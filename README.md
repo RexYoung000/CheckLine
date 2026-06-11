@@ -27,6 +27,7 @@
 | [DESIGN.md](./DESIGN.md) | 设计规范：Token、组件、布局、动效、平台适配 | 写 UI 前 |
 | [ARCHITECTURE.md](./ARCHITECTURE.md) | 技术架构：技术栈、目录、数据模型、模块边界 | 改代码前 |
 | [GLOSSARY.md](./GLOSSARY.md) | 术语表：所有自定义概念的正确定义 + 反面例子 | AI 协作前 |
+| [PRIVACY.md](./PRIVACY.md) | 隐私说明：数据存储、不收集清单、App Store 隐私标签 | 上架前 |
 | [ROADMAP.md](./ROADMAP.md) | 节奏：MVP → 精致 → 平台 → 商业化 | 排期前 |
 | [AGENTS.md](./AGENTS.md) | 协作规则：沟通、改动边界、Git、文档纪律 | 开工前 |
 | [SETUP.md](./SETUP.md) | Xcode 工程对接说明：怎么把磁盘目录变成可运行工程 | 第一次本地跑 |
