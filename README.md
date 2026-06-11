@@ -24,7 +24,9 @@
 |------|------|------|
 | [PRODUCT.md](./PRODUCT.md) | 产品宪法：定位、心智、原则、不做清单 | 任何决策前 |
 | [FEATURE-LOOP.md](./FEATURE-LOOP.md) | 功能架构循环：每日 / 结算 / 心愿三层主流程 | 改功能前 |
+| [DESIGN.md](./DESIGN.md) | 设计规范：Token、组件、布局、动效、平台适配 | 写 UI 前 |
 | [ARCHITECTURE.md](./ARCHITECTURE.md) | 技术架构：技术栈、目录、数据模型、模块边界 | 改代码前 |
+| [GLOSSARY.md](./GLOSSARY.md) | 术语表：所有自定义概念的正确定义 + 反面例子 | AI 协作前 |
 | [ROADMAP.md](./ROADMAP.md) | 节奏：MVP → 精致 → 平台 → 商业化 | 排期前 |
 | [AGENTS.md](./AGENTS.md) | 协作规则：沟通、改动边界、Git、文档纪律 | 开工前 |
 | [SETUP.md](./SETUP.md) | Xcode 工程对接说明：怎么把磁盘目录变成可运行工程 | 第一次本地跑 |
@@ -35,18 +37,15 @@
 
 ```
 ✅ 完成
-  · 产品宪法
-  · 功能架构循环（核心心智 + 三层主流程 + 关联账识别）
-  · 技术架构（SwiftData 数据模型）
+  · 产品宪法 + 功能架构循环 + 术语表
+  · 设计规范（深空暖金 · ui-workflow Deep 模式产出）
+  · 技术架构（8 个 SwiftData 模型 + 模块边界）
   · MVP 范围与验收标准
   · 协作规则与文档纪律
-
-⏳ 进行中
   · 源码目录骨架
 
 ⬜ 未开始
-  · Xcode 工程
-  · App 入口、根 Scene
+  · Xcode 工程（按 SETUP.md 创建）
   · 数据模型代码
   · 首屏 UI
 ```
