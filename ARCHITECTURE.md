@@ -46,11 +46,11 @@ CheckLine/
 ├── Sources/
 │   ├── App/               ← App 入口、根 Scene、Tab/Sidebar
 │   ├── Features/          ← 业务功能模块（按用户视角拆分）
-│   │   ├── Budget/        ← 预算创建、列表、详情、扣血主屏
+│   │   ├── Budget/        ← 预算钱包创建、列表、详情、主屏预算状态
 │   │   ├── Expense/       ← 记一笔（含归类弹窗、多入口分发）
 │   │   ├── Settlement/    ← 结算清单、关联账确认、结算高光
 │   │   ├── Wish/          ← 心愿设定、进度、达成庆祝
-│   │   └── Insights/      ← 仪表盘、月度回顾（v1.1）
+│   │   └── Insights/      ← 统计概览、分类分析、消费记录日历（PRD/Stitch 先完整覆盖）
 │   ├── Core/              ← 业务核心（与 UI 解耦）
 │   │   ├── Models/        ← SwiftData @Model 定义
 │   │   ├── Services/      ← 领域服务：BudgetEngine / SettlementEngine 等
@@ -134,7 +134,7 @@ Widgets （只读 Core）
 | `createdAt` | Date | |
 
 **派生属性（运行时算，不持久化）**：
-- `spent`：本预算已扣血总和
+- `spent`：本预算已用总和
 - `remaining`：`totalAmount - spent`
 - `progress`：`spent / totalAmount`
 
@@ -164,7 +164,7 @@ Widgets （只读 Core）
 
 ### 4.4 `BudgetExpenseBinding` 预算-消费 关联表
 
-> 多对多中间表。一笔消费在每个被关联的预算里都有一条 binding，扣血是按 binding 算的。
+> 多对多中间表。一笔消费在每个被关联的预算里都有一条 binding，预算消耗是按 binding 算的。
 
 | 字段 | 类型 | 说明 |
 |------|------|------|
@@ -172,11 +172,11 @@ Widgets （只读 Core）
 | `budget` | Budget | |
 | `expense` | Expense | |
 | `category` | BudgetCategory | 该预算下的分类 |
-| `recordedAmount` | Decimal | 在此预算下的扣血金额（默认 = expense.amount） |
+| `recordedAmount` | Decimal | 在此预算下的计入金额（默认 = expense.amount） |
 | `finalAttribution` | enum? | 结算时确定：`included` / `excluded` / `partial`（v2） |
 | `createdAt` | Date | |
 
-> **关键**：一笔 ¥38 同时归到「京都」和「生活」两个预算，会产生 2 条 binding，每条 binding 的 `recordedAmount = 38`。结算时用户可以把生活那条标记为 `excluded`，让生活预算的扣血回滚。
+> **关键**：一笔 ¥38 同时归到「京都」和「生活」两个预算，会产生 2 条 binding，每条 binding 的 `recordedAmount = 38`。结算时用户可以把生活那条标记为 `excluded`，让生活预算的计入金额回滚。
 
 ### 4.5 `Settlement` 结算
 
@@ -234,14 +234,14 @@ Widgets （只读 Core）
 
 | Service | 职责 | 所在层 |
 |---------|------|------|
-| `BudgetEngine` | 给定 Budget 算扣血、剩余、进度、日均 | Core/Services |
+| `BudgetEngine` | 给定 Budget 算已用、剩余、进度、日均 | Core/Services |
 | `SettlementEngine` | 触发结算、计算结余、生成关联账清单 | Core/Services |
 | `LinkedExpenseDetector` | 识别同时归多预算的关联账（按 ExpenseID） | Core/Services |
 | `WishLedger` | 心愿入账、达成判断、累积计算 | Core/Services |
 | `CycleScheduler` | 重复型预算到期自动延续 / 单次型归档 | Core/Services |
 | `OverrunHandler` | 处理超支策略（warn / deductFromWish） | Core/Services |
 | `Formatters` | 货币、日期、百分比统一格式化 | Shared |
-| `HapticsCenter` | 扣血 / 结算 / 达成 / 超支 四种触感反馈 | DesignSystem |
+| `HapticsCenter` | 预算消耗 / 结算 / 达成 / 提醒 四种触感反馈 | DesignSystem |
 | `OCRParser` | 截图识别金额 + 商户 | Capture/OCR |
 | `VoiceParser` | 语音转 Expense 的解析 | Capture/Voice |
 
@@ -308,7 +308,8 @@ LinkedExpenseDetector 找出 ExpenseID 在 ≥ 2 个 Budget 中的记录
 
 ## 九、可观测性与调试
 
-- 所有领域服务的关键计算（扣血 / 结算 / 心愿入账）必须可单测，纯函数实现。
+- 所有领域服务的关键计算（预算消耗 / 结算 / 心愿入账）必须可单测，纯函数实现。
+- 统计与消费日历当前先作为 PRD 和 Stitch 原型范围存在；正式实现前如需新增聚合字段或索引，必须先回到本文件登记数据模型影响。
 - 调试模式下 `Resources/Sample/` 提供 sample 数据，一键塞进 SwiftData 容器。
 - 错误用 `OSLog` 分 category：`Budget` / `Settlement` / `Capture` / `Sync`。
 
