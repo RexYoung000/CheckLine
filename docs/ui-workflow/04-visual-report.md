@@ -58,7 +58,7 @@
         "card": "#0D1B2A",
         "elevated": "#1B2838"
       },
-      "contrast_strategy": "dark-on-light (扣血/支出用亮色在深底上)，gold-on-dark (庆祝)"
+      "contrast_strategy": "dark-on-light (预算消耗/支出用亮色在深底上)，gold-on-dark (庆祝)"
     },
 
     "typography": {
@@ -128,7 +128,7 @@
       "easing": "spring(duration: 0.4, bounce: 0.15) 用于微交互；easeInOut 0.3s 用于转场",
       "duration_scale": {
         "micro": "150ms — 选中/切换态",
-        "normal": "300ms — 页面转场、扣血动效",
+        "normal": "300ms — 页面转场、预算消耗动效",
         "macro": "800ms — 结算高光、心愿达成"
       },
       "entrance_pattern": "fade + slight scaleUp(0.97→1)",
@@ -140,7 +140,7 @@
       "button_style": "填充圆角按钮（主色），描边按钮（次要），纯文字按钮（取消）",
       "input_style": "底部圆角输入框 + placeholder 灰色",
       "card_style": "16pt 圆角 + 1px 边框 + 8pt 内间距",
-      "navigation_pattern": "iOS: TabView 底部 4 tab；macOS: NavigationSplitView 侧栏",
+      "navigation_pattern": "iOS: TabView 底部 5 tab（首页 / 预算 / 心愿 / 统计 / 我的）；macOS: NavigationSplitView 侧栏",
       "modal_style": "iOS: .sheet (bottom) / .fullScreenCover (结算清单)；macOS: .sheet",
       "list_style": "圆形首字母 + 两行文字（PlainListStyle）",
       "component_notes": "BudgetTagChip: 选中=填充主色+白字，未选=描边主色+透明底"
@@ -184,11 +184,11 @@
     },
 
     "interaction_feel": {
-      "feedback_style": "即时 + 温柔 — Haptic 轻反馈（扣血），Haptic 强反馈（达成）",
+      "feedback_style": "即时 + 温柔 — Haptic 轻反馈（预算消耗），Haptic 强反馈（达成）",
       "hover_behavior": "macOS: 轻微提亮卡片",
       "transition_personality": "snappy for micro (150ms), smooth glide for navigation (300ms), cinematic for celebration (800ms)",
       "loading_style": "骨架屏（shimmer）+ 进度条平滑增长",
-      "microinteraction_density": "moderate — 扣血/结算/达成都需要，日常不要太花"
+      "microinteraction_density": "moderate — 预算消耗/结算/达成都需要，日常不要太花"
     },
 
     "brand_voice_in_ui": {
@@ -275,7 +275,7 @@
 
     "text_effects": {
       "type": "counter-animate",
-      "description": "金额数字平滑滚动递增递减（扣血时数字向下滚动，结余入账时向上滚动）",
+      "description": "金额数字平滑滚动递增递减（记一笔后数字向下滚动，结余入账时向上滚动）",
       "technology": "SwiftUI Text + contentTransition(.numericText())",
       "params": {
         "split_strategy": "none",
@@ -326,7 +326,7 @@
       "params": { "animation_method": "none", "path_morphing": "none", "stroke_animation": "none", "filter_effects": "none" }
     },
 
-    "composite_notes": "日常界面以深色静态为主+微交互（扣血动效），仅在结算高光和心愿达成时启用粒子+背景渐变。庆祝效果以 SwiftUI Canvas + TimelineView 实现，不引入第三方渲染库。MVP 阶段效果强度控制为「克制日常 + 高光时刻」，避免过度动效干扰预算专注感。"
+    "composite_notes": "日常界面以深色静态为主+微交互（预算消耗动效），仅在结算高光和心愿达成时启用粒子+背景渐变。庆祝效果以 SwiftUI Canvas + TimelineView 实现，不引入第三方渲染库。MVP 阶段效果强度控制为「克制日常 + 高光时刻」，避免过度动效干扰预算专注感。"
   }
 }
 ```
@@ -345,7 +345,7 @@
 | `accent-celebration` | `#FFB300` | 庆祝金（心愿、结算高光） |
 | `semantic-success` | `#00C853` | 结余正向变化 |
 | `semantic-warning` | `#FFB300` | 超支提醒 |
-| `semantic-error` | `#FF5252` | 扣血、支出、超支抵扣 |
+| `semantic-error` | `#FF5252` | 支出、预算消耗、超支抵扣 |
 | `text-primary` | `#E0E1DD` | 主要文字 |
 | `text-secondary` | `#778DA9` | 次要文字 |
 | `text-muted` | `#415A77` | 辅助信息 |
@@ -361,5 +361,5 @@
 | 品牌色 | 冷蓝 `#1C6CFF` | 暖蓝 `#1A73E8` + 暖金 `#FFB300` |
 | 庆祝色 | 无专用庆祝色 | 暖金 `#FFB300` 是核心情感锚点 |
 | 动效哲学 | 功能动效 | 克制日常 + 仪式高光双轨 |
-| 语义映射 | 红=支出(消极) | 红=扣血(中性体感)，金=心愿(积极) |
+| 语义映射 | 红=支出(消极) | 红=预算消耗(中性体感)，金=心愿(积极) |
 | 文案调性 | 中立专业 | 温柔但有边界 |
