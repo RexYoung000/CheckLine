@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>CheckLine - 预算线</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-surface": "#171c25",
+                        "outline-variant": "#c3c5d8",
+                        "primary-fixed": "#dbe1ff",
+                        "on-error": "#ffffff",
+                        "on-primary-fixed-variant": "#003daa",
+                        "error": "#ba1a1a",
+                        "secondary-fixed": "#ffddb8",
+                        "background": "#f9f9ff",
+                        "on-secondary-container": "#684000",
+                        "primary-container": "#135bec",
+                        "outline": "#737687",
+                        "on-secondary-fixed": "#2a1700",
+                        "surface-tint": "#0052de",
+                        "on-primary-container": "#e2e6ff",
+                        "secondary-fixed-dim": "#ffb95f",
+                        "secondary": "#855300",
+                        "secondary-container": "#fea619",
+                        "on-background": "#171c25",
+                        "on-error-container": "#93000a",
+                        "surface-dim": "#d6dae7",
+                        "error-container": "#ffdad6",
+                        "inverse-primary": "#b4c5ff",
+                        "inverse-on-surface": "#ecf0fe",
+                        "surface-container": "#eaeefb",
+                        "surface-container-highest": "#dee2f0",
+                        "on-tertiary-container": "#83ffc6",
+                        "tertiary-fixed-dim": "#4edea3",
+                        "surface-container-lowest": "#ffffff",
+                        "tertiary-fixed": "#6ffbbe",
+                        "on-tertiary-fixed": "#002113",
+                        "primary": "#0045bd",
+                        "surface-bright": "#f9f9ff",
+                        "tertiary": "#005c3e",
+                        "surface-container-high": "#e4e8f5",
+                        "on-surface-variant": "#434655",
+                        "on-primary": "#ffffff",
+                        "surface-variant": "#dee2f0",
+                        "primary-fixed-dim": "#b4c5ff",
+                        "on-tertiary-fixed-variant": "#005236",
+                        "surface-container-low": "#f0f3ff",
+                        "on-secondary": "#ffffff",
+                        "inverse-surface": "#2c303a",
+                        "on-secondary-fixed-variant": "#653e00",
+                        "tertiary-container": "#007751",
+                        "surface": "#f9f9ff",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-fixed": "#00174c"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "xl": "32px",
+                        "container-margin": "16px",
+                        "md": "16px",
+                        "gutter": "12px",
+                        "xs": "8px",
+                        "sm": "12px",
+                        "base": "4px",
+                        "lg": "24px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Inter"],
+                        "label-md": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "body-md": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "display-numeric": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "body-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["18px", {"lineHeight": "24px", "fontWeight": "600"}],
+                        "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                        "label-sm": ["11px", {"lineHeight": "14px", "fontWeight": "600"}],
+                        "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "headline-lg": ["24px", {"lineHeight": "30px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                        "display-numeric": ["34px", {"lineHeight": "41px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "headline-lg-mobile": ["20px", {"lineHeight": "26px", "fontWeight": "700"}],
+                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            background-color: #F6F6F8;
+            -webkit-tap-highlight-color: transparent;
+            font-family: 'Inter', sans-serif;
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .ios-blur {
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="text-on-surface">
+<!-- TopAppBar -->
+<header class="bg-background fixed top-0 w-full z-50 flex justify-between items-center px-container-margin py-xs">
+<div class="flex items-center gap-xs">
+<span class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface-variant opacity-60">今天</span>
+</div>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile font-bold text-primary">CheckLine</h1>
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container transition-colors active:scale-95">
+<span class="material-symbols-outlined text-on-surface-variant">notifications</span>
+</button>
+</header>
+<main class="pt-16 pb-24">
+<!-- Budget Carousel -->
+<section class="mt-lg">
+<div class="flex overflow-x-auto hide-scrollbar snap-x snap-mandatory px-container-margin gap-sm">
+<!-- Card 1: Active -->
+<div class="snap-start min-w-[85vw] bg-surface-container-lowest rounded-xl p-md shadow-[0px_4px_12px_rgba(0,0,0,0.05)] border border-outline-variant/20">
+<div class="flex justify-between items-start mb-sm">
+<div>
+<h3 class="font-headline-md text-headline-md">6 月生活</h3>
+<span class="font-label-md text-label-md text-on-surface-variant">月度预算</span>
+</div>
+<div class="text-right">
+<p class="font-label-md text-label-md text-on-surface-variant">还能花</p>
+<p class="font-display-numeric text-display-numeric text-primary">¥1,520</p>
+</div>
+</div>
+<div class="mb-md">
+<div class="h-2 w-full bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-primary rounded-full w-[70%]"></div>
+</div>
+<div class="flex justify-between mt-xs">
+<span class="font-label-sm text-label-sm text-outline">已用 70%</span>
+<span class="font-label-sm text-label-sm text-outline">总额 ¥5,000</span>
+</div>
+</div>
+<div class="flex gap-sm">
+<div class="flex-1 bg-surface-container-low p-xs rounded-lg">
+<p class="font-label-sm text-label-sm text-outline">伙食</p>
+<p class="font-body-md text-body-md font-bold">¥320</p>
+</div>
+<div class="flex-1 bg-surface-container-low p-xs rounded-lg">
+<p class="font-label-sm text-label-sm text-outline">聚会</p>
+<p class="font-body-md text-body-md font-bold">¥200</p>
+</div>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="snap-start min-w-[85vw] bg-surface-container-lowest rounded-xl p-md shadow-[0px_4px_12px_rgba(0,0,0,0.05)] border border-outline-variant/20 opacity-80 scale-95 origin-left">
+<div class="flex justify-between items-start mb-sm">
+<div>
+<h3 class="font-headline-md text-headline-md">京都旅行</h3>
+<span class="font-label-md text-label-md text-on-surface-variant">单次预算</span>
+</div>
+<div class="text-right">
+<p class="font-label-md text-label-md text-on-surface-variant">还能花</p>
+<p class="font-display-numeric text-display-numeric text-tertiary">¥4,340</p>
+</div>
+</div>
+<div class="h-2 w-full bg-surface-container-high rounded-full overflow-hidden mb-sm">
+<div class="h-full bg-tertiary rounded-full w-[36%]"></div>
+</div>
+<p class="font-label-sm text-label-sm text-outline">总额 ¥6,800</p>
+</div>
+<!-- Card 3 -->
+<div class="snap-start min-w-[85vw] bg-surface-container-lowest rounded-xl p-md shadow-[0px_4px_12px_rgba(0,0,0,0.05)] border border-outline-variant/20 opacity-60 scale-95 origin-left">
+<div class="flex justify-between items-start mb-sm">
+<div>
+<h3 class="font-headline-md text-headline-md">Q3 学习</h3>
+<span class="font-label-md text-label-md text-on-surface-variant">季度预算</span>
+</div>
+<div class="text-right">
+<p class="font-label-md text-label-md text-on-surface-variant">还能花</p>
+<p class="font-display-numeric text-display-numeric text-on-surface">¥1,660</p>
+</div>
+</div>
+<p class="font-label-sm text-label-sm text-outline">总额 ¥2,200</p>
+</div>
+</div>
+</section>
+<!-- Action Row -->
+<section class="mt-xl px-container-margin">
+<div class="grid grid-cols-3 gap-md items-center">
+<div class="flex flex-col items-center gap-xs">
+<button class="w-14 h-14 bg-surface-container-high text-on-surface rounded-full flex items-center justify-center active:scale-90 transition-transform">
+<span class="material-symbols-outlined">receipt_long</span>
+</button>
+<span class="font-label-md text-label-md">结算</span>
+</div>
+<div class="flex flex-col items-center gap-xs">
+<button class="w-20 h-20 bg-primary text-on-primary rounded-full flex items-center justify-center shadow-lg active:scale-90 transition-transform">
+<span class="material-symbols-outlined text-[32px]">add</span>
+</button>
+<span class="font-label-md text-label-md font-bold">记一笔</span>
+</div>
+<div class="flex flex-col items-center gap-xs">
+<button class="w-14 h-14 bg-surface-container-high text-on-surface rounded-full flex items-center justify-center active:scale-90 transition-transform">
+<span class="material-symbols-outlined">stars</span>
+</button>
+<span class="font-label-md text-label-md">心愿</span>
+</div>
+</div>
+</section>
+<!-- Wish Progress -->
+<section class="mt-xl px-container-margin">
+<div class="flex justify-between items-center mb-sm">
+<h2 class="font-headline-md text-headline-md">心愿进展</h2>
+<button class="font-label-md text-label-md text-primary">全部</button>
+</div>
+<div class="space-y-sm">
+<!-- Wish Item 1 -->
+<div class="bg-surface-container-lowest rounded-xl p-sm shadow-[0px_4px_12px_rgba(0,0,0,0.03)] flex gap-sm items-center border border-outline-variant/10">
+<div class="w-12 h-12 rounded-full border-4 border-secondary-container flex items-center justify-center relative">
+<span class="font-label-sm text-label-sm text-secondary">65%</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between">
+<span class="font-body-md text-body-md font-bold">京都樱花季</span>
+<span class="material-symbols-outlined text-secondary text-sm" style="font-variation-settings: 'FILL' 1;">stars</span>
+</div>
+<p class="font-label-md text-label-md text-outline">离心愿近了，还差 ¥3,150</p>
+</div>
+</div>
+<!-- Wish Item 2 -->
+<div class="bg-surface-container-lowest rounded-xl p-sm shadow-[0px_4px_12px_rgba(0,0,0,0.03)] flex gap-sm items-center border border-outline-variant/10">
+<div class="w-12 h-12 rounded-full border-4 border-surface-container-highest flex items-center justify-center relative">
+<div class="absolute inset-0 rounded-full border-4 border-secondary-container border-r-transparent border-b-transparent border-l-transparent rotate-45"></div>
+<span class="font-label-sm text-label-sm text-outline">23%</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between">
+<span class="font-body-md text-body-md font-bold">富士相机</span>
+<span class="material-symbols-outlined text-outline text-sm">stars</span>
+</div>
+<p class="font-label-md text-label-md text-outline">离心愿近了，还差 ¥9,240</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Recent Deductions -->
+<section class="mt-xl px-container-margin">
+<h2 class="font-headline-md text-headline-md mb-sm">最近扣血</h2>
+<div class="bg-surface-container-lowest rounded-xl shadow-[0px_4px_12px_rgba(0,0,0,0.03)] divide-y divide-outline-variant/20 overflow-hidden border border-outline-variant/10">
+<!-- Row 1 -->
+<div class="p-sm flex items-center gap-sm active:bg-surface-container transition-colors">
+<div class="w-10 h-10 bg-surface-container-high rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-on-surface-variant">directions_bus</span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-baseline">
+<h4 class="font-body-md text-body-md truncate">市内交通</h4>
+<span class="font-body-md text-body-md font-bold text-error">¥38</span>
+</div>
+<div class="flex gap-xs mt-base">
+<span class="bg-primary-fixed text-on-primary-fixed-variant px-xs py-[1px] rounded-full text-[10px] font-bold">京都旅行</span>
+<span class="bg-secondary-fixed text-on-secondary-fixed-variant px-xs py-[1px] rounded-full text-[10px] font-bold">6 月生活</span>
+</div>
+</div>
+</div>
+<!-- Row 2 -->
+<div class="p-sm flex items-center gap-sm active:bg-surface-container transition-colors">
+<div class="w-10 h-10 bg-surface-container-high rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-on-surface-variant">restaurant</span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-baseline">
+<h4 class="font-body-md text-body-md truncate">工作日午餐</h4>
+<span class="font-body-md text-body-md font-bold text-error">¥32</span>
+</div>
+<div class="flex gap-xs mt-base">
+<span class="bg-secondary-fixed text-on-secondary-fixed-variant px-xs py-[1px] rounded-full text-[10px] font-bold">6 月生活</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 w-full z-50 flex justify-around items-center px-4 pt-2 pb-6 bg-surface-container-lowest rounded-t-xl shadow-[0px_-4px_12px_rgba(0,0,0,0.05)] ios-blur">
+<a class="flex flex-col items-center justify-center text-primary font-bold transition-opacity" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">home</span>
+<span class="font-label-sm text-label-sm">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-outline transition-opacity opacity-80" href="#">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+<span class="font-label-sm text-label-sm">Budget</span>
+</a>
+<a class="flex flex-col items-center justify-center text-outline transition-opacity opacity-80" href="#">
+<span class="material-symbols-outlined">add_circle</span>
+<span class="font-label-sm text-label-sm">Add</span>
+</a>
+<a class="flex flex-col items-center justify-center text-outline transition-opacity opacity-80" href="#">
+<span class="material-symbols-outlined">stars</span>
+<span class="font-label-sm text-label-sm">Wish</span>
+</a>
+<a class="flex flex-col items-center justify-center text-outline transition-opacity opacity-80" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-sm text-label-sm">Settings</span>
+</a>
+</nav>
+<script>
+        // Simple touch interaction for card scale effect
+        const container = document.querySelector('.hide-scrollbar');
+        if(container) {
+            container.addEventListener('scroll', () => {
+                const cards = container.querySelectorAll('.snap-start');
+                cards.forEach(card => {
+                    const rect = card.getBoundingClientRect();
+                    const centerX = window.innerWidth / 2;
+                    const cardCenterX = rect.left + rect.width / 2;
+                    const distance = Math.abs(centerX - cardCenterX);
+                    const scale = Math.max(0.9, 1 - (distance / window.innerWidth) * 0.2);
+                    const opacity = Math.max(0.6, 1 - (distance / window.innerWidth) * 0.5);
+                    card.style.transform = `scale(${scale})`;
+                    card.style.opacity = opacity;
+                });
+            });
+        }
+    </script>
+</body></html>
