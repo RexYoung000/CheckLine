@@ -7,14 +7,16 @@
 
 ## 一、阅读顺序（每次开工前）
 
-1. `PRODUCT.md` — 产品宪法，看核心心智、不做清单
-2. `FEATURE-LOOP.md` — 功能架构循环，确认改动落在哪一层
-3. `DESIGN.md` — 设计规范，Token / 组件 / 动效
-4. `ARCHITECTURE.md` — 技术结构、目录、数据模型
-5. `GLOSSARY.md` — 术语表，确认概念用法一致
-6. `PRIVACY.md` — 隐私约束，确认不动到数据安全红线
-7. `ROADMAP.md` — 当前轮次的范围与边界
+1. `PRODUCT.md`（根目录） — 产品宪法，看核心心智、不做清单
+2. `docs/spec/FEATURE-LOOP.md` — 功能架构循环，确认改动落在哪一层
+3. `docs/design/DESIGN.md` — 设计规范，Token / 组件 / 动效
+4. `docs/engineering/ARCHITECTURE.md` — 技术结构、目录、数据模型
+5. `docs/spec/GLOSSARY.md` — 术语表，确认概念用法一致
+6. `docs/compliance/PRIVACY.md` — 隐私约束，确认不动到数据安全红线
+7. `docs/spec/ROADMAP.md` — 当前轮次的范围与边界
 8. 全局 `AGENTS.md` — 沟通、节奏、Git 规范
+
+> 完整文档导航见 `README.md` 第二节。
 
 任何改动前先把上面 4 份扫一遍。文档跟代码不一致 = 先改文档。
 
@@ -159,7 +161,7 @@
 - **MVP 不接入任何 Analytics / Tracking / 崩溃收集 SDK**
 - 截图 OCR 和语音识别产生的原始数据处理后即丢弃，不存入 SwiftData
 - iCloud 容器只存 SwiftData 模型定义的字段，不偷塞额外数据
-- 完整隐私约束参见 `PRIVACY.md`
+- 完整隐私约束参见 `docs/compliance/PRIVACY.md`
 
 ---
 

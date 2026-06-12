@@ -32,16 +32,30 @@
 
 ```
 CheckLine/
-├── README.md
-├── PRODUCT.md             ← 产品宪法
-├── FEATURE-LOOP.md        ← 功能架构循环
-├── ARCHITECTURE.md        ← 本文件
-├── ROADMAP.md
+├── README.md              ← 文档门户与导航
 ├── AGENTS.md              ← 协作规则
-├── SETUP.md               ← Xcode 工程对接说明
+├── PRODUCT.md             ← 产品宪法（根目录最常读）
 ├── .gitignore
 │
-├── CheckLine.xcodeproj/   ← Xcode 工程（按 SETUP.md 创建后存在）
+├── CheckLine.xcodeproj/   ← Xcode 工程（按 docs/engineering/SETUP.md 创建后存在）
+│
+├── docs/
+│   ├── spec/              ← 产品规格层
+│   │   ├── PRD.md                ← 完整产品需求
+│   │   ├── FEATURE-LOOP.md       ← 功能架构循环
+│   │   ├── USER-JOURNEY.md       ← Day 1-30 用户旅程
+│   │   ├── ROADMAP.md            ← 路线图
+│   │   └── GLOSSARY.md           ← 术语表
+│   ├── design/            ← 设计层
+│   │   └── DESIGN.md             ← 设计规范
+│   ├── engineering/       ← 技术层
+│   │   ├── ARCHITECTURE.md       ← 本文件
+│   │   ├── SETUP.md              ← Xcode 工程对接
+│   │   └── PERMISSIONS.md        ← iOS 权限申请文案与时机
+│   ├── compliance/        ← 合规层
+│   │   └── PRIVACY.md            ← 隐私说明
+│   ├── ui-workflow/       ← UI workflow 分析报告
+│   └── prototype/         ← Stitch 原型 brief 与生成物
 │
 ├── Sources/
 │   ├── App/               ← App 入口、根 Scene、Tab/Sidebar
