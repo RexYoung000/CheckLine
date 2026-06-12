@@ -82,3 +82,8 @@ temp/
 .aider*
 .copilot/
 .codegraph/
+
+# Node.js（Stitch SDK 等工具脚本）
+node_modules/
+scripts/.env
+scripts/package-lock.json
