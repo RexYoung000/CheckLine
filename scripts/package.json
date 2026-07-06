@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "stitch:generate": "node stitch-generate.js",
+    "stitch:check": "node stitch-generate.js --dry-run"
   },
   "keywords": [],
   "author": "",
