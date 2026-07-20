@@ -11,14 +11,21 @@
 | 产品 | iPhone / iPad App |
 | 最低系统 | iOS 17.0 |
 | UI | SwiftUI |
-| 当前启动页 | 迁入的 SwiftUI 历史交互原型 |
+| 当前启动页 | 当前浅色预算钱包 SwiftUI 体验样机 |
 | 正式数据层 | 未实现 |
 | Test Target | 未建立 |
 | 外部依赖 | 无 |
 | 网络 / 后端 | 无 |
 | iCloud / CloudKit | 未启用，后续阶段 |
 
-当前构建只用于验证 Xcode 工程、资源与历史原型能够运行，不代表第一轮 MVP 已实现。
+当前构建用于验证 Xcode 工程、资源与当前浅色预算钱包交互能够运行，不代表第一轮 MVP 的正式数据层、领域服务和测试已经实现。
+
+### 1.1 当前体验样机边界
+
+- 启动页使用原生 SwiftUI 实现当前 HTML 原型的四 Tab、钱包横滑、记一笔、预算、统计、日历、设置和结算体验。
+- 状态只存在于当前运行周期，使用 `Decimal` 与虚构示例数据，不写入磁盘。
+- 体验样机类型保留在 `Features/Prototype`，不冒充 `Core/Models`、SwiftData Schema 或正式领域服务。
+- 正式 MVP 实装时以本文第五至第七节的数据模型与服务边界替换样机状态，不能把样机模型直接当作持久化模型。
 
 ## 二、技术选择
 
@@ -251,7 +258,7 @@ UI 仍需在 iPhone 小屏、Pro Max、iPad 分屏和 Dynamic Type 下人工验�
 
 ## 十二、已知缺口
 
-- 正式 MVP UI 尚未开始，当前 SwiftUI 原型与产品文案不一致。
+- 当前 SwiftUI 体验样机已对齐现行产品文案，但尚未接入正式 MVP 数据层与领域服务。
 - SwiftData Schema 与迁移计划尚未建立。
 - Test Target 和 CI 尚未建立。
 - 真机签名、App 图标和 App Store 配置尚未完成。

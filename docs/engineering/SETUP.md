@@ -19,7 +19,7 @@
 3. Destination 选择 iOS 17+ 的 iPhone/iPad 模拟器，或完成签名的真机。
 4. 按 `Cmd + R` 启动；按 `Cmd + B` 仅构建。
 
-当前启动页是从旧项目迁入的 SwiftUI 闭环原型，用于确认工程、资源和主要交互已经成功接入。它仍包含历史原型范围，不等于 ROADMAP 第一轮 MVP 已经完成。
+当前启动页是与 `docs/design/prototype/checkline-current.html` 对齐的 SwiftUI 体验样机，用于确认浅色预算钱包方向和主要交互已经接入。它使用内存示例数据，不等于 ROADMAP 第一轮 MVP 的 SwiftData、领域服务和测试已经完成。
 
 ## 三、磁盘与 Xcode 结构
 
@@ -30,7 +30,7 @@
 ```text
 Check_Line/
 ├── App/                 # 当前 App 入口
-├── Features/Prototype/  # 迁入的历史交互原型
+├── Features/Prototype/  # 当前浅色预算钱包 SwiftUI 体验样机
 ├── Resources/           # 中英文本地化
 └── Assets.xcassets      # App 图标、颜色与图片资源
 ```
