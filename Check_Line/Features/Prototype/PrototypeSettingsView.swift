@@ -5,16 +5,17 @@ struct PrototypeSettingsView: View {
     let onPlaceholder: (String) -> Void
 
     var body: some View {
-        ScrollView(showsIndicators: false) {
-            LazyVStack(alignment: .leading, spacing: 20) {
-                statusCard
-                settingsSection("settings.finance", rows: financeRows)
-                settingsSection("settings.general", rows: generalRows)
-                settingsSection("settings.about", rows: aboutRows)
-            }
-            .padding(.horizontal, 20)
-            .padding(.bottom, 36)
+        List {
+            statusCard
+                .listRowInsets(EdgeInsets(top: 12, leading: 20, bottom: 12, trailing: 20))
+                .listRowBackground(Color.clear)
+
+            settingsSection("settings.finance", rows: financeRows)
+            settingsSection("settings.general", rows: generalRows)
+            settingsSection("settings.about", rows: aboutRows)
         }
+        .listStyle(.insetGrouped)
+        .scrollContentBackground(.hidden)
         .background(CheckLineColor.canvas)
         .navigationTitle(Text("tab.settings"))
     }
@@ -33,47 +34,40 @@ struct PrototypeSettingsView: View {
     }
 
     private func settingsSection(_ title: LocalizedStringKey, rows: [SettingRowData]) -> some View {
-        VStack(alignment: .leading, spacing: 12) {
-            PrototypeSectionHeader(title)
-            VStack(spacing: 0) {
-                ForEach(Array(rows.enumerated()), id: \.element.id) { index, row in
-                    Button {
-                        onPlaceholder(String(format: String(localized: "settings.prototype.unavailable"), row.title))
-                    } label: {
-                        HStack(spacing: 12) {
-                            Image(systemName: row.symbol)
-                                .foregroundStyle(CheckLineColor.brand)
-                                .frame(width: 32)
-                            VStack(alignment: .leading, spacing: 4) {
+        Section {
+            ForEach(rows) { row in
+                Button {
+                    onPlaceholder(String(format: String(localized: "settings.prototype.unavailable"), row.title))
+                } label: {
+                    HStack(spacing: 12) {
+                        Label {
+                            VStack(alignment: .leading, spacing: 3) {
                                 Text(row.title)
                                     .font(.subheadline.bold())
-                                    .foregroundStyle(CheckLineColor.text)
                                 Text(row.subtitle)
                                     .font(.caption)
                                     .foregroundStyle(CheckLineColor.secondary)
                             }
-                            Spacer()
-                            if row.isFuture {
-                                Text("settings.future")
-                                    .font(.caption2.bold())
-                                    .foregroundStyle(CheckLineColor.quiet)
-                            } else {
-                                Image(systemName: "chevron.right")
-                                    .font(.caption.bold())
-                                    .foregroundStyle(CheckLineColor.quiet)
-                            }
+                        } icon: {
+                            Image(systemName: row.symbol)
+                                .foregroundStyle(CheckLineColor.brand)
                         }
-                        .padding(.horizontal, 14)
-                        .frame(minHeight: 66)
-                        .contentShape(Rectangle())
-                    }
-                    .buttonStyle(.plain)
-                    if index < rows.count - 1 {
-                        Divider().padding(.leading, 58)
+                        Spacer()
+                        if row.isFuture {
+                            Text("settings.future")
+                                .font(.caption2.bold())
+                                .foregroundStyle(CheckLineColor.quiet)
+                        } else {
+                            Image(systemName: "chevron.right")
+                                .font(.caption.bold())
+                                .foregroundStyle(CheckLineColor.quiet)
+                        }
                     }
                 }
+                .buttonStyle(.plain)
             }
-            .prototypeCard()
+        } header: {
+            Text(title)
         }
     }
 
@@ -105,9 +99,17 @@ struct PrototypeSettingsView: View {
 }
 
 private struct SettingRowData: Identifiable {
-    let id = UUID()
+    let id: String
     let title: String
     let subtitle: String
     let symbol: String
     var isFuture = false
+
+    init(title: String, subtitle: String, symbol: String, isFuture: Bool = false) {
+        self.id = title
+        self.title = title
+        self.subtitle = subtitle
+        self.symbol = symbol
+        self.isFuture = isFuture
+    }
 }

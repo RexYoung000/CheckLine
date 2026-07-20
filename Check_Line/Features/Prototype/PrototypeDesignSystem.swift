@@ -86,15 +86,10 @@ struct BudgetProgressBar: View {
     }
 
     var body: some View {
-        GeometryReader { proxy in
-            ZStack(alignment: .leading) {
-                Capsule().fill(CheckLineColor.muted)
-                Capsule()
-                    .fill(color)
-                    .frame(width: proxy.size.width * min(max(progress, 0), 1))
-            }
-        }
-        .frame(height: height)
+        ProgressView(value: min(max(progress, 0), 1))
+            .progressViewStyle(.linear)
+            .tint(color)
+            .scaleEffect(y: max(1, height / 4), anchor: .center)
         .animation(.easeInOut(duration: 0.3), value: progress)
         .accessibilityLabel(Text("budget.progress.accessibility"))
         .accessibilityValue(Text(progress, format: .percent.precision(.fractionLength(0))))
@@ -115,38 +110,6 @@ struct MoneyText: View {
             .minimumScaleFactor(0.5)
             .contentTransition(.numericText(value: decimalDouble(amount)))
             .animation(.spring(duration: 0.45, bounce: 0.12), value: amount)
-    }
-}
-
-struct PrototypeChip: View {
-    let title: String
-    var symbol: String?
-    var isSelected = false
-    var tint = CheckLineColor.brand
-    let action: () -> Void
-
-    var body: some View {
-        Button(action: action) {
-            HStack(spacing: 6) {
-                if isSelected {
-                    Image(systemName: "checkmark.circle.fill")
-                } else if let symbol {
-                    Image(systemName: symbol)
-                }
-                Text(title)
-                    .lineLimit(1)
-            }
-            .font(.subheadline.weight(.semibold))
-            .foregroundStyle(isSelected ? Color.white : CheckLineColor.secondary)
-            .padding(.horizontal, 12)
-            .frame(minHeight: 44)
-            .background(isSelected ? tint : CheckLineColor.card, in: Capsule())
-            .overlay {
-                Capsule().stroke(isSelected ? tint : CheckLineColor.divider, lineWidth: 1)
-            }
-        }
-        .buttonStyle(.plain)
-        .accessibilityAddTraits(isSelected ? .isSelected : [])
     }
 }
 

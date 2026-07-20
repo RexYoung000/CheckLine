@@ -8,23 +8,29 @@ struct PrototypeBudgetListView: View {
     let onSettle: (UUID) -> Void
 
     var body: some View {
-        ScrollView(showsIndicators: false) {
-            LazyVStack(alignment: .leading, spacing: 20) {
-                summaryCard
+        List {
+            summaryCard
+                .listRowInsets(EdgeInsets(top: 12, leading: 20, bottom: 12, trailing: 20))
+                .listRowBackground(Color.clear)
 
-                PrototypeSectionHeader("budget.active.section")
-                budgetList(store.activeBudgets)
+            Section("budget.active.section") {
+                ForEach(store.activeBudgets) { budget in
+                    budgetNavigationRow(budget)
+                }
+            }
 
-                PrototypeSectionHeader("budget.settling.section")
+            Section("budget.settling.section") {
                 if store.settlingBudgets.isEmpty {
                     emptySettling
                 } else {
-                    budgetList(store.settlingBudgets)
+                    ForEach(store.settlingBudgets) { budget in
+                        budgetNavigationRow(budget)
+                    }
                 }
             }
-            .padding(.horizontal, 20)
-            .padding(.bottom, 120)
         }
+        .listStyle(.insetGrouped)
+        .scrollContentBackground(.hidden)
         .background(CheckLineColor.canvas)
         .navigationTitle(Text("tab.budgets"))
         .toolbar {
@@ -65,27 +71,20 @@ struct PrototypeBudgetListView: View {
         .frame(maxWidth: .infinity, alignment: .leading)
     }
 
-    private func budgetList(_ budgets: [PrototypeBudget]) -> some View {
-        VStack(spacing: 0) {
-            ForEach(Array(budgets.enumerated()), id: \.element.id) { index, budget in
-                NavigationLink {
-                    PrototypeBudgetDetailView(
-                        store: store,
-                        budgetID: budget.id,
-                        onCapture: { onCapture(budget.id) },
-                        onSettle: { onSettle(budget.id) }
-                    )
-                    .onAppear { selectedBudgetID = budget.id }
-                } label: {
-                    PrototypeBudgetListRow(budget: budget)
-                }
-                .buttonStyle(.plain)
-                if index < budgets.count - 1 {
-                    Divider().padding(.leading, 66)
-                }
-            }
+    private func budgetNavigationRow(_ budget: PrototypeBudget) -> some View {
+        NavigationLink {
+            PrototypeBudgetDetailView(
+                store: store,
+                budgetID: budget.id,
+                onCapture: { onCapture(budget.id) },
+                onSettle: { onSettle(budget.id) }
+            )
+            .onAppear { selectedBudgetID = budget.id }
+        } label: {
+            PrototypeBudgetListRow(budget: budget)
         }
-        .prototypeCard()
+        .listRowInsets(EdgeInsets(top: 6, leading: 12, bottom: 6, trailing: 12))
+        .listRowBackground(CheckLineColor.card)
     }
 
     private var emptySettling: some View {
@@ -98,7 +97,7 @@ struct PrototypeBudgetListView: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(16)
-        .prototypeCard()
+        .listRowBackground(CheckLineColor.card)
     }
 }
 

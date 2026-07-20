@@ -85,7 +85,7 @@ struct PrototypeExpenseDraft {
     var note: String
 }
 
-enum PrototypeSettlementChoice: String, CaseIterable, Identifiable {
+enum PrototypeSettlementChoice: String, CaseIterable, Identifiable, Hashable {
     case all
     case current
 

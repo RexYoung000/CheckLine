@@ -19,7 +19,7 @@
 3. Destination 选择 iOS 17+ 的 iPhone/iPad 模拟器，或完成签名的真机。
 4. 按 `Cmd + R` 启动；按 `Cmd + B` 仅构建。
 
-当前启动页是与 `docs/design/prototype/checkline-current.html` 对齐的 SwiftUI 体验样机，用于确认浅色预算钱包方向和主要交互已经接入。它使用内存示例数据，不等于 ROADMAP 第一轮 MVP 的 SwiftData、领域服务和测试已经完成。
+当前启动页是与 `docs/design/prototype/checkline-current.html` 对齐的 SwiftUI 体验样机，用于确认浅色预算钱包方向和主要交互已经接入。系统导航、表单、选择器、列表和进度控件优先采用原生 SwiftUI 组件；它使用内存示例数据，不等于 ROADMAP 第一轮 MVP 的 SwiftData、领域服务和测试已经完成。
 
 ## 三、磁盘与 Xcode 结构
 

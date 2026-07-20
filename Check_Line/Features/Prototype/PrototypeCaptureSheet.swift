@@ -29,15 +29,48 @@ struct PrototypeCaptureSheet: View {
 
     var body: some View {
         NavigationStack {
-            ScrollView(showsIndicators: false) {
-                VStack(alignment: .leading, spacing: 22) {
+            Form {
+                Section {
                     amountField
-                    budgetSelection
-                    categorySelection
-                    noteField
+                } header: {
+                    Text("capture.amount.title")
                 }
-                .padding(20)
-                .padding(.bottom, 24)
+
+                Section("capture.budgets.title") {
+                    ForEach(store.activeBudgets) { budget in
+                        Button {
+                            toggleBudget(budget.id)
+                        } label: {
+                            Label(
+                                budget.name,
+                                systemImage: selectedBudgetIDs.contains(budget.id)
+                                    ? "checkmark.circle.fill"
+                                    : "circle"
+                            )
+                            .foregroundStyle(
+                                selectedBudgetIDs.contains(budget.id)
+                                    ? CheckLineColor.brand
+                                    : CheckLineColor.text
+                            )
+                        }
+                        .buttonStyle(.plain)
+                    }
+                }
+
+                Section("capture.category.title") {
+                    Picker("capture.category.title", selection: $selectedCategory) {
+                        ForEach(categoryOptions, id: \.name) { option in
+                            Label(option.name, systemImage: option.symbol)
+                                .tag(option.name)
+                        }
+                    }
+                }
+
+                Section("capture.note.title") {
+                    TextField("capture.note.placeholder", text: $note, axis: .vertical)
+                        .lineLimit(2 ... 4)
+                        .focused($focusedField, equals: .note)
+                }
             }
             .safeAreaInset(edge: .bottom, spacing: 0) {
                 captureButton
@@ -45,6 +78,8 @@ struct PrototypeCaptureSheet: View {
                     .padding(.vertical, 12)
                     .background(CheckLineColor.canvas)
             }
+            .formStyle(.grouped)
+            .scrollContentBackground(.hidden)
             .background(CheckLineColor.canvas)
             .navigationTitle(Text("capture.title"))
             .navigationBarTitleDisplayMode(.inline)
@@ -58,75 +93,16 @@ struct PrototypeCaptureSheet: View {
     }
 
     private var amountField: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Text("capture.amount.title")
-                .font(.caption.bold())
-                .foregroundStyle(CheckLineColor.secondary)
-            HStack(alignment: .firstTextBaseline, spacing: 8) {
-                Text("CNY")
-                    .font(.subheadline.bold())
-                    .foregroundStyle(CheckLineColor.brand)
-                TextField("0", text: $amountText)
-                    .font(.system(size: 42, weight: .black, design: .rounded))
-                    .keyboardType(.decimalPad)
-                    .focused($focusedField, equals: .amount)
-                    .monospacedDigit()
-                    .accessibilityLabel(Text("capture.amount.title"))
-            }
-            .padding(16)
-            .prototypeCard()
-        }
-    }
-
-    private var budgetSelection: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            Text("capture.budgets.title")
-                .font(.headline)
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 8) {
-                    ForEach(store.activeBudgets) { budget in
-                        PrototypeChip(
-                            title: budget.name,
-                            symbol: "wallet.pass",
-                            isSelected: selectedBudgetIDs.contains(budget.id)
-                        ) {
-                            toggleBudget(budget.id)
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    private var categorySelection: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            Text("capture.category.title")
-                .font(.headline)
-            LazyVGrid(columns: [GridItem(.adaptive(minimum: 98), spacing: 8)], alignment: .leading, spacing: 8) {
-                ForEach(categoryOptions, id: \.name) { option in
-                    PrototypeChip(
-                        title: option.name,
-                        symbol: option.symbol,
-                        isSelected: selectedCategory == option.name,
-                        tint: option.color
-                    ) {
-                        selectedCategory = option.name
-                        PrototypeHaptics.selection()
-                    }
-                }
-            }
-        }
-    }
-
-    private var noteField: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Text("capture.note.title")
-                .font(.headline)
-            TextField("capture.note.placeholder", text: $note, axis: .vertical)
-                .lineLimit(2 ... 4)
-                .focused($focusedField, equals: .note)
-                .padding(14)
-                .prototypeCard(radius: 14)
+        HStack(alignment: .firstTextBaseline, spacing: 8) {
+            Text("CNY")
+                .font(.subheadline.bold())
+                .foregroundStyle(CheckLineColor.brand)
+            TextField("0", text: $amountText)
+                .font(.system(size: 42, weight: .black, design: .rounded))
+                .keyboardType(.decimalPad)
+                .focused($focusedField, equals: .amount)
+                .monospacedDigit()
+                .accessibilityLabel(Text("capture.amount.title"))
         }
     }
 

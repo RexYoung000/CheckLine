@@ -125,22 +125,16 @@ struct PrototypeSettlementSheet: View {
                                 .foregroundStyle(CheckLineColor.secondary)
                         }
                     }
-                    HStack(spacing: 8) {
-                        PrototypeChip(
-                            title: String(localized: "linked.decision.all"),
-                            isSelected: choice(for: expense.id) == .all
-                        ) {
-                            choices[expense.id] = .all
-                            PrototypeHaptics.selection()
-                        }
-                        PrototypeChip(
-                            title: String(format: String(localized: "linked.decision.current"), budget.name),
-                            isSelected: choice(for: expense.id) == .current
-                        ) {
-                            choices[expense.id] = .current
-                            PrototypeHaptics.selection()
-                        }
+                    Picker(
+                        "linked.title",
+                        selection: choiceBinding(for: expense.id)
+                    ) {
+                        Text("linked.decision.all")
+                            .tag(PrototypeSettlementChoice.all)
+                        Text(String(format: String(localized: "linked.decision.current"), budget.name))
+                            .tag(PrototypeSettlementChoice.current)
                     }
+                    .pickerStyle(.segmented)
                 }
                 .padding(14)
                 if index < linkedExpenses.count - 1 { Divider() }
@@ -191,6 +185,16 @@ struct PrototypeSettlementSheet: View {
 
     private func choice(for expenseID: UUID) -> PrototypeSettlementChoice {
         choices[expenseID] ?? .all
+    }
+
+    private func choiceBinding(for expenseID: UUID) -> Binding<PrototypeSettlementChoice> {
+        Binding(
+            get: { choice(for: expenseID) },
+            set: { newValue in
+                choices[expenseID] = newValue
+                PrototypeHaptics.selection()
+            }
+        )
     }
 
     private func linkedBudgetNames(_ expense: PrototypeExpense) -> String {

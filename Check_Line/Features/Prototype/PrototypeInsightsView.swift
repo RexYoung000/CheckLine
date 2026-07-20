@@ -34,23 +34,14 @@ struct PrototypeInsightsView: View {
     }
 
     private var budgetPicker: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            PrototypeSectionHeader("insights.budgetPicker")
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 8) {
-                    ForEach(store.activeBudgets) { option in
-                        PrototypeChip(
-                            title: option.name,
-                            symbol: "wallet.pass",
-                            isSelected: option.id == selectedBudgetID
-                        ) {
-                            selectedBudgetID = option.id
-                            PrototypeHaptics.selection()
-                        }
-                    }
-                }
+        Picker("insights.budgetPicker", selection: $selectedBudgetID) {
+            ForEach(store.activeBudgets) { option in
+                Label(option.name, systemImage: "wallet.pass")
+                    .tag(option.id)
             }
         }
+        .pickerStyle(.menu)
+        .tint(CheckLineColor.brand)
     }
 
     private var remainingCard: some View {

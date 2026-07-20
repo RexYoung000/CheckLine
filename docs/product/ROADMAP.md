@@ -156,3 +156,4 @@ https://stitch.withgoogle.com/projects/11707032164273888537
 - 2026-07-20：旧 Swift Package 项目迁入正式 Xcode iOS App 工程；保留产品文档、HTML/SwiftUI 原型与 Git 历史，最低系统版本对齐 iOS 17。现有 SwiftUI 页面用于迁移后体验验证，不代表当前 MVP 范围已正式实现。
 - 2026-07-20：文档重组为 `product / design / engineering / compliance / archive` 五层；移除重复模块说明，架构、术语、权限和隐私统一到第一轮本地 MVP。
 - 2026-07-20：HTML 原型已迁为可运行的原生 SwiftUI 体验样机，完成四 Tab、预算钱包横滑、记一笔、统计日历和结算主流程的模拟器验证；样机仍使用内存示例数据，正式 SwiftData MVP 尚未开始。
+- 2026-07-20：样机交互控件进一步原生化；记一笔、结算、设置和预算列表改用 SwiftUI `Form` / `List` / `Section` / `Picker` / `ProgressView`，保留预算卡和图表等品牌展示组件，并完成 iOS 17.5 模拟器回归验证。
