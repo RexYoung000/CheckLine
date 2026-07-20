@@ -1,321 +1,268 @@
-# ARCHITECTURE — 预算线 CheckLine 技术架构
+# ARCHITECTURE - CheckLine 技术架构
 
-> 这份文档定义工程结构、技术栈、模块边界、数据模型。
-> 改架构前先更新这份文档，再动代码。
-> 配套阅读：`PRODUCT.md`（产品宪法）、`FEATURE-LOOP.md`（功能架构循环）。
+本文定义当前 Xcode 工程事实、第一轮 MVP 的模块与数据边界，以及后续能力进入工程的条件。产品范围以根目录 `PRODUCT.md` 和 `docs/product/PRD.md` 为上位依据。
 
----
+## 一、当前工程事实
 
-## 一、技术栈
+| 项目 | 当前状态 |
+|---|---|
+| 工程 | `Check_Line.xcodeproj` |
+| Target / Scheme | `Check_Line` |
+| 产品 | iPhone / iPad App |
+| 最低系统 | iOS 17.0 |
+| UI | SwiftUI |
+| 当前启动页 | 迁入的 SwiftUI 历史交互原型 |
+| 正式数据层 | 未实现 |
+| Test Target | 未建立 |
+| 外部依赖 | 无 |
+| 网络 / 后端 | 无 |
+| iCloud / CloudKit | 未启用，后续阶段 |
 
-| 层 | 选择 | 理由 |
-|----|------|------|
-| 平台 | iOS 17+（当前正式 Target）/ macOS 14+（后续） | 先把 iPhone/iPad MVP 跑通，第四轮再接入 macOS 独占能力 |
-| UI | SwiftUI | 声明式、跨平台、Widget 友好 |
-| 数据 | SwiftData | 比 Core Data 轻量，原生 SwiftUI 集成，支持 iCloud |
-| 同步 | iCloud（CloudKit + SwiftData） | 免费、零运维、Mac/iPhone 互通 |
-| 状态 | SwiftUI 内置 + `@Observable` 服务对象 | 不引入第三方架构框架 |
-| 测试 | Swift Testing（默认）+ XCTest（必要时） | 新项目用新框架 |
-| OCR | Vision Framework | 端侧识别支付截图 |
-| 语音 | Speech Framework + 端侧 AI 解析 | 离线、隐私 |
-| 自动化 | App Intents + Shortcuts | iOS 自动化录入入口 |
-| 工程管理 | Xcode Project | 由 Xcode 管理 App Target、签名、资源与后续 Extension |
-| 最低系统 | iOS 17 / macOS 14 | SwiftData / Observation 起步要求 |
+当前构建只用于验证 Xcode 工程、资源与历史原型能够运行，不代表第一轮 MVP 已实现。
 
-**不用的东西**：Combine（除非必要）、第三方架构框架、第三方记账 SDK。
+## 二、技术选择
 
----
+### 第一轮 MVP
 
-## 二、目录结构
+| 层 | 选择 | 原因 |
+|---|---|---|
+| UI | SwiftUI | 原生 iOS、无障碍与后续 Widget 复用 |
+| 状态 | SwiftUI 状态 + `@Observable` | 当前复杂度不需要第三方状态框架 |
+| 数据 | SwiftData 本地存储 | iOS 17 原生、模型与 SwiftUI 集成简单 |
+| 金额 | `Decimal` | 避免浮点金额误差 |
+| 测试 | Swift Testing | 领域服务与模型关系作为合并底线 |
+| 格式化 | Foundation FormatStyle | 统一货币、日期和百分比本地化 |
 
-工作目录：`/Users/rexyoung/Desktop/vibe coding/Check_Line/`
+### 后续阶段
 
-```
+以下能力不是当前架构事实，启动前必须重新更新本文：
+
+- 第二轮：Widget、通知、Photos + Vision OCR、Speech 语音录入。
+- 第三轮：心愿数据模型与结算分配关系。
+- 第四轮：App Intents、Shortcuts、分享扩展、Live Activities、macOS Target。
+- iCloud：产品与数据迁移策略确认后再启用 CloudKit，不在本地 MVP 中预接。
+
+## 三、仓库结构
+
+```text
 CheckLine/
-├── README.md              ← 文档门户与导航
-├── AGENTS.md              ← 协作规则
-├── PRODUCT.md             ← 产品宪法（根目录最常读）
-├── .gitignore
-│
-├── Check_Line.xcodeproj/  ← 正式 Xcode 工程
-├── Check_Line/            ← 主 App Target，Xcode 与磁盘自动同步
-│   ├── App/                      ← App 入口、根 Scene
-│   ├── Features/                 ← 业务功能与当前 Prototype
-│   ├── Core/                     ← 模型、领域服务、持久化、Intents
-│   ├── Capture/                  ← 手动/OCR/语音等录入子系统
-│   ├── DesignSystem/             ← Token、组件与动效
-│   ├── Shared/                   ← 平台封装与通用能力
-│   ├── Resources/                ← 本地化与 Sample 数据
-│   └── Assets.xcassets           ← App 图标、颜色与图片资源
-│
-├── docs/
-│   ├── spec/              ← 产品规格层
-│   │   ├── PRD.md                ← 完整产品需求
-│   │   ├── FEATURE-LOOP.md       ← 功能架构循环
-│   │   ├── USER-JOURNEY.md       ← Day 1-30 用户旅程
-│   │   ├── ROADMAP.md            ← 路线图
-│   │   └── GLOSSARY.md           ← 术语表
-│   ├── design/            ← 设计层
-│   │   └── DESIGN.md             ← 设计规范
-│   ├── engineering/       ← 技术层
-│   │   ├── ARCHITECTURE.md       ← 本文件
-│   │   ├── SETUP.md              ← Xcode 工程对接
-│   │   ├── PERMISSIONS.md        ← iOS 权限申请文案与时机
-│   │   └── modules/              ← 从旧源码骨架迁入的模块职责说明
-│   ├── compliance/        ← 合规层
-│   │   └── PRIVACY.md            ← 隐私说明
-│   ├── ui-workflow/       ← UI workflow 分析报告
-│   └── prototype/         ← Stitch 原型 brief 与生成物
-│
-├── Widgets/               ← Widget Extension 源码
-│   ├── BudgetStatusWidget/      ← 预算剩余 + 心愿进度
-│   └── QuickCaptureWidget/      ← 锁屏速记入口
-│
-├── Tests/
-│   └── CheckLineTests/    ← Swift Testing 单测，对应 Core/Features
-│
-└── planning/              ← 不在本仓库，参考 ../planning/
+├── Check_Line.xcodeproj/       正式 Xcode 工程
+├── Check_Line/                 主 App Target 文件系统同步目录
+│   ├── App/                    App 入口与根导航
+│   ├── Features/               按用户能力拆分的功能模块
+│   ├── Core/                   模型、领域服务、持久化
+│   ├── Capture/                记一笔入口，当前只实现 Manual
+│   ├── DesignSystem/           Token、组件、动效、Haptic
+│   ├── Shared/                 格式化、错误与平台封装
+│   ├── Resources/              本地化与 Sample 数据
+│   └── Assets.xcassets
+├── docs/                       当前文档、设计资料与历史档案
+└── scripts/                    原型辅助脚本
 ```
 
-> 实际 Xcode 工程的 Group 结构与上面磁盘目录保持一一对应，避免出现「工程里看到 A，磁盘上找不到 A」。
+当前磁盘中尚未出现的模块目录属于实施目标，不需要为结构完整提前创建空目录。
 
----
+## 四、模块边界
 
-## 三、模块边界（重要）
-
-```
+```text
 App
- ↓
-Features (Budget / Expense / Settlement / Wish / Insights)
- ↓                                   ↓
-Capture (Manual / OCR / Voice)       │
- ↓                                   │
-Core (Models / Services / Persistence / Intents)  ← DesignSystem  ← Shared
- ↑
-Widgets （只读 Core）
+ ├── Features
+ │    ├── Budget
+ │    ├── Expense
+ │    ├── Settlement
+ │    ├── Insights
+ │    └── Settings
+ ├── Capture/Manual
+ ├── Core
+ │    ├── Models
+ │    ├── Services
+ │    └── Persistence
+ ├── DesignSystem
+ └── Shared
 ```
 
-规则：
-- **Features 之间不能直接互相 import**。两个 Feature 共用的逻辑下沉到 `Core/Services/`。
-- **Core 不能 import SwiftUI**（保持纯逻辑可测）。
-- **Capture 子模块只能向上调用 Core**，不能跨 Feature。
-- **DesignSystem 不能 import Features**（被所有 Feature 共用）。
-- **Widgets 只读 Core / Intents**，不依赖 Features。
-- **App Intents 必须放在 Core/Intents/**，因为 Widget Extension 也要共用。
+约束：
 
-> AI 协作时如果发现要跨边界引用，先停下来跟产品（你）对齐：是不是需要把某段逻辑下沉。
+- `App` 只装配根导航、环境和依赖，不放业务计算。
+- Feature 之间不直接互相 import；共享规则进入 `Core/Services`。
+- `Core` 不 import SwiftUI，金额和结算逻辑保持纯 Swift 可测。
+- Feature 不直接散落 SwiftData 查询，统一通过 Core 提供的查询或服务边界。
+- `Capture/Manual` 产出统一 `ExpenseDraft`，提交前必须由用户确认。
+- `DesignSystem` 不依赖 Feature。
+- 平台条件代码集中到 `Shared/Platform`。
+- 没有进入当前里程碑的 Widget、OCR、Voice、Wish、Intents 不预建实现。
 
----
+## 五、第一轮 MVP 数据模型
 
-## 四、数据模型（基于功能架构循环）
+这些字段是当前实施基线。任何增删、改名或类型变化都先更新本文，再设计 SwiftData Schema 与迁移。
 
-> 用 SwiftData，下面是字段表；进入正式数据层实现时再按版本计划翻成 `@Model class`。
-
-### 4.1 `Budget` 预算
+### 5.1 Budget
 
 | 字段 | 类型 | 说明 |
-|------|------|------|
-| `id` | UUID | 主键 |
-| `name` | String | 例：「6 月生活」「京都旅行」 |
-| `themeTemplate` | String | 模板枚举：`monthly` / `travel` / `date` / `study` / `custom` |
-| `cycleType` | enum | `repeating`（重复型）/ `oneShot`（单次型） |
+|---|---|---|
+| `id` | UUID | 本地主键 |
+| `name` | String | 预算名称 |
+| `themeTemplate` | String | `monthly / travel / study / custom` |
+| `cycleType` | String | `repeating / oneShot` |
 | `startDate` | Date | 周期开始 |
 | `endDate` | Date | 周期结束 |
 | `totalAmount` | Decimal | 预算总额 |
 | `currencyCode` | String | 默认 `CNY` |
-| `categories` | [BudgetCategory] | 分类列表（关系） |
-| `overrunStrategy` | enum | `warnOnly` / `deductFromWish` |
-| `defaultWish` | Wish? | 预设结余转入心愿，可空 |
-| `state` | enum | `draft` / `active` / `settling` / `archived` |
-| `createdAt` | Date | |
+| `overrunStrategy` | String | `warnOnly / strictReview` |
+| `state` | String | `draft / active / settling / archived` |
+| `createdAt` | Date | 创建时间 |
 
-**派生属性（运行时算，不持久化）**：
-- `spent`：本预算已用总和
-- `remaining`：`totalAmount - spent`
-- `progress`：`spent / totalAmount`
+不持久化的派生值：
 
-### 4.2 `BudgetCategory` 预算分类
+- `spent`：有效 binding 的 `recordedAmount` 合计。
+- `remaining`：`totalAmount - spent`。
+- `progress`：`spent / totalAmount`，总额为 0 时按明确边界返回。
+
+当前 Budget 不包含 `defaultWish` 或任何心愿关系。
+
+### 5.2 BudgetCategory
 
 | 字段 | 类型 | 说明 |
-|------|------|------|
-| `id` | UUID | |
+|---|---|---|
+| `id` | UUID | 本地主键 |
 | `budget` | Budget | 所属预算 |
-| `name` | String | 例：「伙食」「聚会」「市内交通」 |
-| `allocatedAmount` | Decimal | 分到该类的额度 |
-| `iconName` | String | SF Symbol 名 |
+| `name` | String | 分类名称 |
+| `allocatedAmount` | Decimal | 分类额度 |
+| `iconName` | String | SF Symbol 名称 |
 | `colorHex` | String | 主题色 |
-| `sortIndex` | Int | 排序 |
+| `sortIndex` | Int | 用户排序 |
 
-### 4.3 `Expense` 一笔消费
+### 5.3 Expense
 
 | 字段 | 类型 | 说明 |
-|------|------|------|
-| `id` | UUID | 主键（同一笔只有一份） |
-| `amount` | Decimal | 金额 |
-| `note` | String? | 备注 |
+|---|---|---|
+| `id` | UUID | 一笔消费只存一份 |
+| `amount` | Decimal | 消费金额 |
+| `note` | String? | 用户备注 |
 | `occurredAt` | Date | 发生时间 |
-| `captureSource` | enum | `manual` / `widget` / `ocr` / `voice` / `share` / `shortcut` |
-| `bindings` | [BudgetExpenseBinding] | 关联的预算们（多对多） |
-| `merchantHint` | String? | OCR / 通知抓到的商户线索 |
+| `captureSource` | String | 当前只有 `manual` |
+| `createdAt` | Date | 创建时间 |
 
-### 4.4 `BudgetExpenseBinding` 预算-消费 关联表
+OCR、语音、Widget 等来源进入对应阶段时再扩展 `captureSource`，不为未来来源提前增加权限或业务字段。
 
-> 多对多中间表。一笔消费在每个被关联的预算里都有一条 binding，预算消耗是按 binding 算的。
+### 5.4 BudgetExpenseBinding
 
 | 字段 | 类型 | 说明 |
-|------|------|------|
-| `id` | UUID | |
-| `budget` | Budget | |
-| `expense` | Expense | |
+|---|---|---|
+| `id` | UUID | 本地主键 |
+| `budget` | Budget | 被计入的预算 |
+| `expense` | Expense | 同一笔消费 |
 | `category` | BudgetCategory | 该预算下的分类 |
-| `recordedAmount` | Decimal | 在此预算下的计入金额（默认 = expense.amount） |
-| `finalAttribution` | enum? | 结算时确定：`included` / `excluded` / `partial`（v2） |
-| `createdAt` | Date | |
+| `recordedAmount` | Decimal | 在该预算中计入的金额，默认等于 Expense.amount |
+| `finalAttribution` | String? | 结算确认后的 `included / excluded` |
+| `createdAt` | Date | 建立关系时间 |
 
-> **关键**：一笔 ¥38 同时归到「京都」和「生活」两个预算，会产生 2 条 binding，每条 binding 的 `recordedAmount = 38`。结算时用户可以把生活那条标记为 `excluded`，让生活预算的计入金额回滚。
+一笔消费选择两个预算时生成两个 binding，但 Expense 只有一份。关联账处理必须由用户确认，系统不自动选归属。
 
-### 4.5 `Settlement` 结算
+### 5.5 Settlement
 
 | 字段 | 类型 | 说明 |
-|------|------|------|
-| `id` | UUID | |
-| `budget` | Budget | |
+|---|---|---|
+| `id` | UUID | 本地主键 |
+| `budget` | Budget | 被结算预算 |
 | `settledAt` | Date | 结算时间 |
-| `totalSpent` | Decimal | 该预算最终支出 |
-| `surplus` | Decimal | 结余 = totalAmount - totalSpent |
-| `triggerType` | enum | `auto`（重复型自动）/ `manual`（用户点击） |
-| `wishAllocations` | [WishAllocation] | 用户分配到各心愿的金额 |
+| `totalSpent` | Decimal | 用户确认后的最终支出 |
+| `surplus` | Decimal | `totalAmount - totalSpent` |
+| `triggerType` | String | `auto / manual` |
 
-### 4.6 `WishAllocation` 心愿分配
+当前 Settlement 只保存结算结果，不包含 `WishAllocation`。
 
-| 字段 | 类型 | 说明 |
-|------|------|------|
-| `id` | UUID | |
-| `settlement` | Settlement | |
-| `wish` | Wish | |
-| `amount` | Decimal | 分配到该心愿的金额 |
+## 六、领域服务
 
-> 同一次结算可以拆分到多个心愿，所有 amount 之和 = settlement.surplus。
+| 服务 | 当前职责 |
+|---|---|
+| `BudgetEngine` | 计算已用、剩余、进度、分类状态 |
+| `SettlementEngine` | 生成结算清单并计算最终支出与结余 |
+| `LinkedExpenseDetector` | 按 ExpenseID 识别一笔多属 |
+| `OverrunPolicy` | 生成 `warnOnly / strictReview` 对应的用户反馈，不自动挪钱 |
+| `CycleScheduler` | 处理重复型下一周期和单次型归档 |
+| `Formatters` | 统一货币、日期与百分比展示 |
 
-### 4.7 `Wish` 心愿
+当前没有 `WishLedger`、`deductFromWish` 或结算转心愿服务。
 
-| 字段 | 类型 | 说明 |
-|------|------|------|
-| `id` | UUID | |
-| `name` | String | 例：「京都樱花季」 |
-| `targetAmount` | Decimal | 目标金额 |
-| `iconName` | String | |
-| `colorHex` | String | |
-| `state` | enum | `active` / `achieved` / `archived` |
-| `createdAt` | Date | |
-| `achievedAt` | Date? | |
+## 七、关键数据流
 
-**派生属性**：
-- `accruedAmount`：所有 `WishAllocation` + 手动 `WishContribution` 的总和
-- `progress`：`accruedAmount / targetAmount`
+### 记一笔
 
-### 4.8 `WishContribution` 心愿手动入账
-
-| 字段 | 类型 | 说明 |
-|------|------|------|
-| `id` | UUID | |
-| `wish` | Wish | |
-| `amount` | Decimal | 可正可负（用户调整） |
-| `note` | String? | |
-| `occurredAt` | Date | |
-
----
-
-## 五、关键领域服务
-
-| Service | 职责 | 所在层 |
-|---------|------|------|
-| `BudgetEngine` | 给定 Budget 算已用、剩余、进度、日均 | Core/Services |
-| `SettlementEngine` | 触发结算、计算结余、生成关联账清单 | Core/Services |
-| `LinkedExpenseDetector` | 识别同时归多预算的关联账（按 ExpenseID） | Core/Services |
-| `WishLedger` | 心愿入账、达成判断、累积计算 | Core/Services |
-| `CycleScheduler` | 重复型预算到期自动延续 / 单次型归档 | Core/Services |
-| `OverrunHandler` | 处理超支策略（warn / deductFromWish） | Core/Services |
-| `Formatters` | 货币、日期、百分比统一格式化 | Shared |
-| `HapticsCenter` | 预算消耗 / 结算 / 达成 / 提醒 四种触感反馈 | DesignSystem |
-| `OCRParser` | 截图识别金额 + 商户 | Capture/OCR |
-| `VoiceParser` | 语音转 Expense 的解析 | Capture/Voice |
-
-### 5.1 SettlementEngine 关键流程
-
-```
-触发结算（auto 或 manual）
-  ↓
-读取 Budget 所有 Bindings
-  ↓
-计算 totalSpent（sum of binding.recordedAmount where finalAttribution != excluded）
-  ↓
-LinkedExpenseDetector 找出 ExpenseID 在 ≥ 2 个 Budget 中的记录
-  ↓
-返回结算清单 ViewModel：
-  · 总支出
-  · 关联账列表（待用户确认）
-  · 预估结余
-  ↓
-用户在 UI 上做：
-  · 关联账归属决策（更新对应 binding.finalAttribution）
-  · 心愿分配（创建 WishAllocations）
-  ↓
-提交结算：
-  · 创建 Settlement 记录
-  · 写入 WishAllocations
-  · 触发结算高光动画
-  · 更新 Budget.state = archived
-  · 如果是 repeating，CycleScheduler 创建下一周期
+```text
+用户输入金额
+ -> 选择一个或多个预算
+ -> 为每个预算选择分类
+ -> 用户点击「记下这笔」
+ -> 创建一份 Expense
+ -> 为每个已选预算创建一份 Binding
+ -> BudgetEngine 重新派生各预算状态
 ```
 
----
+### 结算
 
-## 六、跨平台与命名分区
+```text
+预算到期或用户主动进入结算
+ -> SettlementEngine 汇总 binding
+ -> LinkedExpenseDetector 列出关联账
+ -> 用户确认每条关联账归属
+ -> 重新计算 totalSpent 与 surplus
+ -> 保存 Settlement
+ -> 重复型开启下一周期 / 单次型归档
+```
 
-- **App Display Name**：通过 `InfoPlist.strings` 给 zh-Hans 设为「预算线」，en 设为「CheckLine」。代码里所有字符串走 `String(localized:)`。
-- **平台条件编译**：`#if os(iOS)` / `#if os(macOS)` 集中在 `Shared/Platform/` 下，业务代码不直接写。
-- **窗口/导航**：iOS 走 `TabView`，macOS 走 `NavigationSplitView`，由 `App/RootScene.swift` 路由。
-- **Mac 独占特性**（v1.1）：菜单栏速记、全局快捷键、剪贴板速记 —— 全部走 `Shared/Platform/macOS/`。
+## 八、存储与隐私边界
 
----
+- 第一轮 MVP 只使用本地 SwiftData，不启用 CloudKit。
+- 不连接银行、支付宝、微信或任何真实资金账户。
+- 不接自有后端，不上传预算、金额、分类或备注。
+- 不接 Analytics、Tracking、广告或第三方崩溃收集 SDK。
+- Sample 数据使用虚构名称和金额。
+- 日志不得输出真实金额、预算名或备注。
 
-## 七、依赖与三方包策略
+## 九、本地化与错误
 
-- 默认零依赖。
-- 真要加，必须满足：开源活跃、维护稳定、license 兼容（MIT / Apache 2 优先）。
-- 加之前在本文档「依赖清单」一节登记理由，避免越加越多。
+- App 默认名 `CheckLine`，简体中文通过 `InfoPlist.strings` 显示「预算线」。
+- 所有用户可见字符串同时维护 `zh-Hans` 与 `en`。
+- 金额使用 `Decimal.FormatStyle.Currency`，日期使用系统 FormatStyle。
+- 用户错误不暴露 SQLite、SwiftData 或系统错误码。
+- 可恢复错误由 ViewModel 转换为用户可理解的状态，Service 不使用 `fatalError()`。
 
-### 依赖清单
+## 十、测试基线
 
-（暂无）
+当前没有 Test Target。开始正式模型与服务实现前必须先建立 Swift Testing Target。
 
----
+最低覆盖：
 
-## 八、构建与运行
+- BudgetEngine 的 0 金额、边界金额、超出金额与多 binding。
+- SettlementEngine 的重复型、单次型、结余与负结余。
+- LinkedExpenseDetector 的单预算、多预算、包含/排除确认。
+- OverrunPolicy 的两种策略，确认不会自动修改其他预算。
+- SwiftData 的模型关系、删除行为和迁移。
 
-- 查看 Scheme：`xcodebuild -project Check_Line.xcodeproj -list`
-- iOS 模拟器构建：`xcodebuild -project Check_Line.xcodeproj -scheme Check_Line -destination 'platform=iOS Simulator,name=iPhone 15 Pro' build`
-- 运行：用 Xcode 打开 `Check_Line.xcodeproj`，选择 iPhone/iPad 模拟器或已签名真机。
-- 单测：当前尚未建立 Test Target；进入 Core/Services 实现前补齐，并以 `Cmd + U` 作为最低验收线。
+UI 仍需在 iPhone 小屏、Pro Max、iPad 分屏和 Dynamic Type 下人工验收。
 
----
+## 十一、依赖与能力门槛
 
-## 九、可观测性与调试
+- 当前不引入第三方运行时依赖。
+- 新依赖必须说明解决的问题、包体与维护成本、隐私影响和可替代方案。
+- iCloud、Widget、通知、OCR、语音或新 Target 启动前，先同步路线图、权限、隐私与架构。
+- 心愿阶段启动前，先更新 PRODUCT、PRD、FEATURE-LOOP、GLOSSARY 和本文，再设计 Schema。
 
-- 所有领域服务的关键计算（预算消耗 / 结算 / 心愿入账）必须可单测，纯函数实现。
-- 统计与消费日历当前先作为 PRD 和 Stitch 原型范围存在；正式实现前如需新增聚合字段或索引，必须先回到本文件登记数据模型影响。
-- 调试模式下 `Resources/Sample/` 提供 sample 数据，一键塞进 SwiftData 容器。
-- 错误用 `OSLog` 分 category：`Budget` / `Settlement` / `Capture` / `Sync`。
+## 十二、已知缺口
 
----
+- 正式 MVP UI 尚未开始，当前 SwiftUI 原型与产品文案不一致。
+- SwiftData Schema 与迁移计划尚未建立。
+- Test Target 和 CI 尚未建立。
+- 真机签名、App 图标和 App Store 配置尚未完成。
 
-## 十、未决问题（先记录，不阻塞）
+## 相关文档
 
-- iCloud schema 演进策略：第一次发版前定 schema version 命名规则
-- Widget Family 覆盖范围：MVP 上线哪几个尺寸
-- macOS 菜单栏入口：是否做菜单栏小窗口（倾向 v1.1）
-- 通知策略：是否在「线快用完」时提醒，频率怎么控
-- OCR 精度：截图识别准确率怎么衡量、识别失败怎么 fallback
-- 语音解析模型：用 Apple 端侧还是接小模型 API
-- 关联账识别策略升级：v2 是否引入 LLM 智能识别（不止 ExpenseID 关联，还能按时间+金额近似匹配）
+- `../../PRODUCT.md`
+- `../product/PRD.md`
+- `../product/FEATURE-LOOP.md`
+- `../product/ROADMAP.md`
+- `../design/DESIGN.md`
+- `SETUP.md`
+- `PERMISSIONS.md`
+- `../compliance/PRIVACY.md`

@@ -25,19 +25,17 @@
 
 `Check_Line/` 是主 App Target 的 Xcode 文件系统同步目录。放入该目录的 Swift 源码与资源会自动出现在 Project Navigator 中，Group 与磁盘目录保持一致。
 
-模块说明文档统一放在 `docs/engineering/modules/`，不要把多个同名 `README.md` 放进 App Target 目录；Xcode 会把它们当作资源复制到 App 包并产生同名冲突。
+当前文档入口统一放在 `docs/`，不要把 README 等开发文档放进 App Target；Xcode 会把目标目录内的非源码文件当作 App 资源处理。
 
 ```text
 Check_Line/
-├── App/                 # App 入口与根 Scene
-├── Features/            # 业务功能；迁移后的 Prototype 位于这里
-├── Core/                # 数据模型、领域服务、持久化、Intents
-├── Capture/             # 手动/OCR/语音等录入能力
-├── DesignSystem/        # 设计 Token、组件、动效
-├── Shared/              # 平台封装与通用能力
-├── Resources/           # 本地化、Sample 数据
-└── Assets.xcassets      # App 图标、颜色与图片
+├── App/                 # 当前 App 入口
+├── Features/Prototype/  # 迁入的历史交互原型
+├── Resources/           # 中英文本地化
+└── Assets.xcassets      # App 图标、颜色与图片资源
 ```
+
+`Core`、正式 Feature、Capture、DesignSystem 与 Shared 会在对应 MVP 工作开始时按 `ARCHITECTURE.md` 建立，不预建空目录。
 
 旧项目的 `Package.swift` 和独立 Runner 已退出当前工程，避免同时维护 Swift Package 与 Xcode App 两套入口。它们仍可从 Git 历史中追溯。
 
@@ -79,3 +77,5 @@ xcodebuild \
 - 产品代码与文档的主目录：当前仓库
 - 旧目录 `/Users/rexyoung/Desktop/vibe coding/mac&ios/CheckLine/` 保持不动，仅作为迁移完成后的本地安全备份
 - Git 远端继续使用 `https://github.com/RexYoung000/CheckLine.git`
+
+文档入口见 `../README.md`，当前工程结构和未来模块边界见 `ARCHITECTURE.md`。

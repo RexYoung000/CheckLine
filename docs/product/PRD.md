@@ -69,9 +69,9 @@ https://stitch.withgoogle.com/projects/11707032164273888537
 
 心愿不作为当前版本独立 Tab。
 
-### 3.2 macOS 结构
+### 3.2 macOS 结构（第四轮预案）
 
-macOS 使用 `NavigationSplitView`：
+当前没有 macOS Target，以下内容只作为第四轮平台扩展预案，不进入当前 MVP 验收。届时优先使用 `NavigationSplitView`：
 
 - 侧栏：首页 / 预算 / 统计 / 我的
 - 内容区：选中模块详情

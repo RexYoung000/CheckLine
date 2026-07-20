@@ -35,5 +35,5 @@
 
 - `scripts/stitch-generate.js` 只允许写入正式项目 `3997330998345861813`，不会再自动创建新项目。
 - `--create-project` 已禁用，避免再次污染 Stitch 最近项目列表。
-- 脚本仍指向历史生成项目，当前如需重新生成，应先按 `checkline-full-app-brief.md` 的 8 页范围更新脚本配置。
+- 脚本已收敛为 `checkline-full-app-brief.md` 的 8 个核心页面；实际生成前仍需确认目标项目与现有首页 Screen ID。
 - 先用 `npm run stitch:check` 检查配置和页面清单，不会生成页面。

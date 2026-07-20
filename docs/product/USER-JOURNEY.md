@@ -4,7 +4,7 @@
 > 当前版本聚焦「预算钱包闭环」：建预算、记一笔、看预算详情、看统计、完成结算、回看结果。
 > 长期情感激励功能后置，不进入本轮旅程和验收。
 >
-> 配套阅读：`PRODUCT.md`、`docs/spec/PRD.md`、`docs/spec/FEATURE-LOOP.md`、`docs/spec/ROADMAP.md`。
+> 配套阅读：`../../PRODUCT.md`、`PRD.md`、`FEATURE-LOOP.md`、`ROADMAP.md`。
 
 ---
 

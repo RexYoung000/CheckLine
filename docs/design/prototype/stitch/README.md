@@ -25,19 +25,22 @@ https://stitch.withgoogle.com/projects/11707032164273888537
 |------|------|
 | `checkline-full-app-brief.md` | 当前版本 Stitch 生成 brief：预算钱包主线，8 个核心页面 + 可选结算/教程/空状态 |
 | `reference-index.md` | 旧「预算钱包」Stitch 工程参考索引 |
-| `online-project-cleanup.md` | Stitch 线上重复项目整理说明：保留哪个、哪些可删除、如何避免再次污染 |
 
-历史说明：历史深色 14 页 CheckLine 生成稿已经从当前工作区清理，当前不再作为主设计方向。旧「预算钱包」参考资料保留在 `docs/prototype/stitch-reference/`。
+历史线上项目清理记录已归档到 `docs/archive/stitch-online-project-cleanup.md`。
+
+历史说明：历史深色 14 页 CheckLine 生成稿已经退出当前主线。旧「预算钱包」参考资料保留在 `docs/design/references/stitch-budget-wallet/`。
 
 当前本地原型入口：
 
-`docs/prototype/checkline-current-prototype.html`
+`docs/design/prototype/checkline-current.html`
 
 布局检查补充参考：
 
 https://developer.apple.com/design/human-interface-guidelines/layout
 
 Apple HIG Layout 只作为安全区域、边距、触控区域、底部导航和表单可用性的检查底线，不替代旧「预算钱包」的浅色卡片视觉方向。
+
+`scripts/stitch-generate.js` 当前按本 brief 生成 8 个页面，并锁定指定输出项目防止误建项目。实际生成会修改外部 Stitch 项目，运行前必须再次确认 Project ID 和首页 Screen ID；`npm run stitch:check` 只做本地清单检查。
 
 ---
 

@@ -94,10 +94,11 @@ https://stitch.withgoogle.com/projects/11707032164273888537
 启动本轮前必须同步更新：
 
 - `PRODUCT.md`
-- `FEATURE-LOOP.md`
-- `ARCHITECTURE.md`
-- `GLOSSARY.md`
-- `DESIGN.md`
+- `docs/product/PRD.md`
+- `docs/product/FEATURE-LOOP.md`
+- `docs/product/GLOSSARY.md`
+- `docs/engineering/ARCHITECTURE.md`
+- `docs/design/DESIGN.md`
 
 不能在当前 MVP 里提前把心愿数据模型或页面混进来。
 
@@ -137,45 +138,13 @@ https://stitch.withgoogle.com/projects/11707032164273888537
 
 ---
 
-## 六、当前文档收敛计划
+## 六、已完成的基线工作
 
-**目标**：把文档从历史深色 14 页 CheckLine 原型，收敛到旧「预算钱包」浅色卡片设计 + 当前 MVP 范围。
-
-### 6.1 文档交付
-
-- `README.md`：同步当前项目状态、当前设计方向、心愿后置
-- `PRODUCT.md`：保留长期心愿愿景，但明确当前版本不做心愿
-- `PRD.md` / `FEATURE-LOOP.md` / `ROADMAP.md`：移除当前版本心愿主流程和验收要求
-- `DESIGN.md`：改回旧预算钱包的浅色卡片式方向
-- `docs/prototype/stitch-brief/`：记录当前参考 Stitch 链接，并收敛原型范围
-
-### 6.2 Stitch 当前范围
-
-当前版本原型优先覆盖：
-
-- 首页
-- 预算列表
-- 预算详情
-- 新建 / 编辑预算
-- 记一笔弹窗
-- 统计概览
-- 消费记录日历
-- 我的 / 设置
-- 结算清单
-
-不覆盖：
-
-- 心愿列表
-- 心愿详情
-- 心愿达成反馈
-- 结算转心愿分配
-
-### 6.3 验收
-
-- 当前版本章节不再把心愿 Tab、心愿详情、心愿达成、转到心愿写成必做项
-- 当前设计方向不再使用历史深色主题
-- Stitch 文档明确当前参考项目是 `11707032164273888537`
-- 正式代码和数据模型不在本轮擅自改动
+- 产品方向已从历史深色心愿原型收敛到浅色预算钱包主线。
+- 当前原型范围固定为首页、预算、记一笔、统计、消费日历和设置 8 个核心页面，结算作为补充页。
+- 心愿系统移动到第三轮，Widget / OCR / 语音移动到第二轮。
+- 正式 Xcode iOS 工程已经建立，最低系统版本为 iOS 17。
+- 当前文档已按产品、设计、工程、合规和历史档案重新整理，技术与隐私口径对齐第一轮本地 MVP。
 
 ---
 
@@ -183,3 +152,4 @@ https://stitch.withgoogle.com/projects/11707032164273888537
 
 - 2026-07-06：文档方向收敛到旧「预算钱包」浅色卡片主参考；心愿系统移动到第三轮。
 - 2026-07-20：旧 Swift Package 项目迁入正式 Xcode iOS App 工程；保留产品文档、HTML/SwiftUI 原型与 Git 历史，最低系统版本对齐 iOS 17。现有 SwiftUI 页面用于迁移后体验验证，不代表当前 MVP 范围已正式实现。
+- 2026-07-20：文档重组为 `product / design / engineering / compliance / archive` 五层；移除重复模块说明，架构、术语、权限和隐私统一到第一轮本地 MVP。

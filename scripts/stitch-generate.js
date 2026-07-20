@@ -1,14 +1,14 @@
 /**
  * CheckLine Stitch 原型生成器
  *
- * 目标：把完整 14 页原型写入正式 Stitch 项目，不新建临时项目。
+ * 目标：把当前 8 个核心页面写入指定 Stitch 项目，不新建临时项目。
  *
  * 用法：
  *   node stitch-generate.js           # 生成 / 更新正式项目
  *   node stitch-generate.js --dry-run # 只检查配置和页面清单，不生成
  *   node stitch-generate.js --help    # 查看命令说明
  *
- * 输出：../docs/prototype/stitch-output/
+ * 输出：../docs/design/prototype/stitch-output/
  */
 
 import { existsSync, readFileSync } from "node:fs";
@@ -24,8 +24,8 @@ import { StitchToolClient } from "@google/stitch-sdk";
 
 const __dirname = fileURLToPath(new URL(".", import.meta.url));
 const ROOT_DIR = resolve(__dirname, "..");
-const OUTPUT_DIR = resolve(ROOT_DIR, "docs", "prototype", "stitch-output");
-const BRIEF_PATH = resolve(ROOT_DIR, "docs", "prototype", "stitch-brief", "checkline-full-app-brief.md");
+const OUTPUT_DIR = resolve(ROOT_DIR, "docs", "design", "prototype", "stitch-output");
+const BRIEF_PATH = resolve(ROOT_DIR, "docs", "design", "prototype", "stitch", "checkline-full-app-brief.md");
 const EXPECTED_PROJECT_ID = "3997330998345861813";
 const HOME_SCREEN_ID = "76acdb2c1fe04401bac4ab811e6a35b0";
 const MODEL_ID = "GEMINI_3_1_PRO";
@@ -44,7 +44,7 @@ if (wantsHelp) {
 安全规则：
   - 只允许写入正式项目 ${EXPECTED_PROJECT_ID}
   - 不支持自动新建项目
-  - 首页使用 edit_screens 更新现有 screen，其余 13 页追加生成`);
+  - 首页使用 edit_screens 更新现有 screen，其余 7 页追加生成`);
   process.exit(0);
 }
 
@@ -58,18 +58,18 @@ const env = existsSync(envPath) ? readFileSync(envPath, "utf8") : "";
 const API_KEY = env.match(/^STITCH_API_KEY=(.+)$/m)?.[1]?.trim();
 const STITCH_PROJECT_ID = env.match(/^STITCH_PROJECT_ID=(.+)$/m)?.[1]?.trim();
 
-if (!API_KEY) {
+if (!isDryRun && !API_KEY) {
   console.error("❌ 未找到 STITCH_API_KEY，请检查 scripts/.env。");
   process.exit(1);
 }
 
-if (STITCH_PROJECT_ID !== EXPECTED_PROJECT_ID) {
+if (!isDryRun && STITCH_PROJECT_ID !== EXPECTED_PROJECT_ID) {
   console.error(`❌ STITCH_PROJECT_ID 必须是正式项目 ${EXPECTED_PROJECT_ID}。`);
   console.error(`   当前值：${STITCH_PROJECT_ID || "(未设置)"}`);
   process.exit(1);
 }
 
-process.env.STITCH_API_KEY = API_KEY;
+if (API_KEY) process.env.STITCH_API_KEY = API_KEY;
 
 const brief = readFileSync(BRIEF_PATH, "utf8");
 
@@ -79,15 +79,9 @@ const SCREENS = [
   { number: 3, id: "03-budget-detail", name: "预算详情", action: "generate" },
   { number: 4, id: "04-create-budget", name: "新建/编辑预算", action: "generate" },
   { number: 5, id: "05-expense-sheet", name: "记一笔弹窗", action: "generate" },
-  { number: 6, id: "06-wish-list", name: "心愿列表", action: "generate" },
-  { number: 7, id: "07-wish-detail", name: "心愿详情", action: "generate" },
-  { number: 8, id: "08-stats-overview", name: "统计概览", action: "generate" },
-  { number: 9, id: "09-calendar", name: "消费记录日历", action: "generate" },
-  { number: 10, id: "10-settlement", name: "结算清单", action: "generate" },
-  { number: 11, id: "11-settlement-celebration", name: "结算高光", action: "generate" },
-  { number: 12, id: "12-wish-achieved", name: "心愿达成反馈", action: "generate" },
-  { number: 13, id: "13-settings", name: "我的/设置", action: "generate" },
-  { number: 14, id: "14-tutorial", name: "教程卡片", action: "generate" },
+  { number: 6, id: "06-stats-overview", name: "统计概览", action: "generate" },
+  { number: 7, id: "07-calendar", name: "消费记录日历", action: "generate" },
+  { number: 8, id: "08-settings", name: "我的/设置", action: "generate" },
 ];
 
 function sectionBetween(startPattern, endPattern) {
@@ -101,16 +95,17 @@ function sectionBetween(startPattern, endPattern) {
 function pageSection(pageNumber) {
   return sectionBetween(
     new RegExp(`^### 页 ${pageNumber} ·`, "m"),
-    /^### 页 \d+ ·|^## 八、组件规范/m
+    /^### 页 \d+ ·|^### 可选页|^## 六、组件规则/m
   );
 }
 
 const sharedContext = [
-  sectionBetween(/^## 一、生成目标/m, /^## 二、参考项目说明/m),
+  sectionBetween(/^## 一、生成目标/m, /^## 二、输出范围/m),
   sectionBetween(/^## 三、产品心智/m, /^## 四、设计 Token/m),
-  sectionBetween(/^## 四、设计 Token/m, /^## 五、底部导航与全局结构/m),
-  sectionBetween(/^## 十一、文案规则/m, /^## 十二、线条小助手出场点/m),
-  sectionBetween(/^## 十三、无障碍底线/m, /^## 十四、平台差异/m),
+  sectionBetween(/^## 四、设计 Token/m, /^## 五、页面规格/m),
+  sectionBetween(/^## 六、组件规则/m, /^## 七、文案规则/m),
+  sectionBetween(/^## 七、文案规则/m, /^## 八、无障碍底线/m),
+  sectionBetween(/^## 八、无障碍底线/m, /^## 九、交付判断/m),
 ].filter(Boolean).join("\n\n");
 
 function buildPrompt(screen) {
@@ -120,7 +115,7 @@ function buildPrompt(screen) {
 Hard rules:
 - Generate exactly one MOBILE screen.
 - Screen title must be "${screen.name}".
-- Use the "深空暖金" visual direction: #000814 canvas, #0D1B2A cards, #1A73E8 brand blue, #FFB300 celebration gold.
+- Use the current light budget-wallet direction: #F6F6F8 canvas, white cards, #135BEC brand blue, restrained status colors.
 - Keep the UI native iOS, mature, clean, and product-like.
 - Use Chinese user-facing copy.
 - Do not show these user-facing terms: 扣血, 记账, 主预算, 副预算, AI 智能记账.
@@ -196,7 +191,7 @@ async function writeManifest(manifest) {
 }
 
 async function main() {
-  console.log("🚀 CheckLine Stitch 完整原型生成器");
+  console.log("🚀 CheckLine Stitch 当前原型生成器");
   console.log(`📁 正式项目: ${EXPECTED_PROJECT_ID}`);
   console.log(`📄 ${SCREENS.length} 页`);
   console.log(`🤖 模型: ${MODEL_ID}\n`);
@@ -206,7 +201,7 @@ async function main() {
     for (const screen of SCREENS) {
       const n = String(screen.number).padStart(2, "0");
       const action = screen.action === "edit" ? "编辑现有首页" : "追加生成";
-      console.log(`[${n}/14] ${screen.id} · ${screen.name} · ${action}`);
+      console.log(`[${n}/${SCREENS.length}] ${screen.id} · ${screen.name} · ${action}`);
     }
     return;
   }
@@ -237,7 +232,7 @@ async function main() {
       const n = String(screen.number).padStart(2, "0");
       const prompt = buildPrompt(screen);
       const startedAt = new Date().toISOString();
-      console.log(`[${n}/14] ⏳ ${screen.name} (${screen.action === "edit" ? "编辑" : "生成"})...`);
+      console.log(`[${n}/${SCREENS.length}] ⏳ ${screen.name} (${screen.action === "edit" ? "编辑" : "生成"})...`);
 
       const record = {
         id: screen.id,

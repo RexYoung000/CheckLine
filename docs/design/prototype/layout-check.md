@@ -1,6 +1,6 @@
 # CheckLine 当前原型布局检查
 
-> 检查对象：`docs/prototype/checkline-current-prototype.html`
+> 检查对象：`docs/design/prototype/checkline-current.html`
 > 检查日期：2026-07-06
 > 参考：Apple Human Interface Guidelines - Layout
 > https://developer.apple.com/design/human-interface-guidelines/layout

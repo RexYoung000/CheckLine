@@ -13,21 +13,21 @@ https://stitch.withgoogle.com/projects/11707032164273888537
 
 | 参考页 | 本地文件 | 当前可借鉴内容 |
 |--------|----------|----------------|
-| 首页概览 | `docs/prototype/stitch-reference/code/home.html` | 预算钱包横滑卡片、首页信息层级、轻量操作入口 |
-| 预算钱包列表 | `docs/prototype/stitch-reference/code/screen-4f91.html` | 钱包列表、顶部总览卡、分组列表 |
-| 新建钱包 | `docs/prototype/stitch-reference/code/new-wallet.html` | 新建流程的简洁步骤、命名输入、币种选择 |
-| 统计页 | `docs/prototype/stitch-reference/code/stats.html` | 月度大数字、预算 vs 实际柱状图、摘要卡片 |
-| 我的/设置 | `docs/prototype/stitch-reference/code/screen-123e.html` | 个人状态卡、财务管理、通用设置分组 |
+| 首页概览 | `docs/design/references/stitch-budget-wallet/code/home.html` | 预算钱包横滑卡片、首页信息层级、轻量操作入口 |
+| 预算钱包列表 | `docs/design/references/stitch-budget-wallet/code/screen-4f91.html` | 钱包列表、顶部总览卡、分组列表 |
+| 新建钱包 | `docs/design/references/stitch-budget-wallet/code/new-wallet.html` | 新建流程的简洁步骤、命名输入、币种选择 |
+| 统计页 | `docs/design/references/stitch-budget-wallet/code/stats.html` | 月度大数字、预算 vs 实际柱状图、摘要卡片 |
+| 我的/设置 | `docs/design/references/stitch-budget-wallet/code/screen-123e.html` | 个人状态卡、财务管理、通用设置分组 |
 
 ## 截图参考
 
 | 截图 | 用途 |
 |------|------|
-| `docs/prototype/stitch-reference/home.png` | 首页预算钱包横滑参考 |
-| `docs/prototype/stitch-reference/screen-4f91.png` | 预算钱包列表参考 |
-| `docs/prototype/stitch-reference/new-wallet.png` | 新建钱包参考 |
-| `docs/prototype/stitch-reference/stats.png` | 统计页参考 |
-| `docs/prototype/stitch-reference/screen-123e.png` | 我的/设置参考 |
+| `docs/design/references/stitch-budget-wallet/home.png` | 首页预算钱包横滑参考 |
+| `docs/design/references/stitch-budget-wallet/screen-4f91.png` | 预算钱包列表参考 |
+| `docs/design/references/stitch-budget-wallet/new-wallet.png` | 新建钱包参考 |
+| `docs/design/references/stitch-budget-wallet/stats.png` | 统计页参考 |
+| `docs/design/references/stitch-budget-wallet/screen-123e.png` | 我的/设置参考 |
 
 ## 需要继承的部分
 
