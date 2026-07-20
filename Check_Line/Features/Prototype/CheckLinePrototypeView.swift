@@ -26,7 +26,7 @@ public struct CheckLinePrototypeView: View {
     @State private var selectedTab: PrototypeAppTab = .home
     @State private var selectedBudgetID = PrototypeStore.sample().activeBudgets[0].id
     @State private var activeSheet: PrototypeSheet?
-    @State private var alert: PrototypeAlert?
+    @State private var toast: PrototypeToast?
 
     public init() {}
 
@@ -70,7 +70,7 @@ public struct CheckLinePrototypeView: View {
 
             NavigationStack {
                 PrototypeSettingsView(store: store) { title in
-                    showAlert(PrototypeAlert(title: title))
+                    showToast(PrototypeToast(message: title))
                 }
             }
             .tabItem { Label("tab.settings", systemImage: "person.crop.circle") }
@@ -78,21 +78,15 @@ public struct CheckLinePrototypeView: View {
         }
         .tint(CheckLineColor.brand)
         .preferredColorScheme(.light)
-        .alert(item: $alert) { value in
-            if let actionTitle = value.actionTitle {
-                return Alert(
-                    title: Text(value.title),
-                    message: value.message.map(Text.init),
-                    primaryButton: .default(Text(actionTitle), action: value.action),
-                    secondaryButton: .cancel()
-                )
+        .overlay(alignment: .top) {
+            if let toast {
+                PrototypeToastView(toast: toast)
+                .padding(.horizontal, 16)
+                .padding(.top, 56)
+                .transition(.move(edge: .top).combined(with: .opacity))
             }
-            return Alert(
-                title: Text(value.title),
-                message: value.message.map(Text.init),
-                dismissButton: .default(Text("action.close"))
-            )
         }
+        .animation(.spring(response: 0.35, dampingFraction: 0.85), value: toast?.id)
         .sheet(item: $activeSheet) { sheet in
             switch sheet {
             case .capture:
@@ -108,7 +102,7 @@ public struct CheckLinePrototypeView: View {
                 PrototypeCreateBudgetSheet(store: store) { budgetID in
                     selectedBudgetID = budgetID
                     selectedTab = .home
-                    showAlert(PrototypeAlert(title: String(localized: "toast.budget.created")))
+                    showToast(PrototypeToast(message: String(localized: "toast.budget.created")))
                 }
                 .presentationDetents([.large])
                 .presentationDragIndicator(.visible)
@@ -116,7 +110,7 @@ public struct CheckLinePrototypeView: View {
             case .settlement(let budgetID):
                 PrototypeSettlementSheet(store: store, budgetID: budgetID) { destination in
                     selectedTab = destination
-                    showAlert(PrototypeAlert(title: String(localized: "toast.settlement.completed")))
+                    showToast(PrototypeToast(message: String(localized: "toast.settlement.completed")))
                 }
                 .presentationDetents([.large])
                 .presentationDragIndicator(.visible)
@@ -129,31 +123,34 @@ public struct CheckLinePrototypeView: View {
             store.record(draft)
         }
         PrototypeHaptics.success()
-        showAlert(
-            PrototypeAlert(
-                title: String(format: String(localized: "toast.expense.recorded"), currencyText(draft.amount)),
+        showToast(
+            PrototypeToast(
+                message: String(format: String(localized: "toast.expense.recorded"), currencyText(draft.amount)),
                 actionTitle: String(localized: "action.undo"),
                 action: {
                     withAnimation(.easeInOut(duration: 0.3)) {
                         store.undoExpense(id: expense.id)
                     }
-                    showAlert(PrototypeAlert(title: String(localized: "toast.expense.undone")))
+                    showToast(PrototypeToast(message: String(localized: "toast.expense.undone")))
                 }
             )
         )
     }
 
-    private func showAlert(_ value: PrototypeAlert) {
-        alert = value
-    }
-}
+    private func showToast(_ value: PrototypeToast) {
+        withAnimation(.spring(response: 0.35, dampingFraction: 0.85)) {
+            toast = value
+        }
 
-private struct PrototypeAlert: Identifiable {
-    let id = UUID()
-    let title: String
-    var message: String?
-    var actionTitle: String?
-    var action: (() -> Void)?
+        let toastID = value.id
+        Task { @MainActor in
+            try? await Task.sleep(nanoseconds: 5_000_000_000)
+            guard toast?.id == toastID else { return }
+            withAnimation(.spring(response: 0.35, dampingFraction: 0.85)) {
+                toast = nil
+            }
+        }
+    }
 }
 
 #Preview("Current iOS Prototype") {
