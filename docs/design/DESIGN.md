@@ -411,11 +411,13 @@ Tab 4 我的   -> 设置 / 通知 / 关于
 当前阶段不追求最终美术表现，先确认组件性质、系统行为和无障碍语义。体验样机优先直接使用 SwiftUI 默认外观与原生交互：
 
 - App 壳层使用 `TabView`、`NavigationStack`、`Toolbar` 和系统 Sheet。
-- 页面内容优先使用 `List` / `Form`、`Section`、`NavigationLink` 和系统行布局，不用自定义卡片模拟列表。
+- 设置、配置、标准数据列表优先使用 `List` / `Form`、`Section` 和 `NavigationLink`。
+- 钱包横滑、当前钱包摘要和对应明细属于一个连续交互工作区，必须保持空间连续；使用原生 `ScrollView`、`LazyVStack`、`scrollTargetBehavior` 等布局能力组合，不为追求默认系统外观强行拆成多个 `List Section`。
 - 选择与输入使用 `Picker`、`DatePicker`、`Toggle`、`TextField` 和 `Button`，不使用胶囊按钮或自绘网格模拟系统选择器。
 - 进度使用 `ProgressView(value:)`；统计图表优先使用 Apple 原生 `Charts` 框架。
 - 暂停强化圆角卡片、阴影、浮动按钮、Toast、颜色和自绘日历等视觉包装。它们属于后续视觉阶段，不应阻碍当前原生组件替换。
 - 当前页面可以保留最少量的业务展示分组，但不得以品牌样式覆盖系统控件的默认行为、点击反馈、键盘、焦点和 VoiceOver 语义。
+- “原生组件优先”不等于“全部使用默认 List 布局”；组件替换不得改变信息架构、交互顺序或内容归属。
 
 ---
 

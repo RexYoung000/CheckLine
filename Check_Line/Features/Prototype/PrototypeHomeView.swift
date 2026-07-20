@@ -11,37 +11,56 @@ struct PrototypeHomeView: View {
     }
 
     var body: some View {
-        List {
-            Section {
+        ScrollView(showsIndicators: false) {
+            LazyVStack(alignment: .leading, spacing: 16) {
+                HStack {
+                    Text("home.wallets")
+                        .font(.headline)
+                    Spacer()
+                    Button("action.viewAll", action: onShowBudgets)
+                }
+
                 BudgetPager(
                     budgets: store.activeBudgets,
                     selectedBudgetID: $selectedBudgetID
                 )
-                .listRowInsets(EdgeInsets(top: 8, leading: 0, bottom: 8, trailing: 0))
-            } header: {
-                HStack {
-                    Text("home.wallets")
-                    Spacer()
-                    Button("action.viewAll", action: onShowBudgets)
-                }
-            }
 
-            Section(LocalizedStringKey(selectedBudget.name)) {
-                ForEach(selectedBudget.categories.prefix(3)) { category in
-                    PrototypeCategoryRow(category: category)
-                }
-
-                ForEach(Array(store.expenses(for: selectedBudget.id).prefix(3))) { expense in
-                    PrototypeExpenseRow(expense: expense, store: store)
-                }
+                walletContent
             }
+            .padding(.horizontal, 20)
+            .padding(.top, 12)
+            .padding(.bottom, 28)
         }
-        .listStyle(.insetGrouped)
-        .scrollContentBackground(.hidden)
+        .background(CheckLineColor.canvas)
         .navigationTitle(Text("home.title"))
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button("capture.title", systemImage: "plus", action: onCapture)
+            }
+        }
+        .onAppear {
+            if !store.activeBudgets.contains(where: { $0.id == selectedBudgetID }),
+               let first = store.activeBudgets.first {
+                selectedBudgetID = first.id
+            }
+        }
+    }
+
+    private var walletContent: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text(selectedBudget.name)
+                .font(.headline)
+
+            VStack(spacing: 0) {
+                ForEach(selectedBudget.categories.prefix(3)) { category in
+                    PrototypeCategoryRow(category: category)
+                    Divider()
+                }
+
+                ForEach(Array(store.expenses(for: selectedBudget.id).prefix(3))) { expense in
+                    PrototypeExpenseRow(expense: expense, store: store)
+                    Divider()
+                }
             }
         }
     }
@@ -50,16 +69,35 @@ struct PrototypeHomeView: View {
 struct BudgetPager: View {
     let budgets: [PrototypeBudget]
     @Binding var selectedBudgetID: UUID
+    @State private var scrollID: UUID?
 
     var body: some View {
-        TabView(selection: $selectedBudgetID) {
-            ForEach(budgets) { budget in
-                PrototypeBudgetCard(budget: budget)
-                    .tag(budget.id)
+        ScrollView(.horizontal, showsIndicators: false) {
+            LazyHStack(spacing: 12) {
+                ForEach(budgets) { budget in
+                    PrototypeBudgetCard(budget: budget)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .containerRelativeFrame(.horizontal, count: 1, span: 1, spacing: 12)
+                        .id(budget.id)
+                }
+            }
+            .scrollTargetLayout()
+        }
+        .scrollTargetBehavior(.viewAligned)
+        .scrollPosition(id: $scrollID)
+        .frame(height: 174)
+        .onAppear { scrollID = selectedBudgetID }
+        .onChange(of: scrollID) { _, newValue in
+            guard let newValue, newValue != selectedBudgetID else { return }
+            selectedBudgetID = newValue
+            PrototypeHaptics.selection()
+        }
+        .onChange(of: selectedBudgetID) { _, newValue in
+            guard scrollID != newValue else { return }
+            withAnimation(.easeInOut(duration: 0.2)) {
+                scrollID = newValue
             }
         }
-        .frame(height: 210)
-        .tabViewStyle(.page(indexDisplayMode: .automatic))
     }
 }
 
