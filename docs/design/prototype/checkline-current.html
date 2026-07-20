@@ -179,6 +179,7 @@
     .wallet-card {
       min-width: 316px;
       scroll-snap-align: center;
+      scroll-snap-stop: always;
       text-align: left;
       padding: 20px;
       background: var(--card);
@@ -251,6 +252,38 @@
       background: var(--bar-color, var(--brand));
       border-radius: inherit;
       transition: width .3s ease, background .3s ease;
+    }
+
+    @keyframes amount-feedback {
+      0% { transform: translateY(0); opacity: 1; }
+      45% { transform: translateY(-3px); opacity: .72; }
+      100% { transform: translateY(0); opacity: 1; }
+    }
+
+    .budget-updated .money {
+      animation: amount-feedback .36s ease;
+    }
+
+    .wallet-dots {
+      min-height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      margin-top: 2px;
+    }
+
+    .wallet-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: #cbd5e1;
+      transition: width .18s ease, background .18s ease;
+    }
+
+    .wallet-dot.active {
+      width: 18px;
+      background: var(--brand);
     }
 
     .percent {
@@ -638,6 +671,22 @@
       display: flex;
     }
 
+    .toast-message {
+      min-width: 0;
+      flex: 1;
+    }
+
+    .toast-action {
+      min-height: 36px;
+      padding: 0 10px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, .14);
+      color: white;
+      font-size: 13px;
+      font-weight: 900;
+      flex: 0 0 auto;
+    }
+
     .calendar-grid {
       display: grid;
       grid-template-columns: repeat(7, 1fr);
@@ -660,6 +709,7 @@
     }
 
     .day {
+      min-height: 44px;
       background: white;
       color: var(--sub);
       border: 1px solid rgba(226, 232, 240, .7);
@@ -739,6 +789,20 @@
         min-width: calc(100vw - 70px);
       }
     }
+
+    @media (prefers-reduced-motion: reduce) {
+      .app-scroll {
+        scroll-behavior: auto;
+      }
+
+      *,
+      *::before,
+      *::after {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+      }
+    }
   </style>
 </head>
 <body>
@@ -754,7 +818,7 @@
       </nav>
       <div id="toast" class="toast" role="status" aria-live="polite"></div>
       <div id="sheetCover" class="sheet-cover"></div>
-      <section id="captureSheet" class="sheet" aria-label="记一笔弹窗"></section>
+      <section id="captureSheet" class="sheet" role="dialog" aria-modal="true" aria-hidden="true" aria-label="记一笔弹窗"></section>
     </div>
   </main>
 
@@ -779,11 +843,15 @@
       route: "home",
       selectedBudgetId: "life",
       selectedDay: 6,
+      calendarFilter: "all",
       settlementBudgetId: null,
+      settlementChoices: {},
+      pendingBudgetAnimation: null,
       capture: {
         amount: 38,
         category: "交通",
-        budgetIds: new Set(["life"])
+        budgetIds: new Set(["life"]),
+        note: "地铁到展馆"
       },
       budgets: [
         {
@@ -872,6 +940,14 @@
       return currency.format(Math.max(0, Math.round(value)));
     }
 
+    function attributeValue(value) {
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;");
+    }
+
     function pct(budget) {
       if (!budget.total) return 0;
       return Math.min(100, Math.round((budget.spent / budget.total) * 100));
@@ -920,11 +996,74 @@
       render();
     }
 
-    function showToast(text) {
-      toast.textContent = text;
+    function showToast(text, action = null) {
+      toast.replaceChildren();
+      const message = document.createElement("span");
+      message.className = "toast-message";
+      message.textContent = text;
+      toast.append(message);
+
+      if (action) {
+        const button = document.createElement("button");
+        button.className = "toast-action";
+        button.type = "button";
+        button.textContent = action.label;
+        button.addEventListener("click", () => {
+          window.clearTimeout(showToast.timer);
+          toast.classList.remove("show");
+          action.run();
+        });
+        toast.append(button);
+      }
+
       toast.classList.add("show");
       window.clearTimeout(showToast.timer);
-      showToast.timer = window.setTimeout(() => toast.classList.remove("show"), 1800);
+      showToast.timer = window.setTimeout(() => toast.classList.remove("show"), action ? 4200 : 1800);
+    }
+
+    function budgetProgressSnapshot(ids) {
+      return Object.fromEntries(ids.map((id) => [id, pct(budgetById(id))]));
+    }
+
+    function queueBudgetAnimation(beforeProgress) {
+      state.pendingBudgetAnimation = { beforeProgress };
+    }
+
+    function animatePendingBudgetChanges() {
+      const pending = state.pendingBudgetAnimation;
+      if (!pending) return;
+      state.pendingBudgetAnimation = null;
+
+      window.requestAnimationFrame(() => {
+        Object.entries(pending.beforeProgress).forEach(([id, oldProgress]) => {
+          document.querySelectorAll(`[data-budget-id="${id}"]`).forEach((container) => {
+            container.classList.add("budget-updated");
+            window.setTimeout(() => container.classList.remove("budget-updated"), 420);
+            container.querySelectorAll("[data-budget-progress]").forEach((bar) => {
+              const newProgress = pct(budgetById(id));
+              bar.style.width = `${oldProgress}%`;
+              void bar.offsetWidth;
+              bar.style.width = `${newProgress}%`;
+            });
+          });
+        });
+      });
+    }
+
+    function rollbackExpense(expense) {
+      const index = state.expenses.findIndex((item) => item.id === expense.id);
+      if (index < 0) return;
+      const beforeProgress = budgetProgressSnapshot(expense.budgetIds);
+      state.expenses.splice(index, 1);
+      expense.budgetIds.forEach((id) => {
+        const budget = budgetById(id);
+        budget.spent = Math.max(0, budget.spent - expense.amount);
+        const category = budget.categories.find((item) => item.name === expense.category) || budget.categories[budget.categories.length - 1];
+        category.spent = Math.max(0, category.spent - expense.amount);
+      });
+      queueBudgetAnimation(beforeProgress);
+      render();
+      showToast("已撤销这笔记录");
     }
 
     function pageTop(title, subtitle, right = "") {
@@ -956,7 +1095,7 @@
       const selected = budget.id === state.selectedBudgetId ? " selected" : "";
       const topCategories = budget.categories.slice(0, 2);
       return `
-        <button class="wallet-card${selected}" type="button" data-action="select-budget" data-id="${budget.id}" aria-label="查看${budget.name}">
+        <button class="wallet-card${selected}" type="button" data-action="select-budget" data-id="${budget.id}" data-budget-id="${budget.id}" aria-label="查看${budget.name}" aria-pressed="${budget.id === state.selectedBudgetId}">
           <div class="wallet-top">
             <div>
               <h3>${budget.name}</h3>
@@ -968,7 +1107,7 @@
             </div>
           </div>
           <div class="progress-row" aria-label="已用 ${progress}%">
-            <div class="bar" style="--value:${progress}%; --bar-color:${barColor(progress)}"><span></span></div>
+            <div class="bar" style="--value:${progress}%; --bar-color:${barColor(progress)}"><span data-budget-progress></span></div>
             <span class="percent">${progress}%</span>
           </div>
           <div class="chips">
@@ -1012,24 +1151,11 @@
       return `${date.getMonth() + 1}/${date.getDate()}`;
     }
 
-    function renderHome() {
-      const budget = selectedBudget();
+    function renderHomeLinkedContent(budget) {
       const recent = state.expenses.filter((item) => item.budgetIds.includes(budget.id)).slice(0, 3);
       return `
-        ${pageTop("预算线", "7月6日")}
         <div class="section-head">
-          <h2>预算钱包</h2>
-          <button class="text-btn" type="button" data-route="budgets" data-tab="budgets">查看全部</button>
-        </div>
-        <div class="wallet-strip">
-          ${activeBudgets().map(walletCard).join("")}
-          <button class="empty-add" type="button" data-route="create" data-tab="budgets" aria-label="新建预算">
-            <span style="font-size:28px">+</span>
-            <span>新建预算</span>
-          </button>
-        </div>
-        <div class="section-head">
-          <h2>当前钱包列表</h2>
+          <h2>${budget.name}</h2>
           <button class="text-btn" type="button" data-route="detail" data-tab="budgets">详情</button>
         </div>
         <div class="list">
@@ -1056,10 +1182,34 @@
       `;
     }
 
+    function renderHome() {
+      const budget = selectedBudget();
+      const active = activeBudgets();
+      return `
+        ${pageTop("预算线", "7月6日")}
+        <div class="section-head">
+          <h2>预算钱包</h2>
+          <button class="text-btn" type="button" data-route="budgets" data-tab="budgets">查看全部</button>
+        </div>
+        <div class="wallet-strip">
+          ${active.map(walletCard).join("")}
+          <button class="empty-add" type="button" data-route="create" data-tab="budgets" aria-label="新建预算">
+            <span style="font-size:28px">+</span>
+            <span>新建预算</span>
+          </button>
+        </div>
+        <div class="wallet-dots" aria-hidden="true">
+          ${active.map((item) => `<span class="wallet-dot ${item.id === budget.id ? "active" : ""}" data-wallet-dot="${item.id}"></span>`).join("")}
+        </div>
+        <div id="homeLinkedContent">
+          ${renderHomeLinkedContent(budget)}
+        </div>
+      `;
+    }
+
     function renderBudgets() {
       const settling = state.budgets.filter((item) => item.status === "settling");
       const active = state.budgets.filter((item) => item.status === "active");
-      const spent = state.budgets.reduce((sum, item) => sum + item.spent, 0);
       return `
         ${pageTop("预算", "预算钱包", `<button class="secondary" type="button" data-route="create" data-tab="budgets">+ 新建</button>`)}
         <div class="card panel">
@@ -1067,8 +1217,8 @@
           <h2>${active.length} 个进行中 · ${settling.length} 个待结算</h2>
           <div class="metrics" style="margin-bottom:0">
             <div>
-              <p class="metric-label">本月已用</p>
-              <p class="metric-value">${money(spent)}</p>
+              <p class="metric-label">进行中预算</p>
+              <p class="metric-value">${active.length} 个</p>
             </div>
             <div>
               <p class="metric-label">可回看记录</p>
@@ -1090,12 +1240,12 @@
     function budgetListRow(budget, isSettling = false) {
       const progress = pct(budget);
       return `
-        <button class="row" type="button" data-action="select-detail" data-id="${budget.id}">
+        <button class="row" type="button" data-action="select-detail" data-id="${budget.id}" data-budget-id="${budget.id}">
           <div class="tile">${budget.name.slice(0, 1)}</div>
           <div class="row-main">
             <div class="row-title">${budget.name}</div>
             <div class="row-sub">${budget.start} - ${budget.end} · ${budget.type}</div>
-            <div class="bar" style="--value:${progress}%; --bar-color:${barColor(progress)}; margin-top:8px"><span></span></div>
+            <div class="bar" style="--value:${progress}%; --bar-color:${barColor(progress)}; margin-top:8px"><span data-budget-progress></span></div>
           </div>
           <div class="row-side">${isSettling ? `结余 ${money(remaining(budget))}` : `剩 ${money(remaining(budget))}`}</div>
         </button>
@@ -1108,12 +1258,12 @@
       const recent = expensesForBudget(budget.id);
       return `
         ${backTop(budget.name, `${budget.start} - ${budget.end} · ${budget.type}`)}
-        <div class="card panel">
+        <div class="card panel" data-budget-id="${budget.id}">
           <p class="money-label">还能花</p>
           <p class="money" style="color:${barColor(progress)}">${money(remaining(budget))}</p>
           <p class="row-sub" style="margin-top:8px">${money(budget.spent)} / ${money(budget.total)} 已用</p>
           <div class="progress-row" style="margin-top:14px">
-            <div class="bar" style="--value:${progress}%; --bar-color:${barColor(progress)}"><span></span></div>
+            <div class="bar" style="--value:${progress}%; --bar-color:${barColor(progress)}"><span data-budget-progress></span></div>
             <span class="percent">${progress}%</span>
           </div>
           <div style="display:flex; gap:10px; margin-top:16px; flex-wrap:wrap">
@@ -1180,19 +1330,23 @@
     }
 
     function renderStats() {
-      const total = state.budgets.reduce((sum, item) => sum + item.total, 0);
-      const spent = state.budgets.reduce((sum, item) => sum + item.spent, 0);
-      const surplus = Math.max(0, total - spent);
-      const catTotals = {};
-      state.expenses.forEach((item) => {
-        catTotals[item.category] = (catTotals[item.category] || 0) + item.amount;
-      });
-      const cats = Object.entries(catTotals).sort((a, b) => b[1] - a[1]);
+      const budget = selectedBudget();
+      const total = budget.total;
+      const spent = budget.spent;
+      const surplus = remaining(budget);
+      const cats = budget.categories
+        .map((item) => [item.name, item.spent])
+        .sort((a, b) => b[1] - a[1]);
       return `
         ${pageTop("统计", "预算回看", `<button class="secondary" type="button" data-route="calendar" data-tab="stats">日历</button>`)}
+        <div class="section-head"><h2>查看预算</h2></div>
+        <div class="option-grid" style="margin-bottom:14px">
+          ${activeBudgets().map((item) => `<button class="option ${item.id === budget.id ? "selected" : ""}" type="button" data-action="stats-budget" data-id="${item.id}" aria-pressed="${item.id === budget.id}">${item.id === budget.id ? "✓ " : ""}${item.name}</button>`).join("")}
+        </div>
         <div class="metric" style="margin-bottom:14px">
-          <p class="metric-label">本月结余</p>
+          <p class="metric-label">${budget.name}还能花</p>
           <p class="money" style="color:var(--success)">${money(surplus)}</p>
+          <p class="row-sub" style="margin-top:8px">${budget.start} - ${budget.end} · 已用 ${money(spent)}</p>
         </div>
         <div class="card panel">
           <div class="section-head" style="margin:0 0 8px">
@@ -1218,7 +1372,7 @@
               <div class="tile" style="color:${categoryColor(name)}; background:${softColor(name)}">${name.slice(0, 1)}</div>
               <div class="row-main">
                 <div class="row-title">${name}</div>
-                <div class="row-sub">本月 ${money(value)}</div>
+                <div class="row-sub">${budget.name} ${money(value)}</div>
               </div>
               <div class="row-side">${Math.round(value / Math.max(1, spent) * 100)}%</div>
             </div>
@@ -1229,13 +1383,16 @@
 
     function renderCalendar() {
       const selectedDate = `2026-07-${String(state.selectedDay).padStart(2, "0")}`;
-      const selectedExpenses = state.expenses.filter((item) => item.date === selectedDate);
-      const daysWithExpenses = new Set(state.expenses.map((item) => Number(item.date.slice(-2))));
+      const calendarExpenses = state.calendarFilter === "current"
+        ? expensesForBudget(state.selectedBudgetId)
+        : state.expenses;
+      const selectedExpenses = calendarExpenses.filter((item) => item.date === selectedDate);
+      const daysWithExpenses = new Set(calendarExpenses.map((item) => Number(item.date.slice(-2))));
       return `
         ${backTop("消费日历", "统计")}
         <div class="segmented" style="margin-bottom:14px">
-          <button type="button" class="active">全部预算</button>
-          <button type="button">当前预算</button>
+          <button type="button" class="${state.calendarFilter === "all" ? "active" : ""}" data-action="calendar-filter" data-value="all" aria-pressed="${state.calendarFilter === "all"}">全部预算</button>
+          <button type="button" class="${state.calendarFilter === "current" ? "active" : ""}" data-action="calendar-filter" data-value="current" aria-pressed="${state.calendarFilter === "current"}">${selectedBudget().name}</button>
         </div>
         <div class="card panel">
           <h2>2026年7月</h2>
@@ -1297,11 +1454,29 @@
       `;
     }
 
+    function settlementExpenseRow(expense, budget) {
+      const choice = state.settlementChoices[expense.id] || "all";
+      return `
+        <div class="row" style="align-items:flex-start">
+          <div class="tile" style="color:${categoryColor(expense.category)}; background:${softColor(expense.category)}">${expense.category.slice(0, 1)}</div>
+          <div class="row-main">
+            <div class="row-title">${money(expense.amount)} ${expense.title}</div>
+            <div class="row-sub">归属：${budgetNames(expense.budgetIds)}</div>
+            <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:10px">
+              <button class="option ${choice === "all" ? "selected" : ""}" type="button" data-action="settlement-choice" data-expense-id="${expense.id}" data-value="all" aria-pressed="${choice === "all"}">都算</button>
+              <button class="option ${choice === "current" ? "selected" : ""}" type="button" data-action="settlement-choice" data-expense-id="${expense.id}" data-value="current" aria-pressed="${choice === "current"}">仅${budget.name.slice(0, 4)}</button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
     function renderSettlement() {
       const budget = budgetById(state.settlementBudgetId || state.selectedBudgetId);
       const linked = expensesForBudget(budget.id).filter((item) => item.budgetIds.length > 1);
+      const isPreview = budget.status === "active";
       return `
-        ${backTop(`结算 ${budget.name}`)}
+        ${backTop(`${isPreview ? "预览" : "结算"} ${budget.name}`)}
         <div class="card panel">
           <div class="metrics" style="margin:0">
             <div>
@@ -1320,24 +1495,34 @@
         </div>
         <div class="section-head"><h2>关联账确认</h2></div>
         <div class="list">
-          ${linked.length ? linked.map((expense) => `
-            <div class="row" style="align-items:flex-start">
-              <div class="tile" style="color:${categoryColor(expense.category)}; background:${softColor(expense.category)}">${expense.category.slice(0, 1)}</div>
-              <div class="row-main">
-                <div class="row-title">${money(expense.amount)} ${expense.title}</div>
-                <div class="row-sub">归属：${budgetNames(expense.budgetIds)}</div>
-                <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:10px">
-                  <button class="option selected" type="button">都算</button>
-                  <button class="option" type="button">仅${budget.name.slice(0, 4)}</button>
-                </div>
-              </div>
-            </div>
-          `).join("") : `<div class="row"><div class="row-main"><div class="row-title">没有需要确认的关联账</div><div class="row-sub">可以直接完成结算</div></div></div>`}
+          ${linked.length ? linked.map((expense) => settlementExpenseRow(expense, budget)).join("") : `<div class="row"><div class="row-main"><div class="row-title">没有需要确认的关联账</div><div class="row-sub">可以直接完成结算</div></div></div>`}
         </div>
         <div style="margin-top:18px">
-          <button class="primary" type="button" data-action="complete-settlement" data-id="${budget.id}">完成结算</button>
+          ${isPreview ? `
+            <p class="row-sub" style="margin-bottom:12px">当前预算仍在进行中，这里只用于提前检查结算结果和关联账。</p>
+            <button class="primary" type="button" data-action="back">返回预算</button>
+          ` : `
+            <button class="primary" type="button" data-action="complete-settlement" data-id="${budget.id}">完成结算</button>
+          `}
         </div>
       `;
+    }
+
+    function applySettlementChoices(budget) {
+      expensesForBudget(budget.id)
+        .filter((expense) => expense.budgetIds.length > 1)
+        .forEach((expense) => {
+          if ((state.settlementChoices[expense.id] || "all") !== "current") return;
+          expense.budgetIds
+            .filter((id) => id !== budget.id)
+            .forEach((id) => {
+              const otherBudget = budgetById(id);
+              otherBudget.spent = Math.max(0, otherBudget.spent - expense.amount);
+              const category = otherBudget.categories.find((item) => item.name === expense.category) || otherBudget.categories[otherBudget.categories.length - 1];
+              category.spent = Math.max(0, category.spent - expense.amount);
+            });
+          expense.budgetIds = [budget.id];
+        });
     }
 
     function renderSettlementDone() {
@@ -1360,6 +1545,11 @@
     function render() {
       document.querySelectorAll(".nav button").forEach((btn) => {
         btn.classList.toggle("active", btn.dataset.tab === state.tab);
+        if (btn.dataset.tab === state.tab) {
+          btn.setAttribute("aria-current", "page");
+        } else {
+          btn.removeAttribute("aria-current");
+        }
       });
       fab.classList.toggle("hidden", !["home", "budgets", "detail", "stats"].includes(state.route));
 
@@ -1375,12 +1565,71 @@
 
       app.scrollTop = 0;
       bindPage();
+      alignSelectedWallet();
+      animatePendingBudgetChanges();
+    }
+
+    function bindRouteButtons(root = app) {
+      root.querySelectorAll("[data-route]").forEach((button) => {
+        button.addEventListener("click", () => setRoute(button.dataset.route, button.dataset.tab || state.tab));
+      });
+    }
+
+    function syncHomeBudget(id) {
+      if (id === state.selectedBudgetId) return;
+      state.selectedBudgetId = id;
+      state.capture.budgetIds = new Set([id]);
+
+      app.querySelectorAll("[data-action='select-budget']").forEach((card) => {
+        const selected = card.dataset.id === id;
+        card.classList.toggle("selected", selected);
+        card.setAttribute("aria-pressed", String(selected));
+      });
+      app.querySelectorAll("[data-wallet-dot]").forEach((dot) => {
+        dot.classList.toggle("active", dot.dataset.walletDot === id);
+      });
+
+      const linkedContent = document.getElementById("homeLinkedContent");
+      if (linkedContent) {
+        linkedContent.innerHTML = renderHomeLinkedContent(selectedBudget());
+        bindRouteButtons(linkedContent);
+      }
+    }
+
+    function alignSelectedWallet() {
+      const strip = app.querySelector(".wallet-strip");
+      const selected = strip?.querySelector(`[data-id="${state.selectedBudgetId}"]`);
+      if (!strip || !selected) return;
+      window.requestAnimationFrame(() => {
+        strip.scrollLeft = selected.offsetLeft - (strip.clientWidth - selected.offsetWidth) / 2;
+      });
+    }
+
+    function bindWalletStrip() {
+      const strip = app.querySelector(".wallet-strip");
+      if (!strip) return;
+      let settleTimer = null;
+
+      const syncNearestCard = () => {
+        const center = strip.getBoundingClientRect().left + strip.clientWidth / 2;
+        const cards = Array.from(strip.querySelectorAll("[data-action='select-budget']"));
+        const nearest = cards.reduce((best, card) => {
+          const rect = card.getBoundingClientRect();
+          const distance = Math.abs(rect.left + rect.width / 2 - center);
+          return !best || distance < best.distance ? { card, distance } : best;
+        }, null);
+        if (nearest) syncHomeBudget(nearest.card.dataset.id);
+      };
+
+      strip.addEventListener("scroll", () => {
+        window.clearTimeout(settleTimer);
+        settleTimer = window.setTimeout(syncNearestCard, 90);
+      }, { passive: true });
     }
 
     function bindPage() {
-      app.querySelectorAll("[data-route]").forEach((button) => {
-        button.addEventListener("click", () => setRoute(button.dataset.route, button.dataset.tab || state.tab));
-      });
+      bindRouteButtons();
+      bindWalletStrip();
       app.querySelectorAll("[data-action='select-budget']").forEach((button) => {
         button.addEventListener("click", () => setSelectedBudget(button.dataset.id));
       });
@@ -1396,12 +1645,20 @@
       app.querySelectorAll("[data-action='settle']").forEach((button) => {
         button.addEventListener("click", () => {
           state.settlementBudgetId = button.dataset.id;
+          state.settlementChoices = {};
           setRoute("settlement", "budgets");
+        });
+      });
+      app.querySelectorAll("[data-action='settlement-choice']").forEach((button) => {
+        button.addEventListener("click", () => {
+          state.settlementChoices[button.dataset.expenseId] = button.dataset.value;
+          render();
         });
       });
       app.querySelectorAll("[data-action='complete-settlement']").forEach((button) => {
         button.addEventListener("click", () => {
           const budget = budgetById(button.dataset.id);
+          applySettlementChoices(budget);
           budget.status = "archived";
           state.settlementBudgetId = budget.id;
           setRoute("settlementDone", "budgets");
@@ -1419,6 +1676,15 @@
           state.selectedDay = Number(button.dataset.day);
           render();
         });
+      });
+      app.querySelectorAll("[data-action='calendar-filter']").forEach((button) => {
+        button.addEventListener("click", () => {
+          state.calendarFilter = button.dataset.value;
+          render();
+        });
+      });
+      app.querySelectorAll("[data-action='stats-budget']").forEach((button) => {
+        button.addEventListener("click", () => setSelectedBudget(button.dataset.id));
       });
 
       const createForm = document.getElementById("createForm");
@@ -1478,11 +1744,15 @@
       renderCaptureSheet();
       sheetCover.classList.add("show");
       sheet.classList.add("show");
+      sheet.setAttribute("aria-hidden", "false");
+      window.setTimeout(() => sheet.querySelector("#amount")?.focus({ preventScroll: true }), 80);
     }
 
     function closeCapture() {
       sheetCover.classList.remove("show");
       sheet.classList.remove("show");
+      sheet.setAttribute("aria-hidden", "true");
+      fab.focus({ preventScroll: true });
     }
 
     function renderCaptureSheet() {
@@ -1495,13 +1765,13 @@
         <form class="form" id="captureForm">
           <div class="field">
             <label for="amount">金额</label>
-            <input id="amount" name="amount" type="number" min="1" value="${state.capture.amount}">
+            <input id="amount" name="amount" type="number" inputmode="decimal" min="1" required value="${attributeValue(state.capture.amount)}">
           </div>
           <div class="field">
             <label>归到哪些预算</label>
             <div class="option-grid">
               ${activeBudgets().map((budget) => `
-                <button class="option ${state.capture.budgetIds.has(budget.id) ? "selected" : ""}" type="button" data-capture-budget="${budget.id}">${state.capture.budgetIds.has(budget.id) ? "✓ " : ""}${budget.name}</button>
+                <button class="option ${state.capture.budgetIds.has(budget.id) ? "selected" : ""}" type="button" data-capture-budget="${budget.id}" aria-pressed="${state.capture.budgetIds.has(budget.id)}">${state.capture.budgetIds.has(budget.id) ? "✓ " : ""}${budget.name}</button>
               `).join("")}
             </div>
           </div>
@@ -1509,18 +1779,24 @@
             <label>分类</label>
             <div class="option-grid">
               ${categories.slice(0, 5).map((cat) => `
-                <button class="option ${state.capture.category === cat.name ? "selected" : ""}" type="button" data-capture-category="${cat.name}">${state.capture.category === cat.name ? "✓ " : ""}${cat.name}</button>
+                <button class="option ${state.capture.category === cat.name ? "selected" : ""}" type="button" data-capture-category="${cat.name}" aria-pressed="${state.capture.category === cat.name}">${state.capture.category === cat.name ? "✓ " : ""}${cat.name}</button>
               `).join("")}
             </div>
           </div>
           <div class="field">
             <label for="note">备注（选填）</label>
-            <input id="note" name="note" value="地铁到展馆" autocomplete="off">
+            <input id="note" name="note" value="${attributeValue(state.capture.note)}" autocomplete="off">
           </div>
           <button class="primary" type="submit">记下这笔</button>
         </form>
       `;
       sheet.querySelector("[data-close-sheet]").addEventListener("click", closeCapture);
+      sheet.querySelector("#amount").addEventListener("input", (event) => {
+        state.capture.amount = event.target.value;
+      });
+      sheet.querySelector("#note").addEventListener("input", (event) => {
+        state.capture.note = event.target.value;
+      });
       sheet.querySelectorAll("[data-capture-budget]").forEach((button) => {
         button.addEventListener("click", () => {
           const id = button.dataset.captureBudget;
@@ -1529,21 +1805,35 @@
           } else {
             state.capture.budgetIds.add(id);
           }
-          renderCaptureSheet();
+          const selected = state.capture.budgetIds.has(id);
+          button.classList.toggle("selected", selected);
+          button.setAttribute("aria-pressed", String(selected));
+          button.textContent = `${selected ? "✓ " : ""}${budgetById(id).name}`;
         });
       });
       sheet.querySelectorAll("[data-capture-category]").forEach((button) => {
         button.addEventListener("click", () => {
           state.capture.category = button.dataset.captureCategory;
-          renderCaptureSheet();
+          sheet.querySelectorAll("[data-capture-category]").forEach((item) => {
+            const selected = item.dataset.captureCategory === state.capture.category;
+            item.classList.toggle("selected", selected);
+            item.setAttribute("aria-pressed", String(selected));
+            item.textContent = `${selected ? "✓ " : ""}${item.dataset.captureCategory}`;
+          });
         });
       });
       sheet.querySelector("#captureForm").addEventListener("submit", (event) => {
         event.preventDefault();
         const form = new FormData(event.target);
-        const amount = Math.max(1, Number(form.get("amount") || 0));
+        const amount = Number(form.get("amount") || 0);
+        if (!Number.isFinite(amount) || amount <= 0) {
+          showToast("请输入有效金额");
+          sheet.querySelector("#amount")?.focus();
+          return;
+        }
         const budgetIds = Array.from(state.capture.budgetIds);
         const category = state.capture.category;
+        const beforeProgress = budgetProgressSnapshot(budgetIds);
         const title = category === "交通" ? "市内交通" : category;
         const expense = {
           id: `e-${Date.now()}`,
@@ -1561,9 +1851,15 @@
           const match = budget.categories.find((cat) => cat.name === category) || budget.categories[budget.categories.length - 1];
           match.spent += amount;
         });
+        state.capture.amount = "";
+        state.capture.note = "";
+        queueBudgetAnimation(beforeProgress);
         closeCapture();
-        showToast(`已记下 ${money(amount)}`);
         render();
+        showToast(`已记下 ${money(amount)}`, {
+          label: "撤销",
+          run: () => rollbackExpense(expense)
+        });
       });
     }
 
@@ -1578,6 +1874,9 @@
 
     fab.addEventListener("click", openCapture);
     sheetCover.addEventListener("click", closeCapture);
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && sheet.classList.contains("show")) closeCapture();
+    });
 
     render();
   </script>
