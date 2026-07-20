@@ -39,44 +39,36 @@ struct PrototypeSettlementSheet: View {
     }
 
     private func checklistView(_ budget: PrototypeBudget) -> some View {
-        ScrollView(showsIndicators: false) {
-            LazyVStack(alignment: .leading, spacing: 20) {
+        List {
+            Section {
                 settlementSummary(budget)
+            }
 
-                PrototypeSectionHeader("linked.title")
+            Section("linked.title") {
                 if linkedExpenses.isEmpty {
-                    Text("settlement.linked.empty")
-                        .font(.subheadline)
-                        .foregroundStyle(CheckLineColor.secondary)
-                        .frame(maxWidth: .infinity, minHeight: 74)
-                        .prototypeCard()
+                    ContentUnavailableView("settlement.linked.empty", systemImage: "link.badge.plus")
                 } else {
-                    linkedList(budget)
-                }
-
-                if budget.status == .active {
-                    Text("settlement.preview.message")
-                        .font(.footnote)
-                        .foregroundStyle(CheckLineColor.secondary)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .padding(14)
-                        .background(CheckLineColor.brandSoft, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
-                    Button("settlement.return") { dismiss() }
-                        .font(.headline)
-                        .foregroundStyle(Color.white)
-                        .frame(maxWidth: .infinity, minHeight: 54)
-                        .background(CheckLineColor.brand, in: RoundedRectangle(cornerRadius: 15, style: .continuous))
-                } else {
-                    Button("settlement.complete") { completeSettlement() }
-                        .font(.headline)
-                        .foregroundStyle(Color.white)
-                        .frame(maxWidth: .infinity, minHeight: 54)
-                        .background(CheckLineColor.brand, in: RoundedRectangle(cornerRadius: 15, style: .continuous))
+                    ForEach(linkedExpenses) { expense in
+                        linkedRow(expense, budget: budget)
+                    }
                 }
             }
-            .padding(20)
-            .padding(.bottom, 24)
+
+            Section {
+                if budget.status == .active {
+                    Text("settlement.preview.message")
+                    Button("settlement.return") { dismiss() }
+                        .buttonStyle(.borderedProminent)
+                        .tint(CheckLineColor.brand)
+                } else {
+                    Button("settlement.complete") { completeSettlement() }
+                        .buttonStyle(.borderedProminent)
+                        .tint(CheckLineColor.brand)
+                }
+            }
         }
+        .listStyle(.insetGrouped)
+        .scrollContentBackground(.hidden)
     }
 
     private func settlementSummary(_ budget: PrototypeBudget) -> some View {
@@ -93,7 +85,6 @@ struct PrototypeSettlementSheet: View {
             BudgetProgressBar(progress: budget.progress)
         }
         .padding(16)
-        .prototypeCard()
     }
 
     private func metric(title: LocalizedStringKey, value: String) -> some View {
@@ -108,58 +99,42 @@ struct PrototypeSettlementSheet: View {
         .frame(maxWidth: .infinity, alignment: .leading)
     }
 
-    private func linkedList(_ budget: PrototypeBudget) -> some View {
-        VStack(spacing: 0) {
-            ForEach(Array(linkedExpenses.enumerated()), id: \.element.id) { index, expense in
-                VStack(alignment: .leading, spacing: 10) {
-                    HStack(spacing: 12) {
-                        Image(systemName: "link")
-                            .foregroundStyle(CheckLineColor.brand)
-                            .frame(width: 42, height: 42)
-                            .background(CheckLineColor.brandSoft, in: RoundedRectangle(cornerRadius: 13, style: .continuous))
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text("\(currencyText(expense.amount)) · \(expense.title)")
-                                .font(.subheadline.bold())
-                            Text(linkedBudgetNames(expense))
-                                .font(.caption)
-                                .foregroundStyle(CheckLineColor.secondary)
-                        }
-                    }
-                    Picker(
-                        "linked.title",
-                        selection: choiceBinding(for: expense.id)
-                    ) {
-                        Text("linked.decision.all")
-                            .tag(PrototypeSettlementChoice.all)
-                        Text(String(format: String(localized: "linked.decision.current"), budget.name))
-                            .tag(PrototypeSettlementChoice.current)
-                    }
-                    .pickerStyle(.segmented)
+    private func linkedRow(_ expense: PrototypeExpense, budget: PrototypeBudget) -> some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Label {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("\(currencyText(expense.amount)) · \(expense.title)")
+                    Text(linkedBudgetNames(expense))
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
                 }
-                .padding(14)
-                if index < linkedExpenses.count - 1 { Divider() }
+            } icon: {
+                Image(systemName: "link")
+                    .foregroundStyle(CheckLineColor.brand)
             }
+            Picker("linked.title", selection: choiceBinding(for: expense.id)) {
+                Text("linked.decision.all")
+                    .tag(PrototypeSettlementChoice.all)
+                Text(String(format: String(localized: "linked.decision.current"), budget.name))
+                    .tag(PrototypeSettlementChoice.current)
+            }
+            .pickerStyle(.segmented)
         }
-        .prototypeCard()
+        .padding(.vertical, 4)
     }
 
     private func completionView(budget: PrototypeBudget, surplus: Decimal) -> some View {
-        VStack(spacing: 20) {
+        ScrollView {
+            VStack(spacing: 20) {
             Spacer()
             Image(systemName: "checkmark")
                 .font(.system(size: 32, weight: .bold))
                 .foregroundStyle(CheckLineColor.success)
-                .frame(width: 72, height: 72)
-                .background(CheckLineColor.success.opacity(0.14), in: RoundedRectangle(cornerRadius: 22, style: .continuous))
             Text("settlement.complete.feedback")
-                .font(.caption.bold())
-                .foregroundStyle(CheckLineColor.secondary)
             Text(budget.name)
                 .font(.title.bold())
             MoneyText(amount: surplus, color: CheckLineColor.success)
             Text("settlement.complete.message")
-                .font(.subheadline)
-                .foregroundStyle(CheckLineColor.secondary)
                 .multilineTextAlignment(.center)
                 .padding(.horizontal, 24)
             Spacer()
@@ -167,20 +142,19 @@ struct PrototypeSettlementSheet: View {
                 onFinished(.home)
                 dismiss()
             }
-            .font(.headline)
-            .foregroundStyle(Color.white)
-            .frame(maxWidth: .infinity, minHeight: 54)
-            .background(CheckLineColor.brand, in: RoundedRectangle(cornerRadius: 15, style: .continuous))
+            .buttonStyle(.borderedProminent)
+            .tint(CheckLineColor.brand)
+            .frame(maxWidth: .infinity)
 
             Button("settlement.view.insights") {
                 onFinished(.insights)
                 dismiss()
             }
-            .font(.headline)
-            .foregroundStyle(CheckLineColor.brand)
-            .frame(maxWidth: .infinity, minHeight: 50)
+            .buttonStyle(.bordered)
+            .frame(maxWidth: .infinity)
+            }
+            .padding(20)
         }
-        .padding(20)
     }
 
     private func choice(for expenseID: UUID) -> PrototypeSettlementChoice {

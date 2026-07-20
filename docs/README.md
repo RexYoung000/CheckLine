@@ -51,7 +51,7 @@
 
 - 正式工程是根目录 `Check_Line.xcodeproj`，当前只有 iOS App Target。
 - 最低系统版本为 iOS 17.0。
-- App 当前运行与 HTML 原型对齐的原生 SwiftUI 体验样机，只用于工程与交互验证。
+- App 当前运行与 HTML 原型对齐的 native-first SwiftUI 体验样机，只用于工程与交互验证；最终视觉包装尚未定稿。
 - 正式 MVP UI、SwiftData 模型、领域服务、Test Target、iCloud、Widget、OCR 和语音均未实现。
 - 当前产品范围不包含心愿页面、心愿数据模型或结算转心愿。
 

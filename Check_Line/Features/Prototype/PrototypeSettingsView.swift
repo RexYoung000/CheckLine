@@ -30,7 +30,6 @@ struct PrototypeSettingsView: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(16)
-        .prototypeCard()
     }
 
     private func settingsSection(_ title: LocalizedStringKey, rows: [SettingRowData]) -> some View {

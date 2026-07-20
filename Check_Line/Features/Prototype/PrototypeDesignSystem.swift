@@ -29,52 +29,6 @@ extension Color {
     }
 }
 
-struct PrototypeCardModifier: ViewModifier {
-    var radius: CGFloat = 16
-
-    func body(content: Content) -> some View {
-        content
-            .background(CheckLineColor.card, in: RoundedRectangle(cornerRadius: radius, style: .continuous))
-            .overlay {
-                RoundedRectangle(cornerRadius: radius, style: .continuous)
-                    .stroke(CheckLineColor.divider.opacity(0.75), lineWidth: 1)
-            }
-            .shadow(color: Color.black.opacity(0.05), radius: 14, y: 8)
-    }
-}
-
-extension View {
-    func prototypeCard(radius: CGFloat = 16) -> some View {
-        modifier(PrototypeCardModifier(radius: radius))
-    }
-}
-
-struct PrototypeSectionHeader<Trailing: View>: View {
-    let title: LocalizedStringKey
-    @ViewBuilder var trailing: Trailing
-
-    init(_ title: LocalizedStringKey, @ViewBuilder trailing: () -> Trailing) {
-        self.title = title
-        self.trailing = trailing()
-    }
-
-    var body: some View {
-        HStack(alignment: .center) {
-            Text(title)
-                .font(.title3.bold())
-                .foregroundStyle(CheckLineColor.text)
-            Spacer()
-            trailing
-        }
-    }
-}
-
-extension PrototypeSectionHeader where Trailing == EmptyView {
-    init(_ title: LocalizedStringKey) {
-        self.init(title) { EmptyView() }
-    }
-}
-
 struct BudgetProgressBar: View {
     let progress: Double
     var height: CGFloat = 8
@@ -110,43 +64,6 @@ struct MoneyText: View {
             .minimumScaleFactor(0.5)
             .contentTransition(.numericText(value: decimalDouble(amount)))
             .animation(.spring(duration: 0.45, bounce: 0.12), value: amount)
-    }
-}
-
-struct PrototypeToast: Equatable, Identifiable {
-    let id = UUID()
-    let title: String
-    let symbolName: String
-    var actionTitle: String?
-    var action: (() -> Void)?
-
-    static func == (lhs: PrototypeToast, rhs: PrototypeToast) -> Bool {
-        lhs.id == rhs.id
-    }
-}
-
-struct PrototypeToastView: View {
-    let toast: PrototypeToast
-
-    var body: some View {
-        HStack(spacing: 10) {
-            Image(systemName: toast.symbolName)
-                .font(.body.weight(.bold))
-            Text(toast.title)
-                .font(.subheadline.weight(.semibold))
-                .frame(maxWidth: .infinity, alignment: .leading)
-            if let actionTitle = toast.actionTitle {
-                Button(actionTitle) { toast.action?() }
-                    .font(.subheadline.bold())
-                    .buttonStyle(.plain)
-            }
-        }
-        .foregroundStyle(Color.white)
-        .padding(.horizontal, 16)
-        .frame(minHeight: 52)
-        .background(Color(hex: 0x0F172A), in: RoundedRectangle(cornerRadius: 16, style: .continuous))
-        .shadow(color: Color.black.opacity(0.18), radius: 18, y: 8)
-        .accessibilityElement(children: .combine)
     }
 }
 

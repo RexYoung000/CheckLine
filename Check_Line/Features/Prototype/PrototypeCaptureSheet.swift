@@ -108,12 +108,11 @@ struct PrototypeCaptureSheet: View {
 
     private var captureButton: some View {
         Button("capture.confirm") { save() }
-            .font(.headline)
-            .foregroundStyle(Color.white)
-            .frame(maxWidth: .infinity, minHeight: 54)
-            .background(CheckLineColor.brand, in: RoundedRectangle(cornerRadius: 15, style: .continuous))
+            .buttonStyle(.borderedProminent)
+            .tint(CheckLineColor.brand)
+            .controlSize(.large)
+            .frame(maxWidth: .infinity)
             .disabled(!canSave)
-            .opacity(canSave ? 1 : 0.45)
     }
 
     private var categoryOptions: [(name: String, symbol: String, color: Color)] {

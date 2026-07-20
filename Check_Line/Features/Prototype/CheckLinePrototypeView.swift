@@ -26,83 +26,73 @@ public struct CheckLinePrototypeView: View {
     @State private var selectedTab: PrototypeAppTab = .home
     @State private var selectedBudgetID = PrototypeStore.sample().activeBudgets[0].id
     @State private var activeSheet: PrototypeSheet?
-    @State private var toast: PrototypeToast?
-    @State private var toastDismissTask: Task<Void, Never>?
+    @State private var alert: PrototypeAlert?
 
     public init() {}
 
     public var body: some View {
-        ZStack(alignment: .bottom) {
-            TabView(selection: $selectedTab) {
-                NavigationStack {
-                    PrototypeHomeView(
-                        store: store,
-                        selectedBudgetID: $selectedBudgetID,
-                        onShowBudgets: { selectedTab = .budgets }
-                    )
-                }
-                .tabItem { Label("tab.home", systemImage: "house.fill") }
-                .tag(PrototypeAppTab.home)
-
-                NavigationStack {
-                    PrototypeBudgetListView(
-                        store: store,
-                        selectedBudgetID: $selectedBudgetID,
-                        onCreate: { activeSheet = .createBudget },
-                        onCapture: { budgetID in
-                            selectedBudgetID = budgetID
-                            activeSheet = .capture
-                        },
-                        onSettle: { activeSheet = .settlement($0) }
-                    )
-                }
-                .tabItem { Label("tab.budgets", systemImage: "wallet.pass.fill") }
-                .tag(PrototypeAppTab.budgets)
-
-                NavigationStack {
-                    PrototypeInsightsView(store: store, selectedBudgetID: $selectedBudgetID)
-                }
-                .tabItem { Label("tab.insights", systemImage: "chart.bar.xaxis") }
-                .tag(PrototypeAppTab.insights)
-
-                NavigationStack {
-                    PrototypeSettingsView(store: store) { title in
-                        showToast(PrototypeToast(title: title, symbolName: "info.circle.fill"))
-                    }
-                }
-                .tabItem { Label("tab.settings", systemImage: "person.crop.circle") }
-                .tag(PrototypeAppTab.settings)
+        TabView(selection: $selectedTab) {
+            NavigationStack {
+                PrototypeHomeView(
+                    store: store,
+                    selectedBudgetID: $selectedBudgetID,
+                    onShowBudgets: { selectedTab = .budgets },
+                    onCapture: { activeSheet = .capture }
+                )
             }
-            .tint(CheckLineColor.brand)
+            .tabItem { Label("tab.home", systemImage: "house.fill") }
+            .tag(PrototypeAppTab.home)
 
-            if selectedTab != .settings {
-                Button {
-                    activeSheet = .capture
-                    PrototypeHaptics.selection()
-                } label: {
-                    Image(systemName: "plus")
-                        .font(.title2.bold())
-                        .foregroundStyle(Color.white)
-                        .frame(width: 58, height: 58)
-                        .background(CheckLineColor.brand, in: RoundedRectangle(cornerRadius: 19, style: .continuous))
-                        .shadow(color: CheckLineColor.brand.opacity(0.3), radius: 16, y: 8)
+            NavigationStack {
+                PrototypeBudgetListView(
+                    store: store,
+                    selectedBudgetID: $selectedBudgetID,
+                    onCreate: { activeSheet = .createBudget },
+                    onCapture: { budgetID in
+                        selectedBudgetID = budgetID
+                        activeSheet = .capture
+                    },
+                    onSettle: { activeSheet = .settlement($0) }
+                )
+            }
+            .tabItem { Label("tab.budgets", systemImage: "wallet.pass.fill") }
+            .tag(PrototypeAppTab.budgets)
+
+            NavigationStack {
+                PrototypeInsightsView(
+                    store: store,
+                    selectedBudgetID: $selectedBudgetID,
+                    onCapture: { activeSheet = .capture }
+                )
+            }
+            .tabItem { Label("tab.insights", systemImage: "chart.bar.xaxis") }
+            .tag(PrototypeAppTab.insights)
+
+            NavigationStack {
+                PrototypeSettingsView(store: store) { title in
+                    showAlert(PrototypeAlert(title: title))
                 }
-                .buttonStyle(.plain)
-                .accessibilityLabel(Text("capture.add.accessibility"))
-                .frame(maxWidth: .infinity, alignment: .trailing)
-                .padding(.trailing, 20)
-                .padding(.bottom, 62)
             }
-
-            if let toast {
-                PrototypeToastView(toast: toast)
-                    .padding(.horizontal, 20)
-                    .padding(.bottom, 72)
-                    .transition(.move(edge: .bottom).combined(with: .opacity))
-                    .zIndex(10)
-            }
+            .tabItem { Label("tab.settings", systemImage: "person.crop.circle") }
+            .tag(PrototypeAppTab.settings)
         }
+        .tint(CheckLineColor.brand)
         .preferredColorScheme(.light)
+        .alert(item: $alert) { value in
+            if let actionTitle = value.actionTitle {
+                return Alert(
+                    title: Text(value.title),
+                    message: value.message.map(Text.init),
+                    primaryButton: .default(Text(actionTitle), action: value.action),
+                    secondaryButton: .cancel()
+                )
+            }
+            return Alert(
+                title: Text(value.title),
+                message: value.message.map(Text.init),
+                dismissButton: .default(Text("action.close"))
+            )
+        }
         .sheet(item: $activeSheet) { sheet in
             switch sheet {
             case .capture:
@@ -118,7 +108,7 @@ public struct CheckLinePrototypeView: View {
                 PrototypeCreateBudgetSheet(store: store) { budgetID in
                     selectedBudgetID = budgetID
                     selectedTab = .home
-                    showToast(PrototypeToast(title: String(localized: "toast.budget.created"), symbolName: "checkmark.circle.fill"))
+                    showAlert(PrototypeAlert(title: String(localized: "toast.budget.created")))
                 }
                 .presentationDetents([.large])
                 .presentationDragIndicator(.visible)
@@ -126,7 +116,7 @@ public struct CheckLinePrototypeView: View {
             case .settlement(let budgetID):
                 PrototypeSettlementSheet(store: store, budgetID: budgetID) { destination in
                     selectedTab = destination
-                    showToast(PrototypeToast(title: String(localized: "toast.settlement.completed"), symbolName: "checkmark.seal.fill"))
+                    showAlert(PrototypeAlert(title: String(localized: "toast.settlement.completed")))
                 }
                 .presentationDetents([.large])
                 .presentationDragIndicator(.visible)
@@ -139,34 +129,31 @@ public struct CheckLinePrototypeView: View {
             store.record(draft)
         }
         PrototypeHaptics.success()
-        showToast(
-            PrototypeToast(
+        showAlert(
+            PrototypeAlert(
                 title: String(format: String(localized: "toast.expense.recorded"), currencyText(draft.amount)),
-                symbolName: "checkmark.circle.fill",
                 actionTitle: String(localized: "action.undo"),
                 action: {
                     withAnimation(.easeInOut(duration: 0.3)) {
                         store.undoExpense(id: expense.id)
                     }
-                    showToast(PrototypeToast(title: String(localized: "toast.expense.undone"), symbolName: "arrow.uturn.backward.circle.fill"))
+                    showAlert(PrototypeAlert(title: String(localized: "toast.expense.undone")))
                 }
             )
         )
     }
 
-    private func showToast(_ value: PrototypeToast) {
-        toastDismissTask?.cancel()
-        withAnimation(.spring(duration: 0.32, bounce: 0.12)) {
-            toast = value
-        }
-        toastDismissTask = Task { @MainActor in
-            try? await Task.sleep(for: .seconds(value.actionTitle == nil ? 2 : 4.2))
-            guard !Task.isCancelled else { return }
-            withAnimation(.easeInOut(duration: 0.2)) {
-                toast = nil
-            }
-        }
+    private func showAlert(_ value: PrototypeAlert) {
+        alert = value
     }
+}
+
+private struct PrototypeAlert: Identifiable {
+    let id = UUID()
+    let title: String
+    var message: String?
+    var actionTitle: String?
+    var action: (() -> Void)?
 }
 
 #Preview("Current iOS Prototype") {

@@ -34,6 +34,11 @@ struct PrototypeBudgetListView: View {
         .background(CheckLineColor.canvas)
         .navigationTitle(Text("tab.budgets"))
         .toolbar {
+            ToolbarItem(placement: .topBarLeading) {
+                Button("capture.title", systemImage: "plus") {
+                    onCapture(selectedBudgetID)
+                }
+            }
             ToolbarItem(placement: .topBarTrailing) {
                 Button(action: onCreate) {
                     Label("budget.create", systemImage: "plus")
@@ -56,7 +61,6 @@ struct PrototypeBudgetListView: View {
             }
         }
         .padding(16)
-        .prototypeCard()
     }
 
     private func summaryMetric(title: LocalizedStringKey, value: String) -> some View {
@@ -109,8 +113,7 @@ struct PrototypeBudgetListRow: View {
             Text(String(budget.name.prefix(1)))
                 .font(.headline.bold())
                 .foregroundStyle(CheckLineColor.brand)
-                .frame(width: 42, height: 42)
-                .background(CheckLineColor.brandSoft, in: RoundedRectangle(cornerRadius: 13, style: .continuous))
+                .frame(width: 32)
 
             VStack(alignment: .leading, spacing: 7) {
                 Text(budget.name)
@@ -149,25 +152,42 @@ struct PrototypeBudgetDetailView: View {
     private var budget: PrototypeBudget? { store.budget(id: budgetID) }
 
     var body: some View {
-        Group {
-            if let budget {
-                ScrollView(showsIndicators: false) {
-                    LazyVStack(alignment: .leading, spacing: 20) {
-                        summary(budget)
-                        PrototypeSectionHeader("budget.categories")
-                        categoryList(budget)
-                        PrototypeSectionHeader("expense.recent.title")
-                        expenseList
-                    }
-                    .padding(.horizontal, 20)
-                    .padding(.bottom, 110)
+        if let budget {
+            List {
+                Section {
+                    summary(budget)
                 }
-                .background(CheckLineColor.canvas)
-                .navigationTitle(budget.name)
-                .navigationBarTitleDisplayMode(.inline)
-            } else {
-                ContentUnavailableView("budget.missing", systemImage: "wallet.pass")
+
+                Section("budget.categories") {
+                    ForEach(budget.categories) { category in
+                        VStack(alignment: .leading, spacing: 8) {
+                            PrototypeCategoryRow(category: category)
+                            ProgressView(
+                                value: category.limit > 0
+                                    ? min(1, decimalDouble(category.spent / category.limit))
+                                    : 0
+                            )
+                        }
+                    }
+                }
+
+                Section("expense.recent.title") {
+                    let expenses = store.expenses(for: budgetID)
+                    if expenses.isEmpty {
+                        ContentUnavailableView("expense.empty", systemImage: "tray")
+                    } else {
+                        ForEach(expenses) { expense in
+                            PrototypeExpenseRow(expense: expense, store: store)
+                        }
+                    }
+                }
             }
+            .listStyle(.insetGrouped)
+            .scrollContentBackground(.hidden)
+            .navigationTitle(budget.name)
+            .navigationBarTitleDisplayMode(.inline)
+        } else {
+            ContentUnavailableView("budget.missing", systemImage: "wallet.pass")
         }
     }
 
@@ -196,50 +216,6 @@ struct PrototypeBudgetDetailView: View {
             }
         }
         .padding(16)
-        .prototypeCard()
-    }
-
-    private func categoryList(_ budget: PrototypeBudget) -> some View {
-        VStack(spacing: 0) {
-            ForEach(Array(budget.categories.enumerated()), id: \.element.id) { index, category in
-                VStack(spacing: 7) {
-                    PrototypeCategoryRow(category: category)
-                    BudgetProgressBar(
-                        progress: category.limit > 0 ? min(1, decimalDouble(category.spent / category.limit)) : 0,
-                        height: 5
-                    )
-                    .padding(.horizontal, 14)
-                    .padding(.bottom, 10)
-                }
-                if index < budget.categories.count - 1 {
-                    Divider().padding(.leading, 58)
-                }
-            }
-        }
-        .prototypeCard()
-    }
-
-    private var expenseList: some View {
-        let expenses = store.expenses(for: budgetID)
-        return Group {
-            if expenses.isEmpty {
-                Text("expense.empty")
-                    .font(.subheadline)
-                    .foregroundStyle(CheckLineColor.secondary)
-                    .frame(maxWidth: .infinity, minHeight: 72)
-                    .prototypeCard()
-            } else {
-                VStack(spacing: 0) {
-                    ForEach(Array(expenses.enumerated()), id: \.element.id) { index, expense in
-                        PrototypeExpenseRow(expense: expense, store: store)
-                        if index < expenses.count - 1 {
-                            Divider().padding(.leading, 58)
-                        }
-                    }
-                }
-                .prototypeCard()
-            }
-        }
     }
 }
 

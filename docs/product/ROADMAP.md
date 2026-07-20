@@ -157,3 +157,4 @@ https://stitch.withgoogle.com/projects/11707032164273888537
 - 2026-07-20：文档重组为 `product / design / engineering / compliance / archive` 五层；移除重复模块说明，架构、术语、权限和隐私统一到第一轮本地 MVP。
 - 2026-07-20：HTML 原型已迁为可运行的原生 SwiftUI 体验样机，完成四 Tab、预算钱包横滑、记一笔、统计日历和结算主流程的模拟器验证；样机仍使用内存示例数据，正式 SwiftData MVP 尚未开始。
 - 2026-07-20：样机交互控件进一步原生化；记一笔、结算、设置和预算列表改用 SwiftUI `Form` / `List` / `Section` / `Picker` / `ProgressView`，保留预算卡和图表等品牌展示组件，并完成 iOS 17.5 模拟器回归验证。
+- 2026-07-20：根据阶段调整，进一步收敛为 native-first；首页、预算详情、统计和日历改用系统 `List`、分页 `TabView`、Apple `Charts` 和图形 `DatePicker`，撤掉自定义卡片、Toast、悬浮按钮、胶囊选择器和自绘日历包装，最终视觉表现后置。

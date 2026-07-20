@@ -406,15 +406,16 @@ Tab 4 我的   -> 设置 / 通知 / 关于
 
 体验样机使用内存示例数据，不接 SwiftData，不建立正式领域服务，也不作为第一轮 MVP 数据层完成证明。所有用户可见文案仍遵守当前文案与无障碍规范。
 
-### 3.10 原生 iOS 组件边界
+### 3.10 原生 iOS 优先阶段
 
-体验样机和后续 MVP 的交互控件优先采用 SwiftUI 原生组件：
+当前阶段不追求最终美术表现，先确认组件性质、系统行为和无障碍语义。体验样机优先直接使用 SwiftUI 默认外观与原生交互：
 
-- App 壳层使用 `TabView`、`NavigationStack` 和系统 Sheet。
-- 设置、结构化输入和周期配置使用 `List` / `Form`、`Section`、`Picker`、`DatePicker`、`Toggle` 和系统文本输入。
-- 预算选择、分类选择、关联账确认使用带明确选中态的原生 `Picker` 或原生按钮组，不用胶囊按钮模拟选择器。
-- 进度使用原生 `ProgressView(value:)`，保留品牌色和超预算语义色。
-- 预算卡、图表、分类图标和结算反馈可以保留品牌展示组件，但不得替代系统导航、输入、选择、列表和无障碍语义。
+- App 壳层使用 `TabView`、`NavigationStack`、`Toolbar` 和系统 Sheet。
+- 页面内容优先使用 `List` / `Form`、`Section`、`NavigationLink` 和系统行布局，不用自定义卡片模拟列表。
+- 选择与输入使用 `Picker`、`DatePicker`、`Toggle`、`TextField` 和 `Button`，不使用胶囊按钮或自绘网格模拟系统选择器。
+- 进度使用 `ProgressView(value:)`；统计图表优先使用 Apple 原生 `Charts` 框架。
+- 暂停强化圆角卡片、阴影、浮动按钮、Toast、颜色和自绘日历等视觉包装。它们属于后续视觉阶段，不应阻碍当前原生组件替换。
+- 当前页面可以保留最少量的业务展示分组，但不得以品牌样式覆盖系统控件的默认行为、点击反馈、键盘、焦点和 VoiceOver 语义。
 
 ---
 
