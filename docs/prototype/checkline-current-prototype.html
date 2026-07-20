@@ -1,0 +1,1585 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>预算线 CheckLine 当前闭环原型</title>
+  <style>
+    :root {
+      --bg: #f6f6f8;
+      --card: #ffffff;
+      --muted: #eef2f7;
+      --muted-2: #e5e7eb;
+      --brand: #135bec;
+      --brand-dark: #0e44b3;
+      --brand-soft: #e8f0ff;
+      --text: #0d121b;
+      --sub: #64748b;
+      --quiet: #94a3b8;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --orange: #f97316;
+      --purple: #8b5cf6;
+      --teal: #14b8a6;
+      --shadow: 0 12px 30px rgba(15, 23, 42, .07);
+      --float-shadow: 0 14px 34px rgba(19, 91, 236, .26);
+      --page-x: 20px;
+      --safe-top: max(18px, env(safe-area-inset-top));
+      --safe-bottom: max(16px, env(safe-area-inset-bottom));
+      --tabbar-height: 70px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: #dde4ef;
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "PingFang SC", "Noto Sans SC", sans-serif;
+      letter-spacing: 0;
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
+    }
+
+    button {
+      border: 0;
+      cursor: pointer;
+      color: inherit;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .stage {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 22px;
+    }
+
+    .phone {
+      position: relative;
+      width: min(100%, 420px);
+      height: min(920px, calc(100vh - 44px));
+      min-height: 720px;
+      background: var(--bg);
+      border-radius: 34px;
+      overflow: hidden;
+      box-shadow: 0 26px 70px rgba(15, 23, 42, .24);
+      border: 1px solid rgba(255, 255, 255, .78);
+    }
+
+    .app-scroll {
+      height: 100%;
+      overflow: auto;
+      padding: calc(var(--safe-top) + 2px) var(--page-x) calc(var(--tabbar-height) + var(--safe-bottom) + 24px);
+      scroll-behavior: smooth;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 52px;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .eyebrow {
+      margin: 0 0 4px;
+      color: var(--sub);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin: 0;
+    }
+
+    h1 {
+      font-size: 28px;
+      line-height: 1.12;
+      font-weight: 800;
+      letter-spacing: 0;
+    }
+
+    h2 {
+      font-size: 20px;
+      line-height: 1.2;
+      font-weight: 800;
+      letter-spacing: 0;
+    }
+
+    h3 {
+      font-size: 17px;
+      line-height: 1.25;
+      font-weight: 800;
+      letter-spacing: 0;
+    }
+
+    .icon-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: 999px;
+      background: var(--card);
+      box-shadow: var(--shadow);
+      display: grid;
+      place-items: center;
+      font-size: 18px;
+      flex: 0 0 auto;
+    }
+
+    .section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin: 24px 0 12px;
+    }
+
+    .text-btn {
+      min-height: 44px;
+      padding: 0 2px;
+      background: transparent;
+      color: var(--brand);
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: 20px;
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(226, 232, 240, .7);
+    }
+
+    .wallet-strip {
+      display: flex;
+      gap: 14px;
+      margin: 0 calc(var(--page-x) * -1);
+      padding: 0 var(--page-x) 8px;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+    }
+
+    .wallet-strip::-webkit-scrollbar {
+      display: none;
+    }
+
+    .wallet-card {
+      min-width: 316px;
+      scroll-snap-align: center;
+      text-align: left;
+      padding: 20px;
+      background: var(--card);
+      border-radius: 26px;
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(226, 232, 240, .8);
+      transition: border .18s ease, transform .18s ease;
+    }
+
+    .wallet-card.selected {
+      border-color: rgba(19, 91, 236, .45);
+      transform: translateY(-1px);
+    }
+
+    .wallet-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: flex-start;
+      margin-bottom: 18px;
+    }
+
+    .wallet-type {
+      color: var(--sub);
+      font-size: 12px;
+      font-weight: 800;
+      margin-top: 4px;
+    }
+
+    .money-block {
+      text-align: right;
+      min-width: 118px;
+    }
+
+    .money-label {
+      color: var(--sub);
+      font-size: 12px;
+      font-weight: 800;
+      margin-bottom: 3px;
+    }
+
+    .money {
+      font-size: 36px;
+      line-height: .98;
+      font-weight: 900;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: 0;
+      white-space: nowrap;
+    }
+
+    .progress-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .bar {
+      position: relative;
+      height: 8px;
+      background: var(--muted);
+      border-radius: 999px;
+      overflow: hidden;
+      flex: 1;
+    }
+
+    .bar > span {
+      display: block;
+      height: 100%;
+      width: var(--value);
+      background: var(--bar-color, var(--brand));
+      border-radius: inherit;
+      transition: width .3s ease, background .3s ease;
+    }
+
+    .percent {
+      min-width: 40px;
+      color: var(--sub);
+      font-size: 12px;
+      font-weight: 800;
+      text-align: right;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .chip {
+      min-height: 32px;
+      border-radius: 999px;
+      padding: 7px 11px;
+      background: var(--muted);
+      color: var(--sub);
+      font-size: 12px;
+      font-weight: 800;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      display: inline-block;
+      background: currentColor;
+    }
+
+    .empty-add {
+      min-width: 138px;
+      min-height: 194px;
+      border-radius: 26px;
+      border: 1.5px dashed #cbd5e1;
+      color: var(--sub);
+      background: rgba(255, 255, 255, .48);
+      display: grid;
+      place-items: center;
+      gap: 8px;
+      font-weight: 800;
+      scroll-snap-align: center;
+    }
+
+    .list {
+      overflow: hidden;
+      background: var(--card);
+      border-radius: 20px;
+      border: 1px solid rgba(226, 232, 240, .7);
+      box-shadow: var(--shadow);
+    }
+
+    .row {
+      width: 100%;
+      min-height: 64px;
+      padding: 12px 14px;
+      background: transparent;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-align: left;
+      border-bottom: 1px solid var(--muted-2);
+    }
+
+    .row:last-child {
+      border-bottom: 0;
+    }
+
+    .tile {
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      background: var(--brand-soft);
+      color: var(--brand);
+      flex: 0 0 auto;
+      font-weight: 900;
+    }
+
+    .row-main {
+      min-width: 0;
+      flex: 1;
+    }
+
+    .row-title {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .row-sub {
+      margin-top: 4px;
+      color: var(--sub);
+      font-size: 12px;
+      font-weight: 650;
+      line-height: 1.3;
+    }
+
+    .row-side {
+      text-align: right;
+      font-size: 14px;
+      font-weight: 900;
+      font-variant-numeric: tabular-nums;
+      color: var(--text);
+      flex: 0 0 auto;
+    }
+
+    .nav {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: calc(var(--tabbar-height) + var(--safe-bottom));
+      background: rgba(255, 255, 255, .94);
+      border-top: 1px solid var(--muted-2);
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      align-items: start;
+      padding: 8px 10px var(--safe-bottom);
+      backdrop-filter: blur(18px);
+      z-index: 20;
+    }
+
+    .nav button {
+      min-height: 56px;
+      background: transparent;
+      color: var(--sub);
+      border-radius: 16px;
+      display: grid;
+      gap: 3px;
+      place-items: center;
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .nav .active {
+      color: var(--brand);
+      background: var(--brand-soft);
+    }
+
+    .nav-icon {
+      font-size: 18px;
+      line-height: 1;
+    }
+
+    .fab {
+      position: absolute;
+      right: 22px;
+      bottom: calc(var(--tabbar-height) + var(--safe-bottom) + 16px);
+      width: 58px;
+      height: 58px;
+      border-radius: 20px;
+      background: var(--brand);
+      color: white;
+      box-shadow: var(--float-shadow);
+      font-size: 28px;
+      font-weight: 800;
+      z-index: 18;
+      display: grid;
+      place-items: center;
+    }
+
+    .primary {
+      min-height: 54px;
+      width: 100%;
+      border-radius: 16px;
+      background: var(--brand);
+      color: white;
+      font-size: 16px;
+      font-weight: 900;
+      box-shadow: 0 12px 24px rgba(19, 91, 236, .22);
+    }
+
+    .secondary {
+      min-height: 46px;
+      border-radius: 14px;
+      padding: 0 14px;
+      background: var(--brand-soft);
+      color: var(--brand);
+      font-size: 14px;
+      font-weight: 900;
+    }
+
+    .danger-soft {
+      color: var(--danger);
+      background: #fee2e2;
+    }
+
+    .panel {
+      padding: 16px;
+      margin-bottom: 14px;
+    }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin: 14px 0;
+    }
+
+    .metric {
+      padding: 14px;
+      background: var(--card);
+      border-radius: 18px;
+      border: 1px solid rgba(226, 232, 240, .7);
+      box-shadow: var(--shadow);
+    }
+
+    .metric-label {
+      color: var(--sub);
+      font-size: 12px;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .metric-value {
+      font-size: 22px;
+      font-weight: 900;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .form {
+      display: grid;
+      gap: 14px;
+    }
+
+    .field {
+      display: grid;
+      gap: 8px;
+    }
+
+    label {
+      color: var(--sub);
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    input,
+    select {
+      width: 100%;
+      min-height: 52px;
+      border: 1px solid var(--muted-2);
+      border-radius: 16px;
+      padding: 0 14px;
+      background: white;
+      color: var(--text);
+      outline: none;
+      font-size: 16px;
+    }
+
+    input:focus,
+    select:focus {
+      border-color: rgba(19, 91, 236, .5);
+      box-shadow: 0 0 0 4px rgba(19, 91, 236, .11);
+    }
+
+    .segmented {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+      padding: 4px;
+      background: var(--muted);
+      border-radius: 16px;
+    }
+
+    .segmented button {
+      min-height: 42px;
+      border-radius: 12px;
+      background: transparent;
+      color: var(--sub);
+      font-weight: 900;
+    }
+
+    .segmented .active {
+      background: var(--card);
+      color: var(--brand);
+      box-shadow: var(--shadow);
+    }
+
+    .sheet-cover {
+      position: absolute;
+      inset: 0;
+      background: rgba(15, 23, 42, .24);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .22s ease;
+      z-index: 40;
+    }
+
+    .sheet-cover.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .sheet {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      max-height: 88%;
+      padding: 10px var(--page-x) calc(24px + var(--safe-bottom));
+      background: var(--bg);
+      border-radius: 30px 30px 0 0;
+      box-shadow: 0 -18px 48px rgba(15, 23, 42, .2);
+      transform: translateY(102%);
+      transition: transform .28s ease;
+      z-index: 41;
+      overflow: auto;
+    }
+
+    .sheet.show {
+      transform: translateY(0);
+    }
+
+    .grabber {
+      width: 44px;
+      height: 5px;
+      border-radius: 99px;
+      background: #cbd5e1;
+      margin: 0 auto 14px;
+    }
+
+    .sheet-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+      gap: 12px;
+    }
+
+    .option-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 9px;
+    }
+
+    .option {
+      min-height: 44px;
+      border-radius: 999px;
+      padding: 0 14px;
+      background: white;
+      border: 1px solid var(--muted-2);
+      color: var(--sub);
+      font-weight: 900;
+    }
+
+    .option.selected {
+      background: var(--brand);
+      color: white;
+      border-color: var(--brand);
+    }
+
+    .toast {
+      position: absolute;
+      left: 22px;
+      right: 22px;
+      bottom: calc(var(--tabbar-height) + var(--safe-bottom) + 18px);
+      min-height: 52px;
+      border-radius: 18px;
+      background: #0f172a;
+      color: white;
+      display: none;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 14px;
+      font-size: 14px;
+      font-weight: 800;
+      z-index: 60;
+      box-shadow: 0 18px 36px rgba(15, 23, 42, .22);
+    }
+
+    .toast.show {
+      display: flex;
+    }
+
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .day-name,
+    .day {
+      min-height: 38px;
+      display: grid;
+      place-items: center;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .day-name {
+      color: var(--quiet);
+    }
+
+    .day {
+      background: white;
+      color: var(--sub);
+      border: 1px solid rgba(226, 232, 240, .7);
+    }
+
+    .day.has {
+      color: var(--brand);
+      background: var(--brand-soft);
+    }
+
+    .day.selected {
+      background: var(--brand);
+      color: white;
+      border-color: var(--brand);
+    }
+
+    .chart {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+      align-items: end;
+      height: 150px;
+      padding: 18px 8px 8px;
+    }
+
+    .bar-pair {
+      height: 100%;
+      display: grid;
+      align-items: end;
+      justify-items: center;
+      gap: 8px;
+    }
+
+    .bars {
+      height: 112px;
+      display: flex;
+      align-items: end;
+      gap: 5px;
+    }
+
+    .bars i {
+      display: block;
+      width: 9px;
+      border-radius: 999px 999px 4px 4px;
+      background: var(--brand-soft);
+    }
+
+    .bars i.actual {
+      background: var(--brand);
+    }
+
+    .month {
+      color: var(--sub);
+      font-size: 11px;
+      font-weight: 900;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    @media (max-width: 460px) {
+      .stage {
+        padding: 0;
+      }
+
+      .phone {
+        width: 100%;
+        min-height: 100vh;
+        min-height: 100dvh;
+        height: 100dvh;
+        border-radius: 0;
+        border: 0;
+      }
+
+      .wallet-card {
+        min-width: calc(100vw - 70px);
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="stage">
+    <div class="phone" aria-label="预算线当前闭环原型">
+      <section id="app" class="app-scroll"></section>
+      <button id="fab" class="fab" type="button" aria-label="记一笔">+</button>
+      <nav class="nav" aria-label="底部导航">
+        <button type="button" data-tab="home" class="active"><span class="nav-icon">⌂</span><span>首页</span></button>
+        <button type="button" data-tab="budgets"><span class="nav-icon">▤</span><span>预算</span></button>
+        <button type="button" data-tab="stats"><span class="nav-icon">▥</span><span>统计</span></button>
+        <button type="button" data-tab="settings"><span class="nav-icon">⚙</span><span>我的</span></button>
+      </nav>
+      <div id="toast" class="toast" role="status" aria-live="polite"></div>
+      <div id="sheetCover" class="sheet-cover"></div>
+      <section id="captureSheet" class="sheet" aria-label="记一笔弹窗"></section>
+    </div>
+  </main>
+
+  <script>
+    const currency = new Intl.NumberFormat("zh-CN", {
+      style: "currency",
+      currency: "CNY",
+      maximumFractionDigits: 0
+    });
+
+    const sampleDate = "2026-07-06";
+    const categories = [
+      { name: "伙食", icon: "餐", color: "var(--orange)" },
+      { name: "交通", icon: "行", color: "var(--brand)" },
+      { name: "聚会", icon: "聚", color: "var(--purple)" },
+      { name: "学习", icon: "学", color: "var(--teal)" },
+      { name: "其他", icon: "其", color: "var(--quiet)" }
+    ];
+
+    const state = {
+      tab: "home",
+      route: "home",
+      selectedBudgetId: "life",
+      selectedDay: 6,
+      settlementBudgetId: null,
+      capture: {
+        amount: 38,
+        category: "交通",
+        budgetIds: new Set(["life"])
+      },
+      budgets: [
+        {
+          id: "life",
+          name: "7月生活",
+          type: "重复型",
+          template: "月度生活",
+          total: 5000,
+          spent: 3180,
+          status: "active",
+          start: "7.1",
+          end: "7.31",
+          categories: [
+            { name: "伙食", limit: 2200, spent: 1420 },
+            { name: "交通", limit: 800, spent: 410 },
+            { name: "聚会", limit: 1000, spent: 820 },
+            { name: "其他", limit: 1000, spent: 530 }
+          ]
+        },
+        {
+          id: "trip",
+          name: "京都旅行",
+          type: "单次型",
+          template: "旅行",
+          total: 8800,
+          spent: 4560,
+          status: "active",
+          start: "7.10",
+          end: "7.17",
+          categories: [
+            { name: "交通", limit: 2500, spent: 1360 },
+            { name: "住宿", limit: 3600, spent: 2200 },
+            { name: "餐饮", limit: 1700, spent: 620 },
+            { name: "其他", limit: 1000, spent: 380 }
+          ]
+        },
+        {
+          id: "study",
+          name: "Q3学习",
+          type: "单次型",
+          template: "学习",
+          total: 2600,
+          spent: 940,
+          status: "active",
+          start: "7.1",
+          end: "9.30",
+          categories: [
+            { name: "课程", limit: 1800, spent: 640 },
+            { name: "资料", limit: 500, spent: 220 },
+            { name: "工具", limit: 300, spent: 80 }
+          ]
+        },
+        {
+          id: "may",
+          name: "6月生活",
+          type: "重复型",
+          template: "月度生活",
+          total: 5000,
+          spent: 4380,
+          status: "settling",
+          start: "6.1",
+          end: "6.30",
+          categories: [
+            { name: "伙食", limit: 2200, spent: 1990 },
+            { name: "交通", limit: 800, spent: 650 },
+            { name: "聚会", limit: 1000, spent: 920 },
+            { name: "其他", limit: 1000, spent: 820 }
+          ]
+        }
+      ],
+      expenses: [
+        { id: "e1", title: "市内交通", amount: 38, category: "交通", date: "2026-07-06", budgetIds: ["life", "trip"], note: "地铁到展馆" },
+        { id: "e2", title: "晚餐", amount: 150, category: "伙食", date: "2026-07-05", budgetIds: ["life"], note: "朋友聚餐" },
+        { id: "e3", title: "资料", amount: 220, category: "学习", date: "2026-07-03", budgetIds: ["study"], note: "课程资料" },
+        { id: "e4", title: "机场线", amount: 88, category: "交通", date: "2026-07-04", budgetIds: ["trip"], note: "出行准备" }
+      ]
+    };
+
+    const app = document.getElementById("app");
+    const fab = document.getElementById("fab");
+    const sheet = document.getElementById("captureSheet");
+    const sheetCover = document.getElementById("sheetCover");
+    const toast = document.getElementById("toast");
+
+    function money(value) {
+      return currency.format(Math.max(0, Math.round(value)));
+    }
+
+    function pct(budget) {
+      if (!budget.total) return 0;
+      return Math.min(100, Math.round((budget.spent / budget.total) * 100));
+    }
+
+    function remaining(budget) {
+      return Math.max(0, budget.total - budget.spent);
+    }
+
+    function barColor(progress) {
+      if (progress >= 95) return "var(--danger)";
+      if (progress >= 80) return "var(--warning)";
+      return "var(--brand)";
+    }
+
+    function budgetById(id) {
+      return state.budgets.find((item) => item.id === id) || state.budgets[0];
+    }
+
+    function selectedBudget() {
+      return budgetById(state.selectedBudgetId);
+    }
+
+    function expensesForBudget(id) {
+      return state.expenses.filter((item) => item.budgetIds.includes(id));
+    }
+
+    function budgetNames(ids) {
+      return ids.map((id) => budgetById(id)?.name).filter(Boolean).join(" / ");
+    }
+
+    function activeBudgets() {
+      return state.budgets.filter((item) => item.status === "active");
+    }
+
+    function setRoute(route, tab = state.tab) {
+      state.route = route;
+      state.tab = tab;
+      render();
+    }
+
+    function setSelectedBudget(id, route = null) {
+      state.selectedBudgetId = id;
+      state.capture.budgetIds = new Set([id]);
+      if (route) state.route = route;
+      render();
+    }
+
+    function showToast(text) {
+      toast.textContent = text;
+      toast.classList.add("show");
+      window.clearTimeout(showToast.timer);
+      showToast.timer = window.setTimeout(() => toast.classList.remove("show"), 1800);
+    }
+
+    function pageTop(title, subtitle, right = "") {
+      return `
+        <div class="topbar">
+          <div>
+            <p class="eyebrow">${subtitle}</p>
+            <h1>${title}</h1>
+          </div>
+          ${right || `<button class="icon-btn" type="button" aria-label="通知">⌁</button>`}
+        </div>
+      `;
+    }
+
+    function backTop(title, subtitle = "") {
+      return `
+        <div class="topbar">
+          <button class="icon-btn" type="button" data-action="back" aria-label="返回">‹</button>
+          <div style="flex:1; min-width:0">
+            ${subtitle ? `<p class="eyebrow">${subtitle}</p>` : ""}
+            <h1>${title}</h1>
+          </div>
+        </div>
+      `;
+    }
+
+    function walletCard(budget) {
+      const progress = pct(budget);
+      const selected = budget.id === state.selectedBudgetId ? " selected" : "";
+      const topCategories = budget.categories.slice(0, 2);
+      return `
+        <button class="wallet-card${selected}" type="button" data-action="select-budget" data-id="${budget.id}" aria-label="查看${budget.name}">
+          <div class="wallet-top">
+            <div>
+              <h3>${budget.name}</h3>
+              <p class="wallet-type">${budget.template} · ${budget.type}</p>
+            </div>
+            <div class="money-block">
+              <p class="money-label">还能花</p>
+              <p class="money" style="color:${barColor(progress)}">${money(remaining(budget))}</p>
+            </div>
+          </div>
+          <div class="progress-row" aria-label="已用 ${progress}%">
+            <div class="bar" style="--value:${progress}%; --bar-color:${barColor(progress)}"><span></span></div>
+            <span class="percent">${progress}%</span>
+          </div>
+          <div class="chips">
+            ${topCategories.map((cat) => `<span class="chip"><span class="dot" style="color:${categoryColor(cat.name)}"></span>${cat.name} ${money(Math.max(0, cat.limit - cat.spent))}</span>`).join("")}
+          </div>
+        </button>
+      `;
+    }
+
+    function categoryColor(name) {
+      const match = categories.find((item) => item.name === name);
+      return match ? match.color : "var(--quiet)";
+    }
+
+    function expenseRow(expense) {
+      return `
+        <div class="row" role="listitem">
+          <div class="tile" style="color:${categoryColor(expense.category)}; background:${softColor(expense.category)}">${expense.category.slice(0, 1)}</div>
+          <div class="row-main">
+            <div class="row-title">${expense.title}</div>
+            <div class="row-sub">${formatDate(expense.date)} · ${budgetNames(expense.budgetIds)}</div>
+          </div>
+          <div class="row-side">-${money(expense.amount)}</div>
+        </div>
+      `;
+    }
+
+    function softColor(category) {
+      const map = {
+        "伙食": "#fff7ed",
+        "交通": "var(--brand-soft)",
+        "聚会": "#f3e8ff",
+        "学习": "#ccfbf1",
+        "其他": "var(--muted)"
+      };
+      return map[category] || "var(--muted)";
+    }
+
+    function formatDate(value) {
+      const date = new Date(`${value}T00:00:00`);
+      return `${date.getMonth() + 1}/${date.getDate()}`;
+    }
+
+    function renderHome() {
+      const budget = selectedBudget();
+      const recent = state.expenses.filter((item) => item.budgetIds.includes(budget.id)).slice(0, 3);
+      return `
+        ${pageTop("预算线", "7月6日")}
+        <div class="section-head">
+          <h2>预算钱包</h2>
+          <button class="text-btn" type="button" data-route="budgets" data-tab="budgets">查看全部</button>
+        </div>
+        <div class="wallet-strip">
+          ${activeBudgets().map(walletCard).join("")}
+          <button class="empty-add" type="button" data-route="create" data-tab="budgets" aria-label="新建预算">
+            <span style="font-size:28px">+</span>
+            <span>新建预算</span>
+          </button>
+        </div>
+        <div class="section-head">
+          <h2>当前钱包列表</h2>
+          <button class="text-btn" type="button" data-route="detail" data-tab="budgets">详情</button>
+        </div>
+        <div class="list">
+          ${budget.categories.slice(0, 3).map((cat) => `
+            <div class="row">
+              <div class="tile" style="color:${categoryColor(cat.name)}; background:${softColor(cat.name)}">${cat.name.slice(0, 1)}</div>
+              <div class="row-main">
+                <div class="row-title">${cat.name}</div>
+                <div class="row-sub">已用 ${money(cat.spent)} / ${money(cat.limit)}</div>
+              </div>
+              <div class="row-side">${money(Math.max(0, cat.limit - cat.spent))}</div>
+            </div>
+          `).join("")}
+          ${recent.length ? recent.map(expenseRow).join("") : `
+            <div class="row">
+              <div class="tile">记</div>
+              <div class="row-main">
+                <div class="row-title">还没有记录</div>
+                <div class="row-sub">点右下角记下第一笔</div>
+              </div>
+            </div>
+          `}
+        </div>
+      `;
+    }
+
+    function renderBudgets() {
+      const settling = state.budgets.filter((item) => item.status === "settling");
+      const active = state.budgets.filter((item) => item.status === "active");
+      const spent = state.budgets.reduce((sum, item) => sum + item.spent, 0);
+      return `
+        ${pageTop("预算", "预算钱包", `<button class="secondary" type="button" data-route="create" data-tab="budgets">+ 新建</button>`)}
+        <div class="card panel">
+          <p class="eyebrow">全部预算总览</p>
+          <h2>${active.length} 个进行中 · ${settling.length} 个待结算</h2>
+          <div class="metrics" style="margin-bottom:0">
+            <div>
+              <p class="metric-label">本月已用</p>
+              <p class="metric-value">${money(spent)}</p>
+            </div>
+            <div>
+              <p class="metric-label">可回看记录</p>
+              <p class="metric-value">${state.expenses.length} 笔</p>
+            </div>
+          </div>
+        </div>
+        <div class="section-head"><h2>进行中</h2></div>
+        <div class="list">
+          ${active.map((budget) => budgetListRow(budget)).join("")}
+        </div>
+        <div class="section-head"><h2>待结算</h2></div>
+        <div class="list">
+          ${settling.map((budget) => budgetListRow(budget, true)).join("") || `<div class="row"><div class="row-main"><div class="row-title">暂无待结算预算</div><div class="row-sub">到期后会出现在这里</div></div></div>`}
+        </div>
+      `;
+    }
+
+    function budgetListRow(budget, isSettling = false) {
+      const progress = pct(budget);
+      return `
+        <button class="row" type="button" data-action="select-detail" data-id="${budget.id}">
+          <div class="tile">${budget.name.slice(0, 1)}</div>
+          <div class="row-main">
+            <div class="row-title">${budget.name}</div>
+            <div class="row-sub">${budget.start} - ${budget.end} · ${budget.type}</div>
+            <div class="bar" style="--value:${progress}%; --bar-color:${barColor(progress)}; margin-top:8px"><span></span></div>
+          </div>
+          <div class="row-side">${isSettling ? `结余 ${money(remaining(budget))}` : `剩 ${money(remaining(budget))}`}</div>
+        </button>
+      `;
+    }
+
+    function renderDetail() {
+      const budget = selectedBudget();
+      const progress = pct(budget);
+      const recent = expensesForBudget(budget.id);
+      return `
+        ${backTop(budget.name, `${budget.start} - ${budget.end} · ${budget.type}`)}
+        <div class="card panel">
+          <p class="money-label">还能花</p>
+          <p class="money" style="color:${barColor(progress)}">${money(remaining(budget))}</p>
+          <p class="row-sub" style="margin-top:8px">${money(budget.spent)} / ${money(budget.total)} 已用</p>
+          <div class="progress-row" style="margin-top:14px">
+            <div class="bar" style="--value:${progress}%; --bar-color:${barColor(progress)}"><span></span></div>
+            <span class="percent">${progress}%</span>
+          </div>
+          <div style="display:flex; gap:10px; margin-top:16px; flex-wrap:wrap">
+            <button class="secondary" type="button" data-action="open-capture">记一笔</button>
+            <button class="secondary ${budget.status === "active" ? "" : "danger-soft"}" type="button" data-action="settle" data-id="${budget.id}">${budget.status === "active" ? "预览结算" : "去结算"}</button>
+          </div>
+        </div>
+        <div class="section-head"><h2>分类</h2></div>
+        <div class="list">
+          ${budget.categories.map((cat) => `
+            <div class="row">
+              <div class="tile" style="color:${categoryColor(cat.name)}; background:${softColor(cat.name)}">${cat.name.slice(0, 1)}</div>
+              <div class="row-main">
+                <div class="row-title">${cat.name}</div>
+                <div class="row-sub">${money(cat.spent)} / ${money(cat.limit)}</div>
+                <div class="bar" style="--value:${Math.min(100, Math.round(cat.spent / cat.limit * 100))}%; --bar-color:${categoryColor(cat.name)}; margin-top:8px"><span></span></div>
+              </div>
+              <div class="row-side">${money(Math.max(0, cat.limit - cat.spent))}</div>
+            </div>
+          `).join("")}
+        </div>
+        <div class="section-head"><h2>最近记录</h2></div>
+        <div class="list">
+          ${recent.length ? recent.map(expenseRow).join("") : `<div class="row"><div class="row-main"><div class="row-title">暂无记录</div><div class="row-sub">点右下角记一笔</div></div></div>`}
+        </div>
+      `;
+    }
+
+    function renderCreate() {
+      return `
+        ${backTop("新建预算")}
+        <form class="form" id="createForm">
+          <div class="field">
+            <label for="budgetName">预算名称</label>
+            <input id="budgetName" name="name" value="周末出行" autocomplete="off">
+          </div>
+          <div class="field">
+            <label for="budgetTemplate">模板</label>
+            <select id="budgetTemplate" name="template">
+              <option>月度生活</option>
+              <option selected>旅行</option>
+              <option>学习</option>
+              <option>自定义</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>周期类型</label>
+            <div class="segmented" data-cycle>
+              <button class="active" type="button" data-cycle-value="单次型">单次型</button>
+              <button type="button" data-cycle-value="重复型">重复型</button>
+            </div>
+          </div>
+          <div class="field">
+            <label for="budgetTotal">总额</label>
+            <input id="budgetTotal" name="total" type="number" min="1" value="1200">
+          </div>
+          <div class="field">
+            <label for="budgetStart">起止时间</label>
+            <input id="budgetStart" name="range" value="7.20 - 7.21" autocomplete="off">
+          </div>
+          <button class="primary" type="submit">创建预算</button>
+        </form>
+      `;
+    }
+
+    function renderStats() {
+      const total = state.budgets.reduce((sum, item) => sum + item.total, 0);
+      const spent = state.budgets.reduce((sum, item) => sum + item.spent, 0);
+      const surplus = Math.max(0, total - spent);
+      const catTotals = {};
+      state.expenses.forEach((item) => {
+        catTotals[item.category] = (catTotals[item.category] || 0) + item.amount;
+      });
+      const cats = Object.entries(catTotals).sort((a, b) => b[1] - a[1]);
+      return `
+        ${pageTop("统计", "预算回看", `<button class="secondary" type="button" data-route="calendar" data-tab="stats">日历</button>`)}
+        <div class="metric" style="margin-bottom:14px">
+          <p class="metric-label">本月结余</p>
+          <p class="money" style="color:var(--success)">${money(surplus)}</p>
+        </div>
+        <div class="card panel">
+          <div class="section-head" style="margin:0 0 8px">
+            <h2>预算 vs 实际</h2>
+            <span class="chip">蓝色为实际</span>
+          </div>
+          <div class="chart" aria-label="预算和实际支出柱状图">
+            ${[0.58, 0.72, 0.46, 0.64, Math.min(.95, spent / total)].map((value, index) => `
+              <div class="bar-pair">
+                <div class="bars">
+                  <i style="height:${84 + index * 5}px"></i>
+                  <i class="actual" style="height:${Math.max(26, Math.round(value * 110))}px"></i>
+                </div>
+                <span class="month">${index + 3}月</span>
+              </div>
+            `).join("")}
+          </div>
+        </div>
+        <div class="section-head"><h2>分类分析</h2></div>
+        <div class="list">
+          ${cats.map(([name, value]) => `
+            <div class="row">
+              <div class="tile" style="color:${categoryColor(name)}; background:${softColor(name)}">${name.slice(0, 1)}</div>
+              <div class="row-main">
+                <div class="row-title">${name}</div>
+                <div class="row-sub">本月 ${money(value)}</div>
+              </div>
+              <div class="row-side">${Math.round(value / Math.max(1, spent) * 100)}%</div>
+            </div>
+          `).join("")}
+        </div>
+      `;
+    }
+
+    function renderCalendar() {
+      const selectedDate = `2026-07-${String(state.selectedDay).padStart(2, "0")}`;
+      const selectedExpenses = state.expenses.filter((item) => item.date === selectedDate);
+      const daysWithExpenses = new Set(state.expenses.map((item) => Number(item.date.slice(-2))));
+      return `
+        ${backTop("消费日历", "统计")}
+        <div class="segmented" style="margin-bottom:14px">
+          <button type="button" class="active">全部预算</button>
+          <button type="button">当前预算</button>
+        </div>
+        <div class="card panel">
+          <h2>2026年7月</h2>
+          <div class="calendar-grid">
+            ${["日", "一", "二", "三", "四", "五", "六"].map((item) => `<div class="day-name">${item}</div>`).join("")}
+            ${Array.from({ length: 2 }, () => `<div></div>`).join("")}
+            ${Array.from({ length: 31 }, (_, index) => {
+              const day = index + 1;
+              const cls = ["day", daysWithExpenses.has(day) ? "has" : "", day === state.selectedDay ? "selected" : ""].join(" ");
+              return `<button class="${cls}" type="button" data-action="select-day" data-day="${day}">${day}</button>`;
+            }).join("")}
+          </div>
+        </div>
+        <div class="section-head"><h2>7月${state.selectedDay}日记录</h2></div>
+        <div class="list">
+          ${selectedExpenses.length ? selectedExpenses.map(expenseRow).join("") : `<div class="row"><div class="row-main"><div class="row-title">当天没有记录</div><div class="row-sub">换一天看看，或记下新的一笔</div></div></div>`}
+        </div>
+      `;
+    }
+
+    function renderSettings() {
+      return `
+        ${pageTop("我的", "个人状态")}
+        <div class="card panel">
+          <h2>预算达标 89%</h2>
+          <p class="row-sub" style="margin-top:6px">连续使用 12 天 · 当前有 ${activeBudgets().length} 个预算</p>
+        </div>
+        <div class="section-head"><h2>财务管理</h2></div>
+        <div class="list">
+          ${settingsRow("预算设置", "管理模板、分类和提醒")}
+          ${settingsRow("记录管理", "查看和修正历史记录")}
+          ${settingsRow("导出", "后续提供 CSV")}
+        </div>
+        <div class="section-head"><h2>通用设置</h2></div>
+        <div class="list">
+          ${settingsRow("通知", "预算快用完和结算提醒")}
+          ${settingsRow("外观", "浅色优先，暗色后续")}
+          ${settingsRow("货币", "默认 CNY")}
+          ${settingsRow("iCloud", "后续同步")}
+        </div>
+        <div class="section-head"><h2>关于</h2></div>
+        <div class="list">
+          ${settingsRow("隐私", "不上传消费数据")}
+          ${settingsRow("反馈", "告诉我哪里不好用")}
+          ${settingsRow("版本", "当前原型 0.1")}
+        </div>
+      `;
+    }
+
+    function settingsRow(title, sub) {
+      return `
+        <div class="row">
+          <div class="row-main">
+            <div class="row-title">${title}</div>
+            <div class="row-sub">${sub}</div>
+          </div>
+          <div class="row-side">›</div>
+        </div>
+      `;
+    }
+
+    function renderSettlement() {
+      const budget = budgetById(state.settlementBudgetId || state.selectedBudgetId);
+      const linked = expensesForBudget(budget.id).filter((item) => item.budgetIds.length > 1);
+      return `
+        ${backTop(`结算 ${budget.name}`)}
+        <div class="card panel">
+          <div class="metrics" style="margin:0">
+            <div>
+              <p class="metric-label">总支出</p>
+              <p class="metric-value">${money(budget.spent)}</p>
+            </div>
+            <div>
+              <p class="metric-label">预算总额</p>
+              <p class="metric-value">${money(budget.total)}</p>
+            </div>
+          </div>
+          <div style="padding-top:14px">
+            <p class="metric-label">结余</p>
+            <p class="money" style="color:var(--success)">${money(remaining(budget))}</p>
+          </div>
+        </div>
+        <div class="section-head"><h2>关联账确认</h2></div>
+        <div class="list">
+          ${linked.length ? linked.map((expense) => `
+            <div class="row" style="align-items:flex-start">
+              <div class="tile" style="color:${categoryColor(expense.category)}; background:${softColor(expense.category)}">${expense.category.slice(0, 1)}</div>
+              <div class="row-main">
+                <div class="row-title">${money(expense.amount)} ${expense.title}</div>
+                <div class="row-sub">归属：${budgetNames(expense.budgetIds)}</div>
+                <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:10px">
+                  <button class="option selected" type="button">都算</button>
+                  <button class="option" type="button">仅${budget.name.slice(0, 4)}</button>
+                </div>
+              </div>
+            </div>
+          `).join("") : `<div class="row"><div class="row-main"><div class="row-title">没有需要确认的关联账</div><div class="row-sub">可以直接完成结算</div></div></div>`}
+        </div>
+        <div style="margin-top:18px">
+          <button class="primary" type="button" data-action="complete-settlement" data-id="${budget.id}">完成结算</button>
+        </div>
+      `;
+    }
+
+    function renderSettlementDone() {
+      const budget = budgetById(state.settlementBudgetId || state.selectedBudgetId);
+      return `
+        <div style="min-height:100%; display:grid; align-content:center; gap:18px; text-align:center; padding-bottom:80px">
+          <div class="card panel" style="padding:30px 20px">
+            <div style="width:72px; height:72px; border-radius:24px; display:grid; place-items:center; background:#dcfce7; color:var(--success); margin:0 auto 18px; font-size:34px">✓</div>
+            <p class="eyebrow">结算完成</p>
+            <h1>${budget.name}</h1>
+            <p class="money" style="color:var(--success); margin-top:16px">${money(remaining(budget))}</p>
+            <p class="row-sub" style="margin-top:8px">这段预算已经归档，可以回到首页继续查看当前预算。</p>
+          </div>
+          <button class="primary" type="button" data-action="done-home">回到首页</button>
+          <button class="secondary" type="button" data-route="stats" data-tab="stats">查看统计</button>
+        </div>
+      `;
+    }
+
+    function render() {
+      document.querySelectorAll(".nav button").forEach((btn) => {
+        btn.classList.toggle("active", btn.dataset.tab === state.tab);
+      });
+      fab.classList.toggle("hidden", !["home", "budgets", "detail", "stats"].includes(state.route));
+
+      if (state.route === "home") app.innerHTML = renderHome();
+      if (state.route === "budgets") app.innerHTML = renderBudgets();
+      if (state.route === "detail") app.innerHTML = renderDetail();
+      if (state.route === "create") app.innerHTML = renderCreate();
+      if (state.route === "stats") app.innerHTML = renderStats();
+      if (state.route === "calendar") app.innerHTML = renderCalendar();
+      if (state.route === "settings") app.innerHTML = renderSettings();
+      if (state.route === "settlement") app.innerHTML = renderSettlement();
+      if (state.route === "settlementDone") app.innerHTML = renderSettlementDone();
+
+      app.scrollTop = 0;
+      bindPage();
+    }
+
+    function bindPage() {
+      app.querySelectorAll("[data-route]").forEach((button) => {
+        button.addEventListener("click", () => setRoute(button.dataset.route, button.dataset.tab || state.tab));
+      });
+      app.querySelectorAll("[data-action='select-budget']").forEach((button) => {
+        button.addEventListener("click", () => setSelectedBudget(button.dataset.id));
+      });
+      app.querySelectorAll("[data-action='select-detail']").forEach((button) => {
+        button.addEventListener("click", () => setSelectedBudget(button.dataset.id, "detail"));
+      });
+      app.querySelectorAll("[data-action='back']").forEach((button) => {
+        button.addEventListener("click", goBack);
+      });
+      app.querySelectorAll("[data-action='open-capture']").forEach((button) => {
+        button.addEventListener("click", openCapture);
+      });
+      app.querySelectorAll("[data-action='settle']").forEach((button) => {
+        button.addEventListener("click", () => {
+          state.settlementBudgetId = button.dataset.id;
+          setRoute("settlement", "budgets");
+        });
+      });
+      app.querySelectorAll("[data-action='complete-settlement']").forEach((button) => {
+        button.addEventListener("click", () => {
+          const budget = budgetById(button.dataset.id);
+          budget.status = "archived";
+          state.settlementBudgetId = budget.id;
+          setRoute("settlementDone", "budgets");
+        });
+      });
+      app.querySelectorAll("[data-action='done-home']").forEach((button) => {
+        button.addEventListener("click", () => {
+          const active = activeBudgets()[0];
+          if (active) state.selectedBudgetId = active.id;
+          setRoute("home", "home");
+        });
+      });
+      app.querySelectorAll("[data-action='select-day']").forEach((button) => {
+        button.addEventListener("click", () => {
+          state.selectedDay = Number(button.dataset.day);
+          render();
+        });
+      });
+
+      const createForm = document.getElementById("createForm");
+      if (createForm) {
+        let cycle = "单次型";
+        createForm.querySelectorAll("[data-cycle-value]").forEach((button) => {
+          button.addEventListener("click", () => {
+            cycle = button.dataset.cycleValue;
+            createForm.querySelectorAll("[data-cycle-value]").forEach((item) => item.classList.remove("active"));
+            button.classList.add("active");
+          });
+        });
+        createForm.addEventListener("submit", (event) => {
+          event.preventDefault();
+          const form = new FormData(createForm);
+          const total = Math.max(1, Number(form.get("total") || 0));
+          const id = `budget-${Date.now()}`;
+          const newBudget = {
+            id,
+            name: String(form.get("name") || "新预算").trim() || "新预算",
+            type: cycle,
+            template: String(form.get("template") || "自定义"),
+            total,
+            spent: 0,
+            status: "active",
+            start: String(form.get("range") || "今天").split("-")[0].trim(),
+            end: String(form.get("range") || "今天").split("-").slice(1).join("-").trim() || "待定",
+            categories: [
+              { name: "伙食", limit: Math.round(total * .4), spent: 0 },
+              { name: "交通", limit: Math.round(total * .25), spent: 0 },
+              { name: "其他", limit: Math.round(total * .35), spent: 0 }
+            ]
+          };
+          state.budgets.unshift(newBudget);
+          state.selectedBudgetId = id;
+          state.capture.budgetIds = new Set([id]);
+          showToast("预算已创建");
+          setRoute("home", "home");
+        });
+      }
+    }
+
+    function goBack() {
+      if (state.route === "detail" || state.route === "create" || state.route === "settlement") {
+        setRoute("budgets", "budgets");
+        return;
+      }
+      if (state.route === "calendar") {
+        setRoute("stats", "stats");
+        return;
+      }
+      setRoute("home", "home");
+    }
+
+    function openCapture() {
+      state.capture.budgetIds = new Set([state.selectedBudgetId]);
+      renderCaptureSheet();
+      sheetCover.classList.add("show");
+      sheet.classList.add("show");
+    }
+
+    function closeCapture() {
+      sheetCover.classList.remove("show");
+      sheet.classList.remove("show");
+    }
+
+    function renderCaptureSheet() {
+      sheet.innerHTML = `
+        <div class="grabber"></div>
+        <div class="sheet-head">
+          <h2>记一笔</h2>
+          <button class="icon-btn" type="button" data-close-sheet aria-label="关闭">×</button>
+        </div>
+        <form class="form" id="captureForm">
+          <div class="field">
+            <label for="amount">金额</label>
+            <input id="amount" name="amount" type="number" min="1" value="${state.capture.amount}">
+          </div>
+          <div class="field">
+            <label>归到哪些预算</label>
+            <div class="option-grid">
+              ${activeBudgets().map((budget) => `
+                <button class="option ${state.capture.budgetIds.has(budget.id) ? "selected" : ""}" type="button" data-capture-budget="${budget.id}">${state.capture.budgetIds.has(budget.id) ? "✓ " : ""}${budget.name}</button>
+              `).join("")}
+            </div>
+          </div>
+          <div class="field">
+            <label>分类</label>
+            <div class="option-grid">
+              ${categories.slice(0, 5).map((cat) => `
+                <button class="option ${state.capture.category === cat.name ? "selected" : ""}" type="button" data-capture-category="${cat.name}">${state.capture.category === cat.name ? "✓ " : ""}${cat.name}</button>
+              `).join("")}
+            </div>
+          </div>
+          <div class="field">
+            <label for="note">备注（选填）</label>
+            <input id="note" name="note" value="地铁到展馆" autocomplete="off">
+          </div>
+          <button class="primary" type="submit">记下这笔</button>
+        </form>
+      `;
+      sheet.querySelector("[data-close-sheet]").addEventListener("click", closeCapture);
+      sheet.querySelectorAll("[data-capture-budget]").forEach((button) => {
+        button.addEventListener("click", () => {
+          const id = button.dataset.captureBudget;
+          if (state.capture.budgetIds.has(id) && state.capture.budgetIds.size > 1) {
+            state.capture.budgetIds.delete(id);
+          } else {
+            state.capture.budgetIds.add(id);
+          }
+          renderCaptureSheet();
+        });
+      });
+      sheet.querySelectorAll("[data-capture-category]").forEach((button) => {
+        button.addEventListener("click", () => {
+          state.capture.category = button.dataset.captureCategory;
+          renderCaptureSheet();
+        });
+      });
+      sheet.querySelector("#captureForm").addEventListener("submit", (event) => {
+        event.preventDefault();
+        const form = new FormData(event.target);
+        const amount = Math.max(1, Number(form.get("amount") || 0));
+        const budgetIds = Array.from(state.capture.budgetIds);
+        const category = state.capture.category;
+        const title = category === "交通" ? "市内交通" : category;
+        const expense = {
+          id: `e-${Date.now()}`,
+          title,
+          amount,
+          category,
+          date: sampleDate,
+          budgetIds,
+          note: String(form.get("note") || "")
+        };
+        state.expenses.unshift(expense);
+        budgetIds.forEach((id) => {
+          const budget = budgetById(id);
+          budget.spent += amount;
+          const match = budget.categories.find((cat) => cat.name === category) || budget.categories[budget.categories.length - 1];
+          match.spent += amount;
+        });
+        closeCapture();
+        showToast(`已记下 ${money(amount)}`);
+        render();
+      });
+    }
+
+    document.querySelectorAll(".nav button").forEach((button) => {
+      button.addEventListener("click", () => {
+        const tab = button.dataset.tab;
+        state.tab = tab;
+        state.route = tab;
+        render();
+      });
+    });
+
+    fab.addEventListener("click", openCapture);
+    sheetCover.addEventListener("click", closeCapture);
+
+    render();
+  </script>
+</body>
+</html>

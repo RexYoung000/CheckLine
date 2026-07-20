@@ -1,6 +1,6 @@
 //
-//  Check_LineApp.swift
-//  Check_Line
+//  CheckLineApp.swift
+//  CheckLine
 //
 //  Created by Rex Young on 2026/7/19.
 //
@@ -8,10 +8,10 @@
 import SwiftUI
 
 @main
-struct Check_LineApp: App {
+struct CheckLineApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            CheckLinePrototypeView()
         }
     }
 }
