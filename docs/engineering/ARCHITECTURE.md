@@ -13,12 +13,12 @@
 | UI | SwiftUI |
 | 当前启动页 | 当前浅色预算钱包 SwiftUI 体验样机 |
 | 正式数据层 | 未实现 |
-| Test Target | 未建立 |
+| Test Target | 已建立 `Check_LineTests`，当前覆盖 `BudgetEngine` |
 | 外部依赖 | 无 |
 | 网络 / 后端 | 无 |
 | iCloud / CloudKit | 未启用，后续阶段 |
 
-当前构建用于验证 Xcode 工程、资源与当前浅色预算钱包交互能够运行，不代表第一轮 MVP 的正式数据层、领域服务和测试已经实现。
+当前构建已开始第一轮 MVP 的领域服务与测试实装，但正式数据层尚未建立，样机 UI 也尚未接入正式服务。
 
 ### 1.1 当前体验样机边界
 
@@ -26,7 +26,7 @@
 - 状态只存在于当前运行周期，使用 `Decimal` 与虚构示例数据，不写入磁盘。
 - 体验样机类型保留在 `Features/Prototype`，不冒充 `Core/Models`、SwiftData Schema 或正式领域服务。
 - 正式 MVP 实装时以本文第五至第七节的数据模型与服务边界替换样机状态，不能把样机模型直接当作持久化模型。
-- 当前原生优先阶段使用 SwiftUI 原生控件、布局容器和 Apple Charts；标准设置与表单采用系统容器，钱包等复合业务工作区使用原生 `ScrollView` / Lazy Stack 保持信息连续。暂不投入自定义 Toast、日历网格或其他视觉包装，且组件替换不能改变信息架构与交互顺序。
+- 当前以原生行为和无障碍语义为底线；标准设置与表单采用系统容器，钱包等复合业务工作区使用原生 `ScrollView` / Lazy Stack 保持信息连续，并保留已确认的钱包品牌视觉、主操作层级和可撤销 Toast。自绘日历等非必要包装继续后置，组件替换不能改变信息架构与交互顺序。
 
 ## 二、技术选择
 
@@ -64,6 +64,7 @@ CheckLine/
 │   ├── Shared/                 格式化、错误与平台封装
 │   ├── Resources/              本地化与 Sample 数据
 │   └── Assets.xcassets
+├── Check_LineTests/            Swift Testing 单元测试
 ├── docs/                       当前文档、设计资料与历史档案
 └── scripts/                    原型辅助脚本
 ```
@@ -123,8 +124,10 @@ App
 不持久化的派生值：
 
 - `spent`：有效 binding 的 `recordedAmount` 合计。
-- `remaining`：`totalAmount - spent`。
-- `progress`：`spent / totalAmount`，总额为 0 时按明确边界返回。
+- `remaining`：`totalAmount - spent` 的真实结余，超支时保留负数，供结算和严格复盘使用。
+- `availableToSpend`：日常页面展示的「还能花」，等于 `max(0, remaining)`。
+- `overrunAmount`：超出金额，等于 `max(0, -remaining)`；日常页面通过温和文案单独表达，不用负数替代「还能花」。
+- `progress`：`spent / totalAmount` 的界面进度，限制在 `0...1`；总额为 0 时返回 0。
 
 当前 Budget 不包含 `defaultWish` 或任何心愿关系。
 
@@ -184,7 +187,7 @@ OCR、语音、Widget 等来源进入对应阶段时再扩展 `captureSource`，
 
 | 服务 | 当前职责 |
 |---|---|
-| `BudgetEngine` | 计算已用、剩余、进度、分类状态 |
+| `BudgetEngine` | 计算已用、真实结余、日常可花金额、超出金额、界面进度和分类状态 |
 | `SettlementEngine` | 生成结算清单并计算最终支出与结余 |
 | `LinkedExpenseDetector` | 按 ExpenseID 识别一笔多属 |
 | `OverrunPolicy` | 生成 `warnOnly / strictReview` 对应的用户反馈，不自动挪钱 |
@@ -238,7 +241,7 @@ OCR、语音、Widget 等来源进入对应阶段时再扩展 `captureSource`，
 
 ## 十、测试基线
 
-当前没有 Test Target。开始正式模型与服务实现前必须先建立 Swift Testing Target。
+当前已建立 `Check_LineTests` Swift Testing Target。`BudgetEngine` 首批测试已覆盖 0 金额、边界金额、超出金额与多 binding 汇总；后续领域服务和 SwiftData 必须在对应实现切片同步补齐下列测试。
 
 最低覆盖：
 
@@ -261,7 +264,7 @@ UI 仍需在 iPhone 小屏、Pro Max、iPad 分屏和 Dynamic Type 下人工验�
 
 - 当前 SwiftUI 体验样机已对齐现行产品文案，但尚未接入正式 MVP 数据层与领域服务。
 - SwiftData Schema 与迁移计划尚未建立。
-- Test Target 和 CI 尚未建立。
+- `BudgetEngine` 首批测试已建立；其他领域服务、SwiftData 测试与 CI 尚未建立。
 - 真机签名、App 图标和 App Store 配置尚未完成。
 
 ## 相关文档

@@ -8,6 +8,7 @@
 
 /* Begin PBXFileReference section */
 		7A8C4EE6300D032000DEAD91 /* Check_Line.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Check_Line.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		7B000001300D032000DEAD91 /* Check_LineTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Check_LineTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -16,10 +17,22 @@
 			path = Check_Line;
 			sourceTree = "<group>";
 		};
+		7B000002300D032000DEAD91 /* Check_LineTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Check_LineTests;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		7A8C4EE3300D032000DEAD91 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7B000003300D032000DEAD91 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -33,6 +46,7 @@
 			isa = PBXGroup;
 			children = (
 				7A8C4EE8300D032000DEAD91 /* Check_Line */,
+				7B000002300D032000DEAD91 /* Check_LineTests */,
 				7A8C4EE7300D032000DEAD91 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -41,11 +55,22 @@
 			isa = PBXGroup;
 			children = (
 				7A8C4EE6300D032000DEAD91 /* Check_Line.app */,
+				7B000001300D032000DEAD91 /* Check_LineTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
+
+/* Begin PBXContainerItemProxy section */
+		7B00000A300D032000DEAD91 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7A8C4EDE300D032000DEAD91 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7A8C4EE5300D032000DEAD91;
+			remoteInfo = Check_Line;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXNativeTarget section */
 		7A8C4EE5300D032000DEAD91 /* Check_Line */ = {
@@ -70,6 +95,29 @@
 			productReference = 7A8C4EE6300D032000DEAD91 /* Check_Line.app */;
 			productType = "com.apple.product-type.application";
 		};
+		7B000006300D032000DEAD91 /* Check_LineTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7B000007300D032000DEAD91 /* Build configuration list for PBXNativeTarget "Check_LineTests" */;
+			buildPhases = (
+				7B000004300D032000DEAD91 /* Sources */,
+				7B000003300D032000DEAD91 /* Frameworks */,
+				7B000005300D032000DEAD91 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				7B00000B300D032000DEAD91 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				7B000002300D032000DEAD91 /* Check_LineTests */,
+			);
+			name = Check_LineTests;
+			packageProductDependencies = (
+			);
+			productName = Check_LineTests;
+			productReference = 7B000001300D032000DEAD91 /* Check_LineTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -79,11 +127,15 @@
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 2660;
 				LastUpgradeCheck = 2660;
-				TargetAttributes = {
-					7A8C4EE5300D032000DEAD91 = {
-						CreatedOnToolsVersion = 26.6;
+					TargetAttributes = {
+						7A8C4EE5300D032000DEAD91 = {
+							CreatedOnToolsVersion = 26.6;
+						};
+						7B000006300D032000DEAD91 = {
+							CreatedOnToolsVersion = 26.6;
+							TestTargetID = 7A8C4EE5300D032000DEAD91;
+						};
 					};
-				};
 			};
 			buildConfigurationList = 7A8C4EE1300D032000DEAD91 /* Build configuration list for PBXProject "Check_Line" */;
 			developmentRegion = en;
@@ -99,14 +151,22 @@
 			productRefGroup = 7A8C4EE7300D032000DEAD91 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
-			targets = (
-				7A8C4EE5300D032000DEAD91 /* Check_Line */,
-			);
+				targets = (
+					7A8C4EE5300D032000DEAD91 /* Check_Line */,
+					7B000006300D032000DEAD91 /* Check_LineTests */,
+				);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		7A8C4EE4300D032000DEAD91 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7B000005300D032000DEAD91 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -123,7 +183,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		7B000004300D032000DEAD91 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		7B00000B300D032000DEAD91 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7A8C4EE5300D032000DEAD91 /* Check_Line */;
+			targetProxy = 7B00000A300D032000DEAD91 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		7A8C4EEF300D032100DEAD91 /* Debug */ = {
@@ -309,6 +384,40 @@
 			};
 			name = Release;
 		};
+		7B000008300D032000DEAD91 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "Rex.Check-LineTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CheckLine.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/CheckLine";
+			};
+			name = Debug;
+		};
+		7B000009300D032000DEAD91 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "Rex.Check-LineTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CheckLine.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/CheckLine";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -326,6 +435,15 @@
 			buildConfigurations = (
 				7A8C4EF2300D032100DEAD91 /* Debug */,
 				7A8C4EF3300D032100DEAD91 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		7B000007300D032000DEAD91 /* Build configuration list for PBXNativeTarget "Check_LineTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7B000008300D032000DEAD91 /* Debug */,
+				7B000009300D032000DEAD91 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

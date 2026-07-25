@@ -30,12 +30,15 @@
 ```text
 Check_Line/
 ├── App/                 # 当前 App 入口
+├── Core/Services/       # 已开始实装的纯 Swift 领域服务
 ├── Features/Prototype/  # 当前浅色预算钱包 SwiftUI 体验样机
 ├── Resources/           # 中英文本地化
 └── Assets.xcassets      # App 图标、颜色与图片资源
+
+Check_LineTests/         # Swift Testing 单元测试
 ```
 
-`Core`、正式 Feature、Capture、DesignSystem 与 Shared 会在对应 MVP 工作开始时按 `ARCHITECTURE.md` 建立，不预建空目录。
+`Core/Services` 已随 `BudgetEngine` 正式实装建立；其他正式 Feature、Capture、DesignSystem 与 Shared 会在对应 MVP 工作开始时按 `ARCHITECTURE.md` 建立，不预建空目录。
 
 旧项目的 `Package.swift` 和独立 Runner 已退出当前工程，避免同时维护 Swift Package 与 Xcode App 两套入口。它们仍可从 Git 历史中追溯。
 
@@ -62,7 +65,18 @@ xcodebuild \
   build
 ```
 
-当前尚未建立 Test Target，因此不能把“没有测试”误报成测试通过。进入正式 Core/Services 实现前，应先添加 Swift Testing Target，再以 `Cmd + U` 和命令行测试共同验收。
+当前已建立 `Check_LineTests` Swift Testing Target。使用 Xcode 的 `Cmd + U` 或以下命令运行测试：
+
+```bash
+xcodebuild \
+  -project Check_Line.xcodeproj \
+  -scheme Check_Line \
+  -destination 'platform=iOS Simulator,name=iPhone 15 Pro,OS=17.5' \
+  CODE_SIGNING_ALLOWED=NO \
+  test
+```
+
+新增正式领域服务或 SwiftData 行为时，必须在同一实施切片补齐对应测试，不能用 App 编译成功代替业务规则验证。
 
 ## 六、签名与能力边界
 
