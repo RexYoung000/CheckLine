@@ -2,6 +2,8 @@ import SwiftUI
 
 struct PrototypeSettingsView: View {
     let store: PrototypeStore
+    let onDeleteSingleExpense: (PrototypeExpense, UUID, Bool) -> Void
+    let onDeleteBatchExpenses: (Set<UUID>, UUID, Set<UUID>) -> Void
     let onPlaceholder: (String) -> Void
 
     var body: some View {
@@ -10,7 +12,7 @@ struct PrototypeSettingsView: View {
                 .listRowInsets(EdgeInsets(top: 12, leading: 20, bottom: 12, trailing: 20))
                 .listRowBackground(Color.clear)
 
-            settingsSection("settings.finance", rows: financeRows)
+            financeSection
             settingsSection("settings.general", rows: generalRows)
             settingsSection("settings.about", rows: aboutRows)
         }
@@ -32,42 +34,78 @@ struct PrototypeSettingsView: View {
         .padding(16)
     }
 
+    private var financeSection: some View {
+        Section("settings.finance") {
+            Button {
+                showUnavailable(String(localized: "settings.budgets"))
+            } label: {
+                settingLabel(financeRows[0])
+            }
+            .buttonStyle(.plain)
+
+            NavigationLink {
+                PrototypeRecordBudgetPickerView(
+                    store: store,
+                    onDeleteSingle: onDeleteSingleExpense,
+                    onDeleteBatch: onDeleteBatchExpenses
+                )
+            } label: {
+                settingLabel(financeRows[1], showsChevron: false)
+            }
+
+            Button {
+                showUnavailable(String(localized: "settings.export"))
+            } label: {
+                settingLabel(financeRows[2])
+            }
+            .buttonStyle(.plain)
+        }
+    }
+
     private func settingsSection(_ title: LocalizedStringKey, rows: [SettingRowData]) -> some View {
         Section {
             ForEach(rows) { row in
                 Button {
-                    onPlaceholder(String(format: String(localized: "settings.prototype.unavailable"), row.title))
+                    showUnavailable(row.title)
                 } label: {
-                    HStack(spacing: 12) {
-                        Label {
-                            VStack(alignment: .leading, spacing: 3) {
-                                Text(row.title)
-                                    .font(.subheadline.bold())
-                                Text(row.subtitle)
-                                    .font(.caption)
-                                    .foregroundStyle(CheckLineColor.secondary)
-                            }
-                        } icon: {
-                            Image(systemName: row.symbol)
-                                .foregroundStyle(CheckLineColor.brand)
-                        }
-                        Spacer()
-                        if row.isFuture {
-                            Text("settings.future")
-                                .font(.caption2.bold())
-                                .foregroundStyle(CheckLineColor.quiet)
-                        } else {
-                            Image(systemName: "chevron.right")
-                                .font(.caption.bold())
-                                .foregroundStyle(CheckLineColor.quiet)
-                        }
-                    }
+                    settingLabel(row)
                 }
                 .buttonStyle(.plain)
             }
         } header: {
             Text(title)
         }
+    }
+
+    private func settingLabel(_ row: SettingRowData, showsChevron: Bool = true) -> some View {
+        HStack(spacing: 12) {
+            Label {
+                VStack(alignment: .leading, spacing: 3) {
+                    Text(row.title)
+                        .font(.subheadline.bold())
+                    Text(row.subtitle)
+                        .font(.caption)
+                        .foregroundStyle(CheckLineColor.secondary)
+                }
+            } icon: {
+                Image(systemName: row.symbol)
+                    .foregroundStyle(CheckLineColor.brand)
+            }
+            Spacer()
+            if row.isFuture {
+                Text("settings.future")
+                    .font(.caption2.bold())
+                    .foregroundStyle(CheckLineColor.quiet)
+            } else if showsChevron {
+                Image(systemName: "chevron.right")
+                    .font(.caption.bold())
+                    .foregroundStyle(CheckLineColor.quiet)
+            }
+        }
+    }
+
+    private func showUnavailable(_ title: String) {
+        onPlaceholder(String(format: String(localized: "settings.prototype.unavailable"), title))
     }
 
     private var financeRows: [SettingRowData] {

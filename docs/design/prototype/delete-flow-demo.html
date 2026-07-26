@@ -1,0 +1,578 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>预算线 CheckLine 删除流程交互原型</title>
+  <style>
+    :root {
+      --canvas: #dce4ef;
+      --page: #f6f7f9;
+      --card: #fff;
+      --line: #e6eaf0;
+      --text: #111827;
+      --sub: #64748b;
+      --quiet: #94a3b8;
+      --brand: #135bec;
+      --brand-soft: #eaf1ff;
+      --danger: #d92d20;
+      --danger-soft: #fff1f0;
+      --success: #087443;
+      --success-soft: #eaf8f0;
+      --shadow: 0 22px 56px rgba(15, 23, 42, .18);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      background: var(--canvas);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "PingFang SC", "Noto Sans SC", sans-serif;
+    }
+
+    button {
+      font: inherit;
+      border: 0;
+      cursor: pointer;
+      color: inherit;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .stage {
+      width: min(100%, 980px);
+      display: grid;
+      grid-template-columns: 390px minmax(260px, 1fr);
+      gap: 30px;
+      align-items: center;
+      padding: 28px;
+    }
+
+    .phone {
+      position: relative;
+      width: 390px;
+      height: min(844px, calc(100vh - 56px));
+      min-height: 720px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, .75);
+      border-radius: 34px;
+      background: var(--page);
+      box-shadow: var(--shadow);
+    }
+
+    .app {
+      height: 100%;
+      overflow: auto;
+      padding: 26px 20px 32px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 48px;
+      margin-bottom: 20px;
+    }
+
+    .eyebrow {
+      margin: 0 0 5px;
+      color: var(--sub);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    h1, h2, h3, p { margin: 0; }
+    h1 { font-size: 28px; line-height: 1.1; letter-spacing: -.02em; }
+    h2 { font-size: 20px; line-height: 1.2; }
+    h3 { font-size: 16px; line-height: 1.25; }
+
+    .back {
+      width: 44px;
+      height: 44px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--card);
+      color: var(--brand);
+      font-size: 20px;
+      box-shadow: 0 8px 22px rgba(15, 23, 42, .07);
+    }
+
+    .wallet {
+      padding: 20px;
+      border: 1px solid rgba(19, 91, 236, .13);
+      border-radius: 22px;
+      background: var(--card);
+      box-shadow: 0 12px 28px rgba(15, 23, 42, .06);
+    }
+
+    .wallet-head,
+    .expense-row,
+    .setting-row,
+    .modal-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    .wallet-head { margin-bottom: 22px; }
+    .wallet-name { font-weight: 800; }
+    .wallet-period { margin-top: 5px; color: var(--sub); font-size: 13px; }
+    .wallet-mark {
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      border-radius: 13px;
+      color: var(--brand);
+      background: var(--brand-soft);
+      font-size: 19px;
+      font-weight: 800;
+    }
+
+    .money-label { color: var(--sub); font-size: 13px; }
+    .money { margin-top: 5px; font-size: 36px; line-height: 1; font-weight: 850; letter-spacing: -.04em; }
+    .progress { height: 8px; margin-top: 18px; overflow: hidden; border-radius: 999px; background: #edf1f6; }
+    .progress > span { display: block; width: 64%; height: 100%; border-radius: inherit; background: var(--brand); }
+    .wallet-foot { display: flex; justify-content: space-between; margin-top: 9px; color: var(--sub); font-size: 12px; }
+
+    .section { margin-top: 24px; }
+    .section-title { margin-bottom: 10px; font-size: 13px; font-weight: 800; color: var(--sub); }
+
+    .settings,
+    .history {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: var(--card);
+    }
+
+    .setting-row,
+    .expense-row {
+      min-height: 66px;
+      padding: 13px 15px;
+      text-align: left;
+    }
+
+    .setting-row + .setting-row,
+    .expense-row + .expense-row { border-top: 1px solid var(--line); }
+
+    .row-title { font-size: 15px; font-weight: 750; }
+    .row-sub { margin-top: 4px; color: var(--sub); font-size: 12px; line-height: 1.4; }
+    .chevron { color: var(--quiet); font-size: 18px; }
+    .trash {
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      border-radius: 12px;
+      color: var(--danger);
+      background: var(--danger-soft);
+      font-size: 17px;
+    }
+
+    .demo-panel {
+      padding: 22px;
+      border: 1px solid rgba(19, 91, 236, .16);
+      border-radius: 22px;
+      background: rgba(255, 255, 255, .72);
+    }
+
+    .demo-kicker { color: var(--brand); font-size: 12px; font-weight: 850; text-transform: uppercase; letter-spacing: .08em; }
+    .demo-panel h2 { margin-top: 8px; }
+    .demo-panel > p { margin-top: 10px; color: var(--sub); line-height: 1.55; }
+    .demo-step {
+      display: grid;
+      grid-template-columns: 28px 1fr;
+      gap: 12px;
+      margin-top: 18px;
+      align-items: start;
+    }
+    .step-number {
+      width: 28px;
+      height: 28px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      color: #fff;
+      background: var(--brand);
+      font-size: 13px;
+      font-weight: 800;
+    }
+    .demo-step strong { display: block; font-size: 14px; }
+    .demo-step span { display: block; margin-top: 3px; color: var(--sub); font-size: 13px; line-height: 1.45; }
+
+    .demo-actions { display: grid; gap: 10px; margin-top: 22px; }
+    .demo-button,
+    .primary,
+    .secondary,
+    .danger-button {
+      min-height: 46px;
+      padding: 0 15px;
+      border-radius: 13px;
+      font-size: 14px;
+      font-weight: 800;
+    }
+    .demo-button,
+    .primary { color: #fff; background: var(--brand); }
+    .secondary { color: var(--brand); background: var(--brand-soft); }
+    .danger-button { color: #fff; background: var(--danger); }
+    .text-link {
+      width: 100%;
+      min-height: 44px;
+      margin-top: 8px;
+      background: transparent;
+      color: var(--brand);
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .status {
+      min-height: 40px;
+      margin-top: 15px;
+      padding: 11px 13px;
+      border-radius: 12px;
+      color: var(--success);
+      background: var(--success-soft);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .modal-backdrop {
+      position: absolute;
+      inset: 0;
+      display: none;
+      align-items: end;
+      padding: 14px;
+      background: rgba(15, 23, 42, .34);
+      z-index: 5;
+    }
+    .modal-backdrop.open { display: flex; }
+
+    .modal {
+      width: 100%;
+      padding: 22px 18px 18px;
+      border-radius: 25px;
+      background: var(--card);
+      box-shadow: 0 20px 60px rgba(15, 23, 42, .24);
+      animation: rise .22s ease-out;
+    }
+    @keyframes rise {
+      from { transform: translateY(16px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    .modal-kicker { color: var(--danger); font-size: 12px; font-weight: 850; }
+    .modal h2 { margin-top: 7px; }
+    .modal-copy { margin-top: 10px; color: var(--sub); font-size: 14px; line-height: 1.55; }
+    .modal-actions { margin-top: 20px; }
+    .modal-actions > button { flex: 1; }
+
+    .budget-list {
+      margin-top: 16px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 15px;
+    }
+    .budget-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-height: 48px;
+      padding: 8px 12px;
+      background: #fafbfc;
+    }
+    .budget-item + .budget-item { border-top: 1px solid var(--line); }
+    .budget-dot {
+      width: 10px;
+      height: 10px;
+      flex: 0 0 auto;
+      border-radius: 50%;
+      background: var(--brand);
+    }
+    .budget-item strong { font-size: 14px; }
+    .budget-item span { margin-left: auto; color: var(--sub); font-size: 12px; }
+
+    .choice-list { display: grid; gap: 8px; margin-top: 16px; }
+    .choice {
+      display: grid;
+      grid-template-columns: 20px 1fr;
+      gap: 10px;
+      align-items: start;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      text-align: left;
+      background: #fafbfc;
+    }
+    .choice.selected {
+      border-color: rgba(19, 91, 236, .42);
+      background: var(--brand-soft);
+    }
+    .choice-mark {
+      width: 20px;
+      height: 20px;
+      display: grid;
+      place-items: center;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 50%;
+      color: #fff;
+      font-size: 12px;
+    }
+    .choice.selected .choice-mark { border-color: var(--brand); background: var(--brand); }
+    .choice strong { font-size: 14px; }
+    .choice span { display: block; margin-top: 3px; color: var(--sub); font-size: 12px; line-height: 1.4; }
+
+    .hidden { display: none !important; }
+
+    @media (max-width: 760px) {
+      body { display: block; background: var(--page); }
+      .stage { display: block; width: 100%; padding: 0; }
+      .phone { width: 100%; height: 100vh; min-height: 720px; border: 0; border-radius: 0; box-shadow: none; }
+      .demo-panel { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <main class="stage">
+    <section class="phone" aria-label="预算线删除流程原型">
+      <div class="app">
+        <header class="topbar">
+          <button class="back" aria-label="返回">‹</button>
+          <div>
+            <p class="eyebrow">预算线</p>
+            <h1>预算设置</h1>
+          </div>
+          <div style="width:44px"></div>
+        </header>
+
+        <article class="wallet">
+          <div class="wallet-head">
+            <div>
+              <div class="wallet-name">7月生活</div>
+              <div class="wallet-period">7月1日 - 7月31日 · 重复型</div>
+            </div>
+            <div class="wallet-mark">¥</div>
+          </div>
+          <div class="money-label">还能花</div>
+          <div class="money">¥1,820</div>
+          <div class="progress"><span></span></div>
+          <div class="wallet-foot"><span>已用 ¥3,180</span><span>总额 ¥5,000</span></div>
+        </article>
+
+        <section class="section">
+          <div class="section-title">预算操作</div>
+          <div class="settings">
+            <button class="setting-row" type="button" onclick="openBudgetStart()">
+              <div>
+                <div class="row-title">删除这个预算</div>
+                <div class="row-sub">删除预算本身，不会默认删除消费记录</div>
+              </div>
+              <div class="chevron">›</div>
+            </button>
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="section-title">最近记录</div>
+          <div class="history">
+            <div class="expense-row">
+              <div>
+                <div class="row-title">机场打车</div>
+                <div class="row-sub">¥88 · 6月28日 · 7月生活 / 京都旅行</div>
+              </div>
+              <button class="trash" type="button" aria-label="删除机场打车" onclick="openExpenseConfirm()">⌫</button>
+            </div>
+            <div class="expense-row">
+              <div>
+                <div class="row-title">晚餐</div>
+                <div class="row-sub">¥150 · 7月5日 · 7月生活</div>
+              </div>
+              <button class="trash" type="button" aria-label="删除晚餐" onclick="deleteSimpleExpense()">⌫</button>
+            </div>
+          </div>
+        </section>
+
+        <div id="status" class="status hidden" role="status"></div>
+      </div>
+
+      <div id="budgetStart" class="modal-backdrop" aria-hidden="true">
+        <div class="modal" role="dialog" aria-modal="true" aria-labelledby="budgetStartTitle">
+          <div class="modal-kicker">删除预算</div>
+          <h2 id="budgetStartTitle">删除「7月生活」？</h2>
+          <p class="modal-copy">预算、分类和结算信息会被删除。消费记录默认保留，你之后可以在「消费历史」里处理。</p>
+          <div class="modal-actions">
+            <button class="secondary" type="button" onclick="closeModals()">取消</button>
+            <button class="danger-button" type="button" onclick="openBudgetShared()">继续</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="budgetShared" class="modal-backdrop" aria-hidden="true">
+        <div class="modal" role="dialog" aria-modal="true" aria-labelledby="budgetSharedTitle">
+          <div class="modal-kicker">发现共享消费</div>
+          <h2 id="budgetSharedTitle">有 2 笔消费还在其他预算里</h2>
+          <p class="modal-copy">默认只从「7月生活」移除。只有你主动勾选的消费，才会从其他预算和消费历史中一起删除。</p>
+          <div class="budget-list" aria-label="仍包含这笔消费的预算">
+            <div class="budget-item"><i class="budget-dot"></i><strong>京都旅行</strong><span>¥88 · 机场打车</span></div>
+            <div class="budget-item"><i class="budget-dot" style="background:#14b8a6"></i><strong>Q3学习</strong><span>¥120 · 展览门票</span></div>
+          </div>
+          <div class="choice-list">
+            <button class="choice" type="button" data-select-all onclick="toggleAllShared(this)">
+              <i class="choice-mark"></i>
+              <div><strong>全选</strong><span>从所有预算删除下面全部共享消费</span></div>
+            </button>
+            <button class="choice" type="button" data-expense-id="airport" onclick="toggleShared(this, 'airport')">
+              <i class="choice-mark"></i>
+              <div><strong>机场打车 · ¥88</strong><span>勾选后同时从「京都旅行」删除</span></div>
+            </button>
+            <button class="choice" type="button" data-expense-id="ticket" onclick="toggleShared(this, 'ticket')">
+              <i class="choice-mark"></i>
+              <div><strong>展览门票 · ¥120</strong><span>勾选后同时从「Q3学习」删除</span></div>
+            </button>
+          </div>
+          <div class="modal-actions">
+            <button class="secondary" type="button" onclick="backToBudgetStart()">返回</button>
+            <button class="danger-button" type="button" onclick="finishBudgetDelete()">确认删除预算</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="expenseConfirm" class="modal-backdrop" aria-hidden="true">
+        <div class="modal" role="dialog" aria-modal="true" aria-labelledby="expenseConfirmTitle">
+          <div class="modal-kicker">删除消费记录</div>
+          <h2 id="expenseConfirmTitle">这笔消费还在其他预算里</h2>
+          <p class="modal-copy">「机场打车」¥88 同时属于下面的预算。请选择删除范围，避免误删其他预算的记录。</p>
+          <div class="budget-list" aria-label="包含这笔消费的预算">
+            <div class="budget-item"><i class="budget-dot"></i><strong>7月生活</strong><span>当前预算</span></div>
+            <div class="budget-item"><i class="budget-dot" style="background:#f97316"></i><strong>京都旅行</strong><span>共享预算</span></div>
+          </div>
+          <div class="modal-actions">
+            <button class="secondary" type="button" onclick="closeModals()">取消</button>
+            <button class="danger-button" type="button" onclick="finishExpenseDelete()">从所有预算删除</button>
+          </div>
+          <button class="text-link" type="button" onclick="removeOnlyCurrent()">只从当前预算移除</button>
+        </div>
+      </div>
+    </section>
+
+    <aside class="demo-panel">
+      <div class="demo-kicker">交互演示</div>
+      <h2>看两个删除场景的区别</h2>
+      <p>这里没有真的删除数据，只模拟系统如何检测共享消费，并把复杂关系翻译成一次清晰确认。</p>
+      <div class="demo-step">
+        <div class="step-number">1</div>
+        <div><strong>删除预算</strong><span>先确认删掉预算本身，再提示“这笔消费还在京都旅行”。</span></div>
+      </div>
+      <div class="demo-step">
+        <div class="step-number">2</div>
+        <div><strong>删除消费记录</strong><span>直接检测共享关系，列出包含它的预算，再选择删除范围。</span></div>
+      </div>
+      <div class="demo-step">
+        <div class="step-number">3</div>
+        <div><strong>普通消费</strong><span>没有共享关系时，不弹复杂确认，直接完成删除。</span></div>
+      </div>
+      <div id="demoStatus" class="status">点击左侧的「删除这个预算」或某条记录右侧的删除按钮开始。</div>
+    </aside>
+  </main>
+
+  <script>
+    const sharedExpenseIDs = ["airport", "ticket"];
+    const globallyDeletedExpenseIDs = new Set();
+
+    function showModal(id) {
+      closeModals();
+      const el = document.getElementById(id);
+      el.classList.add("open");
+      el.setAttribute("aria-hidden", "false");
+      document.getElementById("demoStatus").textContent =
+        id === "budgetStart"
+          ? "场景 A：先确认删除预算本身，再由系统检测共享消费。"
+          : id === "budgetShared"
+            ? "场景 A 的第二步：系统列出仍使用这笔消费的其他预算。"
+            : "场景 B：删除消费时直接检测共享关系并二次确认。";
+    }
+
+    function closeModals() {
+      document.querySelectorAll(".modal-backdrop").forEach((el) => {
+        el.classList.remove("open");
+        el.setAttribute("aria-hidden", "true");
+      });
+    }
+
+    function openBudgetStart() {
+      globallyDeletedExpenseIDs.clear();
+      updateSharedChoices();
+      showModal("budgetStart");
+    }
+    function openBudgetShared() { showModal("budgetShared"); }
+    function openExpenseConfirm() { showModal("expenseConfirm"); }
+    function backToBudgetStart() { showModal("budgetStart"); }
+
+    function toggleShared(button, expenseID) {
+      if (globallyDeletedExpenseIDs.has(expenseID)) {
+        globallyDeletedExpenseIDs.delete(expenseID);
+      } else {
+        globallyDeletedExpenseIDs.add(expenseID);
+      }
+      updateSharedChoices();
+    }
+
+    function toggleAllShared() {
+      const shouldSelectAll = globallyDeletedExpenseIDs.size !== sharedExpenseIDs.length;
+      globallyDeletedExpenseIDs.clear();
+      if (shouldSelectAll) sharedExpenseIDs.forEach((id) => globallyDeletedExpenseIDs.add(id));
+      updateSharedChoices();
+    }
+
+    function updateSharedChoices() {
+      document.querySelectorAll("#budgetShared [data-expense-id]").forEach((button) => {
+        const isSelected = globallyDeletedExpenseIDs.has(button.dataset.expenseId);
+        button.classList.toggle("selected", isSelected);
+        button.querySelector(".choice-mark").textContent = isSelected ? "✓" : "";
+      });
+      const selectAll = document.querySelector("#budgetShared [data-select-all]");
+      const allSelected = globallyDeletedExpenseIDs.size === sharedExpenseIDs.length;
+      selectAll.classList.toggle("selected", allSelected);
+      selectAll.querySelector(".choice-mark").textContent = allSelected ? "✓" : "";
+    }
+
+    function finishBudgetDelete() {
+      closeModals();
+      const deleted = [...globallyDeletedExpenseIDs];
+      const message = deleted.length === 0
+        ? "已删除「7月生活」。两笔共享消费仍保留在其他预算，晚餐已删除。"
+        : `已删除「7月生活」。另从所有预算删除了 ${deleted.length} 笔勾选的共享消费。`;
+      setStatus(message);
+    }
+
+    function finishExpenseDelete() {
+      closeModals();
+      setStatus("已从所有预算和消费历史中删除「机场打车」¥88。");
+    }
+
+    function removeOnlyCurrent() {
+      closeModals();
+      setStatus("已从「7月生活」移除「机场打车」，它仍保留在「京都旅行」。");
+    }
+
+    function deleteSimpleExpense() {
+      setStatus("已删除「晚餐」¥150。因为它只属于「7月生活」，没有额外确认。");
+    }
+
+    function setStatus(message) {
+      const status = document.getElementById("status");
+      status.textContent = message;
+      status.classList.remove("hidden");
+      document.getElementById("demoStatus").textContent = message;
+    }
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") closeModals();
+    });
+  </script>
+</body>
+</html>

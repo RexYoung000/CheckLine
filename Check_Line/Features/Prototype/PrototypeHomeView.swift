@@ -6,11 +6,33 @@ struct PrototypeHomeView: View {
     let onShowBudgets: () -> Void
     let onCapture: () -> Void
 
-    private var selectedBudget: PrototypeBudget {
-        store.budget(id: selectedBudgetID) ?? store.activeBudgets[0]
+    private var selectedBudget: PrototypeBudget? {
+        store.activeBudgets.first { $0.id == selectedBudgetID } ?? store.activeBudgets.first
     }
 
     var body: some View {
+        Group {
+            if let selectedBudget {
+                budgetContent(selectedBudget)
+            } else {
+                ContentUnavailableView(
+                    "budget.empty.title",
+                    systemImage: "wallet.pass",
+                    description: Text("budget.empty.message")
+                )
+            }
+        }
+        .background(CheckLineColor.canvas)
+        .navigationTitle(Text("home.title"))
+        .onAppear {
+            if !store.activeBudgets.contains(where: { $0.id == selectedBudgetID }),
+               let first = store.activeBudgets.first {
+                selectedBudgetID = first.id
+            }
+        }
+    }
+
+    private func budgetContent(_ selectedBudget: PrototypeBudget) -> some View {
         ScrollView(showsIndicators: false) {
             LazyVStack(alignment: .leading, spacing: 20) {
                 HStack {
@@ -26,14 +48,13 @@ struct PrototypeHomeView: View {
                     selectedBudgetID: $selectedBudgetID
                 )
 
-                walletContent
+                walletContent(selectedBudget)
             }
             .padding(.horizontal, 20)
             .padding(.top, 12)
             .padding(.bottom, 28)
         }
         .accessibilityIdentifier("home.scroll")
-        .background(CheckLineColor.canvas)
         .safeAreaInset(edge: .bottom, spacing: 0) {
             HStack {
                 Spacer()
@@ -52,16 +73,9 @@ struct PrototypeHomeView: View {
             .padding(.vertical, 10)
             .background(CheckLineColor.canvas)
         }
-        .navigationTitle(Text("home.title"))
-        .onAppear {
-            if !store.activeBudgets.contains(where: { $0.id == selectedBudgetID }),
-               let first = store.activeBudgets.first {
-                selectedBudgetID = first.id
-            }
-        }
     }
 
-    private var walletContent: some View {
+    private func walletContent(_ selectedBudget: PrototypeBudget) -> some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack(alignment: .firstTextBaseline) {
                 Text("budget.categories")

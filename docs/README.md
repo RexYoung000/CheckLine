@@ -53,6 +53,7 @@
 - 最低系统版本为 iOS 17.0。
 - App 当前运行与 HTML 原型对齐的 native-first SwiftUI 体验样机，只用于工程与交互验证；最终视觉包装尚未定稿。
 - 正式 MVP UI 与 SwiftData 模型尚未实现；Swift Testing Target 已建立并完成 `BudgetEngine` 首批规则测试，其他领域服务仍未实现。
+- 体验样机已验证预算删除、消费记录单独/批量删除和共享消费安全确认；这些内存操作不代表 SwiftData 删除关系已经完成。
 - iCloud、Widget、OCR 和语音均未实现。
 - 当前产品范围不包含心愿页面、心愿数据模型或结算转心愿。
 

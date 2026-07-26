@@ -6,6 +6,9 @@ struct PrototypeBudgetListView: View {
     let onCreate: () -> Void
     let onCapture: (UUID) -> Void
     let onSettle: (UUID) -> Void
+    let onDeleteSingleExpense: (PrototypeExpense, UUID, Bool) -> Void
+    let onDeleteBatchExpenses: (Set<UUID>, UUID, Set<UUID>) -> Void
+    let onDeleteBudget: (UUID, Set<UUID>) -> Void
 
     var body: some View {
         List {
@@ -81,7 +84,16 @@ struct PrototypeBudgetListView: View {
                 store: store,
                 budgetID: budget.id,
                 onCapture: { onCapture(budget.id) },
-                onSettle: { onSettle(budget.id) }
+                onSettle: { onSettle(budget.id) },
+                onDeleteSingleExpense: { expense, deleteFromAllBudgets in
+                    onDeleteSingleExpense(expense, budget.id, deleteFromAllBudgets)
+                },
+                onDeleteBatchExpenses: { expenseIDs, globallyDeletedExpenseIDs in
+                    onDeleteBatchExpenses(expenseIDs, budget.id, globallyDeletedExpenseIDs)
+                },
+                onDeleteBudget: { globallyDeletedExpenseIDs in
+                    onDeleteBudget(budget.id, globallyDeletedExpenseIDs)
+                }
             )
             .onAppear { selectedBudgetID = budget.id }
         } label: {
@@ -144,10 +156,17 @@ struct PrototypeBudgetListRow: View {
 }
 
 struct PrototypeBudgetDetailView: View {
+    @Environment(\.dismiss) private var dismiss
     let store: PrototypeStore
     let budgetID: UUID
     let onCapture: () -> Void
     let onSettle: () -> Void
+    let onDeleteSingleExpense: (PrototypeExpense, Bool) -> Void
+    let onDeleteBatchExpenses: (Set<UUID>, Set<UUID>) -> Void
+    let onDeleteBudget: (Set<UUID>) -> Void
+
+    @State private var showBudgetDeleteConfirmation = false
+    @State private var showLinkedExpenseDeleteSheet = false
 
     private var budget: PrototypeBudget? { store.budget(id: budgetID) }
 
@@ -179,13 +198,60 @@ struct PrototypeBudgetDetailView: View {
                         ForEach(expenses) { expense in
                             PrototypeExpenseRow(expense: expense, store: store)
                         }
+                        NavigationLink {
+                            PrototypeBudgetRecordsView(
+                                store: store,
+                                budgetID: budgetID,
+                                onDeleteSingle: onDeleteSingleExpense,
+                                onDeleteBatch: onDeleteBatchExpenses
+                            )
+                        } label: {
+                            Label("records.manage.action", systemImage: "list.bullet.rectangle")
+                        }
                     }
+                }
+
+                Section {
+                    Button(role: .destructive) {
+                        showBudgetDeleteConfirmation = true
+                    } label: {
+                        Label("delete.budget.action", systemImage: "trash")
+                    }
+                } footer: {
+                    Text("delete.budget.footer")
                 }
             }
             .listStyle(.insetGrouped)
             .scrollContentBackground(.hidden)
             .navigationTitle(budget.name)
             .navigationBarTitleDisplayMode(.inline)
+            .confirmationDialog(
+                "delete.budget.title",
+                isPresented: $showBudgetDeleteConfirmation,
+                titleVisibility: .visible
+            ) {
+                Button("delete.budget.continue", role: .destructive) {
+                    continueBudgetDeletion()
+                }
+                Button("action.cancel", role: .cancel) {}
+            } message: {
+                Text(
+                    String(
+                        format: String(localized: "delete.budget.message"),
+                        budget.name
+                    )
+                )
+            }
+            .sheet(isPresented: $showLinkedExpenseDeleteSheet) {
+                PrototypeBudgetDeleteSheet(
+                    store: store,
+                    budgetID: budgetID
+                ) { globallyDeletedExpenseIDs in
+                    finishBudgetDeletion(globallyDeletedExpenseIDs)
+                }
+                .presentationDetents([.medium, .large])
+                .presentationDragIndicator(.visible)
+            }
         } else {
             ContentUnavailableView("budget.missing", systemImage: "wallet.pass")
         }
@@ -216,6 +282,19 @@ struct PrototypeBudgetDetailView: View {
             }
         }
         .padding(16)
+    }
+
+    private func continueBudgetDeletion() {
+        if store.linkedExpenses(for: budgetID).isEmpty {
+            finishBudgetDeletion([])
+        } else {
+            showLinkedExpenseDeleteSheet = true
+        }
+    }
+
+    private func finishBudgetDeletion(_ globallyDeletedExpenseIDs: Set<UUID>) {
+        onDeleteBudget(globallyDeletedExpenseIDs)
+        dismiss()
     }
 }
 

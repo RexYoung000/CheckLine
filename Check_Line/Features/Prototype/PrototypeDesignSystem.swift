@@ -167,6 +167,6 @@ struct PrototypeToastView: View {
                 .stroke(CheckLineColor.surfaceStroke.opacity(0.9), lineWidth: 1)
         )
         .shadow(color: .black.opacity(0.12), radius: 18, x: 0, y: 8)
-        .accessibilityElement(children: .combine)
+        .accessibilityElement(children: .contain)
     }
 }

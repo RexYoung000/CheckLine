@@ -5,21 +5,36 @@ struct PrototypeInsightsView: View {
     let store: PrototypeStore
     @Binding var selectedBudgetID: UUID
 
-    private var budget: PrototypeBudget {
-        store.budget(id: selectedBudgetID) ?? store.activeBudgets[0]
+    private var budget: PrototypeBudget? {
+        store.activeBudgets.first { $0.id == selectedBudgetID } ?? store.activeBudgets.first
     }
 
     let onCapture: () -> Void
 
     var body: some View {
+        Group {
+            if let budget {
+                insightsContent(budget)
+            } else {
+                ContentUnavailableView(
+                    "budget.empty.title",
+                    systemImage: "chart.bar.xaxis",
+                    description: Text("budget.empty.message")
+                )
+            }
+        }
+        .navigationTitle(Text("tab.insights"))
+    }
+
+    private func insightsContent(_ budget: PrototypeBudget) -> some View {
         List {
             Section {
                 budgetPicker
-                remainingCard
+                remainingCard(budget)
             }
 
             Section("insights.comparison") {
-                comparisonChart
+                comparisonChart(budget)
             }
 
             Section("insights.categories") {
@@ -41,7 +56,6 @@ struct PrototypeInsightsView: View {
         }
         .listStyle(.insetGrouped)
         .scrollContentBackground(.hidden)
-        .navigationTitle(Text("tab.insights"))
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
                 Button("capture.title", systemImage: "plus", action: onCapture)
@@ -67,7 +81,7 @@ struct PrototypeInsightsView: View {
         .tint(CheckLineColor.brand)
     }
 
-    private var remainingCard: some View {
+    private func remainingCard(_ budget: PrototypeBudget) -> some View {
         VStack(alignment: .leading, spacing: 8) {
             Text(String(format: String(localized: "insights.remaining"), budget.name))
                 .font(.caption.bold())
@@ -81,9 +95,9 @@ struct PrototypeInsightsView: View {
         .padding(.vertical, 8)
     }
 
-    private var comparisonChart: some View {
+    private func comparisonChart(_ budget: PrototypeBudget) -> some View {
         Chart {
-            ForEach(Array(chartValues.enumerated()), id: \.offset) { index, value in
+            ForEach(Array(chartValues(budget).enumerated()), id: \.offset) { index, value in
                 BarMark(
                     x: .value("month", String(format: String(localized: "month.short"), index + 3)),
                     y: .value("actual", Double(value))
@@ -100,7 +114,7 @@ struct PrototypeInsightsView: View {
         .accessibilityLabel(Text("insights.comparison.accessibility"))
     }
 
-    private var chartValues: [CGFloat] {
+    private func chartValues(_ budget: PrototypeBudget) -> [CGFloat] {
         [0.58, 0.72, 0.46, 0.64, CGFloat(budget.progress)]
     }
 

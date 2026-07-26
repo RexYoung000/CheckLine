@@ -10,6 +10,7 @@
 "action.close" = "Close";
 "action.create" = "Create";
 "action.undo" = "Undo";
+"action.delete" = "Delete";
 
 "budget.remaining.label" = "Available";
 "budget.remaining.short" = "Left";
@@ -28,6 +29,8 @@
 "budget.settling.empty.message" = "Budgets appear here when their period ends";
 "budget.categories" = "Categories";
 "budget.missing" = "Budget unavailable";
+"budget.empty.title" = "No budgets yet";
+"budget.empty.message" = "Create your first budget and draw a clear line.";
 "budget.basic" = "Budget details";
 "budget.amount.period" = "Amount and period";
 "budget.name" = "Budget name";
@@ -119,6 +122,30 @@
 "weekday.sat" = "S";
 "expense.recent.title" = "Recent records";
 "expense.empty" = "No records yet";
+"records.manage.title" = "Manage records";
+"records.manage.action" = "Manage records";
+"records.delete.selected" = "Delete selected (%d)";
+"records.shared.accessibility" = "Contains shared expenses";
+
+"delete.budget.action" = "Delete this budget";
+"delete.budget.footer" = "Deleting a budget or a batch of records cannot be undone.";
+"delete.budget.title" = "Delete this budget?";
+"delete.budget.message" = "The budget, categories, settlement, and exclusive expenses in “%@” will be deleted.";
+"delete.budget.continue" = "Continue";
+"delete.budget.confirm" = "Delete budget";
+"delete.budget.shared.title" = "Confirm shared expenses";
+"delete.budget.shared.message" = "“%@” contains these shared expenses. By default they are removed only from this budget. Select one to delete it from other budgets and history too.";
+"delete.expense.shared.title" = "This expense is in other budgets";
+"delete.expense.shared.message" = "“%@” is still linked to “%@”. Choose the deletion scope.";
+"delete.expense.currentOnly" = "Remove from this budget";
+"delete.expense.everywhere" = "Delete from all budgets";
+"delete.batch.title" = "Delete selected records";
+"delete.batch.summary" = "%d records will be processed. %d belong only to this budget and will be deleted.";
+"delete.batch.confirm" = "Delete records";
+"delete.shared.section" = "Shared expenses";
+"delete.shared.selectAll" = "Delete every shared expense from all budgets";
+"delete.shared.default" = "Nothing is selected by default. Unselected records are removed only from this budget.";
+"delete.shared.stillIn" = "Still in: %@";
 
 "settings.status.title" = "Budget discipline 89%";
 "settings.status.subtitle" = "12-day streak · %d active budgets";
@@ -153,4 +180,9 @@
 "toast.budget.created" = "Budget created";
 "toast.expense.recorded" = "Recorded %@";
 "toast.expense.undone" = "Record undone";
+"toast.expense.deleted" = "Record deleted";
+"toast.expense.removed" = "Removed from this budget";
+"toast.expense.restored" = "Record restored";
+"toast.expenses.deleted" = "%d records processed";
+"toast.budget.deleted" = "“%@” deleted";
 "toast.settlement.completed" = "Settlement complete";

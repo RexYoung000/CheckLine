@@ -170,6 +170,14 @@ OCR、语音、Widget 等来源进入对应阶段时再扩展 `captureSource`，
 
 一笔消费选择两个预算时生成两个 binding，但 Expense 只有一份。关联账处理必须由用户确认，系统不自动选归属。
 
+删除关系遵循：
+
+- 删除当前预算下的普通消费：删除唯一 binding，并删除已经没有其他 binding 的 Expense。
+- 删除当前预算下的共享消费：默认只删除当前 binding；只有用户明确选择“从所有预算删除”，才删除 Expense 和全部 binding。
+- 删除预算：删除 Budget、其 BudgetCategory、Settlement 与当前预算的全部 binding；只属于该预算的 Expense 同时删除。
+- 删除预算遇到共享 Expense 时，先由界面逐笔收集全局删除选择；未勾选的 Expense 保留其他 binding，已勾选的 Expense 才从所有预算删除。
+- 当前 MVP 使用永久删除，不增加 `deletedAt`、回收站表或恢复关系。未来启动回收站时再更新 Schema 与迁移，届时之前已经删除的数据不可恢复。
+
 ### 5.5 Settlement
 
 | 字段 | 类型 | 说明 |
@@ -249,7 +257,7 @@ OCR、语音、Widget 等来源进入对应阶段时再扩展 `captureSource`，
 - SettlementEngine 的重复型、单次型、结余与负结余。
 - LinkedExpenseDetector 的单预算、多预算、包含/排除确认。
 - OverrunPolicy 的两种策略，确认不会自动修改其他预算。
-- SwiftData 的模型关系、删除行为和迁移。
+- SwiftData 的模型关系、预算级联范围、共享消费默认保留、明确全局删除和迁移。
 
 UI 仍需在 iPhone 小屏、Pro Max、iPad 分屏和 Dynamic Type 下人工验收。
 

@@ -85,6 +85,11 @@ struct PrototypeExpenseDraft {
     var note: String
 }
 
+struct PrototypeExpenseDeletion {
+    let expense: PrototypeExpense
+    let removedBudgetIDs: Set<UUID>
+}
+
 enum PrototypeSettlementChoice: String, CaseIterable, Identifiable, Hashable {
     case all
     case current
@@ -188,6 +193,80 @@ final class PrototypeStore {
             at: 0
         )
         return budgetID
+    }
+
+    @discardableResult
+    func deleteExpense(
+        id expenseID: UUID,
+        from budgetID: UUID,
+        deleteFromAllBudgets: Bool
+    ) -> PrototypeExpenseDeletion? {
+        guard let expenseIndex = expenses.firstIndex(where: { $0.id == expenseID }) else { return nil }
+        let expense = expenses[expenseIndex]
+        guard expense.budgetIDs.contains(budgetID) else { return nil }
+
+        let removedBudgetIDs = deleteFromAllBudgets || expense.budgetIDs.count == 1
+            ? expense.budgetIDs
+            : Set([budgetID])
+
+        for removedBudgetID in removedBudgetIDs {
+            updateBudget(
+                id: removedBudgetID,
+                amountDelta: -expense.amount,
+                categoryName: expense.categoryName
+            )
+        }
+
+        if removedBudgetIDs == expense.budgetIDs {
+            expenses.remove(at: expenseIndex)
+        } else {
+            expenses[expenseIndex].budgetIDs.subtract(removedBudgetIDs)
+        }
+
+        return PrototypeExpenseDeletion(expense: expense, removedBudgetIDs: removedBudgetIDs)
+    }
+
+    func restoreExpenseDeletion(_ deletion: PrototypeExpenseDeletion) {
+        if let expenseIndex = expenses.firstIndex(where: { $0.id == deletion.expense.id }) {
+            expenses[expenseIndex] = deletion.expense
+        } else {
+            expenses.insert(deletion.expense, at: 0)
+        }
+
+        for budgetID in deletion.removedBudgetIDs where budget(id: budgetID) != nil {
+            updateBudget(
+                id: budgetID,
+                amountDelta: deletion.expense.amount,
+                categoryName: deletion.expense.categoryName
+            )
+        }
+    }
+
+    func deleteExpenses(
+        ids expenseIDs: Set<UUID>,
+        from budgetID: UUID,
+        deletingFromAllBudgets globalExpenseIDs: Set<UUID>
+    ) {
+        for expenseID in expenseIDs {
+            deleteExpense(
+                id: expenseID,
+                from: budgetID,
+                deleteFromAllBudgets: globalExpenseIDs.contains(expenseID)
+            )
+        }
+    }
+
+    func deleteBudget(
+        id budgetID: UUID,
+        deletingFromAllBudgets globalExpenseIDs: Set<UUID>
+    ) {
+        let expenseIDs = Set(expenses(for: budgetID).map(\.id))
+        deleteExpenses(
+            ids: expenseIDs,
+            from: budgetID,
+            deletingFromAllBudgets: globalExpenseIDs
+        )
+        budgets.removeAll { $0.id == budgetID }
     }
 
     func linkedExpenses(for budgetID: UUID) -> [PrototypeExpense] {

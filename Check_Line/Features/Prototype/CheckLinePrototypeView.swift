@@ -52,7 +52,10 @@ public struct CheckLinePrototypeView: View {
                         selectedBudgetID = budgetID
                         activeSheet = .capture
                     },
-                    onSettle: { activeSheet = .settlement($0) }
+                    onSettle: { activeSheet = .settlement($0) },
+                    onDeleteSingleExpense: handleSingleExpenseDeletion,
+                    onDeleteBatchExpenses: handleBatchExpenseDeletion,
+                    onDeleteBudget: handleBudgetDeletion
                 )
             }
             .tabItem { Label("tab.budgets", systemImage: "wallet.pass.fill") }
@@ -69,7 +72,11 @@ public struct CheckLinePrototypeView: View {
             .tag(PrototypeAppTab.insights)
 
             NavigationStack {
-                PrototypeSettingsView(store: store) { title in
+                PrototypeSettingsView(
+                    store: store,
+                    onDeleteSingleExpense: handleSingleExpenseDeletion,
+                    onDeleteBatchExpenses: handleBatchExpenseDeletion
+                ) { title in
                     showToast(PrototypeToast(message: title))
                 }
             }
@@ -133,6 +140,94 @@ public struct CheckLinePrototypeView: View {
                     }
                     showToast(PrototypeToast(message: String(localized: "toast.expense.undone")))
                 }
+            )
+        )
+    }
+
+    private func handleSingleExpenseDeletion(
+        _ expense: PrototypeExpense,
+        _ budgetID: UUID,
+        _ deleteFromAllBudgets: Bool
+    ) {
+        guard let deletion = withAnimation(.easeInOut(duration: 0.3), {
+            store.deleteExpense(
+                id: expense.id,
+                from: budgetID,
+                deleteFromAllBudgets: deleteFromAllBudgets
+            )
+        }) else { return }
+
+        PrototypeHaptics.success()
+        let message = deleteFromAllBudgets || expense.budgetIDs.count == 1
+            ? String(localized: "toast.expense.deleted")
+            : String(localized: "toast.expense.removed")
+
+        if expense.budgetIDs.count == 1 {
+            showToast(
+                PrototypeToast(
+                    message: message,
+                    actionTitle: String(localized: "action.undo"),
+                    action: {
+                        withAnimation(.easeInOut(duration: 0.3)) {
+                            store.restoreExpenseDeletion(deletion)
+                        }
+                        showToast(PrototypeToast(message: String(localized: "toast.expense.restored")))
+                    }
+                )
+            )
+        } else {
+            showToast(PrototypeToast(message: message))
+        }
+    }
+
+    private func handleBatchExpenseDeletion(
+        _ expenseIDs: Set<UUID>,
+        _ budgetID: UUID,
+        _ globallyDeletedExpenseIDs: Set<UUID>
+    ) {
+        withAnimation(.easeInOut(duration: 0.3)) {
+            store.deleteExpenses(
+                ids: expenseIDs,
+                from: budgetID,
+                deletingFromAllBudgets: globallyDeletedExpenseIDs
+            )
+        }
+        PrototypeHaptics.success()
+        showToast(
+            PrototypeToast(
+                message: String(
+                    format: String(localized: "toast.expenses.deleted"),
+                    expenseIDs.count
+                )
+            )
+        )
+    }
+
+    private func handleBudgetDeletion(
+        _ budgetID: UUID,
+        _ globallyDeletedExpenseIDs: Set<UUID>
+    ) {
+        let deletedBudgetName = store.budget(id: budgetID)?.name ?? String(localized: "budget.missing")
+        withAnimation(.easeInOut(duration: 0.3)) {
+            store.deleteBudget(
+                id: budgetID,
+                deletingFromAllBudgets: globallyDeletedExpenseIDs
+            )
+        }
+        if selectedBudgetID == budgetID {
+            if let nextBudget = store.activeBudgets.first {
+                selectedBudgetID = nextBudget.id
+            } else {
+                selectedTab = .budgets
+            }
+        }
+        PrototypeHaptics.success()
+        showToast(
+            PrototypeToast(
+                message: String(
+                    format: String(localized: "toast.budget.deleted"),
+                    deletedBudgetName
+                )
             )
         )
     }

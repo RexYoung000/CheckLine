@@ -10,6 +10,7 @@
 "action.close" = "关闭";
 "action.create" = "创建";
 "action.undo" = "撤销";
+"action.delete" = "删除";
 
 "budget.remaining.label" = "还能花";
 "budget.remaining.short" = "剩余";
@@ -28,6 +29,8 @@
 "budget.settling.empty.message" = "预算到期后会出现在这里";
 "budget.categories" = "分类";
 "budget.missing" = "预算不存在";
+"budget.empty.title" = "还没有预算";
+"budget.empty.message" = "创建第一个预算，给自己划一条线。";
 "budget.basic" = "预算信息";
 "budget.amount.period" = "金额与周期";
 "budget.name" = "预算名称";
@@ -119,6 +122,30 @@
 "weekday.sat" = "六";
 "expense.recent.title" = "最近记录";
 "expense.empty" = "暂无记录";
+"records.manage.title" = "记录管理";
+"records.manage.action" = "管理记录";
+"records.delete.selected" = "删除所选（%d）";
+"records.shared.accessibility" = "包含共享消费";
+
+"delete.budget.action" = "删除这个预算";
+"delete.budget.footer" = "删除预算和批量删除确认后无法撤销。";
+"delete.budget.title" = "删除这个预算？";
+"delete.budget.message" = "“%@”的预算、分类、结算和独占消费将被删除。";
+"delete.budget.continue" = "继续删除";
+"delete.budget.confirm" = "确认删除预算";
+"delete.budget.shared.title" = "确认共享消费";
+"delete.budget.shared.message" = "“%@”包含以下共享消费。默认只从当前预算移除；勾选后会从其他预算和消费历史中一并删除。";
+"delete.expense.shared.title" = "这笔消费还在其他预算里";
+"delete.expense.shared.message" = "“%@”仍关联“%@”。请选择删除范围。";
+"delete.expense.currentOnly" = "只从当前预算移除";
+"delete.expense.everywhere" = "从所有预算删除";
+"delete.batch.title" = "确认删除所选记录";
+"delete.batch.summary" = "将处理 %d 笔记录，其中 %d 笔只属于当前预算并会直接删除。";
+"delete.batch.confirm" = "确认删除";
+"delete.shared.section" = "共享消费";
+"delete.shared.selectAll" = "从所有预算删除全部共享消费";
+"delete.shared.default" = "默认全部不勾选；未勾选的记录只会从当前预算移除。";
+"delete.shared.stillIn" = "仍在：%@";
 
 "settings.status.title" = "预算达标 89%";
 "settings.status.subtitle" = "连续使用 12 天 · 当前有 %d 个预算";
@@ -153,4 +180,9 @@
 "toast.budget.created" = "预算已创建";
 "toast.expense.recorded" = "已记下 %@";
 "toast.expense.undone" = "已撤销这笔记录";
+"toast.expense.deleted" = "已删除这笔记录";
+"toast.expense.removed" = "已从当前预算移除";
+"toast.expense.restored" = "已恢复这笔记录";
+"toast.expenses.deleted" = "已处理 %d 笔记录";
+"toast.budget.deleted" = "已删除“%@”";
 "toast.settlement.completed" = "结算完成";
