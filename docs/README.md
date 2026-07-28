@@ -9,7 +9,7 @@
 1. 根目录 `PRODUCT.md`：产品定位、核心心智、不做清单。
 2. `product/PRD.md` 与 `product/FEATURE-LOOP.md`：当前版本范围和业务流程。
 3. `product/ROADMAP.md`：当前阶段与后续顺序。
-4. `design/DESIGN.md`：当前视觉、布局、交互和文案规范。
+4. `design/DESIGN.md`：当前设计原则、体验底线、已确认方案和探索边界。
 5. `engineering/ARCHITECTURE.md`：当前工程结构、数据边界与实施约束。
 6. `compliance/PRIVACY.md`：当前真实数据行为与未来能力边界。
 
@@ -32,11 +32,11 @@
 
 | 文件或目录 | 作用 |
 |---|---|
-| `design/DESIGN.md` | 唯一 UI 实施规范 |
+| `design/DESIGN.md` | 唯一设计事实来源；内部区分原则、底线、当前方案和探索参考 |
 | `design/prototype/checkline-current.html` | 当前 8 页面范围的单文件交互原型 |
-| `design/prototype/layout-check.md` | 当前原型的 iOS 布局检查 |
-| `design/prototype/stitch/` | 当前 Stitch brief 与线上项目说明 |
-| `design/references/stitch-budget-wallet/` | 当前浅色预算钱包视觉参考 |
+| `design/prototype/layout-check.md` | 2026-07-06 HTML 原型布局检查快照，不是当前设计规则 |
+| `design/prototype/stitch/` | 历史 Stitch brief 与线上项目说明，不直接作为实施要求 |
+| `design/references/stitch-budget-wallet/` | 浅色预算钱包视觉参考，不具有设计权威 |
 
 ### 工程与合规
 
@@ -51,7 +51,7 @@
 
 - 正式工程是根目录 `Check_Line.xcodeproj`，当前包含一个 iOS App Target 和一个 Swift Testing Target。
 - 最低系统版本为 iOS 17.0。
-- App 当前运行与 HTML 原型对齐的 native-first SwiftUI 体验样机，只用于工程与交互验证；最终视觉包装尚未定稿。
+- App 当前运行与 HTML 原型对齐的 SwiftUI 体验样机，只用于工程与交互验证；最终视觉包装尚未定稿。系统能力用于降低实现风险，不能覆盖用户理解和已确认设计。
 - 正式 MVP UI 与 SwiftData 模型尚未实现；Swift Testing Target 已建立并完成 `BudgetEngine` 首批规则测试，其他领域服务仍未实现。
 - 体验样机已验证预算删除、消费记录单独/批量删除和共享消费安全确认；这些内存操作不代表 SwiftData 删除关系已经完成。
 - iCloud、Widget、OCR 和语音均未实现。
@@ -66,5 +66,5 @@
 - 产品范围变化：先改 `PRODUCT.md`，再同步 PRD、功能循环、路线图和相关实施文档。
 - 数据模型、模块边界或依赖变化：同步 `engineering/ARCHITECTURE.md`。
 - 权限或数据流变化：同步 `engineering/PERMISSIONS.md` 与 `compliance/PRIVACY.md`。
-- 页面、交互、文案变化：同步 `design/DESIGN.md` 和当前原型说明。
+- 页面、交互、文案变化：同步 `design/DESIGN.md` 和当前原型说明。重大视觉与交互变化先完成设计确认，不能由实现层自行决定。
 - 完成一个里程碑：更新 `product/ROADMAP.md` 的实际产出，不保留已经完成的“当前计划”。

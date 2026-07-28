@@ -1,6 +1,8 @@
 # Stitch Brief — CheckLine 当前原型交付包
 
 > 这个目录用于指导 Stitch 生成 CheckLine 当前版本原型。
+>
+> 该目录保留 2026-07-06 阶段的生成输入与参考关系，只用于追溯原型过程。它不是当前设计事实来源，现行规则以 `../../DESIGN.md` 为准。
 > 当前版本从历史 14 页深色稿收敛为预算钱包主线：预算、记一笔、统计、设置和结算。
 
 ---
@@ -38,7 +40,7 @@ https://stitch.withgoogle.com/projects/11707032164273888537
 
 https://developer.apple.com/design/human-interface-guidelines/layout
 
-Apple HIG Layout 只作为安全区域、边距、触控区域、底部导航和表单可用性的检查底线，不替代旧「预算钱包」的浅色卡片视觉方向。
+当时使用 Apple HIG Layout 辅助检查安全区域、触控和表单可用性；这些检查不决定 CheckLine 的品牌或具体布局。旧「预算钱包」是该阶段参考，不是当前验收标准。
 
 `scripts/stitch-generate.js` 当前按本 brief 生成 8 个页面，并锁定指定输出项目防止误建项目。实际生成会修改外部 Stitch 项目，运行前必须再次确认 Project ID 和首页 Screen ID；`npm run stitch:check` 只做本地清单检查。
 

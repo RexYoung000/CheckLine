@@ -147,8 +147,8 @@
 "delete.shared.default" = "Nothing is selected by default. Unselected records are removed only from this budget.";
 "delete.shared.stillIn" = "Still in: %@";
 
-"settings.status.title" = "Budget discipline 89%";
-"settings.status.subtitle" = "12-day streak · %d active budgets";
+"settings.status.title" = "Budget overview";
+"settings.status.subtitle" = "Used for 12 days · %d active budgets";
 "settings.finance" = "Financial management";
 "settings.general" = "General";
 "settings.about" = "About";

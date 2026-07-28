@@ -147,7 +147,7 @@
 "delete.shared.default" = "默认全部不勾选；未勾选的记录只会从当前预算移除。";
 "delete.shared.stillIn" = "仍在：%@";
 
-"settings.status.title" = "预算达标 89%";
+"settings.status.title" = "预算回看";
 "settings.status.subtitle" = "连续使用 12 天 · 当前有 %d 个预算";
 "settings.finance" = "财务管理";
 "settings.general" = "通用设置";
