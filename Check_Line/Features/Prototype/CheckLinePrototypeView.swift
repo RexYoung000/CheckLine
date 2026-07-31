@@ -37,6 +37,7 @@ public struct CheckLinePrototypeView: View {
                     store: store,
                     selectedBudgetID: $selectedBudgetID,
                     onShowBudgets: { selectedTab = .budgets },
+                    onShowInsights: { selectedTab = .insights },
                     onCapture: { activeSheet = .capture }
                 )
             }
@@ -83,7 +84,7 @@ public struct CheckLinePrototypeView: View {
             .tabItem { Label("tab.settings", systemImage: "person.crop.circle") }
             .tag(PrototypeAppTab.settings)
         }
-        .tint(CheckLineColor.brand)
+        .tint(CheckLineColor.text)
         .preferredColorScheme(.light)
         .overlay(alignment: .top) {
             if let toast {

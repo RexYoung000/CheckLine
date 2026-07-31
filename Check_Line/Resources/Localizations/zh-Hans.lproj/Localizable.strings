@@ -5,6 +5,10 @@
 "home.date" = "7月6日";
 "home.title" = "预算线";
 "home.wallets" = "预算钱包";
+"home.budget.switch" = "切换预算";
+"home.budget.summary" = "%@ · 已用 %@ / %@";
+"home.expense.metadata" = "%@ · %@";
+"home.expense.accessibility" = "%@，%@，支出 %@";
 "action.viewAll" = "查看全部";
 "action.cancel" = "取消";
 "action.close" = "关闭";

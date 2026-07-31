@@ -5,6 +5,10 @@
 "home.date" = "Jul 6";
 "home.title" = "CheckLine";
 "home.wallets" = "Budget wallets";
+"home.budget.switch" = "Switch budget";
+"home.budget.summary" = "%@ · %@ used of %@";
+"home.expense.metadata" = "%@ · %@";
+"home.expense.accessibility" = "%@, %@, expense %@";
 "action.viewAll" = "View all";
 "action.cancel" = "Cancel";
 "action.close" = "Close";

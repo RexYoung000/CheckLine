@@ -1,10 +1,24 @@
 import SwiftUI
 
+private enum PrototypeHomePalette {
+    static let canvas = Color(hex: 0xF8F8F5)
+    static let surface = Color.white
+    static let control = Color(hex: 0xF0F0EC)
+    static let ink = Color(hex: 0x1B1B1A)
+    static let secondary = Color(hex: 0x74746E)
+    static let quiet = Color(hex: 0x9A9A94)
+}
+
 struct PrototypeHomeView: View {
     let store: PrototypeStore
     @Binding var selectedBudgetID: UUID
     let onShowBudgets: () -> Void
+    let onShowInsights: () -> Void
     let onCapture: () -> Void
+
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    @ScaledMetric(relativeTo: .largeTitle) private var amountSize: CGFloat = 54
 
     private var selectedBudget: PrototypeBudget? {
         store.activeBudgets.first { $0.id == selectedBudgetID } ?? store.activeBudgets.first
@@ -22,8 +36,10 @@ struct PrototypeHomeView: View {
                 )
             }
         }
-        .background(CheckLineColor.canvas)
-        .navigationTitle(Text("home.title"))
+        .background(PrototypeHomePalette.canvas.ignoresSafeArea())
+        .toolbar(.hidden, for: .navigationBar)
+        .toolbarBackground(PrototypeHomePalette.canvas, for: .tabBar)
+        .toolbarBackground(.visible, for: .tabBar)
         .onAppear {
             if !store.activeBudgets.contains(where: { $0.id == selectedBudgetID }),
                let first = store.activeBudgets.first {
@@ -32,215 +48,325 @@ struct PrototypeHomeView: View {
         }
     }
 
-    private func budgetContent(_ selectedBudget: PrototypeBudget) -> some View {
+    private func budgetContent(_ budget: PrototypeBudget) -> some View {
         ScrollView(showsIndicators: false) {
-            LazyVStack(alignment: .leading, spacing: 20) {
-                HStack {
-                    Text("home.wallets")
-                        .font(.title3.weight(.bold))
-                    Spacer()
-                    Button("action.viewAll", action: onShowBudgets)
-                        .font(.subheadline.weight(.semibold))
-                }
+            LazyVStack(alignment: .leading, spacing: 0) {
+                homeHeader
+                    .padding(.horizontal, 28)
 
-                BudgetPager(
-                    budgets: store.activeBudgets,
-                    selectedBudgetID: $selectedBudgetID
-                )
+                budgetHero(budget)
+                    .padding(.horizontal, 28)
 
-                walletContent(selectedBudget)
+                quickActions
+                    .padding(.horizontal, 28)
+
+                recentRecords(budget)
+                    .padding(.horizontal, 16)
+                    .padding(.top, 38)
             }
-            .padding(.horizontal, 20)
-            .padding(.top, 12)
+            .frame(maxWidth: 620)
+            .frame(maxWidth: .infinity)
+            .padding(.top, 10)
             .padding(.bottom, 28)
         }
         .accessibilityIdentifier("home.scroll")
-        .safeAreaInset(edge: .bottom, spacing: 0) {
-            HStack {
-                Spacer()
-                Button(action: onCapture) {
-                    Label("capture.title", systemImage: "plus")
-                        .font(.headline)
-                }
-                .buttonStyle(.borderedProminent)
-                .buttonBorderShape(.capsule)
-                .controlSize(.large)
-                .tint(CheckLineColor.brand)
-                .shadow(color: CheckLineColor.brand.opacity(0.22), radius: 16, x: 0, y: 8)
-                .accessibilityLabel(Text("capture.add.accessibility"))
-            }
-            .padding(.horizontal, 20)
-            .padding(.vertical, 10)
-            .background(CheckLineColor.canvas)
-        }
     }
 
-    private func walletContent(_ selectedBudget: PrototypeBudget) -> some View {
-        VStack(alignment: .leading, spacing: 12) {
-            HStack(alignment: .firstTextBaseline) {
-                Text("budget.categories")
-                    .font(.headline.weight(.bold))
-                Spacer()
-                Text(dateRangeText(selectedBudget))
-                    .font(.caption.weight(.medium))
-                    .foregroundStyle(CheckLineColor.secondary)
-            }
+    private var homeHeader: some View {
+        HStack(alignment: .center) {
+            Text("home.title")
+                .font(.title3.weight(.semibold))
+                .foregroundStyle(PrototypeHomePalette.ink)
 
-            CheckLineSurface {
-                VStack(spacing: 0) {
-                    ForEach(Array(selectedBudget.categories.prefix(3).enumerated()), id: \.element.id) { index, category in
-                        PrototypeCategoryRow(category: category)
-                        if index < min(selectedBudget.categories.count, 3) - 1 {
-                            Divider()
-                                .overlay(CheckLineColor.divider)
+            Spacer()
+
+            Text("home.date")
+                .font(.subheadline)
+                .foregroundStyle(PrototypeHomePalette.secondary)
+        }
+        .frame(minHeight: 44)
+    }
+
+    private func budgetHero(_ budget: PrototypeBudget) -> some View {
+        VStack(alignment: .leading, spacing: 0) {
+            Text("budget.remaining.label")
+                .font(.subheadline)
+                .foregroundStyle(PrototypeHomePalette.secondary)
+                .padding(.bottom, 7)
+
+            Text(currencyText(budget.remaining))
+                .font(.system(size: amountSize, weight: .regular, design: .default))
+                .monospacedDigit()
+                .foregroundStyle(PrototypeHomePalette.ink)
+                .lineLimit(1)
+                .minimumScaleFactor(0.58)
+                .contentTransition(.numericText(value: decimalDouble(budget.remaining)))
+                .animation(reduceMotion ? nil : .easeInOut(duration: 0.22), value: budget.remaining)
+                .accessibilityLabel(Text("budget.remaining.label"))
+                .accessibilityValue(Text(currencyText(budget.remaining)))
+
+            Menu {
+                ForEach(store.activeBudgets) { candidate in
+                    Button {
+                        selectBudget(candidate.id)
+                    } label: {
+                        if candidate.id == selectedBudgetID {
+                            Label(candidate.name, systemImage: "checkmark")
+                        } else {
+                            Text(candidate.name)
                         }
                     }
                 }
-            }
-
-            HStack {
-                Text("expense.recent.title")
-                    .font(.headline.weight(.bold))
-                Spacer()
-                Text(selectedBudget.cycleType.title)
-                    .font(.caption.weight(.medium))
-                    .foregroundStyle(CheckLineColor.secondary)
-            }
-
-            CheckLineSurface {
-                let recentExpenses = Array(store.expenses(for: selectedBudget.id).prefix(3))
-                VStack(spacing: 0) {
-                    ForEach(Array(recentExpenses.enumerated()), id: \.element.id) { index, expense in
-                        PrototypeExpenseRow(expense: expense, store: store)
-                        if index < recentExpenses.count - 1 {
-                            Divider()
-                                .overlay(CheckLineColor.divider)
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
-struct BudgetPager: View {
-    let budgets: [PrototypeBudget]
-    @Binding var selectedBudgetID: UUID
-    @State private var scrollID: UUID?
-
-    var body: some View {
-        VStack(spacing: 8) {
-            ScrollView(.horizontal, showsIndicators: false) {
-                LazyHStack(spacing: 12) {
-                    ForEach(budgets) { budget in
-                        PrototypeBudgetCard(
-                            budget: budget,
-                            isSelected: budget.id == selectedBudgetID
-                        )
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .containerRelativeFrame(.horizontal, count: 1, span: 1, spacing: 12)
-                        .id(budget.id)
-                    }
-                }
-                .scrollTargetLayout()
-            }
-            .scrollTargetBehavior(.viewAligned)
-            .scrollPosition(id: $scrollID)
-            .frame(height: 194)
-            .accessibilityIdentifier("home.budgetPager")
-
-            HStack(spacing: 7) {
-                ForEach(budgets) { budget in
-                    Capsule()
-                        .fill(budget.id == selectedBudgetID ? CheckLineColor.brand : CheckLineColor.divider)
-                        .frame(width: budget.id == selectedBudgetID ? 18 : 6, height: 6)
-                        .animation(.spring(response: 0.3, dampingFraction: 0.8), value: selectedBudgetID)
-                }
-            }
-            .frame(height: 8)
-            .accessibilityHidden(true)
-        }
-        .onAppear { scrollID = selectedBudgetID }
-        .onChange(of: scrollID) { _, newValue in
-            guard let newValue, newValue != selectedBudgetID else { return }
-            selectedBudgetID = newValue
-            PrototypeHaptics.selection()
-        }
-        .onChange(of: selectedBudgetID) { _, newValue in
-            guard scrollID != newValue else { return }
-            withAnimation(.easeInOut(duration: 0.2)) {
-                scrollID = newValue
-            }
-        }
-    }
-}
-
-struct PrototypeBudgetCard: View {
-    let budget: PrototypeBudget
-    let isSelected: Bool
-
-    private var progressColor: Color {
-        budget.progress >= 0.95 ? CheckLineColor.danger : CheckLineColor.text
-    }
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            HStack(alignment: .top, spacing: 12) {
-                VStack(alignment: .leading, spacing: 4) {
+            } label: {
+                HStack(spacing: 7) {
                     Text(budget.name)
-                        .font(.headline.weight(.bold))
-                    Text("\(budget.template.title) · \(budget.cycleType.title)")
-                        .font(.caption.weight(.medium))
-                        .foregroundStyle(CheckLineColor.secondary)
-                }
-                Spacer(minLength: 6)
-                VStack(alignment: .trailing, spacing: 4) {
-                    Text("budget.remaining.label")
+                        .lineLimit(1)
+                    Image(systemName: "chevron.down")
                         .font(.caption.weight(.semibold))
-                        .foregroundStyle(CheckLineColor.secondary)
-                    MoneyText(amount: budget.remaining, color: progressColor, size: 34)
                 }
+                .font(.subheadline.weight(.semibold))
+                .foregroundStyle(PrototypeHomePalette.ink)
+                .padding(.horizontal, 15)
+                .frame(minHeight: 38)
+                .background(PrototypeHomePalette.control, in: Capsule())
             }
+            .buttonStyle(.plain)
+            .accessibilityLabel(Text("home.budget.switch"))
+            .accessibilityValue(Text(budget.name))
+            .accessibilityIdentifier("home.budgetSelector")
+            .padding(.top, 20)
 
-            HStack(spacing: 10) {
-                BudgetProgressBar(progress: budget.progress)
-                Text(budget.progress, format: .percent.precision(.fractionLength(0)))
-                    .font(.caption.weight(.semibold).monospacedDigit())
-                    .foregroundStyle(CheckLineColor.secondary)
-                    .frame(minWidth: 34, alignment: .trailing)
+            Text(
+                String(
+                    format: String(localized: "home.budget.summary"),
+                    dateRangeText(budget),
+                    currencyText(budget.spent),
+                    currencyText(budget.total)
+                )
+            )
+            .font(.footnote)
+            .foregroundStyle(PrototypeHomePalette.secondary)
+            .fixedSize(horizontal: false, vertical: true)
+            .padding(.top, 12)
+        }
+        .padding(.top, 36)
+        .padding(.bottom, 38)
+    }
+
+    @ViewBuilder
+    private var quickActions: some View {
+        if dynamicTypeSize.isAccessibilitySize {
+            VStack(spacing: 12) {
+                PrototypeHomeAccessibleAction(
+                    title: String(localized: "capture.title"),
+                    systemImage: "plus",
+                    isPrimary: true,
+                    action: onCapture
+                )
+                PrototypeHomeAccessibleAction(
+                    title: String(localized: "tab.budgets"),
+                    systemImage: "square.stack.3d.up",
+                    action: onShowBudgets
+                )
+                PrototypeHomeAccessibleAction(
+                    title: String(localized: "tab.insights"),
+                    systemImage: "chart.bar.xaxis",
+                    action: onShowInsights
+                )
             }
+        } else {
+            HStack(alignment: .top, spacing: 24) {
+                Spacer(minLength: 0)
+                PrototypeHomeAction(
+                    title: String(localized: "capture.title"),
+                    systemImage: "plus",
+                    isPrimary: true,
+                    action: onCapture
+                )
+                PrototypeHomeAction(
+                    title: String(localized: "tab.budgets"),
+                    systemImage: "square.stack.3d.up",
+                    action: onShowBudgets
+                )
+                PrototypeHomeAction(
+                    title: String(localized: "tab.insights"),
+                    systemImage: "chart.bar.xaxis",
+                    action: onShowInsights
+                )
+                Spacer(minLength: 0)
+            }
+        }
+    }
 
-            HStack(spacing: 8) {
-                ForEach(budget.categories.prefix(2)) { category in
-                    HStack(spacing: 5) {
-                        Circle()
-                            .fill(categoryColor(category))
-                            .frame(width: 6, height: 6)
-                        Text("\(category.name) \(currencyText(max(0, category.limit - category.spent)))")
+    private func recentRecords(_ budget: PrototypeBudget) -> some View {
+        let expenses = Array(store.expenses(for: budget.id).prefix(4))
+
+        return VStack(alignment: .leading, spacing: 0) {
+            Text("expense.recent.title")
+                .font(.headline.weight(.semibold))
+                .foregroundStyle(PrototypeHomePalette.ink)
+                .padding(.bottom, 18)
+
+            if expenses.isEmpty {
+                Text("expense.empty")
+                    .font(.subheadline)
+                    .foregroundStyle(PrototypeHomePalette.secondary)
+                    .frame(maxWidth: .infinity, minHeight: 72, alignment: .leading)
+            } else {
+                VStack(spacing: 18) {
+                    ForEach(expenses) { expense in
+                        PrototypeHomeExpenseRow(
+                            expense: expense,
+                            iconName: iconName(for: expense, in: budget)
+                        )
                     }
-                    .font(.caption.weight(.medium))
-                    .foregroundStyle(CheckLineColor.secondary)
-                    .padding(.horizontal, 8)
-                    .padding(.vertical, 5)
-                    .background(CheckLineColor.muted, in: Capsule())
                 }
             }
         }
-        .padding(20)
+        .padding(.horizontal, 20)
+        .padding(.top, 22)
+        .padding(.bottom, 24)
         .background(
-            RoundedRectangle(cornerRadius: 24, style: .continuous)
-                .fill(CheckLineColor.card)
+            RoundedRectangle(cornerRadius: 28, style: .continuous)
+                .fill(PrototypeHomePalette.surface)
         )
-        .overlay(
-            RoundedRectangle(cornerRadius: 24, style: .continuous)
-                .stroke(
-                    isSelected ? CheckLineColor.brand.opacity(0.5) : CheckLineColor.surfaceStroke.opacity(0.8),
-                    lineWidth: isSelected ? 1.5 : 1
+        .shadow(color: .black.opacity(0.035), radius: 22, x: 0, y: 10)
+    }
+
+    private func iconName(for expense: PrototypeExpense, in budget: PrototypeBudget) -> String {
+        budget.categories.first { $0.name == expense.categoryName }?.iconName ?? "receipt"
+    }
+
+    private func selectBudget(_ id: UUID) {
+        guard id != selectedBudgetID else { return }
+        if reduceMotion {
+            selectedBudgetID = id
+        } else {
+            withAnimation(.easeInOut(duration: 0.22)) {
+                selectedBudgetID = id
+            }
+        }
+        PrototypeHaptics.selection()
+    }
+}
+
+private struct PrototypeHomeAction: View {
+    let title: String
+    let systemImage: String
+    var isPrimary = false
+    let action: () -> Void
+
+    var body: some View {
+        Button(action: action) {
+            VStack(spacing: 10) {
+                Image(systemName: systemImage)
+                    .font(.system(size: 20, weight: .medium))
+                    .frame(width: 64, height: 64)
+                    .foregroundStyle(isPrimary ? .white : PrototypeHomePalette.ink)
+                    .background(
+                        isPrimary ? PrototypeHomePalette.ink : PrototypeHomePalette.control,
+                        in: Circle()
+                    )
+
+                Text(title)
+                    .font(.caption)
+                    .foregroundStyle(PrototypeHomePalette.secondary)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.75)
+            }
+            .frame(width: 76)
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel(Text(title))
+    }
+}
+
+private struct PrototypeHomeAccessibleAction: View {
+    let title: String
+    let systemImage: String
+    var isPrimary = false
+    let action: () -> Void
+
+    var body: some View {
+        Button(action: action) {
+            HStack(spacing: 14) {
+                Image(systemName: systemImage)
+                    .font(.body.weight(.semibold))
+                    .frame(width: 44, height: 44)
+                    .foregroundStyle(isPrimary ? .white : PrototypeHomePalette.ink)
+                    .background(
+                        isPrimary ? PrototypeHomePalette.ink : PrototypeHomePalette.control,
+                        in: Circle()
+                    )
+
+                Text(title)
+                    .font(.body.weight(.medium))
+                    .foregroundStyle(PrototypeHomePalette.ink)
+
+                Spacer()
+            }
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+    }
+}
+
+private struct PrototypeHomeExpenseRow: View {
+    let expense: PrototypeExpense
+    let iconName: String
+
+    private var metadata: String {
+        String(
+            format: String(localized: "home.expense.metadata"),
+            expense.categoryName,
+            expense.occurredAt.formatted(
+                .dateTime
+                    .month(.defaultDigits)
+                    .day()
+            )
+        )
+    }
+
+    var body: some View {
+        HStack(spacing: 13) {
+            Image(systemName: iconName)
+                .font(.subheadline.weight(.medium))
+                .foregroundStyle(PrototypeHomePalette.ink)
+                .frame(width: 42, height: 42)
+                .background(PrototypeHomePalette.control, in: Circle())
+                .accessibilityHidden(true)
+
+            VStack(alignment: .leading, spacing: 4) {
+                Text(expense.title)
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(PrototypeHomePalette.ink)
+                    .lineLimit(1)
+
+                Text(metadata)
+                    .font(.caption)
+                    .foregroundStyle(PrototypeHomePalette.quiet)
+                    .lineLimit(1)
+            }
+
+            Spacer(minLength: 8)
+
+            Text(currencyText(-expense.amount))
+                .font(.subheadline.weight(.semibold).monospacedDigit())
+                .foregroundStyle(PrototypeHomePalette.ink)
+                .lineLimit(1)
+        }
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(
+            Text(
+                String(
+                    format: String(localized: "home.expense.accessibility"),
+                    expense.title,
+                    metadata,
+                    currencyText(expense.amount)
                 )
+            )
         )
-        .shadow(color: .black.opacity(isSelected ? 0.075 : 0.045), radius: 20, x: 0, y: isSelected ? 9 : 7)
-        .scaleEffect(isSelected ? 1 : 0.985)
-        .animation(.spring(response: 0.34, dampingFraction: 0.82), value: isSelected)
     }
 }
 
