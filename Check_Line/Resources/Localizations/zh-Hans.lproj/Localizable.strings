@@ -6,7 +6,9 @@
 "home.title" = "预算线";
 "home.wallets" = "预算钱包";
 "home.budget.switch" = "切换预算";
-"home.budget.summary" = "%@ · 已用 %@ / %@";
+"home.budget.total.inline" = "/ %@";
+"home.budget.spent.accessibility" = "总支出";
+"home.budget.balance.accessibility" = "还能花 %@，预算总额 %@";
 "home.expense.metadata" = "%@ · %@";
 "home.expense.accessibility" = "%@，%@，支出 %@";
 "action.viewAll" = "查看全部";

@@ -6,7 +6,9 @@
 "home.title" = "CheckLine";
 "home.wallets" = "Budget wallets";
 "home.budget.switch" = "Switch budget";
-"home.budget.summary" = "%@ · %@ used of %@";
+"home.budget.total.inline" = "/ %@";
+"home.budget.spent.accessibility" = "Total spent";
+"home.budget.balance.accessibility" = "Available %@, total budget %@";
 "home.expense.metadata" = "%@ · %@";
 "home.expense.accessibility" = "%@, %@, expense %@";
 "action.viewAll" = "View all";

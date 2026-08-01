@@ -73,84 +73,98 @@ struct PrototypeHomeView: View {
     }
 
     private var homeHeader: some View {
-        HStack(alignment: .center) {
-            Text("home.title")
-                .font(.title3.weight(.semibold))
-                .foregroundStyle(PrototypeHomePalette.ink)
-
-            Spacer()
-
-            Text("home.date")
-                .font(.subheadline)
-                .foregroundStyle(PrototypeHomePalette.secondary)
-        }
+        Text("home.title")
+            .font(.title3.weight(.semibold))
+            .foregroundStyle(PrototypeHomePalette.ink)
         .frame(minHeight: 44)
     }
 
     private func budgetHero(_ budget: PrototypeBudget) -> some View {
-        VStack(alignment: .leading, spacing: 0) {
-            Text("budget.remaining.label")
-                .font(.subheadline)
-                .foregroundStyle(PrototypeHomePalette.secondary)
-                .padding(.bottom, 7)
+        Group {
+            if dynamicTypeSize.isAccessibilitySize {
+                VStack(alignment: .leading, spacing: 18) {
+                    budgetMenu(budget)
+                        .frame(maxWidth: .infinity, alignment: .trailing)
+                    budgetAmount(budget)
+                }
+            } else {
+                HStack(alignment: .top, spacing: 12) {
+                    budgetAmount(budget)
+                    Spacer(minLength: 0)
+                    budgetMenu(budget)
+                }
+            }
+        }
+        .padding(.top, 44)
+        .padding(.bottom, 44)
+    }
 
-            Text(currencyText(budget.remaining))
+    private func budgetAmount(_ budget: PrototypeBudget) -> some View {
+        HStack(alignment: .lastTextBaseline, spacing: 8) {
+            Text(homeCurrencyText(budget.remaining))
                 .font(.system(size: amountSize, weight: .regular, design: .default))
                 .monospacedDigit()
                 .foregroundStyle(PrototypeHomePalette.ink)
                 .lineLimit(1)
-                .minimumScaleFactor(0.58)
+                .minimumScaleFactor(0.7)
                 .contentTransition(.numericText(value: decimalDouble(budget.remaining)))
                 .animation(reduceMotion ? nil : .easeInOut(duration: 0.22), value: budget.remaining)
-                .accessibilityLabel(Text("budget.remaining.label"))
-                .accessibilityValue(Text(currencyText(budget.remaining)))
-
-            Menu {
-                ForEach(store.activeBudgets) { candidate in
-                    Button {
-                        selectBudget(candidate.id)
-                    } label: {
-                        if candidate.id == selectedBudgetID {
-                            Label(candidate.name, systemImage: "checkmark")
-                        } else {
-                            Text(candidate.name)
-                        }
-                    }
-                }
-            } label: {
-                HStack(spacing: 7) {
-                    Text(budget.name)
-                        .lineLimit(1)
-                    Image(systemName: "chevron.down")
-                        .font(.caption.weight(.semibold))
-                }
-                .font(.subheadline.weight(.semibold))
-                .foregroundStyle(PrototypeHomePalette.ink)
-                .padding(.horizontal, 15)
-                .frame(minHeight: 38)
-                .background(PrototypeHomePalette.control, in: Capsule())
-            }
-            .buttonStyle(.plain)
-            .accessibilityLabel(Text("home.budget.switch"))
-            .accessibilityValue(Text(budget.name))
-            .accessibilityIdentifier("home.budgetSelector")
-            .padding(.top, 20)
 
             Text(
                 String(
-                    format: String(localized: "home.budget.summary"),
-                    dateRangeText(budget),
-                    currencyText(budget.spent),
-                    currencyText(budget.total)
+                    format: String(localized: "home.budget.total.inline"),
+                    homeCurrencyText(budget.total)
                 )
             )
-            .font(.footnote)
-            .foregroundStyle(PrototypeHomePalette.secondary)
-            .fixedSize(horizontal: false, vertical: true)
-            .padding(.top, 12)
+            .font(.footnote.weight(.medium))
+            .monospacedDigit()
+            .foregroundStyle(PrototypeHomePalette.quiet)
+            .lineLimit(1)
+            .fixedSize(horizontal: true, vertical: false)
         }
-        .padding(.top, 36)
-        .padding(.bottom, 38)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(
+            Text(
+                String(
+                    format: String(localized: "home.budget.balance.accessibility"),
+                    homeCurrencyText(budget.remaining),
+                    homeCurrencyText(budget.total)
+                )
+            )
+        )
+    }
+
+    private func budgetMenu(_ budget: PrototypeBudget) -> some View {
+        Menu {
+            ForEach(store.activeBudgets) { candidate in
+                Button {
+                    selectBudget(candidate.id)
+                } label: {
+                    if candidate.id == selectedBudgetID {
+                        Label(candidate.name, systemImage: "checkmark")
+                    } else {
+                        Text(candidate.name)
+                    }
+                }
+            }
+        } label: {
+            HStack(spacing: 7) {
+                Text(budget.name)
+                    .lineLimit(1)
+                Image(systemName: "chevron.down")
+                    .font(.caption.weight(.semibold))
+            }
+            .font(.subheadline.weight(.semibold))
+            .foregroundStyle(PrototypeHomePalette.ink)
+            .padding(.horizontal, 13)
+            .frame(minHeight: 36)
+            .background(PrototypeHomePalette.control, in: Capsule())
+        }
+        .fixedSize(horizontal: true, vertical: false)
+        .buttonStyle(.plain)
+        .accessibilityLabel(Text("home.budget.switch"))
+        .accessibilityValue(Text(budget.name))
+        .accessibilityIdentifier("home.budgetSelector")
     }
 
     @ViewBuilder
@@ -202,10 +216,23 @@ struct PrototypeHomeView: View {
         let expenses = Array(store.expenses(for: budget.id).prefix(4))
 
         return VStack(alignment: .leading, spacing: 0) {
-            Text("expense.recent.title")
-                .font(.headline.weight(.semibold))
-                .foregroundStyle(PrototypeHomePalette.ink)
-                .padding(.bottom, 18)
+            HStack(alignment: .firstTextBaseline, spacing: 12) {
+                Text("expense.recent.title")
+                    .font(.headline.weight(.semibold))
+                    .foregroundStyle(PrototypeHomePalette.ink)
+
+                Spacer(minLength: 8)
+
+                Text(homeCurrencyText(-budget.spent))
+                    .font(.headline.weight(.semibold))
+                    .monospacedDigit()
+                    .foregroundStyle(PrototypeHomePalette.ink)
+                    .lineLimit(1)
+                    .fixedSize(horizontal: true, vertical: false)
+                    .accessibilityLabel(Text("home.budget.spent.accessibility"))
+                    .accessibilityValue(Text(homeCurrencyText(budget.spent)))
+            }
+            .padding(.bottom, 20)
 
             if expenses.isEmpty {
                 Text("expense.empty")
@@ -351,7 +378,7 @@ private struct PrototypeHomeExpenseRow: View {
 
             Spacer(minLength: 8)
 
-            Text(currencyText(-expense.amount))
+            Text(homeCurrencyText(-expense.amount))
                 .font(.subheadline.weight(.semibold).monospacedDigit())
                 .foregroundStyle(PrototypeHomePalette.ink)
                 .lineLimit(1)
@@ -368,6 +395,14 @@ private struct PrototypeHomeExpenseRow: View {
             )
         )
     }
+}
+
+private func homeCurrencyText(_ amount: Decimal) -> String {
+    amount.formatted(
+        .currency(code: "CNY")
+        .presentation(.narrow)
+        .precision(.fractionLength(0))
+    )
 }
 
 struct PrototypeCategoryRow: View {
