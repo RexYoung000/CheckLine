@@ -9,8 +9,6 @@ struct PrototypeInsightsView: View {
         store.activeBudgets.first { $0.id == selectedBudgetID } ?? store.activeBudgets.first
     }
 
-    let onCapture: () -> Void
-
     var body: some View {
         Group {
             if let budget {
@@ -27,39 +25,21 @@ struct PrototypeInsightsView: View {
     }
 
     private func insightsContent(_ budget: PrototypeBudget) -> some View {
-        List {
-            Section {
+        ScrollView(showsIndicators: false) {
+            VStack(alignment: .leading, spacing: 28) {
                 budgetPicker
                 remainingCard(budget)
+                comparisonSection(budget)
+                categoriesSection(budget)
             }
-
-            Section("insights.comparison") {
-                comparisonChart(budget)
-            }
-
-            Section("insights.categories") {
-                ForEach(budget.categories.sorted { $0.spent > $1.spent }) { category in
-                    HStack {
-                        Label(category.name, systemImage: category.iconName)
-                            .foregroundStyle(categoryColor(category))
-                        Spacer()
-                        VStack(alignment: .trailing, spacing: 2) {
-                            Text(currencyText(category.spent))
-                                .monospacedDigit()
-                            Text(category.spent / max(1, budget.spent), format: .percent.precision(.fractionLength(0)))
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
-                        }
-                    }
-                }
-            }
+            .padding(.horizontal, 20)
+            .padding(.top, 12)
+            .padding(.bottom, 36)
+            .frame(maxWidth: 620)
+            .frame(maxWidth: .infinity)
         }
-        .listStyle(.insetGrouped)
-        .scrollContentBackground(.hidden)
+        .background(CheckLineColor.canvas.ignoresSafeArea())
         .toolbar {
-            ToolbarItem(placement: .topBarLeading) {
-                Button("capture.title", systemImage: "plus", action: onCapture)
-            }
             ToolbarItem(placement: .topBarTrailing) {
                 NavigationLink {
                     PrototypeCalendarView(store: store, selectedBudgetID: selectedBudgetID)
@@ -71,28 +51,92 @@ struct PrototypeInsightsView: View {
     }
 
     private var budgetPicker: some View {
-        Picker("insights.budgetPicker", selection: $selectedBudgetID) {
-            ForEach(store.activeBudgets) { option in
-                Label(option.name, systemImage: "wallet.pass")
-                    .tag(option.id)
+        HStack {
+            Text("insights.budgetPicker")
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(CheckLineColor.secondary)
+
+            Spacer()
+
+            Picker("insights.budgetPicker", selection: $selectedBudgetID) {
+                ForEach(store.activeBudgets) { option in
+                    Label(option.name, systemImage: "wallet.pass")
+                        .tag(option.id)
+                }
             }
+            .pickerStyle(.menu)
+            .tint(CheckLineColor.text)
         }
-        .pickerStyle(.menu)
-        .tint(CheckLineColor.brand)
     }
 
     private func remainingCard(_ budget: PrototypeBudget) -> some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: 10) {
             Text(String(format: String(localized: "insights.remaining"), budget.name))
-                .font(.caption.bold())
+                .font(.caption.weight(.semibold))
                 .foregroundStyle(CheckLineColor.secondary)
-            MoneyText(amount: budget.remaining, color: CheckLineColor.success)
+
+            MoneyText(amount: budget.remaining, size: 52)
+
             Text("\(dateRangeText(budget)) · \(String(localized: "budget.used")) \(currencyText(budget.spent))")
-                .font(.caption)
+                .font(.subheadline)
                 .foregroundStyle(CheckLineColor.secondary)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(.vertical, 8)
+    }
+
+    private func comparisonSection(_ budget: PrototypeBudget) -> some View {
+        VStack(alignment: .leading, spacing: 12) {
+            CheckLineSectionHeader("insights.comparison")
+            CheckLineSurface {
+                comparisonChart(budget)
+            }
+        }
+    }
+
+    private func categoriesSection(_ budget: PrototypeBudget) -> some View {
+        let categories = budget.categories.sorted { $0.spent > $1.spent }
+
+        return VStack(alignment: .leading, spacing: 12) {
+            CheckLineSectionHeader("insights.categories")
+
+            VStack(spacing: 0) {
+                ForEach(Array(categories.enumerated()), id: \.element.id) { index, category in
+                    HStack(spacing: 12) {
+                        Image(systemName: category.iconName)
+                            .font(.subheadline.weight(.semibold))
+                            .foregroundStyle(categoryColor(category))
+                            .frame(width: 34, height: 34)
+                            .background(CheckLineColor.muted, in: Circle())
+
+                        Text(category.name)
+                            .font(.body.weight(.medium))
+                            .foregroundStyle(CheckLineColor.text)
+
+                        Spacer()
+
+                        VStack(alignment: .trailing, spacing: 3) {
+                            Text(currencyText(category.spent))
+                                .font(.body.weight(.semibold).monospacedDigit())
+                            Text(
+                                category.spent / max(1, budget.spent),
+                                format: .percent.precision(.fractionLength(0))
+                            )
+                            .font(.caption)
+                            .foregroundStyle(CheckLineColor.secondary)
+                        }
+                    }
+                    .padding(.horizontal, 18)
+                    .padding(.vertical, 13)
+
+                    if index < categories.count - 1 {
+                        Divider()
+                            .padding(.leading, 64)
+                    }
+                }
+            }
+            .background(CheckLineColor.card, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
+            .shadow(color: .black.opacity(0.035), radius: 20, x: 0, y: 10)
+        }
     }
 
     private func comparisonChart(_ budget: PrototypeBudget) -> some View {
@@ -148,17 +192,16 @@ struct PrototypeCalendarView: View {
     }
 
     var body: some View {
-        List {
-            Section("calendar.filter") {
+        ScrollView(showsIndicators: false) {
+            VStack(alignment: .leading, spacing: 24) {
                 Picker("calendar.filter", selection: $filter) {
                     Text("calendar.all").tag(PrototypeCalendarFilter.all)
                     Text(store.budget(id: selectedBudgetID)?.name ?? String(localized: "calendar.current"))
                         .tag(PrototypeCalendarFilter.current)
                 }
                 .pickerStyle(.segmented)
-            }
 
-            Section {
+                CheckLineSurface {
                 DatePicker(
                     "calendar.month.title",
                     selection: $selectedDate,
@@ -166,20 +209,46 @@ struct PrototypeCalendarView: View {
                     displayedComponents: .date
                 )
                 .datePickerStyle(.graphical)
-            }
+                }
 
-            Section(LocalizedStringKey(String(format: String(localized: "calendar.records.day"), Calendar.current.component(.day, from: selectedDate)))) {
-                if selectedExpenses.isEmpty {
-                    ContentUnavailableView("calendar.empty", systemImage: "calendar.badge.exclamationmark")
-                } else {
-                    ForEach(selectedExpenses) { expense in
-                        PrototypeExpenseRow(expense: expense, store: store)
+                VStack(alignment: .leading, spacing: 12) {
+                    Text(
+                        String(
+                            format: String(localized: "calendar.records.day"),
+                            Calendar.current.component(.day, from: selectedDate)
+                        )
+                    )
+                    .font(.headline.weight(.semibold))
+
+                    VStack(spacing: 0) {
+                        if selectedExpenses.isEmpty {
+                            Text("calendar.empty")
+                                .font(.subheadline)
+                                .foregroundStyle(CheckLineColor.secondary)
+                                .frame(maxWidth: .infinity, minHeight: 84, alignment: .leading)
+                                .padding(.horizontal, 18)
+                        } else {
+                            ForEach(Array(selectedExpenses.enumerated()), id: \.element.id) { index, expense in
+                                PrototypeExpenseRow(expense: expense, store: store)
+                                    .padding(.horizontal, 18)
+                                if index < selectedExpenses.count - 1 {
+                                    Divider()
+                                        .padding(.leading, 62)
+                                }
+                            }
+                        }
                     }
+                    .background(CheckLineColor.card, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
+                    .shadow(color: .black.opacity(0.035), radius: 20, x: 0, y: 10)
                 }
             }
+            .padding(.horizontal, 20)
+            .padding(.top, 12)
+            .padding(.bottom, 36)
+            .frame(maxWidth: 620)
+            .frame(maxWidth: .infinity)
         }
-        .listStyle(.insetGrouped)
-        .scrollContentBackground(.hidden)
+        .background(CheckLineColor.canvas.ignoresSafeArea())
         .navigationTitle(Text("insights.calendar"))
         .navigationBarTitleDisplayMode(.inline)
         .onChange(of: filter) { _, _ in PrototypeHaptics.selection() }

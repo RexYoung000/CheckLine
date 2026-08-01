@@ -1,20 +1,5 @@
 import SwiftUI
 
-private enum PrototypeHomePalette {
-    static let canvas = Color(hex: 0xF8F8F5)
-    static let surface = Color.white
-    static let control = Color(hex: 0xF0F0EC)
-    static let ink = Color(hex: 0x1B1B1A)
-    static let secondary = Color(hex: 0x74746E)
-    static let quiet = Color(hex: 0x9A9A94)
-}
-
-private enum PrototypeCaptureLauncherState {
-    case collapsed
-    case peeking
-    case expanded
-}
-
 struct PrototypeHomeView: View {
     let store: PrototypeStore
     @Binding var selectedBudgetID: UUID
@@ -25,9 +10,7 @@ struct PrototypeHomeView: View {
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @ScaledMetric(relativeTo: .largeTitle) private var amountSize: CGFloat = 64
 
-    @State private var launcherState = PrototypeCaptureLauncherState.collapsed
-    @State private var didRecognizeLongPress = false
-    @State private var hasShownLauncherHint = false
+    @State private var isCaptureMenuExpanded = false
 
     private var selectedBudget: PrototypeBudget? {
         store.activeBudgets.first { $0.id == selectedBudgetID } ?? store.activeBudgets.first
@@ -45,9 +28,9 @@ struct PrototypeHomeView: View {
                 )
             }
         }
-        .background(PrototypeHomePalette.canvas.ignoresSafeArea())
+        .background(CheckLineColor.canvas.ignoresSafeArea())
         .toolbar(.hidden, for: .navigationBar)
-        .toolbarBackground(PrototypeHomePalette.canvas, for: .tabBar)
+        .toolbarBackground(CheckLineColor.canvas, for: .tabBar)
         .toolbarBackground(.visible, for: .tabBar)
         .onAppear {
             if !store.activeBudgets.contains(where: { $0.id == selectedBudgetID }),
@@ -55,7 +38,6 @@ struct PrototypeHomeView: View {
                 selectedBudgetID = first.id
             }
         }
-        .task { await showLauncherHintOnce() }
     }
 
     private func budgetContent(_ budget: PrototypeBudget) -> some View {
@@ -79,10 +61,10 @@ struct PrototypeHomeView: View {
             }
             .accessibilityIdentifier("home.scroll")
 
-            if launcherState == .expanded {
-                Color.clear
+            if isCaptureMenuExpanded {
+                Color.black.opacity(0.025)
                     .contentShape(Rectangle())
-                    .onTapGesture { setLauncherState(.collapsed) }
+                    .onTapGesture { setCaptureMenuExpanded(false) }
                     .accessibilityHidden(true)
             }
 
@@ -96,7 +78,7 @@ struct PrototypeHomeView: View {
         HStack(alignment: .center, spacing: 12) {
             Text("home.title")
                 .font(.title3.weight(.semibold))
-                .foregroundStyle(PrototypeHomePalette.ink)
+                .foregroundStyle(CheckLineColor.text)
 
             Spacer(minLength: 8)
 
@@ -141,7 +123,7 @@ struct PrototypeHomeView: View {
         Text(homeCurrencyText(budget.remaining))
             .font(.system(size: amountSize, weight: .regular, design: .default))
             .monospacedDigit()
-            .foregroundStyle(PrototypeHomePalette.ink)
+            .foregroundStyle(CheckLineColor.text)
             .lineLimit(1)
             .minimumScaleFactor(0.68)
             .contentTransition(.numericText(value: decimalDouble(budget.remaining)))
@@ -157,7 +139,7 @@ struct PrototypeHomeView: View {
         )
         .font(.footnote.weight(.medium))
         .monospacedDigit()
-        .foregroundStyle(PrototypeHomePalette.quiet)
+        .foregroundStyle(CheckLineColor.quiet)
         .lineLimit(1)
         .fixedSize(horizontal: true, vertical: false)
     }
@@ -183,10 +165,10 @@ struct PrototypeHomeView: View {
                     .font(.caption.weight(.semibold))
             }
             .font(.subheadline.weight(.semibold))
-            .foregroundStyle(PrototypeHomePalette.ink)
+            .foregroundStyle(CheckLineColor.text)
             .padding(.horizontal, 13)
             .frame(minHeight: 36)
-            .background(PrototypeHomePalette.control, in: Capsule())
+            .background(CheckLineColor.muted, in: Capsule())
         }
         .fixedSize(horizontal: true, vertical: false)
         .buttonStyle(.plain)
@@ -203,14 +185,14 @@ struct PrototypeHomeView: View {
             HStack(alignment: .firstTextBaseline, spacing: 12) {
                 Text("expense.recent.title")
                     .font(.headline.weight(.semibold))
-                    .foregroundStyle(PrototypeHomePalette.ink)
+                    .foregroundStyle(CheckLineColor.text)
 
                 Spacer(minLength: 8)
 
                 Text(homeCurrencyText(-budget.spent))
                     .font(.headline.weight(.semibold))
                     .monospacedDigit()
-                    .foregroundStyle(PrototypeHomePalette.ink)
+                    .foregroundStyle(CheckLineColor.text)
                     .lineLimit(1)
                     .fixedSize(horizontal: true, vertical: false)
                     .accessibilityLabel(Text("home.budget.spent.accessibility"))
@@ -221,7 +203,7 @@ struct PrototypeHomeView: View {
             if expenses.isEmpty {
                 Text("expense.empty")
                     .font(.subheadline)
-                    .foregroundStyle(PrototypeHomePalette.secondary)
+                    .foregroundStyle(CheckLineColor.secondary)
                     .frame(maxWidth: .infinity, minHeight: 72, alignment: .leading)
             } else {
                 VStack(spacing: 18) {
@@ -239,66 +221,65 @@ struct PrototypeHomeView: View {
         .padding(.bottom, 24)
         .background(
             RoundedRectangle(cornerRadius: 28, style: .continuous)
-                .fill(PrototypeHomePalette.surface)
+                .fill(CheckLineColor.card)
         )
         .shadow(color: .black.opacity(0.035), radius: 22, x: 0, y: 10)
     }
 
     private var captureLauncher: some View {
         ZStack(alignment: .bottomTrailing) {
-            if launcherState != .collapsed {
+            if isCaptureMenuExpanded {
                 launcherAction(
-                    title: "capture.mode.manual",
+                    title: "capture.mode.text",
                     systemImage: "square.and.pencil",
-                    expandedOffset: CGSize(width: -92, height: -38),
+                    expandedOffset: CGSize(width: -92, height: -8),
+                    animationDelay: 0,
+                    accessibilityPriority: 3,
                     action: activateManualCapture
                 )
 
                 launcherAction(
                     title: "capture.mode.voice",
                     systemImage: "mic.fill",
-                    expandedOffset: CGSize(width: -150, height: -66),
+                    expandedOffset: CGSize(width: -64, height: -66),
+                    animationDelay: 0.035,
+                    accessibilityPriority: 2,
                     action: activateVoiceCapture
                 )
             }
 
             Button(action: activateLauncherButton) {
                 Image(
-                    systemName: reduceMotion && launcherState == .expanded
+                    systemName: reduceMotion && isCaptureMenuExpanded
                         ? "xmark"
                         : "plus"
                 )
                     .font(.system(size: 24, weight: .semibold))
                     .foregroundStyle(.white)
                     .frame(width: 64, height: 64)
-                    .background(PrototypeHomePalette.ink, in: Circle())
+                    .background(CheckLineColor.text, in: Circle())
                     .rotationEffect(
-                        .degrees(!reduceMotion && launcherState == .expanded ? 45 : 0)
+                        .degrees(!reduceMotion && isCaptureMenuExpanded ? 45 : 0)
                     )
                     .shadow(color: .black.opacity(0.18), radius: 16, x: 0, y: 8)
             }
             .buttonStyle(PrototypeCaptureLauncherButtonStyle())
-            .simultaneousGesture(
-                LongPressGesture(minimumDuration: 0.35, maximumDistance: 44)
-                    .onEnded { _ in
-                        didRecognizeLongPress = true
-                        setLauncherState(.expanded)
-                        PrototypeHaptics.selection()
-                    }
+            .accessibilityLabel(
+                isCaptureMenuExpanded
+                    ? Text("capture.launcher.close")
+                    : Text("capture.add.accessibility")
             )
-            .accessibilityLabel(Text("capture.add.accessibility"))
-            .accessibilityHint(Text("capture.launcher.hint"))
+            .accessibilityHint(
+                isCaptureMenuExpanded
+                    ? Text("")
+                    : Text("capture.launcher.hint")
+            )
             .accessibilityValue(
-                launcherState == .expanded
+                isCaptureMenuExpanded
                     ? Text("capture.launcher.expanded")
                     : Text("")
             )
-            .accessibilityAction(named: Text("capture.mode.manual")) {
-                activateManualCapture()
-            }
-            .accessibilityAction(named: Text("capture.mode.voice")) {
-                activateVoiceCapture()
-            }
+            .accessibilitySortPriority(1)
             .accessibilityIdentifier("home.captureLauncher")
         }
         .frame(width: 190, height: 190, alignment: .bottomTrailing)
@@ -308,38 +289,42 @@ struct PrototypeHomeView: View {
         title: LocalizedStringKey,
         systemImage: String,
         expandedOffset: CGSize,
+        animationDelay: Double,
+        accessibilityPriority: Double,
         action: @escaping () -> Void
     ) -> some View {
         Button(action: action) {
             VStack(spacing: 6) {
                 Image(systemName: systemImage)
                     .font(.system(size: 18, weight: .semibold))
-                    .foregroundStyle(PrototypeHomePalette.ink)
+                    .foregroundStyle(CheckLineColor.text)
                     .frame(width: 52, height: 52)
-                    .background(PrototypeHomePalette.surface, in: Circle())
+                    .background(CheckLineColor.card, in: Circle())
                     .shadow(color: .black.opacity(0.1), radius: 12, x: 0, y: 6)
 
                 Text(title)
                     .font(.caption2.weight(.medium))
-                    .foregroundStyle(PrototypeHomePalette.secondary)
+                    .foregroundStyle(CheckLineColor.secondary)
                     .lineLimit(1)
                     .minimumScaleFactor(0.8)
-                    .opacity(launcherState == .expanded ? 1 : 0)
             }
             .frame(width: 64)
         }
         .buttonStyle(.plain)
-        .offset(launcherOffset(expanded: expandedOffset))
-        .scaleEffect(launcherState == .peeking ? 0.82 : 1)
-        .opacity(launcherState == .peeking ? 0.72 : 1)
-        .allowsHitTesting(launcherState == .expanded)
-        .accessibilityHidden(launcherState != .expanded)
+        .offset(expandedOffset)
+        .accessibilitySortPriority(accessibilityPriority)
         .transition(
             reduceMotion
                 ? .opacity
                 : .offset(x: -expandedOffset.width, y: -expandedOffset.height)
+                    .combined(with: .scale(scale: 0.62, anchor: .bottomTrailing))
                     .combined(with: .opacity)
         )
+        .transaction { transaction in
+            if !reduceMotion, animationDelay > 0 {
+                transaction.animation = transaction.animation?.delay(animationDelay)
+            }
+        }
     }
 
     private func iconName(for expense: PrototypeExpense, in budget: PrototypeBudget) -> String {
@@ -358,60 +343,29 @@ struct PrototypeHomeView: View {
         PrototypeHaptics.selection()
     }
 
-    private func launcherOffset(expanded: CGSize) -> CGSize {
-        if reduceMotion || launcherState == .expanded {
-            return expanded
-        }
-        if launcherState == .peeking {
-            return CGSize(width: expanded.width * 0.66, height: expanded.height * 0.66)
-        }
-        return .zero
-    }
-
     private func activateLauncherButton() {
-        if didRecognizeLongPress {
-            didRecognizeLongPress = false
-            return
-        }
-
-        if launcherState == .expanded {
-            setLauncherState(.collapsed)
-        } else {
-            activateManualCapture()
-        }
+        setCaptureMenuExpanded(!isCaptureMenuExpanded)
+        PrototypeHaptics.selection()
     }
 
     private func activateManualCapture() {
-        setLauncherState(.collapsed)
+        setCaptureMenuExpanded(false)
         onCapture()
     }
 
     private func activateVoiceCapture() {
-        setLauncherState(.collapsed)
+        setCaptureMenuExpanded(false)
         onVoiceCapture()
     }
 
-    private func setLauncherState(_ state: PrototypeCaptureLauncherState) {
+    private func setCaptureMenuExpanded(_ expanded: Bool) {
         withAnimation(
             reduceMotion
-                ? .easeOut(duration: 0.18)
-                : .spring(response: 0.34, dampingFraction: 0.78)
+                ? .easeOut(duration: 0.14)
+                : .spring(response: 0.3, dampingFraction: 0.76)
         ) {
-            launcherState = state
+            isCaptureMenuExpanded = expanded
         }
-    }
-
-    @MainActor
-    private func showLauncherHintOnce() async {
-        guard !hasShownLauncherHint else { return }
-        hasShownLauncherHint = true
-        try? await Task.sleep(for: .milliseconds(700))
-        guard !Task.isCancelled, launcherState == .collapsed else { return }
-
-        setLauncherState(.peeking)
-        try? await Task.sleep(for: .milliseconds(720))
-        guard !Task.isCancelled, launcherState == .peeking else { return }
-        setLauncherState(.collapsed)
     }
 }
 
@@ -446,20 +400,20 @@ private struct PrototypeHomeExpenseRow: View {
         HStack(spacing: 13) {
             Image(systemName: iconName)
                 .font(.subheadline.weight(.medium))
-                .foregroundStyle(PrototypeHomePalette.ink)
+                .foregroundStyle(CheckLineColor.text)
                 .frame(width: 42, height: 42)
-                .background(PrototypeHomePalette.control, in: Circle())
+                .background(CheckLineColor.muted, in: Circle())
                 .accessibilityHidden(true)
 
             VStack(alignment: .leading, spacing: 4) {
                 Text(expense.title)
                     .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(PrototypeHomePalette.ink)
+                    .foregroundStyle(CheckLineColor.text)
                     .lineLimit(1)
 
                 Text(metadata)
                     .font(.caption)
-                    .foregroundStyle(PrototypeHomePalette.quiet)
+                    .foregroundStyle(CheckLineColor.quiet)
                     .lineLimit(1)
             }
 
@@ -467,7 +421,7 @@ private struct PrototypeHomeExpenseRow: View {
 
             Text(homeCurrencyText(-expense.amount))
                 .font(.subheadline.weight(.semibold).monospacedDigit())
-                .foregroundStyle(PrototypeHomePalette.ink)
+                .foregroundStyle(CheckLineColor.text)
                 .lineLimit(1)
         }
         .accessibilityElement(children: .ignore)

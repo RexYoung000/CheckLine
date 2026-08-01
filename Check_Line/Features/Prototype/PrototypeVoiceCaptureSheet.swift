@@ -51,9 +51,7 @@ struct PrototypeVoiceCaptureSheet: View {
                             .font(.subheadline.weight(.semibold))
                             .frame(maxWidth: .infinity)
                     }
-                    .buttonStyle(.borderedProminent)
-                    .controlSize(.large)
-                    .tint(CheckLineColor.text)
+                    .buttonStyle(CheckLinePrimaryButtonStyle())
                     .accessibilityIdentifier("voice.useManual")
                 }
             }

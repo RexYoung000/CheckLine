@@ -30,48 +30,76 @@ struct PrototypeCaptureSheet: View {
 
     var body: some View {
         NavigationStack {
-            Form {
-                Section {
+            ScrollView(showsIndicators: false) {
+                VStack(alignment: .leading, spacing: 24) {
                     amountField
-                } header: {
-                    Text("capture.amount.title")
-                }
 
-                Section("capture.budgets.title") {
-                    ForEach(store.activeBudgets) { budget in
-                        Button {
-                            toggleBudget(budget.id)
-                        } label: {
-                            Label(
-                                budget.name,
-                                systemImage: selectedBudgetIDs.contains(budget.id)
-                                    ? "checkmark.circle.fill"
-                                    : "circle"
-                            )
-                            .foregroundStyle(
-                                selectedBudgetIDs.contains(budget.id)
-                                    ? CheckLineColor.brand
-                                    : CheckLineColor.text
-                            )
+                    CheckLineSurface {
+                        VStack(alignment: .leading, spacing: 0) {
+                            Text("capture.budgets.title")
+                                .font(.headline.weight(.semibold))
+                                .padding(.bottom, 10)
+
+                            ForEach(Array(store.activeBudgets.enumerated()), id: \.element.id) { index, budget in
+                                Button {
+                                    toggleBudget(budget.id)
+                                } label: {
+                                    HStack(spacing: 12) {
+                                        Image(
+                                            systemName: selectedBudgetIDs.contains(budget.id)
+                                                ? "checkmark.circle.fill"
+                                                : "circle"
+                                        )
+                                        .foregroundStyle(
+                                            selectedBudgetIDs.contains(budget.id)
+                                                ? CheckLineColor.text
+                                                : CheckLineColor.quiet
+                                        )
+                                        Text(budget.name)
+                                            .foregroundStyle(CheckLineColor.text)
+                                        Spacer()
+                                    }
+                                    .frame(minHeight: 44)
+                                }
+                                .buttonStyle(.plain)
+
+                                if index < store.activeBudgets.count - 1 {
+                                    Divider()
+                                }
+                            }
                         }
-                        .buttonStyle(.plain)
+                    }
+
+                    CheckLineSurface {
+                        VStack(alignment: .leading, spacing: 10) {
+                            Text("capture.category.title")
+                                .font(.headline.weight(.semibold))
+                            Picker("capture.category.title", selection: $selectedCategory) {
+                                ForEach(categoryOptions, id: \.name) { option in
+                                    Label(option.name, systemImage: option.symbol)
+                                        .tag(option.name)
+                                }
+                            }
+                            .tint(CheckLineColor.text)
+                        }
+                    }
+
+                    CheckLineSurface {
+                        VStack(alignment: .leading, spacing: 10) {
+                            Text("capture.note.title")
+                                .font(.headline.weight(.semibold))
+                            TextField("capture.note.placeholder", text: $note, axis: .vertical)
+                                .lineLimit(2 ... 4)
+                                .textFieldStyle(.plain)
+                                .focused($focusedField, equals: .note)
+                        }
                     }
                 }
-
-                Section("capture.category.title") {
-                    Picker("capture.category.title", selection: $selectedCategory) {
-                        ForEach(categoryOptions, id: \.name) { option in
-                            Label(option.name, systemImage: option.symbol)
-                                .tag(option.name)
-                        }
-                    }
-                }
-
-                Section("capture.note.title") {
-                    TextField("capture.note.placeholder", text: $note, axis: .vertical)
-                        .lineLimit(2 ... 4)
-                        .focused($focusedField, equals: .note)
-                }
+                .padding(.horizontal, 20)
+                .padding(.top, 18)
+                .padding(.bottom, 108)
+                .frame(maxWidth: 620)
+                .frame(maxWidth: .infinity)
             }
             .safeAreaInset(edge: .bottom, spacing: 0) {
                 captureButton
@@ -79,9 +107,7 @@ struct PrototypeCaptureSheet: View {
                     .padding(.vertical, 12)
                     .background(CheckLineColor.canvas)
             }
-            .formStyle(.grouped)
-            .scrollContentBackground(.hidden)
-            .background(CheckLineColor.canvas)
+            .background(CheckLineColor.canvas.ignoresSafeArea())
             .navigationTitle(Text("capture.title"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -110,24 +136,30 @@ struct PrototypeCaptureSheet: View {
     }
 
     private var amountField: some View {
-        HStack(alignment: .firstTextBaseline, spacing: 8) {
-            Text("CNY")
-                .font(.subheadline.bold())
-                .foregroundStyle(CheckLineColor.brand)
-            TextField("0", text: $amountText)
-                .font(.system(size: 42, weight: .black, design: .rounded))
-                .keyboardType(.decimalPad)
-                .focused($focusedField, equals: .amount)
-                .monospacedDigit()
-                .accessibilityLabel(Text("capture.amount.title"))
+        VStack(alignment: .leading, spacing: 8) {
+            Text("capture.amount.title")
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(CheckLineColor.secondary)
+
+            HStack(alignment: .firstTextBaseline, spacing: 8) {
+                Text("currency.cny")
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(CheckLineColor.secondary)
+                TextField("0", text: $amountText)
+                    .font(.system(size: 52, weight: .regular, design: .default))
+                    .keyboardType(.decimalPad)
+                    .focused($focusedField, equals: .amount)
+                    .monospacedDigit()
+                    .textFieldStyle(.plain)
+                    .accessibilityLabel(Text("capture.amount.title"))
+            }
         }
+        .padding(.horizontal, 4)
     }
 
     private var captureButton: some View {
         Button("capture.confirm") { save() }
-            .buttonStyle(.borderedProminent)
-            .tint(CheckLineColor.brand)
-            .controlSize(.large)
+            .buttonStyle(CheckLinePrimaryButtonStyle())
             .frame(maxWidth: .infinity)
             .disabled(!canSave)
     }

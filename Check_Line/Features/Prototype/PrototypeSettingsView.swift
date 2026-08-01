@@ -7,73 +7,94 @@ struct PrototypeSettingsView: View {
     let onPlaceholder: (String) -> Void
 
     var body: some View {
-        List {
-            statusCard
-                .listRowInsets(EdgeInsets(top: 12, leading: 20, bottom: 12, trailing: 20))
-                .listRowBackground(Color.clear)
-
-            financeSection
-            settingsSection("settings.general", rows: generalRows)
-            settingsSection("settings.about", rows: aboutRows)
+        ScrollView(showsIndicators: false) {
+            VStack(alignment: .leading, spacing: 28) {
+                statusCard
+                financeSection
+                settingsSection("settings.general", rows: generalRows)
+                settingsSection("settings.about", rows: aboutRows)
+            }
+            .padding(.horizontal, 20)
+            .padding(.top, 12)
+            .padding(.bottom, 36)
+            .frame(maxWidth: 620)
+            .frame(maxWidth: .infinity)
         }
-        .listStyle(.insetGrouped)
-        .scrollContentBackground(.hidden)
-        .background(CheckLineColor.canvas)
+        .background(CheckLineColor.canvas.ignoresSafeArea())
         .navigationTitle(Text("tab.settings"))
     }
 
     private var statusCard: some View {
-        VStack(alignment: .leading, spacing: 7) {
+        VStack(alignment: .leading, spacing: 8) {
             Text("settings.status.title")
-                .font(.title3.bold())
-            Text(String(format: String(localized: "settings.status.subtitle"), store.activeBudgets.count))
-                .font(.subheadline)
+                .font(.caption.weight(.semibold))
                 .foregroundStyle(CheckLineColor.secondary)
+            Text(String(format: String(localized: "settings.status.subtitle"), store.activeBudgets.count))
+                .font(.title3.weight(.semibold))
+                .foregroundStyle(CheckLineColor.text)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(16)
     }
 
     private var financeSection: some View {
-        Section("settings.finance") {
-            Button {
-                showUnavailable(String(localized: "settings.budgets"))
-            } label: {
-                settingLabel(financeRows[0])
-            }
-            .buttonStyle(.plain)
+        VStack(alignment: .leading, spacing: 12) {
+            CheckLineSectionHeader("settings.finance")
 
-            NavigationLink {
-                PrototypeRecordBudgetPickerView(
-                    store: store,
-                    onDeleteSingle: onDeleteSingleExpense,
-                    onDeleteBatch: onDeleteBatchExpenses
-                )
-            } label: {
-                settingLabel(financeRows[1], showsChevron: false)
-            }
+            CheckLineSurface {
+                VStack(spacing: 0) {
+                    Button {
+                        showUnavailable(String(localized: "settings.budgets"))
+                    } label: {
+                        settingLabel(financeRows[0])
+                    }
+                    .buttonStyle(.plain)
 
-            Button {
-                showUnavailable(String(localized: "settings.export"))
-            } label: {
-                settingLabel(financeRows[2])
+                    Divider()
+
+                    NavigationLink {
+                        PrototypeRecordBudgetPickerView(
+                            store: store,
+                            onDeleteSingle: onDeleteSingleExpense,
+                            onDeleteBatch: onDeleteBatchExpenses
+                        )
+                    } label: {
+                        settingLabel(financeRows[1])
+                    }
+                    .buttonStyle(.plain)
+
+                    Divider()
+
+                    Button {
+                        showUnavailable(String(localized: "settings.export"))
+                    } label: {
+                        settingLabel(financeRows[2])
+                    }
+                    .buttonStyle(.plain)
+                }
             }
-            .buttonStyle(.plain)
         }
     }
 
     private func settingsSection(_ title: LocalizedStringKey, rows: [SettingRowData]) -> some View {
-        Section {
-            ForEach(rows) { row in
-                Button {
-                    showUnavailable(row.title)
-                } label: {
-                    settingLabel(row)
+        VStack(alignment: .leading, spacing: 12) {
+            CheckLineSectionHeader(title)
+
+            CheckLineSurface {
+                VStack(spacing: 0) {
+                    ForEach(Array(rows.enumerated()), id: \.element.id) { index, row in
+                        Button {
+                            showUnavailable(row.title)
+                        } label: {
+                            settingLabel(row)
+                        }
+                        .buttonStyle(.plain)
+
+                        if index < rows.count - 1 {
+                            Divider()
+                        }
+                    }
                 }
-                .buttonStyle(.plain)
             }
-        } header: {
-            Text(title)
         }
     }
 
@@ -89,7 +110,10 @@ struct PrototypeSettingsView: View {
                 }
             } icon: {
                 Image(systemName: row.symbol)
-                    .foregroundStyle(CheckLineColor.brand)
+                    .font(.subheadline.weight(.medium))
+                    .foregroundStyle(CheckLineColor.text)
+                    .frame(width: 34, height: 34)
+                    .background(CheckLineColor.muted, in: Circle())
             }
             Spacer()
             if row.isFuture {
@@ -99,9 +123,11 @@ struct PrototypeSettingsView: View {
             } else if showsChevron {
                 Image(systemName: "chevron.right")
                     .font(.caption.bold())
-                    .foregroundStyle(CheckLineColor.quiet)
+                .foregroundStyle(CheckLineColor.quiet)
             }
         }
+        .frame(minHeight: 58)
+        .contentShape(Rectangle())
     }
 
     private func showUnavailable(_ title: String) {

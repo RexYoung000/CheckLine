@@ -66,8 +66,7 @@ public struct CheckLinePrototypeView: View {
             NavigationStack {
                 PrototypeInsightsView(
                     store: store,
-                    selectedBudgetID: $selectedBudgetID,
-                    onCapture: { activeSheet = .capture }
+                    selectedBudgetID: $selectedBudgetID
                 )
             }
             .tabItem { Label("tab.insights", systemImage: "chart.bar.xaxis") }

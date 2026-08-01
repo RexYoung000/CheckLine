@@ -2,28 +2,28 @@ import SwiftUI
 import UIKit
 
 enum CheckLineColor {
-    static let canvas = Color(hex: 0xF6F6F8)
+    static let canvas = Color(hex: 0xF8F8F5)
     static let card = Color.white
-    static let muted = Color(hex: 0xEEF2F7)
-    static let divider = Color(hex: 0xE5E7EB)
-    static let surfaceStroke = Color(hex: 0xE2E8F0)
-    static let brand = Color(hex: 0x135BEC)
-    static let brandDark = Color(hex: 0x0E44B3)
-    static let brandSoft = Color(hex: 0xE8F0FF)
-    static let text = Color(hex: 0x0D121B)
-    static let secondary = Color(hex: 0x64748B)
-    static let quiet = Color(hex: 0x94A3B8)
-    static let success = Color(hex: 0x10B981)
-    static let warning = Color(hex: 0xF59E0B)
-    static let danger = Color(hex: 0xEF4444)
+    static let muted = Color(hex: 0xF0F0EC)
+    static let divider = Color(hex: 0xE7E7E2)
+    static let surfaceStroke = Color(hex: 0xE9E9E4)
+    static let brand = Color(hex: 0x1B1B1A)
+    static let brandDark = Color(hex: 0x10100F)
+    static let brandSoft = Color(hex: 0xECECE7)
+    static let text = Color(hex: 0x1B1B1A)
+    static let secondary = Color(hex: 0x74746E)
+    static let quiet = Color(hex: 0x9A9A94)
+    static let success = Color(hex: 0x426B57)
+    static let warning = Color(hex: 0xA36B24)
+    static let danger = Color(hex: 0xC84845)
 }
 
 struct CheckLineSurface<Content: View>: View {
     let content: Content
-    var cornerRadius: CGFloat = 18
+    var cornerRadius: CGFloat = 20
 
     init(
-        cornerRadius: CGFloat = 18,
+        cornerRadius: CGFloat = 20,
         @ViewBuilder content: () -> Content
     ) {
         self.cornerRadius = cornerRadius
@@ -32,16 +32,12 @@ struct CheckLineSurface<Content: View>: View {
 
     var body: some View {
         content
-            .padding(16)
+            .padding(18)
             .background(
                 RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
                     .fill(CheckLineColor.card)
             )
-            .overlay(
-                RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
-                    .stroke(CheckLineColor.surfaceStroke.opacity(0.75), lineWidth: 1)
-            )
-            .shadow(color: .black.opacity(0.045), radius: 18, x: 0, y: 8)
+            .shadow(color: .black.opacity(0.035), radius: 20, x: 0, y: 10)
     }
 }
 
@@ -58,8 +54,10 @@ extension Color {
 }
 
 struct BudgetProgressBar: View {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
     let progress: Double
-    var height: CGFloat = 8
+    var height: CGFloat = 5
 
     private var color: Color {
         if progress >= 0.95 { return CheckLineColor.danger }
@@ -78,26 +76,80 @@ struct BudgetProgressBar: View {
                     .fill(CheckLineColor.muted)
             )
             .clipShape(Capsule())
-            .animation(.easeInOut(duration: 0.3), value: progress)
+        .animation(reduceMotion ? nil : .easeInOut(duration: 0.24), value: progress)
             .accessibilityLabel(Text("budget.progress.accessibility"))
             .accessibilityValue(Text(progress, format: .percent.precision(.fractionLength(0))))
     }
 }
 
 struct MoneyText: View {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
     let amount: Decimal
     var color: Color = CheckLineColor.text
-    var size: CGFloat = 36
+    var size: CGFloat = 40
 
     var body: some View {
         Text(currencyText(amount))
-            .font(.system(size: size, weight: .black, design: .rounded))
+            .font(.system(size: size, weight: .regular, design: .default))
             .monospacedDigit()
             .foregroundStyle(color)
             .lineLimit(1)
             .minimumScaleFactor(0.5)
             .contentTransition(.numericText(value: decimalDouble(amount)))
-            .animation(.spring(duration: 0.45, bounce: 0.12), value: amount)
+            .animation(
+                reduceMotion ? nil : .spring(response: 0.36, dampingFraction: 0.84),
+                value: amount
+            )
+    }
+}
+
+struct CheckLinePrimaryButtonStyle: ButtonStyle {
+    @Environment(\.isEnabled) private var isEnabled
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .font(.body.weight(.semibold))
+            .foregroundStyle(.white)
+            .frame(maxWidth: .infinity, minHeight: 52)
+            .background(
+                CheckLineColor.text.opacity(isEnabled ? 1 : 0.3),
+                in: RoundedRectangle(cornerRadius: 12, style: .continuous)
+            )
+            .scaleEffect(!reduceMotion && configuration.isPressed ? 0.975 : 1)
+            .opacity(reduceMotion && configuration.isPressed ? 0.72 : 1)
+            .animation(.easeOut(duration: 0.12), value: configuration.isPressed)
+    }
+}
+
+struct CheckLineSectionHeader<Trailing: View>: View {
+    let title: LocalizedStringKey
+    let trailing: Trailing
+
+    init(
+        _ title: LocalizedStringKey,
+        @ViewBuilder trailing: () -> Trailing
+    ) {
+        self.title = title
+        self.trailing = trailing()
+    }
+
+    var body: some View {
+        HStack(alignment: .firstTextBaseline, spacing: 12) {
+            Text(title)
+                .font(.headline.weight(.semibold))
+                .foregroundStyle(CheckLineColor.text)
+
+            Spacer(minLength: 8)
+            trailing
+        }
+    }
+}
+
+extension CheckLineSectionHeader where Trailing == EmptyView {
+    init(_ title: LocalizedStringKey) {
+        self.init(title) { EmptyView() }
     }
 }
 
@@ -155,13 +207,13 @@ struct PrototypeToastView: View {
                     action()
                 }
                 .font(.subheadline.weight(.bold))
-                .foregroundStyle(CheckLineColor.brand)
+                .foregroundStyle(CheckLineColor.text)
                 .buttonStyle(.plain)
             }
         }
         .padding(.horizontal, 14)
         .padding(.vertical, 12)
-        .background(.ultraThinMaterial, in: Capsule())
+        .background(CheckLineColor.card, in: Capsule())
         .overlay(
             Capsule()
                 .stroke(CheckLineColor.surfaceStroke.opacity(0.9), lineWidth: 1)

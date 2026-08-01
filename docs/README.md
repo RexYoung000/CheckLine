@@ -33,7 +33,7 @@
 | 文件或目录 | 作用 |
 |---|---|
 | `design/DESIGN.md` | 唯一设计事实来源；内部区分原则、底线、当前方案和探索参考 |
-| `design/prototype/checkline-current.html` | 当前 8 页面范围的单文件交互原型 |
+| `design/prototype/checkline-current.html` | 早期 8 页面交互流程参考；当前视觉以 `DESIGN.md` 和 SwiftUI 运行结果为准 |
 | `design/prototype/layout-check.md` | 2026-07-06 HTML 原型布局检查快照，不是当前设计规则 |
 | `design/prototype/stitch/` | 历史 Stitch brief 与线上项目说明，不直接作为实施要求 |
 | `design/references/stitch-budget-wallet/` | 浅色预算钱包视觉参考，不具有设计权威 |
@@ -51,7 +51,7 @@
 
 - 正式工程是根目录 `Check_Line.xcodeproj`，当前包含一个 iOS App Target 和一个 Swift Testing Target。
 - 最低系统版本为 iOS 17.0。
-- App 当前运行与 HTML 原型对齐的 SwiftUI 体验样机，只用于工程与交互验证；最终视觉包装尚未定稿。系统能力用于降低实现风险，不能覆盖用户理解和已确认设计。
+- App 当前运行 8 个核心页面共享轻量设计语言的 SwiftUI 体验样机，只用于设计、工程与交互验证；HTML 原型不再代表当前视觉实现。系统能力用于降低实现风险，不能覆盖用户理解和已确认设计。
 - 正式 MVP UI 与 SwiftData 模型尚未实现；Swift Testing Target 已建立并完成 `BudgetEngine` 首批规则测试，其他领域服务仍未实现。
 - 体验样机已验证预算删除、消费记录单独/批量删除和共享消费安全确认；这些内存操作不代表 SwiftData 删除关系已经完成。
 - iCloud、Widget、OCR 和语音均未实现。

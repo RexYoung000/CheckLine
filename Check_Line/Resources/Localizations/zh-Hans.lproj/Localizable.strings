@@ -8,7 +8,7 @@
 "home.budget.switch" = "切换预算";
 "home.budget.total.inline" = "/ %@";
 "home.budget.spent.accessibility" = "总支出";
-"home.budget.balance.accessibility" = "还能花 %@，预算总额 %@";
+"home.budget.balance.accessibility" = "余额 %@，预算总额 %@";
 "home.expense.metadata" = "%@ · %@";
 "home.expense.accessibility" = "%@，%@，支出 %@";
 "action.viewAll" = "查看全部";
@@ -18,7 +18,7 @@
 "action.undo" = "撤销";
 "action.delete" = "删除";
 
-"budget.remaining.label" = "还能花";
+"budget.remaining.label" = "余额";
 "budget.remaining.short" = "剩余";
 "budget.used" = "已用";
 "budget.progress.accessibility" = "预算进度";
@@ -46,6 +46,8 @@
 "budget.start" = "开始日期";
 "budget.end" = "结束日期";
 "budget.template.note" = "模板会预填常用分类，正式 MVP 中可继续编辑分类和超支策略。";
+"budget.used.amount" = "%@ 已用";
+"currency.cny" = "CNY";
 
 "cycle.oneShot" = "单次型";
 "cycle.repeating" = "重复型";
@@ -91,8 +93,10 @@
 "capture.note.title" = "备注（选填）";
 "capture.note.placeholder" = "例如：地铁到展馆";
 "capture.mode.manual" = "手动";
+"capture.mode.text" = "文本";
 "capture.mode.voice" = "语音";
-"capture.launcher.hint" = "轻点手动记一笔，更多录入方式可用";
+"capture.launcher.hint" = "轻点选择文本或语音";
+"capture.launcher.close" = "关闭录入方式";
 "capture.launcher.expanded" = "录入方式已展开";
 "voice.title" = "语音记一笔";
 "voice.listening" = "正在聆听";
@@ -125,7 +129,7 @@
 "linked.belongs" = "归属：%@";
 
 "insights.budgetPicker" = "查看预算";
-"insights.remaining" = "%@还能花";
+"insights.remaining" = "%@ · 余额";
 "insights.comparison" = "预算 vs 实际";
 "insights.actual.legend" = "蓝色为实际";
 "insights.comparison.accessibility" = "预算和实际支出对比图";

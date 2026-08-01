@@ -8,7 +8,7 @@
 "home.budget.switch" = "Switch budget";
 "home.budget.total.inline" = "/ %@";
 "home.budget.spent.accessibility" = "Total spent";
-"home.budget.balance.accessibility" = "Available %@, total budget %@";
+"home.budget.balance.accessibility" = "Balance %@, total budget %@";
 "home.expense.metadata" = "%@ · %@";
 "home.expense.accessibility" = "%@, %@, expense %@";
 "action.viewAll" = "View all";
@@ -18,7 +18,7 @@
 "action.undo" = "Undo";
 "action.delete" = "Delete";
 
-"budget.remaining.label" = "Available";
+"budget.remaining.label" = "Balance";
 "budget.remaining.short" = "Left";
 "budget.used" = "used";
 "budget.progress.accessibility" = "Budget progress";
@@ -46,6 +46,8 @@
 "budget.start" = "Start date";
 "budget.end" = "End date";
 "budget.template.note" = "Templates prefill common categories. The MVP will let you edit categories and overrun rules.";
+"budget.used.amount" = "%@ used";
+"currency.cny" = "CNY";
 
 "cycle.oneShot" = "One-shot";
 "cycle.repeating" = "Repeating";
@@ -91,8 +93,10 @@
 "capture.note.title" = "Note (optional)";
 "capture.note.placeholder" = "Example: subway to venue";
 "capture.mode.manual" = "Manual";
+"capture.mode.text" = "Text";
 "capture.mode.voice" = "Voice";
-"capture.launcher.hint" = "Tap for manual entry. More capture options are available.";
+"capture.launcher.hint" = "Tap to choose text or voice entry.";
+"capture.launcher.close" = "Close capture options";
 "capture.launcher.expanded" = "Capture options expanded";
 "voice.title" = "Add by voice";
 "voice.listening" = "Listening";
@@ -125,7 +129,7 @@
 "linked.belongs" = "Belongs to: %@";
 
 "insights.budgetPicker" = "View budget";
-"insights.remaining" = "%@ available";
+"insights.remaining" = "%@ · balance";
 "insights.comparison" = "Budget vs actual";
 "insights.actual.legend" = "Blue is actual";
 "insights.comparison.accessibility" = "Budget and actual spending comparison";
