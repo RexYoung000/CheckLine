@@ -73,6 +73,14 @@
 "sample.expense.materials.note" = "课程资料";
 "sample.expense.airport" = "机场线";
 "sample.expense.airport.note" = "出行准备";
+"sample.expense.grocery" = "周末采购";
+"sample.expense.grocery.note" = "超市日用品";
+"sample.expense.coffee" = "咖啡";
+"sample.expense.coffee.note" = "下午咖啡";
+"sample.expense.subscription" = "订阅续费";
+"sample.expense.subscription.note" = "云存储";
+"sample.expense.lunch" = "工作日午餐";
+"sample.expense.lunch.note" = "简餐";
 
 "capture.add.accessibility" = "记一笔";
 "capture.title" = "记一笔";
@@ -82,6 +90,18 @@
 "capture.category.title" = "分类";
 "capture.note.title" = "备注（选填）";
 "capture.note.placeholder" = "例如：地铁到展馆";
+"capture.mode.manual" = "手动";
+"capture.mode.voice" = "语音";
+"capture.launcher.hint" = "轻点手动记一笔，更多录入方式可用";
+"capture.launcher.expanded" = "录入方式已展开";
+"voice.title" = "语音记一笔";
+"voice.listening" = "正在聆听";
+"voice.paused" = "已暂停";
+"voice.mock.status" = "模拟识别 · 未访问麦克风";
+"voice.transcript" = "午餐 46 元 · 7月生活";
+"voice.manual" = "改用手动输入";
+"voice.pause" = "暂停模拟聆听";
+"voice.resume" = "继续模拟聆听";
 
 "budget.surplus" = "结余";
 "budget.settle" = "结算";

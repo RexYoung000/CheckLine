@@ -73,6 +73,14 @@
 "sample.expense.materials.note" = "Course materials";
 "sample.expense.airport" = "Airport line";
 "sample.expense.airport.note" = "Trip preparation";
+"sample.expense.grocery" = "Weekend groceries";
+"sample.expense.grocery.note" = "Groceries and essentials";
+"sample.expense.coffee" = "Coffee";
+"sample.expense.coffee.note" = "Afternoon coffee";
+"sample.expense.subscription" = "Subscription";
+"sample.expense.subscription.note" = "Cloud storage";
+"sample.expense.lunch" = "Weekday lunch";
+"sample.expense.lunch.note" = "Quick lunch";
 
 "capture.add.accessibility" = "Add an expense";
 "capture.title" = "Add expense";
@@ -82,6 +90,18 @@
 "capture.category.title" = "Category";
 "capture.note.title" = "Note (optional)";
 "capture.note.placeholder" = "Example: subway to venue";
+"capture.mode.manual" = "Manual";
+"capture.mode.voice" = "Voice";
+"capture.launcher.hint" = "Tap for manual entry. More capture options are available.";
+"capture.launcher.expanded" = "Capture options expanded";
+"voice.title" = "Add by voice";
+"voice.listening" = "Listening";
+"voice.paused" = "Paused";
+"voice.mock.status" = "Simulated recognition · Microphone not accessed";
+"voice.transcript" = "Lunch CNY 46 · July living";
+"voice.manual" = "Use manual entry";
+"voice.pause" = "Pause simulated listening";
+"voice.resume" = "Resume simulated listening";
 
 "budget.surplus" = "Surplus";
 "budget.settle" = "Settle";

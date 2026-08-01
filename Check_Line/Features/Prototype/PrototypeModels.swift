@@ -389,6 +389,15 @@ extension PrototypeStore {
                 note: String(localized: "sample.expense.dinner.note")
             ),
             PrototypeExpense(
+                id: UUID(uuidString: "10000000-0000-0000-0000-000000000005") ?? UUID(),
+                title: String(localized: "sample.expense.grocery"),
+                amount: 286,
+                categoryName: String(localized: "category.food"),
+                occurredAt: prototypeDate(year: 2026, month: 7, day: 4),
+                budgetIDs: [livingID],
+                note: String(localized: "sample.expense.grocery.note")
+            ),
+            PrototypeExpense(
                 id: UUID(uuidString: "10000000-0000-0000-0000-000000000003") ?? UUID(),
                 title: String(localized: "sample.expense.materials"),
                 amount: 220,
@@ -396,6 +405,33 @@ extension PrototypeStore {
                 occurredAt: prototypeDate(year: 2026, month: 7, day: 3),
                 budgetIDs: [studyID],
                 note: String(localized: "sample.expense.materials.note")
+            ),
+            PrototypeExpense(
+                id: UUID(uuidString: "10000000-0000-0000-0000-000000000006") ?? UUID(),
+                title: String(localized: "sample.expense.coffee"),
+                amount: 28,
+                categoryName: String(localized: "category.food"),
+                occurredAt: prototypeDate(year: 2026, month: 7, day: 3),
+                budgetIDs: [livingID],
+                note: String(localized: "sample.expense.coffee.note")
+            ),
+            PrototypeExpense(
+                id: UUID(uuidString: "10000000-0000-0000-0000-000000000007") ?? UUID(),
+                title: String(localized: "sample.expense.subscription"),
+                amount: 68,
+                categoryName: String(localized: "category.other"),
+                occurredAt: prototypeDate(year: 2026, month: 7, day: 2),
+                budgetIDs: [livingID],
+                note: String(localized: "sample.expense.subscription.note")
+            ),
+            PrototypeExpense(
+                id: UUID(uuidString: "10000000-0000-0000-0000-000000000008") ?? UUID(),
+                title: String(localized: "sample.expense.lunch"),
+                amount: 46,
+                categoryName: String(localized: "category.food"),
+                occurredAt: prototypeDate(year: 2026, month: 7, day: 1),
+                budgetIDs: [livingID],
+                note: String(localized: "sample.expense.lunch.note")
             ),
             PrototypeExpense(
                 id: UUID(uuidString: "10000000-0000-0000-0000-000000000004") ?? UUID(),

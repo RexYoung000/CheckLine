@@ -9,12 +9,14 @@ enum PrototypeAppTab: Hashable {
 
 private enum PrototypeSheet: Identifiable {
     case capture
+    case voiceCapture
     case createBudget
     case settlement(UUID)
 
     var id: String {
         switch self {
         case .capture: "capture"
+        case .voiceCapture: "voice-capture"
         case .createBudget: "create-budget"
         case .settlement(let id): "settlement-\(id)"
         }
@@ -36,9 +38,8 @@ public struct CheckLinePrototypeView: View {
                 PrototypeHomeView(
                     store: store,
                     selectedBudgetID: $selectedBudgetID,
-                    onShowBudgets: { selectedTab = .budgets },
-                    onShowInsights: { selectedTab = .insights },
-                    onCapture: { activeSheet = .capture }
+                    onCapture: { activeSheet = .capture },
+                    onVoiceCapture: { activeSheet = .voiceCapture }
                 )
             }
             .tabItem { Label("tab.home", systemImage: "house.fill") }
@@ -104,6 +105,13 @@ public struct CheckLinePrototypeView: View {
                     onSave: handleExpenseCapture
                 )
                 .presentationDetents([.large])
+                .presentationDragIndicator(.visible)
+
+            case .voiceCapture:
+                PrototypeVoiceCaptureSheet {
+                    activeSheet = .capture
+                }
+                .presentationDetents([.medium, .large])
                 .presentationDragIndicator(.visible)
 
             case .createBudget:

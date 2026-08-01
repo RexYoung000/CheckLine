@@ -10,6 +10,7 @@ struct PrototypeCaptureSheet: View {
     @State private var selectedBudgetIDs: Set<UUID>
     @State private var selectedCategory = String(localized: "category.transport")
     @State private var note = String(localized: "sample.expense.transit.note")
+    @State private var showsVoiceCapture = false
     @FocusState private var focusedField: Field?
 
     private enum Field {
@@ -87,8 +88,24 @@ struct PrototypeCaptureSheet: View {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("action.cancel") { dismiss() }
                 }
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        showsVoiceCapture = true
+                    } label: {
+                        Image(systemName: "mic.fill")
+                    }
+                    .accessibilityLabel(Text("capture.mode.voice"))
+                    .accessibilityIdentifier("capture.voiceEntry")
+                }
             }
             .onAppear { focusedField = .amount }
+            .sheet(isPresented: $showsVoiceCapture) {
+                PrototypeVoiceCaptureSheet {
+                    showsVoiceCapture = false
+                }
+                .presentationDetents([.medium, .large])
+                .presentationDragIndicator(.visible)
+            }
         }
     }
 
