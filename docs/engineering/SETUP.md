@@ -10,7 +10,7 @@
 - 主 Scheme / Target：`Check_Line`
 - App 默认显示名：`CheckLine`；简体中文环境显示「预算线」
 
-当前产品先以 iPhone/iPad App 为主。macOS Target、Widget Extension、SwiftData/iCloud 能力均按路线图在对应阶段添加，不在迁移阶段预建空 Target。
+当前产品先以 iPhone/iPad App 为主。SwiftData 是新 V1 确定性账本的下一阶段能力；macOS Target、Widget Extension 和 iCloud 是否进入首发仍待确认，不提前创建空 Target 或启用 Capability。
 
 ## 二、打开与运行
 
@@ -19,7 +19,7 @@
 3. Destination 选择 iOS 17+ 的 iPhone/iPad 模拟器，或完成签名的真机。
 4. 按 `Cmd + R` 启动；按 `Cmd + B` 仅构建。
 
-当前启动页是覆盖 8 个核心页面的 SwiftUI 体验样机，用于确认业务主线、轻量视觉语言和交互行为；当前实现以 `docs/design/DESIGN.md` 和原生运行结果为准，HTML 原型只保留为早期流程参考。在不损害用户理解、产品心智和已确认设计的前提下，可以优先复用 SwiftUI 的导航、输入、滚动和无障碍能力。样机使用内存示例数据，不等于 ROADMAP 第一轮 MVP 的 SwiftData、领域服务和测试已经完成。
+当前启动页是 2026-08-01 版本的 8 页面 SwiftUI 内存样机。它用于追溯旧视觉与工程验证，但其中四 Tab、多预算重复扣减、旧结算和悬浮录入入口已经被 2026-08-10 新产品定义取代，不能继续作为正式 V1 需求来源。新实现以 `PRODUCT.md`、`docs/product/PRD.md`、`docs/product/FEATURE-LOOP.md` 和更新后的 `DESIGN.md` 为准。
 
 ## 三、磁盘与 Xcode 结构
 
@@ -38,7 +38,7 @@ Check_Line/
 Check_LineTests/         # Swift Testing 单元测试
 ```
 
-`Core/Services` 已随 `BudgetEngine` 正式实装建立；其他正式 Feature、Capture、DesignSystem 与 Shared 会在对应 MVP 工作开始时按 `ARCHITECTURE.md` 建立，不预建空目录。
+`Core/Services` 已随 `BudgetEngine` 建立；其他正式 Feature、Application、Capture、DesignSystem 与 Shared 会按新 `ARCHITECTURE.md` 的内部里程碑逐步建立，不预建空目录。旧 `Features/Prototype` 后续按实现切片替换。
 
 旧项目的 `Package.swift` 和独立 Runner 已退出当前工程，避免同时维护 Swift Package 与 Xcode App 两套入口。它们仍可从 Git 历史中追溯。
 
@@ -82,14 +82,14 @@ xcodebuild \
 
 - 模拟器构建不需要开发签名。
 - 真机运行时在 Xcode 的 Signing & Capabilities 中选择 Rex 的 Team。
-- iCloud、App Groups、Widget、通知、语音等能力只在对应功能进入当前里程碑时开启。
+- iCloud、App Groups、Widget、通知、语音、自动化和邮箱/AI 网络能力只在对应实现切片进入当前里程碑并完成隐私审查后开启。
 - 不提交 `xcuserdata/`、DerivedData、证书、Provisioning Profile、脚本密钥与 `.env`。
 
 ## 七、迁移后基线
 
 - 最低系统版本：iOS 17.0
-- 产品代码与文档的主目录：当前仓库
-- 旧目录 `/Users/rexyoung/Desktop/vibe coding/mac&ios/CheckLine/` 保持不动，仅作为迁移完成后的本地安全备份
+- 产品代码与文档的唯一主目录：当前 `Check_Line` 仓库
+- 旧目录 `/Users/rexyoung/Desktop/vibe coding/mac&ios/CheckLine/` 已由 Rex 确认废弃并删除，不再作为备份或文档来源
 - Git 远端继续使用 `https://github.com/RexYoung000/CheckLine.git`
 
 文档入口见 `../README.md`，当前工程结构和未来模块边界见 `ARCHITECTURE.md`。

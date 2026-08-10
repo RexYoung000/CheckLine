@@ -1,288 +1,428 @@
-# ARCHITECTURE - CheckLine 技术架构
+# ARCHITECTURE — CheckLine 技术架构
 
-本文定义当前 Xcode 工程事实、第一轮 MVP 的模块与数据边界，以及后续能力进入工程的条件。产品范围以根目录 `PRODUCT.md` 和 `docs/product/PRD.md` 为上位依据。
+> 本文定义正式 Xcode 工程事实、新 V1 目标架构与金额模型。正式 SwiftData Schema 尚未落地，因此不为未发布的旧“多预算重复扣减”样机保留兼容层。
+
+---
 
 ## 一、当前工程事实
 
 | 项目 | 当前状态 |
-|---|---|
+|------|----------|
 | 工程 | `Check_Line.xcodeproj` |
 | Target / Scheme | `Check_Line` |
-| 产品 | iPhone / iPad App |
-| 最低系统 | iOS 17.0 |
-| UI | SwiftUI |
-| 当前启动页 | 当前 SwiftUI 体验样机 |
+| 平台 | iPhone / iPad，最低 iOS 17.0 |
+| 当前 UI | `Features/Prototype` 中的旧内存 SwiftUI 样机 |
 | 正式数据层 | 未实现 |
-| Test Target | 已建立 `Check_LineTests`，当前覆盖 `BudgetEngine` 与样机关系删除规则 |
-| 外部依赖 | 无 |
-| 网络 / 后端 | 无 |
-| iCloud / CloudKit | 未启用，后续阶段 |
+| Test Target | `Check_LineTests` 已存在，覆盖 `BudgetEngine` 基础规则与旧样机关系删除 |
+| 网络 / 后端 / AI | 未实现 |
+| 系统权限 / iCloud | 未启用 |
 
-当前构建已开始第一轮 MVP 的领域服务与测试实装，但正式数据层尚未建立，样机 UI 也尚未接入正式服务。
+旧样机的 `budgetIDs` 多预算关系、共享消费删除和旧结算只用于追溯，不是新 Schema 或验收依据。`BudgetEngine` 的 Decimal 基础计算可以继续复用；命名和输入结构在新模型落地时同步收敛。
 
-### 1.1 当前体验样机边界
+---
 
-- 启动页使用 SwiftUI 实现四 Tab、首页预算选择、记一笔、预算、统计、日历、设置和结算体验；当前视觉与交互以 `DESIGN.md` 和原生运行结果为准，HTML 原型只作早期流程参考。
-- 状态只存在于当前运行周期，使用 `Decimal` 与虚构示例数据，不写入磁盘。
-- 体验样机类型保留在 `Features/Prototype`，不冒充 `Core/Models`、SwiftData Schema 或正式领域服务。
-- 正式 MVP 实装时以本文第五至第七节的数据模型与服务边界替换样机状态，不能把样机模型直接当作持久化模型。
-- SwiftUI 是实现框架，不是视觉规范。只有在不损害用户理解、产品心智、交互可靠性和品牌表达时，才优先复用系统导航、滚动、输入、键盘、焦点与无障碍能力；系统控件默认结构不适合当前任务时，可以重新组合、视觉包装或开发自定义组件。
-- 当前样机的四 Tab、紧凑预算选择器、轻量表面、悬浮录入入口和可撤销 Toast 都是阶段性实现，不是永久架构约束。组件替换不能在未确认的情况下改变产品含义、数据归属或核心任务流程。
+## 二、架构目标
 
-## 二、技术选择
+1. **金额可验证**：预算剩余、结算、钱包和待恢复差额全部由确定性领域服务计算。
+2. **输入可替换**：文字、语音、图片、Apple Pay、短信、邮件和账单导入共用同一标准化入口。
+3. **一笔只结算一次**：交易只有一个结算预算周期，多标签不参与金额。
+4. **历史可追溯**：结算后迟到交易和退款通过调整记录修正，不静默覆盖。
+5. **设备优先**：完整账本和原始财务数据默认留在设备；云端 AI 只接收用户允许的最少必要字段。
+6. **失败可降级**：Agent 或任何被动来源不可用时，手动记录与确定性账本仍可运行。
 
-### 第一轮 MVP
+---
 
-| 层 | 选择 | 原因 |
-|---|---|---|
-| UI | SwiftUI | 当前 Apple 平台实现框架，便于复用系统行为与后续 Widget 能力 |
-| 状态 | SwiftUI 状态 + `@Observable` | 当前复杂度不需要第三方状态框架 |
-| 数据 | SwiftData 本地存储 | iOS 17 原生、模型与 SwiftUI 集成简单 |
-| 金额 | `Decimal` | 避免浮点金额误差 |
-| 测试 | Swift Testing | 领域服务与模型关系作为合并底线 |
-| 格式化 | Foundation FormatStyle | 统一货币、日期和百分比本地化 |
+## 三、V1 目标技术栈
 
-### 后续阶段
+| 层 | 目标选择 | 说明 |
+|----|----------|------|
+| 平台 | iOS 17+ | 当前只有 iPhone / iPad Target；macOS 发布顺序仍待确认 |
+| UI | SwiftUI | 使用系统导航和 Sheet 能力，但不由系统默认控件替产品作设计决定 |
+| 本地数据 | SwiftData | 金额使用 `Decimal`，不使用 `Double` |
+| 同步 | 首发范围待确认 | 当前不启用 iCloud；若后续启用，先设计迁移与冲突策略 |
+| 状态 | Observation / `@Observable` | 不引入第三方架构框架 |
+| OCR | Vision Framework 优先 | 原图处理后丢弃 |
+| 语音 | Speech Framework / 可用端侧能力优先 | 是否完全端侧按语言与系统能力验证 |
+| 系统自动化 | App Intents + Shortcuts | Apple Pay、短信等入口按平台公开能力实现 |
+| AI | Provider 接口抽象，具体模型待定 | 只做理解、追问和解释，不自由计算金额 |
+| 测试 | Swift Testing | 所有领域服务必须覆盖 |
 
-以下能力不是当前架构事实，启动前必须重新更新本文：
+邮箱转发、地区银行连接或云端 AI 如需要后端，必须先更新 `PRIVACY.md`、数据保留策略和合规说明，不能默认接入。
 
-- 第二轮：Widget、通知、Photos + Vision OCR、Speech 语音录入。
-- 第三轮：心愿数据模型与结算分配关系。
-- 第四轮：App Intents、Shortcuts、分享扩展、Live Activities、macOS Target。
-- iCloud：产品与数据迁移策略确认后再启用 CloudKit，不在本地 MVP 中预接。
-
-## 三、仓库结构
-
-```text
-CheckLine/
-├── Check_Line.xcodeproj/       正式 Xcode 工程
-├── Check_Line/                 主 App Target 文件系统同步目录
-│   ├── App/                    App 入口与根导航
-│   ├── Features/               按用户能力拆分的功能模块
-│   ├── Core/                   模型、领域服务、持久化
-│   ├── Capture/                记一笔入口，当前只实现 Manual
-│   ├── DesignSystem/           Token、组件、动效、Haptic
-│   ├── Shared/                 格式化、错误与平台封装
-│   ├── Resources/              本地化与 Sample 数据
-│   └── Assets.xcassets
-├── Check_LineTests/            Swift Testing 单元测试
-├── docs/                       当前文档、设计资料与历史档案
-└── scripts/                    原型辅助脚本
-```
-
-当前磁盘中尚未出现的模块目录属于实施目标，不需要为结构完整提前创建空目录。
+---
 
 ## 四、模块边界
 
 ```text
-App
- ├── Features
- │    ├── Budget
- │    ├── Expense
- │    ├── Settlement
- │    ├── Insights
- │    └── Settings
- ├── Capture/Manual
- ├── Core
- │    ├── Models
- │    ├── Services
- │    └── Persistence
- ├── DesignSystem
- └── Shared
+App / Navigation
+  ↓
+Features
+  ├─ Home
+  ├─ Budget
+  ├─ Transactions
+  ├─ Settlement
+  ├─ Wish
+  ├─ DataSources
+  └─ AgentPanel
+       ↓
+Application
+  ├─ AgentActionCoordinator
+  ├─ ConfirmationGate
+  ├─ ImportCoordinator
+  └─ UndoCoordinator
+       ↓
+Core
+  ├─ Models
+  ├─ BudgetEngine
+  ├─ AttributionEngine
+  ├─ DeduplicationEngine
+  ├─ SettlementEngine
+  ├─ WalletLedger
+  ├─ RetrospectiveAdjustmentEngine
+  └─ CurrencyEngine
+       ↑
+Capture Adapters
+  ├─ Manual / Text
+  ├─ Voice
+  ├─ Image / OCR
+  ├─ ApplePay Shortcut
+  ├─ SMS Shortcut
+  ├─ Email
+  └─ Statement Import
 ```
 
-约束：
+规则：
 
-- `App` 只装配根导航、环境和依赖，不放业务计算。
-- Feature 之间不直接互相 import；共享规则进入 `Core/Services`。
-- `Core` 不 import SwiftUI，金额和结算逻辑保持纯 Swift 可测。
-- Feature 不直接散落 SwiftData 查询，统一通过 Core 提供的查询或服务边界。
-- `Capture/Manual` 产出统一 `ExpenseDraft`，提交前必须由用户确认。
-- `DesignSystem` 不依赖 Feature。
-- 平台条件代码集中到 `Shared/Platform`。
-- 没有进入当前里程碑的 Widget、OCR、Voice、Wish、Intents 不预建实现。
+- `Core` 不依赖 SwiftUI、具体 AI 模型或具体来源 SDK；
+- Capture Adapter 只负责提取来源事实，不直接写预算余额；
+- Agent 必须把结构化行动交给 Application/Core 执行；
+- `ConfirmationGate` 统一处理高影响动作，不能在不同页面各写一套规则；
+- Features 之间共享逻辑下沉到 Application/Core；
+- 任何来源失败都不能阻断手动记录和本地账本。
 
-## 五、第一轮 MVP 数据模型
+---
 
-这些字段是当前实施基线。任何增删、改名或类型变化都先更新本文，再设计 SwiftData Schema 与迁移。
+## 五、交易处理管线
 
-### 5.1 Budget
+```text
+Source Payload
+  ↓
+Capture Adapter
+  ↓
+NormalizedTransactionCandidate
+  ↓
+DeduplicationEngine
+  ├─ 高置信重复 → 合并到现有 Expense，追加 SourceEvidence
+  └─ 不确定 → PendingDeduplication
+  ↓
+AttributionEngine
+  ├─ 高置信 → 绑定唯一 BudgetPeriod
+  ├─ 低置信 → 暂时绑定 + pending attribution
+  └─ 无匹配 → unbudgeted
+  ↓
+BudgetEngine / Home Projection
+```
+
+所有可见状态来自模型投影，不在 View 中维护独立余额。
+
+---
+
+## 六、数据模型
+
+> 以下是正式 Schema 的目标字段。实现前按 SwiftData 约束建立 `VersionedSchema`；CloudKit 尚未进入已确认范围。
+
+### 6.1 `Budget`
 
 | 字段 | 类型 | 说明 |
-|---|---|---|
-| `id` | UUID | 本地主键 |
-| `name` | String | 预算名称 |
-| `themeTemplate` | String | `monthly / travel / study / custom` |
-| `cycleType` | String | `repeating / oneShot` |
+|------|------|------|
+| `id` | UUID | 主键 |
+| `name` | String | 预算卡名称 |
+| `defaultAmount` | Decimal | 新周期默认额度；不能反向改变已结算周期 |
+| `defaultCurrencyCode` | String | 新周期默认基准币 |
+| `cycleTypeRaw` | String | `repeating` / `oneShot` |
+| `recurrenceRule` | String? | 循环规则，按可迁移格式存储 |
+| `optionalDeadline` | Date? | 一次性预算可无截止日期 |
+| `stateRaw` | String | `draft` / `active` / `pendingSettlement` / `archived` |
+| `sortIndex` | Int | 首页固定顺序 |
+| `createdAt` | Date | 创建时间 |
+| `updatedAt` | Date | 最后修改时间 |
+
+### 6.2 `BudgetPeriod`
+
+| 字段 | 类型 | 说明 |
+|------|------|------|
+| `id` | UUID | 主键 |
+| `budget` | Budget | 所属预算卡 |
+| `budgetAmount` | Decimal | 本周期额度快照，历史周期不随 Budget 默认值变化 |
+| `currencyCode` | String | 本周期结算基准币 |
 | `startDate` | Date | 周期开始 |
-| `endDate` | Date | 周期结束 |
-| `totalAmount` | Decimal | 预算总额 |
-| `currencyCode` | String | 默认 `CNY` |
-| `overrunStrategy` | String | `warnOnly / strictReview` |
-| `state` | String | `draft / active / settling / archived` |
-| `createdAt` | Date | 创建时间 |
+| `endDate` | Date? | 无截止日期的一次性预算可为空 |
+| `stateRaw` | String | `active` / `pendingSettlement` / `settled` |
+| `sequence` | Int | 循环周期序号 |
+| `createdAt` | Date | |
 
-不持久化的派生值：
+到期后尚未结算的新交易不绑定旧周期，使用 `Expense.queuedForBudget` 暂存。新周期创建时复制 Budget 的默认额度/币种，再一次性绑定队列记录。已结算 `BudgetPeriod` 的额度和币种不可直接改写，后续变化使用调整记录。
 
-- `spent`：有效 binding 的 `recordedAmount` 合计。
-- `remaining`：`totalAmount - spent` 的真实结余，超支时保留负数，供结算和严格复盘使用。
-- `availableToSpend`：日常页面展示的「还能花」，等于 `max(0, remaining)`。
-- `overrunAmount`：超出金额，等于 `max(0, -remaining)`；日常页面通过温和文案单独表达，不用负数替代「还能花」。
-- `progress`：`spent / totalAmount` 的界面进度，限制在 `0...1`；总额为 0 时返回 0。
-
-当前 Budget 不包含 `defaultWish` 或任何心愿关系。
-
-### 5.2 BudgetCategory
+### 6.3 `Expense`
 
 | 字段 | 类型 | 说明 |
-|---|---|---|
-| `id` | UUID | 本地主键 |
-| `budget` | Budget | 所属预算 |
-| `name` | String | 分类名称 |
-| `allocatedAmount` | Decimal | 分类额度 |
-| `iconName` | String | SF Symbol 名称 |
-| `colorHex` | String | 主题色 |
-| `sortIndex` | Int | 用户排序 |
-
-### 5.3 Expense
-
-| 字段 | 类型 | 说明 |
-|---|---|---|
-| `id` | UUID | 一笔消费只存一份 |
-| `amount` | Decimal | 消费金额 |
-| `note` | String? | 用户备注 |
+|------|------|------|
+| `id` | UUID | 同一笔交易只存一份 |
+| `originalAmount` | Decimal | 原币金额 |
+| `originalCurrencyCode` | String | 原币 |
+| `postedAmount` | Decimal? | 银行实际入账金额 |
+| `postedCurrencyCode` | String? | 实际入账币种 |
+| `estimatedBudgetAmount` | Decimal? | 未入账时暂估金额 |
+| `estimateRateSource` | String? | 汇率来源与时间摘要 |
+| `kindRaw` | String | `purchase` / `refund` |
+| `reversesExpense` | Expense? | 退款所追溯的原消费；普通消费为空 |
 | `occurredAt` | Date | 发生时间 |
-| `captureSource` | String | 当前只有 `manual` |
-| `createdAt` | Date | 创建时间 |
+| `merchant` | String? | 商家 |
+| `note` | String? | 备注 |
+| `budgetPeriod` | BudgetPeriod? | 唯一结算周期；为空表示未纳入或排队 |
+| `queuedForBudget` | Budget? | 循环卡待结算空窗期间的下周期队列 |
+| `attributionStateRaw` | String | `confirmed` / `pending` / `unbudgeted` |
+| `attributionConfidence` | Decimal? | 仅用于解释，不直接决定金额规则 |
+| `tags` | [ExpenseTag] | 多标签，不参与金额扣减 |
+| `sourceEvidence` | [SourceEvidence] | 一个或多个来源证据 |
+| `wishRedemption` | WishRedemption? | 属于心愿兑现时设置；此时不得绑定普通预算周期 |
+| `createdAt` | Date | |
+| `updatedAt` | Date | |
 
-OCR、语音、Widget 等来源进入对应阶段时再扩展 `captureSource`，不为未来来源提前增加权限或业务字段。
+**结算金额派生顺序**：
 
-### 5.4 BudgetExpenseBinding
+1. 若有与预算基准币一致的 `postedAmount`，使用实际入账；
+2. 否则使用明确标记的 `estimatedBudgetAmount`；
+3. 原币金额始终保留；
+4. 最终入账更新同一 `Expense`，不创建重复交易；
+5. 退款作为独立证据记录并链接 `reversesExpense`，金额影响由追溯调整引擎作用到原周期，不计入当前周期制造新结余。
 
-| 字段 | 类型 | 说明 |
-|---|---|---|
-| `id` | UUID | 本地主键 |
-| `budget` | Budget | 被计入的预算 |
-| `expense` | Expense | 同一笔消费 |
-| `category` | BudgetCategory | 该预算下的分类 |
-| `recordedAmount` | Decimal | 在该预算中计入的金额，默认等于 Expense.amount |
-| `finalAttribution` | String? | 结算确认后的 `included / excluded` |
-| `createdAt` | Date | 建立关系时间 |
-
-一笔消费选择两个预算时生成两个 binding，但 Expense 只有一份。关联账处理必须由用户确认，系统不自动选归属。
-
-删除关系遵循：
-
-- 删除当前预算下的普通消费：删除唯一 binding，并删除已经没有其他 binding 的 Expense。
-- 删除当前预算下的共享消费：默认只删除当前 binding；只有用户明确选择“从所有预算删除”，才删除 Expense 和全部 binding。
-- 删除预算：删除 Budget、其 BudgetCategory、Settlement 与当前预算的全部 binding；只属于该预算的 Expense 同时删除。
-- 删除预算遇到共享 Expense 时，先由界面逐笔收集全局删除选择；未勾选的 Expense 保留其他 binding，已勾选的 Expense 才从所有预算删除。
-- 当前 MVP 使用永久删除，不增加 `deletedAt`、回收站表或恢复关系。未来启动回收站时再更新 Schema 与迁移，届时之前已经删除的数据不可恢复。
-
-### 5.5 Settlement
+### 6.4 `ExpenseTag`
 
 | 字段 | 类型 | 说明 |
-|---|---|---|
-| `id` | UUID | 本地主键 |
-| `budget` | Budget | 被结算预算 |
-| `settledAt` | Date | 结算时间 |
-| `totalSpent` | Decimal | 用户确认后的最终支出 |
-| `surplus` | Decimal | `totalAmount - totalSpent` |
-| `triggerType` | String | `auto / manual` |
+|------|------|------|
+| `id` | UUID | |
+| `name` | String | 餐饮、人情、聚会等 |
+| `createdAt` | Date | |
 
-当前 Settlement 只保存结算结果，不包含 `WishAllocation`。
+标签只表达含义，不拥有额度，不参与结算。
 
-## 六、领域服务
+### 6.5 `SourceEvidence`
 
-| 服务 | 当前职责 |
-|---|---|
-| `BudgetEngine` | 计算已用、真实结余、日常可花金额、超出金额、界面进度和分类状态 |
-| `SettlementEngine` | 生成结算清单并计算最终支出与结余 |
-| `LinkedExpenseDetector` | 按 ExpenseID 识别一笔多属 |
-| `OverrunPolicy` | 生成 `warnOnly / strictReview` 对应的用户反馈，不自动挪钱 |
-| `CycleScheduler` | 处理重复型下一周期和单次型归档 |
-| `Formatters` | 统一货币、日期与百分比展示 |
+| 字段 | 类型 | 说明 |
+|------|------|------|
+| `id` | UUID | |
+| `expense` | Expense | 所属交易 |
+| `sourceTypeRaw` | String | `manual` / `agentText` / `voice` / `image` / `applePay` / `sms` / `email` / `statement` |
+| `externalReferenceHash` | String? | 来源侧标识的本地不可逆摘要，不存账号明文 |
+| `capturedAt` | Date | 捕获时间 |
+| `coverageTimestamp` | Date? | 该来源覆盖到的时间 |
+| `metadataEnvelope` | Data? | 只存去重必要的最少结构化字段，不存原图/原音频 |
 
-当前没有 `WishLedger`、`deductFromWish` 或结算转心愿服务。
+### 6.6 `DataSourceConnection`
 
-## 七、关键数据流
+| 字段 | 类型 | 说明 |
+|------|------|------|
+| `id` | UUID | |
+| `sourceTypeRaw` | String | Apple Pay / 短信 / 邮箱 / 账单导入等 |
+| `stateRaw` | String | `disconnected` / `connected` / `needsAttention` |
+| `lastCoveredAt` | Date? | 最后覆盖时间 |
+| `coverageNote` | String? | 对用户可读的缺口说明 |
+| `lastErrorCode` | String? | 脱敏错误码，不保存真实金融数据 |
+| `updatedAt` | Date | |
 
-### 记一笔
+### 6.7 `Settlement`
+
+| 字段 | 类型 | 说明 |
+|------|------|------|
+| `id` | UUID | |
+| `period` | BudgetPeriod | 唯一周期 |
+| `settledAt` | Date | 用户确认时间 |
+| `budgetAmountSnapshot` | Decimal | 结算时的周期额度 |
+| `currencyCode` | String | 结算基准币 |
+| `confirmedSpent` | Decimal | 当时确认的支出 |
+| `baseSurplus` | Decimal | `budgetAmountSnapshot - confirmedSpent`，可正可负 |
+| `coverageSnapshot` | Data? | 结算时各来源覆盖的结构化快照 |
+| `acceptedIncompleteData` | Bool | 用户是否明确接受仍可能不完整的数据 |
+| `createdWalletEntry` | WalletLedgerEntry? | 对钱包账本的基础影响 |
+
+### 6.8 `SettlementAdjustment`
+
+| 字段 | 类型 | 说明 |
+|------|------|------|
+| `id` | UUID | |
+| `settlement` | Settlement | 被修正的原结算 |
+| `reasonRaw` | String | `lateExpense` / `refund` / `postedAmountChange` |
+| `amountDelta` | Decimal | 对原周期支出的变化 |
+| `confirmedAt` | Date | 用户确认时间 |
+| `sourceExpense` | Expense? | 追溯来源 |
+| `walletEntry` | WalletLedgerEntry? | 对钱包的对应调整 |
+
+原 `Settlement` 保留当时事实，当前有效结果由基础值加全部调整派生。
+
+### 6.9 `WalletLedgerEntry`
+
+| 字段 | 类型 | 说明 |
+|------|------|------|
+| `id` | UUID | |
+| `typeRaw` | String | `surplus` / `overrun` / `wishRedemption` / `refund` / `retrospectiveAdjustment` |
+| `sourceSignedAmount` | Decimal | 来源币种金额：结余为正，越线和兑现为负 |
+| `sourceCurrencyCode` | String | 来源币种 |
+| `walletSignedAmount` | Decimal? | 换算为钱包基准币后的金额；换算规则确认前不可生成 |
+| `walletCurrencyCode` | String? | 钱包基准币 |
+| `conversionSnapshot` | Data? | 汇率、来源和换算时点的可追溯快照 |
+| `settlement` | Settlement? | 结算来源 |
+| `adjustment` | SettlementAdjustment? | 追溯来源 |
+| `wishRedemption` | WishRedemption? | 心愿来源 |
+| `occurredAt` | Date | |
+| `note` | String? | 用户可读摘要，不存敏感原文 |
+
+**唯一钱包计算（同一钱包基准币内）**：
 
 ```text
-用户输入金额
- -> 选择一个或多个预算
- -> 为每个预算选择分类
- -> 用户点击「记下这笔」
- -> 创建一份 Expense
- -> 为每个已选预算创建一份 Binding
- -> BudgetEngine 重新派生各预算状态
+net = sum(WalletLedgerEntry.walletSignedAmount)
+walletBalance = max(net, 0)
+recoveryGap = max(-net, 0)
 ```
 
-### 结算
+因此待恢复差额不是第二个账户，也不需要单独维护可漂移的余额字段。
+
+**未决门禁**：多币种预算进入唯一钱包时，钱包基准币、换算时点和汇率来源尚未由产品确认。确认前只能保存来源金额，不能生成 `walletSignedAmount`、合并不同币种余额或判断跨币种心愿是否可兑现。
+
+### 6.10 `Wish`
+
+| 字段 | 类型 | 说明 |
+|------|------|------|
+| `id` | UUID | |
+| `name` | String | 用户真实表达的心愿 |
+| `targetAmount` | Decimal? | 参考价格，可空 |
+| `currencyCode` | String? | 参考价格币种 |
+| `referenceURL` | String? | 商品链接，可空 |
+| `stateRaw` | String | `active` / `completed` / `archived` |
+| `createdAt` | Date | |
+| `completedAt` | Date? | |
+
+Wish 不持有独立余额。
+
+### 6.11 `WishRedemption`
+
+| 字段 | 类型 | 说明 |
+|------|------|------|
+| `id` | UUID | |
+| `wish` | Wish | |
+| `expense` | Expense? | 捕获到真实交易时关联 |
+| `actualAmount` | Decimal | 实际成交金额 |
+| `currencyCode` | String | 实际成交币种 |
+| `confirmedAt` | Date | 用户确认时间 |
+| `stateRaw` | String | `completed` / `refunded` |
+| `walletEntry` | WalletLedgerEntry | 对钱包的实际扣减 |
+
+创建前必须按已确认的钱包基准币换算规则验证余额足够。目标价格不参与扣款；多币种规则未确认前不得跨币种兑现。
+
+### 6.12 `MatchingRule`
+
+| 字段 | 类型 | 说明 |
+|------|------|------|
+| `id` | UUID | |
+| `humanReadableRule` | String | 给用户看的规则摘要 |
+| `structuredPredicate` | Data | 可确定执行的条件 |
+| `targetBudget` | Budget? | 目标结算预算卡 |
+| `targetTags` | [ExpenseTag] | 可选标签 |
+| `stateRaw` | String | `proposed` / `active` / `disabled` |
+| `confirmedAt` | Date? | 批量/未来应用前的用户确认 |
+
+---
+
+## 七、关键领域服务
+
+| Service | 职责 |
+|---------|------|
+| `BudgetEngine` | 计算周期已用、剩余、进度和风险输入 |
+| `CycleEngine` | 周期到期、待结算、下周期队列和新周期创建 |
+| `AttributionEngine` | 唯一预算归属、低置信和未纳入状态 |
+| `DeduplicationEngine` | 跨来源重复判断和证据合并 |
+| `CurrencyEngine` | 原币、暂估、实际入账与预算基准币金额 |
+| `SettlementEngine` | 结算预览、数据覆盖检查、确认提交 |
+| `WalletLedger` | 追加账本、派生钱包余额与待恢复差额 |
+| `WishRedemptionEngine` | 余额校验、实际购买扣减和退款 |
+| `RetrospectiveAdjustmentEngine` | 迟到交易、退款和入账差异的追溯影响预览 |
+| `AgentActionCoordinator` | 将 Agent 结构化意图路由到领域服务 |
+| `ConfirmationGate` | 按风险统一决定直接执行、确认或拒绝 |
+
+所有 Service 必须使用 `Decimal` 并有 Swift Testing 单测。
+
+---
+
+## 八、结算事务
 
 ```text
-预算到期或用户主动进入结算
- -> SettlementEngine 汇总 binding
- -> LinkedExpenseDetector 列出关联账
- -> 用户确认每条关联账归属
- -> 重新计算 totalSpent 与 surplus
- -> 保存 Settlement
- -> 重复型开启下一周期 / 单次型归档
+生成结算预览
+  · 锁定 period 当前交易快照
+  · 读取 pending / unbudgeted / data source coverage
+  · 计算 confirmedSpent 与预估 baseSurplus
+  · 计算钱包影响
+  ↓
+用户处理关键项或接受不完整数据
+  ↓
+ConfirmationGate 展示最终影响并确认
+  ↓
+单一事务提交
+  · 创建 Settlement
+  · 追加 WalletLedgerEntry
+  · period → settled
+  · repeating: 创建新 period 并迁移 queued expenses
+  · oneShot: Budget → archived
 ```
 
-## 八、存储与隐私边界
+任何一步失败都回滚整个提交，避免预算结算成功但钱包未更新。
 
-- 第一轮 MVP 只使用本地 SwiftData，不启用 CloudKit。
-- 不连接银行、支付宝、微信或任何真实资金账户。
-- 不接自有后端，不上传预算、金额、分类或备注。
-- 不接 Analytics、Tracking、广告或第三方崩溃收集 SDK。
-- Sample 数据使用虚构名称和金额。
-- 日志不得输出真实金额、预算名或备注。
+---
 
-## 九、本地化与错误
+## 九、Agent 安全边界
 
-- App 默认名 `CheckLine`，简体中文通过 `InfoPlist.strings` 显示「预算线」。
-- 所有用户可见字符串同时维护 `zh-Hans` 与 `en`。
-- 金额使用 `Decimal.FormatStyle.Currency`，日期使用系统 FormatStyle。
-- 用户错误不暴露 SQLite、SwiftData 或系统错误码。
-- 可恢复错误由 ViewModel 转换为用户可理解的状态，Service 不使用 `fatalError()`。
+- LLM 输出只能是结构化候选意图，不能直接写数据库；
+- 所有金额重新由 Core 校验和计算；
+- 低风险单笔新增可执行后提供撤销；
+- 调额度、改周期、删除、批量修改、结算、钱包和追溯必须经过 `ConfirmationGate`；
+- Agent 不可见完整账本，除非任务确实需要且用户已允许；
+- 云端请求只发送完成当前判断所需的最少字段；
+- Agent 不可调用投资、借贷、保险、税务等产品范围外动作。
 
-## 十、测试基线
+---
 
-当前已建立 `Check_LineTests` Swift Testing Target。`BudgetEngine` 首批测试已覆盖 0 金额、边界金额、超出金额与多 binding 汇总；后续领域服务和 SwiftData 必须在对应实现切片同步补齐下列测试。
+## 十、隐私与数据保留
 
-最低覆盖：
+- 完整 Expense、Settlement、WalletLedger 默认仅存用户设备本地；iCloud 尚未进入已确认首发范围；
+- 图片和语音原始数据处理后丢弃；
+- 短信、邮件只提取交易必要字段，不保存整段无关内容；
+- 来源账号标识优先保存不可逆摘要；
+- 调试日志不得输出真实金额、商家、邮箱、短信或心愿名称；
+- 云端 AI、邮箱转发和地区连接器上线前必须分别完成数据流审查。
 
-- BudgetEngine 的 0 金额、边界金额、超出金额与多 binding。
-- SettlementEngine 的重复型、单次型、结余与负结余。
-- LinkedExpenseDetector 的单预算、多预算、包含/排除确认。
-- OverrunPolicy 的两种策略，确认不会自动修改其他预算。
-- SwiftData 的模型关系、预算级联范围、共享消费默认保留、明确全局删除和迁移。
+详细规则见 `../compliance/PRIVACY.md`。
 
-UI 仍需在 iPhone 小屏、Pro Max、iPad 分屏和 Dynamic Type 下人工验收。
+---
 
-## 十一、依赖与能力门槛
+## 十一、迁移说明
 
-- 当前不引入第三方运行时依赖。
-- 新依赖必须说明解决的问题、包体与维护成本、隐私影响和可替代方案。
-- iCloud、Widget、通知、OCR、语音或新 Target 启动前，先同步路线图、权限、隐私与架构。
-- 心愿阶段启动前，先更新 PRODUCT、PRD、FEATURE-LOOP、GLOSSARY 和本文，再设计 Schema。
+当前仓库没有已发布的正式 SwiftData 账本，因此：
 
-## 十二、已知缺口
+- `Features/Prototype` 中的 `budgetIDs`、共享消费删除和旧结算保持为历史样机，后续实现切片按需替换；
+- 旧草案的 `BudgetExpenseBinding` 和 `WishAllocation` 不进入正式 Schema；
+- 旧 `PrototypeDeletionTests` 不作为新 V1 验收，模型切换时用唯一预算归属测试替换；
+- 不为未发布旧结构建立兼容层；
+- 正式 Schema 从本文的新模型开始建立版本；
+- 若后续发现已有真实用户数据，必须暂停并重新制定迁移计划。
 
-- 当前 SwiftUI 体验样机已对齐现行产品文案，但尚未接入正式 MVP 数据层与领域服务。
-- SwiftData Schema 与迁移计划尚未建立。
-- `BudgetEngine` 首批测试已建立；其他领域服务、SwiftData 测试与 CI 尚未建立。
-- 真机签名、App 图标和 App Store 配置尚未完成。
+---
 
-## 相关文档
+## 十二、待技术确认
 
-- `../../PRODUCT.md`
-- `../product/PRD.md`
-- `../product/FEATURE-LOOP.md`
-- `../product/ROADMAP.md`
-- `../design/DESIGN.md`
-- `SETUP.md`
-- `PERMISSIONS.md`
-- `../compliance/PRIVACY.md`
+- SwiftData 对上述关系和 `Data` 快照字段的最终兼容性；
+- 预算 recurrence rule 的可迁移编码格式；
+- Apple Pay 与银行短信自动化在目标系统版本的真实事件字段；
+- 邮件入口是否完全端侧，还是需要最小中转服务；
+- AI Provider、端侧/云端分工和离线降级；
+- 唯一心愿钱包的基准币、预算结余/越线换算时点和汇率来源；
+- 多设备并发结算的冲突策略（若启用同步）；
+- 各地区银行连接器和隐私合规要求。
