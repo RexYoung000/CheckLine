@@ -9,7 +9,7 @@
 3. `docs/product/PRD.md`：确认 V1 范围。
 4. `docs/product/FEATURE-LOOP.md`：确认改动属于哪个业务循环。
 5. `docs/product/GLOSSARY.md`：确认术语和废弃概念。
-6. `docs/product/ROADMAP.md`：确认当前内部里程碑。
+6. `docs/product/ROADMAP.md`：确认当前内部里程碑、切片节奏和阶段门禁。
 7. 按任务读取 `docs/design/DESIGN.md`、`docs/engineering/ARCHITECTURE.md`、`docs/engineering/PERMISSIONS.md` 和隐私文档。
 
 发现文档、样机或代码冲突时，先按 `docs/README.md` 的权威顺序收敛文档。历史原型和现有样机代码不能覆盖 2026-08-10 之后的新产品定义。
@@ -20,7 +20,7 @@
 - 主 App Target / Scheme：`Check_Line`
 - 当前平台：iPhone / iPad，最低 iOS 17.0
 - 当前源码根目录：`Check_Line/`
-- 当前阶段：新 V1 产品定义已收敛，交互形态与正式数据模型待重做
+- 当前阶段：M0 交互形态收敛。产品定义已完成；下一刀是交互契约和钱包跨币种规则。切片节奏与阶段门禁见 `docs/product/ROADMAP.md`。
 - 当前启动页：基于上一版“多预算重复扣减”的 SwiftUI 内存样机，只可用于历史视觉/工程参考
 - 当前已有：`Check_LineTests` Swift Testing Target、`BudgetEngine` 基础金额规则、旧样机删除关系测试
 - 当前尚无：SwiftData 正式模型、新 V1 完整领域服务、行动 Agent、被动数据来源、心愿钱包账本
@@ -153,5 +153,6 @@ Check_Line/
 - 数据模型/模块/依赖：同步 `ARCHITECTURE`
 - 权限/数据流：同步 `PERMISSIONS` 与 `PRIVACY`
 - 阶段结束：在 `ROADMAP` 记录实际产出
+- 切片节奏、依赖门禁和每阶段验收：以 `ROADMAP` 为准，不另建流程文档
 
 历史资料归档到 `docs/archive/`，不能继续出现在当前文档导航中。

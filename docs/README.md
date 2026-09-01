@@ -9,7 +9,7 @@
 1. 根目录 `PRODUCT.md`：定位、核心心智、金额原则、不做清单。
 2. `product/PRD.md` 与 `product/FEATURE-LOOP.md`：V1 范围和业务流程。
 3. `product/GLOSSARY.md`：当前术语、金额含义和废弃概念。
-4. `product/ROADMAP.md`：内部里程碑与当前阶段。
+4. `product/ROADMAP.md`：内部里程碑、切片节奏、阶段门禁与当前阶段。
 5. `design/DESIGN.md`：设计原则、体验底线、已确认交互和历史样机边界。
 6. `engineering/ARCHITECTURE.md`：工程结构、目标数据模型和实施约束。
 7. `compliance/PRIVACY.md`：当前构建事实与 V1 数据边界。
@@ -27,7 +27,7 @@
 | `product/FEATURE-LOOP.md` | 引导、每日预算、结算、心愿与追溯循环 |
 | `product/USER-JOURNEY.md` | 从第一张预算卡到首个完整周期 |
 | `product/GLOSSARY.md` | 术语、金额规则与废弃概念 |
-| `product/ROADMAP.md` | 完整 V1 与内部里程碑 |
+| `product/ROADMAP.md` | 完整 V1、内部里程碑、开发流程与阶段门禁 |
 
 ### 设计
 
@@ -54,7 +54,7 @@
 - 正式 SwiftData 尚未建立，因此不为旧未发布数据模型增加兼容层。
 - `BudgetEngine` 基础 Decimal 计算仍可复用；`PrototypeDeletionTests` 只证明旧样机行为，不是新 V1 验收证据。
 - 当前构建仍无网络、无 iCloud、无真实 AI、无被动来源、无系统权限。
-- 新 V1 的下一步是完成交互形态，再按 `ROADMAP.md` 的内部里程碑实现。
+- 新 V1 的下一步是完成 M0 交互契约和钱包跨币种规则，再按 `ROADMAP.md` 的切片节奏与阶段门禁实现。切片怎么拆、何时能进下一里程碑，以该文件为准。
 
 ## 维护规则
 
@@ -62,5 +62,5 @@
 - 页面、导航、交互和文案：同步 `DESIGN.md` 与当前原型说明。
 - 数据模型、模块和依赖：同步 `ARCHITECTURE.md`。
 - 权限或数据流：同步 `PERMISSIONS.md` 与 `PRIVACY.md`。
-- 阶段结束：更新 `ROADMAP.md` 的实际产出。
+- 阶段结束：更新 `ROADMAP.md` 的实际产出。切片节奏与阶段门禁以 `ROADMAP.md` 为准。
 - 历史材料归档到 `docs/archive/`，不能继续占用当前文档入口。
