@@ -51,10 +51,10 @@
 - 正式工程：根目录 `Check_Line.xcodeproj`，iOS App + Swift Testing Target。
 - 当前 App 仍运行 2026-08-01 的内存 SwiftUI 体验样机，只作历史视觉/工程参考；**启动页不是新 V1 需求**。
 - 样机的四 Tab、多预算重复扣减、旧结算和悬浮文本/语音入口已经被新产品定义取代，见 `DESIGN.md` 3.1 与 3.4。
-- 正式 SwiftData Schema V1（`Persisted*`）已建立，领域引擎可在无 UI 下跑通循环卡与一次性卡；**App 启动页仍是旧样机**，尚未打开 `ModelContainer`。
-- `BudgetEngine` 及 M1 领域服务单测是新 V1 验收入口；`PrototypeDeletionTests` 只证明旧样机行为。
-- 当前构建仍无网络、无 iCloud、无真实 AI、无被动来源、无系统权限。
-- **M1 领域账本已落地。** 下一步不要改旧样机外观；把 Schema 接到 App 或进入 M2 Agent 前，先在 macOS 上跑 `Check_LineTests`。真实页面视口验收属于 M4。
+- 正式 SwiftData Schema V1 与本地 `ModelContainer` 已接入 App（无 CloudKit）；**启动页仍是旧样机**，不读写新账本。
+- `BudgetEngine`、`LedgerStore` 及 M1 领域服务单测是新 V1 验收入口；`PrototypeDeletionTests` 只证明旧样机行为。
+- 当前构建仍无网络、无 iCloud 同步、无真实 AI、无被动来源、无系统权限。
+- **M1 已完成。** 下一步是 M2 行动 Agent。不要改旧样机外观。真实页面视口验收属于 M4。
 
 ## 维护规则
 

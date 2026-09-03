@@ -32,7 +32,7 @@ Check_Line/
 ├── App/                 # 当前 App 入口
 ├── Core/Services/       # M1 领域引擎（纯 Swift，不依赖 SwiftUI）
 ├── Core/Models/         # 领域 struct / Ledger
-├── Core/Persistence/    # SwiftData Schema V1（Persisted*），尚未接入启动页
+├── Core/Persistence/    # Schema V1、本地容器、LedgerStore；旧样机 UI 不读写
 ├── Features/Prototype/  # 历史 SwiftUI 样机，不是新 V1 需求；M4 替换启动页
 ├── Resources/           # 中英文本地化
 └── Assets.xcassets      # App 图标、颜色与图片资源

@@ -18,11 +18,11 @@
 - 首次引导与首页“预算状态 + 常驻 Agent + 底部任务面板”框架已确认；
 - 财务健康分、收入债务画像和完整财务规划已从范围删除。
 
-### 下一步：把 M1 账本接到产品表面之前
+### 下一步：M2 预算循环行动 Agent
 
-M1 确定性账本的领域引擎、Swift Testing 与 SwiftData Schema V1 已落地；启动页仍是旧样机，App 尚未打开 `ModelContainer`。
+M1 确定性账本已落地：领域引擎、Swift Testing、`CheckLineSchemaV1`，以及 App 启动时的本地 `ModelContainer`（无 CloudKit）。启动页仍是旧样机，不读写新账本。
 
-下一步仍属于 M1 收尾或直接进入 M2 之前：不要改旧样机当新 UI。卡片密度、配色、字号留到 M4。
+不要改旧样机当新 UI。卡片密度、配色、字号留到 M4。
 
 ---
 
@@ -79,7 +79,7 @@ V1 同时包含：
 - [x] 心愿兑现与追溯调整；
 - [x] 多币种金额规则；
 - [x] Core 领域服务单测；
-- [ ] App 接入 SwiftData `ModelContainer`（Schema V1 已建立，启动页未切换）。
+- [x] App 接入 SwiftData `ModelContainer`（Schema V1，无 CloudKit；启动页未切换）。
 
 **内部验收**：不依赖 AI 和外部来源，也能完整跑通一个循环预算和一个一次性预算。已由 `FullCycleTests` 覆盖。
 
@@ -163,7 +163,7 @@ V1 同时包含：
 - 2026-09-03：确认首页多卡固定顺序、无四 Tab 导航、Agent 面板三态与结算/心愿确认页必须字段；视觉密度仍待真实页面验收。
 - 2026-09-03：确认唯一心愿钱包基准币、仅在用户确认时换算、汇率优先实际入账否则暂估可见；已有钱包分录后 V1 不改基准币。
 - 2026-09-03：写入目标视口与真实内容核对清单；将旧四 Tab 样机从当前需求入口摘出。M0 关闭，下一步 M1。
-- 2026-09-03：M1 金额由纯 Swift 领域引擎计算；SwiftData 仅建立 `CheckLineSchemaV1` 镜像，启动页不切换。
+- 2026-09-03：M1 金额由纯 Swift 领域引擎计算；SwiftData Schema V1 与本地容器接入 App，启动页不切换、不读写新账本。
 
 ---
 
@@ -187,3 +187,4 @@ V1 同时包含：
 - 2026-09-03：将首页多卡信息层级、无四 Tab 主导航、Agent 底部任务面板三态/升级条件、结算与心愿兑现确认页必须字段写入 `DESIGN.md` 第 3.1 节。不改旧样机代码。
 - 2026-09-03：写入唯一心愿钱包跨币种规则（`PRODUCT.md` 第 6.5 节、`ARCHITECTURE.md` `WalletSettings` / `CurrencyEngine`）。
 - 2026-09-03：落地 M1 确定性账本：领域 `Ledger` + Budget/Cycle/Attribution/Deduplication/Currency/Settlement/Wallet/Wish/Retrospective 引擎，`CheckLineSchemaV1` SwiftData 镜像，以及对应 Swift Testing。不改旧样机启动页。
+- 2026-09-03：App 启动打开本地 SwiftData 容器（关闭 CloudKit），`LedgerStore` 负责领域账本读写；旧样机 UI 仍不使用该账本。

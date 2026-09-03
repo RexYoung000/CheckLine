@@ -47,11 +47,10 @@ CheckLine 是一个 iOS 17+ 的 Agent 驱动个人预算循环工具。用户自
 - 唯一心愿钱包基准币、确认时换算与汇率来源（`PRODUCT.md` 第 6.5 节）；
 - 目标视口与真实内容核对清单（`docs/design/DESIGN.md` 第 3.1.6 节；真实页面验收属于 M4）；
 - 旧 SwiftUI 样机已标明为历史参考，不再作为新 V1 需求；
-- M1 确定性账本：领域引擎、Swift Testing，以及 SwiftData Schema V1。
+- M1 确定性账本：领域引擎、Swift Testing、SwiftData Schema V1，以及 App 本地 `ModelContainer`（无 CloudKit）。
 
 尚未完成：
 
-- App 接入 SwiftData `ModelContainer`（启动页仍是旧样机）；
 - 行动 Agent、语音/图片和被动数据来源；
 - 正式 UI、真实页面视觉验收与公开发布准备。
 

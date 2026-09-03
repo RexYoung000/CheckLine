@@ -1,6 +1,6 @@
 # ARCHITECTURE — CheckLine 技术架构
 
-> 本文定义正式 Xcode 工程事实、新 V1 目标架构与金额模型。正式 SwiftData Schema 尚未落地，因此不为未发布的旧“多预算重复扣减”样机保留兼容层。
+> 本文定义正式 Xcode 工程事实、新 V1 目标架构与金额模型。SwiftData Schema V1 已建立；不为未发布的旧“多预算重复扣减”样机保留兼容层。
 
 ---
 
@@ -12,10 +12,10 @@
 | Target / Scheme | `Check_Line` |
 | 平台 | iPhone / iPad，最低 iOS 17.0 |
 | 当前 UI | `Features/Prototype` 历史启动页（不是新 V1 需求；M4 按 `DESIGN.md` 3.1 替换） |
-| 正式数据层 | Core 领域模型与引擎已落地；SwiftData Schema V1（`Persisted*`）已建立，App 尚未接入 `ModelContainer` |
-| Test Target | `Check_LineTests` 已存在，覆盖 `BudgetEngine` 基础规则与旧样机关系删除 |
+| 正式数据层 | 领域 `Ledger` + 引擎已落地；App 启动时打开本地 `ModelContainer`（无 CloudKit）。旧样机 UI 仍不读写该账本 |
+| Test Target | `Check_LineTests` 覆盖领域引擎、`LedgerStore` 回合与 Schema 关系 |
 | 网络 / 后端 / AI | 未实现 |
-| 系统权限 / iCloud | 未启用 |
+| 系统权限 / iCloud | 未启用；SwiftData 配置为 `cloudKitDatabase: .none` |
 
 旧样机的 `budgetIDs` 多预算关系、共享消费删除和旧结算只用于追溯，不是新 Schema 或验收依据。`BudgetEngine` 的 Decimal 基础计算可以继续复用；命名和输入结构在新模型落地时同步收敛。
 
@@ -129,7 +129,7 @@ BudgetEngine / Home Projection
 
 ## 六、数据模型
 
-> 以下是正式 Schema 的目标字段。领域计算使用无 UI 依赖的 struct（`Ledger` / `Budget` / `Expense` 等）；SwiftData 镜像为 `Persisted*`，`CheckLineSchemaV1` 已建立。App 启动页尚未接入持久化。CloudKit 尚未进入已确认范围。
+> 以下是正式 Schema 的目标字段。领域计算使用无 UI 依赖的 struct（`Ledger` / `Budget` / `Expense` 等）；SwiftData 镜像为 `Persisted*`。`LedgerStore` 负责读写；App 启动打开本地容器且 `cloudKitDatabase` 为 `.none`。旧样机界面仍不使用该账本。CloudKit 同步尚未进入已确认范围。
 
 ### 6.0 `WalletSettings`
 
@@ -439,6 +439,8 @@ ConfirmationGate 展示最终影响并确认
 当前仓库没有已发布的正式 SwiftData 账本，因此：
 
 - 领域引擎与 `CheckLineSchemaV1` 从本文模型新建，不为旧样机 `budgetIDs` 建立兼容层；
+- App 通过 `CheckLinePersistence.makeAppContainer()` 打开本地容器，失败时回退内存容器；`LedgerStore` 做领域账本整本替换读写；
+- 当前启动页不调用 `LedgerStore`，因此不会把旧样机 Sample 写入 Schema；
 - `Features/Prototype` 中的 `budgetIDs`、共享消费删除和旧结算保持为历史样机，M4 替换启动页；不作为新 Schema 或验收依据；
 - 旧草案的 `BudgetExpenseBinding` 和 `WishAllocation` 不进入正式 Schema；
 - 旧 `PrototypeDeletionTests` 不作为新 V1 验收；新归属测试覆盖“一笔消费一个结算周期”；
