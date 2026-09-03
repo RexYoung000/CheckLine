@@ -18,11 +18,9 @@
 - 首次引导与首页“预算状态 + 常驻 Agent + 底部任务面板”框架已确认；
 - 财务健康分、收入债务画像和完整财务规划已从范围删除。
 
-### 下一步：M2 预算循环行动 Agent
+### 下一步：补齐 M2 的 LLM / 语音图片，或保持文字意图直到 M4 面板
 
-M1 确定性账本已落地：领域引擎、Swift Testing、`CheckLineSchemaV1`，以及 App 启动时的本地 `ModelContainer`（无 CloudKit）。启动页仍是旧样机，不读写新账本。
-
-不要改旧样机当新 UI。卡片密度、配色、字号留到 M4。
+M2 已有 `AgentIntent`、`ConfirmationGate`、`AgentActionCoordinator` 与文字 Capture 适配。启动页仍是旧样机，不改外观。真实 LLM、语音、图片和底部任务面板尚未接入。
 
 ---
 
@@ -87,12 +85,14 @@ V1 同时包含：
 
 **目标**：让文字、语音和图片共用同一套行动与风险门禁。
 
-- 结构化理解与行动计划；
-- 低风险直接执行 + 撤销；
-- 不确定信息确认；
-- 高风险金额影响预览；
-- 创建/调整预算卡、改记录、查询、结算和心愿行动；
-- Agent 结果必须调用确定性领域服务，不自行计算余额。
+- [x] 结构化意图与 `ConfirmationGate`；
+- [x] 低风险直接执行 + 撤销；
+- [x] 不确定归属先确认结构化结果；
+- [x] 结算 / 心愿 / 追溯先展示领域预览再确认；
+- [x] 创建预算、查询剩余、记一笔经协调器调用 Core；
+- [ ] 真实 LLM Provider；
+- [ ] 语音 / 图片 Capture；
+- [ ] Agent 底部任务面板 UI（M4）。
 
 ### M3 · 数据来源与可信度
 
@@ -164,6 +164,7 @@ V1 同时包含：
 - 2026-09-03：确认唯一心愿钱包基准币、仅在用户确认时换算、汇率优先实际入账否则暂估可见；已有钱包分录后 V1 不改基准币。
 - 2026-09-03：写入目标视口与真实内容核对清单；将旧四 Tab 样机从当前需求入口摘出。M0 关闭，下一步 M1。
 - 2026-09-03：M1 金额由纯 Swift 领域引擎计算；SwiftData Schema V1 与本地容器接入 App，启动页不切换、不读写新账本。
+- 2026-09-03：M2 Agent 只接受结构化意图；金额与钱包数字一律由 Core 计算；低风险可撤销，结算级必须确认影响。
 
 ---
 
@@ -187,4 +188,4 @@ V1 同时包含：
 - 2026-09-03：将首页多卡信息层级、无四 Tab 主导航、Agent 底部任务面板三态/升级条件、结算与心愿兑现确认页必须字段写入 `DESIGN.md` 第 3.1 节。不改旧样机代码。
 - 2026-09-03：写入唯一心愿钱包跨币种规则（`PRODUCT.md` 第 6.5 节、`ARCHITECTURE.md` `WalletSettings` / `CurrencyEngine`）。
 - 2026-09-03：落地 M1 确定性账本：领域 `Ledger` + Budget/Cycle/Attribution/Deduplication/Currency/Settlement/Wallet/Wish/Retrospective 引擎，`CheckLineSchemaV1` SwiftData 镜像，以及对应 Swift Testing。不改旧样机启动页。
-- 2026-09-03：App 启动打开本地 SwiftData 容器（关闭 CloudKit），`LedgerStore` 负责领域账本读写；旧样机 UI 仍不使用该账本。
+- 2026-09-03：落地 M2 行动层：`ConfirmationGate` + `AgentActionCoordinator` + 快照撤销；文字只提取/转发结构化意图，不写库、不算余额。不改启动页。

@@ -30,6 +30,8 @@
 ```text
 Check_Line/
 ├── App/                 # 当前 App 入口
+├── Application/         # Agent 意图、ConfirmationGate、协调器与撤销
+├── Capture/Text/        # 文字只提取事实，不写账本
 ├── Core/Services/       # M1 领域引擎（纯 Swift，不依赖 SwiftUI）
 ├── Core/Models/         # 领域 struct / Ledger
 ├── Core/Persistence/    # Schema V1、本地容器、LedgerStore；旧样机 UI 不读写
@@ -40,7 +42,7 @@ Check_Line/
 Check_LineTests/         # Swift Testing 单元测试
 ```
 
-`Core/Models`、`Core/Services` 与 `Core/Persistence` 已随 M1 账本建立。其他正式 Feature、Application、Capture、DesignSystem 与 Shared 会按新 `ARCHITECTURE.md` 的内部里程碑逐步建立，不预建空目录。旧 `Features/Prototype` 不是新 V1 需求；M4 用真实首页替换启动页。
+`Core/Models`、`Core/Services` 与 `Core/Persistence` 已随 M1 账本建立。`Application` 与 `Capture/Text` 已随 M2 行动层建立。其他正式 Feature、DesignSystem 与 Shared 会按新 `ARCHITECTURE.md` 的内部里程碑逐步建立，不预建空目录。旧 `Features/Prototype` 不是新 V1 需求；M4 用真实首页替换启动页。
 
 旧项目的 `Package.swift` 和独立 Runner 已退出当前工程，避免同时维护 Swift Package 与 Xcode App 两套入口。它们仍可从 Git 历史中追溯。
 

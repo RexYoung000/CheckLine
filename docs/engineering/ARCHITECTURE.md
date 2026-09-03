@@ -376,8 +376,9 @@ Wish 不持有独立余额。
 | `WalletLedger` | 追加账本、派生钱包余额与待恢复差额 |
 | `WishRedemptionEngine` | 余额校验、实际购买扣减和退款 |
 | `RetrospectiveAdjustmentEngine` | 迟到交易、退款和入账差异的追溯影响预览 |
-| `AgentActionCoordinator` | 将 Agent 结构化意图路由到领域服务 |
-| `ConfirmationGate` | 按风险统一决定直接执行、确认或拒绝 |
+| `AgentActionCoordinator` | Application：将结构化意图路由到领域服务，不自行计算余额 |
+| `ConfirmationGate` | Application：按风险决定直接执行、确认结构、确认影响或拒绝 |
+| `UndoCoordinator` | Application：低风险记一笔的账本快照撤销 |
 
 所有 Service 必须使用 `Decimal` 并有 Swift Testing 单测。
 
@@ -410,10 +411,10 @@ ConfirmationGate 展示最终影响并确认
 
 ## 九、Agent 安全边界
 
-- LLM 输出只能是结构化候选意图，不能直接写数据库；
+- LLM 输出只能是结构化候选意图，不能直接写数据库；当前 M2 由 `AgentActionCoordinator` 接收 `AgentIntent`，金额一律回算自 Core；
 - 所有金额重新由 Core 校验和计算；
 - LLM 不得编造汇率或钱包数字；跨币种写入必须使用 `CurrencyEngine` 的确认换算结果；
-- 低风险单笔新增可执行后提供撤销；
+- 低风险单笔新增可执行后提供撤销（`UndoCoordinator`）；
 - 调额度、改周期、删除、批量修改、结算、钱包和追溯必须经过 `ConfirmationGate`；
 - Agent 不可见完整账本，除非任务确实需要且用户已允许；
 - 云端请求只发送完成当前判断所需的最少字段；

@@ -54,7 +54,7 @@
 - 正式 SwiftData Schema V1 与本地 `ModelContainer` 已接入 App（无 CloudKit）；**启动页仍是旧样机**，不读写新账本。
 - `BudgetEngine`、`LedgerStore` 及 M1 领域服务单测是新 V1 验收入口；`PrototypeDeletionTests` 只证明旧样机行为。
 - 当前构建仍无网络、无 iCloud 同步、无真实 AI、无被动来源、无系统权限。
-- **M1 已完成。** 下一步是 M2 行动 Agent。不要改旧样机外观。真实页面视口验收属于 M4。
+- **M2 行动门禁已落地。** 下一步是 LLM/语音/图片或 M4 面板，不要改旧样机外观。
 
 ## 维护规则
 
