@@ -20,7 +20,7 @@
 - 主 App Target / Scheme：`Check_Line`
 - 当前平台：iPhone / iPad，最低 iOS 17.0
 - 当前源码根目录：`Check_Line/`
-- 当前阶段：新 V1 产品定义已收敛，交互形态与正式数据模型待重做
+- 当前阶段：M0。首页/导航/Agent/确认页交互契约已写入 `docs/design/DESIGN.md` 第 3.1 节；仍待钱包跨币种规则与视口核对。正式数据模型未开始。
 - 当前启动页：基于上一版“多预算重复扣减”的 SwiftUI 内存样机，只可用于历史视觉/工程参考
 - 当前已有：`Check_LineTests` Swift Testing Target、`BudgetEngine` 基础金额规则、旧样机删除关系测试
 - 当前尚无：SwiftData 正式模型、新 V1 完整领域服务、行动 Agent、被动数据来源、心愿钱包账本

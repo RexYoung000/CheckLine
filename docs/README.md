@@ -54,7 +54,7 @@
 - 正式 SwiftData 尚未建立，因此不为旧未发布数据模型增加兼容层。
 - `BudgetEngine` 基础 Decimal 计算仍可复用；`PrototypeDeletionTests` 只证明旧样机行为，不是新 V1 验收证据。
 - 当前构建仍无网络、无 iCloud、无真实 AI、无被动来源、无系统权限。
-- 新 V1 的下一步是完成交互形态，再按 `ROADMAP.md` 的内部里程碑实现。
+- 新 V1 的下一步是确认钱包跨币种规则，并用真实内容核对目标视口；交互契约以 `design/DESIGN.md` 第 3.1 节为准，再按 `ROADMAP.md` 进入 M1。
 
 ## 维护规则
 
