@@ -131,6 +131,19 @@ BudgetEngine / Home Projection
 
 > 以下是正式 Schema 的目标字段。实现前按 SwiftData 约束建立 `VersionedSchema`；CloudKit 尚未进入已确认范围。
 
+### 6.0 `WalletSettings`
+
+唯一心愿钱包的账本级设置，全设备一份，不是按心愿拆分的账户。
+
+| 字段 | 类型 | 说明 |
+|------|------|------|
+| `id` | UUID | 单例主键 |
+| `walletCurrencyCode` | String | 钱包基准币；全账本只有这一个 |
+| `setAt` | Date | 用户确认或默认生效时间 |
+| `updatedAt` | Date | |
+
+尚未产生任何 `WalletLedgerEntry` 时，`walletCurrencyCode` 默认等于第一张预算卡的 `defaultCurrencyCode`，用户可以改。已有分录后 V1 不得更改该字段。余额和待恢复差额只在该币种内派生。
+
 ### 6.1 `Budget`
 
 | 字段 | 类型 | 说明 |
@@ -268,9 +281,9 @@ BudgetEngine / Home Projection
 | `typeRaw` | String | `surplus` / `overrun` / `wishRedemption` / `refund` / `retrospectiveAdjustment` |
 | `sourceSignedAmount` | Decimal | 来源币种金额：结余为正，越线和兑现为负 |
 | `sourceCurrencyCode` | String | 来源币种 |
-| `walletSignedAmount` | Decimal? | 换算为钱包基准币后的金额；换算规则确认前不可生成 |
-| `walletCurrencyCode` | String? | 钱包基准币 |
-| `conversionSnapshot` | Data? | 汇率、来源和换算时点的可追溯快照 |
+| `walletSignedAmount` | Decimal | 换算为钱包基准币后的金额；同币种时等于 `sourceSignedAmount` |
+| `walletCurrencyCode` | String | 写入时的钱包基准币，必须等于当时的 `WalletSettings.walletCurrencyCode` |
+| `conversionSnapshot` | Data | 汇率、来源（`posted` / `estimated` / `identity`）和时间；同币种也记录 identity |
 | `settlement` | Settlement? | 结算来源 |
 | `adjustment` | SettlementAdjustment? | 追溯来源 |
 | `wishRedemption` | WishRedemption? | 心愿来源 |
@@ -287,7 +300,22 @@ recoveryGap = max(-net, 0)
 
 因此待恢复差额不是第二个账户，也不需要单独维护可漂移的余额字段。
 
-**未决门禁**：多币种预算进入唯一钱包时，钱包基准币、换算时点和汇率来源尚未由产品确认。确认前只能保存来源金额，不能生成 `walletSignedAmount`、合并不同币种余额或判断跨币种心愿是否可兑现。
+**换算规则**（`CurrencyEngine`，金额规则见 `PRODUCT.md` 第 6.5 节）：
+
+```text
+确认结算 / 兑现 / 退款 / 追溯调整
+  ↓
+sourceSignedAmount + sourceCurrencyCode
+  ↓
+sourceCurrency == walletCurrency
+  ├─ 是 → walletSignedAmount = sourceSignedAmount；snapshot.kind = identity
+  └─ 否 → 优先实际入账汇率，否则确认页可见的暂估汇率
+         得不到汇率则拒绝写入
+  ↓
+写入 WalletLedgerEntry（含 conversionSnapshot）
+```
+
+事后汇率变化不回写旧分录。入账差异或迟到交易先按预算基准币算差额，再在用户确认该调整时换算为新的钱包分录。V1 在已有分录后拒绝更改 `WalletSettings.walletCurrencyCode`。
 
 ### 6.10 `Wish`
 
@@ -317,7 +345,7 @@ Wish 不持有独立余额。
 | `stateRaw` | String | `completed` / `refunded` |
 | `walletEntry` | WalletLedgerEntry | 对钱包的实际扣减 |
 
-创建前必须按已确认的钱包基准币换算规则验证余额足够。目标价格不参与扣款；多币种规则未确认前不得跨币种兑现。
+创建前必须按钱包基准币换算后的余额校验是否足够。目标价格不参与扣款。跨币种兑现与结算使用同一套确认时换算规则；得不到可展示汇率时不能完成兑现。
 
 ### 6.12 `MatchingRule`
 
@@ -341,7 +369,7 @@ Wish 不持有独立余额。
 | `CycleEngine` | 周期到期、待结算、下周期队列和新周期创建 |
 | `AttributionEngine` | 唯一预算归属、低置信和未纳入状态 |
 | `DeduplicationEngine` | 跨来源重复判断和证据合并 |
-| `CurrencyEngine` | 原币、暂估、实际入账与预算基准币金额 |
+| `CurrencyEngine` | 原币、暂估、实际入账、预算基准币金额，以及进入钱包时的确认换算与快照 |
 | `SettlementEngine` | 结算预览、数据覆盖检查、确认提交 |
 | `WalletLedger` | 追加账本、派生钱包余额与待恢复差额 |
 | `WishRedemptionEngine` | 余额校验、实际购买扣减和退款 |
@@ -360,7 +388,7 @@ Wish 不持有独立余额。
   · 锁定 period 当前交易快照
   · 读取 pending / unbudgeted / data source coverage
   · 计算 confirmedSpent 与预估 baseSurplus
-  · 计算钱包影响
+  · 计算钱包影响（含跨币种确认换算预览）
   ↓
 用户处理关键项或接受不完整数据
   ↓
@@ -382,6 +410,7 @@ ConfirmationGate 展示最终影响并确认
 
 - LLM 输出只能是结构化候选意图，不能直接写数据库；
 - 所有金额重新由 Core 校验和计算；
+- LLM 不得编造汇率或钱包数字；跨币种写入必须使用 `CurrencyEngine` 的确认换算结果；
 - 低风险单笔新增可执行后提供撤销；
 - 调额度、改周期、删除、批量修改、结算、钱包和追溯必须经过 `ConfirmationGate`；
 - Agent 不可见完整账本，除非任务确实需要且用户已允许；
@@ -423,6 +452,6 @@ ConfirmationGate 展示最终影响并确认
 - Apple Pay 与银行短信自动化在目标系统版本的真实事件字段；
 - 邮件入口是否完全端侧，还是需要最小中转服务；
 - AI Provider、端侧/云端分工和离线降级；
-- 唯一心愿钱包的基准币、预算结余/越线换算时点和汇率来源；
+- 暂估汇率的具体系统/服务来源（产品只要求确认页可见来源名称与时间，不绑定供应商）；
 - 多设备并发结算的冲突策略（若启用同步）；
 - 各地区银行连接器和隐私合规要求。
