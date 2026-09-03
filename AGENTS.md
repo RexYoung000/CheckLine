@@ -20,12 +20,12 @@
 - 主 App Target / Scheme：`Check_Line`
 - 当前平台：iPhone / iPad，最低 iOS 17.0
 - 当前源码根目录：`Check_Line/`
-- 当前阶段：M0 文档与交互契约已完成。下一步是 M1 确定性账本（SwiftData 与领域引擎）。启动页仍是旧样机，M4 按 `DESIGN.md` 第 3.1 节替换。正式数据模型未开始。
+- 当前阶段：M1 确定性账本。领域引擎与 SwiftData Schema V1 已落地；启动页仍是旧样机，App 尚未接入持久化。
 - 当前启动页：基于上一版“多预算重复扣减”的 SwiftUI 内存样机，只可用于历史视觉/工程参考
-- 当前已有：`Check_LineTests` Swift Testing Target、`BudgetEngine` 基础金额规则、旧样机删除关系测试
-- 当前尚无：SwiftData 正式模型、新 V1 完整领域服务、行动 Agent、被动数据来源、心愿钱包账本
+- 当前已有：`Check_LineTests` Swift Testing Target、`BudgetEngine` 及 M1 全套领域引擎、SwiftData Schema V1、旧样机删除关系测试
+- 当前尚无：App 接入 SwiftData、新 V1 完整 UI、行动 Agent、被动数据来源
 
-不得把 `Features/Prototype` 的多预算关系、四 Tab、悬浮“文本/语音”入口或旧结算流程视为当前需求。它们会在后续实现切片中按新文档重做；本次文档任务不直接修改代码。
+不得把 `Features/Prototype` 的多预算关系、四 Tab、悬浮“文本/语音”入口或旧结算流程视为当前需求。它们会在后续实现切片中按新文档重做。M1 只加 Core 账本，不改启动页。
 
 ## 三、当前 V1 产品边界
 

@@ -12,7 +12,7 @@
 | Target / Scheme | `Check_Line` |
 | 平台 | iPhone / iPad，最低 iOS 17.0 |
 | 当前 UI | `Features/Prototype` 历史启动页（不是新 V1 需求；M4 按 `DESIGN.md` 3.1 替换） |
-| 正式数据层 | 未实现 |
+| 正式数据层 | Core 领域模型与引擎已落地；SwiftData Schema V1（`Persisted*`）已建立，App 尚未接入 `ModelContainer` |
 | Test Target | `Check_LineTests` 已存在，覆盖 `BudgetEngine` 基础规则与旧样机关系删除 |
 | 网络 / 后端 / AI | 未实现 |
 | 系统权限 / iCloud | 未启用 |
@@ -129,7 +129,7 @@ BudgetEngine / Home Projection
 
 ## 六、数据模型
 
-> 以下是正式 Schema 的目标字段。实现前按 SwiftData 约束建立 `VersionedSchema`；CloudKit 尚未进入已确认范围。
+> 以下是正式 Schema 的目标字段。领域计算使用无 UI 依赖的 struct（`Ledger` / `Budget` / `Expense` 等）；SwiftData 镜像为 `Persisted*`，`CheckLineSchemaV1` 已建立。App 启动页尚未接入持久化。CloudKit 尚未进入已确认范围。
 
 ### 6.0 `WalletSettings`
 
@@ -363,6 +363,8 @@ Wish 不持有独立余额。
 
 ## 七、关键领域服务
 
+金额计算以 `Check_Line/Core/Services` 中的纯 Swift 引擎为准，输入输出都是领域 struct，不读写 SwiftUI 状态。
+
 | Service | 职责 |
 |---------|------|
 | `BudgetEngine` | 计算周期已用、剩余、进度和风险输入 |
@@ -436,11 +438,10 @@ ConfirmationGate 展示最终影响并确认
 
 当前仓库没有已发布的正式 SwiftData 账本，因此：
 
+- 领域引擎与 `CheckLineSchemaV1` 从本文模型新建，不为旧样机 `budgetIDs` 建立兼容层；
 - `Features/Prototype` 中的 `budgetIDs`、共享消费删除和旧结算保持为历史样机，M4 替换启动页；不作为新 Schema 或验收依据；
 - 旧草案的 `BudgetExpenseBinding` 和 `WishAllocation` 不进入正式 Schema；
-- 旧 `PrototypeDeletionTests` 不作为新 V1 验收，模型切换时用唯一预算归属测试替换；
-- 不为未发布旧结构建立兼容层；
-- 正式 Schema 从本文的新模型开始建立版本；
+- 旧 `PrototypeDeletionTests` 不作为新 V1 验收；新归属测试覆盖“一笔消费一个结算周期”；
 - 若后续发现已有真实用户数据，必须暂停并重新制定迁移计划。
 
 ---
