@@ -31,14 +31,14 @@
 Check_Line/
 ├── App/                 # 当前 App 入口
 ├── Core/Services/       # 已开始实装的纯 Swift 领域服务
-├── Features/Prototype/  # 当前浅色预算钱包 SwiftUI 体验样机
+├── Features/Prototype/  # 历史 SwiftUI 样机，不是新 V1 需求；M4 替换启动页
 ├── Resources/           # 中英文本地化
 └── Assets.xcassets      # App 图标、颜色与图片资源
 
 Check_LineTests/         # Swift Testing 单元测试
 ```
 
-`Core/Services` 已随 `BudgetEngine` 建立；其他正式 Feature、Application、Capture、DesignSystem 与 Shared 会按新 `ARCHITECTURE.md` 的内部里程碑逐步建立，不预建空目录。旧 `Features/Prototype` 后续按实现切片替换。
+`Core/Services` 已随 `BudgetEngine` 建立；其他正式 Feature、Application、Capture、DesignSystem 与 Shared 会按新 `ARCHITECTURE.md` 的内部里程碑逐步建立，不预建空目录。旧 `Features/Prototype` 不是新 V1 需求；M4 用真实首页替换启动页。
 
 旧项目的 `Package.swift` 和独立 Runner 已退出当前工程，避免同时维护 Swift Package 与 Xcode App 两套入口。它们仍可从 Git 历史中追溯。
 

@@ -11,7 +11,7 @@
 | 工程 | `Check_Line.xcodeproj` |
 | Target / Scheme | `Check_Line` |
 | 平台 | iPhone / iPad，最低 iOS 17.0 |
-| 当前 UI | `Features/Prototype` 中的旧内存 SwiftUI 样机 |
+| 当前 UI | `Features/Prototype` 历史启动页（不是新 V1 需求；M4 按 `DESIGN.md` 3.1 替换） |
 | 正式数据层 | 未实现 |
 | Test Target | `Check_LineTests` 已存在，覆盖 `BudgetEngine` 基础规则与旧样机关系删除 |
 | 网络 / 后端 / AI | 未实现 |
@@ -436,7 +436,7 @@ ConfirmationGate 展示最终影响并确认
 
 当前仓库没有已发布的正式 SwiftData 账本，因此：
 
-- `Features/Prototype` 中的 `budgetIDs`、共享消费删除和旧结算保持为历史样机，后续实现切片按需替换；
+- `Features/Prototype` 中的 `budgetIDs`、共享消费删除和旧结算保持为历史样机，M4 替换启动页；不作为新 Schema 或验收依据；
 - 旧草案的 `BudgetExpenseBinding` 和 `WishAllocation` 不进入正式 Schema；
 - 旧 `PrototypeDeletionTests` 不作为新 V1 验收，模型切换时用唯一预算归属测试替换；
 - 不为未发布旧结构建立兼容层；
