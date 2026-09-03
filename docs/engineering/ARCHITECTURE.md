@@ -420,6 +420,85 @@ ConfirmationGate 展示最终影响并确认
 - 云端请求只发送完成当前判断所需的最少字段；
 - Agent 不可调用投资、借贷、保险、税务等产品范围外动作。
 
+### 9.1 Agent Harness 规格
+
+#### 9.1.1 整体管线
+
+```text
+用户输入（文字 / 语音转写 / OCR 文字）
+  ↓
+AgentContextBuilder
+  · 从 Ledger 投影生成只读上下文
+  · 只含：活跃预算卡名称 + 周期 + 货币、
+         最近 ≤10 条去重商家名、已有标签名
+  · 不含：金额、完整记录、钱包余额
+  ↓
+LLMProvider.complete(prompt, context) → AgentIntentCandidate
+  ↓
+IntentValidator
+  · 校验 amount 是否 Decimal、periodID 是否存在等
+  · 校验不过 → needsClarification（交给 UI）
+  ↓
+ConfirmationGate.decide(...)
+  ├─ executeDirectly → AgentActionCoordinator → Core
+  ├─ confirmStructured → 返回 UI 让用户确认
+  ├─ confirmImpact → 返回 UI 展示领域预览
+  └─ refuse → 返回 UI 说明原因
+```
+
+模型只做约束结构化输出——接收用户输入 + 上下文，返回一个经校验的 `AgentIntent`。不能调工具、不算余额、不直接写库。模型侧不暴露任何 function-calling / tool-use；执行由 `AgentActionCoordinator` + Core 引擎完成。
+
+#### 9.1.2 LLMProvider 协议
+
+```swift
+protocol LLMProvider: Sendable {
+    func complete(prompt: AgentPrompt) async throws -> AgentIntentCandidate
+}
+```
+
+- V1 只有一个实现（云端 HTTP）。
+- 测试用 `MockLLMProvider`。
+- 离线或失败 → `LocalRegexFallback` 提取金额/商家，归属留空。
+- `AgentIntentCandidate` 是模型返回的未校验 JSON；经 `IntentValidator` 解码和校验后才生成正式 `AgentIntent` 或 `needsClarification`。
+
+#### 9.1.3 AgentPrompt 与上下文构建规则
+
+- **system prompt 固定**：角色 + 可返回的 intent 类型 + JSON schema。
+- **user message** = 用户原文（文字 / 语音转写 / OCR 提取的文字）。
+- **context** = `AgentContextBuilder.build(ledger)` 的 JSON，内容：
+  - 活跃预算卡名称、周期、货币
+  - 最近 ≤10 条去重商家名
+  - 已有标签名
+  - **不含**：金额、完整交易记录、商家历史明细、钱包余额
+- 语音：先 Speech → text，用同一条 prompt。
+- 图片：先 Vision OCR → text，用同一条 prompt。
+- 如果用户显式 opt-in「发给模型帮我看」，才发 base64（V1 不默认开启）。
+
+#### 9.1.4 一问一答与追问
+
+- 模型只返回一次。
+- 返回 `needsClarification(field, options)` 时，UI 展示选项/表单，用户选完后本地组装 `AgentIntent`，不再调模型。
+- 不存在多轮 session / history。
+
+#### 9.1.5 离线降级
+
+- Agent 入口始终可见。
+- 离线或模型不可用 → `LocalRegexFallback`：
+  - 正则提取：金额、货币符号、商家关键词。
+  - 填入 `CaptureDraft(amount, currency, merchant)`。
+  - 归属留 `nil` → `ConfirmationGate` 判为 `confirmStructured` → UI 引导用户选预算卡。
+- 查询、结算、心愿等动作离线时全部可用——纯本地 Core 计算，不依赖模型。
+
+#### 9.1.6 多模态输入统一
+
+```text
+文字 ───────────────────────→ prompt text ─→ LLMProvider / Fallback
+语音 ─→ SpeechAdapter → text → prompt text ─→ LLMProvider / Fallback
+图片 ─→ VisionOCRAdapter → text → prompt text ─→ LLMProvider / Fallback
+```
+
+三条路汇入同一个 `LLMProvider.complete()` 或 `LocalRegexFallback`。原音频和原图处理后丢弃，不发云端。
+
 ---
 
 ## 十、隐私与数据保留
