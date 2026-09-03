@@ -13,8 +13,8 @@
 | 平台 | iPhone / iPad，最低 iOS 17.0 |
 | 当前 UI | `Features/Prototype` 历史启动页（不是新 V1 需求；M4 按 `DESIGN.md` 3.1 替换） |
 | 正式数据层 | 领域 `Ledger` + 引擎已落地；App 启动时打开本地 `ModelContainer`（无 CloudKit）。旧样机 UI 仍不读写该账本 |
-| Test Target | `Check_LineTests` 覆盖领域引擎、`LedgerStore` 回合与 Schema 关系 |
-| 网络 / 后端 / AI | 未实现 |
+| Test Target | `Check_LineTests` 覆盖领域引擎、`LedgerStore`、Agent 门禁与理解管线桩 |
+| 网络 / 后端 / AI | 理解管线桩已落地（`MockLLMProvider` / 本地回退）；无真实云端 LLM |
 | 系统权限 / iCloud | 未启用；SwiftData 配置为 `cloudKitDatabase: .none` |
 
 旧样机的 `budgetIDs` 多预算关系、共享消费删除和旧结算只用于追溯，不是新 Schema 或验收依据。`BudgetEngine` 的 Decimal 基础计算可以继续复用；命名和输入结构在新模型落地时同步收敛。
@@ -66,6 +66,8 @@ Features
   └─ AgentPanel
        ↓
 Application
+  ├─ AgentUnderstander / AgentContextBuilder / IntentValidator
+  ├─ LocalRegexFallback / LLMProvider
   ├─ AgentActionCoordinator
   ├─ ConfirmationGate
   ├─ ImportCoordinator
@@ -376,6 +378,9 @@ Wish 不持有独立余额。
 | `WalletLedger` | 追加账本、派生钱包余额与待恢复差额 |
 | `WishRedemptionEngine` | 余额校验、实际购买扣减和退款 |
 | `RetrospectiveAdjustmentEngine` | 迟到交易、退款和入账差异的追溯影响预览 |
+| `AgentContextBuilder` | Application：从账本投影只读上下文（卡名/周期/货币、最近商家、标签；不含金额与钱包） |
+| `AgentUnderstander` | Application：本地拒答 → `LLMProvider` → 失败则 `LocalRegexFallback` → `IntentValidator` |
+| `IntentValidator` | Application：把未信任的 `AgentIntentCandidate` 校验成 `AgentIntent` 或 `needsClarification` |
 | `AgentActionCoordinator` | Application：将结构化意图路由到领域服务，不自行计算余额 |
 | `ConfirmationGate` | Application：按风险决定直接执行、确认结构、确认影响或拒绝 |
 | `UndoCoordinator` | Application：低风险记一笔的账本快照撤销 |
@@ -411,7 +416,7 @@ ConfirmationGate 展示最终影响并确认
 
 ## 九、Agent 安全边界
 
-- LLM 输出只能是结构化候选意图，不能直接写数据库；当前 M2 由 `AgentActionCoordinator` 接收 `AgentIntent`，金额一律回算自 Core；
+- LLM 输出只能是结构化候选意图，不能直接写数据库；当前 M2 由 `AgentUnderstander` 产出 `AgentIntent`，再交给 `AgentActionCoordinator`，金额一律回算自 Core；
 - 所有金额重新由 Core 校验和计算；
 - LLM 不得编造汇率或钱包数字；跨币种写入必须使用 `CurrencyEngine` 的确认换算结果；
 - 低风险单笔新增可执行后提供撤销（`UndoCoordinator`）；
@@ -456,10 +461,9 @@ protocol LLMProvider: Sendable {
 }
 ```
 
-- V1 只有一个实现（云端 HTTP）。
-- 测试用 `MockLLMProvider`。
+- V1 目标实现是云端 HTTP；当前代码只有 `MockLLMProvider`，不发起网络请求。
 - 离线或失败 → `LocalRegexFallback` 提取金额/商家，归属留空。
-- `AgentIntentCandidate` 是模型返回的未校验 JSON；经 `IntentValidator` 解码和校验后才生成正式 `AgentIntent` 或 `needsClarification`。
+- `AgentIntentCandidate` 是模型返回的未校验 JSON（金额字段为字符串）；经 `IntentValidator` 解码和校验后才生成正式 `AgentIntent` 或 `needsClarification`。
 
 #### 9.1.3 AgentPrompt 与上下文构建规则
 
