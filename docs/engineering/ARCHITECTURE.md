@@ -13,8 +13,8 @@
 | 平台 | iPhone / iPad，最低 iOS 17.0 |
 | 当前 UI | `Features/Prototype` 历史启动页（不是新 V1 需求；M4 按 `DESIGN.md` 3.1 替换） |
 | 正式数据层 | 领域 `Ledger` + 引擎已落地；App 启动时打开本地 `ModelContainer`（无 CloudKit）。旧样机 UI 仍不读写该账本 |
-| Test Target | `Check_LineTests` 覆盖领域引擎、`LedgerStore`、Agent 门禁与理解管线桩 |
-| 网络 / 后端 / AI | 理解管线桩已落地（`MockLLMProvider` / 本地回退）；无真实云端 LLM |
+| Test Target | `Check_LineTests` 覆盖领域引擎、`LedgerStore`、Agent 门禁、理解管线与 `AgentSession` 回合 |
+| 网络 / 后端 / AI | `CloudLLMProvider` 已实现且默认关闭；App 入口不启用、启动无网络请求 |
 | 系统权限 / iCloud | 未启用；SwiftData 配置为 `cloudKitDatabase: .none` |
 
 旧样机的 `budgetIDs` 多预算关系、共享消费删除和旧结算只用于追溯，不是新 Schema 或验收依据。`BudgetEngine` 的 Decimal 基础计算可以继续复用；命名和输入结构在新模型落地时同步收敛。
@@ -66,8 +66,9 @@ Features
   └─ AgentPanel
        ↓
 Application
+  ├─ AgentSession
   ├─ AgentUnderstander / AgentContextBuilder / IntentValidator
-  ├─ LocalRegexFallback / LLMProvider
+  ├─ LocalRegexFallback / LLMProvider / CloudLLMProvider
   ├─ AgentActionCoordinator
   ├─ ConfirmationGate
   ├─ ImportCoordinator
@@ -378,6 +379,7 @@ Wish 不持有独立余额。
 | `WalletLedger` | 追加账本、派生钱包余额与待恢复差额 |
 | `WishRedemptionEngine` | 余额校验、实际购买扣减和退款 |
 | `RetrospectiveAdjustmentEngine` | 迟到交易、退款和入账差异的追溯影响预览 |
+| `AgentSession` | Application：一轮理解 + 门禁；本地组装的意图不调模型；默认离线 |
 | `AgentContextBuilder` | Application：从账本投影只读上下文（卡名/周期/货币、最近商家、标签；不含金额与钱包） |
 | `AgentUnderstander` | Application：本地拒答 → `LLMProvider` → 失败则 `LocalRegexFallback` → `IntentValidator` |
 | `IntentValidator` | Application：把未信任的 `AgentIntentCandidate` 校验成 `AgentIntent` 或 `needsClarification` |
@@ -461,8 +463,10 @@ protocol LLMProvider: Sendable {
 }
 ```
 
-- V1 目标实现是云端 HTTP；当前代码只有 `MockLLMProvider`，不发起网络请求。
-- 离线或失败 → `LocalRegexFallback` 提取金额/商家，归属留空。
+- V1 目标实现是云端 HTTP（`CloudLLMProvider`）。
+- **默认关闭**：`LLMProviderSettings.disabled` 只返回 `UnavailableLLMProvider`，走 `LocalRegexFallback`。
+- App 入口当前不启用该开关，因此启动仍无网络请求。
+- 测试用 `MockLLMProvider` 或注入 `HTTPPerforming`，不打真实地址。
 - `AgentIntentCandidate` 是模型返回的未校验 JSON（金额字段为字符串）；经 `IntentValidator` 解码和校验后才生成正式 `AgentIntent` 或 `needsClarification`。
 
 #### 9.1.3 AgentPrompt 与上下文构建规则
@@ -502,6 +506,15 @@ protocol LLMProvider: Sendable {
 ```
 
 三条路汇入同一个 `LLMProvider.complete()` 或 `LocalRegexFallback`。原音频和原图处理后丢弃，不发云端。
+
+#### 9.1.7 AgentSession
+
+M4 面板只渲染 `AgentTurn`，不直接调引擎：
+
+- `turn(input:)`：自然语言 / 转写 / OCR → Understander → ConfirmationGate。
+- `turn(intent:)`：追问表单、结算按钮、查询等本地组装的意图，**不再调模型**。
+- `execute`：确认后经协调器写 Core。
+- 默认 `LLMProviderSettings.disabled`。启用云端前必须与 `PRIVACY.md` 5.2 字段表一致。
 
 ---
 

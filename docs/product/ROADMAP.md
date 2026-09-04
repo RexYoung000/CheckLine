@@ -18,9 +18,9 @@
 - 首次引导与首页“预算状态 + 常驻 Agent + 底部任务面板”框架已确认；
 - 财务健康分、收入债务画像和完整财务规划已从范围删除。
 
-### 下一步：接入真实 LLM（需隐私审查），或保持桩管线直到 M4 面板
+### 下一步：M4 底部任务面板渲染 `AgentTurn`，或打开真实模型开关（须产品确认）
 
-M2 已有确认门禁、行动协调器，以及不联网的理解管线桩（上下文投影、结构化候选、校验、本地回退）。启动页仍是旧样机，不改外观。真实云端 LLM、端侧 Speech/Vision 和底部任务面板尚未接入。
+M2 已有确认门禁、理解管线、默认关闭的 HTTP Provider，以及 `AgentSession` 回合编排。启动页仍是旧样机。端侧 Speech/Vision 和底部任务面板尚未接入；云端模型默认不启用。
 
 ---
 
@@ -91,7 +91,9 @@ V1 同时包含：
 - [x] 结算 / 心愿 / 追溯先展示领域预览再确认；
 - [x] 创建预算、查询剩余、记一笔经协调器调用 Core；
 - [x] 理解管线桩：`AgentContextBuilder`、`AgentPrompt`、`LLMProvider`、`IntentValidator`、`LocalRegexFallback`、`AgentUnderstander`（无真实云端调用）；
-- [ ] 真实 LLM Provider（须先完成隐私与数据流审查）；
+- [x] `AgentSession` 回合编排（理解 → 门禁 → 执行；本地意图不调模型）；
+- [x] 云端 AI 请求字段审查与默认关闭的 `CloudLLMProvider`（App 入口未启用）；
+- [ ] 启用真实模型与密钥配置（须产品确认）；
 - [ ] 端侧语音 / 图片 Capture（Speech / Vision）；
 - [ ] Agent 底部任务面板 UI（M4）。
 
@@ -167,6 +169,7 @@ V1 同时包含：
 - 2026-09-03：M1 金额由纯 Swift 领域引擎计算；SwiftData Schema V1 与本地容器接入 App，启动页不切换、不读写新账本。
 - 2026-09-03：M2 Agent 只接受结构化意图；金额与钱包数字一律由 Core 计算；低风险可撤销，结算级必须确认影响。
 - 2026-09-03：M2 理解管线只做约束结构化输出，不调用工具；离线回退本地正则；上下文不含金额与钱包。
+- 2026-09-04：云端 AI 请求字段锁定为 `LLMRequestPayload`；`CloudLLMProvider` 默认关闭。`AgentSession` 编排理解与门禁，本地意图不调模型。
 
 ---
 
@@ -192,3 +195,4 @@ V1 同时包含：
 - 2026-09-03：落地 M1 确定性账本：领域 `Ledger` + Budget/Cycle/Attribution/Deduplication/Currency/Settlement/Wallet/Wish/Retrospective 引擎，`CheckLineSchemaV1` SwiftData 镜像，以及对应 Swift Testing。不改旧样机启动页。
 - 2026-09-03：落地 M2 行动层：`ConfirmationGate` + `AgentActionCoordinator` + 快照撤销；文字只提取/转发结构化意图，不写库、不算余额。不改启动页。
 - 2026-09-03：落地 M2 理解管线桩：`AgentUnderstander` 先本地拒答，再经 `LLMProvider`（测试用 Mock）或 `LocalRegexFallback`，由 `IntentValidator` 生成 `AgentIntent`。不接真实云端模型，不改启动页。
+- 2026-09-04：落地 `AgentSession` 回合编排，以及默认关闭的 `CloudLLMProvider`；隐私允许清单锁定为 `system` / `userMessage` / `context`。App 入口未启用网络，不改启动页。
