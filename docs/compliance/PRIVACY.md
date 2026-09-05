@@ -20,17 +20,17 @@
 
 ## 二、当前构建的真实状态
 
-当前 App 仍运行上一版 SwiftUI 内存体验样机作为启动页：
+当前 App 启动新首页与文字 Agent 面板：
 
-- 启动页数据来自代码中的虚构 Sample，只存在于当前运行内存，**不写入**新账本；
-- App 启动时会打开本地 SwiftData `ModelContainer`（`CheckLineSchemaV1`），默认关闭 CloudKit；旧样机界面尚未使用该容器；
-- 没有网络请求、自有后端、已启用的 AI Provider 或第三方数据服务；代码含默认关闭的 `CloudLLMProvider`，App 入口未打开该开关；
+- 用户创建的预算卡和记一笔写入本地 SwiftData（`CheckLineSchemaV1`），默认关闭 CloudKit；
+- 没有网络请求、自有后端、已启用的 AI Provider 或第三方数据服务；`CloudLLMProvider` 默认关闭，App 入口未打开；
 - 没有启用 iCloud 同步；
 - 不请求通知、照片、麦克风、语音或邮箱权限；
 - 没有 Apple Pay、短信、邮件或账单导入连接器；
-- 不收集设备标识符、诊断、使用行为或个人身份信息。
+- 不收集设备标识符、诊断、使用行为或个人身份信息；
+- 旧四 Tab 样机不再启动，其内存 Sample 不会写入新账本。
 
-因此当前构建仍可按真实二进制评估 `Data Not Collected`。新 V1 一旦加入 AI、来源连接或网络请求，必须重新评估，不能沿用当前结论。旧样机开始把真实用户输入写入 Schema 之前，也必须再核对一次存储说明。
+设备上的用户账本按 Apple 提交时规则判断是否算“收集”。一旦打开云端 AI、来源连接或网络请求，必须重新评估隐私标签。
 
 ---
 
@@ -211,7 +211,7 @@ FinanceKit、Open Banking 聚合商、邮箱中转和 AI Provider 都必须逐�
 
 ## 十一、App Store 隐私申报
 
-- **当前构建**：无已启用网络、无权限、虚构内存数据；`CloudLLMProvider` 未在 App 入口打开。可按真实二进制评估 `Data Not Collected`。
+- **当前构建**：无已启用网络、无系统权限；用户账本只在设备本地。`CloudLLMProvider` 未打开。是否仍填 `Data Not Collected` 按提交时 Apple 对“仅存设备”的规则判断。
 - **正式 V1**：必须重新检查用户内容、财务信息、标识符、诊断数据、是否与身份关联和是否用于追踪。
 - 只存在用户设备的数据是否属于“收集”，按 Apple 提交时最新规则判断。
 - 一旦加入云端 AI、邮件中转、银行聚合、iCloud、反馈或诊断，必须重新填写。

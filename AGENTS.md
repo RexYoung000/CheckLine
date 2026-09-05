@@ -20,12 +20,12 @@
 - 主 App Target / Scheme：`Check_Line`
 - 当前平台：iPhone / iPad，最低 iOS 17.0
 - 当前源码根目录：`Check_Line/`
-- 当前阶段：M2 行动 Agent。门禁、理解管线、`AgentSession` 与默认关闭的 HTTP Provider 已落地；无真实已启用 LLM / 语音图片 UI。启动页仍是旧样机。
-- 当前启动页：基于上一版“多预算重复扣减”的 SwiftUI 内存样机，只可用于历史视觉/工程参考
-- 当前已有：M1 账本、`LedgerStore`、App 本地容器、`AgentSession` / `AgentUnderstander` / `ConfirmationGate` / `AgentActionCoordinator`
-- 当前尚无：已启用的云端 LLM、端侧 Speech/Vision、新 V1 完整 UI、被动数据来源
+- 当前阶段：M4 功能骨架。新首页 + 文字 Agent 已接本地账本；视觉未验收。
+- 当前启动页：`CheckLineHomeView`（预算卡 + 底部文字面板）。`Features/Prototype` 只作历史参考
+- 当前已有：M1 账本、`LedgerStore`、`AgentSession`、`CheckLineWorkspace`、首页与文字面板
+- 当前尚无：结算/心愿全屏确认、已启用云端 LLM、端侧 Speech/Vision、被动数据来源、视觉验收
 
-不得把 `Features/Prototype` 的多预算关系、四 Tab、悬浮“文本/语音”入口或旧结算流程视为当前需求。M2 不改启动页外观。
+不得把 `Features/Prototype` 的多预算关系、四 Tab、悬浮“文本/语音”入口或旧结算流程视为当前需求。
 
 ## 三、当前 V1 产品边界
 
@@ -100,7 +100,7 @@
 Check_Line/
 ├── App/               App 入口与根导航
 ├── Features/          Home / Budget / Transactions / Settlement / Wish / DataSources / AgentPanel
-├── Application/       AgentSession / AgentUnderstander / ConfirmationGate / AgentActionCoordinator
+├── Application/       CheckLineWorkspace / AgentSession / ConfirmationGate / AgentActionCoordinator
 ├── Core/              Models / Services / Persistence
 ├── Capture/           Text / Voice / Image / ApplePay / SMS / Email / Statement
 ├── DesignSystem/      Token、组件、动效、Haptic

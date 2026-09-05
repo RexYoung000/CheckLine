@@ -18,7 +18,7 @@ struct CheckLineApp: App {
 
     var body: some Scene {
         WindowGroup {
-            CheckLinePrototypeView()
+            CheckLineHomeView()
         }
         .modelContainer(container)
     }

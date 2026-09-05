@@ -11,9 +11,9 @@
 | 工程 | `Check_Line.xcodeproj` |
 | Target / Scheme | `Check_Line` |
 | 平台 | iPhone / iPad，最低 iOS 17.0 |
-| 当前 UI | `Features/Prototype` 历史启动页（不是新 V1 需求；M4 按 `DESIGN.md` 3.1 替换） |
-| 正式数据层 | 领域 `Ledger` + 引擎已落地；App 启动时打开本地 `ModelContainer`（无 CloudKit）。旧样机 UI 仍不读写该账本 |
-| Test Target | `Check_LineTests` 覆盖领域引擎、`LedgerStore`、Agent 门禁、理解管线与 `AgentSession` 回合 |
+| 当前 UI | `CheckLineHomeView`：预算卡列表 + 文字 Agent 面板。旧四 Tab 样机仍在 `Features/Prototype`，不再启动 |
+| 正式数据层 | 首页与 Agent 经 `CheckLineWorkspace` 读写本地 `LedgerStore`（无 CloudKit） |
+| Test Target | `Check_LineTests` 覆盖领域引擎、理解管线、`AgentSession` 与首页工作区持久化 |
 | 网络 / 后端 / AI | `CloudLLMProvider` 已实现且默认关闭；App 入口不启用、启动无网络请求 |
 | 系统权限 / iCloud | 未启用；SwiftData 配置为 `cloudKitDatabase: .none` |
 
@@ -66,6 +66,7 @@ Features
   └─ AgentPanel
        ↓
 Application
+  ├─ CheckLineWorkspace / HomeProjector
   ├─ AgentSession
   ├─ AgentUnderstander / AgentContextBuilder / IntentValidator
   ├─ LocalRegexFallback / LLMProvider / CloudLLMProvider
@@ -379,6 +380,8 @@ Wish 不持有独立余额。
 | `WalletLedger` | 追加账本、派生钱包余额与待恢复差额 |
 | `WishRedemptionEngine` | 余额校验、实际购买扣减和退款 |
 | `RetrospectiveAdjustmentEngine` | 迟到交易、退款和入账差异的追溯影响预览 |
+| `CheckLineWorkspace` | Application：首页工作区；经 `AgentSession` 执行后写入 `LedgerStore` |
+| `HomeProjector` | Application：预算卡与处理区投影；已用/待确认分开，金额来自 `BudgetEngine` |
 | `AgentSession` | Application：一轮理解 + 门禁；本地组装的意图不调模型；默认离线 |
 | `AgentContextBuilder` | Application：从账本投影只读上下文（卡名/周期/货币、最近商家、标签；不含金额与钱包） |
 | `AgentUnderstander` | Application：本地拒答 → `LLMProvider` → 失败则 `LocalRegexFallback` → `IntentValidator` |
