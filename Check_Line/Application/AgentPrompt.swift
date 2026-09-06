@@ -21,4 +21,8 @@ nonisolated struct AgentPrompt: Equatable, Sendable {
     static func make(userMessage: String, context: AgentContext) -> AgentPrompt {
         AgentPrompt(system: systemText, userMessage: userMessage, context: context)
     }
+
+    var requestPayload: LLMRequestPayload {
+        LLMRequestPayload(system: system, userMessage: userMessage, context: context)
+    }
 }

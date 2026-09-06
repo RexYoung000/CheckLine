@@ -26,23 +26,22 @@ nonisolated struct LLMRequestPayload: Equatable, Sendable, Codable {
     }
 }
 
-extension AgentPrompt {
-    nonisolated var requestPayload: LLMRequestPayload {
-        LLMRequestPayload(system: system, userMessage: userMessage, context: context)
-    }
-}
-
 nonisolated struct CloudLLMProvider: LLMProvider {
     var endpoint: URL
     var client: any HTTPPerforming
     var timeout: TimeInterval = 15
 
-    func complete(prompt: AgentPrompt) async throws -> AgentIntentCandidate {
+    nonisolated func complete(prompt: AgentPrompt) async throws -> AgentIntentCandidate {
         var request = URLRequest(url: endpoint)
         request.httpMethod = "POST"
         request.timeoutInterval = timeout
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.httpBody = try JSONEncoder().encode(prompt.requestPayload)
+        let payload = LLMRequestPayload(
+            system: prompt.system,
+            userMessage: prompt.userMessage,
+            context: prompt.context
+        )
+        request.httpBody = try JSONEncoder().encode(payload)
 
         let data: Data
         let response: URLResponse
