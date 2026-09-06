@@ -103,7 +103,7 @@ nonisolated enum SettlementEngine {
         }
 
         var ledger = ledger
-        let period = try ledger.requirePeriod(periodID)
+        var period = try ledger.requirePeriod(periodID)
         var budget = try ledger.requireBudget(period.budgetID)
 
         var walletEntryIDWritten: UUID?

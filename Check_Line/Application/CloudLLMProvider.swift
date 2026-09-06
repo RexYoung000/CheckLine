@@ -27,7 +27,7 @@ nonisolated struct LLMRequestPayload: Equatable, Sendable, Codable {
 }
 
 extension AgentPrompt {
-    var requestPayload: LLMRequestPayload {
+    nonisolated var requestPayload: LLMRequestPayload {
         LLMRequestPayload(system: system, userMessage: userMessage, context: context)
     }
 }
