@@ -32,6 +32,7 @@ enum CheckLineAppTab: String, CaseIterable, Identifiable, Hashable {
 final class ShellChromeState {
     var selectedTab: CheckLineAppTab = .home
     var isSettingsPresented = false
+    var isAttentionPresented = false
     var isShowingDetail = false
     var isCreateMenuPresented = false
 

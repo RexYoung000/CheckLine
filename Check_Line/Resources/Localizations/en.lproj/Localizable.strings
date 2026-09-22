@@ -391,3 +391,10 @@
 "wallet.symbol.sofa" = "Home";
 
 "wallet.pending.count" = "%ld to review";
+
+/* Wallet shell */
+"wallet.attention.title" = "Needs attention";
+"wallet.attention.count" = "%ld items need attention";
+"wallet.attention.empty" = "Nothing needs attention";
+"wallet.functions" = "Quick actions";
+"wallet.agent.resume.hint" = "Open the panel to continue your last discussion";

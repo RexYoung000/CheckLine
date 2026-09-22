@@ -29,6 +29,7 @@ struct CheckLineShellView: View {
             }
         }) { WalletAgentSheet(workspace: workspace).preferredColorScheme(.dark) }
         .sheet(isPresented: $chrome.isSettingsPresented) { SettingsPlaceholderView().preferredColorScheme(.dark) }
+        .sheet(isPresented: $chrome.isAttentionPresented) { WalletAttentionSheet(workspace: workspace).preferredColorScheme(.dark) }
         .sheet(isPresented: $showsPreviewDetail) { previewDetail.preferredColorScheme(.dark) }
         .background(PaperTheme.canvas.ignoresSafeArea())
         .task {
@@ -36,6 +37,7 @@ struct CheckLineShellView: View {
             if let tab = CheckLineAppTab(rawValue: DesignPreviewData.screen) { chrome.selectedTab = tab }
             switch DesignPreviewData.screen {
             case "settings": chrome.isSettingsPresented = true
+            case "attention": chrome.isAttentionPresented = true
             case "agent": workspace.showAgent = true
             case "record": workspace.openComposer(.record)
             case "create-budget": workspace.openComposer(.budget)

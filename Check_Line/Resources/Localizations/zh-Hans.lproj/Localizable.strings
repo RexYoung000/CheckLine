@@ -391,3 +391,10 @@
 "wallet.symbol.sofa" = "家居";
 
 "wallet.pending.count" = "%ld 笔待确认";
+
+/* Wallet shell */
+"wallet.attention.title" = "待处理事项";
+"wallet.attention.count" = "%ld 项待处理";
+"wallet.attention.empty" = "暂时没有待处理事项";
+"wallet.functions" = "功能菜单";
+"wallet.agent.resume.hint" = "继续上次讨论，点击打开面板";

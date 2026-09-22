@@ -21,7 +21,7 @@
 - 当前平台：iPhone / iPad，最低 iOS 17.0
 - 当前源码根目录：`Check_Line/`
 - 当前阶段：M4。2026-09-22 液面卡夹设计已扩展到原生页面；真机视觉验收未完成。
-- 当前启动页：`CheckLineRootView`（系统 Tab：首页 / 预算 / 心愿 / 分析；根页面共享文字 Agent 与记一笔，个人设置在页首）。`Features/Prototype` 只作历史参考
+- 当前启动页：`CheckLineRootView`（TabView 内容：首页 / 预算 / 心愿 / 分析；底部左侧原生玻璃导航、右侧 Agent 头像。记一笔在卡片加号和功能菜单，个人设置在页首头像）。`Features/Prototype` 只作历史参考
 - 当前已有：M1 账本、`LedgerStore`、`AgentSession`、`CheckLineWorkspace`、统一材质 Token、预算详情、消费日历、预设符号心愿与同币种兑现全屏确认
 - 当前尚无：结算全屏确认、跨币种兑现汇率输入、已启用云端 LLM、端侧 Speech/Vision、被动数据来源、真机视觉验收
 

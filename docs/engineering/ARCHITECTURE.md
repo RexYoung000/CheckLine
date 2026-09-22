@@ -11,7 +11,7 @@
 | 工程 | `Check_Line.xcodeproj` |
 | Target / Scheme | `Check_Line` |
 | 平台 | iPhone / iPad，最低 iOS 17.0 |
-| 当前 UI | 2026-09-22 开始同步液面卡夹设计：系统 TabView 首页 / 预算 / 心愿 / 分析，共享主动 Agent，个人设置为页首入口；验收状态见 ROADMAP |
+| 当前 UI | 2026-09-22 液面卡夹设计：TabView 管理四个页面，隐藏默认栏；WalletNavigationBar 用原生 glassEffect 实现左侧导航 + 右侧 Agent 头像，首页凹口卡夹、头像 / 待处理 / 功能栏；验收状态见 ROADMAP |
 | 正式数据层 | 首页与 Agent 经 `CheckLineWorkspace` 读写本地 `LedgerStore`（无 CloudKit） |
 | Test Target | `Check_LineTests` 覆盖领域引擎、理解管线、`AgentSession` 与首页工作区持久化 |
 | 网络 / 后端 / AI | `CloudLLMProvider` 已实现且默认关闭；App 入口不启用、启动无网络请求 |

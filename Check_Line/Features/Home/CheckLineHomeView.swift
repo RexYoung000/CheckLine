@@ -14,8 +14,11 @@ struct CheckLineHomeView: View {
     var body: some View {
         WalletRootPage(title: String(localized: "tab.home"), workspace: workspace, lightHeader: true) {
             if let card {
-                VStack(spacing: 18) {
+                VStack(spacing: 0) {
                     deck(card)
+                        .padding(.horizontal, 18)
+                        .padding(.top, 12)
+                    VStack(spacing: 18) {
                     if typeSize.isAccessibilitySize {
                         VStack(spacing: 12) { usedTile(card); dateTile(card) }
                     } else {
@@ -40,7 +43,16 @@ struct CheckLineHomeView: View {
                         }
                         .buttonStyle(.plain)
                     }
-                }.frame(maxWidth: 560)
+                    }
+                    .padding(.horizontal, 16)
+                    .padding(.top, 38)
+                    .padding(.bottom, 32)
+                    .frame(maxWidth: .infinity, minHeight: 470, alignment: .top)
+                    .background { WalletCardholderSurface() }
+                    .padding(.top, -24)
+                }
+                .background(PaperTheme.paper)
+                .frame(maxWidth: 560)
             } else {
                 VStack(spacing: 24) {
                     WalletSymbol(name: "wallet.pass", size: 80)
@@ -62,7 +74,7 @@ struct CheckLineHomeView: View {
                     .padding(.horizontal, 9).rotationEffect(.degrees(-2)).offset(y: -6)
                     .accessibilityHidden(true)
             }
-            Button { detail = .overview } label: { LiquidBudgetCard(card: card, flows: !workspace.showAgent && !workspace.showComposer && detail == nil && chrome?.isSettingsPresented != true) }
+            Button { detail = .overview } label: { LiquidBudgetCard(card: card, flows: !workspace.showAgent && !workspace.showComposer && detail == nil && chrome?.isSettingsPresented != true && chrome?.isAttentionPresented != true) }
                 .buttonStyle(.plain)
                 .offset(y: dragOffset)
                 .simultaneousGesture(DragGesture(minimumDistance: 18).onChanged { value in
@@ -89,6 +101,18 @@ struct CheckLineHomeView: View {
                 Image(systemName: "ellipsis").foregroundStyle(.white).frame(width: 44, height: 44).padding(8)
             }
             .accessibilityLabel(String(localized: "wallet.card.more"))
+        }
+        .overlay(alignment: .bottomLeading) {
+            Button { workspace.openComposer(.record) } label: {
+                Image(systemName: "plus")
+                    .font(.system(size: 20, weight: .medium))
+                    .foregroundStyle(.white)
+                    .frame(width: 44, height: 44)
+                    .paperGlass(.circle, interactive: true)
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel(String(localized: "capture.title"))
+            .padding(.leading, 18).padding(.bottom, 22)
         }
         .padding(.top, 8)
     }

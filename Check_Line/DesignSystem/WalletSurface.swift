@@ -49,8 +49,8 @@ struct WalletRootPage<Content: View>: View {
         NavigationStack {
             ScrollView {
                 content()
-                    .padding(.horizontal, 18)
-                    .padding(.top, 12)
+                    .padding(.horizontal, lightHeader ? 0 : 18)
+                    .padding(.top, lightHeader ? 0 : 12)
                     .padding(.bottom, 24)
                     .frame(maxWidth: PaperTheme.Layout.contentMaxWidth)
                     .frame(maxWidth: .infinity)
@@ -59,62 +59,27 @@ struct WalletRootPage<Content: View>: View {
             .background(PaperTheme.canvas.ignoresSafeArea())
             .toolbar(.hidden, for: .navigationBar)
             .safeAreaInset(edge: .top, spacing: 0) {
-                HStack {
-                    VStack(alignment: .leading, spacing: 3) {
-                        Text(title).font(.title2.weight(.semibold)).accessibilityAddTraits(.isHeader)
-                        if DesignPreviewData.isEnabled { Text(String(localized: "wallet.preview")).font(.caption2) }
-                    }
-                    Spacer()
-                    if let onAdd {
-                        Button(action: onAdd) { Image(systemName: "plus").frame(width: 44, height: 44) }
-                            .accessibilityLabel(String(localized: "wallet.create"))
-                    }
-                    Button { chrome?.isSettingsPresented = true } label: {
-                        Image(systemName: "person.crop.circle").font(.title3).frame(width: 44, height: 44)
-                    }
-                    .accessibilityLabel(String(localized: "tab.settings"))
-                }
-                .foregroundStyle(lightHeader ? PaperTheme.paperInk : PaperTheme.ink)
-                .padding(.horizontal, 20)
-                .padding(.vertical, 3)
-                .background(lightHeader ? PaperTheme.paper : PaperTheme.canvas)
+                WalletPageHeader(title: lightHeader ? nil : title, workspace: workspace, light: lightHeader, onAdd: onAdd)
             }
             .safeAreaInset(edge: .bottom, spacing: 0) {
-                WalletInputBar(workspace: workspace).padding(.horizontal, 18).padding(.vertical, 8)
-            }
-        }
-    }
-}
-
-struct WalletInputBar: View {
-    @Bindable var workspace: CheckLineWorkspace
-    @Environment(\.dynamicTypeSize) private var typeSize
-    var body: some View {
-        HStack(spacing: 6) {
-            Button { workspace.showAgent = true } label: {
-                HStack(spacing: 10) {
-                    Image(systemName: "sparkles").font(.system(size: 17))
-                        .frame(width: 30, height: 30).background(PaperTheme.accent.opacity(0.2), in: Circle())
-                    Text(typeSize.isAccessibilitySize ? String(localized: "wallet.agent.open") : String(localized: "wallet.agent.prompt"))
-                        .font(.subheadline).lineLimit(1)
-                    Spacer(minLength: 0)
+                VStack(spacing: 8) {
+                    if workspace.lastUndo != nil, let banner = workspace.banner {
+                        HStack {
+                            Text(banner.localizedText).font(.caption).lineLimit(2)
+                            Spacer(minLength: 8)
+                            Button(String(localized: "action.undo")) { workspace.undoLast() }
+                                .font(.subheadline.weight(.semibold)).frame(minHeight: 44)
+                        }
+                        .padding(.horizontal, 16).walletSurface(radius: 22)
+                    }
+                    WalletNavigationBar(workspace: workspace)
                 }
-                .frame(minHeight: 44)
+                .frame(maxWidth: 560)
+                .padding(.horizontal, 18).padding(.top, 8).padding(.bottom, 6)
+                .frame(maxWidth: .infinity)
             }
-            .accessibilityLabel(String(localized: "wallet.agent.open"))
-            if workspace.lastUndo != nil {
-                Button { workspace.undoLast() } label: { Image(systemName: "arrow.uturn.backward").frame(width: 44, height: 44) }
-                    .accessibilityLabel(String(localized: "action.undo"))
-            }
-            Button { workspace.openComposer(.record) } label: { Image(systemName: "plus").frame(width: 44, height: 44) }
-                .accessibilityLabel(String(localized: "capture.title"))
+            .toolbar(.hidden, for: .tabBar)
         }
-        .buttonStyle(.plain)
-        .foregroundStyle(PaperTheme.ink)
-        .padding(.leading, 9).padding(.trailing, 3)
-        .paperGlass(.capsule, interactive: true)
-        .frame(maxWidth: 560)
-        .frame(maxWidth: .infinity)
     }
 }
 

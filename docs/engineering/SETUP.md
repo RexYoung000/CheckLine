@@ -19,17 +19,17 @@
 3. Destination 选择 iOS 17+ 的 iPhone/iPad 模拟器，或完成签名的真机。
 4. 按 `Cmd + R` 启动；按 `Cmd + B` 仅构建。
 
-当前启动页是 `CheckLineRootView`，进入首页 / 预算 / 心愿 / 分析四个系统 Tab，个人图标打开设置，各根页面共享主动 Agent 与记一笔入口。正常启动使用用户的本地账本，空账本显示创建入口。`Features/Prototype` 仅作历史参考。当前范围以 `PRODUCT.md`、`docs/product/PRD.md`、`docs/product/FEATURE-LOOP.md` 和 `DESIGN.md` 为准。
+当前启动页是 `CheckLineRootView`，进入首页 / 预算 / 心愿 / 分析四个页面。底部左侧原生玻璃图标导航、右侧 Agent 头像；页首个人头像打开设置。正常启动使用用户的本地账本，空账本显示创建入口。`Features/Prototype` 仅作历史参考。当前范围以 `PRODUCT.md`、`docs/product/PRD.md`、`docs/product/FEATURE-LOOP.md` 和 `DESIGN.md` 为准。
 
 ### 独立示例预览
 
 Debug Scheme 的 Arguments Passed On Launch 可添加 `-design-preview`。该模式使用独立内存容器、标注「示例数据」，不读取或覆盖用户账本，Release 构建不启用。
 
-可附加 `-design-screen wishes` 直接预览页面。支持 `home`、`budgets`、`wishes`、`insights`、`settings`、`agent`、`record`、`create-budget`、`create-wish`、`budget-detail`、`wish-detail`、`redemption`。详情直达只用于布局检查，不能代替真实点击路径验证。
+可附加 `-design-screen wishes` 直接预览页面。支持 `home`、`budgets`、`wishes`、`insights`、`settings`、`agent`、`attention`、`record`、`create-budget`、`create-wish`、`budget-detail`、`wish-detail`、`redemption`。详情直达只用于布局检查，不能代替真实点击路径验证。
 
 附加 `-design-reduce-motion` 可在示例模式中检查静态液位和取消位移动效的降级。正常启动遵循系统「减少动态效果」设置；此调试参数不等于验证过系统开关。
 
-验收入口：预算页 `+` 创建卡片，卡片进入详情；心愿页 `+` 选符号并创建，心愿详情进入真实购买确认；分析页点日期看当天记录；底部输入条打开 Agent，`+` 打开记一笔；右上个人图标打开设置。
+验收入口：预算页 `+` 创建卡片，卡片进入详情；心愿页 `+` 选符号并创建，心愿详情进入真实购买确认；分析页点日期看当天记录；底部右侧 Agent 头像打开面板，首页卡片 `+` 或页首功能菜单打开记一笔；左上个人头像打开设置，首页铃铛打开待处理事项（可用 `-design-screen attention` 直达布局预览）。
 
 ## 三、磁盘与 Xcode 结构
 
