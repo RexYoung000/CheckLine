@@ -151,7 +151,7 @@ struct WishDetailView: View {
         }
         .background(PaperTheme.canvas.ignoresSafeArea())
         .navigationTitle(String(localized: "wallet.wishes.detail")).navigationBarTitleDisplayMode(.inline)
-        .toolbar(.visible, for: .navigationBar).toolbar(.hidden, for: .tabBar).toolbarBackground(.hidden, for: .navigationBar)
+        .toolbar(.visible, for: .navigationBar).toolbar(.hidden, for: .tabBar, .bottomBar).toolbarBackground(.hidden, for: .navigationBar)
         .fullScreenCover(isPresented: $redeem) { WishRedemptionView(workspace: workspace, wishID: wishID) }
     }
 }

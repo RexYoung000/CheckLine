@@ -39,7 +39,7 @@ struct HomeBudgetDetailView: View {
     var body: some View {
         BudgetDetailContent(workspace: workspace, budgetID: budgetID, section: .overview)
             .toolbar(.visible, for: .navigationBar)
-            .toolbar(.hidden, for: .tabBar)
+            .toolbar(.hidden, for: .tabBar, .bottomBar)
     }
 }
 
@@ -71,6 +71,7 @@ struct BudgetDetailContent: View {
         .background(PaperTheme.canvas.ignoresSafeArea())
         .foregroundStyle(PaperTheme.ink)
         .navigationTitle(section.title).navigationBarTitleDisplayMode(.inline)
+        .toolbar(.hidden, for: .bottomBar)
         .toolbarBackground(.hidden, for: .navigationBar)
         .sheet(item: $expense) { item in WalletExpenseDetail(expense: item) }
     }
@@ -244,6 +245,6 @@ struct UnbudgetedRecordsView: View {
                 ForEach(workspace.ledger.expenses.values.filter { $0.attributionState == .unbudgeted && $0.wishRedemptionID == nil }.sorted { $0.occurredAt > $1.occurredAt }) { WalletExpenseRow(expense: $0) }
             }.padding(22)
         }.background(PaperTheme.canvas.ignoresSafeArea()).navigationTitle(String(localized: "v1.unbudgeted"))
-            .toolbar(.visible, for: .navigationBar).toolbar(.hidden, for: .tabBar)
+            .toolbar(.visible, for: .navigationBar).toolbar(.hidden, for: .tabBar, .bottomBar)
     }
 }

@@ -37,3 +37,10 @@
 Device Hub 的自动交互连接在本轮仍超时，未验证真实点按、手势竞争、键盘遮挡、VoiceOver 与真机表现；不把这些项标为通过。
 
 试用顺序：卡片上下抽换 → 票据下拉 / 上推 → 首页 / 内页往返与中途改选 → 卡片 `+` 记一笔 / 撤销 → Agent 金额确认 / 取消 / 返回 → 详情记录 / 日历 / 返回 → 新建预算 → 心愿购买确认 / 取消 / 完成页。
+
+## 原生玻璃底栏修正
+
+- 原底栏给整个 HStack 应用 `glassEffect`，选中态仍是固定灰色 Capsule，缺少原生分段控件的选中透镜与跟手处理。iOS 26+ 改由系统底部工具栏承载图标 Picker，以原生工具栏间隔分开 Agent；低版本保留原 material 回退。
+- 预留系统分组内边距，避免 iOS 27 将四个入口折叠进“更多”；预算、心愿与记录详情显式隐藏底部工具栏。尺寸从当前容器直接取得，避免切页后才测量造成宽度跳变。
+- 构建通过；4 项 `WalletNavigationTests` 专项回归通过，结果 `/tmp/checkline-glass-navigation-tests.xcresult`。新截图覆盖 iPhone 18 Pro / iOS 27、375 pt iPhone SE / iOS 26.5 英文首页与 iPad mini / iOS 27 英文预算页，四入口及独立 Agent 均可见。12 秒原生自动导航录屏及逐帧抽样未见入口折叠或底栏消失。
+- 本轮材料：`tmp/native-ui-2026-09-22/glass-restoration/`。上述验证不包含真实按压、拖动选中、VoiceOver 或系统玻璃偏好切换；Device Hub 的触控连接仍超时。

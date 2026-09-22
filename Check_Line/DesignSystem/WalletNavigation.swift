@@ -121,6 +121,48 @@ struct WalletPageHeader: View {
     }
 }
 
+@available(iOS 26.0, *)
+struct WalletNavigationToolbar: ToolbarContent {
+    @Bindable var workspace: CheckLineWorkspace
+    var width: CGFloat
+    @Environment(\.shellChrome) private var chrome
+
+    var body: some ToolbarContent {
+        ToolbarItem(placement: .bottomBar) {
+            Picker("", selection: Binding(
+                get: { chrome?.selectedTab ?? .home },
+                set: { tab in
+                    guard chrome?.selectedTab != tab else { return }
+                    PaperHaptics.selection()
+                    chrome?.selectedTab = tab
+                }
+            )) {
+                ForEach([CheckLineAppTab.home, .budgets, .wishes, .insights]) { tab in
+                    Label(tab.title, systemImage: tab.systemImage)
+                        .symbolVariant(chrome?.selectedTab == tab ? .fill : .none)
+                        .labelStyle(.iconOnly)
+                        .accessibilityIdentifier("wallet.tab.\(tab.rawValue)")
+                        .tag(tab)
+                }
+            }
+            .pickerStyle(.segmented)
+            .labelsHidden()
+            // Leave room for the two system group paddings, avatar, and gap.
+            // Otherwise iOS 27 moves the entire picker into an overflow menu.
+            .frame(width: max(176, width - 132))
+            .accessibilityIdentifier("wallet.tabs")
+        }
+        ToolbarSpacer(.fixed, placement: .bottomBar)
+        ToolbarItem(placement: .bottomBar) {
+            Button { workspace.showAgent = true } label: { WalletAgentAvatar() }
+                .accessibilityLabel(String(localized: "wallet.agent.open"))
+                .accessibilityHint(String(localized: "wallet.agent.resume.hint"))
+                .accessibilityIdentifier("wallet.agent.avatar")
+        }
+    }
+}
+
+// System-material fallback for versions before Liquid Glass.
 struct WalletNavigationBar: View {
     @Bindable var workspace: CheckLineWorkspace
     @Environment(\.shellChrome) private var chrome
