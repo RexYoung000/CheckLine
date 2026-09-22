@@ -71,7 +71,7 @@ struct BudgetDetailContent: View {
         .background(PaperTheme.canvas.ignoresSafeArea())
         .foregroundStyle(PaperTheme.ink)
         .navigationTitle(section.title).navigationBarTitleDisplayMode(.inline)
-        .toolbar(.hidden, for: .bottomBar)
+        .toolbar(.hidden, for: .tabBar, .bottomBar)
         .toolbarBackground(.hidden, for: .navigationBar)
         .sheet(item: $expense) { item in WalletExpenseDetail(expense: item) }
     }

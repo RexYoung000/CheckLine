@@ -40,7 +40,9 @@ Device Hub 的自动交互连接在本轮仍超时，未验证真实点按、手
 
 ## 原生玻璃底栏修正
 
-- 原底栏给整个 HStack 应用 `glassEffect`，选中态仍是固定灰色 Capsule，缺少原生分段控件的选中透镜与跟手处理。iOS 26+ 改由系统底部工具栏承载图标 Picker，以原生工具栏间隔分开 Agent；低版本保留原 material 回退。
-- 预留系统分组内边距，避免 iOS 27 将四个入口折叠进“更多”；预算、心愿与记录详情显式隐藏底部工具栏。尺寸从当前容器直接取得，避免切页后才测量造成宽度跳变。
-- 构建通过；4 项 `WalletNavigationTests` 专项回归通过，结果 `/tmp/checkline-glass-navigation-tests.xcresult`。新截图覆盖 iPhone 18 Pro / iOS 27、375 pt iPhone SE / iOS 26.5 英文首页与 iPad mini / iOS 27 英文预算页，四入口及独立 Agent 均可见。12 秒原生自动导航录屏及逐帧抽样未见入口折叠或底栏消失。
-- 本轮材料：`tmp/native-ui-2026-09-22/glass-restoration/`。上述验证不包含真实按压、拖动选中、VoiceOver 或系统玻璃偏好切换；Device Hub 的触控连接仍超时。
+- 用户复核指出上一版 `Toolbar + Picker` 仍非所需系统 Tab 栏。根因是隐藏了真实 `TabView` 底栏，再叠加自绘导航或分段控件。撤掉两种替代实现，恢复系统 Tab 栏自身的材质与选中反馈；旧 `glass-restoration/` 材料属于被否决方案。
+- iOS 27 使用真实 `Tab` 的 `prominent` 角色将 Agent 分到右侧。头像以原色图片交给系统，避免被模板渲染成纯色圆形；Agent 请求只打开原会话面板，不改变当前页面。更早系统使用五入口同组的标准原生 Tab 栏，不冒用搜索角色。
+- iPad 只给导航容器紧凑尺寸，保持底部位置，子页面恢复原尺寸类别，预算双列保持。共享预算详情（含继续打开记录 / 日历）与心愿详情隐藏 Tab 栏。
+- Xcode 27 构建通过；4 项 `WalletNavigationTests` 专项回归通过，结果 `/tmp/checkline-native-tab-tests.xcresult`。原生截图覆盖 iPhone 18 Pro / iOS 27 四个根页、375 pt iPhone SE / iOS 26.5 英文首页、iPad mini / iOS 27 英文预算页；入口与头像完整可见。
+- 自动序列改为经过正式 Tab 选择 Binding，检查合夹 / 开夹、中途改选与返回，以及 Agent 呼出 / 关闭。录屏抽样中未见底栏丢失，关闭 Agent 后保留首页与原选中项。此序列仍是程序请求导航，未模拟真实触摸 Tab。
+- 本轮材料：`tmp/native-ui-2026-09-22/native-tab-bar/`。Device Hub 自动触控连接再次超时；真实点击、按压、拖动选中、VoiceOver、系统玻璃偏好与真机表现均未验收。不得将原生组件、截图或状态测试等同于这些验收结果。

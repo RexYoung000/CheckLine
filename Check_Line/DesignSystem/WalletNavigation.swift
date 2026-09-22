@@ -121,109 +121,13 @@ struct WalletPageHeader: View {
     }
 }
 
-@available(iOS 26.0, *)
-struct WalletNavigationToolbar: ToolbarContent {
-    @Bindable var workspace: CheckLineWorkspace
-    var width: CGFloat
-    @Environment(\.shellChrome) private var chrome
-
-    var body: some ToolbarContent {
-        ToolbarItem(placement: .bottomBar) {
-            Picker("", selection: Binding(
-                get: { chrome?.selectedTab ?? .home },
-                set: { tab in
-                    guard chrome?.selectedTab != tab else { return }
-                    PaperHaptics.selection()
-                    chrome?.selectedTab = tab
-                }
-            )) {
-                ForEach([CheckLineAppTab.home, .budgets, .wishes, .insights]) { tab in
-                    Label(tab.title, systemImage: tab.systemImage)
-                        .symbolVariant(chrome?.selectedTab == tab ? .fill : .none)
-                        .labelStyle(.iconOnly)
-                        .accessibilityIdentifier("wallet.tab.\(tab.rawValue)")
-                        .tag(tab)
-                }
-            }
-            .pickerStyle(.segmented)
-            .labelsHidden()
-            // Leave room for the two system group paddings, avatar, and gap.
-            // Otherwise iOS 27 moves the entire picker into an overflow menu.
-            .frame(width: max(176, width - 132))
-            .accessibilityIdentifier("wallet.tabs")
-        }
-        ToolbarSpacer(.fixed, placement: .bottomBar)
-        ToolbarItem(placement: .bottomBar) {
-            Button { workspace.showAgent = true } label: { WalletAgentAvatar() }
-                .accessibilityLabel(String(localized: "wallet.agent.open"))
-                .accessibilityHint(String(localized: "wallet.agent.resume.hint"))
-                .accessibilityIdentifier("wallet.agent.avatar")
-        }
-    }
-}
-
-// System-material fallback for versions before Liquid Glass.
-struct WalletNavigationBar: View {
-    @Bindable var workspace: CheckLineWorkspace
-    @Environment(\.shellChrome) private var chrome
-    @Environment(\.walletReduceMotion) private var reduceMotion
-    @Namespace private var selection
-    private let tabs: [CheckLineAppTab] = [.home, .budgets, .wishes, .insights]
-
-    var body: some View {
-        if #available(iOS 26.0, *) {
-            GlassEffectContainer(spacing: 8) { controls }
-        } else {
-            controls
-        }
-    }
-
-    private var controls: some View {
-        HStack(spacing: 12) {
-            HStack(spacing: 0) {
-                ForEach(tabs) { tab in
-                    let selected = chrome?.selectedTab == tab
-                    Button {
-                        guard chrome?.selectedTab != tab else { return }
-                        PaperHaptics.selection()
-                        chrome?.selectedTab = tab
-                    } label: {
-                        Image(systemName: tab.systemImage)
-                            .symbolVariant(selected ? .fill : .none)
-                            .font(.system(size: 22, weight: selected ? .semibold : .regular))
-                            .foregroundStyle(selected ? PaperTheme.ink : PaperTheme.muted)
-                            .frame(maxWidth: .infinity).frame(height: 50)
-                            .background {
-                                if selected {
-                                    Capsule().fill(.white.opacity(0.12))
-                                        .matchedGeometryEffect(id: "selected-tab", in: selection)
-                                }
-                            }
-                            .contentShape(Capsule())
-                    }
-                    .accessibilityLabel(tab.title)
-                    .accessibilityAddTraits(selected ? .isSelected : [])
-                    .accessibilityIdentifier("wallet.tab.\(tab.rawValue)")
-                }
-            }
-            .padding(5)
-            .animation(reduceMotion ? nil : .snappy(duration: 0.25), value: chrome?.selectedTab)
-            .paperGlass(.capsule, interactive: true)
-            .accessibilityElement(children: .contain)
-
-            Button { workspace.showAgent = true } label: {
-                WalletAgentAvatar().frame(width: 60, height: 60)
-                    .paperGlass(.circle, interactive: true)
-            }
-            .accessibilityLabel(String(localized: "wallet.agent.open"))
-            .accessibilityHint(String(localized: "wallet.agent.resume.hint"))
-            .accessibilityIdentifier("wallet.agent.avatar")
-        }
-        .buttonStyle(.plain)
-    }
-}
-
 struct WalletAgentAvatar: View {
+    @MainActor static let tabImage: UIImage = {
+        let renderer = ImageRenderer(content: WalletAgentAvatar().scaleEffect(32.0 / 44).frame(width: 32, height: 32))
+        renderer.scale = 3
+        return (renderer.uiImage ?? UIImage(systemName: "face.smiling") ?? UIImage()).withRenderingMode(.alwaysOriginal)
+    }()
+
     var body: some View {
         ZStack {
             Circle().fill(LinearGradient(colors: [Color(red: 0.71, green: 0.68, blue: 0.96), Color(red: 0.36, green: 0.33, blue: 0.69)], startPoint: .topLeading, endPoint: .bottomTrailing))
