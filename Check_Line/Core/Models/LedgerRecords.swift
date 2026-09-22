@@ -168,6 +168,7 @@ nonisolated struct Wish: Equatable, Sendable, Identifiable {
     var state: WishState
     var createdAt: Date
     var completedAt: Date?
+    var symbolName: String? = nil
 }
 
 nonisolated struct WishRedemption: Equatable, Sendable, Identifiable {

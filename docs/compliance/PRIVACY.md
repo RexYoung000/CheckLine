@@ -22,13 +22,14 @@
 
 当前 App 启动新首页与文字 Agent 面板：
 
-- 用户创建的预算卡和记一笔写入本地 SwiftData（`CheckLineSchemaV1`），默认关闭 CloudKit；
+- 用户创建的预算卡、消费、心愿名称、可选金额与预设符号，以及兑现记录写入本地 SwiftData（`CheckLineSchemaV1`），默认关闭 CloudKit；
 - 没有网络请求、自有后端、已启用的 AI Provider 或第三方数据服务；`CloudLLMProvider` 默认关闭，App 入口未打开；
 - 没有启用 iCloud 同步；
 - 不请求通知、照片、麦克风、语音或邮箱权限；
 - 没有 Apple Pay、短信、邮件或账单导入连接器；
 - 不收集设备标识符、诊断、使用行为或个人身份信息；
-- 旧四 Tab 样机不再启动，其内存 Sample 不会写入新账本。
+- 旧四 Tab 样机不再启动，其内存 Sample 不会写入新账本；
+- 显式 Debug 参数 `-design-preview` 使用独立内存账本并标记“示例数据”，不会读写用户账本，Release 不启用。
 
 设备上的用户账本按 Apple 提交时规则判断是否算“收集”。一旦打开云端 AI、来源连接或网络请求，必须重新评估隐私标签。
 

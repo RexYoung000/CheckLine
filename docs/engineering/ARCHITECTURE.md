@@ -11,7 +11,7 @@
 | 工程 | `Check_Line.xcodeproj` |
 | Target / Scheme | `Check_Line` |
 | 平台 | iPhone / iPad，最低 iOS 17.0 |
-| 当前 UI | `CheckLineHomeView`：预算卡列表 + 文字 Agent 面板。旧四 Tab 样机仍在 `Features/Prototype`，不再启动 |
+| 当前 UI | 2026-09-22 开始同步液面卡夹设计：系统 TabView 首页 / 预算 / 心愿 / 分析，共享主动 Agent，个人设置为页首入口；验收状态见 ROADMAP |
 | 正式数据层 | 首页与 Agent 经 `CheckLineWorkspace` 读写本地 `LedgerStore`（无 CloudKit） |
 | Test Target | `Check_LineTests` 覆盖领域引擎、理解管线、`AgentSession` 与首页工作区持久化 |
 | 网络 / 后端 / AI | `CloudLLMProvider` 已实现且默认关闭；App 入口不启用、启动无网络请求 |
@@ -327,6 +327,7 @@ sourceCurrency == walletCurrency
 |------|------|------|
 | `id` | UUID | |
 | `name` | String | 用户真实表达的心愿 |
+| `symbolName` | String? | 统一预设符号；旧值为空时显示默认符号，不存用户图片 |
 | `targetAmount` | Decimal? | 参考价格，可空 |
 | `currencyCode` | String? | 参考价格币种 |
 | `referenceURL` | String? | 商品链接，可空 |
@@ -540,8 +541,9 @@ M4 面板只渲染 `AgentTurn`，不直接调引擎：
 
 - 领域引擎与 `CheckLineSchemaV1` 从本文模型新建，不为旧样机 `budgetIDs` 建立兼容层；
 - App 通过 `CheckLinePersistence.makeAppContainer()` 打开本地容器，失败时回退内存容器；`LedgerStore` 做领域账本整本替换读写；
-- 当前启动页不调用 `LedgerStore`，因此不会把旧样机 Sample 写入 Schema；
-- `Features/Prototype` 中的 `budgetIDs`、共享消费删除和旧结算保持为历史样机，M4 替换启动页；不作为新 Schema 或验收依据；
+- 当前启动页通过 `CheckLineWorkspace` 读写 `LedgerStore`；显式 Debug 示例模式使用隔离内存容器，不把 Sample 写入用户账本；
+- `Features/Prototype` 中的 `budgetIDs`、共享消费删除和旧结算保持为历史样机，未挂载到当前启动页；不作为新 Schema 或验收依据；
+- 本轮 `Wish.symbolName` 为可选字段；已验证含符号及空符号的账本保存读取，未验证旧版本磁盘库迁移，不重置现存数据库；
 - 旧草案的 `BudgetExpenseBinding` 和 `WishAllocation` 不进入正式 Schema；
 - 旧 `PrototypeDeletionTests` 不作为新 V1 验收；新归属测试覆盖“一笔消费一个结算周期”；
 - 若后续发现已有真实用户数据，必须暂停并重新制定迁移计划。
@@ -558,3 +560,11 @@ M4 面板只渲染 `AgentTurn`，不直接调引擎：
 - 暂估汇率的具体系统/服务来源（产品只要求确认页可见来源名称与时间，不绑定供应商）；
 - 多设备并发结算的冲突策略（若启用同步）；
 - 各地区银行连接器和隐私合规要求。
+
+### 2026-09-22 设计实装切片
+
+- 复用本地 Ledger、Decimal 金额引擎与系统导航；不接入网络或新权限。
+- `BudgetPresentation` 只派生暂计剩余、暂计已用和按日图表；展示比例可以转 Double，金融计算仍是 Decimal。
+- 心愿预设图标作为可选 `symbolName` 保存于 Wish / PersistedWish，旧值为空时使用统一默认符号；不存用户图片。
+- 创建心愿、置顶和兑现由 Workspace 提交，成功持久化后更新观察状态；兑现先调用既有 WishRedemptionEngine 预览并显式确认。
+- 调额度、删除、结算与追溯页面不因视觉实装被视为完整 V1 完成。

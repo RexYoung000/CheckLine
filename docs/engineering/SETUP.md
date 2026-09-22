@@ -4,13 +4,13 @@
 
 ## 一、环境要求
 
-- Xcode 16 或更高
+- Xcode 26 或更高（本轮验证：Xcode 27.0 / iOS 27 模拟器）
 - iOS 17+ Simulator Runtime，或可用于开发签名的 Apple ID 与真机
 - 正式工程：`Check_Line.xcodeproj`
 - 主 Scheme / Target：`Check_Line`
 - App 默认显示名：`CheckLine`；简体中文环境显示「预算线」
 
-当前产品先以 iPhone/iPad App 为主。SwiftData 是新 V1 确定性账本的下一阶段能力；macOS Target、Widget Extension 和 iCloud 是否进入首发仍待确认，不提前创建空 Target 或启用 Capability。
+当前产品先以 iPhone/iPad App 为主。正式页面已读写本地 SwiftData 账本；macOS Target、Widget Extension 和 iCloud 是否进入首发仍待确认，不提前创建空 Target 或启用 Capability。
 
 ## 二、打开与运行
 
@@ -19,7 +19,17 @@
 3. Destination 选择 iOS 17+ 的 iPhone/iPad 模拟器，或完成签名的真机。
 4. 按 `Cmd + R` 启动；按 `Cmd + B` 仅构建。
 
-当前启动页是 2026-08-01 版本的 8 页面 SwiftUI 内存样机。它用于追溯旧视觉与工程验证，但其中四 Tab、多预算重复扣减、旧结算和悬浮录入入口已经被 2026-08-10 新产品定义取代，不能继续作为正式 V1 需求来源。新实现以 `PRODUCT.md`、`docs/product/PRD.md`、`docs/product/FEATURE-LOOP.md` 和更新后的 `DESIGN.md` 为准。
+当前启动页是 `CheckLineRootView`，进入首页 / 预算 / 心愿 / 分析四个系统 Tab，个人图标打开设置，各根页面共享主动 Agent 与记一笔入口。正常启动使用用户的本地账本，空账本显示创建入口。`Features/Prototype` 仅作历史参考。当前范围以 `PRODUCT.md`、`docs/product/PRD.md`、`docs/product/FEATURE-LOOP.md` 和 `DESIGN.md` 为准。
+
+### 独立示例预览
+
+Debug Scheme 的 Arguments Passed On Launch 可添加 `-design-preview`。该模式使用独立内存容器、标注「示例数据」，不读取或覆盖用户账本，Release 构建不启用。
+
+可附加 `-design-screen wishes` 直接预览页面。支持 `home`、`budgets`、`wishes`、`insights`、`settings`、`agent`、`record`、`create-budget`、`create-wish`、`budget-detail`、`wish-detail`、`redemption`。详情直达只用于布局检查，不能代替真实点击路径验证。
+
+附加 `-design-reduce-motion` 可在示例模式中检查静态液位和取消位移动效的降级。正常启动遵循系统「减少动态效果」设置；此调试参数不等于验证过系统开关。
+
+验收入口：预算页 `+` 创建卡片，卡片进入详情；心愿页 `+` 选符号并创建，心愿详情进入真实购买确认；分析页点日期看当天记录；底部输入条打开 Agent，`+` 打开记一笔；右上个人图标打开设置。
 
 ## 三、磁盘与 Xcode 结构
 
@@ -34,15 +44,18 @@ Check_Line/
 ├── Capture/Text/        # 文字只提取事实，不写账本
 ├── Core/Services/       # M1 领域引擎（纯 Swift，不依赖 SwiftUI）
 ├── Core/Models/         # 领域 struct / Ledger
-├── Core/Persistence/    # Schema V1、本地容器、LedgerStore；旧样机 UI 不读写
-├── Features/Prototype/  # 历史 SwiftUI 样机，不是新 V1 需求；M4 替换启动页
+├── Core/Persistence/    # Schema V1、本地容器、LedgerStore
+├── DesignSystem/        # 共享颜色、字体、哑光表面、液面卡与玻璃控件
+├── Features/            # Home / Budget / Wish / Insights / AgentPanel / Capture / Shell
+├── Features/Prototype/  # 历史 SwiftUI 样机，未挂载到当前启动页
+├── Shared/              # 金额、日期和错误格式化
 ├── Resources/           # 中英文本地化
 └── Assets.xcassets      # App 图标、颜色与图片资源
 
 Check_LineTests/         # Swift Testing 单元测试
 ```
 
-`Core/Models`、`Core/Services` 与 `Core/Persistence` 已随 M1 账本建立。`Application` 与 `Capture/Text` 已随 M2 行动层建立。其他正式 Feature、DesignSystem 与 Shared 会按新 `ARCHITECTURE.md` 的内部里程碑逐步建立，不预建空目录。旧 `Features/Prototype` 不是新 V1 需求；M4 用真实首页替换启动页。
+`Core/Models`、`Core/Services` 与 `Core/Persistence` 已随 M1 账本建立。`Application` 与 `Capture/Text` 已随 M2 行动层建立。M4 正式页面接入上述服务，金额由确定性领域层计算；尚未实现的能力见 `ROADMAP.md`，不能从页面外观推断完整 V1 已交付。
 
 旧项目的 `Package.swift` 和独立 Runner 已退出当前工程，避免同时维护 Swift Package 与 Xcode App 两套入口。它们仍可从 Git 历史中追溯。
 
@@ -60,12 +73,11 @@ Check_LineTests/         # Swift Testing 单元测试
 # 查看工程与 Scheme
 xcodebuild -project Check_Line.xcodeproj -list
 
-# 无签名构建 iOS 模拟器版本
+# 构建模拟器版本（设备名与 OS 按本机已安装运行时调整）
 xcodebuild \
   -project Check_Line.xcodeproj \
   -scheme Check_Line \
-  -destination 'platform=iOS Simulator,name=iPhone 15 Pro,OS=17.5' \
-  CODE_SIGNING_ALLOWED=NO \
+  -destination 'platform=iOS Simulator,name=iPhone 18 Pro,OS=27.0' \
   build
 ```
 
@@ -75,8 +87,9 @@ xcodebuild \
 xcodebuild \
   -project Check_Line.xcodeproj \
   -scheme Check_Line \
-  -destination 'platform=iOS Simulator,name=iPhone 15 Pro,OS=17.5' \
-  CODE_SIGNING_ALLOWED=NO \
+  -destination 'platform=iOS Simulator,name=iPhone 18 Pro,OS=27.0' \
+  -parallel-testing-enabled NO \
+  -collect-test-diagnostics never \
   test
 ```
 
@@ -84,7 +97,7 @@ xcodebuild \
 
 ## 六、签名与能力边界
 
-- 模拟器构建不需要开发签名。
+- 模拟器使用本地签名，不需要开发者证书；需要安装运行时不要禁用构建的默认签名步骤。
 - 真机运行时在 Xcode 的 Signing & Capabilities 中选择 Rex 的 Team。
 - iCloud、App Groups、Widget、通知、语音、自动化和邮箱/AI 网络能力只在对应实现切片进入当前里程碑并完成隐私审查后开启。
 - 不提交 `xcuserdata/`、DerivedData、证书、Provisioning Profile、脚本密钥与 `.env`。

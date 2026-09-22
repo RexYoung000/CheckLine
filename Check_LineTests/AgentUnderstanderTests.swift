@@ -68,11 +68,11 @@ struct AgentContextBuilderTests {
         #expect(json.contains("9999") == false)
         #expect(json.lowercased().contains("wallet") == false)
         let object = try JSONSerialization.jsonObject(with: Data(json.utf8)) as? [String: Any]
-        #expect(Set(object?.keys ?? []) == ["budgetCards", "recentMerchants", "tagNames"])
+        #expect(Set(object?.keys.map { $0 } ?? []) == ["budgetCards", "recentMerchants", "tagNames"])
         #expect(object?["recentMerchants"] as? [String] == ["HiddenCafe"])
         #expect(object?["tagNames"] as? [String] == ["人情"])
         let card = (object?["budgetCards"] as? [[String: Any]])?.first
-        #expect(Set(card?.keys ?? []) == ["name", "cycleType", "currencyCode"])
+        #expect(Set(card?.keys.map { $0 } ?? []) == ["name", "cycleType", "currencyCode"])
     }
 
     @Test("最近商家按时间去重且最多 10 条")

@@ -6,8 +6,18 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXContainerItemProxy section */
+		7B00000A300D032000DEAD91 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7A8C4EDE300D032000DEAD91 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7A8C4EE5300D032000DEAD91;
+			remoteInfo = Check_Line;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
-		7A8C4EE6300D032000DEAD91 /* Check_Line.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Check_Line.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		7A8C4EE6300D032000DEAD91 /* Check_Line.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = Check_Line.app; path = CheckLine.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7B000001300D032000DEAD91 /* Check_LineTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Check_LineTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -61,16 +71,6 @@
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
-
-/* Begin PBXContainerItemProxy section */
-		7B00000A300D032000DEAD91 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 7A8C4EDE300D032000DEAD91 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 7A8C4EE5300D032000DEAD91;
-			remoteInfo = Check_Line;
-		};
-/* End PBXContainerItemProxy section */
 
 /* Begin PBXNativeTarget section */
 		7A8C4EE5300D032000DEAD91 /* Check_Line */ = {
@@ -127,15 +127,15 @@
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 2660;
 				LastUpgradeCheck = 2660;
-					TargetAttributes = {
-						7A8C4EE5300D032000DEAD91 = {
-							CreatedOnToolsVersion = 26.6;
-						};
-						7B000006300D032000DEAD91 = {
-							CreatedOnToolsVersion = 26.6;
-							TestTargetID = 7A8C4EE5300D032000DEAD91;
-						};
+				TargetAttributes = {
+					7A8C4EE5300D032000DEAD91 = {
+						CreatedOnToolsVersion = 26.6;
 					};
+					7B000006300D032000DEAD91 = {
+						CreatedOnToolsVersion = 26.6;
+						TestTargetID = 7A8C4EE5300D032000DEAD91;
+					};
+				};
 			};
 			buildConfigurationList = 7A8C4EE1300D032000DEAD91 /* Build configuration list for PBXProject "Check_Line" */;
 			developmentRegion = en;
@@ -151,10 +151,10 @@
 			productRefGroup = 7A8C4EE7300D032000DEAD91 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
-				targets = (
-					7A8C4EE5300D032000DEAD91 /* Check_Line */,
-					7B000006300D032000DEAD91 /* Check_LineTests */,
-				);
+			targets = (
+				7A8C4EE5300D032000DEAD91 /* Check_Line */,
+				7B000006300D032000DEAD91 /* Check_LineTests */,
+			);
 		};
 /* End PBXProject section */
 

@@ -9,7 +9,7 @@ struct LedgerStoreTests {
     func containerConfiguration() throws {
         let live = CheckLinePersistence.liveConfiguration()
         #expect(live.isStoredInMemoryOnly == false)
-        #expect(live.cloudKitDatabase == .none)
+        #expect(live.cloudKitContainerIdentifier == nil)
 
         let container = try CheckLinePersistence.makeContainer(inMemory: true)
         let context = ModelContext(container)

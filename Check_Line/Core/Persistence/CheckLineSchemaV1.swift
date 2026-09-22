@@ -349,6 +349,7 @@ final class PersistedWish {
     var targetAmount: Decimal?
     var currencyCode: String?
     var referenceURL: String?
+    var symbolName: String? = nil
     var stateRaw: String
     var createdAt: Date
     var completedAt: Date?

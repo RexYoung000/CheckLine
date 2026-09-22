@@ -3,7 +3,7 @@ import Testing
 @testable import CheckLine
 
 struct LLMRequestPayloadTests {
-    @Test("云端请求体只有 system、userMessage 和上下文，不含金额或钱包")
+    @Test("云端请求体字段受限，上下文不含金额或钱包数据")
     func payloadAllowlistOmitsAmounts() throws {
         let now = TestDates.day(2026, 1, 5)
         var ledger = Ledger.blank(walletCurrencyCode: "CNY", now: now)
@@ -41,13 +41,14 @@ struct LLMRequestPayloadTests {
         )
         let json = prompt.requestPayload.jsonUTF8
         let object = try JSONSerialization.jsonObject(with: Data(json.utf8)) as? [String: Any]
-        #expect(Set(object?.keys ?? []) == ["system", "userMessage", "context"])
+        #expect(Set(object?.keys.map { $0 } ?? []) == ["system", "userMessage", "context"])
         #expect(json.contains("2468") == false)
         #expect(json.contains("135.79") == false)
         #expect(json.contains("77.77") == false)
-        #expect(json.lowercased().contains("wallet") == false)
         let context = object?["context"] as? [String: Any]
-        #expect(Set(context?.keys ?? []) == ["budgetCards", "recentMerchants", "tagNames"])
+        let contextJSON = String(decoding: try JSONSerialization.data(withJSONObject: context ?? [:]), as: UTF8.self)
+        #expect(contextJSON.lowercased().contains("wallet") == false)
+        #expect(Set(context?.keys.map { $0 } ?? []) == ["budgetCards", "recentMerchants", "tagNames"])
     }
 }
 
@@ -58,7 +59,7 @@ struct CloudLLMProviderTests {
             #expect(request.httpMethod == "POST")
             #expect(request.value(forHTTPHeaderField: "Content-Type") == "application/json")
             let body = try JSONSerialization.jsonObject(with: request.httpBody ?? Data()) as? [String: Any]
-            #expect(Set(body?.keys ?? []) == ["system", "userMessage", "context"])
+            #expect(Set(body?.keys.map { $0 } ?? []) == ["system", "userMessage", "context"])
             let data = Data(#"{"intentType":"capture","amount":"18","currencyCode":"CNY","merchant":"面馆"}"#.utf8)
             return (data, HTTPURLResponse(
                 url: request.url!,

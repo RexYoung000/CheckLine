@@ -13,12 +13,21 @@ struct CheckLineApp: App {
     private let container: ModelContainer
 
     init() {
-        container = CheckLinePersistence.makeAppContainer()
+        if DesignPreviewData.isEnabled {
+            do {
+                container = try CheckLinePersistence.makeContainer(inMemory: true)
+                try DesignPreviewData.populate(container.mainContext)
+            } catch {
+                preconditionFailure("Unable to create the isolated design preview.")
+            }
+        } else {
+            container = CheckLinePersistence.makeAppContainer()
+        }
     }
 
     var body: some Scene {
         WindowGroup {
-            CheckLineHomeView()
+            CheckLineRootView()
         }
         .modelContainer(container)
     }

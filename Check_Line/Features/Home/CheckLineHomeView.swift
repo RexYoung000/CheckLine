@@ -1,263 +1,219 @@
-import SwiftData
 import SwiftUI
-import UIKit
 
 struct CheckLineHomeView: View {
-    @Environment(\.modelContext) private var modelContext
-    @State private var workspace: CheckLineWorkspace?
-    @State private var showWish = false
-    @State private var showSettings = false
-
-    var body: some View {
-        Group {
-            if let workspace {
-                HomeContentView(workspace: workspace, showWish: $showWish, showSettings: $showSettings)
-            } else {
-                ProgressView()
-                    .onAppear {
-                        workspace = CheckLineWorkspace(context: modelContext)
-                    }
-            }
-        }
-    }
-}
-
-private struct HomeContentView: View {
     @Bindable var workspace: CheckLineWorkspace
-    @Binding var showWish: Bool
-    @Binding var showSettings: Bool
+    @Environment(\.shellChrome) private var chrome
+    @Environment(\.walletReduceMotion) private var reduceMotion
+    @Environment(\.dynamicTypeSize) private var typeSize
+    @State private var detail: BudgetDetailSection?
+    @State private var dragOffset: CGFloat = 0
+    @State private var receiptOffset = 0
+
+    private var card: HomeBudgetCardModel? { workspace.selectedCard }
 
     var body: some View {
-        NavigationStack {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 16) {
-                    if workspace.processingItems.isEmpty == false {
-                        HomeProcessingStrip(items: workspace.processingItems)
-                    }
-
-                    if workspace.isEmpty {
-                        emptyState
+        WalletRootPage(title: String(localized: "tab.home"), workspace: workspace, lightHeader: true) {
+            if let card {
+                VStack(spacing: 18) {
+                    deck(card)
+                    if typeSize.isAccessibilitySize {
+                        VStack(spacing: 12) { usedTile(card); dateTile(card) }
                     } else {
-                        ForEach(workspace.cards) { card in
-                            NavigationLink {
-                                HomeBudgetDetailView(card: card, ledger: workspace.ledger)
-                            } label: {
-                                HomeBudgetCardView(card: card)
+                        HStack(alignment: .top, spacing: 12) { usedTile(card); dateTile(card) }
+                    }
+                    receipts(card)
+                    if BudgetPresentation.pendingCount(card, in: workspace.ledger) > 0 {
+                        Button { detail = .pending } label: {
+                            HStack {
+                                Label(String(format: String(localized: "wallet.pending.count"), BudgetPresentation.pendingCount(card, in: workspace.ledger)), systemImage: "clock")
+                                Spacer()
+                                Text(MoneyFormat.string(card.snapshot.pendingAmount, currencyCode: card.currencyCode)).monospacedDigit()
+                                Image(systemName: "chevron.right").font(.caption)
                             }
-                            .buttonStyle(.plain)
+                            .font(.subheadline).padding(16).walletSurface(radius: 18)
                         }
+                        .buttonStyle(.plain)
+                    }
+                    if workspace.ledger.expenses.values.contains(where: { $0.attributionState == .unbudgeted && $0.wishRedemptionID == nil }) {
+                        NavigationLink { UnbudgetedRecordsView(workspace: workspace) } label: {
+                            Label(String(localized: "v1.unbudgeted"), systemImage: "tray").font(.subheadline).frame(maxWidth: .infinity, alignment: .leading).padding(16).walletSurface(radius: 18)
+                        }
+                        .buttonStyle(.plain)
+                    }
+                }.frame(maxWidth: 560)
+            } else {
+                VStack(spacing: 24) {
+                    WalletSymbol(name: "wallet.pass", size: 80)
+                    PaperEmptyHint(title: String(localized: "v1.home.empty.title"), message: String(localized: "wallet.empty.budget"))
+                    Button(String(localized: "v1.budget.create")) { workspace.openComposer(.budget) }.buttonStyle(PaperSolidButtonStyle())
+                }.padding(.vertical, 36)
+            }
+        }
+        .sheet(item: $detail) { section in
+            if let card { BudgetDetailSheet(workspace: workspace, budgetID: card.id, initialSection: section) }
+        }
+        .onChange(of: workspace.selectedBudgetID) { _, _ in receiptOffset = 0 }
+    }
+
+    private func deck(_ card: HomeBudgetCardModel) -> some View {
+        ZStack(alignment: .topTrailing) {
+            if workspace.cards.count > 1 {
+                RoundedRectangle(cornerRadius: 28).fill(PaperTheme.accent.opacity(0.45))
+                    .padding(.horizontal, 9).rotationEffect(.degrees(-2)).offset(y: -6)
+                    .accessibilityHidden(true)
+            }
+            Button { detail = .overview } label: { LiquidBudgetCard(card: card, flows: !workspace.showAgent && !workspace.showComposer && detail == nil && chrome?.isSettingsPresented != true) }
+                .buttonStyle(.plain)
+                .offset(y: dragOffset)
+                .simultaneousGesture(DragGesture(minimumDistance: 18).onChanged { value in
+                    dragOffset = reduceMotion ? 0 : max(-70, min(70, value.translation.height * 0.55))
+                }.onEnded { value in
+                    let delta = value.translation.height
+                    withAnimation(reduceMotion ? nil : .spring(response: 0.35, dampingFraction: 0.82)) {
+                        if abs(delta) > 45 { changeCard(delta < 0 ? 1 : -1) }
+                        dragOffset = 0
+                    }
+                })
+                .accessibilityAction(named: Text("wallet.card.next")) { changeCard(1) }
+                .accessibilityAction(named: Text("wallet.card.previous")) { changeCard(-1) }
+            Menu {
+                ForEach(workspace.cards) { item in
+                    Button { workspace.selectedBudgetID = item.id } label: {
+                        if item.id == card.id { Label(item.name, systemImage: "checkmark") } else { Text(item.name) }
                     }
                 }
-                .padding()
+                Divider()
+                Button(String(localized: "wallet.card.details"), systemImage: "arrow.up.right") { detail = .overview }
+                Button(String(localized: "wallet.budget.manage"), systemImage: "wallet.pass") { chrome?.selectedTab = .budgets }
+            } label: {
+                Image(systemName: "ellipsis").foregroundStyle(.white).frame(width: 44, height: 44).padding(8)
             }
-            .navigationTitle(String(localized: "v1.home.title"))
-            .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
-                    Button(String(localized: "v1.wish.entry")) { showWish = true }
+            .accessibilityLabel(String(localized: "wallet.card.more"))
+        }
+        .padding(.top, 8)
+    }
+
+    private func usedTile(_ card: HomeBudgetCardModel) -> some View {
+        Button { detail = .overview } label: {
+            VStack(alignment: .leading, spacing: 12) {
+                tileLabel(String(localized: "v1.card.used"), icon: "arrow.up.right")
+                Text(MoneyFormat.string(-BudgetPresentation.used(card), currencyCode: card.currencyCode))
+                    .font(.title2.weight(.medium)).monospacedDigit().lineLimit(1).minimumScaleFactor(0.6)
+                HStack(alignment: .bottom) {
+                    BudgetMiniBars(card: card, ledger: workspace.ledger)
+                    Text(String(localized: "wallet.last7days")).font(.caption2).foregroundStyle(PaperTheme.muted)
                 }
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button(String(localized: "v1.settings.entry")) { showSettings = true }
+            }.padding(16).frame(maxWidth: .infinity, minHeight: 137, alignment: .topLeading).walletSurface()
+        }.buttonStyle(.plain)
+    }
+
+    private func dateTile(_ card: HomeBudgetCardModel) -> some View {
+        Button { detail = .calendar } label: {
+            VStack(alignment: .leading, spacing: 16) {
+                tileLabel(Date().formatted(.dateTime.month(.wide)), icon: "arrow.up.right")
+                HStack(alignment: .bottom, spacing: 12) {
+                    MiniBudgetCalendar(card: card, ledger: workspace.ledger)
+                    Spacer(minLength: 0)
+                    VStack(alignment: .trailing, spacing: 4) {
+                        if let end = card.periodEnd {
+                            Text(max(0, Calendar.current.dateComponents([.day], from: Calendar.current.startOfDay(for: Date()), to: end).day ?? 0), format: .number)
+                                .font(.title.weight(.medium)).monospacedDigit()
+                            Text(String(localized: "wallet.daysLeft")).font(.caption2)
+                        } else {
+                            Image(systemName: "infinity").font(.title2)
+                            Text(String(localized: "wallet.noDeadline")).font(.caption2)
+                        }
+                    }.foregroundStyle(PaperTheme.muted)
                 }
-            }
-            .safeAreaInset(edge: .bottom) {
-                AgentTaskPanel(workspace: workspace)
-            }
-            .sheet(isPresented: $showWish) {
-                WishWalletSummaryView(projection: workspace.wallet, currencyCode: workspace.ledger.walletSettings.walletCurrencyCode)
-            }
-            .sheet(isPresented: $showSettings) {
-                SettingsPlaceholderView()
-            }
-            .sheet(isPresented: $workspace.showCreateBudget) {
-                CreateBudgetSheet(workspace: workspace)
-            }
-        }
+            }.padding(16).frame(maxWidth: .infinity, minHeight: 137, alignment: .topLeading).walletSurface()
+        }.buttonStyle(.plain)
     }
 
-    private var emptyState: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text(String(localized: "v1.home.empty.title"))
-                .font(.title2.weight(.semibold))
-            Text(String(localized: "v1.home.empty.message"))
-                .foregroundStyle(.secondary)
-            Button(String(localized: "v1.budget.create")) {
-                workspace.showCreateBudget = true
-            }
-            .buttonStyle(.borderedProminent)
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(.vertical, 24)
-        .accessibilityElement(children: .combine)
-    }
-}
-
-private struct HomeProcessingStrip: View {
-    var items: [HomeProcessingItem]
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            ForEach(items) { item in
-                Text(label(for: item.kind))
-                    .font(.subheadline)
-                    .padding(10)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 10))
-                    .accessibilityLabel(label(for: item.kind))
-            }
-        }
-        .accessibilityElement(children: .contain)
+    private func tileLabel(_ title: String, icon: String) -> some View {
+        HStack { Text(title); Spacer(); Image(systemName: icon) }.font(.caption).foregroundStyle(PaperTheme.muted)
     }
 
-    private func label(for kind: HomeProcessingKind) -> String {
-        switch kind {
-        case .pendingTransactions(let count):
-            String(format: String(localized: "v1.process.pending"), locale: .current, count)
-        case .unbudgetedTransactions(let count):
-            String(format: String(localized: "v1.process.unbudgeted"), locale: .current, count)
-        case .possibleOverrun(let name):
-            String(format: String(localized: "v1.process.possible"), locale: .current, name)
-        case .certainOverrun(let name):
-            String(format: String(localized: "v1.process.certain"), locale: .current, name)
-        case .noDataSources:
-            String(localized: "v1.process.coverage")
-        }
-    }
-}
-
-private struct HomeBudgetCardView: View {
-    var card: HomeBudgetCardModel
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
+    private func receipts(_ card: HomeBudgetCardModel) -> some View {
+        let rows = BudgetPresentation.expenses(card, in: workspace.ledger).filter { $0.attributionState == .confirmed }
+        let start = min(receiptOffset, max(0, rows.count - 1))
+        let shown = Array(rows.dropFirst(start).prefix(3))
+        return VStack(spacing: 12) {
             HStack {
-                Text(card.name)
-                    .font(.headline)
-                    .lineLimit(2)
+                Text(String(localized: "expense.recent.title")).font(.headline)
                 Spacer()
-                Text(cycleLabel)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+                Button { detail = .records } label: { Image(systemName: "arrow.up.right").frame(width: 44, height: 44) }
+                    .accessibilityLabel(String(localized: "wallet.records.all"))
             }
-            labeledAmount(String(localized: "v1.card.used"), card.snapshot.confirmedSpent)
-            labeledAmount(String(localized: "v1.card.remaining"), card.snapshot.availableToSpend)
-            if card.snapshot.pendingAmount != 0 {
-                labeledAmount(String(localized: "v1.card.pending"), card.snapshot.pendingAmount)
+            if shown.isEmpty {
+                Text(String(localized: "v1.card.records.empty")).font(.subheadline).foregroundStyle(PaperTheme.muted).padding(.vertical, 20)
+            } else {
+                VStack(spacing: -7) {
+                    ForEach(Array(shown.reversed().enumerated()), id: \.element.id) { index, expense in
+                        Button { detail = .records } label: {
+                            HStack(spacing: 12) {
+                                Image(systemName: BudgetPresentation.symbol(for: expense))
+                                Text(expense.merchant ?? String(localized: "v1.card.record.untitled")).lineLimit(1)
+                                Spacer(minLength: 4)
+                                Text(MoneyFormat.string(expense.kind == .refund ? expense.originalAmount : -expense.originalAmount, currencyCode: expense.originalCurrencyCode)).monospacedDigit().lineLimit(1).minimumScaleFactor(0.7)
+                            }
+                            .font(.subheadline).padding(.horizontal, 16).frame(minHeight: 55)
+                            .foregroundStyle(PaperTheme.paperInk)
+                            .background(LinearGradient(colors: [PaperTheme.accent.opacity(0.85), Color(red: 0.91, green: 0.87, blue: 1)], startPoint: .topLeading, endPoint: .bottomTrailing), in: RoundedRectangle(cornerRadius: 16))
+                            .padding(.horizontal, CGFloat(shown.count - index - 1) * 7)
+                        }.buttonStyle(.plain)
+                    }
+                }
+                .contentShape(Rectangle())
+                .gesture(DragGesture(minimumDistance: 20).onEnded { value in
+                    guard abs(value.translation.height) > 25 else { return }
+                    withAnimation(reduceMotion ? nil : .smooth(duration: 0.22)) {
+                        receiptOffset = max(0, min(rows.count - 1, start + (value.translation.height > 0 ? 1 : -1)))
+                    }
+                })
+                .accessibilityAction(named: Text("wallet.records.older")) { receiptOffset = min(rows.count - 1, start + 1) }
+                .accessibilityAction(named: Text("wallet.records.newer")) { receiptOffset = max(0, start - 1) }
             }
-            ProgressView(value: NSDecimalNumber(decimal: card.snapshot.progress).doubleValue)
-                .accessibilityLabel(String(localized: "v1.card.progress"))
-                .accessibilityValue("\(card.snapshot.progress)")
         }
-        .padding()
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color(UIColor.secondarySystemBackground), in: RoundedRectangle(cornerRadius: 12))
-        .accessibilityElement(children: .combine)
     }
 
-    private var cycleLabel: String {
-        card.cycleType == .repeating
-            ? String(localized: "v1.cycle.repeating")
-            : String(localized: "v1.cycle.oneShot")
-    }
-
-    private func labeledAmount(_ title: String, _ amount: Decimal) -> some View {
-        HStack {
-            Text(title)
-                .foregroundStyle(.secondary)
-            Spacer()
-            Text(MoneyFormat.string(amount, currencyCode: card.currencyCode))
-                .monospacedDigit()
-        }
-        .font(.subheadline)
+    private func changeCard(_ direction: Int) {
+        guard let card, let index = workspace.cards.firstIndex(where: { $0.id == card.id }), workspace.cards.indices.contains(index + direction) else { return }
+        workspace.selectedBudgetID = workspace.cards[index + direction].id
+        PaperHaptics.selection()
     }
 }
 
-struct HomeBudgetDetailView: View {
+struct BudgetMiniBars: View {
     var card: HomeBudgetCardModel
     var ledger: Ledger
-
     var body: some View {
-        List {
-            Section(String(localized: "v1.card.section.status")) {
-                LabeledContent(String(localized: "v1.card.used")) {
-                    Text(MoneyFormat.string(card.snapshot.confirmedSpent, currencyCode: card.currencyCode))
-                }
-                LabeledContent(String(localized: "v1.card.remaining")) {
-                    Text(MoneyFormat.string(card.snapshot.availableToSpend, currencyCode: card.currencyCode))
-                }
-                if card.snapshot.pendingAmount != 0 {
-                    LabeledContent(String(localized: "v1.card.pending")) {
-                        Text(MoneyFormat.string(card.snapshot.pendingAmount, currencyCode: card.currencyCode))
-                    }
-                }
+        let values = BudgetPresentation.days().map { BudgetPresentation.dailyAmount($0, card: card, ledger: ledger) }
+        let maximum = max(values.max() ?? 0, 1)
+        HStack(alignment: .bottom, spacing: 4) {
+            ForEach(values.indices, id: \.self) { index in
+                Capsule().fill(PaperTheme.accent.opacity(index == 6 ? 1 : 0.55))
+                    .frame(width: 7, height: max(2, 30 * NSDecimalNumber(decimal: max(0, values[index]) / maximum).doubleValue))
             }
-            Section(String(localized: "v1.card.section.records")) {
-                let expenses = ledger.expenses.values
-                    .filter { $0.budgetPeriodID == card.periodID }
-                    .sorted { $0.occurredAt > $1.occurredAt }
-                if expenses.isEmpty {
-                    Text(String(localized: "v1.card.records.empty"))
-                        .foregroundStyle(.secondary)
-                } else {
-                    ForEach(expenses) { expense in
-                        VStack(alignment: .leading) {
-                            Text(expense.merchant ?? String(localized: "v1.card.record.untitled"))
-                            Text(MoneyFormat.string(expense.originalAmount, currencyCode: expense.originalCurrencyCode))
-                                .font(.subheadline)
-                                .foregroundStyle(.secondary)
-                        }
-                    }
-                }
-            }
-        }
-        .navigationTitle(card.name)
+        }.frame(height: 32).accessibilityHidden(true)
     }
 }
 
-private struct CreateBudgetSheet: View {
-    @Bindable var workspace: CheckLineWorkspace
-    @State private var name = ""
-    @State private var amount = ""
-    @State private var currency = "CNY"
-    @State private var repeating = true
-    @Environment(\.dismiss) private var dismiss
-
+struct MiniBudgetCalendar: View {
+    var card: HomeBudgetCardModel
+    var ledger: Ledger
     var body: some View {
-        NavigationStack {
-            Form {
-                TextField(String(localized: "v1.budget.name"), text: $name)
-                TextField(String(localized: "v1.budget.amount"), text: $amount)
-                    .keyboardType(.decimalPad)
-                Picker(String(localized: "v1.budget.currency"), selection: $currency) {
-                    Text("CNY").tag("CNY")
-                    Text("USD").tag("USD")
-                    Text("JPY").tag("JPY")
-                    Text("EUR").tag("EUR")
-                }
-                Picker(String(localized: "v1.budget.cycle"), selection: $repeating) {
-                    Text(String(localized: "v1.cycle.repeating")).tag(true)
-                    Text(String(localized: "v1.cycle.oneShot")).tag(false)
-                }
+        let calendar = Calendar.current
+        let start = calendar.dateInterval(of: .month, for: Date())?.start ?? Date()
+        let range = calendar.range(of: .day, in: .month, for: start) ?? 1..<29
+        let leading = (calendar.component(.weekday, from: start) - calendar.firstWeekday + 7) % 7
+        LazyVGrid(columns: Array(repeating: GridItem(.fixed(6), spacing: 4), count: 7), spacing: 4) {
+            ForEach(0..<leading, id: \.self) { _ in Color.clear.frame(width: 6, height: 6) }
+            ForEach(Array(range), id: \.self) { day in
+                let date = calendar.date(byAdding: .day, value: day - 1, to: start) ?? start
+                let hasRecords = BudgetPresentation.expenses(card, in: ledger).contains { calendar.isDate($0.occurredAt, inSameDayAs: date) }
+                RoundedRectangle(cornerRadius: 1.5).fill(hasRecords ? PaperTheme.accent : .white.opacity(0.12)).frame(width: 6, height: 6)
+                    .overlay { if calendar.isDateInToday(date) { RoundedRectangle(cornerRadius: 1.5).stroke(.white, lineWidth: 1) } }
             }
-            .navigationTitle(String(localized: "v1.budget.create"))
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button(String(localized: "action.cancel")) { dismiss() }
-                }
-                ToolbarItem(placement: .confirmationAction) {
-                    Button(String(localized: "action.create")) {
-                        workspace.createBudget(
-                            name: name,
-                            amountText: amount,
-                            currencyCode: currency,
-                            cycleType: repeating ? .repeating : .oneShot
-                        )
-                        if workspace.banner == .createdBudget {
-                            dismiss()
-                        }
-                    }
-                    .disabled(name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
-                }
-            }
-        }
+        }.frame(width: 66).accessibilityHidden(true)
     }
 }

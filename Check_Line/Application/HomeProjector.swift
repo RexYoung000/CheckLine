@@ -8,6 +8,9 @@ nonisolated struct HomeBudgetCardModel: Equatable, Identifiable, Sendable {
     var currencyCode: String
     var snapshot: PeriodBudgetSnapshot
     var periodState: PeriodState
+    var periodStart: Date
+    var periodEnd: Date?
+    var cycleProgress: Double?
 }
 
 nonisolated enum HomeProcessingKind: Equatable, Sendable {
@@ -24,7 +27,7 @@ nonisolated struct HomeProcessingItem: Equatable, Identifiable, Sendable {
 }
 
 nonisolated enum HomeProjector {
-    static func cards(in ledger: Ledger) -> [HomeBudgetCardModel] {
+    static func cards(in ledger: Ledger, now: Date = Date()) -> [HomeBudgetCardModel] {
         ledger.budgets.values
             .filter { $0.state == .active || $0.state == .pendingSettlement }
             .sorted { lhs, rhs in
@@ -45,9 +48,22 @@ nonisolated enum HomeProjector {
                         period: period,
                         expenses: Array(ledger.expenses.values)
                     ),
-                    periodState: period.state
+                    periodState: period.state,
+                    periodStart: period.startDate,
+                    periodEnd: period.endDate,
+                    cycleProgress: cycleProgress(period: period, now: now)
                 )
             }
+    }
+
+    static func cycleProgress(period: BudgetPeriod, now: Date) -> Double? {
+        if period.state == .pendingSettlement {
+            return 1
+        }
+        guard let endDate = period.endDate else { return nil }
+        let duration = endDate.timeIntervalSince(period.startDate)
+        guard duration > 0 else { return nil }
+        return min(max(now.timeIntervalSince(period.startDate) / duration, 0), 1)
     }
 
     static func processingItems(in ledger: Ledger) -> [HomeProcessingItem] {
@@ -118,4 +134,36 @@ nonisolated enum WorkspaceBanner: Equatable, Sendable {
     case needsFullscreen
     case needsClarification(String)
     case failed
+
+    var localizedText: String {
+        switch self {
+        case .recorded:
+            String(localized: "v1.banner.recorded")
+        case .undone:
+            String(localized: "v1.banner.undone")
+        case .createdBudget:
+            String(localized: "v1.banner.created")
+        case .queryRemaining(let amount, let currency):
+            String(format: String(localized: "v1.banner.query"), locale: .current, MoneyFormat.string(amount, currencyCode: currency))
+        case .refusedRecommend:
+            String(localized: "v1.banner.refuseRecommend")
+        case .refusedOutOfScope:
+            String(localized: "v1.banner.refuseScope")
+        case .needsAmount:
+            String(localized: "v1.banner.needsAmount")
+        case .needsFullscreen:
+            String(localized: "v1.banner.needsFullscreen")
+        case .needsClarification:
+            String(localized: "v1.banner.needsClarification")
+        case .failed:
+            String(localized: "v1.banner.failed")
+        }
+    }
+}
+
+enum ComposerIntent: String, CaseIterable, Identifiable {
+    case budget
+    case record
+
+    var id: String { rawValue }
 }

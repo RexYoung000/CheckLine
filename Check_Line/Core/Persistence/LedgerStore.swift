@@ -79,7 +79,8 @@ enum LedgerStore {
                 referenceURL: record.referenceURL,
                 state: state,
                 createdAt: record.createdAt,
-                completedAt: record.completedAt
+                completedAt: record.completedAt,
+                symbolName: record.symbolName
             )
         }
 
@@ -324,6 +325,7 @@ enum LedgerStore {
             record.targetAmount = wish.targetAmount
             record.currencyCode = wish.currencyCode
             record.referenceURL = wish.referenceURL
+            record.symbolName = wish.symbolName
             record.completedAt = wish.completedAt
             context.insert(record)
             wishes[wish.id] = record

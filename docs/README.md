@@ -33,7 +33,7 @@
 
 | 文件或目录 | 作用 |
 |------------|------|
-| `design/DESIGN.md` | 设计原则、已确认交互契约（3.1）和目标视口清单（3.1.6）；2026-08-01 旧样机只作历史参考 |
+| `design/DESIGN.md` | 设计原则、已确认交互契约（3.1，含四 Tab）、本轮 App 手感 Token（3.1.5）和目标视口清单（3.1.6）；2026-08-01 旧样机只作历史参考 |
 | `design/explorations/` | 视觉探索，不直接作为实现要求 |
 | `design/prototype/` | 历史流程/布局参考，不代表当前产品行为 |
 
@@ -49,12 +49,12 @@
 ## 当前实现状态
 
 - 正式工程：根目录 `Check_Line.xcodeproj`，iOS App + Swift Testing Target。
-- 当前 App 仍运行 2026-08-01 的内存 SwiftUI 体验样机，只作历史视觉/工程参考；**启动页不是新 V1 需求**。
-- 样机的四 Tab、多预算重复扣减、旧结算和悬浮文本/语音入口已经被新产品定义取代，见 `DESIGN.md` 3.1 与 3.4。
-- 正式 SwiftData Schema V1 与本地 `ModelContainer` 已接入 App（无 CloudKit）；**启动页仍是旧样机**，不读写新账本。
+- 当前启动页是 `CheckLineRootView`（四 Tab + 本地账本）。`Features/Prototype` 只作历史视觉参考。
+- 旧样机的多预算重复扣减、旧结算、悬浮文本/语音已被新产品定义取代；分析日历按 2026-09-22 新规则实装，四 Tab 职责以 `DESIGN.md` 3.1.2 为准。
+- 正式 SwiftData Schema V1 与本地 `ModelContainer` 已接入 App（无 CloudKit）。
 - `BudgetEngine`、`LedgerStore` 及 M1 领域服务单测是新 V1 验收入口；`PrototypeDeletionTests` 只证明旧样机行为。
 - 当前构建仍无网络、无 iCloud 同步、无真实 AI、无被动来源、无系统权限。
-- **M2 行动门禁已落地。** 下一步是 LLM/语音/图片或 M4 面板，不要改旧样机外观。
+- **M4 本轮原生材质同步已实现，体验验收未关闭。** 已接预算、心愿、分析与共享面板；83 项测试通过，渲染检查与未验证交互、未交付功能见 ROADMAP。不要改旧样机外观。
 
 ## 维护规则
 

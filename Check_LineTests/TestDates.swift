@@ -1,4 +1,5 @@
 import Foundation
+@testable import CheckLine
 
 enum TestDates {
     static var calendar: Calendar {

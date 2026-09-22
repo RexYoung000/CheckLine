@@ -35,7 +35,7 @@ CheckLine 是一个 iOS 17+ 的 Agent 驱动个人预算循环工具。用户自
 - 测试：`Check_LineTests` Swift Testing Target
 - 远端：`https://github.com/RexYoung000/CheckLine.git`
 
-当前 SwiftUI 启动页和部分测试来自上一版“多预算重复扣减、心愿后置”的内存样机。它们可以帮助追溯视觉和工程过程，但不代表 2026-08-10 后的新 V1 规则。
+当前启动页为 `CheckLineRootView`，连接本地 SwiftData 账本。`Features/Prototype` 和 `PrototypeDeletionTests` 保留历史，不代表当前 V1 规则。
 
 已经完成：
 
@@ -43,17 +43,17 @@ CheckLine 是一个 iOS 17+ 的 Agent 驱动个人预算循环工具。用户自
 - 目标数据模型、金额规则、权限和隐私边界；
 - `BudgetEngine` 基础 Decimal 计算与旧样机测试基线；
 - 首页“预算状态 + 常驻 Agent + 底部任务面板”的框架决定；
-- 首页多卡层级、无四 Tab 导航、Agent 面板三态与结算/心愿确认页字段契约（`docs/design/DESIGN.md` 第 3.1 节）；
+- 液面卡夹首页、四 Tab 导航（首页 / 预算 / 心愿 / 分析）、Agent 面板三态与结算/心愿确认页字段契约（`docs/design/DESIGN.md` 第 3.1 节）；
 - 唯一心愿钱包基准币、确认时换算与汇率来源（`PRODUCT.md` 第 6.5 节）；
 - 目标视口与真实内容核对清单（`docs/design/DESIGN.md` 第 3.1.6 节；真实页面验收属于 M4）；
 - 旧 SwiftUI 样机已标明为历史参考，不再作为新 V1 需求；
 - M1 确定性账本：领域引擎、Swift Testing、SwiftData Schema V1，以及 App 本地 `ModelContainer`（无 CloudKit）；
 - M2 行动层：`AgentSession`、`ConfirmationGate`、理解管线、默认关闭的 `CloudLLMProvider`；
-- M4 功能骨架：新首页与文字 Agent 面板写入本地账本；视觉、结算全屏和语音/图片尚未验收。
+- M4：液面首页、预算管理与详情、消费图表与日历、预设符号心愿、同币种真实购买兑现及保留完成页；设置与共享文字 Agent 使用统一哑光表面。
 
 尚未完成：
 
-- 结算/心愿全屏确认、真实 LLM、语音/图片 Capture 与被动数据来源；
+- 结算全屏、跨币种兑现汇率输入、真实 LLM、语音/图片 Capture 与被动数据来源；
 - 真实页面视觉验收与公开发布准备。
 
 ## V1 范围

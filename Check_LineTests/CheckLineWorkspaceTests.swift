@@ -47,12 +47,46 @@ struct HomeProjectorTests {
         #expect(items.contains { if case .certainOverrun = $0.kind { return true }; return false } == false)
     }
 
+    @Test("周期进度按时间计算，无截止日期则不画进度")
+    func cycleProgressUsesPeriodDates() throws {
+        let now = TestDates.day(2026, 1, 16)
+        var ledger = Ledger.blank(walletCurrencyCode: "CNY", now: now)
+        let created = try ledger.insertBudgetCard(
+            name: "餐饮",
+            amount: 1_000,
+            currencyCode: "CNY",
+            cycleType: .repeating,
+            recurrence: .monthly,
+            startDate: TestDates.day(2026, 1, 1),
+            endDate: TestDates.day(2026, 1, 31),
+            now: now
+        )
+        let progress = HomeProjector.cycleProgress(period: created.1, now: now)
+        #expect(progress != nil)
+        #expect(abs((progress ?? 0) - 0.5) < 0.05)
+
+        let openEnded = try ledger.insertBudgetCard(
+            name: "旅行",
+            amount: 5_000,
+            currencyCode: "CNY",
+            cycleType: .oneShot,
+            recurrence: nil,
+            startDate: TestDates.day(2026, 1, 1),
+            endDate: nil,
+            now: now
+        )
+        #expect(HomeProjector.cycleProgress(period: openEnded.1, now: now) == nil)
+    }
+
     @Test("金额格式化为货币字符串")
     func moneyFormatUsesCurrencyStyle() {
         let text = MoneyFormat.string(35, currencyCode: "CNY")
         #expect(text.contains("35"))
         #expect(MoneyFormat.parseAmount("35.50") == Decimal(string: "35.50", locale: Locale(identifier: "en_US_POSIX")))
         #expect(MoneyFormat.parseAmount("abc") == nil)
+        let large = Decimal(string: "12345678.90", locale: Locale(identifier: "en_US_POSIX")) ?? 0
+        let largeText = MoneyFormat.string(large, currencyCode: "CNY")
+        #expect(largeText.contains("12,345,678.9") || largeText.contains("12345678.9"))
     }
 }
 
@@ -73,6 +107,28 @@ struct CheckLineWorkspaceTests {
         let reloaded = try LedgerStore.load(from: context, now: now)
         #expect(reloaded.budgets.count == 1)
         #expect(HomeProjector.cards(in: reloaded)[0].snapshot.availableToSpend == 1_000)
+    }
+
+    @Test("表单记一笔走结构化服务，金额用 Decimal")
+    func formRecordPersists() throws {
+        let now = TestDates.day(2026, 1, 5)
+        let container = try CheckLinePersistence.makeContainer(inMemory: true)
+        let context = ModelContext(container)
+        let workspace = CheckLineWorkspace(context: context, now: now, calendar: TestDates.calendar)
+        workspace.createBudget(name: "餐饮", amountText: "1000", currencyCode: "CNY", cycleType: .repeating, now: now)
+        let attributionID = workspace.attributionChoices.first { $0.periodID != nil }?.id ?? "unbudgeted"
+        workspace.recordExpense(
+            amountText: "35.5",
+            merchant: "星巴克",
+            note: "",
+            attributionID: attributionID,
+            occurredAt: now,
+            now: now
+        )
+        #expect(workspace.banner == .recorded)
+        #expect(workspace.cards[0].snapshot.confirmedSpent == DecimalMath.parse("35.5"))
+        #expect(workspace.cards[0].snapshot.availableToSpend == DecimalMath.parse("964.5"))
+        #expect(workspace.showComposer == false)
     }
 
     @Test("离线记一笔确认归属后写入，并可撤销")
