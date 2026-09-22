@@ -236,7 +236,9 @@ CheckLine 自主定义字体、字号、字重、行高和数字风格。系统�
 | 分析 | 选择预算卡，柱图与金额摘要，日期热力图，点日期查看该日记录 |
 | 个人图标 | 设置、当前来源状态、设备优先隐私说明 |
 
-2026-09-22 纠偏：底部必须是真正的系统 `TabView` / Tab 栏，不能隐藏它再用 `Toolbar + Picker` 或自绘胶囊替代。iOS 27 使用 `TabRole.prominent` 将右侧 Agent 头像与首页 / 预算 / 心愿 / 分析四入口分开；Agent 仍呼出原会话面板，不切到空白页面。更早系统使用系统标准 Tab 栏，Agent 在同一组内，不能冒用 search 语义制造分组。iPad 仅将导航容器设为紧凑尺寸以保留底部位置，页面恢复实际尺寸类别，继续使用双列等适配布局。图标具备本地化辅助名称与选中状态；各根页共享原生栏，详情隐藏。玻璃、选中、按压与拖动均由系统 Tab 控件负责，材质不另加底色、描边或选中层。
+2026-09-22 原生对照后确认：用户选择「原生玻璃选中层」，以静止时也可见的透光、高光边缘和厚度为目标，替代系统 Tab 默认的深色选中胶囊。保留左侧首页 / 预算 / 心愿 / 分析与右侧 Agent、石墨底色和薰衣草选中色。iOS 26+ 选中胶囊直接使用 `glassEffect(.clear.interactive())`，`GlassEffectContainer` 隔离材质采样，图标置于玻璃之上保持清晰；不手画玻璃描边或折射。承托底板不是另一层玻璃，避免玻璃采样玻璃。低版本使用系统 material。
+
+该方案是「应用组合的导航 + 系统原生玻璃材质」，不是系统 Tab 栏默认外观。`TabView` 继续保存各页导航栈，隐藏默认栏；自有导航负责点选与横向拖动，拖动只预览，松手后提交，移出有效区域 / 取消则恢复。选中层立即反馈，内容仍待卡夹合拢后切换。各入口具有本地化名称和选中语义；Agent 直接打开原会话面板。根页共享布局，详情不显示该栏；iPad 限制栏宽并居中，内容保留双列。减少动态效果取消玻璃位移和交互弹动。
 
 2026-09-22 卡夹空间与过渡：
 
@@ -307,11 +309,11 @@ CheckLine 自主定义字体、字号、字重、行高和数字风格。系统�
 | 减少动态效果 | 静态液位，金额与动作完整可用；不依赖陀螺仪 |
 | 详情 | 同一面板表面，固定导航标题/关闭，正文滚动；尊重系统返回和 Sheet 手势 |
 
-原生材料的实际系统表现以项目 SDK 与运行验证为准。通用玻璃按钮沿用 iOS 26+ `glassEffect` 及低版本 material 回退；底部导航直接使用系统 Tab 栏，材质与选中态均交由系统渲染，不额外叠加标记或外观覆盖。
+原生材料的实际系统表现以项目 SDK 与运行验证为准。通用玻璃按钮沿用 iOS 26+ `glassEffect` 及低版本 material 回退。原生最小对照确认默认 `TabView` 在此深色背景下使用深色选中胶囊；用户已明确选择系统 `glassEffect(.clear.interactive())` 的独立玻璃选中层。不得再把「用了 TabView」当作这层视觉效果已满足的证据。
 
-底栏实现纠正：系统分段选择器不等同于系统 Tab 栏，上一版 `Toolbar + Picker` 未达到用户要求，撤回该替代方案。使用 Tab 栏自身的液态玻璃，不叠加其他控件来模拟。保留四入口顺序、Agent 面板、卡夹过渡和详情隐藏规则；运行检查须区分原生渲染与实际触控验证。
+保留四入口顺序、Agent 面板、卡夹过渡和详情隐藏规则；材质、静止渲染、程序切换与真实触控必须分别核验。
 
-官方参考（2026-09-22）：[TabView](https://developer.apple.com/documentation/swiftui/tabview)、[iOS 27 独立强调 Tab](https://developer.apple.com/documentation/swiftui/tabrole/prominent)、[采用系统 Liquid Glass 控件](https://developer.apple.com/documentation/technologyoverviews/adopting-liquid-glass)、[glassEffect](https://developer.apple.com/documentation/swiftui/view/glasseffect(_:in:))、[TimelineView](https://developer.apple.com/documentation/swiftui/timelineview)。具体手感必须由原生运行证据验证。
+官方参考（2026-09-22）：[TabView](https://developer.apple.com/documentation/swiftui/tabview)、[原生玻璃材质与交互](https://developer.apple.com/videos/play/wwdc2025/323/)、[采用系统 Liquid Glass 控件](https://developer.apple.com/documentation/technologyoverviews/adopting-liquid-glass)、[glassEffect](https://developer.apple.com/documentation/swiftui/view/glasseffect(_:in:))、[TimelineView](https://developer.apple.com/documentation/swiftui/timelineview)。具体手感必须由原生运行证据验证。
 
 本轮原生实现边界：预算与分析显示当前选中周期的数据，切换月份不代表已支持全部历史周期；已有待确认明细目前可查看，完整处理流程另行实施。心愿已接同币种购买门禁与完成页，跨币种汇率输入和结算 UI 尚未交付。Agent 只提供已接入的本地文字能力。大字体下摘要纵向排列，表单标签和值分行，热力日期选择改用系统控件；减少动态效果停止液面相位与位移。已完成的渲染检查及尚未完成的真实操作检查见 `ROADMAP.md` 当前切片，不能把此处的目标核对清单整体标为通过。
 

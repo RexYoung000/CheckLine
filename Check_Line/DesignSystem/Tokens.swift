@@ -14,6 +14,7 @@ enum PaperTheme {
     static let lineTrack = Color.white.opacity(0.10)
     static let lineInk = accent
     static let chipIdle = Color.white.opacity(0.07)
+    static let navigationBase = Color(red: 0.19, green: 0.21, blue: 0.23)
     static let shadow = Color.black.opacity(0.18)
 
     static var canvasUIColor: UIColor {

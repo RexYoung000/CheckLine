@@ -121,12 +121,112 @@ struct WalletPageHeader: View {
     }
 }
 
+struct WalletGlassNavigation: View {
+    @Bindable var workspace: CheckLineWorkspace
+    @Environment(\.shellChrome) private var chrome
+    @Environment(\.walletReduceMotion) private var reduceMotion
+    @Environment(\.layoutDirection) private var layoutDirection
+    @GestureState private var dragLocation: CGPoint?
+    private let tabs: [CheckLineAppTab] = [.home, .budgets, .wishes, .insights]
+
+    var body: some View {
+        HStack(spacing: 12) {
+            GeometryReader { geometry in
+                let preview = dragLocation.flatMap { WalletTabHitTarget.tab(at: $0, size: geometry.size, rightToLeft: layoutDirection == .rightToLeft) }
+                let selected = preview ?? chrome?.selectedTab ?? .home
+                let column = tabs.firstIndex(of: selected) ?? 0
+                let visualColumn = layoutDirection == .rightToLeft ? tabs.count - 1 - column : column
+                let slotWidth = (geometry.size.width - 10) / CGFloat(tabs.count)
+                HStack(spacing: 0) {
+                    ForEach(tabs) { tab in
+                        Button { select(tab) } label: {
+                            selectionLabel(tab, selected: selected == tab)
+                        }
+                        .accessibilityLabel(tab.title)
+                        .accessibilityAddTraits(chrome?.selectedTab == tab ? .isSelected : [])
+                        .accessibilityIdentifier("wallet.tab.\(tab.rawValue)")
+                    }
+                }
+                .buttonStyle(.plain)
+                .padding(5)
+                .background {
+                    ZStack {
+                        Capsule().fill(PaperTheme.navigationBase)
+                        selectionGlass
+                            .frame(width: slotWidth, height: 50)
+                            .position(x: 5 + slotWidth * (CGFloat(visualColumn) + 0.5), y: 30)
+                            // Finish before the shortest page handoff replaces its root.
+                            .animation(reduceMotion ? nil : .easeOut(duration: 0.1), value: selected)
+                    }
+                    .allowsHitTesting(false)
+                }
+                .highPriorityGesture(
+                    DragGesture(minimumDistance: 10)
+                        .updating($dragLocation) { value, location, _ in
+                            location = abs(value.translation.width) > abs(value.translation.height) ? value.location : nil
+                        }
+                        .onEnded { value in
+                            guard abs(value.translation.width) > abs(value.translation.height),
+                                  let tab = WalletTabHitTarget.tab(at: value.location, size: geometry.size, rightToLeft: layoutDirection == .rightToLeft) else { return }
+                            select(tab)
+                        }
+                )
+                .accessibilityElement(children: .contain)
+            }
+            .frame(height: 60)
+
+            Button { workspace.showAgent = true } label: {
+                WalletAgentAvatar().scaleEffect(32.0 / 44).frame(width: 60, height: 60)
+                    .paperGlass(.circle, interactive: !reduceMotion)
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel(String(localized: "wallet.agent.open"))
+            .accessibilityHint(String(localized: "wallet.agent.resume.hint"))
+            .accessibilityIdentifier("wallet.agent.avatar")
+        }
+        .environment(\.colorScheme, .dark)
+    }
+
+    private func selectionLabel(_ tab: CheckLineAppTab, selected: Bool) -> some View {
+        Image(systemName: tab.systemImage)
+            .symbolVariant(.fill)
+            .font(.system(size: 24, weight: .regular))
+            .foregroundStyle(selected ? PaperTheme.accent : PaperTheme.ink)
+            .frame(maxWidth: .infinity).frame(height: 50)
+            .contentShape(Capsule())
+    }
+
+    @ViewBuilder private var selectionGlass: some View {
+        if #available(iOS 26.0, *) {
+            // Keep the symbols outside the glass sampling container so they stay crisp.
+            GlassEffectContainer(spacing: 0) {
+                Color.clear.glassEffect(.clear.interactive(!reduceMotion), in: .capsule)
+            }
+        } else {
+            Capsule().fill(.regularMaterial)
+        }
+    }
+
+    private func select(_ tab: CheckLineAppTab) {
+        guard chrome?.selectedTab != tab else { return }
+        PaperHaptics.selection()
+        chrome?.selectedTab = tab
+    }
+}
+
+enum WalletTabHitTarget {
+    static func tab(at point: CGPoint, size: CGSize, rightToLeft: Bool = false) -> CheckLineAppTab? {
+        let inset: CGFloat = 5
+        let width = size.width - inset * 2
+        guard width > 0, point.x >= inset, point.x < size.width - inset,
+              point.y >= inset, point.y <= size.height - inset else { return nil }
+        let tabs: [CheckLineAppTab] = [.home, .budgets, .wishes, .insights]
+        let column = min(tabs.count - 1, Int((point.x - inset) / (width / CGFloat(tabs.count))))
+        return tabs[rightToLeft ? tabs.count - 1 - column : column]
+    }
+}
+
 struct WalletAgentAvatar: View {
-    @MainActor static let tabImage: UIImage = {
-        let renderer = ImageRenderer(content: WalletAgentAvatar().scaleEffect(32.0 / 44).frame(width: 32, height: 32))
-        renderer.scale = 3
-        return (renderer.uiImage ?? UIImage(systemName: "face.smiling") ?? UIImage()).withRenderingMode(.alwaysOriginal)
-    }()
 
     var body: some View {
         ZStack {

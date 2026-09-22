@@ -46,3 +46,13 @@ Device Hub 的自动交互连接在本轮仍超时，未验证真实点按、手
 - Xcode 27 构建通过；4 项 `WalletNavigationTests` 专项回归通过，结果 `/tmp/checkline-native-tab-tests.xcresult`。原生截图覆盖 iPhone 18 Pro / iOS 27 四个根页、375 pt iPhone SE / iOS 26.5 英文首页、iPad mini / iOS 27 英文预算页；入口与头像完整可见。
 - 自动序列改为经过正式 Tab 选择 Binding，检查合夹 / 开夹、中途改选与返回，以及 Agent 呼出 / 关闭。录屏抽样中未见底栏丢失，关闭 Agent 后保留首页与原选中项。此序列仍是程序请求导航，未模拟真实触摸 Tab。
 - 本轮材料：`tmp/native-ui-2026-09-22/native-tab-bar/`。Device Hub 自动触控连接再次超时；真实点击、按压、拖动选中、VoiceOver、系统玻璃偏好与真机表现均未验收。不得将原生组件、截图或状态测试等同于这些验收结果。
+
+## 用户确认的独立玻璃选中层
+
+- 默认 Tab 栏虽为原生，静止选中态仍未达到用户要求。在同一 iOS 27 模拟器用无项目样式的最小 TabView 做深 / 浅色对照，默认选中项仍为实色胶囊；直接使用 `glassEffect(.clear.interactive())` 的对照呈现可见高光与透光边缘。用户明确选择后者。对照材料位于 `tmp/native-ui-2026-09-22/glass-selection-comparison/`。
+- `WalletGlassNavigation` 保留石墨承托底、四入口与独立 Agent；选中层使用系统玻璃，使用单一玻璃层做连续位置过渡，`GlassEffectContainer` 隔离图标与背景采样。没有用描边图片伪造玻璃。该导航由应用组合，已撤下系统 Tab 默认栏；TabView 只继续保留页面与导航栈。旧 `native-tab-bar/` 不能再当成当前视觉验收图。
+- 点选立即更新选中项，卡夹协调器继续决定内容何时切换；横向拖动预览目标，松手提交，越界 / 纵向离开 / 系统取消恢复原选择。减少动态效果取消选择位移与材质交互弹动；低版本用系统 material。Agent 仍打开原会话。
+- Xcode 27 构建与 5 项导航测试通过，结果 `/tmp/checkline-glass-selection-final-tests.xcresult`。新增栏宽命中、横向布局镜像、越界与空容器检查；这些是逻辑测试，不代表手指滑动已测。
+- iPhone 18 Pro / iOS 27 预算页、375 pt iPhone SE / iOS 26.5 英文首页、iPad mini / iOS 27 英文预算页已检查：静止选中项均显示玻璃边缘，入口完整。iPad 栏居中且预算双列保留。材料位于 `tmp/native-ui-2026-09-22/glass-selection-final/`。
+- 逐帧检查发现最初的玻璃匹配方案会跳到新入口，已改为单一材质层做短位移；将图标放在材质容器外，修正过渡时被玻璃自身采样造成的模糊。正常速度录屏覆盖往返、快速改选与 Agent 开关；60 fps 抽帧可见选中层的中间位置。减少动态效果预览使用同一正式分支，取消位移并保留切页淡入；这是调试参数验证，未改系统辅助功能设置。
+- 真实按压、滑动、VoiceOver 和真机材质仍待验证，不能以程序渲染代替；整体业务未交付项沿用本文上方记录。

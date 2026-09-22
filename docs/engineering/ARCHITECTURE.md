@@ -11,7 +11,7 @@
 | 工程 | `Check_Line.xcodeproj` |
 | Target / Scheme | `Check_Line` |
 | 平台 | iPhone / iPad，最低 iOS 17.0 |
-| 当前 UI | 2026-09-22 液面卡夹设计：恢复 TabView 自身的系统 Tab 栏；iOS 27 使用 prominent 角色分开 Agent 头像，更早系统采用同组标准 Tab 栏。Agent 打开原会话面板，页面选择仍由卡夹导航协调器处理；不使用 Toolbar / Picker 或自绘栏冒充 Tab 栏。验收状态见 ROADMAP |
+| 当前 UI | 2026-09-22 原生材质对照后确认：TabView 保存四页导航栈并隐藏默认栏；WalletGlassNavigation 组合导航，选中层使用系统 glassEffect(.clear.interactive())。点选 / 拖动提交通过卡夹协调器，Agent 直接打开原会话面板。此实现不声称为系统 Tab 栏默认外观。验收状态见 ROADMAP |
 | 正式数据层 | 首页与 Agent 经 `CheckLineWorkspace` 读写本地 `LedgerStore`（无 CloudKit） |
 | Test Target | `Check_LineTests` 覆盖领域引擎、理解管线、`AgentSession` 与首页工作区持久化 |
 | 网络 / 后端 / AI | `CloudLLMProvider` 已实现且默认关闭；App 入口不启用、启动无网络请求 |

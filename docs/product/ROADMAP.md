@@ -43,7 +43,7 @@
 - 层级与空间过渡修正后检查原生正常 / 减少动态效果预览录屏：包含合夹、内页切换、开夹返回、中途返回与改选。录屏通过 Debug 选择序列触发正式导航协调器，不代表触控命中或滚动手势已验证；布局检查同时修正票据裁切与首页状态栏底色。
 - 原生 UI 控制先前受 Mac 锁屏阻止；解锁后 DeviceHub 控制仍超时，未完成真实点击、拖拽、键盘遮挡、VoiceOver 和真机检查。截图与领域测试不能替代这些证据。iOS 17 运行时及旧磁盘库迁移也未验证。
 - 试用前问题和本轮证据记录在 [交互检查](../design/2026-09-22-interaction-audit.md)，不把修复完成与触控验收混写。
-- 底栏玻璃再次纠偏：用户否决 `Toolbar + Picker` 替代方案，恢复真正的系统 `TabView` 底栏。iOS 27 的 `TabRole.prominent` 分离右侧 Agent，低版本为原生五入口同组；iPad 保留底部导航与双列内容。重新构建与 4 项导航回归通过（`/tmp/checkline-native-tab-tests.xcresult`）；iPhone / 375 pt 小屏 / iPad 渲染及经过正式选择 Binding 的自动切页、Agent 开关序列已检查。真实点击、按压、拖动和 VoiceOver 仍受触控连接阻塞，未关闭视觉验收。
+- 原生材质对照后，用户确认采用独立玻璃选中层：WalletGlassNavigation 组合导航，iOS 26+ 使用 glassEffect(.clear.interactive())，TabView 只保存页面栈并隐藏默认栏。承托底色、四入口、Agent 与卡夹逻辑保留；横向拖动预览后松手提交，越界取消。构建与 5 项导航回归通过（`/tmp/checkline-glass-selection-final-tests.xcresult`），iPhone / 375 pt 小屏 / iPad 静止渲染、正常与减少动态效果预览序列已检查；选中层位移做了逐帧复查。实际触控和 VoiceOver 仍未验收。最新材质与默认 Tab 栏区别见交互检查末节。
 
 仍未交付的业务能力：完整预算编辑/删除、已有待确认记录的批量处理、检查式结算 UI、跨币种兑现汇率输入、云端 Agent、语音/图片识别与被动来源。已有页面按真实能力显示状态，不提供伪可用操作。
 

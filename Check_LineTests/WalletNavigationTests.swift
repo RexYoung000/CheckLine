@@ -71,4 +71,19 @@ struct WalletNavigationTests {
         #expect(state.stageOpacity == 1)
         #expect(!state.isTransitioning)
     }
+
+    @Test("导航拖动按实际栏宽定位，移出或窄容器不误切页")
+    func dragTargetsAndCancellation() {
+        let size = CGSize(width: 290, height: 60)
+        #expect(WalletTabHitTarget.tab(at: CGPoint(x: 40, y: 30), size: size) == .home)
+        #expect(WalletTabHitTarget.tab(at: CGPoint(x: 110, y: 30), size: size) == .budgets)
+        #expect(WalletTabHitTarget.tab(at: CGPoint(x: 180, y: 30), size: size) == .wishes)
+        #expect(WalletTabHitTarget.tab(at: CGPoint(x: 250, y: 30), size: size) == .insights)
+        #expect(WalletTabHitTarget.tab(at: CGPoint(x: 40, y: 30), size: size, rightToLeft: true) == .insights)
+        #expect(WalletTabHitTarget.tab(at: CGPoint(x: 110, y: 30), size: size, rightToLeft: true) == .wishes)
+        for point in [CGPoint(x: -1, y: 30), CGPoint(x: 291, y: 30), CGPoint(x: 140, y: -1), CGPoint(x: 140, y: 61)] {
+            #expect(WalletTabHitTarget.tab(at: point, size: size) == nil)
+        }
+        #expect(WalletTabHitTarget.tab(at: .zero, size: .zero) == nil)
+    }
 }

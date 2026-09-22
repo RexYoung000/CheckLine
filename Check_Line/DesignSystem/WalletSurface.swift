@@ -84,12 +84,13 @@ struct WalletRootPage<Content: View>: View {
                         }
                         .padding(.horizontal, 16).walletSurface(radius: 22)
                     }
+                    WalletGlassNavigation(workspace: workspace)
                 }
                 .frame(maxWidth: 560)
                 .padding(.horizontal, 18).padding(.top, 8).padding(.bottom, 6)
                 .frame(maxWidth: .infinity)
             }
-            .toolbar(.visible, for: .tabBar)
+            .toolbar(.hidden, for: .tabBar)
             .toolbar(.hidden, for: .bottomBar)
             .onChange(of: chrome?.presentedTab) { _, tab in
                 if lightHeader && tab == .home { reader.scrollTo("wallet-page-top", anchor: .top) }
