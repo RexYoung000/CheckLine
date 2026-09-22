@@ -15,6 +15,10 @@ enum DesignPreviewData {
         isEnabled && ProcessInfo.processInfo.arguments.contains("-design-reduce-motion")
     }
 
+    static var runsMotionTour: Bool {
+        isEnabled && ProcessInfo.processInfo.arguments.contains("-design-motion-tour")
+    }
+
     static var screen: String {
         guard isEnabled, let index = ProcessInfo.processInfo.arguments.firstIndex(of: "-design-screen"), ProcessInfo.processInfo.arguments.indices.contains(index + 1) else { return "home" }
         return ProcessInfo.processInfo.arguments[index + 1]

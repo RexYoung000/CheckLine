@@ -2,14 +2,16 @@ import SwiftUI
 
 /// The dark front of the wallet rises at both edges and overlaps the budget card.
 struct WalletCardholderSurface: View {
+    var opening: CGFloat = 1
     var body: some View {
-        WalletPocketShape()
+        WalletPocketShape(opening: opening)
             .fill(LinearGradient(colors: [Color(red: 0.105, green: 0.12, blue: 0.135), PaperTheme.canvas], startPoint: .topLeading, endPoint: .bottomTrailing))
             .overlay(alignment: .top) {
                 WalletPocketRim()
                     .stroke(LinearGradient(colors: [.white.opacity(0.17), .white.opacity(0.025), .white.opacity(0.11)], startPoint: .leading, endPoint: .trailing), lineWidth: 0.8)
-                    .frame(height: 24)
+                    .frame(height: 24 * opening)
             }
+            .overlay { WalletGrain().opacity(0.24).clipShape(WalletPocketShape(opening: opening)) }
             .shadow(color: .black.opacity(0.16), radius: 8, y: -4)
             .accessibilityHidden(true)
     }
@@ -28,8 +30,13 @@ private struct WalletPocketRim: Shape {
 }
 
 private struct WalletPocketShape: Shape {
+    var opening: CGFloat = 1
+    var animatableData: CGFloat {
+        get { opening }
+        set { opening = newValue }
+    }
     func path(in rect: CGRect) -> Path {
-        var path = WalletPocketRim().path(in: CGRect(x: 0, y: 0, width: rect.width, height: min(24, rect.height)))
+        var path = WalletPocketRim().path(in: CGRect(x: 0, y: 0, width: rect.width, height: min(24 * opening, rect.height)))
         path.addLine(to: CGPoint(x: rect.width, y: rect.height))
         path.addLine(to: CGPoint(x: 0, y: rect.height))
         path.closeSubpath()
@@ -43,6 +50,8 @@ struct WalletPageHeader: View {
     var light = false
     var onAdd: (() -> Void)?
     @Environment(\.shellChrome) private var chrome
+
+    private var visibility: Double { light ? 1 - Double(chrome?.pocketClosure ?? 0) : chrome?.interiorReveal ?? 1 }
 
     var body: some View {
         HStack(spacing: 10) {
@@ -98,8 +107,17 @@ struct WalletPageHeader: View {
         .font(.system(size: 20, weight: .regular))
         .buttonStyle(.plain)
         .foregroundStyle(light ? PaperTheme.paperInk : PaperTheme.ink)
+        .opacity(visibility)
+        .offset(y: light ? -12 * (1 - visibility) : 6 * (1 - visibility))
         .padding(.horizontal, 16).padding(.vertical, 5)
-        .background(light ? PaperTheme.paper : PaperTheme.canvas)
+        .background {
+            if light {
+                PaperTheme.paper.overlay { PaperTheme.canvas.opacity(Double(chrome?.pocketClosure ?? 0)) }
+                    .ignoresSafeArea(edges: .top)
+            } else {
+                Color.clear
+            }
+        }
     }
 }
 
@@ -126,7 +144,7 @@ struct WalletNavigationBar: View {
                     Button {
                         guard chrome?.selectedTab != tab else { return }
                         PaperHaptics.selection()
-                        withAnimation(reduceMotion ? nil : .snappy(duration: 0.25)) { chrome?.selectedTab = tab }
+                        chrome?.selectedTab = tab
                     } label: {
                         Image(systemName: tab.systemImage)
                             .symbolVariant(selected ? .fill : .none)
@@ -147,6 +165,7 @@ struct WalletNavigationBar: View {
                 }
             }
             .padding(5)
+            .animation(reduceMotion ? nil : .snappy(duration: 0.25), value: chrome?.selectedTab)
             .paperGlass(.capsule, interactive: true)
             .accessibilityElement(children: .contain)
 

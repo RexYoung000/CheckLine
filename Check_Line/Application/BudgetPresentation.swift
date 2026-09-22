@@ -39,6 +39,11 @@ nonisolated enum BudgetPresentation {
 
     static func symbol(for expense: Expense) -> String {
         if expense.kind == .refund { return "arrow.uturn.backward" }
+        let name = (expense.merchant ?? "").lowercased()
+        if ["咖啡", "coffee", "café", "cafe"].contains(where: name.contains) { return "cup.and.saucer" }
+        if ["地铁", "交通", "metro", "train", "transit"].contains(where: name.contains) { return "tram" }
+        if ["午餐", "晚餐", "早餐", "lunch", "dinner", "breakfast"].contains(where: name.contains) { return "fork.knife" }
+        if ["采购", "超市", "grocery", "groceries"].contains(where: name.contains) { return "bag" }
         return "receipt"
     }
 }

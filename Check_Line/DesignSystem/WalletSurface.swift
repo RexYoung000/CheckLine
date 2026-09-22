@@ -44,23 +44,31 @@ struct WalletRootPage<Content: View>: View {
     var onAdd: (() -> Void)?
     @ViewBuilder var content: () -> Content
     @Environment(\.shellChrome) private var chrome
+    @Environment(\.walletReduceMotion) private var reduceMotion
 
     var body: some View {
         NavigationStack {
+            ScrollViewReader { reader in
             ScrollView {
                 content()
+                    .id("wallet-page-top")
                     .padding(.horizontal, lightHeader ? 0 : 18)
                     .padding(.top, lightHeader ? 0 : 12)
                     .padding(.bottom, 24)
                     .frame(maxWidth: PaperTheme.Layout.contentMaxWidth)
                     .frame(maxWidth: .infinity)
+                    .opacity(lightHeader ? 1 : chrome?.interiorReveal ?? 1)
+                    .offset(y: !lightHeader && !reduceMotion ? 16 * (1 - (chrome?.interiorReveal ?? 1)) : 0)
+                    .rotation3DEffect(.degrees(!lightHeader && !reduceMotion ? -5 * (1 - (chrome?.interiorReveal ?? 1)) : 0), axis: (x: 1, y: 0, z: 0), anchor: .top, perspective: 0.25)
             }
+            .scrollDisabled(chrome?.isTransitioning == true)
             .scrollDismissesKeyboard(.interactively)
-            .background(PaperTheme.canvas.ignoresSafeArea())
+            .background { WalletInteriorSurface().ignoresSafeArea() }
             .toolbar(.hidden, for: .navigationBar)
             .safeAreaInset(edge: .top, spacing: 0) {
                 WalletPageHeader(title: lightHeader ? nil : title, workspace: workspace, light: lightHeader, onAdd: onAdd)
             }
+            .opacity(chrome?.stageOpacity ?? 1)
             .safeAreaInset(edge: .bottom, spacing: 0) {
                 VStack(spacing: 8) {
                     if workspace.lastUndo != nil, let banner = workspace.banner {
@@ -79,6 +87,10 @@ struct WalletRootPage<Content: View>: View {
                 .frame(maxWidth: .infinity)
             }
             .toolbar(.hidden, for: .tabBar)
+            .onChange(of: chrome?.presentedTab) { _, tab in
+                if lightHeader && tab == .home { reader.scrollTo("wallet-page-top", anchor: .top) }
+            }
+            }
         }
     }
 }
@@ -87,6 +99,7 @@ struct LiquidWave: Shape {
     var level: CGFloat
     var phase: Double
     var amplitude: CGFloat
+    var surfaceOnly = false
     var animatableData: CGFloat {
         get { level }
         set { level = newValue }
@@ -101,9 +114,11 @@ struct LiquidWave: Shape {
             if index == 0 { path.move(to: CGPoint(x: x, y: y)) }
             else { path.addLine(to: CGPoint(x: x, y: y)) }
         }
-        path.addLine(to: CGPoint(x: rect.maxX, y: rect.maxY))
-        path.addLine(to: CGPoint(x: rect.minX, y: rect.maxY))
-        path.closeSubpath()
+        if !surfaceOnly {
+            path.addLine(to: CGPoint(x: rect.maxX, y: rect.maxY))
+            path.addLine(to: CGPoint(x: rect.minX, y: rect.maxY))
+            path.closeSubpath()
+        }
         return path
     }
 }
@@ -118,7 +133,8 @@ struct LiquidBudgetCard: View {
 
     var body: some View {
         ZStack {
-            LinearGradient(colors: [Color(red: 0.40, green: 0.39, blue: 0.52), Color(red: 0.20, green: 0.21, blue: 0.32)], startPoint: .topLeading, endPoint: .bottomTrailing)
+            LinearGradient(colors: [Color(red: 0.42, green: 0.42, blue: 0.55), Color(red: 0.23, green: 0.24, blue: 0.35), Color(red: 0.18, green: 0.19, blue: 0.29)], startPoint: .topLeading, endPoint: .bottomTrailing)
+            RadialGradient(colors: [.white.opacity(0.17), .clear], center: .topLeading, startRadius: 0, endRadius: 280)
             TimelineView(.animation(minimumInterval: 1.0/30, paused: !flows || reduceMotion || !visible || scenePhase != .active)) { timeline in
                 let phase = reduceMotion || !flows ? 0 : timeline.date.timeIntervalSinceReferenceDate.truncatingRemainder(dividingBy: 6.83) / 6.83 * .pi * 2
                 let level = CGFloat(BudgetPresentation.fill(card))
@@ -126,14 +142,24 @@ struct LiquidBudgetCard: View {
                     LiquidWave(level: level > 0 ? min(1, level + 0.009) : 0, phase: phase + 1.2, amplitude: reduceMotion ? 0 : 3)
                         .fill(PaperTheme.accent.opacity(0.48))
                     LiquidWave(level: level, phase: phase, amplitude: reduceMotion ? 0 : 3.5)
-                        .fill(LinearGradient(colors: [Color(red: 0.58, green: 0.52, blue: 1), Color(red: 0.27, green: 0.24, blue: 0.77)], startPoint: .top, endPoint: .bottom))
+                        .fill(LinearGradient(stops: [
+                            .init(color: Color(red: 0.64, green: 0.58, blue: 1), location: 0),
+                            .init(color: Color(red: 0.47, green: 0.42, blue: 0.96), location: 0.46),
+                            .init(color: Color(red: 0.29, green: 0.27, blue: 0.82), location: 0.8),
+                            .init(color: Color(red: 0.20, green: 0.18, blue: 0.61), location: 1)
+                        ], startPoint: .topLeading, endPoint: .bottomTrailing))
                         .overlay {
-                            LiquidWave(level: level, phase: phase, amplitude: reduceMotion ? 0 : 3.5)
-                                .stroke(.white.opacity(0.26), lineWidth: 0.8)
+                            RadialGradient(colors: [Color(red: 0.80, green: 0.76, blue: 1).opacity(0.4), .clear], center: .leading, startRadius: 0, endRadius: 270)
+                                .mask { LiquidWave(level: level, phase: phase, amplitude: reduceMotion ? 0 : 3.5) }
+                        }
+                        .overlay {
+                            LiquidWave(level: level, phase: phase, amplitude: reduceMotion ? 0 : 3.5, surfaceOnly: true)
+                                .stroke(LinearGradient(colors: [.white.opacity(0.10), .white.opacity(0.8), PaperTheme.accent.opacity(0.3)], startPoint: .leading, endPoint: .trailing), lineWidth: 1)
                         }
                 }.animation(reduceMotion ? nil : .easeOut(duration: 0.65), value: level)
             }
             .accessibilityHidden(true)
+            WalletGrain().opacity(0.7)
             VStack(alignment: .leading, spacing: 18) {
                 Text(card.name).font(.title3.weight(.medium)).lineLimit(2).padding(.trailing, 40)
                 Spacer(minLength: 8)
@@ -156,7 +182,11 @@ struct LiquidBudgetCard: View {
         }
         .frame(minHeight: typeSize.isAccessibilitySize ? 250 : 202)
         .clipShape(RoundedRectangle(cornerRadius: 28, style: .continuous))
-        .overlay { RoundedRectangle(cornerRadius: 28, style: .continuous).strokeBorder(.white.opacity(0.28), lineWidth: 0.8) }
+        .overlay {
+            RoundedRectangle(cornerRadius: 28, style: .continuous)
+                .strokeBorder(LinearGradient(colors: [.white.opacity(0.6), .white.opacity(0.08), .white.opacity(0.22)], startPoint: .topLeading, endPoint: .bottomTrailing), lineWidth: 1)
+                .overlay { RoundedRectangle(cornerRadius: 26, style: .continuous).strokeBorder(.white.opacity(0.07), lineWidth: 0.5).padding(2) }
+        }
         .shadow(color: .black.opacity(0.18), radius: 12, y: 7)
         .onAppear { visible = true }.onDisappear { visible = false }
         .accessibilityElement(children: .combine)
