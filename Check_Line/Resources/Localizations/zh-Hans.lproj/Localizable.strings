@@ -389,6 +389,8 @@
 "wallet.symbol.book" = "书籍";
 "wallet.symbol.gamecontroller" = "游戏";
 "wallet.symbol.sofa" = "家居";
+"wallet.agent.cancelProposal" = "取消本次确认";
+"wallet.cycle.monthly" = "每月循环";
 
 "wallet.pending.count" = "%ld 笔待确认";
 

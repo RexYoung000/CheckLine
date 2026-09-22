@@ -45,9 +45,13 @@ struct CheckLineShellView: View {
             case "settings": chrome.isSettingsPresented = true
             case "attention": chrome.isAttentionPresented = true
             case "agent": workspace.showAgent = true
+            case "agent-confirm":
+                workspace.draftText = String(localized: "wallet.demo.coffee") + " 35"
+                await workspace.submitText()
+                workspace.showAgent = true
             case "record": workspace.openComposer(.record)
             case "create-budget": workspace.openComposer(.budget)
-            case "create-wish", "budget-detail", "wish-detail", "redemption": showsPreviewDetail = true
+            case "create-wish", "budget-detail", "records", "calendar", "wish-detail", "redemption": showsPreviewDetail = true
             default: break
             }
             if DesignPreviewData.runsMotionTour {
@@ -66,6 +70,8 @@ struct CheckLineShellView: View {
             case "create-wish": CreateWishSheet(workspace: workspace)
             case "budget-detail":
                 if let card = workspace.selectedCard { BudgetDetailSheet(workspace: workspace, budgetID: card.id, initialSection: .overview) }
+            case "records", "calendar":
+                if let card = workspace.selectedCard { BudgetDetailSheet(workspace: workspace, budgetID: card.id, initialSection: DesignPreviewData.screen == "records" ? .records : .calendar) }
             case "wish-detail":
                 if let wish = workspace.ledger.wishes.values.first(where: { $0.symbolName == "headphones" }) {
                     NavigationStack { WishDetailView(workspace: workspace, wishID: wish.id) }

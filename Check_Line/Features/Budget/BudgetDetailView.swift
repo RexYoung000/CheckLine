@@ -46,7 +46,7 @@ struct HomeBudgetDetailView: View {
 struct BudgetDetailContent: View {
     @Bindable var workspace: CheckLineWorkspace
     var budgetID: UUID
-    @State var section: BudgetDetailSection
+    var section: BudgetDetailSection
     @State private var expense: Expense?
     private var card: HomeBudgetCardModel? { workspace.cards.first { $0.id == budgetID } }
     var body: some View {
@@ -99,8 +99,12 @@ struct BudgetDetailContent: View {
                     .font(.subheadline).foregroundStyle(PaperTheme.accent)
             }
             VStack(spacing: 12) {
-                Button { section = .records } label: { Label(String(localized: "wallet.records.all"), systemImage: "receipt").frame(maxWidth: .infinity) }.buttonStyle(PaperSolidButtonStyle())
-                Button { section = .calendar } label: { Label(String(localized: "wallet.calendar.title"), systemImage: "calendar").frame(maxWidth: .infinity).frame(minHeight: 44) }.buttonStyle(.plain)
+                NavigationLink { BudgetDetailContent(workspace: workspace, budgetID: budgetID, section: .records) } label: {
+                    Label(String(localized: "wallet.records.all"), systemImage: "receipt").frame(maxWidth: .infinity)
+                }.buttonStyle(PaperSolidButtonStyle())
+                NavigationLink { BudgetDetailContent(workspace: workspace, budgetID: budgetID, section: .calendar) } label: {
+                    Label(String(localized: "wallet.calendar.title"), systemImage: "calendar").frame(maxWidth: .infinity).frame(minHeight: 44)
+                }.buttonStyle(.plain)
             }
             Text(String(localized: "wallet.coverage.note")).font(.caption).foregroundStyle(PaperTheme.muted)
         }
@@ -198,6 +202,9 @@ struct BudgetCalendarView: View {
             if rows.isEmpty { Text(String(localized: "wallet.day.empty")).font(.subheadline).foregroundStyle(PaperTheme.muted).padding(.vertical, 16) }
             ForEach(rows) { WalletExpenseRow(expense: $0) }
             Text(String(localized: "wallet.coverage.note")).font(.caption).foregroundStyle(PaperTheme.muted)
+        }
+        .onChange(of: selectedDay) { _, day in
+            if !calendar.isDate(day, equalTo: month, toGranularity: .month) { month = day }
         }
     }
     private func changeMonth(_ value: Int) {

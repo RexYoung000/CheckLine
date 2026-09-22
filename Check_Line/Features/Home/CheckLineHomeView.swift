@@ -6,7 +6,7 @@ struct CheckLineHomeView: View {
     @Environment(\.walletReduceMotion) private var reduceMotion
     @Environment(\.dynamicTypeSize) private var typeSize
     @State private var detail: BudgetDetailSection?
-    @State private var dragOffset: CGFloat = 0
+    @GestureState(resetTransaction: Transaction(animation: .smooth(duration: 0.2))) private var dragOffset: CGFloat = 0
     @State private var receiptOffset = 0
     @State private var deckHeight: CGFloat = 222
 
@@ -79,7 +79,7 @@ struct CheckLineHomeView: View {
         .sheet(item: $detail) { section in
             if let card { BudgetDetailSheet(workspace: workspace, budgetID: card.id, initialSection: section) }
         }
-        .onChange(of: workspace.selectedBudgetID) { _, _ in receiptOffset = 0 }
+        .onChange(of: card?.id) { _, _ in receiptOffset = 0 }
     }
 
     private func deck(_ card: HomeBudgetCardModel) -> some View {
@@ -123,14 +123,16 @@ struct CheckLineHomeView: View {
             .padding(.leading, 18).padding(.bottom, 22)
         }
         .offset(y: dragOffset)
-        .simultaneousGesture(DragGesture(minimumDistance: 18).onChanged { value in
-            dragOffset = reduceMotion ? 0 : max(-70, min(70, value.translation.height * 0.55))
+        .gesture(DragGesture(minimumDistance: 18).updating($dragOffset) { value, offset, _ in
+            guard !reduceMotion, abs(value.translation.height) > abs(value.translation.width),
+                  canChangeCard(value.translation.height < 0 ? 1 : -1) else { return }
+            offset = max(-70, min(70, value.translation.height * 0.55))
         }.onEnded { value in
+            guard abs(value.translation.height) > abs(value.translation.width) else { return }
             withAnimation(reduceMotion ? nil : .spring(response: 0.35, dampingFraction: 0.82)) {
                 if abs(value.translation.height) > 45 { changeCard(value.translation.height < 0 ? 1 : -1) }
-                dragOffset = 0
             }
-        })
+        }, including: workspace.cards.count > 1 ? .all : .subviews)
         .id(card.id)
         .transition(reduceMotion ? .opacity : .asymmetric(insertion: .offset(y: 18).combined(with: .opacity), removal: .offset(y: -80).combined(with: .opacity)))
         }
@@ -199,6 +201,11 @@ struct CheckLineHomeView: View {
         guard let card, let index = workspace.cards.firstIndex(where: { $0.id == card.id }), workspace.cards.indices.contains(index + direction) else { return }
         workspace.selectedBudgetID = workspace.cards[index + direction].id
         PaperHaptics.selection()
+    }
+
+    private func canChangeCard(_ direction: Int) -> Bool {
+        guard let card, let index = workspace.cards.firstIndex(where: { $0.id == card.id }) else { return false }
+        return workspace.cards.indices.contains(index + direction)
     }
 }
 

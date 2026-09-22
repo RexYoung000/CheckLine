@@ -33,7 +33,7 @@ enum DesignPreviewData {
 
     static func populate(_ context: ModelContext, now: Date = Date()) throws {
         #if DEBUG
-        guard isEnabled else { return }
+        guard isEnabled, screen != "empty" else { return }
         let calendar = Calendar.current
         let start = calendar.dateInterval(of: .month, for: now)?.start ?? now
         let next = calendar.date(byAdding: .month, value: 1, to: start) ?? now

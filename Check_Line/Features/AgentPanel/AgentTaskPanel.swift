@@ -17,7 +17,7 @@ struct AgentTaskPanel: View {
                         .shadow(color: PaperTheme.shadow, radius: 16, x: 0, y: -4)
                 }
             }
-            .padding(.horizontal, embedded ? 20 : 16)
+            .padding(.horizontal, embedded ? 0 : 16)
             .onChange(of: workspace.panelExpanded) { _, expanded in
                 if expanded == false {
                     inputFocused = false
@@ -59,7 +59,7 @@ struct AgentTaskPanel: View {
                 }
             }
 
-            if let banner = workspace.banner {
+            if let banner = workspace.agentBanner {
                 Text(banner.localizedText)
                     .font(PaperTheme.Typography.meta)
                     .foregroundStyle(PaperTheme.ink)
@@ -71,6 +71,7 @@ struct AgentTaskPanel: View {
                 structuredConfirm
             }
 
+            if !workspace.showsStructuredConfirm {
             HStack(alignment: .bottom, spacing: PaperTheme.Space.s) {
                 PaperField(
                     title: String(localized: "v1.agent.placeholder"),
@@ -80,6 +81,7 @@ struct AgentTaskPanel: View {
                 .focused($inputFocused)
 
                 Button(String(localized: "v1.agent.send")) {
+                    inputFocused = false
                     Task { await workspace.submitText() }
                 }
                 .buttonStyle(
@@ -89,8 +91,9 @@ struct AgentTaskPanel: View {
                 )
                 .disabled(canSend == false)
             }
+            }
 
-            if workspace.lastUndo != nil {
+            if workspace.lastUndo != nil && !workspace.showsStructuredConfirm {
                 Button(String(localized: "action.undo")) {
                     workspace.undoLast()
                 }
@@ -109,47 +112,58 @@ struct AgentTaskPanel: View {
 
     private var structuredConfirm: some View {
         VStack(alignment: .leading, spacing: PaperTheme.Space.m) {
-            if workspace.banner == .needsAmount || MoneyFormat.parseAmount(workspace.confirmAmountText) == nil {
+            if let draft = workspace.captureProposal {
+                HStack(alignment: .center, spacing: 12) {
                 PaperField(
                     title: String(localized: "v1.agent.amount"),
                     text: $workspace.confirmAmountText,
                     keyboard: .decimalPad
                 )
-                HStack(spacing: PaperTheme.Space.s) {
-                    ForEach(["CNY", "USD", "JPY", "EUR"], id: \.self) { code in
-                        PaperChoiceChip(
-                            title: code,
-                            value: code,
-                            selection: $workspace.confirmCurrencyCode
-                        )
+                Picker(String(localized: "v1.budget.currency"), selection: $workspace.confirmCurrencyCode) {
+                    ForEach(Array(Set(["CNY", "USD", "JPY", "EUR", workspace.confirmCurrencyCode])).sorted(), id: \.self) { code in
+                        Text(code).tag(code)
                     }
+                }.pickerStyle(.menu).labelsHidden().fixedSize().frame(minHeight: 44)
+                    .accessibilityLabel(String(localized: "v1.budget.currency"))
                 }
-                .accessibilityLabel(String(localized: "v1.budget.currency"))
-            }
+                if let merchant = draft.merchant {
+                    PaperFormItem(title: String(localized: "v1.composer.merchant"), value: merchant)
+                }
+                PaperFormItem(title: String(localized: "v1.composer.date"), value: draft.occurredAt.formatted(date: .abbreviated, time: .omitted))
 
-            VStack(alignment: .leading, spacing: PaperTheme.Space.s) {
-                Text(String(localized: "v1.agent.attribution"))
-                    .font(PaperTheme.Typography.caption)
-                    .foregroundStyle(PaperTheme.muted)
-                ScrollView(.horizontal, showsIndicators: false) {
-                    HStack(spacing: PaperTheme.Space.s) {
-                        ForEach(workspace.attributionChoices) { choice in
-                            PaperChoiceChip(
-                                title: choice.periodID == nil
-                                    ? String(localized: "v1.unbudgeted")
-                                    : choice.title,
-                                value: choice.id,
-                                selection: $workspace.selectedAttributionID
-                            )
+                VStack(alignment: .leading, spacing: PaperTheme.Space.s) {
+                    Text(String(localized: "v1.agent.attribution"))
+                        .font(PaperTheme.Typography.caption)
+                        .foregroundStyle(PaperTheme.muted)
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: PaperTheme.Space.s) {
+                            ForEach(workspace.attributionChoices) { choice in
+                                PaperChoiceChip(
+                                    title: choice.periodID == nil ? String(localized: "v1.unbudgeted") : choice.title,
+                                    value: choice.id,
+                                    selection: $workspace.selectedAttributionID
+                                )
+                            }
                         }
                     }
                 }
+            } else if let draft = workspace.budgetProposal {
+                Text(draft.name).font(.headline)
+                PaperFormItem(title: String(localized: "v1.budget.amount"), value: MoneyFormat.string(draft.amount, currencyCode: draft.currencyCode))
+                Text(draft.startDate, format: .dateTime.year().month().day()).font(.subheadline)
+                if let end = draft.endDate { Text(end, format: .dateTime.year().month().day()).font(.subheadline) }
             }
 
             Button(String(localized: "v1.agent.confirm")) {
+                inputFocused = false
                 workspace.confirmStructured()
             }
-            .buttonStyle(PaperSolidButtonStyle())
+            .buttonStyle(PaperSolidButtonStyle(enabled: workspace.canConfirmProposal))
+            .disabled(!workspace.canConfirmProposal)
+            Button(String(localized: "wallet.agent.cancelProposal")) {
+                workspace.cancelAgentProposal()
+                inputFocused = true
+            }.buttonStyle(PaperQuietButtonStyle())
         }
     }
 }

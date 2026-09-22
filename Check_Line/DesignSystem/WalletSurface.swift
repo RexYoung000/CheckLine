@@ -71,12 +71,16 @@ struct WalletRootPage<Content: View>: View {
             .opacity(chrome?.stageOpacity ?? 1)
             .safeAreaInset(edge: .bottom, spacing: 0) {
                 VStack(spacing: 8) {
-                    if workspace.lastUndo != nil, let banner = workspace.banner {
+                    if let banner = workspace.actionFeedback {
                         HStack {
                             Text(banner.localizedText).font(.caption).lineLimit(2)
                             Spacer(minLength: 8)
-                            Button(String(localized: "action.undo")) { workspace.undoLast() }
-                                .font(.subheadline.weight(.semibold)).frame(minHeight: 44)
+                            if workspace.lastUndo != nil {
+                                Button(String(localized: "action.undo")) { workspace.undoLast() }
+                                    .font(.subheadline.weight(.semibold)).frame(minHeight: 44)
+                            }
+                            Button(String(localized: "action.close"), systemImage: "xmark") { workspace.dismissActionFeedback() }
+                                .labelStyle(.iconOnly).font(.caption).frame(width: 44, height: 44)
                         }
                         .padding(.horizontal, 16).walletSurface(radius: 22)
                     }
@@ -130,13 +134,15 @@ struct LiquidBudgetCard: View {
     @Environment(\.scenePhase) private var scenePhase
     @Environment(\.dynamicTypeSize) private var typeSize
     @State private var visible = false
+    @State private var motionClock = LiquidMotionClock()
+    private var animates: Bool { flows && !reduceMotion && visible && scenePhase == .active }
 
     var body: some View {
         ZStack {
             LinearGradient(colors: [Color(red: 0.42, green: 0.42, blue: 0.55), Color(red: 0.23, green: 0.24, blue: 0.35), Color(red: 0.18, green: 0.19, blue: 0.29)], startPoint: .topLeading, endPoint: .bottomTrailing)
             RadialGradient(colors: [.white.opacity(0.17), .clear], center: .topLeading, startRadius: 0, endRadius: 280)
-            TimelineView(.animation(minimumInterval: 1.0/30, paused: !flows || reduceMotion || !visible || scenePhase != .active)) { timeline in
-                let phase = reduceMotion || !flows ? 0 : timeline.date.timeIntervalSinceReferenceDate.truncatingRemainder(dividingBy: 6.83) / 6.83 * .pi * 2
+            TimelineView(.animation(minimumInterval: 1.0/30, paused: !animates)) { _ in
+                let phase = motionClock.phase(at: ProcessInfo.processInfo.systemUptime)
                 let level = CGFloat(BudgetPresentation.fill(card))
                 ZStack {
                     LiquidWave(level: level > 0 ? min(1, level + 0.009) : 0, phase: phase + 1.2, amplitude: reduceMotion ? 0 : 3)
@@ -188,7 +194,14 @@ struct LiquidBudgetCard: View {
                 .overlay { RoundedRectangle(cornerRadius: 26, style: .continuous).strokeBorder(.white.opacity(0.07), lineWidth: 0.5).padding(2) }
         }
         .shadow(color: .black.opacity(0.18), radius: 12, y: 7)
-        .onAppear { visible = true }.onDisappear { visible = false }
+        .onAppear { visible = true }
+        .onDisappear {
+            visible = false
+            motionClock.setRunning(false, at: ProcessInfo.processInfo.systemUptime)
+        }
+        .onChange(of: animates, initial: true) { _, running in
+            motionClock.setRunning(running, at: ProcessInfo.processInfo.systemUptime)
+        }
         .accessibilityElement(children: .combine)
         .accessibilityLabel(card.name)
         .accessibilityValue(String(localized: "v1.card.remaining") + " " + MoneyFormat.string(BudgetPresentation.remaining(card), currencyCode: card.currencyCode))

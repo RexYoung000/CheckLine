@@ -25,7 +25,9 @@
 
 Debug Scheme 的 Arguments Passed On Launch 可添加 `-design-preview`。该模式使用独立内存容器、标注「示例数据」，不读取或覆盖用户账本，Release 构建不启用。
 
-可附加 `-design-screen wishes` 直接预览页面。支持 `home`、`budgets`、`wishes`、`insights`、`settings`、`agent`、`attention`、`record`、`create-budget`、`create-wish`、`budget-detail`、`wish-detail`、`redemption`。详情直达只用于布局检查，不能代替真实点击路径验证。
+模拟器手动试用可直接选择共享 Scheme **CheckLine Demo**，设备选 iPhone 18 Pro，按 `⌘R`。它已带 `-design-preview`，没有自动跳页序列；当前运行中操作会真实修改隔离的内存账本，重新运行时示例数据恢复。普通 `Check_Line` Scheme 继续使用持久化账本。Demo 的 Profile / Archive 不带调试参数，也不能作为示例数据试用入口。
+
+可附加 `-design-screen wishes` 直接预览页面。支持 `home`、`empty`、`budgets`、`wishes`、`insights`、`settings`、`agent`、`agent-confirm`、`attention`、`record`、`create-budget`、`create-wish`、`budget-detail`、`records`、`calendar`、`wish-detail`、`redemption`。`agent-confirm` 通过本地解析生成未提交的测试草稿；`empty` 使用空内存账本。详情直达只用于布局检查，不能代替真实点击路径验证。
 
 附加 `-design-reduce-motion` 可在示例模式中检查静态液位和取消位移动效的降级。正常启动遵循系统「减少动态效果」设置；此调试参数不等于验证过系统开关。
 

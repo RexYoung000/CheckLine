@@ -76,7 +76,7 @@ struct WalletReceiptStack: View {
     @Environment(\.dynamicTypeSize) private var typeSize
     @GestureState private var drag: CGFloat = 0
 
-    private var start: Int { min(position, max(0, rows.count - 1)) }
+    private var start: Int { max(0, min(position, max(0, rows.count - 1))) }
     private var location: CGFloat {
         let raw = CGFloat(start) + (reduceMotion ? 0 : drag / 52)
         return min(CGFloat(max(0, rows.count - 1)), max(0, raw))
@@ -112,9 +112,12 @@ struct WalletReceiptStack: View {
         .buttonStyle(.plain)
         .contentShape(Rectangle())
         .gesture(DragGesture(minimumDistance: 18)
-            .updating($drag) { value, state, _ in state = value.translation.height }
+            .updating($drag) { value, state, _ in
+                guard abs(value.translation.height) > abs(value.translation.width) else { return }
+                state = value.translation.height
+            }
             .onEnded { value in
-                guard abs(value.translation.height) > 22 else { return }
+                guard abs(value.translation.height) > 22, abs(value.translation.height) > abs(value.translation.width) else { return }
                 let travel = value.predictedEndTranslation.height / 52
                 let step = max(-3, min(3, Int(travel.rounded())))
                 move(to: start + (step == 0 ? (value.translation.height > 0 ? 1 : -1) : step))

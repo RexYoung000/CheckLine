@@ -389,6 +389,8 @@
 "wallet.symbol.book" = "Book";
 "wallet.symbol.gamecontroller" = "Gaming";
 "wallet.symbol.sofa" = "Home";
+"wallet.agent.cancelProposal" = "Cancel this confirmation";
+"wallet.cycle.monthly" = "Monthly";
 
 "wallet.pending.count" = "%ld to review";
 

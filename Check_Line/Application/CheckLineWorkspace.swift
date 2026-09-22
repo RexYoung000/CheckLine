@@ -13,7 +13,9 @@ final class CheckLineWorkspace {
     var confirmCurrencyCode: String = "CNY"
     var selectedAttributionID: String = "unbudgeted"
     var lastUndo: UndoToken?
+    var undoBanner: WorkspaceBanner?
     var banner: WorkspaceBanner?
+    var agentBanner: WorkspaceBanner?
     var isWorking: Bool = false
     var selectedBudgetID: UUID?
     var agentBudgetID: UUID?
@@ -25,16 +27,19 @@ final class CheckLineWorkspace {
     private let context: ModelContext
     private let session: AgentSession
     private let calendar: Calendar
+    private let saveLedger: @MainActor (Ledger, ModelContext) throws -> Void
 
     init(
         context: ModelContext,
         now: Date = Date(),
         calendar: Calendar = .current,
-        session: AgentSession? = nil
+        session: AgentSession? = nil,
+        saveLedger: (@MainActor (Ledger, ModelContext) throws -> Void)? = nil
     ) {
         self.context = context
         self.calendar = calendar
         self.session = session ?? AgentSession.make(calendar: calendar)
+        self.saveLedger = saveLedger ?? { try LedgerStore.replaceAll($0, in: $1) }
         if let loaded = try? LedgerStore.load(from: context, now: now) {
             ledger = loaded
         } else {
@@ -86,8 +91,10 @@ final class CheckLineWorkspace {
 
     private func commitPresentationChange(_ changed: Ledger) throws {
         do {
-            try LedgerStore.replaceAll(changed, in: context)
+            try saveLedger(changed, context)
             ledger = changed
+            lastUndo = nil
+            undoBanner = nil
         } catch {
             context.rollback()
             throw error
@@ -110,10 +117,48 @@ final class CheckLineWorkspace {
         cards.isEmpty
     }
 
+    var actionFeedback: WorkspaceBanner? {
+        if banner == .failed || banner == .undone { return banner }
+        return lastUndo == nil ? nil : undoBanner
+    }
+
+    func dismissActionFeedback() {
+        banner = nil
+        undoBanner = nil
+    }
+
     var showsStructuredConfirm: Bool {
-        guard let turn = lastTurn else { return false }
-        if case .needsClarification = turn.understand { return true }
-        return turn.evaluation?.gate == .confirmStructured
+        lastTurn?.evaluation?.gate == .confirmStructured
+    }
+
+    var captureProposal: CaptureDraft? {
+        guard showsStructuredConfirm, case .intent(.capture(let draft)) = lastTurn?.understand else { return nil }
+        return draft
+    }
+
+    var budgetProposal: CreateBudgetDraft? {
+        guard showsStructuredConfirm, case .intent(.createBudget(let draft)) = lastTurn?.understand else { return nil }
+        return draft
+    }
+
+    var canConfirmProposal: Bool {
+        if captureProposal != nil {
+            return MoneyFormat.parseAmount(confirmAmountText) != nil && !confirmCurrencyCode.isEmpty
+                && attributionChoices.contains { $0.id == selectedAttributionID }
+        }
+        return budgetProposal != nil
+    }
+
+    func cancelAgentProposal() {
+        lastTurn = nil
+        confirmAmountText = ""
+        agentBanner = nil
+    }
+
+    func discussBudget(_ id: UUID) {
+        guard cards.contains(where: { $0.id == id }) else { return }
+        agentBudgetID = id
+        cancelAgentProposal()
     }
 
     func submitText(now: Date = Date()) async {
@@ -122,30 +167,34 @@ final class CheckLineWorkspace {
         panelExpanded = true
         isWorking = true
         banner = nil
+        agentBanner = nil
+        confirmAmountText = ""
         if let budgetID = inferQueryBudget(from: text) {
             let turn = session.turn(intent: .queryBudgetStatus(budgetID: budgetID), ledger: ledger, now: now)
             lastTurn = turn
             isWorking = false
             applyTurn(turn, now: now)
+            agentBanner = banner
             return
         }
         let turn = await session.turn(input: .text(text), ledger: ledger, now: now)
         lastTurn = turn
         isWorking = false
         applyTurn(turn, now: now)
+        agentBanner = banner
     }
 
     func confirmStructured(now: Date = Date()) {
-        guard let turn = lastTurn, case .intent(var intent) = turn.understand else { return }
+        guard showsStructuredConfirm, let turn = lastTurn, case .intent(let intent) = turn.understand else { return }
+        defer { agentBanner = banner }
         if case .capture(var draft) = intent {
-            if draft.amount == nil {
-                guard let amount = MoneyFormat.parseAmount(confirmAmountText) else {
-                    banner = .needsAmount
-                    return
-                }
-                draft.amount = amount
-                draft.currencyCode = confirmCurrencyCode
+            guard let amount = MoneyFormat.parseAmount(confirmAmountText) else {
+                banner = .needsAmount
+                return
             }
+            guard canConfirmProposal else { return }
+            draft.amount = amount
+            draft.currencyCode = confirmCurrencyCode
             let confirmation: AgentConfirmation
             if let periodID = attributionChoices.first(where: { $0.id == selectedAttributionID })?.periodID {
                 confirmation = .attribution(.confirmed(periodID: periodID))
@@ -229,17 +278,22 @@ final class CheckLineWorkspace {
 
     func openComposer(_ intent: ComposerIntent) {
         composerIntent = intent
+        banner = nil
         showComposer = true
         collapsePanel()
     }
 
     func undoLast(now: Date = Date()) {
         guard let token = lastUndo else { return }
-        ledger = UndoCoordinator.undo(ledger: ledger, token: token)
-        lastUndo = nil
-        lastTurn = nil
-        persistLedger()
-        banner = .undone
+        do {
+            try commitPresentationChange(UndoCoordinator.undo(ledger: ledger, token: token))
+            lastTurn = nil
+            banner = .undone
+            agentBanner = .undone
+        } catch {
+            banner = .failed
+            agentBanner = .failed
+        }
     }
 
     func expandPanel() {
@@ -269,13 +323,12 @@ final class CheckLineWorkspace {
                 }
             case .confirmStructured:
                 if case .capture(let draft) = intent {
-                    if let amount = draft.amount {
-                        confirmAmountText = "\(amount)"
-                    }
-                    if let currency = draft.currencyCode {
-                        confirmCurrencyCode = currency
-                    }
-                    if let card = cards.first(where: { $0.id == agentBudgetID }) ?? selectedCard, let choice = attributionChoices.first(where: { $0.periodID == card.periodID }) {
+                    let card = cards.first { $0.periodID == draft.periodID || $0.id == draft.budgetID }
+                        ?? cards.first { $0.id == agentBudgetID } ?? selectedCard
+                    confirmAmountText = draft.amount.map { "\($0)" } ?? ""
+                    confirmCurrencyCode = draft.currencyCode ?? card?.currencyCode ?? ledger.walletSettings.walletCurrencyCode
+                    selectedAttributionID = "unbudgeted"
+                    if let card, let choice = attributionChoices.first(where: { $0.periodID == card.periodID }) {
                         selectedAttributionID = choice.id
                     }
                     if draft.amount == nil {
@@ -309,8 +362,11 @@ final class CheckLineWorkspace {
                 now: now,
                 confirmation: confirmation
             )
+            let newBudgetID = executed.ledger.budgets.keys.first { ledger.budgets[$0] == nil }
             try commitPresentationChange(executed.ledger)
             lastUndo = executed.undo
+            undoBanner = executed.undo == nil ? nil : recordedBanner
+            if let newBudgetID { selectedBudgetID = newBudgetID }
             banner = recordedBanner
             draftText = ""
             lastTurn = nil
@@ -331,14 +387,6 @@ final class CheckLineWorkspace {
             return match.id
         }
         return agentBudgetID ?? selectedCard?.id
-    }
-
-    private func persistLedger() {
-        do {
-            try LedgerStore.replaceAll(ledger, in: context)
-        } catch {
-            banner = .failed
-        }
     }
 
     private func monthBounds(now: Date) -> (start: Date, end: Date) {

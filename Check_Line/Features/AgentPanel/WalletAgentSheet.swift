@@ -3,12 +3,14 @@ import SwiftUI
 struct WalletAgentSheet: View {
     @Bindable var workspace: CheckLineWorkspace
     @Environment(\.dismiss) private var dismiss
+    @State private var detent: PresentationDetent = .medium
     private var discussion: HomeBudgetCardModel? { workspace.cards.first { $0.id == workspace.agentBudgetID } }
 
     var body: some View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 24) {
+                    if !workspace.showsStructuredConfirm {
                     HStack(spacing: 16) {
                         WalletSymbol(name: "bubble.left.and.bubble.right", size: 64)
                         VStack(alignment: .leading, spacing: 6) {
@@ -16,16 +18,17 @@ struct WalletAgentSheet: View {
                             Text(String(localized: "wallet.agent.localCapability")).font(.caption).foregroundStyle(PaperTheme.muted)
                         }
                     }
+                    }
                     if let discussion {
                         Label(discussion.name, systemImage: "wallet.pass").font(.subheadline)
                             .padding(.horizontal, 16).padding(.vertical, 12).walletSurface(radius: 18)
                     }
                     if let selected = workspace.selectedCard, selected.id != workspace.agentBudgetID {
-                        Button { workspace.agentBudgetID = selected.id } label: {
+                        Button { workspace.discussBudget(selected.id) } label: {
                             Label(String(localized: "wallet.agent.currentBudget") + " · " + selected.name, systemImage: "arrow.turn.down.right")
                         }.buttonStyle(PaperQuietButtonStyle())
                     }
-                    if workspace.banner == nil && workspace.draftText.isEmpty, let discussion {
+                    if workspace.agentBanner == nil && workspace.draftText.isEmpty, let discussion {
                         Button {
                             workspace.draftText = discussion.name + " " + String(localized: "wallet.agent.askRemaining")
                             Task { await workspace.submitText() }
@@ -46,10 +49,14 @@ struct WalletAgentSheet: View {
             .toolbarBackground(.hidden, for: .navigationBar)
             .toolbar { ToolbarItem(placement: .topBarTrailing) { Button(String(localized: "action.close"), systemImage: "xmark") { dismiss() }.labelStyle(.iconOnly) } }
         }
-        .presentationDetents([.medium, .large])
+        .presentationDetents([.medium, .large], selection: $detent)
         .presentationDragIndicator(.visible)
         .presentationBackground(PaperTheme.canvas)
+        .tint(PaperTheme.accent)
         .presentationCornerRadius(PaperTheme.Radius.sheet)
         .onAppear { if workspace.agentBudgetID == nil { workspace.agentBudgetID = workspace.selectedCard?.id } }
+        .onChange(of: workspace.showsStructuredConfirm, initial: true) { _, confirms in
+            if confirms { detent = .large }
+        }
     }
 }

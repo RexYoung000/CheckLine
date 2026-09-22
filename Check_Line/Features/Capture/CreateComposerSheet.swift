@@ -46,6 +46,7 @@ struct CreateComposerSheet: View {
                         mode = .form
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+                    .padding(.horizontal, 20)
                 }
             }
 
@@ -60,6 +61,7 @@ struct CreateComposerSheet: View {
             }
         }
         .presentationBackground(PaperTheme.canvas)
+        .tint(PaperTheme.accent)
         .presentationDetents([.large])
         .presentationDragIndicator(.visible)
         .presentationCornerRadius(PaperTheme.Radius.sheet)
@@ -71,6 +73,9 @@ struct CreateComposerSheet: View {
         }
         .onChange(of: workspace.showComposer) { _, presented in
             if presented == false { dismiss() }
+        }
+        .onChange(of: mode) { _, mode in
+            if mode == .form { workspace.banner = nil }
         }
         .confirmationDialog(
             String(localized: "v1.composer.choose.currency"),
@@ -140,7 +145,7 @@ struct CreateComposerSheet: View {
                     )
                     PaperCapsuleSegment(
                         items: [
-                            (true, String(localized: "v1.cycle.repeating")),
+                            (true, String(localized: "wallet.cycle.monthly")),
                             (false, String(localized: "v1.cycle.oneShot")),
                         ],
                         selection: $repeating
