@@ -2,8 +2,14 @@ import SwiftUI
 import UIKit
 
 enum WalletTabTransition {
+    static var usesSystemBar: Bool {
+        if #available(iOS 27.0, *) { UIDevice.current.userInterfaceIdiom == .phone }
+        else { false }
+    }
+
     static var usesImmediateContent: Bool {
-        if #available(iOS 26.0, *) { UIDevice.current.userInterfaceIdiom == .phone }
+        if usesSystemBar { true }
+        else if #available(iOS 26.0, *) { UIDevice.current.userInterfaceIdiom == .phone }
         else { false }
     }
 }

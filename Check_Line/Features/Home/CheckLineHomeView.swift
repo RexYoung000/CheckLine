@@ -20,7 +20,7 @@ struct CheckLineHomeView: View {
     private var closure: CGFloat { reduceMotion ? 0 : chrome?.pocketClosure ?? 0 }
 
     var body: some View {
-        WalletRootPage(tab: .home, title: String(localized: "tab.home"), workspace: workspace, lightHeader: true) {
+        WalletRootPage(tab: .home, title: String(localized: "tab.home"), workspace: workspace, lightHeader: true, fullPaperBackground: card == nil) {
             if let card {
                 VStack(spacing: 0) {
                     deck(card)
@@ -81,9 +81,24 @@ struct CheckLineHomeView: View {
             } else {
                 VStack(spacing: 24) {
                     WalletSymbol(name: "wallet.pass", size: 80)
-                    PaperEmptyHint(title: String(localized: "v1.home.empty.title"), message: String(localized: "wallet.empty.budget"))
-                    Button(String(localized: "v1.budget.create")) { workspace.openComposer(.budget) }.buttonStyle(PaperSolidButtonStyle())
-                }.padding(.vertical, 36)
+                    VStack(spacing: 10) {
+                        Text(String(localized: "v1.home.empty.title"))
+                            .font(.title2.weight(.semibold))
+                            .foregroundStyle(PaperTheme.paperInk)
+                            .accessibilityAddTraits(.isHeader)
+                        Text(String(localized: "wallet.empty.budget"))
+                            .font(.body)
+                            .foregroundStyle(PaperTheme.paperInk.opacity(0.65))
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
+                    .multilineTextAlignment(.center)
+                    Button(String(localized: "v1.budget.create")) { workspace.openComposer(.budget) }
+                        .buttonStyle(PaperSolidButtonStyle(foreground: PaperTheme.paper, background: PaperTheme.paperInk))
+                        .accessibilityIdentifier("wallet.empty.createBudget")
+                }
+                .padding(.horizontal, 28)
+                .padding(.vertical, 48)
+                .frame(maxWidth: 560)
             }
         }
         .sheet(item: $detail) { section in

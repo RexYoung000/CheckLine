@@ -1,4 +1,5 @@
 import SwiftUI
+import UIKit
 
 /// The dark front of the wallet rises at both edges and overlaps the budget card.
 struct WalletCardholderSurface: View {
@@ -137,7 +138,7 @@ struct WalletGlassNavigation: View {
                 let selected = preview ?? chrome?.selectedTab ?? .home
                 navigationButtons(selected: selected, slotWidth: geometry.size.width / CGFloat(tabs.count))
                 .padding(5)
-                .background { Capsule().fill(.clear).paperGlass(.capsule).allowsHitTesting(false) }
+                .background { navigationBackground.allowsHitTesting(false) }
                 .highPriorityGesture(
                     DragGesture(minimumDistance: 10)
                         .updating($dragLocation) { value, location, _ in
@@ -156,6 +157,15 @@ struct WalletGlassNavigation: View {
             WalletAgentButton(workspace: workspace)
         }
         .environment(\.colorScheme, .dark)
+    }
+
+    @ViewBuilder private var navigationBackground: some View {
+        if #available(iOS 26.0, *) {
+            Capsule().fill(.clear)
+                .glassEffect(.regular.tint(PaperTheme.canvas.opacity(0.65)), in: .capsule)
+        } else {
+            Capsule().fill(.clear).paperGlass(.capsule)
+        }
     }
 
     @ViewBuilder private func navigationButtons(selected: CheckLineAppTab, slotWidth: CGFloat) -> some View {
@@ -234,6 +244,33 @@ struct WalletGlassNavigation: View {
     }
 }
 
+struct WalletActionFeedback: View {
+    @Bindable var workspace: CheckLineWorkspace
+
+    var body: some View {
+        if let banner = workspace.actionFeedback {
+            HStack {
+                Text(banner.localizedText).font(.caption).lineLimit(2)
+                Spacer(minLength: 8)
+                if workspace.lastUndo != nil {
+                    Button(String(localized: "action.undo")) { workspace.undoLast() }
+                        .font(.subheadline.weight(.semibold))
+                        .frame(minHeight: 44)
+                }
+                Button(String(localized: "action.close"), systemImage: "xmark") {
+                    workspace.dismissActionFeedback()
+                }
+                .labelStyle(.iconOnly)
+                .font(.caption)
+                .frame(width: 44, height: 44)
+            }
+            .foregroundStyle(PaperTheme.ink)
+            .padding(.horizontal, 16)
+            .walletSurface(radius: 22)
+        }
+    }
+}
+
 struct WalletAgentButton: View {
     @Bindable var workspace: CheckLineWorkspace
     @Environment(\.walletReduceMotion) private var reduceMotion
@@ -263,6 +300,11 @@ enum WalletTabHitTarget {
 }
 
 struct WalletAgentAvatar: View {
+    @MainActor static let tabImage: UIImage = {
+        let renderer = ImageRenderer(content: WalletAgentAvatar().scaleEffect(32.0 / 44).frame(width: 32, height: 32))
+        renderer.scale = 3
+        return (renderer.uiImage ?? UIImage()).withRenderingMode(.alwaysOriginal)
+    }()
 
     var body: some View {
         ZStack {

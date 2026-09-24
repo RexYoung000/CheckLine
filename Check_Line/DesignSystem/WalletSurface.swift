@@ -42,6 +42,7 @@ struct WalletRootPage<Content: View>: View {
     var title: String
     @Bindable var workspace: CheckLineWorkspace
     var lightHeader = false
+    var fullPaperBackground = false
     var onAdd: (() -> Void)?
     @ViewBuilder var content: () -> Content
     @Environment(\.shellChrome) private var chrome
@@ -55,7 +56,7 @@ struct WalletRootPage<Content: View>: View {
                     .id("wallet-page-top")
                     .padding(.horizontal, lightHeader ? 0 : 18)
                     .padding(.top, lightHeader ? 0 : 12)
-                    .padding(.bottom, workspace.actionFeedback == nil ? 104 : 160)
+                    .padding(.bottom, (WalletTabTransition.usesSystemBar ? 24 : 104) + (workspace.actionFeedback == nil ? 0 : 56))
                     .frame(maxWidth: PaperTheme.Layout.contentMaxWidth)
                     .frame(maxWidth: .infinity)
                     .opacity(lightHeader ? 1 : chrome?.interiorReveal ?? 1)
@@ -65,7 +66,9 @@ struct WalletRootPage<Content: View>: View {
             .scrollDisabled(chrome?.isTransitioning == true)
             .scrollDismissesKeyboard(.interactively)
             .background {
-                if lightHeader {
+                if fullPaperBackground {
+                    PaperTheme.paper.ignoresSafeArea()
+                } else if lightHeader {
                     GeometryReader { geometry in
                         ZStack(alignment: .top) {
                             PaperTheme.canvas.ignoresSafeArea()
@@ -82,8 +85,17 @@ struct WalletRootPage<Content: View>: View {
             .safeAreaInset(edge: .top, spacing: 0) {
                 WalletPageHeader(title: lightHeader ? nil : title, workspace: workspace, light: lightHeader, onAdd: onAdd)
             }
+            .overlay(alignment: .bottom) {
+                if WalletTabTransition.usesSystemBar && chrome?.isShowingDetail != true {
+                    WalletActionFeedback(workspace: workspace)
+                        .frame(maxWidth: 560)
+                        .padding(.horizontal, 18)
+                        .padding(.bottom, 8)
+                }
+            }
             .opacity(chrome?.stageOpacity ?? 1)
-            .toolbar(.hidden, for: .tabBar)
+            .toolbar(WalletTabTransition.usesSystemBar && chrome?.isShowingDetail != true ? .visible : .hidden, for: .tabBar)
+            .toolbarColorScheme(.dark, for: .tabBar)
             .toolbar(.hidden, for: .bottomBar)
             .onAppear {
                 if chrome?.selectedTab == tab { chrome?.isShowingDetail = false }

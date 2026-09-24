@@ -32,7 +32,11 @@
 
 上轮纠正的 iOS 27 iPhone 与 iPad、iOS 26.5 小屏截图已复核左四右一和无底板浮层；模拟器自动切换录屏逐帧可见选中透镜在入口间拉伸移动，但换页时会中断。上轮 100 项 Swift Testing、Release 与 iPhone 12 Debug 构建通过，已安装到 iPhone 12；设备锁屏阻止远程启动。
 
-本轮修复持续保留同一组外层底栏，在 iOS 26+ iPhone 恢复 `ccb6316` 的即时换页节奏，以深色系统玻璃选中透镜在左侧四入口间形变，右侧 Agent 与无底板悬浮结构不变。iOS 27 模拟器正常速度连续切换录屏 `/tmp/checkline-persistent-glass-tour.mp4` 已逐帧核对透镜跨入口的拉伸与收拢；iOS 26.5 小屏和 iOS 27 iPad 首页已做静态布局检查。Debug 模拟器 100 项测试通过（`/tmp/checkline-final-persistent/Logs/Test/Test-CheckLine Demo-2026.09.24_16-59-33-+0800.xcresult`），Release iOS 与 iPhone 12 Debug 构建通过，最新版已安装到 iPhone 12。设备仍锁屏并拒绝远程启动，真机触控、VoiceOver、减少动态效果、正常速度录屏与掉帧分析仍待验收。
+上一轮 `f3ba036` 持续保留同一组外层底栏，在 iOS 26+ iPhone 恢复 `ccb6316` 的即时换页节奏，但仍隐藏系统栏、使用自定义玻璃选中层。其自动序列录屏只能证明该选中层移动，不能证明恢复了系统 Tab 的触摸透镜。该版本的构建与 100 项领域测试通过，但 Rex 再次在真机否决动效，并发现空首页背景与文字断裂；以上历史检查不构成这两项体验的验收。
+
+**当前修正（2026-09-24）**：iOS 27+ iPhone 真正显示系统 `TabView`，以四个普通 Tab 与右侧 `.prominent` Agent 保持左四右一同排悬浮结构，触摸透镜由系统处理。Agent 打开原会话面板，关闭保留原页面；详情隐藏底栏，返回恢复。空账本首页改为完整米白背景、深色说明与创建按钮；操作反馈放在页面安全区内，避免遮住系统底栏。iPad 与 iOS 17–26 保留自有栏兼容路径；iPad 继续限宽居中，浅色背景下的兼容栏图标对比度已修正，不能宣称该路径具有同样的系统透镜。
+
+当前验证：新增 `CheckLine UI` Scheme / `Check_LineUITests`，在隔离内存账本实际点击、长按拖动四 Tab，连续开关 Agent、进详情返回、从空首页创建再撤销，并检查反馈不遮住导航。3 项 UI 测试通过（`/tmp/checkline-native-ui-final.xcresult`）；100 项 Swift Testing 通过（`/tmp/checkline-native-domain-final.xcresult`）；Debug 真机构建与 Release iOS 构建通过（`/tmp/checkline-native-release-final.xcresult`，保留原有 3 项编译警告）。正常速度模拟器触控录屏 `/tmp/checkline-native-lens-normal-speed.mp4` 已看到系统透镜放大折射及往返拖动，最终页面截图在 `/tmp/checkline-native-final-evidence/`；另已检查 iOS 26.5 小屏英文大字体空首页与 iOS 27 iPad 英文居中布局。最终 Debug App 已安装到 iPhone 12；启动被系统以 `Locked` 拒绝，真机动效、Debug/Release 帧耗时、VoiceOver 和系统减少动态效果仍待核验，M4 未关闭。
 
 首页方向已获产品主认可，原生层级与过渡继续按反馈修正；预算、心愿、分析、设置、Agent 与录入面板已同步到原生 App。模拟器试用前再次检查并修复确认、撤销、返回路径及动效恢复，Xcode 27 模拟器构建及 95 项 Swift Testing 测试通过；完成常规 iPhone、375 pt 小屏、iPad 英文和辅助功能大字体的代表页面渲染检查。原生触控路径与最终真机视觉验收尚未完成，详见本节验证范围。云端模型、Speech/Vision、被动来源仍未启用，不能把界面实装等同于完整 V1 交付。
 

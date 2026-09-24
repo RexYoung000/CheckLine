@@ -12,29 +12,9 @@ struct CheckLineShellView: View {
         .tint(PaperTheme.accent)
         .preferredColorScheme((WalletTabTransition.usesImmediateContent ? chrome.selectedTab : chrome.presentedTab) == .home ? .light : .dark)
         .overlay(alignment: .bottom) {
-            if !chrome.isShowingDetail {
+            if !WalletTabTransition.usesSystemBar && !chrome.isShowingDetail {
                 VStack(spacing: 8) {
-                    if let banner = workspace.actionFeedback {
-                        HStack {
-                            Text(banner.localizedText)
-                                .font(.caption)
-                                .lineLimit(2)
-                            Spacer(minLength: 8)
-                            if workspace.lastUndo != nil {
-                                Button(String(localized: "action.undo")) { workspace.undoLast() }
-                                    .font(.subheadline.weight(.semibold))
-                                    .frame(minHeight: 44)
-                            }
-                            Button(String(localized: "action.close"), systemImage: "xmark") {
-                                workspace.dismissActionFeedback()
-                            }
-                            .labelStyle(.iconOnly)
-                            .font(.caption)
-                            .frame(width: 44, height: 44)
-                        }
-                        .padding(.horizontal, 16)
-                        .walletSurface(radius: 22)
-                    }
+                    WalletActionFeedback(workspace: workspace)
                     WalletGlassNavigation(workspace: workspace)
                 }
                 .frame(maxWidth: 560)
@@ -97,14 +77,51 @@ struct CheckLineShellView: View {
         }
     }
 
-    private var rootTabs: some View {
-        TabView(selection: WalletTabTransition.usesImmediateContent ? $chrome.selectedTab : $chrome.presentedTab) {
-            ForEach([CheckLineAppTab.home, .budgets, .wishes, .insights]) { tab in
-                page(tab)
-                    .tabItem { Image(systemName: tab.systemImage).accessibilityLabel(tab.title) }
-                    .tag(tab)
+    @ViewBuilder private var rootTabs: some View {
+        if #available(iOS 27.0, *), WalletTabTransition.usesSystemBar {
+            TabView(selection: systemSelection) {
+                Tab(value: WalletSystemTab.page(.home)) { page(.home) } label: { tabLabel(.home) }
+                Tab(value: WalletSystemTab.page(.budgets)) { page(.budgets) } label: { tabLabel(.budgets) }
+                Tab(value: WalletSystemTab.page(.wishes)) { page(.wishes) } label: { tabLabel(.wishes) }
+                Tab(value: WalletSystemTab.page(.insights)) { page(.insights) } label: { tabLabel(.insights) }
+                Tab(value: WalletSystemTab.agent, role: .prominent) {
+                    Color.clear
+                } label: {
+                    Image(uiImage: WalletAgentAvatar.tabImage)
+                        .renderingMode(.original)
+                        .accessibilityLabel(String(localized: "wallet.agent.open"))
+                        .accessibilityIdentifier("wallet.agent.avatar")
+                }
+            }
+            .tabViewStyle(.tabBarOnly)
+            .tabBarMinimizeBehavior(.never)
+            .toolbarColorScheme(.dark, for: .tabBar)
+        } else {
+            TabView(selection: WalletTabTransition.usesImmediateContent ? $chrome.selectedTab : $chrome.presentedTab) {
+                ForEach([CheckLineAppTab.home, .budgets, .wishes, .insights]) { tab in
+                    page(tab)
+                        .tabItem { tabLabel(tab) }
+                        .tag(tab)
+                }
             }
         }
+    }
+
+    private var systemSelection: Binding<WalletSystemTab> {
+        Binding {
+            .page(chrome.selectedTab)
+        } set: { destination in
+            switch destination {
+            case .page(let tab): chrome.selectedTab = tab
+            case .agent: workspace.showAgent = true
+            }
+        }
+    }
+
+    private func tabLabel(_ tab: CheckLineAppTab) -> some View {
+        Image(systemName: tab.systemImage)
+            .accessibilityLabel(tab.title)
+            .accessibilityIdentifier("wallet.tab.\(tab.rawValue)")
     }
 
     @ViewBuilder private func page(_ tab: CheckLineAppTab) -> some View {
@@ -139,4 +156,9 @@ struct CheckLineShellView: View {
             }
         }
     }
+}
+
+private enum WalletSystemTab: Hashable {
+    case page(CheckLineAppTab)
+    case agent
 }

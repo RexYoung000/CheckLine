@@ -80,15 +80,17 @@ struct PaperSolidButtonStyle: ButtonStyle {
     @Environment(\.walletReduceMotion) private var reduceMotion
     @Environment(\.isEnabled) private var isEnabled
     var enabled: Bool = true
+    var foreground: Color = PaperTheme.canvas
+    var background: Color = PaperTheme.ink
 
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .font(.body.weight(.semibold))
-            .foregroundStyle(PaperTheme.canvas)
+            .foregroundStyle(foreground)
             .padding(.horizontal, PaperTheme.Space.m)
             .frame(minHeight: PaperTheme.Layout.minTap)
             .background(
-                PaperTheme.ink.opacity(backgroundOpacity(pressed: configuration.isPressed)),
+                background.opacity(backgroundOpacity(pressed: configuration.isPressed)),
                 in: Capsule()
             )
             .scaleEffect(configuration.isPressed && !reduceMotion ? 0.98 : 1)
