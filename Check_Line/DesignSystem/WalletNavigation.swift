@@ -135,9 +135,9 @@ struct WalletGlassNavigation: View {
             GeometryReader { geometry in
                 let preview = dragLocation.flatMap { WalletTabHitTarget.tab(at: $0, size: geometry.size, rightToLeft: layoutDirection == .rightToLeft) }
                 let selected = preview ?? chrome?.selectedTab ?? .home
-                navigationButtons(selected: selected)
+                navigationButtons(selected: selected, slotWidth: geometry.size.width / CGFloat(tabs.count))
                 .padding(5)
-                .background { Capsule().fill(PaperTheme.navigationBase).allowsHitTesting(false) }
+                .background { Capsule().fill(.clear).paperGlass(.capsule).allowsHitTesting(false) }
                 .highPriorityGesture(
                     DragGesture(minimumDistance: 10)
                         .updating($dragLocation) { value, location, _ in
@@ -158,15 +158,15 @@ struct WalletGlassNavigation: View {
         .environment(\.colorScheme, .dark)
     }
 
-    @ViewBuilder private func navigationButtons(selected: CheckLineAppTab) -> some View {
+    @ViewBuilder private func navigationButtons(selected: CheckLineAppTab, slotWidth: CGFloat) -> some View {
         if #available(iOS 26.0, *) {
             ZStack {
-                GlassEffectContainer(spacing: 0) { selectionRow(selected: selected) }
+                GlassEffectContainer(spacing: slotWidth + 8) { selectionRow(selected: selected) }
                     .allowsHitTesting(false)
                     .accessibilityHidden(true)
                 buttonRow(selected: selected)
             }
-            .animation(reduceMotion ? nil : .spring(response: 0.34, dampingFraction: 0.76), value: selected)
+            .animation(reduceMotion ? nil : .spring(response: 0.36, dampingFraction: 0.72), value: selected)
         } else {
             ZStack {
                 selectionRow(selected: selected)
@@ -182,7 +182,11 @@ struct WalletGlassNavigation: View {
         HStack(spacing: 0) {
             ForEach(tabs) { tab in
                 ZStack {
-                    if selected == tab { selectionGlass.padding(.horizontal, 3).padding(.vertical, 2) }
+                    if selected == tab {
+                        selectionGlass
+                            .padding(.horizontal, 3).padding(.vertical, 2)
+                            .matchedGeometryEffect(id: "selected-tab-position", in: glassNamespace)
+                    }
                 }
                 .frame(maxWidth: .infinity)
                 .frame(height: 50)
@@ -215,6 +219,7 @@ struct WalletGlassNavigation: View {
             Capsule().fill(.clear)
                 .glassEffect(.clear.interactive(!reduceMotion), in: .capsule)
                 .glassEffectID("selected-tab-lens", in: glassNamespace)
+                .glassEffectTransition(.matchedGeometry)
         } else {
             Capsule().fill(.regularMaterial)
         }
@@ -223,7 +228,9 @@ struct WalletGlassNavigation: View {
     private func select(_ tab: CheckLineAppTab) {
         guard chrome?.selectedTab != tab else { return }
         PaperHaptics.selection()
-        chrome?.selectedTab = tab
+        withAnimation(reduceMotion ? nil : .spring(response: 0.36, dampingFraction: 0.72)) {
+            chrome?.selectedTab = tab
+        }
     }
 }
 

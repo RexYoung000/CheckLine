@@ -54,7 +54,7 @@ struct WalletRootPage<Content: View>: View {
                     .id("wallet-page-top")
                     .padding(.horizontal, lightHeader ? 0 : 18)
                     .padding(.top, lightHeader ? 0 : 12)
-                    .padding(.bottom, 24)
+                    .padding(.bottom, workspace.actionFeedback == nil ? 104 : 160)
                     .frame(maxWidth: PaperTheme.Layout.contentMaxWidth)
                     .frame(maxWidth: .infinity)
                     .opacity(lightHeader ? 1 : chrome?.interiorReveal ?? 1)
@@ -82,7 +82,7 @@ struct WalletRootPage<Content: View>: View {
                 WalletPageHeader(title: lightHeader ? nil : title, workspace: workspace, light: lightHeader, onAdd: onAdd)
             }
             .opacity(chrome?.stageOpacity ?? 1)
-            .safeAreaInset(edge: .bottom, spacing: 0) {
+            .overlay(alignment: .bottom) {
                 VStack(spacing: 8) {
                     if let banner = workspace.actionFeedback {
                         HStack {
@@ -97,21 +97,13 @@ struct WalletRootPage<Content: View>: View {
                         }
                         .padding(.horizontal, 16).walletSurface(radius: 22)
                     }
-                    if !WalletTabPresentation.usesSystemBar {
-                        WalletGlassNavigation(workspace: workspace)
-                    } else {
-                        HStack {
-                            Spacer()
-                            WalletAgentButton(workspace: workspace)
-                        }
-                    }
+                    WalletGlassNavigation(workspace: workspace)
                 }
                 .frame(maxWidth: 560)
                 .padding(.horizontal, 18).padding(.top, 8).padding(.bottom, 6)
                 .frame(maxWidth: .infinity)
-                .background { if lightHeader && !WalletTabPresentation.usesSystemBar { PaperTheme.canvas.ignoresSafeArea(edges: .bottom) } }
             }
-            .toolbar(WalletTabPresentation.usesSystemBar ? .visible : .hidden, for: .tabBar)
+            .toolbar(.hidden, for: .tabBar)
             .toolbar(.hidden, for: .bottomBar)
             .onChange(of: chrome?.presentedTab) { _, tab in
                 if lightHeader && tab == .home { reader.scrollTo("wallet-page-top", anchor: .top) }

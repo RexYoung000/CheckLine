@@ -10,7 +10,7 @@ struct CheckLineShellView: View {
     var body: some View {
         rootTabs
         .tint(PaperTheme.accent)
-        .preferredColorScheme((WalletTabPresentation.usesSystemBar ? chrome.selectedTab : chrome.presentedTab) == .home ? .light : .dark)
+        .preferredColorScheme(chrome.presentedTab == .home ? .light : .dark)
         .environment(\.shellChrome, chrome)
         .sheet(isPresented: $workspace.showComposer) { CreateComposerSheet(workspace: workspace).preferredColorScheme(.dark) }
         .sheet(isPresented: $workspace.showAgent, onDismiss: {
@@ -24,12 +24,8 @@ struct CheckLineShellView: View {
         .sheet(isPresented: $showsPreviewDetail) { previewDetail.preferredColorScheme(.dark) }
         .background(PaperTheme.canvas.ignoresSafeArea())
         .task(id: WalletNavigationRequest(tab: chrome.selectedTab, reduceMotion: reduceMotion, active: scenePhase == .active)) {
-            if WalletTabPresentation.usesSystemBar { chrome.settleNavigation() }
-            else if scenePhase == .active { await chrome.transitionToSelection(reduceMotion: reduceMotion) }
+            if scenePhase == .active { await chrome.transitionToSelection(reduceMotion: reduceMotion) }
             else { chrome.settleNavigation() }
-        }
-        .onChange(of: chrome.selectedTab) { _, _ in
-            if WalletTabPresentation.usesSystemBar { chrome.settleNavigation() }
         }
         .task {
             guard DesignPreviewData.isEnabled else { return }
@@ -64,30 +60,12 @@ struct CheckLineShellView: View {
         }
     }
 
-    @ViewBuilder private var rootTabs: some View {
-        if #available(iOS 26.0, *), WalletTabPresentation.usesSystemBar {
-            TabView(selection: $chrome.selectedTab) {
-                Tab(value: CheckLineAppTab.home) { page(.home) } label: {
-                    Image(systemName: CheckLineAppTab.home.systemImage).accessibilityLabel(CheckLineAppTab.home.title)
-                }
-                Tab(value: CheckLineAppTab.budgets) { page(.budgets) } label: {
-                    Image(systemName: CheckLineAppTab.budgets.systemImage).accessibilityLabel(CheckLineAppTab.budgets.title)
-                }
-                Tab(value: CheckLineAppTab.wishes) { page(.wishes) } label: {
-                    Image(systemName: CheckLineAppTab.wishes.systemImage).accessibilityLabel(CheckLineAppTab.wishes.title)
-                }
-                Tab(value: CheckLineAppTab.insights) { page(.insights) } label: {
-                    Image(systemName: CheckLineAppTab.insights.systemImage).accessibilityLabel(CheckLineAppTab.insights.title)
-                }
-            }
-            .toolbarColorScheme(.dark, for: .tabBar)
-        } else {
-            TabView(selection: $chrome.presentedTab) {
-                ForEach([CheckLineAppTab.home, .budgets, .wishes, .insights]) { tab in
-                    page(tab)
-                        .tabItem { Image(systemName: tab.systemImage).accessibilityLabel(tab.title) }
-                        .tag(tab)
-                }
+    private var rootTabs: some View {
+        TabView(selection: $chrome.presentedTab) {
+            ForEach([CheckLineAppTab.home, .budgets, .wishes, .insights]) { tab in
+                page(tab)
+                    .tabItem { Image(systemName: tab.systemImage).accessibilityLabel(tab.title) }
+                    .tag(tab)
             }
         }
     }

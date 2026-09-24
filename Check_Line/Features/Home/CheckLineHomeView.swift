@@ -52,7 +52,6 @@ struct CheckLineHomeView: View {
                             .font(.subheadline).padding(16).walletSurface(radius: 18)
                         }
                         .buttonStyle(.plain)
-                        .padding(.trailing, WalletTabPresentation.usesSystemBar ? 80 : 0)
                     }
                     if workspace.ledger.expenses.values.contains(where: { $0.attributionState == .unbudgeted && $0.wishRedemptionID == nil }) {
                         NavigationLink { UnbudgetedRecordsView(workspace: workspace) } label: {
