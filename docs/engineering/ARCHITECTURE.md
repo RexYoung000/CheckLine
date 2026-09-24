@@ -11,12 +11,12 @@
 | 工程 | `Check_Line.xcodeproj` |
 | Target / Scheme | `Check_Line` |
 | 平台 | iPhone / iPad，最低 iOS 17.0 |
-| 当前 UI | `TabView` 保存四页导航栈并隐藏默认栏；`WalletGlassNavigation` 在所有设备保持左侧四入口胶囊组与右侧同排 Agent，以无底板浮层覆盖根页滚动内容。iOS 26+ 的选中透镜采用系统玻璃形变过渡，旧系统使用 material。验收状态见 ROADMAP |
+| 当前 UI | `TabView` 保存四页导航栈并隐藏默认栏；`CheckLineShellView` 持续持有一组 `WalletGlassNavigation`，保持左侧四入口胶囊组与右侧同排 Agent，以无底板浮层覆盖根页滚动内容，详情页隐藏。iOS 26+ 的选中透镜采用系统玻璃形变过渡，旧系统使用 material。验收状态见 ROADMAP |
 | 正式数据层 | 首页与 Agent 经 `CheckLineWorkspace` 读写本地 `LedgerStore`（无 CloudKit） |
 | Test Target | `Check_LineTests` 覆盖领域引擎、理解管线、`AgentSession` 与首页工作区持久化 |
 | 网络 / 后端 / AI | `CloudLLMProvider` 已实现且默认关闭；App 入口不启用、启动无网络请求 |
 
-卡夹导航由 `ShellChromeState` 分离用户选择与当前呈现页面：闭合首页卡夹后才替换 Tab 内容；返回反向打开。选中透镜立即响应选择，并只在四入口胶囊组内过渡。导航不修改业务数据。磨砂材质与不透明票据在 DesignSystem 共享。
+`ShellChromeState` 分离用户选择与当前呈现页面：iOS 26+ iPhone 继续沿用 `ccb6316` 的即时选中与换页，iPad 和旧系统待首页卡夹闭合后替换 Tab 内容、返回时反向打开。外层持续存在的选中透镜立即响应选择，并只在四入口胶囊组内过渡；根页进入详情时通过 `isShowingDetail` 隐藏外层导航。导航不修改业务数据。磨砂材质与不透明票据在 DesignSystem 共享。
 | 系统权限 / iCloud | 未启用；SwiftData 配置为 `cloudKitDatabase: .none` |
 
 旧样机的 `budgetIDs` 多预算关系、共享消费删除和旧结算只用于追溯，不是新 Schema 或验收依据。`BudgetEngine` 的 Decimal 基础计算可以继续复用；命名和输入结构在新模型落地时同步收敛。

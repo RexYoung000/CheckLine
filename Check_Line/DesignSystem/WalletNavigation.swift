@@ -217,7 +217,7 @@ struct WalletGlassNavigation: View {
     @ViewBuilder private var selectionGlass: some View {
         if #available(iOS 26.0, *) {
             Capsule().fill(.clear)
-                .glassEffect(.clear.interactive(!reduceMotion), in: .capsule)
+                .glassEffect(.regular.tint(PaperTheme.canvas).interactive(!reduceMotion), in: .capsule)
                 .glassEffectID("selected-tab-lens", in: glassNamespace)
                 .glassEffectTransition(.matchedGeometry)
         } else {

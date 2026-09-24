@@ -10,7 +10,40 @@ struct CheckLineShellView: View {
     var body: some View {
         rootTabs
         .tint(PaperTheme.accent)
-        .preferredColorScheme(chrome.presentedTab == .home ? .light : .dark)
+        .preferredColorScheme((WalletTabTransition.usesImmediateContent ? chrome.selectedTab : chrome.presentedTab) == .home ? .light : .dark)
+        .overlay(alignment: .bottom) {
+            if !chrome.isShowingDetail {
+                VStack(spacing: 8) {
+                    if let banner = workspace.actionFeedback {
+                        HStack {
+                            Text(banner.localizedText)
+                                .font(.caption)
+                                .lineLimit(2)
+                            Spacer(minLength: 8)
+                            if workspace.lastUndo != nil {
+                                Button(String(localized: "action.undo")) { workspace.undoLast() }
+                                    .font(.subheadline.weight(.semibold))
+                                    .frame(minHeight: 44)
+                            }
+                            Button(String(localized: "action.close"), systemImage: "xmark") {
+                                workspace.dismissActionFeedback()
+                            }
+                            .labelStyle(.iconOnly)
+                            .font(.caption)
+                            .frame(width: 44, height: 44)
+                        }
+                        .padding(.horizontal, 16)
+                        .walletSurface(radius: 22)
+                    }
+                    WalletGlassNavigation(workspace: workspace)
+                }
+                .frame(maxWidth: 560)
+                .padding(.horizontal, 18)
+                .padding(.top, 8)
+                .padding(.bottom, 6)
+                .frame(maxWidth: .infinity)
+            }
+        }
         .environment(\.shellChrome, chrome)
         .sheet(isPresented: $workspace.showComposer) { CreateComposerSheet(workspace: workspace).preferredColorScheme(.dark) }
         .sheet(isPresented: $workspace.showAgent, onDismiss: {
@@ -24,8 +57,12 @@ struct CheckLineShellView: View {
         .sheet(isPresented: $showsPreviewDetail) { previewDetail.preferredColorScheme(.dark) }
         .background(PaperTheme.canvas.ignoresSafeArea())
         .task(id: WalletNavigationRequest(tab: chrome.selectedTab, reduceMotion: reduceMotion, active: scenePhase == .active)) {
-            if scenePhase == .active { await chrome.transitionToSelection(reduceMotion: reduceMotion) }
+            if WalletTabTransition.usesImmediateContent { chrome.settleNavigation() }
+            else if scenePhase == .active { await chrome.transitionToSelection(reduceMotion: reduceMotion) }
             else { chrome.settleNavigation() }
+        }
+        .onChange(of: chrome.selectedTab) { _, _ in
+            if WalletTabTransition.usesImmediateContent { chrome.settleNavigation() }
         }
         .task {
             guard DesignPreviewData.isEnabled else { return }
@@ -61,7 +98,7 @@ struct CheckLineShellView: View {
     }
 
     private var rootTabs: some View {
-        TabView(selection: $chrome.presentedTab) {
+        TabView(selection: WalletTabTransition.usesImmediateContent ? $chrome.selectedTab : $chrome.presentedTab) {
             ForEach([CheckLineAppTab.home, .budgets, .wishes, .insights]) { tab in
                 page(tab)
                     .tabItem { Image(systemName: tab.systemImage).accessibilityLabel(tab.title) }

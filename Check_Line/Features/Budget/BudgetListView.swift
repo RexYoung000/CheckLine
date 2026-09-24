@@ -8,7 +8,7 @@ struct BudgetListView: View {
     @State private var expandedBudgetID: UUID?
 
     var body: some View {
-        WalletRootPage(title: String(localized: "tab.budgets"), workspace: workspace, onAdd: { workspace.openComposer(.budget) }) {
+        WalletRootPage(tab: .budgets, title: String(localized: "tab.budgets"), workspace: workspace, onAdd: { workspace.openComposer(.budget) }) {
             VStack(alignment: .leading, spacing: 20) {
                 if workspace.isEmpty {
                     PaperEmptyHint(title: String(localized: "v1.home.empty.title"), message: String(localized: "wallet.empty.budget"))

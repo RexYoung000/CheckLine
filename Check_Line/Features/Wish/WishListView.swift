@@ -10,7 +10,7 @@ struct WishListView: View {
             .sorted { $0.createdAt == $1.createdAt ? $0.name < $1.name : $0.createdAt > $1.createdAt }
     }
     var body: some View {
-        WalletRootPage(title: String(localized: "wallet.wishes.title"), workspace: workspace, onAdd: { adding = true }) {
+        WalletRootPage(tab: .wishes, title: String(localized: "wallet.wishes.title"), workspace: workspace, onAdd: { adding = true }) {
             VStack(alignment: .leading, spacing: 24) {
                 Button { walletDetails = true } label: {
                     PaperCard {

@@ -4,7 +4,7 @@ struct CycleReviewView: View {
     @Bindable var workspace: CheckLineWorkspace
     @State private var showsDetails = false
     var body: some View {
-        WalletRootPage(title: String(localized: "wallet.analysis.title"), workspace: workspace) {
+        WalletRootPage(tab: .insights, title: String(localized: "wallet.analysis.title"), workspace: workspace) {
             VStack(alignment: .leading, spacing: 24) {
                 if let card = workspace.selectedCard {
                     Menu {

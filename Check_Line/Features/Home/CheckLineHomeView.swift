@@ -20,7 +20,7 @@ struct CheckLineHomeView: View {
     private var closure: CGFloat { reduceMotion ? 0 : chrome?.pocketClosure ?? 0 }
 
     var body: some View {
-        WalletRootPage(title: String(localized: "tab.home"), workspace: workspace, lightHeader: true) {
+        WalletRootPage(tab: .home, title: String(localized: "tab.home"), workspace: workspace, lightHeader: true) {
             if let card {
                 VStack(spacing: 0) {
                     deck(card)
