@@ -167,11 +167,33 @@ struct WalletGlassNavigation: View {
 
     @ViewBuilder private func navigationButtons(selected: CheckLineAppTab) -> some View {
         if #available(iOS 26.0, *) {
-            GlassEffectContainer(spacing: 0) { buttonRow(selected: selected) }
-                .animation(reduceMotion ? nil : .spring(response: 0.34, dampingFraction: 0.76), value: selected)
+            ZStack {
+                GlassEffectContainer(spacing: 0) { selectionRow(selected: selected) }
+                    .allowsHitTesting(false)
+                    .accessibilityHidden(true)
+                buttonRow(selected: selected)
+            }
+            .animation(reduceMotion ? nil : .spring(response: 0.34, dampingFraction: 0.76), value: selected)
         } else {
-            buttonRow(selected: selected)
-                .animation(reduceMotion ? nil : .smooth(duration: 0.24), value: selected)
+            ZStack {
+                selectionRow(selected: selected)
+                    .allowsHitTesting(false)
+                    .accessibilityHidden(true)
+                buttonRow(selected: selected)
+            }
+            .animation(reduceMotion ? nil : .smooth(duration: 0.24), value: selected)
+        }
+    }
+
+    private func selectionRow(selected: CheckLineAppTab) -> some View {
+        HStack(spacing: 0) {
+            ForEach(tabs) { tab in
+                ZStack {
+                    if selected == tab { selectionGlass.padding(.horizontal, 3).padding(.vertical, 2) }
+                }
+                .frame(maxWidth: .infinity)
+                .frame(height: 50)
+            }
         }
     }
 
@@ -193,12 +215,10 @@ struct WalletGlassNavigation: View {
             .foregroundStyle(selected ? PaperTheme.accent : PaperTheme.ink)
             .frame(maxWidth: .infinity).frame(height: 50)
             .contentShape(Capsule())
-            .background { if selected { selectionGlass } }
     }
 
     @ViewBuilder private var selectionGlass: some View {
         if #available(iOS 26.0, *) {
-            // Keep the symbols outside the glass sampling container so they stay crisp.
             Capsule().fill(.clear)
                 .glassEffect(.clear.interactive(!reduceMotion), in: .capsule)
                 .glassEffectID("selected-tab-lens", in: glassNamespace)
