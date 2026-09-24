@@ -1,4 +1,12 @@
 import SwiftUI
+import UIKit
+
+enum WalletTabPresentation {
+    static var usesSystemBar: Bool {
+        if #available(iOS 26.0, *) { UIDevice.current.userInterfaceIdiom == .phone }
+        else { false }
+    }
+}
 
 enum CheckLineAppTab: String, CaseIterable, Identifiable, Hashable {
     case home

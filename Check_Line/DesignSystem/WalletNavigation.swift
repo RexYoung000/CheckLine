@@ -153,14 +153,7 @@ struct WalletGlassNavigation: View {
             }
             .frame(height: 60)
 
-            Button { workspace.showAgent = true } label: {
-                WalletAgentAvatar().scaleEffect(32.0 / 44).frame(width: 60, height: 60)
-                    .paperGlass(.circle, interactive: !reduceMotion)
-            }
-            .buttonStyle(.plain)
-            .accessibilityLabel(String(localized: "wallet.agent.open"))
-            .accessibilityHint(String(localized: "wallet.agent.resume.hint"))
-            .accessibilityIdentifier("wallet.agent.avatar")
+            WalletAgentButton(workspace: workspace)
         }
         .environment(\.colorScheme, .dark)
     }
@@ -231,6 +224,22 @@ struct WalletGlassNavigation: View {
         guard chrome?.selectedTab != tab else { return }
         PaperHaptics.selection()
         chrome?.selectedTab = tab
+    }
+}
+
+struct WalletAgentButton: View {
+    @Bindable var workspace: CheckLineWorkspace
+    @Environment(\.walletReduceMotion) private var reduceMotion
+
+    var body: some View {
+        Button { workspace.showAgent = true } label: {
+            WalletAgentAvatar().scaleEffect(32.0 / 44).frame(width: 60, height: 60)
+                .paperGlass(.circle, interactive: !reduceMotion)
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel(String(localized: "wallet.agent.open"))
+        .accessibilityHint(String(localized: "wallet.agent.resume.hint"))
+        .accessibilityIdentifier("wallet.agent.avatar")
     }
 }
 

@@ -64,7 +64,17 @@ struct WalletRootPage<Content: View>: View {
             .scrollDisabled(chrome?.isTransitioning == true)
             .scrollDismissesKeyboard(.interactively)
             .background {
-                if lightHeader { PaperTheme.paper.ignoresSafeArea() }
+                if lightHeader {
+                    GeometryReader { geometry in
+                        ZStack(alignment: .top) {
+                            PaperTheme.canvas.ignoresSafeArea()
+                            PaperTheme.paper
+                                .frame(height: min(geometry.size.height * 0.42, 340))
+                                .frame(maxWidth: .infinity, alignment: .top)
+                                .ignoresSafeArea(edges: .top)
+                        }
+                    }
+                }
                 else { WalletInteriorSurface().ignoresSafeArea() }
             }
             .toolbar(.hidden, for: .navigationBar)
@@ -87,14 +97,21 @@ struct WalletRootPage<Content: View>: View {
                         }
                         .padding(.horizontal, 16).walletSurface(radius: 22)
                     }
-                    WalletGlassNavigation(workspace: workspace)
+                    if !WalletTabPresentation.usesSystemBar {
+                        WalletGlassNavigation(workspace: workspace)
+                    } else {
+                        HStack {
+                            Spacer()
+                            WalletAgentButton(workspace: workspace)
+                        }
+                    }
                 }
                 .frame(maxWidth: 560)
                 .padding(.horizontal, 18).padding(.top, 8).padding(.bottom, 6)
                 .frame(maxWidth: .infinity)
-                .background { if lightHeader { PaperTheme.canvas.ignoresSafeArea(edges: .bottom) } }
+                .background { if lightHeader && !WalletTabPresentation.usesSystemBar { PaperTheme.canvas.ignoresSafeArea(edges: .bottom) } }
             }
-            .toolbar(.hidden, for: .tabBar)
+            .toolbar(WalletTabPresentation.usesSystemBar ? .visible : .hidden, for: .tabBar)
             .toolbar(.hidden, for: .bottomBar)
             .onChange(of: chrome?.presentedTab) { _, tab in
                 if lightHeader && tab == .home { reader.scrollTo("wallet-page-top", anchor: .top) }
