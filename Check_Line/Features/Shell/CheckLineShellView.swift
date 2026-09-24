@@ -30,6 +30,7 @@ struct CheckLineShellView: View {
         .task {
             guard DesignPreviewData.isEnabled else { return }
             if let tab = CheckLineAppTab(rawValue: DesignPreviewData.screen) { chrome.selectedTab = tab; chrome.settleNavigation() }
+            if DesignPreviewData.screen == "budget-inline" { chrome.selectedTab = .budgets; chrome.settleNavigation() }
             switch DesignPreviewData.screen {
             case "settings": chrome.isSettingsPresented = true
             case "attention": chrome.isAttentionPresented = true

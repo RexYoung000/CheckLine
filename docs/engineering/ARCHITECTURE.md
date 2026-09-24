@@ -208,6 +208,8 @@ BudgetEngine / Home Projection
 | `createdAt` | Date | |
 | `updatedAt` | Date | |
 
+消费附件由设备本地 `ExpenseAttachmentStore` 按 `Expense.id` 管理，不加入 `PersistedExpense` 或 `LedgerStore.replaceAll` 的整本替换范围。每笔最多 5 张用户主动添加的图片；写入去除元数据的可读副本，临时写入成功后原子替换，失败可重试且不能报成功；删除附件和消费时清理对应副本。仅用于 OCR 的原图不成为附件。备注可保存至 10,000 字，输入超限时明确提示且不得静默截断。待确认归属由 Workspace 调用确定性 `AttributionEngine`；确认进入已结算原周期时经 `RetrospectiveAdjustmentEngine` 预览并确认钱包影响，从已结算周期改归属时先展示原结算不变和新预算已用增加的影响。
+
 **结算金额派生顺序**：
 
 1. 若有与预算基准币一致的 `postedAmount`，使用实际入账；
@@ -527,7 +529,7 @@ M4 面板只渲染 `AgentTurn`，不直接调引擎：
 ## 十、隐私与数据保留
 
 - 完整 Expense、Settlement、WalletLedger 默认仅存用户设备本地；iCloud 尚未进入已确认首发范围；
-- 图片和语音原始数据处理后丢弃；
+- OCR 原图和语音原始数据处理后丢弃；用户明确保存的消费附件单独存设备本地无元数据副本，不上传；
 - 短信、邮件只提取交易必要字段，不保存整段无关内容；
 - 来源账号标识优先保存不可逆摘要；
 - 调试日志不得输出真实金额、商家、邮箱、短信或心愿名称；

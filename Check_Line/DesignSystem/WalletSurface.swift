@@ -63,7 +63,10 @@ struct WalletRootPage<Content: View>: View {
             }
             .scrollDisabled(chrome?.isTransitioning == true)
             .scrollDismissesKeyboard(.interactively)
-            .background { WalletInteriorSurface().ignoresSafeArea() }
+            .background {
+                if lightHeader { PaperTheme.paper.ignoresSafeArea() }
+                else { WalletInteriorSurface().ignoresSafeArea() }
+            }
             .toolbar(.hidden, for: .navigationBar)
             .safeAreaInset(edge: .top, spacing: 0) {
                 WalletPageHeader(title: lightHeader ? nil : title, workspace: workspace, light: lightHeader, onAdd: onAdd)
@@ -89,6 +92,7 @@ struct WalletRootPage<Content: View>: View {
                 .frame(maxWidth: 560)
                 .padding(.horizontal, 18).padding(.top, 8).padding(.bottom, 6)
                 .frame(maxWidth: .infinity)
+                .background { if lightHeader { PaperTheme.canvas.ignoresSafeArea(edges: .bottom) } }
             }
             .toolbar(.hidden, for: .tabBar)
             .toolbar(.hidden, for: .bottomBar)

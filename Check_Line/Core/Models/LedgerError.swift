@@ -21,6 +21,7 @@ nonisolated enum LedgerError: Error, Equatable, Sendable {
     case wishNotFound
     case redemptionNotFound
     case settlementNotFound
+    case staleRetrospectivePreview
     case oneShotDoesNotOpenNextPeriod
     case repeatingBudgetNeedsRecurrence
     case walletCurrencyMismatch

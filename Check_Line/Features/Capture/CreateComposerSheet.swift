@@ -1,4 +1,5 @@
 import SwiftUI
+import PhotosUI
 
 enum ComposerMode: String, CaseIterable, Identifiable {
     case form
@@ -23,6 +24,11 @@ struct CreateComposerSheet: View {
     @State private var repeating = true
     @State private var merchant = ""
     @State private var note = ""
+    @State private var pickerItems: [PhotosPickerItem] = []
+    @State private var attachmentData: [Data] = []
+    @State private var recordedExpenseID: UUID?
+    @State private var isImportingImages = false
+    @State private var attachmentError: String?
     @State private var occurredAt = Date()
     @State private var attributionID = "unbudgeted"
     @State private var showingCurrencyPicker = false
@@ -77,6 +83,7 @@ struct CreateComposerSheet: View {
         .onChange(of: mode) { _, mode in
             if mode == .form { workspace.banner = nil }
         }
+        .onChange(of: pickerItems) { _, items in Task { await importImages(items) } }
         .confirmationDialog(
             String(localized: "v1.composer.choose.currency"),
             isPresented: $showingCurrencyPicker,
@@ -204,6 +211,7 @@ struct CreateComposerSheet: View {
                             showingDatePicker = true
                         }
                         noteCard
+                        attachmentInput
                     }
                 }
 
@@ -213,6 +221,7 @@ struct CreateComposerSheet: View {
                         .foregroundStyle(PaperTheme.ink)
                         .frame(maxWidth: .infinity, alignment: .leading)
                 }
+                if let attachmentError { Text(attachmentError).font(.caption).foregroundStyle(.red) }
             }
             .padding(.horizontal, 20)
             .padding(.bottom, 24)
@@ -245,11 +254,6 @@ struct CreateComposerSheet: View {
                     .scrollContentBackground(.hidden)
                     .accessibilityLabel(String(localized: "v1.composer.note.placeholder"))
                     .frame(height: 120)
-                    .onChange(of: note) { _, newValue in
-                        if newValue.count > 150 {
-                            note = String(newValue.prefix(150))
-                        }
-                    }
                 if note.isEmpty {
                     Text(String(localized: "v1.composer.note.placeholder"))
                         .font(.subheadline)
@@ -261,13 +265,59 @@ struct CreateComposerSheet: View {
             }
             HStack {
                 Spacer()
-                Text("\(note.count)/150")
+                Text("\(note.count)/10000")
                     .font(.caption2)
-                    .foregroundStyle(PaperTheme.muted)
+                    .foregroundStyle(note.count > 10_000 ? .red : PaperTheme.muted)
+            }
+            if note.count > 10_000 {
+                Text(String(localized: "wallet.expense.noteTooLong"))
+                    .font(.caption).foregroundStyle(.red)
             }
         }
         .padding(12)
         .walletSurface()
+    }
+
+    private var attachmentInput: some View {
+        let savedCount = recordedExpenseID.map { workspace.attachmentStore.attachments(for: $0).count } ?? 0
+        let totalCount = attachmentData.count + savedCount
+        return VStack(alignment: .leading, spacing: 10) {
+            HStack {
+                Text(String(localized: "wallet.expense.attachments"))
+                Spacer()
+                Text("\(totalCount)/\(ExpenseAttachmentStore.maximumPerExpense)").foregroundStyle(PaperTheme.muted)
+            }.font(.subheadline)
+            if totalCount < ExpenseAttachmentStore.maximumPerExpense {
+                PhotosPicker(selection: $pickerItems, maxSelectionCount: ExpenseAttachmentStore.maximumPerExpense - totalCount, matching: .images) {
+                    Label(String(localized: "wallet.expense.addAttachment"), systemImage: "photo.badge.plus")
+                }
+                Button {
+                    if let data = UIPasteboard.general.image?.pngData() { addAttachmentData(data) }
+                    else { attachmentError = String(localized: "wallet.expense.noClipboardImage") }
+                } label: { Label(String(localized: "wallet.expense.pasteImage"), systemImage: "doc.on.clipboard") }
+            }
+        }
+        .padding(16)
+        .walletSurface()
+    }
+
+    private func addAttachmentData(_ data: Data) {
+        let savedCount = recordedExpenseID.map { workspace.attachmentStore.attachments(for: $0).count } ?? 0
+        guard attachmentData.count + savedCount < ExpenseAttachmentStore.maximumPerExpense else { return }
+        attachmentData.append(data)
+        attachmentError = nil
+    }
+
+    private func importImages(_ items: [PhotosPickerItem]) async {
+        isImportingImages = true
+        for item in items {
+            do {
+                guard let data = try await item.loadTransferable(type: Data.self) else { throw ExpenseAttachmentError.unreadableImage }
+                addAttachmentData(data)
+            } catch { attachmentError = String(localized: "wallet.expense.retrySave") }
+        }
+        pickerItems = []
+        isImportingImages = false
     }
 
     private var canSubmit: Bool {
@@ -276,7 +326,7 @@ struct CreateComposerSheet: View {
             name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty == false
                 && MoneyFormat.parseAmount(amount) != nil
         case .record:
-            MoneyFormat.parseAmount(amount) != nil
+            MoneyFormat.parseAmount(amount) != nil && note.count <= 10_000 && !isImportingImages
         }
     }
 
@@ -307,13 +357,25 @@ struct CreateComposerSheet: View {
                 cycleType: repeating ? .repeating : .oneShot
             )
         case .record:
-            workspace.recordExpense(
-                amountText: amount,
-                merchant: merchant,
-                note: note,
-                attributionID: attributionID,
-                occurredAt: occurredAt
+            let id = recordedExpenseID ?? workspace.recordExpense(
+                amountText: amount, merchant: merchant, note: note,
+                attributionID: attributionID, occurredAt: occurredAt,
+                keepComposerOpen: !attachmentData.isEmpty
             )
+            guard let id else { return }
+            recordedExpenseID = id
+            while !attachmentData.isEmpty {
+                do {
+                    try workspace.attachmentStore.add(imageData: attachmentData[0], to: id)
+                    attachmentData.removeFirst()
+                } catch {
+                    attachmentError = String(localized: "wallet.expense.retrySave")
+                    workspace.banner = .failed
+                    return
+                }
+            }
+            workspace.banner = .recorded
+            workspace.showComposer = false
         }
     }
 }

@@ -6,9 +6,15 @@ struct CheckLineHomeView: View {
     @Environment(\.walletReduceMotion) private var reduceMotion
     @Environment(\.dynamicTypeSize) private var typeSize
     @State private var detail: BudgetDetailSection?
-    @GestureState(resetTransaction: Transaction(animation: .smooth(duration: 0.2))) private var dragOffset: CGFloat = 0
+    @State private var inlineDetails = false
+    @State private var summaryPopup: BudgetDetailSection?
+    @State private var selectedExpense: Expense?
+    @Namespace private var summaryNamespace
+    @GestureState(resetTransaction: Transaction(animation: .spring(response: 0.3, dampingFraction: 0.8))) private var dragOffset: CGSize = .zero
     @State private var receiptOffset = 0
     @State private var deckHeight: CGFloat = 222
+    @State private var flightOffset: CGSize = .zero
+    @State private var isCardFlying = false
 
     private var card: HomeBudgetCardModel? { workspace.selectedCard }
     private var closure: CGFloat { reduceMotion ? 0 : chrome?.pocketClosure ?? 0 }
@@ -26,6 +32,9 @@ struct CheckLineHomeView: View {
                         .rotation3DEffect(.degrees(-6 * Double(closure)), axis: (x: 1, y: 0, z: 0), anchor: .bottom, perspective: 0.35)
                         .offset(y: -24 * closure)
                     VStack(spacing: 18) {
+                    if inlineDetails {
+                        BudgetInlineDetails(workspace: workspace, card: card)
+                    } else {
                     if typeSize.isAccessibilitySize {
                         VStack(spacing: 12) { usedTile(card); dateTile(card) }
                     } else {
@@ -49,6 +58,7 @@ struct CheckLineHomeView: View {
                             Label(String(localized: "v1.unbudgeted"), systemImage: "tray").font(.subheadline).frame(maxWidth: .infinity, alignment: .leading).padding(16).walletSurface(radius: 18)
                         }
                         .buttonStyle(.plain)
+                    }
                     }
                     }
                     .opacity(max(0, 1 - Double(closure) * 2.2))
@@ -79,12 +89,28 @@ struct CheckLineHomeView: View {
         .sheet(item: $detail) { section in
             if let card { BudgetDetailSheet(workspace: workspace, budgetID: card.id, initialSection: section) }
         }
+        .sheet(item: $selectedExpense) { item in WalletExpenseDetail(workspace: workspace, expenseID: item.id) }
+        .overlay {
+            if let summaryPopup, let card {
+                HomeSummaryOverlay(workspace: workspace, card: card, section: summaryPopup, namespace: summaryNamespace) {
+                    withAnimation(reduceMotion ? nil : .spring(response: 0.38, dampingFraction: 0.86)) { self.summaryPopup = nil }
+                }
+                .transition(.opacity)
+                .zIndex(10)
+            }
+        }
         .onChange(of: card?.id) { _, _ in receiptOffset = 0 }
+        .onAppear {
+            guard DesignPreviewData.isEnabled else { return }
+            if DesignPreviewData.screen == "home-inline" { inlineDetails = true }
+            if DesignPreviewData.screen == "home-used" { summaryPopup = .overview }
+            if DesignPreviewData.screen == "home-calendar" { summaryPopup = .calendar }
+        }
     }
 
     private func deck(_ card: HomeBudgetCardModel) -> some View {
         ZStack(alignment: .topTrailing) {
-            if workspace.cards.count > 1 {
+            if canChangeCard(1) {
                 RoundedRectangle(cornerRadius: 27)
                     .fill(LinearGradient(colors: [Color(red: 0.78, green: 0.75, blue: 0.9), Color(red: 0.63, green: 0.60, blue: 0.78)], startPoint: .topLeading, endPoint: .bottomTrailing))
                     .overlay { RoundedRectangle(cornerRadius: 27).strokeBorder(.white.opacity(0.5), lineWidth: 0.7) }
@@ -92,10 +118,38 @@ struct CheckLineHomeView: View {
                     .accessibilityHidden(true)
             }
             ZStack(alignment: .topTrailing) {
-            Button { detail = .overview } label: { LiquidBudgetCard(card: card, flows: !workspace.showAgent && !workspace.showComposer && detail == nil && chrome?.isSettingsPresented != true && chrome?.isAttentionPresented != true) }
+            Button { withAnimation(reduceMotion ? nil : .smooth(duration: 0.28)) { inlineDetails.toggle() } } label: { LiquidBudgetCard(card: card, flows: !workspace.showAgent && !workspace.showComposer && detail == nil && !inlineDetails && chrome?.isSettingsPresented != true && chrome?.isAttentionPresented != true) }
                 .buttonStyle(.plain)
-                .accessibilityAction(named: Text("wallet.card.next")) { changeCard(1) }
-                .accessibilityAction(named: Text("wallet.card.previous")) { changeCard(-1) }
+                .highPriorityGesture(LongPressGesture(minimumDuration: 0.16, maximumDistance: 12).sequenced(before: DragGesture(minimumDistance: 0))
+                    .updating($dragOffset) { value, offset, _ in
+                        guard !reduceMotion, canChangeCard(1), !isCardFlying else { return }
+                        if case .second(true, let drag?) = value { offset = drag.translation }
+                    }
+                    .onEnded { value in
+                        guard case .second(true, let drag?) = value, canChangeCard(1), !isCardFlying else { return }
+                        let distance = hypot(drag.translation.width, drag.translation.height)
+                        if distance >= min(deckHeight, 300) * 0.3 {
+                            isCardFlying = true
+                            withTransaction(Transaction(animation: nil)) {
+                                flightOffset = CGSize(width: drag.translation.width * 0.7, height: drag.translation.height * 0.7)
+                            }
+                            withAnimation(.easeOut(duration: 0.15)) {
+                                flightOffset = CGSize(width: drag.translation.width / distance * 360, height: drag.translation.height / distance * 360)
+                            }
+                            Task { @MainActor in
+                                try? await Task.sleep(for: .milliseconds(150))
+                                withTransaction(Transaction(animation: nil)) {
+                                    changeCard(1)
+                                    flightOffset = .zero
+                                    isCardFlying = false
+                                }
+                            }
+                        }
+                    })
+                .accessibilityActions {
+                    if canChangeCard(1) { Button(String(localized: "wallet.card.next")) { changeCard(1) } }
+                    if canChangeCard(-1) { Button(String(localized: "wallet.card.previous")) { changeCard(-1) } }
+                }
             Menu {
                 ForEach(workspace.cards) { item in
                     Button { workspace.selectedBudgetID = item.id } label: {
@@ -103,7 +157,7 @@ struct CheckLineHomeView: View {
                     }
                 }
                 Divider()
-                Button(String(localized: "wallet.card.details"), systemImage: "arrow.up.right") { detail = .overview }
+                Button(String(localized: "wallet.card.details"), systemImage: "arrow.up.right") { inlineDetails = true }
                 Button(String(localized: "wallet.budget.manage"), systemImage: "wallet.pass") { chrome?.selectedTab = .budgets }
             } label: {
                 Image(systemName: "ellipsis").foregroundStyle(.white).frame(width: 44, height: 44).padding(8)
@@ -122,17 +176,7 @@ struct CheckLineHomeView: View {
             .accessibilityLabel(String(localized: "capture.title"))
             .padding(.leading, 18).padding(.bottom, 22)
         }
-        .offset(y: dragOffset)
-        .gesture(DragGesture(minimumDistance: 18).updating($dragOffset) { value, offset, _ in
-            guard !reduceMotion, abs(value.translation.height) > abs(value.translation.width),
-                  canChangeCard(value.translation.height < 0 ? 1 : -1) else { return }
-            offset = max(-70, min(70, value.translation.height * 0.55))
-        }.onEnded { value in
-            guard abs(value.translation.height) > abs(value.translation.width) else { return }
-            withAnimation(reduceMotion ? nil : .spring(response: 0.35, dampingFraction: 0.82)) {
-                if abs(value.translation.height) > 45 { changeCard(value.translation.height < 0 ? 1 : -1) }
-            }
-        }, including: workspace.cards.count > 1 ? .all : .subviews)
+        .offset(x: dragOffset.width * 0.7 + flightOffset.width, y: dragOffset.height * 0.7 + flightOffset.height)
         .id(card.id)
         .transition(reduceMotion ? .opacity : .asymmetric(insertion: .offset(y: 18).combined(with: .opacity), removal: .offset(y: -80).combined(with: .opacity)))
         }
@@ -140,7 +184,7 @@ struct CheckLineHomeView: View {
     }
 
     private func usedTile(_ card: HomeBudgetCardModel) -> some View {
-        Button { detail = .overview } label: {
+        Button { withAnimation(reduceMotion ? nil : .spring(response: 0.38, dampingFraction: 0.86)) { summaryPopup = .overview } } label: {
             VStack(alignment: .leading, spacing: 12) {
                 tileLabel(String(localized: "v1.card.used"), icon: "arrow.up.right")
                 Text(MoneyFormat.string(-BudgetPresentation.used(card), currencyCode: card.currencyCode))
@@ -150,11 +194,12 @@ struct CheckLineHomeView: View {
                     Text(String(localized: "wallet.last7days")).font(.caption2).foregroundStyle(PaperTheme.muted)
                 }
             }.padding(16).frame(maxWidth: .infinity, minHeight: 137, alignment: .topLeading).walletSurface()
+                .matchedGeometryEffect(id: BudgetDetailSection.overview.rawValue, in: summaryNamespace, isSource: summaryPopup != .overview)
         }.buttonStyle(.plain)
     }
 
     private func dateTile(_ card: HomeBudgetCardModel) -> some View {
-        Button { detail = .calendar } label: {
+        Button { withAnimation(reduceMotion ? nil : .spring(response: 0.38, dampingFraction: 0.86)) { summaryPopup = .calendar } } label: {
             VStack(alignment: .leading, spacing: 16) {
                 tileLabel(Date().formatted(.dateTime.month(.wide)), icon: "arrow.up.right")
                 HStack(alignment: .bottom, spacing: 12) {
@@ -172,6 +217,7 @@ struct CheckLineHomeView: View {
                     }.foregroundStyle(PaperTheme.muted)
                 }
             }.padding(16).frame(maxWidth: .infinity, minHeight: 137, alignment: .topLeading).walletSurface()
+                .matchedGeometryEffect(id: BudgetDetailSection.calendar.rawValue, in: summaryNamespace, isSource: summaryPopup != .calendar)
         }.buttonStyle(.plain)
     }
 
@@ -191,7 +237,7 @@ struct CheckLineHomeView: View {
             if rows.isEmpty {
                 Text(String(localized: "v1.card.records.empty")).font(.subheadline).foregroundStyle(PaperTheme.muted).padding(.vertical, 20)
             } else {
-                WalletReceiptStack(rows: rows, position: $receiptOffset) { detail = .records }
+                WalletReceiptStack(rows: rows, position: $receiptOffset) { selectedExpense = $0 }
                     .id(card.id)
             }
         }
@@ -206,6 +252,57 @@ struct CheckLineHomeView: View {
     private func canChangeCard(_ direction: Int) -> Bool {
         guard let card, let index = workspace.cards.firstIndex(where: { $0.id == card.id }) else { return false }
         return workspace.cards.indices.contains(index + direction)
+    }
+}
+
+private struct HomeSummaryOverlay: View {
+    @Bindable var workspace: CheckLineWorkspace
+    var card: HomeBudgetCardModel
+    var section: BudgetDetailSection
+    var namespace: Namespace.ID
+    var close: () -> Void
+
+    var body: some View {
+        GeometryReader { geometry in
+            ZStack {
+                Color.black.opacity(0.54).ignoresSafeArea().onTapGesture(perform: close)
+                VStack(spacing: 0) {
+                    HStack {
+                        Text(section.title).font(.headline)
+                        Spacer()
+                        Button(action: close) { Image(systemName: "xmark").frame(width: 44, height: 44) }
+                            .accessibilityLabel(String(localized: "action.close"))
+                    }.padding(.horizontal, 22).padding(.top, 14)
+                    ScrollView {
+                        VStack(alignment: .leading, spacing: 20) {
+                        if section == .overview {
+                            Text(MoneyFormat.string(-BudgetPresentation.used(card), currencyCode: card.currencyCode))
+                                .font(.largeTitle.weight(.medium)).monospacedDigit()
+                            BudgetDailyChart(card: card, ledger: workspace.ledger)
+                            HStack {
+                                Text(String(localized: "v1.card.pending"))
+                                Spacer()
+                                Text(MoneyFormat.string(card.snapshot.pendingAmount, currencyCode: card.currencyCode))
+                            }.font(.subheadline)
+                        } else {
+                            BudgetCalendarView(card: card, ledger: workspace.ledger)
+                        }
+                        }
+                        .padding(22)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                }
+                .frame(maxWidth: 560)
+                .frame(height: min(geometry.size.height - 64, 620))
+                .walletSurface()
+                .matchedGeometryEffect(id: section.rawValue, in: namespace, isSource: true)
+                .padding(18)
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+        }
+        .foregroundStyle(PaperTheme.ink)
+        .accessibilityAddTraits(.isModal)
+        .accessibilityAction(.escape) { close() }
     }
 }
 

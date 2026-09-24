@@ -100,11 +100,25 @@ nonisolated enum AttributionEngine {
         guard expense.attributionState == .pending, expense.budgetPeriodID != nil else {
             return ledger
         }
+        if let periodID = expense.budgetPeriodID, try ledger.requirePeriod(periodID).state == .settled {
+            throw LedgerError.cannotBindSettledPeriod
+        }
         expense.attributionState = .confirmed
         expense.attributionConfidence = 1
         expense.updatedAt = now
         ledger.upsert(expense)
         return ledger
+    }
+
+    static func resolvePending(ledger: Ledger, expenseID: UUID, decision: AttributionDecision, now: Date, confirmedSettledImpact: Bool = false) throws -> Ledger {
+        let expense = try ledger.requireExpense(expenseID)
+        guard expense.attributionState == .pending else { return ledger }
+        if let oldID = expense.budgetPeriodID, try ledger.requirePeriod(oldID).state == .settled && !confirmedSettledImpact {
+            throw LedgerError.cannotBindSettledPeriod
+        }
+        var movable = ledger
+        movable.expenses[expenseID]?.budgetPeriodID = nil
+        return try apply(ledger: movable, expenseID: expenseID, decision: decision, now: now)
     }
 
     private static func validateBindable(period: BudgetPeriod, expense: Expense) throws {

@@ -71,7 +71,7 @@ struct WalletReceiptCard: View {
 struct WalletReceiptStack: View {
     var rows: [Expense]
     @Binding var position: Int
-    var openRecords: () -> Void
+    var openExpense: (Expense) -> Void
     @Environment(\.walletReduceMotion) private var reduceMotion
     @Environment(\.dynamicTypeSize) private var typeSize
     @GestureState private var drag: CGFloat = 0
@@ -87,7 +87,7 @@ struct WalletReceiptStack: View {
             if typeSize.isAccessibilitySize {
                 VStack(spacing: 10) {
                     ForEach(Array(rows.dropFirst(start).prefix(3))) { expense in
-                        Button(action: openRecords) { WalletReceiptCard(expense: expense, depth: 0) }
+                        Button { openExpense(expense) } label: { WalletReceiptCard(expense: expense, depth: 0) }
                     }
                 }
             } else {
@@ -95,7 +95,7 @@ struct WalletReceiptStack: View {
                     ForEach(Array(rows.enumerated()), id: \.element.id) { index, expense in
                         let depth = CGFloat(index) - location
                         if depth > -1 && depth < 3 {
-                            Button(action: openRecords) { WalletReceiptCard(expense: expense, depth: depth < 0.7 ? 0 : 1) }
+                            Button { openExpense(expense) } label: { WalletReceiptCard(expense: expense, depth: depth < 0.7 ? 0 : 1) }
                                 .frame(height: 57)
                                 .scaleEffect(1 - max(0, depth) * 0.055)
                                 .offset(y: CGFloat(min(2, rows.count - 1)) * 44 - depth * 44)
@@ -111,15 +111,15 @@ struct WalletReceiptStack: View {
         }
         .buttonStyle(.plain)
         .contentShape(Rectangle())
-        .gesture(DragGesture(minimumDistance: 18)
+        .highPriorityGesture(DragGesture(minimumDistance: 8)
             .updating($drag) { value, state, _ in
                 guard abs(value.translation.height) > abs(value.translation.width) else { return }
                 state = value.translation.height
             }
             .onEnded { value in
-                guard abs(value.translation.height) > 22, abs(value.translation.height) > abs(value.translation.width) else { return }
-                let travel = value.predictedEndTranslation.height / 52
-                let step = max(-3, min(3, Int(travel.rounded())))
+                guard abs(value.translation.height) > 10, abs(value.translation.height) > abs(value.translation.width) else { return }
+                let travel = value.predictedEndTranslation.height / 44
+                let step = max(-rows.count, min(rows.count, Int(travel.rounded())))
                 move(to: start + (step == 0 ? (value.translation.height > 0 ? 1 : -1) : step))
             })
         .accessibilityAction(named: Text("wallet.records.older")) { move(to: start + 1) }

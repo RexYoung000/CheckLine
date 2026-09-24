@@ -23,6 +23,7 @@ final class CheckLineWorkspace {
     var composerAfterAgent: ComposerIntent?
     var showComposer: Bool = false
     var composerIntent: ComposerIntent = .budget
+    let attachmentStore: ExpenseAttachmentStore
 
     private let context: ModelContext
     private let session: AgentSession
@@ -34,14 +35,19 @@ final class CheckLineWorkspace {
         now: Date = Date(),
         calendar: Calendar = .current,
         session: AgentSession? = nil,
-        saveLedger: (@MainActor (Ledger, ModelContext) throws -> Void)? = nil
+        saveLedger: (@MainActor (Ledger, ModelContext) throws -> Void)? = nil,
+        attachmentStore: ExpenseAttachmentStore? = nil
     ) {
         self.context = context
         self.calendar = calendar
         self.session = session ?? AgentSession.make(calendar: calendar)
         self.saveLedger = saveLedger ?? { try LedgerStore.replaceAll($0, in: $1) }
+        self.attachmentStore = attachmentStore ?? ExpenseAttachmentStore()
         if let loaded = try? LedgerStore.load(from: context, now: now) {
             ledger = loaded
+            if !DesignPreviewData.isEnabled {
+                try? self.attachmentStore.removeOrphans(keeping: Set(loaded.expenses.keys))
+            }
         } else {
             ledger = Ledger.blank(walletCurrencyCode: "CNY", now: now)
         }
@@ -64,6 +70,30 @@ final class CheckLineWorkspace {
             changed.budgets[card.id]?.sortIndex = index
         }
         do { try commitPresentationChange(changed) } catch { banner = .failed }
+    }
+
+    func confirmPendingExpense(_ id: UUID, now: Date = Date()) throws {
+        try commitPresentationChange(AttributionEngine.confirmPending(ledger: ledger, expenseID: id, now: now))
+    }
+
+    func changePendingExpense(_ id: UUID, to periodID: UUID?, confirmedSettledImpact: Bool = false, now: Date = Date()) throws {
+        let decision: AttributionDecision = periodID.map { .confirmed(periodID: $0) } ?? .unbudgeted
+        try commitPresentationChange(AttributionEngine.resolvePending(ledger: ledger, expenseID: id, decision: decision, now: now, confirmedSettledImpact: confirmedSettledImpact))
+    }
+
+    func previewPendingRetrospective(_ id: UUID, now: Date = Date()) throws -> RetrospectivePreview {
+        let expense = try ledger.requireExpense(id)
+        guard let periodID = expense.budgetPeriodID else { throw LedgerError.periodNotFound }
+        return try RetrospectiveAdjustmentEngine.previewLateExpense(ledger: ledger, periodID: periodID, expenseID: id, quote: nil, now: now)
+    }
+
+    func confirmPendingRetrospective(_ preview: RetrospectivePreview, now: Date = Date()) throws {
+        guard let expenseID = preview.sourceExpenseID,
+              ledger.expenses[expenseID]?.attributionState == .pending,
+              try previewPendingRetrospective(expenseID, now: preview.conversion.quotedAt) == preview else {
+            throw LedgerError.staleRetrospectivePreview
+        }
+        try commitPresentationChange(RetrospectiveAdjustmentEngine.confirm(ledger: ledger, preview: preview, quote: nil, now: now))
     }
 
     func createWish(name: String, amountText: String, symbolName: String, now: Date = Date()) throws {
@@ -90,9 +120,11 @@ final class CheckLineWorkspace {
     }
 
     private func commitPresentationChange(_ changed: Ledger) throws {
+        let removedExpenseIDs = Set(ledger.expenses.keys).subtracting(changed.expenses.keys)
         do {
             try saveLedger(changed, context)
             ledger = changed
+            for id in removedExpenseIDs { try? attachmentStore.removeAll(for: id) }
             lastUndo = nil
             undoBanner = nil
         } catch {
@@ -241,17 +273,19 @@ final class CheckLineWorkspace {
         )
     }
 
-    func recordExpense(
+    @discardableResult func recordExpense(
         amountText: String,
         merchant: String,
         note: String,
         attributionID: String,
         occurredAt: Date,
+        keepComposerOpen: Bool = false,
         now: Date = Date()
-    ) {
+    ) -> UUID? {
+        guard note.count <= 10_000 else { banner = .failed; return nil }
         guard let amount = MoneyFormat.parseAmount(amountText) else {
             banner = .needsAmount
-            return
+            return nil
         }
         let choice = attributionChoices.first(where: { $0.id == attributionID })
         let currency = cards.first(where: { $0.periodID == choice?.periodID })?.currencyCode
@@ -273,7 +307,9 @@ final class CheckLineWorkspace {
         } else {
             confirmation = .attribution(.unbudgeted)
         }
-        persist(intent: .capture(draft), confirmation: confirmation, now: now, recordedBanner: .recorded)
+        let previousIDs = Set(ledger.expenses.keys)
+        persist(intent: .capture(draft), confirmation: confirmation, now: now, recordedBanner: .recorded, keepComposerOpen: keepComposerOpen)
+        return ledger.expenses.keys.first { !previousIDs.contains($0) }
     }
 
     func openComposer(_ intent: ComposerIntent) {
@@ -353,7 +389,8 @@ final class CheckLineWorkspace {
         intent: AgentIntent,
         confirmation: AgentConfirmation,
         now: Date,
-        recordedBanner: WorkspaceBanner
+        recordedBanner: WorkspaceBanner,
+        keepComposerOpen: Bool = false
     ) {
         do {
             let executed = try session.execute(
@@ -371,7 +408,7 @@ final class CheckLineWorkspace {
             draftText = ""
             lastTurn = nil
             confirmAmountText = ""
-            showComposer = false
+            if !keepComposerOpen { showComposer = false }
         } catch AgentRefusal.missingAmount {
             banner = .needsAmount
         } catch {

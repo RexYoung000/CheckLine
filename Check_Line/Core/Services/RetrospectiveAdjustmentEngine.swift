@@ -133,6 +133,7 @@ nonisolated enum RetrospectiveAdjustmentEngine {
                 expense.budgetPeriodID = preview.periodID
                 expense.queuedForBudgetID = nil
                 expense.attributionState = .confirmed
+                expense.attributionConfidence = 1
             case .postedAmountChange:
                 if let newPostedAmount = preview.newPostedAmount {
                     expense.postedAmount = newPostedAmount

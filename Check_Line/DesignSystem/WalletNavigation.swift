@@ -127,6 +127,7 @@ struct WalletGlassNavigation: View {
     @Environment(\.walletReduceMotion) private var reduceMotion
     @Environment(\.layoutDirection) private var layoutDirection
     @GestureState private var dragLocation: CGPoint?
+    @Namespace private var glassNamespace
     private let tabs: [CheckLineAppTab] = [.home, .budgets, .wishes, .insights]
 
     var body: some View {
@@ -134,32 +135,9 @@ struct WalletGlassNavigation: View {
             GeometryReader { geometry in
                 let preview = dragLocation.flatMap { WalletTabHitTarget.tab(at: $0, size: geometry.size, rightToLeft: layoutDirection == .rightToLeft) }
                 let selected = preview ?? chrome?.selectedTab ?? .home
-                let column = tabs.firstIndex(of: selected) ?? 0
-                let visualColumn = layoutDirection == .rightToLeft ? tabs.count - 1 - column : column
-                let slotWidth = (geometry.size.width - 10) / CGFloat(tabs.count)
-                HStack(spacing: 0) {
-                    ForEach(tabs) { tab in
-                        Button { select(tab) } label: {
-                            selectionLabel(tab, selected: selected == tab)
-                        }
-                        .accessibilityLabel(tab.title)
-                        .accessibilityAddTraits(chrome?.selectedTab == tab ? .isSelected : [])
-                        .accessibilityIdentifier("wallet.tab.\(tab.rawValue)")
-                    }
-                }
-                .buttonStyle(.plain)
+                navigationButtons(selected: selected)
                 .padding(5)
-                .background {
-                    ZStack {
-                        Capsule().fill(PaperTheme.navigationBase)
-                        selectionGlass
-                            .frame(width: slotWidth, height: 50)
-                            .position(x: 5 + slotWidth * (CGFloat(visualColumn) + 0.5), y: 30)
-                            // Finish before the shortest page handoff replaces its root.
-                            .animation(reduceMotion ? nil : .easeOut(duration: 0.1), value: selected)
-                    }
-                    .allowsHitTesting(false)
-                }
+                .background { Capsule().fill(PaperTheme.navigationBase).allowsHitTesting(false) }
                 .highPriorityGesture(
                     DragGesture(minimumDistance: 10)
                         .updating($dragLocation) { value, location, _ in
@@ -187,6 +165,27 @@ struct WalletGlassNavigation: View {
         .environment(\.colorScheme, .dark)
     }
 
+    @ViewBuilder private func navigationButtons(selected: CheckLineAppTab) -> some View {
+        if #available(iOS 26.0, *) {
+            GlassEffectContainer(spacing: 0) { buttonRow(selected: selected) }
+                .animation(reduceMotion ? nil : .spring(response: 0.34, dampingFraction: 0.76), value: selected)
+        } else {
+            buttonRow(selected: selected)
+                .animation(reduceMotion ? nil : .smooth(duration: 0.24), value: selected)
+        }
+    }
+
+    private func buttonRow(selected: CheckLineAppTab) -> some View {
+        HStack(spacing: 0) {
+            ForEach(tabs) { tab in
+                Button { select(tab) } label: { selectionLabel(tab, selected: selected == tab) }
+                    .accessibilityLabel(tab.title)
+                    .accessibilityAddTraits(chrome?.selectedTab == tab ? .isSelected : [])
+                    .accessibilityIdentifier("wallet.tab.\(tab.rawValue)")
+            }
+        }.buttonStyle(.plain)
+    }
+
     private func selectionLabel(_ tab: CheckLineAppTab, selected: Bool) -> some View {
         Image(systemName: tab.systemImage)
             .symbolVariant(.fill)
@@ -194,14 +193,15 @@ struct WalletGlassNavigation: View {
             .foregroundStyle(selected ? PaperTheme.accent : PaperTheme.ink)
             .frame(maxWidth: .infinity).frame(height: 50)
             .contentShape(Capsule())
+            .background { if selected { selectionGlass } }
     }
 
     @ViewBuilder private var selectionGlass: some View {
         if #available(iOS 26.0, *) {
             // Keep the symbols outside the glass sampling container so they stay crisp.
-            GlassEffectContainer(spacing: 0) {
-                Color.clear.glassEffect(.clear.interactive(!reduceMotion), in: .capsule)
-            }
+            Capsule().fill(.clear)
+                .glassEffect(.clear.interactive(!reduceMotion), in: .capsule)
+                .glassEffectID("selected-tab-lens", in: glassNamespace)
         } else {
             Capsule().fill(.regularMaterial)
         }
