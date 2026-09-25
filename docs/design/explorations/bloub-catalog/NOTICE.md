@@ -1,0 +1,32 @@
+# bloub 动画选型页来源
+
+- 仓库：https://github.com/jeremy-prt/bloub
+- 固定提交：`b4bb3c1b5f93c7b87a2e8d620f667c4093d97749`
+- `vendor/*.ts`：该提交 `src/bot/` 下同名原版源码，保持原样。
+- `vendor/*.mjs`：由 Node 24 `stripTypeScriptTypes` 去除类型，补齐浏览器模块扩展名。运行 `node docs/design/explorations/bloub-catalog/build-vendor.mjs` 可重新生成；不安装依赖。
+- 采用原版 BotEngine、14 种目录动画、形状、表情、粒子、轨道、眼部校正和进出形变。SVG 绘制顺序、蒙版和配色规则依据上游 `src/components/BloubBot.vue`，转换成独立 DOM 绘制适配器。未使用上一版 CheckLine 五态动作函数。
+- 本页新增：中文场景建议、审阅布局、单项播放器、时间轴、云朵进出片段、主题配色预览与本机选择记录。各场景仅为建议。
+- 默认使用上游墨黑配色、Cloud Shape、静态缩略图；默认一次播放后停止。切换“灰紫预览”只调整主体色，不修改原版动作和彩色轨道。
+- 此为内部参考页，不接原生 App、账本或模型，不是 Spine 文件。上游 MIT 授权覆盖代码；上游 README 声明其模仿的 x.ai 设计不属于该授权。本页不宣称品牌或形象权利已完成发布核查。
+
+## MIT License
+
+Copyright (c) 2026 Jérémy Perret
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
