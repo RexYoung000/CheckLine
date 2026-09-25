@@ -385,7 +385,7 @@ function handleAction(b){
  else if(action==='close-modal'){s.modal=null;renderOverlay()}
  else if(action==='day'){s.selectedDay=Number(b.dataset.day);render()}
  else if(action==='dismiss-toast'){s.toast=null;renderToast()}
- else if(action==='undo'){if(s.toast&&s.toast.undo){s.budget=s.toast.undo.budget;s.records=s.toast.undo.records;s.toast=null;s.agent.open=false;s.agent.phase='idle';render();toast('已撤销')}} 
+ else if(action==='undo'){if(s.toast&&s.toast.undo){s.budget=s.toast.undo.budget;s.records=s.toast.undo.records;s.toast=null;s.agent.open=false;s.agent.phase='idle';render();toast('已撤销')}}
 }
 $('app').addEventListener('click',function(e){const b=e.target.closest('[data-action]');if(b&&!b.disabled)handleAction(b)});
 $('app').addEventListener('input',function(e){if(e.target.dataset.entryField)s.agent.entries[Number(e.target.dataset.entry)][e.target.dataset.entryField]=e.target.value;if(e.target.dataset.field)s.agent[e.target.dataset.field]=e.target.value;if(e.target.id==='wish-name')s.newWish=e.target.value;if(e.target.id==='wish-amount')s.wishAmount=e.target.value});
