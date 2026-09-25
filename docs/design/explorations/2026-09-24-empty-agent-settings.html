@@ -1,0 +1,410 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CheckLine · 空状态、Agent 与设置设计</title>
+<style>
+:root{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","PingFang SC",sans-serif;color:#25272b;background:#e9e9e4;font-synthesis:none}
+*{box-sizing:border-box}body{margin:0}button,input,textarea,select{font:inherit}button{cursor:pointer}button:disabled{cursor:default;opacity:.45}button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:3px solid #8071d5;outline-offset:3px}button{border:0}svg{width:22px;height:22px;flex-shrink:0}h1,h2,h3,p{margin:0}
+.review-shell{max-width:1240px;margin:0 auto;padding:40px 24px;display:grid;grid-template-columns:200px minmax(320px,1fr) 240px;gap:32px;align-items:start}
+.inspector,.notes{position:sticky;top:28px}.kicker{font-size:10px;letter-spacing:2.5px;color:#777a79;font-weight:600;margin-bottom:14px}h1{font-size:27px;line-height:1.3;letter-spacing:-1px;margin-bottom:16px}.intro{font-size:13px;line-height:1.7;color:#6b706e;margin-bottom:28px}
+.review-nav{display:grid;gap:4px;margin-bottom:28px}.review-nav button{text-align:left;background:none;color:#717572;border-radius:10px;min-height:42px;padding:10px 12px;display:flex;gap:12px;align-items:center;font-size:13px}.review-nav button.active{background:#dadbd4;color:#262a25}.review-nav small{font-size:10px;opacity:.5;letter-spacing:1px}
+.control{display:block;margin:16px 0;font-size:12px;color:#666c65}.control select{display:block;width:100%;background:transparent;color:#282b27;border:1px solid #cccec6;border-radius:8px;padding:10px 8px;margin-top:8px}.control.check{display:flex;gap:8px;align-items:center}.control input{accent-color:#7364ae}
+.scenario-section{border-top:1px solid #cccfc5;padding-top:8px}.reset{background:none;text-decoration:underline;text-underline-offset:4px;color:#686f64;font-size:12px;padding:6px 0;margin-top:12px}
+.preview-column{min-width:0;display:flex;flex-direction:column;align-items:center}.stage-meta{width:min(100%,var(--preview-width,390px));display:flex;justify-content:space-between;font-size:11px;color:#74796e;margin-bottom:12px;gap:10px}.stage-meta b{font-weight:500;color:#3c4439}.caveat{font-size:11px;line-height:1.7;color:#787d71;max-width:390px;margin-top:18px}
+.notes .eyebrow{font-size:11px;letter-spacing:1px;color:#7b8174;margin:5px 0 16px}.notes h2{font-size:19px;font-weight:550;margin-bottom:16px}.notes p,.notes li{font-size:13px;line-height:1.9;color:#697061}.notes ol{padding-left:18px;margin:18px 0}.notes .boundary{margin-top:28px;border-top:1px solid #cdd1c5;padding-top:16px;font-size:11px;line-height:1.8}.micro-link{background:none;color:#675699;font-size:12px;padding:8px 0;text-align:left}.legend-dot{width:6px;height:6px;background:#9287ba;display:inline-block;border-radius:50%;margin-right:5px}
+.app{--canvas:#14171a;--surface:#22262b;--paper:#f6f6f0;--paper-ink:#17181d;--ink:#f8f7fc;--muted:#b8bac5;--accent:#b6aaff;--fs:1;position:relative;width:min(100%,var(--preview-width,390px));height:812px;overflow:hidden;border-radius:28px;background:var(--canvas);color:var(--ink);box-shadow:0 22px 60px #2931241f;isolation:isolate}.app.large{--fs:1.18}.app .page{height:100%;overflow:auto;scrollbar-width:none;padding-bottom:112px}.app .page::-webkit-scrollbar{display:none}.app .page.home{background:var(--paper);color:var(--paper-ink)}
+.app button,.app input,.app textarea,.app select{color:inherit}.app .topbar{display:flex;align-items:center;gap:8px;padding:22px 18px 12px;min-height:82px}.topbar h2{font-size:calc(23px * var(--fs));font-weight:560;flex:1;letter-spacing:-.5px}.topbar .space{flex:1}.icon-btn{width:44px;height:44px;border-radius:50%;display:inline-grid;place-items:center;background:transparent;color:inherit;flex-shrink:0}.icon-btn.soft{background:#ffffff0a}.home .icon-btn.soft{background:#17181d0b}.icon-btn svg{width:23px;height:23px}.app .body-pad{padding:18px 20px 24px;max-width:650px;margin:auto}.app .muted{color:var(--muted)}.app .small{font-size:calc(13px * var(--fs));line-height:1.55}.app .caption{font-size:calc(11px * var(--fs));line-height:1.5}
+.hero{padding:22px 20px 0;max-width:560px;margin:auto}.create-card,.liquid-card{position:relative;display:block;width:100%;height:232px;border-radius:30px;text-align:left;overflow:hidden}.create-card{background:linear-gradient(135deg,#edede7,#deded8);border:1px solid #fff;box-shadow:inset 0 0 0 5px #ffffff24,0 10px 20px #28282712;color:#46474c;padding:28px}.create-card .cross{width:42px;height:42px;display:grid;place-items:center;border-radius:50%;border:1px solid #5b5b651f;margin-bottom:20px;background:#fff5}.create-card .cross svg{width:24px;height:24px}.create-card strong{display:block;font-size:calc(22px * var(--fs));line-height:1.4;font-weight:550;letter-spacing:-.5px}.create-card .card-foot{margin-top:10px;font-size:calc(12px * var(--fs));color:#77777e}.create-card:after{content:"";position:absolute;width:90px;height:150%;right:40px;top:-40px;background:#fff2;transform:rotate(24deg);pointer-events:none}
+.pocket{position:relative;z-index:2;background:linear-gradient(125deg,#23262b,#14171a 75%);margin-top:-12px;min-height:436px;color:var(--ink);padding:34px 18px 26px}.pocket-rim{position:absolute;top:-24px;left:0;width:100%;height:26px;color:#23262b;filter:drop-shadow(0 -1px 0 #ffffff15)}.empty-pocket{height:240px;display:flex;align-items:center;justify-content:center;text-align:center;padding:24px 16px}.empty-pocket p{font-size:calc(14px * var(--fs));line-height:1.8;color:#9b9da5}.empty-pocket .inner-seam{width:100%;max-width:350px;padding:38px 20px;border:1px solid #ffffff07;border-radius:22px;box-shadow:inset 0 1px 9px #0002}
+.liquid-card{background:linear-gradient(155deg,#a095ff,#6551e6 58%,#443b90);color:#fff;padding:26px;box-shadow:inset 0 0 0 1px #fff4,inset 0 0 0 5px #ffffff08,0 8px 20px #38326033}.liquid-card:before{content:"";position:absolute;top:18%;height:130%;width:180%;left:-40%;border-radius:42%;background:#b7afff18;transform:rotate(-8deg);pointer-events:none}.liquid-card .name{font-size:calc(20px * var(--fs));font-weight:550;max-width:80%;overflow-wrap:anywhere}.liquid-card .ellipsis{position:absolute;right:20px;top:27px}.liquid-card .amount{position:absolute;bottom:38px;right:25px;font-size:calc(42px * var(--fs));letter-spacing:-1.5px;font-weight:450}.liquid-card .mini-plus{position:absolute;left:23px;bottom:32px;border:1px solid #fff4;background:#fff1;width:46px;height:46px;border-radius:50%;display:grid;place-items:center}.inserted{animation:insert-card .5s cubic-bezier(.2,.8,.3,1)}@keyframes insert-card{0%{transform:translateY(-72px) scale(.94);opacity:0}40%{opacity:1}100%{transform:none}}
+.summary-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;animation:appear .35s .14s both}.summary{background:linear-gradient(140deg,#2d3137,#22262b);border:1px solid #ffffff0f;border-radius:25px;padding:16px;min-height:136px}.summary .eyeline{display:flex;align-items:center;justify-content:space-between;color:var(--muted);font-size:calc(12px * var(--fs))}.summary .eyeline svg{width:15px;height:15px}.summary .stat{font-size:calc(29px * var(--fs));margin-top:10px}.summary .track{display:flex;gap:5px;align-items:flex-end;height:22px;margin-top:12px}.track i{display:block;flex:1;height:3px;background:#b6aaff66;border-radius:2px}.calendar-mini{display:grid;grid-template-columns:repeat(7,5px);gap:4px;margin-top:16px}.calendar-mini i{height:5px;border-radius:1px;background:#83858b3d}.section-title{font-size:calc(19px * var(--fs));font-weight:550;display:flex;justify-content:space-between;align-items:center;margin:26px 0 16px}.section-title span{font-size:calc(12px * var(--fs));font-weight:400;color:var(--muted)}.quiet-empty{text-align:center;color:#a4a6b1;font-size:calc(13px * var(--fs));line-height:1.7;padding:20px 10px}.text-action{background:none;color:var(--accent)!important;min-height:40px;font-size:calc(13px * var(--fs));padding:8px 0}
+.primary,.secondary{font-size:calc(14px * var(--fs));font-weight:550;border-radius:24px;min-height:46px;padding:12px 22px;display:inline-flex;align-items:center;justify-content:center;gap:8px}.primary{background:var(--ink);color:var(--canvas)!important}.secondary{background:#ffffff0b;color:var(--ink);border:1px solid #ffffff12}.full{width:100%}.primary svg,.secondary svg{width:18px;height:18px}
+.slot-label{font-size:calc(12px * var(--fs));color:var(--muted);margin-bottom:16px}.empty-slot{position:relative;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;width:100%;min-height:255px;border-radius:30px;border:1px solid #ffffff1d;background:linear-gradient(145deg,#ffffff06,transparent 60%);box-shadow:inset 0 1px 18px #0002}.empty-slot:after{content:"";position:absolute;left:20px;right:20px;height:5px;bottom:16px;border-radius:5px;box-shadow:inset 0 1px 2px #0007;background:#ffffff05}.empty-slot .slot-plus{display:grid;place-items:center;width:52px;height:52px;border:1px solid #ffffff22;border-radius:16px;color:var(--accent)}.empty-slot h3{font-size:calc(19px * var(--fs));font-weight:500}.body-copy{font-size:calc(13px * var(--fs));line-height:1.8;color:var(--muted);margin-top:22px}.cycle-tags{display:flex;gap:16px;margin-top:20px;color:#c1c1cf;font-size:calc(12px * var(--fs))}.cycle-tags span{display:flex;gap:6px;align-items:center}.cycle-tags svg{width:15px;height:15px}.budget-meta{display:flex;justify-content:space-between;font-size:calc(12px * var(--fs));color:var(--muted);margin-top:12px;padding:0 6px}
+.wallet-compact{display:flex;justify-content:space-between;align-items:center;gap:12px;width:100%;text-align:left;padding:17px 0 22px;border-bottom:1px solid #ffffff0c;background:none}.wallet-compact .label{display:flex;align-items:center;gap:8px;font-size:calc(13px * var(--fs));color:var(--muted)}.wallet-compact .wallet-number{font-size:calc(22px * var(--fs));letter-spacing:-.5px}.wallet-full{padding:23px;background:linear-gradient(140deg,#302e3d,#25272e);border:1px solid #ffffff12;border-radius:26px;width:100%;text-align:left}.wallet-full .label{font-size:calc(13px * var(--fs));color:#c3bed5}.wallet-full .wallet-number{font-size:calc(38px * var(--fs));margin:12px 0}.wallet-full .recovery{font-size:calc(13px * var(--fs));color:var(--accent);margin-bottom:8px}.wishlist-empty{padding:28px 0;text-align:center}.wish-note{position:relative;max-width:255px;width:83%;min-height:195px;background:var(--paper);color:var(--paper-ink);border-radius:9px 9px 30px 9px;margin:4px auto 24px;padding:32px 22px 27px;box-shadow:0 10px 25px #0003;transform:rotate(-3deg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px}.wish-note:before{content:"";position:absolute;width:54px;height:18px;top:-8px;left:calc(50% - 27px);background:#c7c2d1;opacity:.9;transform:rotate(1deg)}.wish-note svg{width:32px;height:32px;color:#8b7fb7}.wish-note p{font-size:calc(16px * var(--fs));line-height:1.65;color:#666270}.wishlist-empty h3{font-size:calc(21px * var(--fs));font-weight:500;margin-bottom:10px}.wishlist-empty .small{color:var(--muted);margin-bottom:24px}.segmented{display:flex;background:#ffffff06;border-radius:16px;padding:4px;margin:22px 0}.segmented button{flex:1;border-radius:12px;background:none;padding:9px;color:var(--muted);font-size:calc(13px * var(--fs))}.segmented button.active{background:#ffffff12;color:var(--ink)}.wish-row{display:flex;gap:16px;align-items:center;text-align:left;background:#ffffff04;border-bottom:1px solid #ffffff0d;width:100%;padding:18px 4px}.wish-row .wish-symbol{width:54px;height:54px;background:linear-gradient(140deg,#a895c8,#685887);display:grid;place-items:center;border-radius:18px}.wish-row strong{display:block;font-size:calc(16px * var(--fs));font-weight:500}.wish-row span{display:block;color:var(--muted);font-size:calc(12px * var(--fs));margin-top:5px}
+.calendar-paper{border-radius:26px;border:1px solid #ffffff0f;background:linear-gradient(145deg,#2a2d32,#22262b);padding:20px}.calendar-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;font-size:calc(16px * var(--fs))}.calendar-header .month-number{font-size:calc(36px * var(--fs));font-weight:400;color:#bdc0cb;letter-spacing:-1px}.calendar-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px}.calendar-grid .day-title{font-size:calc(10px * var(--fs));text-align:center;color:#90939e;margin-bottom:8px}.calendar-grid button,.calendar-grid .blank{width:100%;min-height:35px;border-radius:11px;background:none;color:#aeb1bc;font-size:calc(12px * var(--fs));position:relative;padding:5px 0}.calendar-grid button.selected{box-shadow:inset 0 0 0 1px #c3b5ff;color:var(--ink)}.calendar-grid button.has-data{background:#8b7ec75c}.calendar-grid button:disabled{opacity:.45}.analysis-intro{padding:26px 4px 8px;text-align:center}.analysis-intro h3{font-size:calc(20px * var(--fs));line-height:1.5;font-weight:500}.analysis-intro p{margin:10px 0 22px;color:var(--muted);font-size:calc(13px * var(--fs));line-height:1.7}.budget-selector{display:flex;justify-content:space-between;align-items:center;font-size:calc(16px * var(--fs));padding:4px 0 22px}.record-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:17px 15px;background:#eeedf0;color:#22252a;border-radius:18px;margin-top:12px}.record-row strong{font-size:calc(15px * var(--fs));font-weight:550}.record-row p{font-size:calc(11px * var(--fs));color:#777881;margin-top:5px}.record-row .money{font-size:calc(18px * var(--fs));white-space:nowrap}.chart-box{background:#ffffff04;border:1px solid #ffffff0c;border-radius:24px;padding:18px;margin-bottom:16px}.chart-box .total{font-size:calc(29px * var(--fs));margin:10px 0}.bars{display:flex;align-items:end;gap:10px;height:64px;border-bottom:1px solid #ffffff15}.bars i{flex:1;display:block;border-radius:4px 4px 0 0;background:#b6aaff66;min-height:2px}.bars i:last-child{background:#b6aaff}.week-labels{display:flex;justify-content:space-between;font-size:calc(10px * var(--fs));color:var(--muted);margin-top:8px}
+.dock{position:absolute;z-index:5;bottom:17px;left:18px;right:18px;display:flex;gap:11px;max-width:560px;margin:auto;pointer-events:none}.dock button{pointer-events:auto}.tab-group{display:flex;flex:1;min-width:0;border:1px solid #ffffff28;border-radius:40px;background:#383d42b8;box-shadow:inset 0 1px 1px #fff2,0 8px 26px #0002;backdrop-filter:blur(20px);padding:5px}.tab-group button{flex:1;min-width:0;height:46px;display:grid;place-items:center;border-radius:30px;background:none;color:#faf8ff}.tab-group button.active{background:#11171cb5;color:#c3b6ff}.tab-group svg{width:23px;height:23px}.agent-entry{width:58px;height:58px;border-radius:50%;background:#363c429e;border:1px solid #ffffff28;display:grid;place-items:center;box-shadow:inset 0 1px 1px #fff2;backdrop-filter:blur(20px)}.avatar{width:33px;height:33px;background:linear-gradient(145deg,#ccbcff,#8079c7);border-radius:50%;display:grid;place-items:center;border:1px solid #e4d7ff80;position:relative;flex-shrink:0}.avatar:before{content:"";width:22px;height:20px;background:#e9e2ff;border-radius:8px}.avatar:after{content:"••";position:absolute;letter-spacing:4px;left:11px;top:6px;font-size:15px;color:#625184;line-height:17px}
+.settings-hero{padding:10px 0 27px;display:flex;gap:16px;align-items:center}.settings-hero .device{width:64px;height:64px;display:grid;place-items:center;border:1px solid #ffffff16;border-radius:21px;background:linear-gradient(145deg,#a998c040,#242730)}.settings-hero .device svg{width:31px;height:31px;color:#d0c1f2}.settings-hero h3{font-size:calc(19px * var(--fs));font-weight:500;line-height:1.5}.settings-hero p{font-size:calc(12px * var(--fs));color:var(--muted);margin-top:6px}.settings-section{margin:16px 0 24px}.settings-section>h3{font-size:calc(12px * var(--fs));font-weight:400;color:var(--muted);padding:0 4px 9px}.settings-rows{background:#ffffff04;border:1px solid #ffffff0c;border-radius:22px;overflow:hidden}.setting-row{display:flex;align-items:center;gap:12px;width:100%;background:none;padding:15px 14px;text-align:left;min-height:56px}.setting-row+.setting-row{border-top:1px solid #ffffff0b}.setting-row>svg:first-child{color:#c2b4e2;width:19px;height:19px}.setting-row .row-text{flex:1;font-size:calc(14px * var(--fs));line-height:1.5}.setting-row .row-value{font-size:calc(12px * var(--fs));color:var(--muted);max-width:38%;text-align:right}.setting-row .arrow{width:14px;height:14px;color:#797d88}.detail-copy h3{font-size:calc(21px * var(--fs));font-weight:500;margin:14px 0 18px}.detail-copy p{font-size:calc(14px * var(--fs));line-height:1.9;color:#c1c4ce;margin:12px 0}.source-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:18px 0;border-bottom:1px solid #ffffff10;font-size:calc(14px * var(--fs))}.source-row .state{font-size:calc(11px * var(--fs));color:var(--muted)}.source-row .state.ready{color:#c2b5ff}
+.overlay{position:absolute;inset:0;z-index:10;display:flex;align-items:flex-end}.backdrop{position:absolute;inset:0;background:#05080d49;backdrop-filter:blur(2px)}.agent-panel,.modal-panel{position:relative;width:100%;background:#202329;color:var(--ink);border:1px solid #ffffff1b;border-radius:29px 29px 0 0;box-shadow:0 -12px 40px #0003;max-height:91%;display:flex;flex-direction:column;animation:panel-in .24s ease-out;padding-bottom:20px}.agent-panel.expanded{height:90%}.agent-panel .handle{align-self:center;width:54px;height:23px;background:none;display:grid;place-items:center;padding:0}.handle:before{content:"";width:30px;height:4px;background:#73747c;border-radius:3px}.agent-head{display:flex;align-items:center;gap:10px;padding:0 18px 12px}.agent-head h3{font-size:calc(16px * var(--fs));font-weight:550}.agent-head .subtitle{font-size:calc(11px * var(--fs));color:var(--muted);margin-top:3px}.agent-head .heading{flex:1}.agent-head .icon-btn{width:36px;height:36px}.agent-head svg{width:19px;height:19px}.task-context{font-size:calc(11px * var(--fs));color:#cec7e3;background:#ffffff08;border:1px solid #ffffff10;border-radius:12px;padding:8px 12px;margin:0 18px 12px;display:flex;justify-content:space-between;align-items:center;gap:10px}.task-context button{background:none;color:var(--accent);font-size:calc(11px * var(--fs));padding:2px}
+.agent-body{overflow:auto;min-height:0;padding:0 18px;scrollbar-width:none}.expanded .agent-body{flex:1}.agent-intro{font-size:calc(17px * var(--fs));line-height:1.6;margin:10px 0 17px;font-weight:400}.suggestions{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:13px}.suggestions button{font-size:calc(11px * var(--fs));color:#bfc0cd;background:#ffffff05;padding:8px 11px;border:1px solid #ffffff0e;border-radius:17px}.chat-message{font-size:calc(13px * var(--fs));line-height:1.7;padding:12px 14px;border-radius:18px;margin:10px 0;overflow-wrap:anywhere}.chat-message.user{background:#3f3854;margin-left:28px;border-bottom-right-radius:5px}.chat-message.assistant{padding-left:0;color:#d9d8e3;white-space:pre-line}.mode-toggle{display:flex;justify-content:space-between;align-items:center;margin:9px 0 14px;font-size:calc(11px * var(--fs));color:var(--muted)}.mode-toggle button{background:none;color:var(--accent);font-size:calc(12px * var(--fs));padding:4px}
+.composer{flex-shrink:0;margin:10px 18px 0;padding:12px;background:#16191e;border:1px solid #ffffff16;border-radius:23px}.composer textarea{width:100%;background:none;resize:none;border:0;color:#f8f7fc;padding:3px 3px 8px;min-height:51px;max-height:130px;font-size:calc(14px * var(--fs));line-height:1.6}.composer textarea::placeholder{color:#878b98}.composer-tools{display:flex;align-items:center;gap:6px}.composer-tools .icon-btn{width:36px;height:36px;border:1px solid transparent}.composer-tools .active{background:#b6aaff1c;border-color:#b6aaff40;color:var(--accent)}.composer-tools svg{width:19px;height:19px}.composer-tools .spacer{flex:1}.send{width:36px;height:36px;border-radius:50%;background:var(--accent);color:#22232b!important;display:grid;place-items:center}.composer-subtitle{padding:8px 18px 0;text-align:center;font-size:calc(10px * var(--fs));color:#8f929e}
+.result-card{border:1px solid #c4b9ec30;background:linear-gradient(140deg,#343040,#282a33);border-radius:22px;padding:17px;margin:10px 0 14px}.result-card .result-label{display:flex;align-items:center;gap:7px;font-size:calc(11px * var(--fs));color:#c7bfdc;margin-bottom:14px}.result-card h3{font-size:calc(19px * var(--fs));font-weight:500;margin:6px 0}.result-card .amount-large{font-size:calc(32px * var(--fs));font-weight:400;margin:9px 0 14px}.form-row{display:flex;align-items:center;gap:12px;border-bottom:1px solid #ffffff0d;padding:11px 0}.form-row label{font-size:calc(12px * var(--fs));color:#bfc0cb;flex-shrink:0}.form-row input,.form-row select{min-width:0;flex:1;background:none;border:0;text-align:right;font-size:calc(14px * var(--fs));padding:4px}.form-row select{color:#f1ecfb;background:#302e3b;max-width:72%;padding:6px;border-radius:8px}.form-row option{color:#f7f7fa;background:#30303b}.form-row:last-child{border:0}.result-card .primary{margin-top:17px}.save-hint{font-size:calc(11px * var(--fs));color:#b2afbf;line-height:1.6;margin-top:12px}.error-box{border-left:2px solid #d49eac;padding:8px 0 8px 11px;margin:10px 0 16px;color:#edc8d0;font-size:calc(12px * var(--fs));line-height:1.65}.busy{padding:22px 4px;display:flex;align-items:center;gap:12px;font-size:calc(14px * var(--fs));color:#c8c4dc}.busy .dots{display:flex;gap:4px}.dots i{height:5px;width:5px;background:var(--accent);border-radius:50%;animation:dot 1s infinite}.dots i:nth-child(2){animation-delay:.14s}.dots i:nth-child(3){animation-delay:.28s}@keyframes dot{50%{opacity:.2;transform:translateY(-4px)}}
+.voice-surface{display:flex;align-items:center;flex-direction:column;padding:18px 0 10px;gap:14px}.waveform{height:30px;display:flex;gap:5px;align-items:center}.waveform i{width:3px;border-radius:2px;background:#b6aaff;animation:wave .7s ease-in-out infinite alternate}.waveform i:nth-child(2n){animation-delay:-.3s}.waveform i:nth-child(3n){animation-delay:-.5s}@keyframes wave{to{transform:scaleY(.3)}}.voice-button{min-height:58px;border-radius:20px;background:#b6aaff1f;border:1px solid #b6aaff2c;color:var(--accent)!important;width:100%;display:flex;gap:12px;justify-content:center;align-items:center;touch-action:none;user-select:none;font-size:calc(15px * var(--fs))}.voice-button.recording{background:#8473b8;color:#fff!important}.voice-help{font-size:calc(11px * var(--fs));color:#969aa7}.transcript{background:#ffffff04;border:1px solid #ffffff10;border-radius:16px;padding:12px;margin:10px 0}.transcript label{display:block;color:#b5b1c9;font-size:calc(11px * var(--fs));margin-bottom:8px}.transcript textarea{border:0;background:none;color:var(--ink);width:100%;font-size:calc(14px * var(--fs));resize:vertical;line-height:1.6;min-height:70px}
+.image-tray{display:flex;gap:9px;margin:12px 0;overflow:auto;padding:3px}.receipt-thumb{width:72px;height:92px;padding:13px 8px 7px;background:#e6e4df;color:#504d49;border-radius:6px;flex-shrink:0;position:relative;display:flex;flex-direction:column;align-items:center;gap:7px;font-size:9px}.receipt-thumb strong{font-size:14px}.receipt-thumb i{display:block;height:2px;background:#c2c0ba;width:90%}.receipt-thumb button{position:absolute;right:-3px;top:-3px;border:1px solid #69616a;background:#333039;color:white;width:22px;height:22px;border-radius:50%;display:grid;place-items:center}.receipt-thumb button svg{width:13px;height:13px}.add-image{width:72px;min-height:92px;border:1px solid #ffffff20;background:#ffffff05;border-radius:9px;display:grid;place-items:center;color:var(--accent)!important}.attachment-option{display:flex;gap:8px;align-items:flex-start;font-size:calc(11px * var(--fs));line-height:1.6;color:#c9c6d4;margin:15px 0}.attachment-option input{accent-color:#a593e4;margin-top:3px}.success-line{display:flex;align-items:center;gap:8px;color:#d3c9f0;font-size:calc(13px * var(--fs));margin-bottom:12px}
+.modal-panel{padding:22px;max-height:90%;overflow:auto}.modal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}.modal-head h3{font-size:calc(21px * var(--fs));font-weight:500}.field{display:block;margin:18px 0}.field span{display:block;font-size:calc(12px * var(--fs));color:var(--muted);margin-bottom:9px}.field input,.field textarea{background:#ffffff05;border:1px solid #ffffff15;border-radius:15px;padding:14px;width:100%;color:var(--ink);font-size:calc(16px * var(--fs));resize:vertical}.symbol-choices{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0 25px}.symbol-choices button{width:48px;height:48px;border-radius:16px;background:#ffffff05;display:grid;place-items:center;border:1px solid #ffffff15}.symbol-choices button.active{border-color:#b6aaff;background:#b6aaff22}.toast{position:absolute;z-index:30;bottom:90px;left:18px;right:18px;background:#30343deb;border:1px solid #ffffff20;backdrop-filter:blur(16px);border-radius:19px;padding:13px 16px;font-size:calc(12px * var(--fs));color:#f8f7fc;box-shadow:0 8px 20px #0002;display:flex;align-items:center;justify-content:space-between;gap:12px}.toast button{color:var(--accent);background:none;min-height:28px;white-space:nowrap}.app .detail-section{padding:18px 0;border-top:1px solid #ffffff10}
+@keyframes panel-in{from{transform:translateY(38px);opacity:.4}}@keyframes appear{from{opacity:0;transform:translateY(9px)}}
+.reduce *,.reduce *:before,.reduce *:after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;scroll-behavior:auto!important}
+.app{height:min(812px,calc(100svh - 160px));min-height:560px}.app .page.home{background:var(--canvas)}.home .topbar,.home .hero{background:var(--paper)}.budget-meta span{display:flex;gap:6px;align-items:center}.budget-meta svg{width:16px;height:16px}.batch-row{border-top:1px solid #ffffff14;padding:14px 0 8px}.batch-row h4{font-size:calc(13px * var(--fs));font-weight:500;margin:0 0 5px;color:#cec4e8}.batch-row .attachment-option{margin-bottom:5px}.agent-head .icon-btn,.composer-tools .icon-btn,.send{width:44px;height:44px}.text-action,.task-context button,.mode-toggle button{min-height:44px}.review-shell:has(.app.wide){grid-template-columns:150px minmax(600px,1fr);max-width:1200px}.review-shell:has(.app.wide) .notes{grid-column:2;position:static;max-width:760px}.review-shell:has(.app.wide) .caveat{max-width:760px}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}}
+.agent-panel,.modal-panel{animation:none}.agent-panel.opening,.modal-panel.opening{animation:panel-in .24s ease-out}.agent-panel:not(.expanded) .suggestions{display:none}.agent-panel:not(.expanded) .agent-intro{font-size:calc(15px * var(--fs));margin:4px 0 6px}.agent-panel:not(.expanded) .mode-toggle{margin:0}.agent-panel:not(.expanded) .task-context{margin-bottom:7px}.agent-panel:not(.expanded) .composer textarea{min-height:42px}
+@media(max-height:850px){.wishlist-empty{padding:16px 0}.wish-note{min-height:145px;margin-bottom:18px;padding:20px}.wishlist-empty .small{margin-bottom:16px}.empty-pocket{height:180px}.empty-pocket .inner-seam{padding:24px 18px}}
+.home .hero{max-width:none}.hero>.create-card,.hero>.liquid-card{max-width:520px;margin:0 auto}.handle{touch-action:none}.app.wide .overlay{justify-content:center}.app.wide .agent-panel,.app.wide .modal-panel{max-width:560px;border-radius:29px;margin-bottom:22px}
+@media(max-width:1100px){.review-shell{grid-template-columns:170px minmax(320px,1fr);max-width:850px;gap:24px}.notes{position:static;grid-column:2;max-width:440px;margin:auto;width:100%}.notes .boundary{margin-top:12px}}
+@media(max-width:630px){.review-shell{display:block;padding:18px 12px}.inspector{position:static}.kicker{margin:4px 0 10px}h1{font-size:23px;margin-bottom:8px}.intro{margin-bottom:12px}.review-nav{display:flex;overflow:auto;margin-bottom:14px;gap:3px}.review-nav button{white-space:nowrap;padding:8px 10px;min-height:38px}.review-nav small{display:none}.scenario-section{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:18px;padding-top:8px}.control{margin:4px 0;font-size:11px}.control select{padding:6px;max-width:175px;margin-top:4px}.control.check{margin-top:14px}.reset{margin:0}.app{border-radius:24px;height:780px}.stage-meta{margin-top:4px}.notes{margin:25px auto;max-width:390px}.notes .boundary{margin-top:14px}.caveat{margin-top:13px}.hero{padding-left:17px;padding-right:17px}.large .summary-grid{grid-template-columns:1fr}.large .summary{min-height:104px}.large .summary .calendar-mini{display:none}}
+</style>
+</head>
+<body>
+<div class="review-shell">
+<aside class="inspector">
+<div class="kicker">CHECKLINE / M4</div>
+<h1>从空卡夹开始。</h1>
+<p class="intro">空状态、输入与结果，<br>放在同一个连续的空间里。</p>
+<nav class="review-nav" aria-label="设计页面">
+<button data-jump="home" class="active"><small>01</small>空首页</button>
+<button data-jump="budgets"><small>02</small>预算卡</button>
+<button data-jump="wishes"><small>03</small>心愿</button>
+<button data-jump="insights"><small>04</small>分析</button>
+<button data-jump="agent"><small>05</small>Agent</button>
+<button data-jump="settings"><small>06</small>个人设置</button>
+</nav>
+<div class="scenario-section">
+<label class="control">查看场景
+<select id="scenario"><option value="empty">全新空账本</option><option value="budget">有预算，还没有记录</option><option value="unbudgeted">无预算，有未纳入记录</option><option value="wallet">钱包有结余，没有心愿</option><option value="recovery">有待恢复差额，没有心愿</option><option value="completed">只有已完成心愿</option><option value="record">已有一笔消费</option><option value="save-error">下一次保存失败</option><option value="voice-denied">语音权限被拒绝</option><option value="voice-error">语音转写失败</option><option value="image-error">图片识别失败</option></select></label>
+<label class="control">查看宽度
+<select id="viewport"><option value="390">390 pt · iPhone</option><option value="350">350 pt · 小屏</option><option value="760">760 pt · 宽屏</option></select></label>
+<label class="control check"><input type="checkbox" id="large-type">大字体</label>
+<label class="control check"><input type="checkbox" id="reduce-motion">减少动态效果</label>
+<button class="reset" id="reset">重置演示数据</button>
+</div>
+</aside>
+<main class="preview-column">
+<div class="stage-meta"><b id="state-label">首页 · 空卡夹</b><span>可交互设计稿</span></div>
+<div id="app" class="app">
+<div id="page" class="page home"></div>
+<div id="dock"></div><div id="overlay-host"></div><div id="toast-host" aria-live="polite"></div>
+</div>
+<p class="caveat">本稿覆盖本轮空状态与 Agent 输入流程。语音、识别、权限和保存均为模拟状态，数据只在此页面临时保留。原生键盘、系统玻璃透镜及真机手感另行验证。</p>
+</main>
+<aside class="notes">
+<div class="eyebrow"><span class="legend-dot"></span>当前查看</div>
+<h2 id="note-title">同一个卡夹，从创建开始</h2>
+<p id="note-body"></p>
+<ol id="note-steps"></ol>
+<button class="micro-link" id="demo-fill">填入一条演示需求 ↗</button>
+<p class="boundary">已确认：空卡夹与创建卡；Agent 优先、可切表单；轻输入逐步展开；设置聚焦数据与使用；文字、语音、图片分别设计完整状态。</p>
+</aside>
+</div>
+<script>
+(function(){
+'use strict';
+const $=function(id){return document.getElementById(id)};
+const paths={
+home:'<path d="M3 11 12 3l9 8M5 10v11h5v-7h4v7h5V10"/>',
+budget:'<rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 3v3h6V3M9 11h6M9 15h4"/>',
+heart:'<path d="M20.8 5.8c-2.4-2.6-6.3-1.5-8.8 1.2-2.5-2.7-6.4-3.8-8.8-1.2-4 4.4 1.7 10 8.8 15 7.1-5 12.8-10.6 8.8-15Z"/>',
+chart:'<path d="M4 21h17M6 17V9h3v8M12 17V3h3v14M18 17v-6h3v6"/>',
+plus:'<path d="M12 5v14M5 12h14"/>',arrow:'<path d="M6 18 18 6M6 6h12v12"/>',
+close:'<path d="m6 6 12 12M6 18 18 6"/>',user:'<circle cx="12" cy="8" r="4"/><path d="M4 21v-2a8 8 0 0 1 16 0v2"/>',
+bell:'<path d="M5 15c2-2 1-6 2-8a5 5 0 0 1 10 0c1 2 0 6 2 8l1 2H4l1-2ZM10 21h4"/>',
+menu:'<path d="M4 6h16M4 12h16M4 18h16"/>',mic:'<rect x="9" y="2" width="6" height="13" rx="3"/><path d="M5 11v1a7 7 0 0 0 14 0v-1M12 19v3M8 22h8"/>',
+image:'<rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8" cy="8" r="1.5"/><path d="m3 17 5-5 4 4 4-6 5 7"/>',
+send:'<path d="m5 12 7-7 7 7M12 5v15"/>',down:'<path d="m6 9 6 6 6-6"/>',back:'<path d="m15 5-7 7 7 7"/>',
+right:'<path d="m9 5 7 7-7 7"/>',expand:'<path d="M14 3h7v7M21 3l-7 7M10 21H3v-7M3 21l7-7"/>',
+check:'<path d="m5 12 4 4L19 6"/>',shield:'<path d="m12 2 8 4v6c0 5-8 10-8 10S4 17 4 12V6l8-4Z"/><path d="m8 12 3 3 5-6"/>',
+phone:'<rect x="6" y="2" width="12" height="20" rx="3"/><path d="M10 5h4M10 19h4"/>',
+globe:'<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c6 5 6 13 0 18-6-5-6-13 0-18Z"/>',
+wave:'<path d="M3 6c4-4 5 4 9 0s5 4 9 0M3 12c4-4 5 4 9 0s5 4 9 0M3 18c4-4 5 4 9 0s5 4 9 0"/>',
+lock:'<rect x="5" y="10" width="14" height="12" rx="3"/><path d="M8 10V6a4 4 0 0 1 8 0v4M12 15v2"/>',
+calendar:'<rect x="3" y="5" width="18" height="16" rx="3"/><path d="M7 2v6M17 2v6M3 11h18"/>',
+keyboard:'<rect x="2" y="5" width="20" height="14" rx="3"/><path d="M5 9h1m3 0h1m3 0h1m3 0h1M5 12h1m3 0h1m3 0h1m3 0h1M6 16h12"/>',
+repeat:'<path d="m17 2 4 4-4 4M3 10V8a2 2 0 0 1 2-2h16M7 22l-4-4 4-4M21 14v2a2 2 0 0 1-2 2H3"/>',
+flag:'<path d="M5 22V3c5-5 9 5 15 0v12c-6 5-10-5-15 0"/>',
+star:'<path d="m12 2 3 7 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1Z"/>',
+headphones:'<path d="M4 15v-3a8 8 0 0 1 16 0v3M4 13h3v8H4a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2ZM20 13h-3v8h3a2 2 0 0 0 2-2v-4a2 2 0 0 0-2-2Z"/>',
+book:'<path d="M3 4c3-1 6-1 9 2 3-3 6-3 9-2v16c-3-1-6-1-9 2-3-3-6-3-9-2V4ZM12 6v16"/>',
+tent:'<path d="m3 21 9-18 9 18H3ZM8 21l4-8 4 8"/>',
+info:'<circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7h.01"/>'
+};
+function icon(n,cl){return '<svg class="'+(cl||'')+'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+(paths[n]||paths.info)+'</svg>'}
+function esc(v){return String(v==null?'':v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+function cents(v){const m=String(v).trim().match(/^(\d{1,9})(?:\.(\d{1,2}))?$/);return m?parseInt(m[1],10)*100+parseInt((m[2]||'').padEnd(2,'0'),10):0}
+function money(c){return new Intl.NumberFormat('zh-CN',{style:'currency',currency:'CNY',maximumFractionDigits:c%100?2:0}).format(c/100)}
+function avatar(){return '<span class="avatar" aria-hidden="true"></span>'}
+function btn(action,label,kind){return '<button class="'+(kind||'primary')+'" data-action="'+action+'">'+label+'</button>'}
+function ib(action,name,label,extra){return '<button class="icon-btn '+(extra||'')+'" data-action="'+action+'" aria-label="'+label+'">'+icon(name)+'</button>'}
+let operation=0,voiceTimer=null,lastVoiceDown=0,voiceStartY=0,panelStartY=null,lastPanelDrag=-1000;
+function freshAgent(){return {open:false,expanded:false,mode:'text',phase:'idle',task:'create',origin:'home',manual:false,text:'',name:'日常生活',amount:'3000',cycle:'monthly',merchant:'午餐',unbudgeted:false,images:0,entries:[],keepAttachment:false,history:[],error:'',seconds:0,discussion:null}}
+let s={tab:'home',budget:null,records:[],wishes:[],completed:false,wallet:0,recovery:0,walletHistory:false,settings:null,modal:null,modalError:'',newWish:'',wishAmount:'',wishSymbol:'star',agent:freshAgent(),failSave:false,denyVoice:false,failImage:false,insert:false,selectedDay:24,toast:null};
+const notes={
+home:['同一个卡夹，从创建开始','创建卡与真实预算卡共用位置。第一次保存后，预算卡落入卡夹，再带出摘要和最近记录。',['点击「创建第一张预算卡」。','表达需求，或切到手动填写。','确认后观察卡片入夹；也可取消或撤销。']],
+budgets:['空卡槽就是创建入口','从管理页面发起创建，就在管理页面看到新卡。首页与预算页共享同一创建草稿。',['点空卡槽创建。','在 Agent 和手动表单之间切换。','保存后留在预算页，卡槽被真实卡替换。']],
+wishes:['空清单保留钱包信息','无流水时收敛钱包概览；已有结余或待恢复差额时保留完整信息。心愿不占用钱包额度。',['添加一个自己的心愿。','切换「钱包有结余」场景。','查看只有已完成心愿时的分组空态。']],
+insights:['区分预算与记录的空状态','区分无预算、整张卡无记录和某一天无记录。第一笔消费出现后，图表才承载实际数据。',['无预算时可直接创建。','已有卡但无记录时，添加第一笔。','在月历选择一天，查看局部空状态。']],
+agent:['先输入，需要时再展开','轻面板把任务、输入和结果放在一起。文字、语音、图片切换时保留草稿与已填字段。',['试文字输入，再切手动表单。','按住语音按钮，或选择图片演示。','从场景菜单检查拒绝、失败和重试。']],
+settings:['围绕数据与使用来组织','顶部说明数据保存在本机。偏好、数据来源、隐私和关于使用紧凑分组，具体说明放到下一层。',['从页首个人图标进入。','查看来源的可用与尚未接入状态。','逐级返回，恢复进入前的页面。']]
+};
+function total(){return s.records.reduce(function(a,r){return a+(r.unbudgeted?0:r.cents)},0)}
+function header(title,home){return '<header class="topbar">'+ib('settings','user','个人设置','soft')+(title?'<h2>'+title+'</h2>':'<div class="space"></div>')+(home?ib('attention','bell','待处理事项'):'')+(s.tab==='budgets'?ib('create','plus','创建预算卡'):s.tab==='wishes'?ib('add-wish','plus','添加心愿'):'')+ib('menu','menu','功能菜单')+'</header>'}
+function rim(){return '<svg class="pocket-rim" viewBox="0 0 390 26" preserveAspectRatio="none" aria-hidden="true"><path d="M0 0C20 0 23 25 48 25H342C367 25 370 0 390 0V26H0Z" fill="currentColor"/></svg>'}
+function liquid(){return '<div class="liquid-card '+(s.insert?'inserted':'')+'"><div class="name">'+esc(s.budget.name)+'</div><span class="ellipsis">•••</span><button class="mini-plus" data-action="record" aria-label="记一笔">'+icon('plus')+'</button><span class="amount">'+money(s.budget.cents-total())+'</span></div>'}
+function miniCalendar(){return '<div class="calendar-mini">'+Array.from({length:28},function(){return '<i></i>'}).join('')+'</div>'}
+function recordRows(records){return records.map(function(r){return '<button class="record-row full" data-action="record-detail" data-index="'+s.records.indexOf(r)+'"><div><strong>'+esc(r.name)+'</strong><p>9月24日'+(r.attachment?' · 附件已保留':'')+(r.unbudgeted?' · 未纳入预算':'')+'</p></div><span class="money">−'+money(r.cents)+'</span></button>'}).join('')}
+function budgetRecords(){return s.records.filter(function(r){return !r.unbudgeted})}
+function unbudgetedLink(){const count=s.records.filter(function(r){return r.unbudgeted}).length;return count?'<div style="text-align:center;margin:16px 0">'+btn('unbudgeted','未纳入预算 · '+count+' 笔','secondary')+'</div>':''}
+function homePage(){
+ const card=s.budget?liquid():'<button class="create-card" data-action="create"><span class="cross">'+icon('plus')+'</span><strong>创建第一张<br>预算卡</strong><div class="card-foot">先选一部分，你想管理的开销</div></button>';
+ const contents=s.budget?'<div class="summary-grid"><div class="summary"><div class="eyeline">已用'+icon('arrow')+'</div><div class="stat">'+(total()?'−':'')+money(total())+'</div><div class="track"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div><div class="summary"><div class="eyeline">九月'+icon('arrow')+'</div><div class="stat">6 <span class="caption muted">天剩余</span></div>'+miniCalendar()+'</div></div><div class="section-title">最近记录<span>当前预算卡</span></div>'+(budgetRecords().length?recordRows(budgetRecords()):'<div class="quiet-empty">这张卡还没有消费记录<br>'+btn('record','记一笔','text-action')+'</div>'):'<div class="empty-pocket"><div class="inner-seam"><p>从日常开销开始，<br>也可以是一次旅行、一个计划。</p></div></div>';
+ return header('',true)+'<div class="hero">'+card+'</div><section class="pocket">'+rim()+contents+unbudgetedLink()+'</section>';
+}
+function budgetPage(){return header('预算卡',false)+'<div class="body-pad">'+(s.budget?'<div class="slot-label">我的卡夹 · 1 张卡</div>'+liquid()+'<div class="budget-meta"><span>'+icon(s.budget.cycle==='monthly'?'repeat':'flag')+' '+(s.budget.cycle==='monthly'?'每月循环':'一次计划')+'</span><span>人民币</span></div><div class="section-title">消费明细</div>'+(budgetRecords().length?recordRows(budgetRecords()):'<div class="quiet-empty">第一笔消费会留在这里。<br>'+btn('record','记一笔','text-action')+'</div>'):'<div class="slot-label">我的卡夹</div><button class="empty-slot" data-action="create"><span class="slot-plus">'+icon('plus')+'</span><h3>放入第一张预算卡</h3><span class="small muted">把想管理的开销，放进自己的卡里。</span></button><p class="body-copy">每张卡，都有自己的用途与预算线。</p><div class="cycle-tags"><span>'+icon('repeat')+'日常循环开销</span><span>'+icon('flag')+'一次特别计划</span></div>')+'</div>'}
+function walletOverview(){
+ if(!s.walletHistory&&!s.recovery)return '<button class="wallet-compact" data-action="wallet"><span class="label">'+icon('star')+'心愿钱包</span><span class="wallet-number">'+money(s.wallet)+'</span></button>';
+ return '<button class="wallet-full" data-action="wallet"><div class="label">心愿钱包</div><div class="wallet-number">'+money(s.wallet)+'</div>'+(s.recovery?'<div class="recovery">待恢复差额 '+money(s.recovery)+'</div>':'')+'<p class="caption muted">来自预算结算的额度，不是真实资金。</p></button>'
+}
+function wishPage(){
+ const list=s.wishes.filter(function(w){return !!w.completed===s.completed});
+ const segmented=s.wishes.length?'<div class="segmented" aria-label="心愿分组"><button data-action="wish-active" class="'+(!s.completed?'active':'')+'">心愿清单</button><button data-action="wish-completed" class="'+(s.completed?'active':'')+'">已完成</button></div>':'';
+ let content='';
+ if(list.length)content=list.map(function(w){return '<button class="wish-row" data-action="wish-detail" data-id="'+w.id+'"><div class="wish-symbol">'+icon(w.symbol)+'</div><div><strong>'+esc(w.name)+'</strong><span>'+(w.completed?'已经实现':w.cents?'预计 '+money(w.cents):'还没有估价')+'</span></div></button>'}).join('');
+ else if(s.completed)content='<div class="analysis-intro">'+icon('check')+'<h3 style="margin-top:16px">还没有已完成的心愿</h3><p>真实购买并确认后，会留在这里。</p>'+btn('wish-active','回到心愿清单','secondary')+'</div>';
+ else content='<div class="wishlist-empty"><div class="wish-note" aria-hidden="true">'+icon('star')+'<p>一件你想实现的事，<br>值得留个位置。</p></div><h3>给心愿留个位置</h3><p class="small">先写下来，金额可以以后再补。</p>'+btn('add-wish',icon('plus')+'添加心愿')+'</div>';
+ return header('心愿',false)+'<div class="body-pad">'+walletOverview()+segmented+content+'</div>';
+}
+function calendar(disabled){return '<div class="calendar-paper"><div class="calendar-header"><div>2026 年<span class="caption muted" style="display:block;margin-top:5px">九月</span></div><span class="month-number">09</span></div><div class="calendar-grid">'+['一','二','三','四','五','六','日'].map(function(t){return '<div class="day-title">'+t+'</div>'}).join('')+'<div class="blank"></div>'+Array.from({length:30},function(_,i){const day=i+1;return '<button '+(disabled?'disabled':'')+' data-action="day" data-day="'+day+'" class="'+(s.selectedDay===day?'selected ':'')+(day===24&&budgetRecords().length?'has-data':'')+'" aria-label="9月'+day+'日">'+day+'</button>'}).join('')+'</div></div>'}
+function insightPage(){
+ let content='';
+ if(!s.budget)content='<div class="analysis-intro" style="padding-top:0;margin-bottom:20px"><h3>从一张预算卡，<br>看见开销的变化。</h3><p>有了预算卡，就能按日期回看消费。</p>'+btn('create','创建预算卡')+'</div>'+calendar(true);
+ else{
+ content='<div class="budget-selector"><span>'+esc(s.budget.name)+'</span>'+icon('down')+'</div>';
+ if(budgetRecords().length)content+='<div class="chart-box"><div class="small muted">已记录支出</div><div class="total">'+money(total())+'</div><div class="bars"><i></i><i></i><i></i><i></i><i></i><i></i><i style="height:58px"></i></div><div class="week-labels"><span>9.18</span><span>9.24</span></div></div>';
+ else content+='<div class="analysis-intro" style="padding-top:0"><h3>这张卡还没有消费记录</h3><p>记录第一笔，再慢慢看清花费的节奏。</p>'+btn('record',icon('plus')+'记一笔','secondary')+'</div>';
+ content+=calendar(false)+'<div class="section-title">9月'+s.selectedDay+'日</div>'+(s.selectedDay===24&&budgetRecords().length?recordRows(budgetRecords()):'<div class="quiet-empty">这一天还没有记录。</div>');
+ }
+ return header('分析',false)+'<div class="body-pad">'+content+'</div>';
+}
+function settingRow(key,symbol,title,value){return '<button class="setting-row" data-action="setting" data-setting="'+key+'">'+icon(symbol)+'<span class="row-text">'+title+'</span><span class="row-value">'+value+'</span>'+icon('right','arrow')+'</button>'}
+function settingsPage(){
+ if(s.settings!=='root')return settingsDetail();
+ return '<header class="topbar">'+ib('settings-back','back','返回原页面')+'<h2>个人设置</h2></header><div class="body-pad"><div class="settings-hero"><span class="device">'+icon('phone')+'</span><div><h3>保存在这台设备</h3><p>你的预算与记录，留在本机。</p></div></div><section class="settings-section"><h3>使用偏好</h3><div class="settings-rows">'+settingRow('language','globe','语言','跟随系统')+settingRow('motion','wave','动态效果',$('reduce-motion').checked?'减少动态':'跟随系统')+'</div></section><section class="settings-section"><h3>数据</h3><div class="settings-rows">'+settingRow('storage','phone','保存位置','本机')+settingRow('currency','budget','钱包基准币','CNY')+settingRow('sources','repeat','数据来源','手动与文字')+'</div></section><section class="settings-section"><h3>了解 CheckLine</h3><div class="settings-rows">'+settingRow('privacy','shield','隐私与数据','')+settingRow('about','info','关于','1.0')+'</div></section></div>';
+}
+function settingsDetail(){
+ const map={language:['语言','跟随你的系统语言','当前使用简体中文。正式 App 支持简体中文与英文，语言设置由系统管理。'],motion:['动态效果','跟随系统，保留操作反馈','减少动态效果开启时，卡片入夹改为短淡入，液面保持静止。操作结果、焦点和状态仍然完整可见。'],storage:['保存位置','预算与记录保存在本机','当前账本保存在这台设备。主动添加的消费附件独立存放，可在对应记录中删除。'],currency:['钱包基准币','人民币 · CNY','心愿钱包使用一种基准币。已有钱包分录后，基准币保持不变，避免历史金额失去共同口径。'],privacy:['隐私与数据','由你决定添加什么','账本默认保存在设备。仅用于识别的原图和原音频在提取后丢弃。只有明确选择保存为消费附件的图片才会保留可读副本。'],about:['关于 CheckLine','一张卡，一条自己的预算线。','CheckLine 帮你看见自己设定的消费边界，并在主动结算后，把结余留给心愿。'],sources:['数据来源','从你愿意使用的方式开始','各种来源可以分别选择；任何来源都不是开始使用的门槛。']};
+ const d=map[s.settings]||map.about;
+ let c='<div class="detail-copy"><h3>'+d[1]+'</h3><p>'+d[2]+'</p></div>';
+ if(s.settings==='sources')c+='<div class="detail-section"><p class="caption muted">当前可用</p><div class="source-row"><span>手动填写</span><span class="state ready">可用</span></div><div class="source-row"><span>文字输入</span><span class="state ready">本地处理</span></div></div><div class="detail-section"><p class="caption muted">后续能力</p>'+['语音与图片识别','Apple Pay','短信与邮件','账单导入'].map(function(x){return '<div class="source-row"><span>'+x+'</span><span class="state">暂不可用</span></div>'}).join('')+'</div>';
+ if(s.settings==='privacy')c+='<div class="detail-section"><p class="small muted">消费附件最多每笔 5 张。保留前移除图片元数据，删除入口在对应记录内。</p></div>';
+ if(s.settings==='about')c+='<div class="detail-section"><p class="small muted">版本 1.0</p></div>';
+ return '<header class="topbar">'+ib('settings-back','back','返回个人设置')+'<h2>'+d[0]+'</h2></header><div class="body-pad">'+c+'</div>';
+}
+function renderDock(){if(s.settings){$('dock').innerHTML='';return}const tabs=[['home','home','首页'],['budgets','budget','预算'],['wishes','heart','心愿'],['insights','chart','分析']];$('dock').innerHTML='<nav class="dock" aria-label="主导航"><div class="tab-group">'+tabs.map(function(t){return '<button data-action="tab" data-tab="'+t[0]+'" class="'+(s.tab===t[0]?'active':'')+'" aria-label="'+t[2]+'" aria-current="'+(s.tab===t[0]?'page':'false')+'">'+icon(t[1])+'</button>'}).join('')+'</div><button class="agent-entry" data-action="agent" aria-label="打开 Agent">'+avatar()+'</button></nav>'}
+function render(){
+ $('page').className='page '+(!s.settings&&s.tab==='home'?'home':'');
+ $('page').innerHTML=s.settings?settingsPage():s.tab==='home'?homePage():s.tab==='budgets'?budgetPage():s.tab==='wishes'?wishPage():insightPage();
+ renderDock();renderOverlay();renderToast();updateNotes();
+}
+function updateNotes(){
+ const key=s.settings?'settings':s.agent.open?'agent':s.tab,n=notes[key];
+ $('note-title').textContent=n[0];$('note-body').textContent=n[1];$('note-steps').innerHTML=n[2].map(function(x){return '<li>'+x+'</li>'}).join('');
+ document.querySelectorAll('[data-jump]').forEach(function(b){b.classList.toggle('active',b.dataset.jump===key)});
+ $('state-label').textContent=s.settings?'个人设置'+(s.settings==='root'?'':' · 二级页面'):s.agent.open?'Agent · '+({idle:s.agent.expanded?'完整对话':'轻输入',clarifying:'补充信息','voice-error':'转写失败',recording:'录音中',transcribing:'转写中',transcript:'核对文字',images:'图片预览',thinking:'处理中',review:'确认结果',saving:'保存中',done:'操作结果',denied:'权限受限','image-error':'识别失败'}[s.agent.phase]||'对话'):({home:'首页',budgets:'预算卡',wishes:'心愿',insights:'分析'}[s.tab])+' · '+(s.tab==='wishes'?(s.wishes.length?'心愿清单':'无心愿'):s.budget?(s.records.length?'有消费记录':'有卡，无记录'):'空卡夹');
+}
+function openAgent(task,origin){
+ const a=s.agent;operation++;const hasDraft=a.text.trim()||a.manual||a.images||!['idle','done'].includes(a.phase);
+ if(task&&(task!==a.task||a.phase==='done')){a.task=task;a.phase='idle';a.manual=false;a.mode='text';a.error='';a.text='';a.images=0;a.entries=[];a.keepAttachment=false;a.amount=task==='create'?'3000':'35';a.origin=origin||s.tab}
+ else if(!hasDraft)a.origin=origin||s.tab;
+ if(!task&&!hasDraft&&a.phase!=='done')a.task=s.budget?'general':'create';
+ a.open=true;
+ if(a.discussion===null&&s.budget)a.discussion=s.budget.name;
+ renderOverlay();updateNotes();setTimeout(function(){const t=$('agent-text');if(t)t.focus({preventScroll:true})},100);
+}
+function closeAgent(){
+ if(s.agent.phase==='saving')return;
+ operation++;stopVoiceTimer();const a=s.agent;
+ if(a.phase==='recording'||a.phase==='transcribing'||a.phase==='thinking'){a.phase=a.mode==='image'&&a.images?'images':'idle'}
+ a.open=false;renderOverlay();updateNotes();const b=document.querySelector('[data-action="agent"]');if(b)b.focus({preventScroll:true});
+}
+function asyncStep(callback,delay){const id=++operation;setTimeout(function(){if(id===operation)callback()},delay)}
+function dots(text){return '<div class="busy"><span class="dots"><i></i><i></i><i></i></span>'+text+'</div>'}
+function budgetFields(){const a=s.agent;return '<div class="form-row"><label for="budget-name">名称</label><input id="budget-name" data-field="name" value="'+esc(a.name)+'" maxlength="80"></div><div class="form-row"><label for="budget-amount">额度 · CNY</label><input id="budget-amount" data-field="amount" inputmode="decimal" value="'+esc(a.amount)+'"></div><div class="form-row"><label for="budget-cycle">周期</label><select id="budget-cycle" data-field="cycle"><option value="monthly" '+(a.cycle==='monthly'?'selected':'')+'>每月循环</option><option value="once" '+(a.cycle==='once'?'selected':'')+'>一次计划</option></select></div>'}
+function attributionOptions(unbudgeted){return (s.budget?'<option value="budget" '+(!unbudgeted?'selected':'')+'>'+esc(s.budget.name)+'</option>':'')+'<option value="none" '+(unbudgeted||!s.budget?'selected':'')+'>未纳入预算</option>'}
+function recordFields(){const a=s.agent;return '<div class="form-row"><label for="record-name">消费内容</label><input id="record-name" data-field="merchant" value="'+esc(a.merchant)+'" maxlength="80"></div><div class="form-row"><label for="record-amount">金额 · CNY</label><input id="record-amount" data-field="amount" inputmode="decimal" value="'+esc(a.amount)+'"></div><div class="form-row"><label for="record-attribution">归属</label><select id="record-attribution" data-attribution="single">'+attributionOptions(a.unbudgeted)+'</select></div><div class="form-row"><label>日期</label><span style="margin-left:auto;font-size:13px">2026年9月24日</span></div>'}
+function batchFields(){return s.agent.entries.map(function(e,i){return '<section class="batch-row"><h4>第 '+(i+1)+' 笔</h4><div class="form-row"><label for="batch-name-'+i+'">消费内容</label><input id="batch-name-'+i+'" data-entry="'+i+'" data-entry-field="merchant" value="'+esc(e.merchant)+'"></div><div class="form-row"><label for="batch-amount-'+i+'">金额 · CNY</label><input id="batch-amount-'+i+'" data-entry="'+i+'" data-entry-field="amount" inputmode="decimal" value="'+esc(e.amount)+'"></div><div class="form-row"><label for="batch-attribution-'+i+'">归属</label><select id="batch-attribution-'+i+'" data-attribution="'+i+'">'+attributionOptions(e.unbudgeted)+'</select></div><label class="attachment-option"><input type="checkbox" data-attachment="'+i+'" '+(e.keepAttachment?'checked':'')+'><span>保存对应图片为这一笔的附件</span></label></section>'}).join('')}
+function errorBox(){return s.agent.error?'<div class="error-box" role="alert">'+esc(s.agent.error)+'</div>':''}
+function reviewCard(){
+ const a=s.agent,create=a.task==='create',batch=!create&&a.entries.length>1;
+ return '<div class="result-card"><div class="result-label">'+icon(create?'budget':'check')+(create?'核对这张预算卡':batch?'逐笔核对 · '+a.entries.length+' 笔消费':'核对这笔消费')+'</div>'+(create?budgetFields():batch?batchFields():recordFields())+(!create&&!batch&&a.mode==='image'?'<label class="attachment-option"><input type="checkbox" id="keep-attachment" '+(a.keepAttachment?'checked':'')+'><span>保存为这笔消费的附件<br><span class="caption muted">关闭时，图片只用于识别。</span></span></label>':'')+errorBox()+btn('confirm',(a.error?'重试保存':create?'确认创建':batch?'确认保存 '+a.entries.length+' 笔':'确认保存'),'primary full')+'<p class="save-hint">'+(create?'确认后，卡片会放入你的卡夹。':'确认金额和归属后再保存；结果可撤销。')+'</p></div>'
+}
+function voiceView(){
+ const a=s.agent;
+ if(a.phase==='denied')return '<div class="error-box" role="alert">暂时无法使用麦克风。你可以继续用文字表达同一件事。</div>'+btn('voice-to-text','改用文字','primary full')+'<div style="text-align:center">'+btn('voice-retry','重新尝试','text-action')+'</div>';
+ if(a.phase==='voice-error')return '<div class="error-box" role="alert">这次没有听清。可以重新说一遍，或继续用文字填写；此前的草稿仍在。</div>'+btn('voice-retry','重新说一遍','primary full')+'<div style="text-align:center">'+btn('voice-to-text','改用文字','text-action')+'</div>';
+ if(a.phase==='transcribing')return dots('正在整理你说的话');
+ if(a.phase==='transcript')return '<div class="transcript"><label for="voice-text">先核对，再继续</label><textarea id="voice-text" data-field="text">'+esc(a.text)+'</textarea></div>'+btn('send','继续','primary full');
+ return '<div class="voice-surface">'+(a.phase==='recording'?'<div class="waveform" aria-hidden="true">'+[12,22,15,30,20,27,13,22,16,28,19].map(function(v){return '<i style="height:'+v+'px"></i>'}).join('')+'</div><div class="small" aria-live="polite">正在听 · '+a.seconds+' 秒</div>':'<p class="small muted">说说这笔开销，或你想管理的预算。</p>')+'<button class="voice-button '+(a.phase==='recording'?'recording':'')+'" id="voice-control" data-action="voice-click" aria-label="'+(a.phase==='recording'?'结束录音':'开始录音')+'">'+icon('mic')+(a.phase==='recording'?'松开结束，上滑取消':'按住说话')+'</button><div class="voice-help">也可点击开始，再点一次结束</div>'+(a.phase==='recording'?btn('voice-cancel','取消录音','text-action'):'')+'</div>';
+}
+function imageView(){
+ const a=s.agent;
+ let thumbs='<div class="image-tray">'+Array.from({length:a.images},function(_,i){return '<div class="receipt-thumb"><button data-action="remove-image" aria-label="删除第'+(i+1)+'张图片">'+icon('close')+'</button><span>消费小票</span><i></i><strong>¥35.00</strong><i></i><i></i></div>'}).join('')+(a.images<5?'<button class="add-image" data-action="add-image" aria-label="添加图片">'+icon('plus')+'</button>':'')+'</div>';
+ if(a.phase==='image-error')return thumbs+'<div class="error-box" role="alert">没有看清图片里的金额。图片仍在，可以重试或手动填写。</div>'+btn('recognize','重新识别','primary full')+'<div style="text-align:center">'+btn('manual','手动填写','text-action')+'</div>';
+ return '<p class="small muted">添加要核对的图片，继续前可以移除。</p>'+thumbs+'<p class="caption muted">'+a.images+' / 5 张 · 仅用于识别</p>'+(a.images?'<div style="margin-top:15px">'+btn('recognize','继续识别','primary full')+'</div>':'');
+}
+function renderAgent(){
+ const a=s.agent;let content='',foot='';
+ const history=a.expanded?a.history.slice(-6).map(function(m){return '<div class="chat-message '+m.role+'">'+esc(m.text)+'</div>'}).join(''):'';
+ if(a.manual)content='<div class="mode-toggle"><span>手动填写 · 草稿仍然保留</span>'+btn('manual','切回 Agent','text-action')+'</div><div class="result-card">'+(a.task==='create'?budgetFields():recordFields())+errorBox()+btn('confirm',a.task==='create'?'创建预算卡':'保存消费','primary full')+'</div>';
+ else if(a.phase==='thinking'||a.phase==='saving')content=dots(a.phase==='saving'?'正在保存':'正在整理这条输入');
+ else if(a.phase==='clarifying')content='<div class="chat-message assistant">'+esc(a.error)+'</div><div class="mode-toggle"><span>你已经写下的内容仍在</span>'+btn('manual','打开表单','text-action')+'</div>';
+ else if(a.phase==='review')content=reviewCard();
+ else if(a.phase==='done')content='<div class="result-card"><div class="success-line">'+icon('check')+'已保存</div><h3>'+esc(a.task==='create'?s.budget.name:a.entries.length>1?a.entries.length+' 笔消费':a.merchant)+'</h3><p class="small muted" style="margin-top:8px">'+(a.task==='create'?'预算卡已放入卡夹。':'消费已更新到对应记录。')+'</p>'+btn('view-result','查看结果','text-action')+'</div>';
+ else if(a.mode==='voice')content=voiceView();
+ else if(a.mode==='image')content=imageView();
+ else content='<p class="agent-intro">'+(a.task==='create'?'你想管理哪部分支出？':a.task==='record'?'这笔开销是什么？':'有什么想一起梳理？')+'</p><div class="suggestions"><button data-action="suggest-create">日常开销，每月 3000 元</button>'+(s.budget?'<button data-action="suggest-record">今天午餐花了 35 元</button>':'')+'</div><div class="mode-toggle"><span>也可以自己填写</span>'+btn('manual','打开表单','text-action')+'</div>';
+ if(!a.manual&&!['review','thinking','saving'].includes(a.phase)){
+ foot='<div class="composer">'+(a.mode==='text'?'<textarea id="agent-text" data-field="text" aria-label="告诉 Agent 你的需求" placeholder="'+(a.task==='create'?'例如：日常生活，每月 3000 元':'例如：今天午餐花了 35 元')+'" rows="2">'+esc(a.text)+'</textarea>':'')+'<div class="composer-tools">'+['text','voice','image'].map(function(m){return '<button class="icon-btn '+(a.mode===m?'active':'')+'" data-action="input-mode" data-mode="'+m+'" aria-label="'+({text:'文字输入',voice:'语音输入',image:'图片输入'}[m])+'">'+icon({text:'keyboard',voice:'mic',image:'image'}[m])+'</button>'}).join('')+'<span class="spacer"></span>'+(a.mode==='text'?'<button class="send" data-action="send" aria-label="发送">'+icon('send')+'</button>':'')+'</div></div>';
+ }
+ return '<div class="overlay"><div class="backdrop" data-action="close-agent"></div><section class="agent-panel '+(a.expanded?'expanded':'')+'" role="dialog" aria-modal="true" aria-label="预算助手"><button class="handle" data-action="expand-agent" aria-label="'+(a.expanded?'收起对话':'展开完整对话')+'"></button><header class="agent-head">'+avatar()+'<div class="heading"><h3>预算助手</h3><p class="subtitle">'+(a.task==='create'?'创建预算卡':a.task==='record'?'记一笔':'继续上次的话题')+'</p></div>'+ib('expand-agent',a.expanded?'down':'expand',a.expanded?'收起对话':'展开完整对话')+ib('close-agent','close','关闭 Agent')+'</header><div class="task-context"><span>'+(a.task==='create'?'新建 · 一条自己的预算线':a.discussion?'正在聊 · '+esc(a.discussion):'还没有选择讨论的预算')+'</span>'+((s.budget&&a.discussion!==s.budget.name)?btn('current-context','聊聊当前预算','text-action'):'')+'</div><div class="agent-body">'+history+content+'</div>'+foot+'<div class="composer-subtitle">切换输入方式会保留当前草稿</div></section></div>';
+}
+function renderModal(){
+ let title='',body='';
+ if(s.modal==='wish'){
+ title='添加心愿';body='<p class="small muted">先写下想实现的一件事。</p><label class="field"><span>心愿名称</span><input id="wish-name" value="'+esc(s.newWish)+'" placeholder="例如：一副新耳机" maxlength="80"></label><label class="field"><span>预计花费 · 可选</span><input id="wish-amount" value="'+esc(s.wishAmount)+'" inputmode="decimal" placeholder="以后再想也可以"></label><p class="small muted">选一个符号</p><div class="symbol-choices">'+['star','headphones','tent','book','heart'].map(function(n){return '<button data-action="wish-symbol" data-symbol="'+n+'" class="'+(s.wishSymbol===n?'active':'')+'" aria-label="'+({star:'星星',headphones:'耳机',tent:'帐篷',book:'书本',heart:'心愿'}[n])+'">'+icon(n)+'</button>'}).join('')+'</div>'+(s.modalError?'<div class="error-box" role="alert">'+s.modalError+'</div>':'')+btn('save-wish','添加到心愿清单','primary full');
+ }else if(s.modal==='wallet'){
+ title='心愿钱包';body='<p style="font-size:38px;margin:12px 0">'+money(s.wallet)+'</p><p class="small muted">来自预算结算的额度，不是真实资金。</p><div class="detail-section"><p class="small">心愿不会预先占用这笔额度。真实购买并确认后，再按实际金额从心愿钱包中扣减。</p></div>'+(s.recovery?'<div class="detail-section"><p class="small">待恢复差额：'+money(s.recovery)+'</p></div>':'');
+ }else if(s.modal==='attention'){title='待处理';body='<div class="quiet-empty">目前没有需要确认的事项。</div>'}
+ else if(s.modal==='unbudgeted'){title='未纳入预算';body='<p class="small muted">这些记录已经保存，尚未计入任何预算卡。</p>'+recordRows(s.records.filter(function(r){return r.unbudgeted}))}
+ else if(s.modal==='menu'){title='快捷操作';body='<div class="settings-rows">'+settingAction('create','budget','创建预算卡')+settingAction('record','plus','记一笔')+settingAction('settings','user','个人设置')+'</div>'}
+ else if(s.modal&&s.modal.type==='record'){const r=s.records[s.modal.index]||s.records[0];title='消费详情';body=r?'<h3>'+esc(r.name)+'</h3><p style="font-size:36px;margin:18px 0">'+money(r.cents)+'</p><p class="small muted">2026年9月24日 · '+esc(r.unbudgeted?'未纳入预算':s.budget.name)+'</p><div class="detail-section"><p class="small">'+(r.attachment?'已保留图片附件':'没有添加备注或附件')+'</p></div>':''}
+ else if(s.modal&&s.modal.type==='wish'){const w=s.wishes.find(function(x){return x.id===s.modal.id});title='心愿详情';body=w?'<div style="text-align:center;margin:20px 0;color:#c6b8ee">'+icon(w.symbol)+'</div><h3>'+esc(w.name)+'</h3><p style="font-size:29px;margin:18px 0">'+(w.cents?money(w.cents):'暂未填写预计花费')+'</p><p class="small muted">'+(w.completed?'已完成的心愿，留在这里。':'添加心愿不会分配或冻结钱包额度。')+'</p>':''}
+ return '<div class="overlay"><div class="backdrop" data-action="close-modal"></div><section class="modal-panel" role="dialog" aria-modal="true" aria-label="'+title+'"><header class="modal-head"><h3>'+title+'</h3>'+ib('close-modal','close','关闭')+'</header>'+body+'</section></div>';
+}
+function settingAction(action,name,text){return '<button class="setting-row" data-action="'+action+'">'+icon(name)+'<span class="row-text">'+text+'</span>'+icon('right','arrow')+'</button>'}
+function renderOverlay(){
+ const host=$('overlay-host'),previous=host.querySelector('[role="dialog"]'),oldHeight=previous?previous.getBoundingClientRect().height:0,isOpen=s.agent.open||!!s.modal;
+ host.innerHTML=s.agent.open?renderAgent():s.modal?renderModal():'';$('page').inert=isOpen;$('dock').inert=isOpen;
+ const panel=host.querySelector('[role="dialog"]');if(!panel)return;
+ if(!previous){panel.classList.add('opening');const focus=panel.querySelector('input,textarea,button');if(focus)focus.focus({preventScroll:true})}
+ else if(!document.documentElement.classList.contains('reduce')&&!window.matchMedia('(prefers-reduced-motion: reduce)').matches){const height=panel.getBoundingClientRect().height;if(Math.abs(height-oldHeight)>2)panel.animate([{height:oldHeight+'px'},{height:height+'px'}],{duration:240,easing:'cubic-bezier(.2,.8,.3,1)'})}
+}
+function toast(msg,undo){const entry={text:msg,undo:undo||null};s.toast=entry;renderToast();setTimeout(function(){if(s.toast===entry){s.toast=null;renderToast()}},6000)}
+function renderToast(){$('toast-host').innerHTML=s.toast?'<div class="toast"><span>'+esc(s.toast.text)+'</span><button data-action="'+(s.toast.undo?'undo':'dismiss-toast')+'">'+(s.toast.undo?'撤销':'关闭')+'</button></div>':''}
+function parseInput(){
+ const a=s.agent,text=a.text.trim();if(!text)return;
+ if(['thinking','saving'].includes(a.phase))return;
+ a.error='';a.entries=[];
+ a.history.push({role:'user',text:text});
+ if(/还[能剩]|剩余/.test(text))a.task='general';
+ else if(/预算|每月|管理/.test(text))a.task='create';
+ else if(/花|午餐|咖啡|消费|交通/.test(text)&&!(/还[能剩]|剩余/.test(text)))a.task='record';
+ const amount=text.match(/(\d+(?:\.\d{1,2})?)/);if(amount)a.amount=amount[1];
+ if(a.task==='create'){if(/旅行/.test(text))a.name='旅行计划';else if(/日常|生活/.test(text))a.name='日常生活';a.cycle=/一次|旅行/.test(text)?'once':'monthly'}
+ if(a.task==='record')a.merchant=/咖啡/.test(text)?'咖啡':/交通|地铁/.test(text)?'交通':'午餐';
+ a.phase='thinking';renderOverlay();updateNotes();
+ asyncStep(function(){
+  if(a.task==='general'){
+   const reply=s.budget?esc(s.budget.name)+'当前还能花 '+money(s.budget.cents-total())+'。以上只包含已记录的数据。':'可以先从一张预算卡开始，告诉我你想管理的开销。';
+   a.history.push({role:'assistant',text:reply});a.expanded=true;a.phase='idle';a.text='';
+  }else if(!amount){a.phase='clarifying';a.error=a.task==='create'?'这张卡准备设置多少预算？补上额度后，我们再核对。':'这笔消费是多少钱？补上金额后，我们再核对。'}
+  else a.phase='review';
+  renderOverlay();updateNotes();
+ },550);
+}
+function confirm(){
+ const a=s.agent,value=cents(a.amount),name=(a.task==='create'?a.name:a.merchant).trim(),batch=a.task==='record'&&a.entries.length>1;
+ const rows=batch?a.entries:[{merchant:a.merchant,amount:a.amount,unbudgeted:a.unbudgeted,keepAttachment:a.mode==='image'&&a.keepAttachment}];
+ if(a.task==='create'?(!value||!name):rows.some(function(e){return !e.merchant.trim()||!cents(e.amount)})){a.error='请补充名称和大于 0 的金额。';renderOverlay();return}
+ if(a.phase==='saving')return;
+ const old={budget:s.budget?Object.assign({},s.budget):null,records:s.records.slice()};
+ a.manual=false;a.phase='saving';renderOverlay();updateNotes();
+ asyncStep(function(){
+  if(s.failSave){s.failSave=false;a.phase='review';a.error='没有保存成功。内容仍在，请重试。';renderOverlay();updateNotes();return}
+  a.error='';
+  if(a.task==='create'){s.budget={name:name,cents:value,cycle:a.cycle};s.insert=true;a.discussion=name}
+  else rows.forEach(function(e){s.records.push({name:e.merchant.trim(),cents:cents(e.amount),day:24,attachment:e.keepAttachment,unbudgeted:!s.budget||e.unbudgeted})});
+  a.history.push({role:'assistant',text:a.task==='create'?'预算卡已创建：'+name:'已保存 '+rows.length+' 笔消费'});
+  a.phase='done';a.text='';
+  if(a.origin!=='agent'){a.open=false;s.tab=a.origin==='insights'?'insights':a.origin==='budgets'?'budgets':'home'}
+  render();toast(a.task==='create'?'预算卡已创建':rows.length+' 笔消费已保存',old);
+  setTimeout(function(){s.insert=false},650);
+ },430);
+}
+function stopVoiceTimer(){if(voiceTimer){clearInterval(voiceTimer);voiceTimer=null}}
+function startVoice(){
+ const a=s.agent;if(s.denyVoice){a.phase='denied';renderOverlay();updateNotes();return}
+ stopVoiceTimer();a.phase='recording';a.seconds=0;renderOverlay();updateNotes();
+ voiceTimer=setInterval(function(){a.seconds++;const n=$('overlay-host').querySelector('[aria-live]');if(n)n.textContent='正在听 · '+a.seconds+' 秒'},1000);
+}
+function endVoice(cancel){
+ const a=s.agent;stopVoiceTimer();if(cancel){a.phase='idle';renderOverlay();updateNotes();return}
+ a.phase='transcribing';renderOverlay();updateNotes();asyncStep(function(){a.text=a.task==='create'?'日常生活，每月预算 3000 元':'今天午餐花了 35 元';a.phase='transcript';renderOverlay();updateNotes()},550);
+}
+function recognize(){
+ const a=s.agent;if(!a.images)return;a.phase='thinking';renderOverlay();updateNotes();
+ asyncStep(function(){if(s.failImage){s.failImage=false;a.phase='image-error'}else{a.task='record';a.merchant='午餐';a.amount='35';a.entries=a.images>1?Array.from({length:a.images},function(_,i){return {merchant:i===0?'午餐':'咖啡',amount:i===0?'35':'18',unbudgeted:!s.budget,keepAttachment:false}}):[];if(a.entries.length>1)a.expanded=true;a.phase='review'}renderOverlay();updateNotes()},650);
+}
+function setScenario(value){
+ operation++;stopVoiceTimer();s.budget=null;s.records=[];s.wishes=[];s.wallet=0;s.recovery=0;s.walletHistory=false;s.completed=false;s.settings=null;s.modal=null;s.toast=null;s.agent=freshAgent();s.failSave=false;s.denyVoice=false;s.failImage=false;s.selectedDay=24;
+ if(['budget','wallet','completed','record'].includes(value))s.budget={name:'日常生活',cents:300000,cycle:'monthly'};
+ if(value==='wallet'){s.wallet=86000;s.walletHistory=true;s.tab='wishes'}
+ if(value==='recovery'){s.recovery=15000;s.walletHistory=true;s.tab='wishes'}
+ if(value==='unbudgeted'){s.records=[{name:'午餐',cents:3500,day:24,attachment:false,unbudgeted:true}];s.tab='home'}
+ if(value==='completed'){s.wishes=[{id:1,name:'一副新耳机',cents:69900,symbol:'headphones',completed:true}];s.tab='wishes'}
+ if(value==='record'){s.records=[{name:'午餐',cents:3500,day:24,attachment:false,unbudgeted:false}];s.tab='insights'}
+ if(value==='save-error')s.failSave=true;
+ if(value==='voice-denied'){s.denyVoice=true;s.agent.open=true;s.agent.mode='voice';s.agent.phase='denied';s.agent.origin='agent'}
+ if(value==='voice-error'){s.agent.open=true;s.agent.mode='voice';s.agent.phase='voice-error';s.agent.origin='agent'}
+ if(value==='image-error'){s.failImage=true;s.agent.open=true;s.agent.mode='image';s.agent.images=1;s.agent.phase='image-error';s.agent.task='record';s.agent.origin='agent';s.failImage=false}
+ render();
+}
+function handleAction(b){
+ const action=b.dataset.action,a=s.agent;
+ if(action==='tab'){s.tab=b.dataset.tab;s.settings=null;s.toast=null;render();$('page').scrollTop=0}
+ else if(action==='create'||action==='record'){s.modal=null;openAgent(action==='create'?'create':'record',s.tab)}
+ else if(action==='agent')openAgent(null,'agent');
+ else if(action==='close-agent')closeAgent();
+ else if(action==='expand-agent'){if(performance.now()-lastPanelDrag<350)return;a.expanded=!a.expanded;renderOverlay();updateNotes()}
+ else if(action==='manual'){a.manual=!a.manual;a.expanded=a.manual||a.expanded;if(a.task==='general')a.task='record';if(a.manual)a.phase='idle';renderOverlay();updateNotes()}
+ else if(action==='send')parseInput();
+ else if(action==='confirm')confirm();
+ else if(action==='input-mode'){operation++;stopVoiceTimer();a.mode=b.dataset.mode;a.manual=false;a.error='';a.phase=a.mode==='image'?(a.images?'images':'idle'):'idle';renderOverlay();updateNotes()}
+ else if(action==='suggest-create'){a.text='日常生活，每月预算 3000 元';a.task='create';a.mode='text';renderOverlay();$('agent-text').focus()}
+ else if(action==='suggest-record'){a.text='今天午餐花了 35 元';a.task='record';a.mode='text';renderOverlay();$('agent-text').focus()}
+ else if(action==='current-context'){a.discussion=s.budget.name;renderOverlay()}
+ else if(action==='voice-click'){if(performance.now()-lastVoiceDown<450)return;if(a.phase==='recording')endVoice(false);else startVoice()}
+ else if(action==='voice-cancel')endVoice(true);
+ else if(action==='voice-to-text'){a.mode='text';a.phase='idle';renderOverlay()}
+ else if(action==='voice-retry'){s.denyVoice=false;a.phase='idle';renderOverlay()}
+ else if(action==='add-image'){if(a.images<5)a.images++;a.phase='images';renderOverlay()}
+ else if(action==='remove-image'){a.images=Math.max(0,a.images-1);renderOverlay()}
+ else if(action==='recognize')recognize();
+ else if(action==='view-result'){a.open=false;s.tab=a.task==='create'?'budgets':'home';render()}
+ else if(action==='settings'){s.modal=null;s.settings='root';render();$('page').scrollTop=0}
+ else if(action==='settings-back'){s.settings=s.settings==='root'?null:'root';render();$('page').scrollTop=0}
+ else if(action==='setting'){s.settings=b.dataset.setting;render();$('page').scrollTop=0}
+ else if(action==='add-wish'){s.modal='wish';s.modalError='';renderOverlay()}
+ else if(action==='wish-symbol'){s.wishSymbol=b.dataset.symbol;renderOverlay()}
+ else if(action==='save-wish'){
+  if(!s.newWish.trim()){s.modalError='先给这个心愿一个名字。';renderOverlay();return}
+  if(s.wishAmount.trim()&&!cents(s.wishAmount)){s.modalError='预计花费请填大于 0 的金额，或暂时留空。';renderOverlay();return}
+  s.wishes.push({id:Date.now(),name:s.newWish.trim(),cents:cents(s.wishAmount),symbol:s.wishSymbol,completed:false});s.modal=null;s.completed=false;s.newWish='';s.wishAmount='';render();toast('心愿已添加，钱包额度保持不变。');
+ }
+ else if(action==='wish-active'||action==='wish-completed'){s.completed=action==='wish-completed';render()}
+ else if(action==='wish-detail'){s.modal={type:'wish',id:Number(b.dataset.id)};renderOverlay()}
+ else if(action==='record-detail'){s.modal={type:'record',index:Number(b.dataset.index)};renderOverlay()}
+ else if(action==='wallet'||action==='attention'||action==='menu'||action==='unbudgeted'){s.modal=action;renderOverlay()}
+ else if(action==='close-modal'){s.modal=null;renderOverlay()}
+ else if(action==='day'){s.selectedDay=Number(b.dataset.day);render()}
+ else if(action==='dismiss-toast'){s.toast=null;renderToast()}
+ else if(action==='undo'){if(s.toast&&s.toast.undo){s.budget=s.toast.undo.budget;s.records=s.toast.undo.records;s.toast=null;s.agent.open=false;s.agent.phase='idle';render();toast('已撤销')}} 
+}
+$('app').addEventListener('click',function(e){const b=e.target.closest('[data-action]');if(b&&!b.disabled)handleAction(b)});
+$('app').addEventListener('input',function(e){if(e.target.dataset.entryField)s.agent.entries[Number(e.target.dataset.entry)][e.target.dataset.entryField]=e.target.value;if(e.target.dataset.field)s.agent[e.target.dataset.field]=e.target.value;if(e.target.id==='wish-name')s.newWish=e.target.value;if(e.target.id==='wish-amount')s.wishAmount=e.target.value});
+$('app').addEventListener('change',function(e){const d=e.target.dataset;if(d.attribution!==undefined){if(d.attribution==='single')s.agent.unbudgeted=e.target.value==='none';else s.agent.entries[Number(d.attribution)].unbudgeted=e.target.value==='none'}if(d.attachment!==undefined)s.agent.entries[Number(d.attachment)].keepAttachment=e.target.checked;if(e.target.id==='keep-attachment')s.agent.keepAttachment=e.target.checked;if(d.field)s.agent[d.field]=e.target.value});
+$('app').addEventListener('pointerdown',function(e){if(e.target.closest('.handle'))panelStartY=e.clientY;if(e.target.closest('#voice-control')&&e.pointerType!=='mouse'){lastVoiceDown=performance.now();voiceStartY=e.clientY;startVoice()}});
+document.addEventListener('pointerup',function(e){if(panelStartY!==null){const delta=e.clientY-panelStartY;panelStartY=null;if(Math.abs(delta)>32&&s.agent.open){lastPanelDrag=performance.now();s.agent.expanded=delta<0;renderOverlay();updateNotes()}}if(s.agent.phase==='recording'&&e.pointerType!=='mouse'){lastVoiceDown=performance.now();endVoice(e.clientY<voiceStartY-55)}});
+document.addEventListener('keydown',function(e){
+ if(e.key==='Escape'){if(s.agent.open){if(s.agent.phase==='recording')endVoice(true);else closeAgent()}else if(s.modal){s.modal=null;renderOverlay()}else if(s.settings){s.settings=s.settings==='root'?null:'root';render()}}
+ if(e.key==='Tab'){const dialog=$('app').querySelector('[role="dialog"]');if(dialog){const focusables=Array.from(dialog.querySelectorAll('button:not(:disabled),input,textarea,select')).filter(function(el){return el.offsetParent!==null});const first=focusables[0],last=focusables[focusables.length-1];if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus()}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus()}}}
+});
+document.querySelectorAll('[data-jump]').forEach(function(b){b.addEventListener('click',function(){if(s.agent.phase==='saving')return;operation++;stopVoiceTimer();if(['recording','transcribing','thinking'].includes(s.agent.phase))s.agent.phase='idle';s.modal=null;s.agent.open=false;s.settings=null;if(b.dataset.jump==='settings')s.settings='root';else if(b.dataset.jump==='agent'){openAgent(null,'agent');return}else s.tab=b.dataset.jump;render();$('page').scrollTop=0})});
+$('scenario').addEventListener('change',function(){setScenario(this.value)});
+$('viewport').addEventListener('change',function(){document.documentElement.style.setProperty('--preview-width',this.value+'px');$('app').classList.toggle('wide',this.value==='760')});
+$('large-type').addEventListener('change',function(){$('app').classList.toggle('large',this.checked)});
+$('reduce-motion').addEventListener('change',function(){document.documentElement.classList.toggle('reduce',this.checked);if(s.settings==='root')render()});
+$('reset').addEventListener('click',function(){s.tab='home';$('scenario').value='empty';setScenario('empty')});
+$('demo-fill').addEventListener('click',function(){openAgent(s.budget?'record':'create',s.tab);s.agent.text=s.budget?'今天午餐花了 35 元':'日常生活，每月预算 3000 元';s.agent.mode='text';s.agent.phase='idle';renderOverlay();$('agent-text').focus()});
+render();
+})();
+</script>
+</body>
+</html>
