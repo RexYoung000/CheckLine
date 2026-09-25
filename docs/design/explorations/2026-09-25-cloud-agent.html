@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CheckLine · Cloud Agent 五状态</title>
+<style>
+:root{font:15px/1.55 -apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif;color:#353040;background:#f5f3f7;--cloud:#78648c;--eyes:#faf6ed;--ink:#353040;--muted:#70677c;--line:#ded8e5;--paper:#fcfbfd;--soft:#eee8f3;--context:#ece7f1;color-scheme:light}
+*{box-sizing:border-box}body{margin:0}button,input{font:inherit}button{cursor:pointer;min-height:44px;border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:12px;padding:9px 16px}button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid #957aad;outline-offset:4px}button:disabled{cursor:default;opacity:.45}button:active{transform:scale(.98)}a{color:inherit;text-underline-offset:4px}h1,h2,h3,p{margin:0}svg{display:block;overflow:visible;flex-shrink:0}main{max-width:1180px;margin:auto;padding:38px 32px 24px}.top{display:flex;justify-content:space-between;gap:20px;align-items:center;border-bottom:1px solid var(--line);padding-bottom:24px}.brand{font-size:11px;letter-spacing:2px;font-weight:650;color:var(--muted)}.tools{display:flex;align-items:center;flex-wrap:wrap;gap:12px;font-size:12px}.tools button{font-size:12px}.tools label{display:flex;gap:7px;align-items:center;min-height:44px;cursor:pointer}input{accent-color:var(--cloud)}.intro{padding:34px 0 26px;display:flex;justify-content:space-between;gap:28px;align-items:end}h1{font-size:clamp(26px,4vw,40px);font-weight:560;letter-spacing:-1px;line-height:1.25}.intro p{color:var(--muted);font-size:13px;margin-top:12px}.edition{font-size:11px;letter-spacing:1px;color:var(--muted);white-space:nowrap;padding-bottom:4px}.workbench{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(310px,.85fr);gap:24px;align-items:start}.stage{min-width:0;background:var(--paper);border:1px solid var(--line);border-radius:24px;overflow:hidden}.stage-head{display:flex;justify-content:space-between;gap:14px;padding:18px 22px;font-size:11px;color:var(--muted)}.stage-head strong{font-weight:500}.hero-area{height:315px;display:grid;place-items:center}.hero-area svg{width:280px;height:260px}.caption{padding:0 26px 24px;min-height:102px}h2{font-size:21px;font-weight:550;letter-spacing:-.4px}.caption p{margin-top:6px;font-size:13px;color:var(--muted);max-width:440px}.stage-actions{display:flex;flex-wrap:wrap;gap:8px;border-top:1px solid var(--line);padding:16px 22px}.stage-actions button{font-size:12px}.primary{background:var(--cloud);color:var(--eyes);border-color:var(--cloud)}.context{min-width:0;background:var(--context);border:1px solid var(--line);border-radius:24px;padding:22px;position:relative}.context-label{font-size:11px;letter-spacing:1px;color:var(--muted);display:flex;justify-content:space-between;margin-bottom:20px}.assistant-panel{border:1px solid var(--line);border-radius:22px;background:var(--paper);padding:18px;min-height:354px;display:flex;flex-direction:column;gap:18px}.assistant-head{display:flex;align-items:center;gap:8px}.assistant-head svg{width:48px;height:44px}.assistant-head strong{display:block;font-size:15px;font-weight:600}.assistant-head small{font-size:11px;color:var(--muted)}.context-message{font-size:14px;line-height:1.8;flex:1}.user-bubble{background:var(--soft);border-radius:14px 14px 4px 14px;padding:10px 13px;align-self:end;font-size:12px;margin-bottom:12px}.context-message p{margin-top:5px}.confirm{margin-top:13px;border-top:1px solid var(--line);padding-top:12px;font-size:12px}.confirm button{margin-top:10px;width:100%;font-size:12px}.composer{border:1px solid var(--line);border-radius:15px;padding:12px 14px;font-size:12px;color:var(--muted);display:flex;align-items:center;justify-content:space-between;min-height:52px}.composer span:last-child{width:27px;height:27px;border-radius:50%;background:var(--soft);display:grid;place-items:center;color:var(--cloud)}.dock-demo{display:flex;align-items:center;justify-content:space-between;margin-top:18px;gap:16px}.dock-note{font-size:11px;color:var(--muted)}.dock-circle{width:56px;height:56px;border:1px solid var(--line);background:var(--paper);border-radius:50%;display:grid;place-items:center}.dock-circle svg{width:42px;height:40px}.sizes{display:flex;gap:18px;align-items:center;border-top:1px solid var(--line);padding:16px 22px;flex-wrap:wrap}.sizes p{font-size:11px;color:var(--muted);margin-right:auto}.size-item{display:flex;gap:5px;align-items:center;font-size:10px;color:var(--muted)}.states{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin-top:22px}.state-button{padding:14px;text-align:left;border-radius:16px;background:transparent;display:flex;flex-direction:column;align-items:start;min-height:133px;gap:4px}.state-button[aria-pressed=true]{background:var(--paper);border:2px solid var(--cloud);padding:13px}.state-button svg{width:62px;height:56px;margin-bottom:5px}.state-button .number{font-size:10px;color:var(--muted);letter-spacing:1px}.state-button .title{font-size:14px;font-weight:550}.state-button .sub{font-size:11px;color:var(--muted)}footer{display:flex;justify-content:space-between;gap:24px;font-size:11px;color:var(--muted);margin-top:24px;padding-top:20px;border-top:1px solid var(--line)}footer p{max-width:660px}body.dark{background:#25212c;color:#eee9f3;--ink:#eee9f3;--muted:#b7aabd;--line:#4d4259;--paper:#302a39;--soft:#44384e;--context:#2b2532;--cloud:#bca6cf;--eyes:#302637;color-scheme:dark}body.dark .primary{color:#302637}.reduce button:active{transform:none}[hidden]{display:none!important}@media(max-width:780px){main{padding:22px 20px}.top{align-items:start}.workbench{grid-template-columns:1fr}.context{max-width:460px;width:100%;margin:auto}.intro{display:block}.edition{margin-top:16px}.states{grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}.state-button{padding:10px 7px;min-height:120px}.state-button[aria-pressed=true]{padding:9px 6px}.state-button svg{width:44px;height:42px}.state-button .title{font-size:12px}.state-button .sub{display:none}footer{flex-direction:column;gap:10px}}@media(max-width:420px){.top{display:block}.tools{margin-top:14px;gap:10px}.hero-area{height:250px}.hero-area svg{width:238px;height:220px}.stage-head,.stage-actions,.sizes{padding-inline:16px}.caption{padding-inline:18px;min-height:116px}.context{padding:16px}.state-button .number{font-size:9px}.state-button .title{font-size:11px}.states{gap:4px}.state-button svg{width:36px;height:36px}main{padding-inline:14px}.brand{letter-spacing:1.5px}}@media(prefers-reduced-motion:reduce){button:active{transform:none}}
+</style>
+</head>
+<body><main>
+<header class="top"><div class="brand">CHECKLINE / AGENT STUDY 01</div><div class="tools"><button id="theme" aria-pressed="false">深色背景</button><label><input id="reduced" type="checkbox">减少动态</label></div></header>
+<section class="intro"><div><h1>一朵云，五种回应。</h1><p>同一个轮廓，让眼神先说话。</p></div><span class="edition">二维动效提案 · 等待审阅</span></section>
+<div class="workbench">
+<section class="stage" aria-label="放大动效预览">
+<div class="stage-head"><span>动作观察</span><strong id="play-state">正常速度 · 待机循环</strong></div>
+<div class="hero-area"><svg data-live></svg></div>
+<div class="caption" aria-live="polite" aria-atomic="true"><h2 id="state-title">待机</h2><p id="state-description">偶尔看看你，再安静地眨一下眼。身体保持安定。</p></div>
+<div class="stage-actions"><button id="replay">重播当前动作</button><button id="pause" aria-pressed="false">暂停</button><button id="sequence" class="primary">走一遍任务</button><button id="cancel">取消并归位</button></div>
+<div class="sizes"><p>同一时刻 · 小尺寸观察</p><div class="size-item"><svg data-live style="width:28px;height:28px"></svg><span>28</span></div><div class="size-item"><svg data-live style="width:40px;height:40px"></svg><span>40</span></div><div class="size-item"><svg data-live style="width:64px;height:64px"></svg><span>64 px</span></div></div>
+</section>
+<aside class="context" aria-label="Agent 场景示意">
+<div class="context-label"><span>放回界面看看</span><span>演示数据</span></div>
+<section class="assistant-panel"><header class="assistant-head"><svg data-live></svg><div><strong>预算助手</strong><small id="context-state">随时可以开始</small></div></header><div class="context-message"><div class="user-bubble" id="sample-request" hidden>午餐花了 35 元</div><p id="context-copy">今天，想一起梳理什么？</p><div class="confirm" id="confirmation" hidden><span>日常生活 · ¥35.00<br>这笔消费归到这里，可以吗？</span><button class="primary" id="confirm">确认归属 · 模拟保存</button></div></div><div class="composer" aria-label="输入区域示意"><span>说说这笔消费…</span><span aria-hidden="true">↑</span></div></section>
+<div class="dock-demo"><p class="dock-note">底部独立入口<br>小头像仅保留眼神与低幅动作</p><div class="dock-circle"><svg id="dock-cloud"></svg></div></div>
+</aside>
+</div>
+<nav class="states" aria-label="选择要审阅的状态">
+<button class="state-button" data-state="idle" aria-pressed="true"><svg></svg><span class="number">01 / IDLE</span><span class="title">待机</span><span class="sub">看一眼，眨眼，停顿</span></button>
+<button class="state-button" data-state="received" aria-pressed="false"><svg></svg><span class="number">02 / RECEIVE</span><span class="title">收到输入</span><span class="sub">抬眼，轻压，舒展</span></button>
+<button class="state-button" data-state="processing" aria-pressed="false"><svg></svg><span class="number">03 / WORK</span><span class="title">处理中</span><span class="sub">左右检查，轮廓错拍</span></button>
+<button class="state-button" data-state="waiting" aria-pressed="false"><svg></svg><span class="number">04 / WAIT</span><span class="title">等待确认</span><span class="sub">侧倾，看向你，等候</span></button>
+<button class="state-button" data-state="done" aria-pressed="false"><svg></svg><span class="number">05 / DONE</span><span class="title">完成</span><span class="sub">舒展，点头，归位</span></button>
+</nav>
+<footer><p>独立动效小样。按钮与任务结果均为模拟，不保存消费记录。云朵沿用 bloub Cloud Shape；配色、五态动作与节奏为 CheckLine 提案，尚未接入原生 App。</p><a href="cloud-agent/NOTICE.md">参考与来源 ↗</a></footer>
+</main>
+<script type="module">
+import { CloudPlayer, createCloud, pose, REST } from './cloud-agent/motion.mjs';
+const $ = id => document.getElementById(id);
+const info = {
+ idle: ['待机','偶尔看看你，再安静地眨一下眼。身体保持安定。','随时可以开始','今天，想一起梳理什么？','待机循环'],
+ received: ['收到输入','眼睛先抬起来，身体轻压后舒展。一笔输入，只回应一次。','收到你的输入','收到，我来帮你看看这笔消费。','单次回应'],
+ processing: ['处理中','眼神左右检查，云朵两侧错拍起伏。持续处理时可以循环。','正在核对这笔消费','正在核对金额与预算归属…','处理循环'],
+ waiting: ['等待确认','轻轻侧倾，回头看向你。停下来等，不自动进入完成。','需要你确认一下','这笔消费的预算归属需要你核对。','保持等候'],
+ done: ['完成','一次舒展、点头和愉快眼形，随后收回原来的云朵。','已完成 · 演示','这笔消费已处理好。','单次回应']
+};
+const player = new CloudPlayer(), draw = [...document.querySelectorAll('[data-live]')].map(createCloud), dock = createCloud($('dock-cloud'));
+document.querySelectorAll('[data-state]').forEach(button => {
+ const id = button.dataset.state;
+ createCloud(button.querySelector('svg'))(pose(id, id === 'done' ? .9 : .5, true));
+ button.addEventListener('click', () => { sequence = false; select(id); });
+});
+let paused = false, sequence = false, raf = null, last = null;
+const mq = matchMedia('(prefers-reduced-motion: reduce)');
+$('reduced').checked = mq.matches; player.setReduced(mq.matches);
+function render() {
+ draw.forEach(fn => fn(player.current));
+ const small = { ...player.current };
+ // Preserve expression, reduce contour displacement in the persistent dock.
+ for (const key of ['sx','sy','lean','lift','lobe']) small[key] = REST[key] + (small[key] - REST[key]) * .3;
+ dock(small);
+}
+function updatePlayback() {
+ $('play-state').textContent = (paused ? '已暂停' : player.reduced ? '减少动态 · 静态表达' : '正常速度') + ' · ' + info[player.state][4];
+ $('pause').textContent = paused ? '继续播放' : '暂停'; $('pause').setAttribute('aria-pressed', String(paused));
+}
+function updateUI() {
+ const [title, description, context, copy] = info[player.state];
+ $('state-title').textContent = title; $('state-description').textContent = description;
+ $('context-state').textContent = context; $('context-copy').textContent = copy;
+ $('sample-request').hidden = player.state === 'idle'; $('confirmation').hidden = player.state !== 'waiting';
+ document.querySelectorAll('[data-state]').forEach(el => el.setAttribute('aria-pressed', String(el.dataset.state === player.state)));
+ document.body.classList.toggle('reduce', player.reduced); updatePlayback();
+}
+function select(state) { player.select(state); paused = false; updateUI(); render(); start(); }
+function tick(now) {
+ raf = null;
+ if (document.hidden || paused) { last = null; return; }
+ const dt = last === null ? 0 : Math.min((now - last) / 1000, .05); last = now;
+ if (sequence && player.state === 'received' && player.elapsed >= 1.5) { player.select('processing'); updateUI(); }
+ if (sequence && player.state === 'processing' && player.elapsed >= 4.8) { sequence = false; player.select('waiting'); updateUI(); }
+ player.advance(dt); render(); raf = requestAnimationFrame(tick);
+}
+function start() { if (raf === null && !paused && !document.hidden) { last = null; raf = requestAnimationFrame(tick); } }
+function stop() { if (raf !== null) cancelAnimationFrame(raf); raf = null; last = null; }
+$('pause').onclick = () => { paused = !paused; if (paused) stop(); else start(); updatePlayback(); };
+$('replay').onclick = () => { sequence = false; select(player.state); };
+$('sequence').onclick = () => { sequence = true; select('received'); };
+$('cancel').onclick = () => { sequence = false; select('idle'); };
+$('confirm').onclick = () => { sequence = false; select('done'); $('context-copy').textContent = '已模拟保存到「日常生活」。'; $('replay').focus({preventScroll:true}); };
+function reduce(value) { $('reduced').checked = value; player.setReduced(value); updateUI(); render(); }
+$('reduced').onchange = () => reduce($('reduced').checked);
+mq.addEventListener('change', e => reduce(e.matches));
+$('theme').onclick = () => { const dark = document.body.classList.toggle('dark'); $('theme').textContent = dark ? '浅色背景' : '深色背景'; $('theme').setAttribute('aria-pressed', String(dark)); };
+document.addEventListener('visibilitychange', () => { if (document.hidden) stop(); else start(); });
+updateUI(); render(); start();
+</script>
+</body>
+</html>
