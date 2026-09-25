@@ -15,7 +15,7 @@ export function cloudPose(id,t){
  p.sil={...p.sil,radii:[...CLOUD]};
  if(id==='orbit'){
   const amount=envelope(t,0,.65,2.5,3.4),wave=Math.sin(t*Math.PI*1.1)*amount;
-  p.sil.rot=.075*wave;
+  p.sil.rot=0; // Whole-body rotation is applied to body and eye mask together.
   p.sil.sx=1+.035*wave;p.sil.sy=1-.035*wave;
   p.sil.radii=CLOUD.map((r,i)=>r*(1+.025*amount*Math.sin(i/CLOUD.length*Math.PI*4-t*2)));
   p.gaze={...p.gaze,yaw:p.gaze.yaw-14*Math.sin(t*1.6)*amount,pitch:p.gaze.pitch+5*wave};
@@ -37,7 +37,20 @@ export function cloudPose(id,t){
 }
 const defs=new Map(IDS.map(id=>[id,{...STATE_BY_ID.get(id),baseBody:false,baseFace:false,pose:t=>cloudPose(id,t)}]));
 export class CloudEngine extends BotEngine{
- constructor(initial='idle'){super(100,initial,CLOUD);}
+ constructor(initial='idle'){
+  super(100,initial,CLOUD);
+  this.spin={from:0,to:initial==='orbit'?-360:0,at:0,duration:3.4};
+ }
+ rotation(now){const s=this.spin;return s.from+(s.to-s.from)*smooth((now-s.at)/s.duration);}
+ setState(id,now){
+  if(id===this.state)return;
+  const angle=this.rotation(now);
+  this.spin={from:angle,to:id==='orbit'?angle-360:Math.round(angle/360)*360,at:now,duration:id==='orbit'?3.4:.7};
+  super.setState(id,now);
+ }
+ reset(id,now){super.reset(id,now);this.spin={from:0,to:id==='orbit'?-360:0,at:now,duration:3.4};}
+ sample(now){return {...super.sample(now),bodyRotation:this.rotation(now)};}
+
  posed(def,t,shape,expression){return super.posed(defs.get(def.id)??def,t,shape,expression);}
  // The cloud keeps its resting face attachment even during its temporary states.
  decalageAtTime(now,state){return super.decalageAtTime(now,IDS.includes(state)?'idle':state);}

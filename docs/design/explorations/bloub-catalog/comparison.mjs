@@ -1,7 +1,7 @@
 import {engine,hold,IDS} from './cloud-variants.mjs';
 import {renderer} from './render.mjs';
 const $=id=>document.getElementById(id);
-const info={orbit:['轨道','原版：三角形旋转 → 圆球 → 云朵','云朵版：云瓣保持，三条轨道绕行，身体轻转后归位','观察云朵在轨道穿行时是否仍清楚，以及转头和线条的节奏是否协调。'],burst:['聚合','原版：圆球收缩 → 颗粒汇入 → 圆球 → 云朵','云朵版：收成小核 → 颗粒汇入 → 云瓣直接长开','重点看重新长大的一刻：云瓣应在主体长大前出现，眼睛随着身体恢复。'],comet:['彗星','原版：圆球收缩 → 拖尾环绕 → 圆球 → 云朵','云朵版：收拢 → 拖尾环绕 → 直接展开为云朵','重点看拖尾退场与云瓣展开是否连贯；原版彩色拖尾保留，配色还可继续讨论。']};
+const info={orbit:['轨道','原版：三角形旋转 → 圆球 → 云朵','云朵版：本体旋转一周，眼睛随身体转动，三条轨道独立绕行','观察云朵整体旋转是否舒服：眼睛随身体转动，起止逐渐加减速；中途切换或取消会就近回正。'],burst:['聚合','原版：圆球收缩 → 颗粒汇入 → 圆球 → 云朵','云朵版：收成小核 → 颗粒汇入 → 云瓣直接长开','重点看重新长大的一刻：云瓣应在主体长大前出现，眼睛随着身体恢复。'],comet:['彗星','原版：圆球收缩 → 拖尾环绕 → 圆球 → 云朵','云朵版：收拢 → 拖尾环绕 → 直接展开为云朵','重点看拖尾退场与云瓣展开是否连贯；原版彩色拖尾保留，配色还可继续讨论。']};
 const draws=[renderer($('original')),renderer($('cloud')),renderer($('original-small')),renderer($('cloud-small'))];
 let chosen='orbit',events=[],time=0,end=0,playing=false,last=null,raf=null;
 function setup(id){events=[{id:'idle',at:0},{id,at:.6},{id:'idle',at:.6+hold(id)}];time=0;end=hold(id)+1.8;}
