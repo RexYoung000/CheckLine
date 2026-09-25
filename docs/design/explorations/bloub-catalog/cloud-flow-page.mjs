@@ -1,9 +1,10 @@
-import {DURATION,sampleFlow,createFlowRenderer} from './cloud-flow.mjs';
+import {DURATION,sampleFlow,sampleCompactFlow,createFlowRenderer} from './cloud-flow.mjs';
 const $=id=>document.getElementById(id);
-const renderers=[...document.querySelectorAll('[data-cloud]')].map(createFlowRenderer);
+const renderers=[...document.querySelectorAll('[data-cloud]')].map(svg=>({draw:createFlowRenderer(svg,{compact:svg.dataset.cloud==='compact'}),compact:svg.dataset.cloud==='compact'}));
 let time=0,playing=false,last=null,raf=null,mode='thinking';
+const setText=(id,text)=>{if($(id).textContent!==text)$(id).textContent=text;};
 const stages=['云絮靠近','融入轮廓','边缘消散','回到完整云朵'];
-function draw(){const frame=sampleFlow(time,mode);renderers.forEach(draw=>draw(frame));$('seek').value=time;$('timer').textContent=`${time.toFixed(1)} / ${DURATION.toFixed(1)} 秒`;$('stage').textContent=$('reduce').checked?'静态云朵':stages[time<1.1?0:time<3.1?1:time<5.3?2:3];$('play').textContent=playing?'暂停':'播放';$('play').setAttribute('aria-pressed',String(playing));document.querySelectorAll('[data-mode]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.mode===mode)));$('context').textContent=mode==='idle'?'我在这里':'正在整理你的想法…';}
+function draw(){const frame=sampleFlow(time,mode);const small=sampleCompactFlow(time,mode);renderers.forEach(r=>r.draw(r.compact?small:frame));$('seek').value=time;$('timer').textContent=`${time.toFixed(1)} / ${DURATION.toFixed(1)} 秒`;$('stage').textContent=$('reduce').checked?'静态云朵':stages[time<1.1?0:time<3.1?1:time<5.3?2:3];$('play').textContent=playing?'暂停':'播放';$('play').setAttribute('aria-pressed',String(playing));document.querySelectorAll('[data-mode]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.mode===mode)));setText('context',mode==='idle'?'待机 · 我在这里':'处理中 · 正在整理你的想法…');setText('small-status',mode==='idle'?'待机':'处理中');}
 function stop(){playing=false;last=null;if(raf!==null)cancelAnimationFrame(raf);raf=null;}
 function start(){if($('reduce').checked)return;playing=true;last=null;if(raf===null&&!document.hidden)raf=requestAnimationFrame(tick);draw();}
 function tick(now){raf=null;if(!playing||document.hidden)return;if(last!==null)time=(time+Math.min((now-last)/1000,.08)*Number($('speed').value))%DURATION;last=now;draw();raf=requestAnimationFrame(tick);}

@@ -19,6 +19,7 @@
 
 - `cloud-flow.mjs`、`cloud-flow-page.mjs`：CheckLine 独立的固定风向聚散循环，仅复用固定版本 Cloud 轮廓与路径生成方法；未复用轨道姿态或引入外部颗粒库。
 - 沿风向局部生长与消散、短距离云絮融合、稳定双眼、大图与头像同步播放。Animation Patterns Primitive Cluster 和 ZachSaucier/Disintegrate 仅为运动机制参考，未复制其代码或资产。
+- 小尺寸使用独立的 3.2 秒云团聚散姿态、收紧的画布和局部轮廓变化，省去细碎颗粒；保留直接缩小版作对照。
 - 试作参数等待审阅，未接入原生 App / Spine。
 
 ## MIT License
