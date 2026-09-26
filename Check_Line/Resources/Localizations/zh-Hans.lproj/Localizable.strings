@@ -300,9 +300,9 @@
 /* Matte wallet native UI */
 "wallet.agent.askRemaining" = "还能花多少";
 "wallet.agent.currentBudget" = "聊聊当前预算";
-"wallet.agent.heading" = "从这一笔开始";
-"wallet.agent.localCapability" = "可用文字记一笔、查询余额。更多分析尚未接入。";
-"wallet.agent.open" = "打开 Agent";
+"wallet.agent.heading" = "小朵 · 预算助手";
+"wallet.agent.localCapability" = "可用文字记一笔、查询预算剩余。更多分析尚未接入。";
+"wallet.agent.open" = "打开小朵，预算助手";
 "wallet.agent.prompt" = "记一笔，或问问预算";
 "wallet.analysis.title" = "分析";
 "wallet.budget.collection" = "预算卡";
@@ -415,3 +415,11 @@
 "wallet.attention.empty" = "暂时没有待处理事项";
 "wallet.functions" = "功能菜单";
 "wallet.agent.resume.hint" = "继续上次讨论，点击打开面板";
+
+"wallet.mascot.name" = "小朵";
+"wallet.mascot.preview.notice" = "动效预览 · 模拟状态，不处理账本";
+"wallet.mascot.idle" = "我在这里";
+"wallet.mascot.thinking" = "理一理…";
+"wallet.mascot.waiting" = "等你确认或补充";
+"wallet.mascot.success" = "处理好了";
+"wallet.mascot.error" = "没能完成，请再试一次";

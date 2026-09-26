@@ -301,27 +301,13 @@ enum WalletTabHitTarget {
 
 struct WalletAgentAvatar: View {
     @MainActor static let tabImage: UIImage = {
-        let renderer = ImageRenderer(content: WalletAgentAvatar().scaleEffect(32.0 / 44).frame(width: 32, height: 32))
+        let renderer = ImageRenderer(content: CloudMascotDrawing(frame: CloudMascotMotion.sample(.idle, elapsed: 0, reduced: true), compact: true).frame(width: 32, height: 32))
         renderer.scale = 3
         return (renderer.uiImage ?? UIImage()).withRenderingMode(.alwaysOriginal)
     }()
 
     var body: some View {
-        ZStack {
-            Circle().fill(LinearGradient(colors: [Color(red: 0.71, green: 0.68, blue: 0.96), Color(red: 0.36, green: 0.33, blue: 0.69)], startPoint: .topLeading, endPoint: .bottomTrailing))
-            RoundedRectangle(cornerRadius: 13, style: .continuous)
-                .fill(LinearGradient(colors: [Color.white, Color(red: 0.78, green: 0.79, blue: 0.97)], startPoint: .topLeading, endPoint: .bottomTrailing))
-                .frame(width: 31, height: 27).rotationEffect(.degrees(-5))
-                .shadow(color: .black.opacity(0.18), radius: 3, y: 2)
-            HStack(spacing: 8) {
-                Capsule().frame(width: 3, height: 6)
-                Capsule().frame(width: 3, height: 6)
-            }.foregroundStyle(Color(red: 0.23, green: 0.21, blue: 0.40)).offset(y: -1)
-            Capsule().fill(Color(red: 0.42, green: 0.39, blue: 0.60)).frame(width: 7, height: 1.5).offset(y: 6)
-        }
-        .frame(width: 44, height: 44)
-        .overlay { Circle().strokeBorder(.white.opacity(0.34), lineWidth: 0.8) }
-        .accessibilityHidden(true)
+        CloudMascotView().frame(width: 44, height: 44).accessibilityHidden(true)
     }
 }
 

@@ -58,7 +58,7 @@ struct CheckLineShellView: View {
                 workspace.showAgent = true
             case "record": workspace.openComposer(.record)
             case "create-budget": workspace.openComposer(.budget)
-            case "create-wish", "budget-detail", "records", "calendar", "wish-detail", "redemption": showsPreviewDetail = true
+            case "create-wish", "budget-detail", "records", "calendar", "wish-detail", "redemption", "agent-mascot": showsPreviewDetail = true
             default: break
             }
             if DesignPreviewData.runsMotionTour {
@@ -139,6 +139,9 @@ struct CheckLineShellView: View {
     @ViewBuilder private var previewDetail: some View {
         if DesignPreviewData.isEnabled {
             switch DesignPreviewData.screen {
+            #if DEBUG
+            case "agent-mascot": CloudMascotReview()
+            #endif
             case "create-wish": CreateWishSheet(workspace: workspace)
             case "budget-detail":
                 if let card = workspace.selectedCard { BudgetDetailSheet(workspace: workspace, budgetID: card.id, initialSection: .overview) }

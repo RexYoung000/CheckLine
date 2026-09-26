@@ -300,9 +300,9 @@
 /* Matte wallet native UI */
 "wallet.agent.askRemaining" = "How much is left?";
 "wallet.agent.currentBudget" = "Discuss current budget";
-"wallet.agent.heading" = "Start with one entry";
+"wallet.agent.heading" = "Xiaoduo · Budget assistant";
 "wallet.agent.localCapability" = "Record expenses and check your budget by text. Further analysis is not connected yet.";
-"wallet.agent.open" = "Open Agent";
+"wallet.agent.open" = "Open Xiaoduo, budget assistant";
 "wallet.agent.prompt" = "Add an expense or ask about a budget";
 "wallet.analysis.title" = "Analysis";
 "wallet.budget.collection" = "Budget cards";
@@ -415,3 +415,11 @@
 "wallet.attention.empty" = "Nothing needs attention";
 "wallet.functions" = "Quick actions";
 "wallet.agent.resume.hint" = "Open the panel to continue your last discussion";
+
+"wallet.mascot.name" = "Xiaoduo";
+"wallet.mascot.preview.notice" = "Motion preview · Simulated states, no ledger changes";
+"wallet.mascot.idle" = "Here for you";
+"wallet.mascot.thinking" = "Thinking…";
+"wallet.mascot.waiting" = "Waiting for your input";
+"wallet.mascot.success" = "All done";
+"wallet.mascot.error" = "Couldn’t finish. Please try again.";

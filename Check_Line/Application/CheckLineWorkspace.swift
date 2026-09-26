@@ -163,6 +163,18 @@ final class CheckLineWorkspace {
         lastTurn?.evaluation?.gate == .confirmStructured
     }
 
+    var mascotState: CloudMascotState {
+        if isWorking { return .thinking }
+        // Failed persistence can leave a confirmable proposal in place for retry.
+        if agentBanner == .failed { return .error }
+        if showsStructuredConfirm { return .waiting }
+        switch agentBanner {
+        case .recorded, .createdBudget, .queryRemaining: return .success
+        case .needsAmount, .needsClarification, .needsFullscreen: return .waiting
+        default: return .idle
+        }
+    }
+
     var captureProposal: CaptureDraft? {
         guard showsStructuredConfirm, case .intent(.capture(let draft)) = lastTurn?.understand else { return nil }
         return draft

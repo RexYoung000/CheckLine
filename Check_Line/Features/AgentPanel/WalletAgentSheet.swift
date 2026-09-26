@@ -3,6 +3,7 @@ import SwiftUI
 struct WalletAgentSheet: View {
     @Bindable var workspace: CheckLineWorkspace
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @State private var detent: PresentationDetent = .medium
     private var discussion: HomeBudgetCardModel? { workspace.cards.first { $0.id == workspace.agentBudgetID } }
 
@@ -10,15 +11,7 @@ struct WalletAgentSheet: View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 24) {
-                    if !workspace.showsStructuredConfirm {
-                    HStack(spacing: 16) {
-                        WalletSymbol(name: "bubble.left.and.bubble.right", size: 64)
-                        VStack(alignment: .leading, spacing: 6) {
-                            Text(String(localized: "wallet.agent.heading")).font(.title3.weight(.medium))
-                            Text(String(localized: "wallet.agent.localCapability")).font(.caption).foregroundStyle(PaperTheme.muted)
-                        }
-                    }
-                    }
+                    mascotHeader
                     if let discussion {
                         Label(discussion.name, systemImage: "wallet.pass").font(.subheadline)
                             .padding(.horizontal, 16).padding(.vertical, 12).walletSurface(radius: 18)
@@ -44,7 +37,7 @@ struct WalletAgentSheet: View {
             }
             .scrollDismissesKeyboard(.interactively)
             .background(PaperTheme.canvas.ignoresSafeArea())
-            .navigationTitle(String(localized: "v1.composer.agent"))
+            .navigationTitle(String(localized: "wallet.mascot.name"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbarBackground(.hidden, for: .navigationBar)
             .toolbar { ToolbarItem(placement: .topBarTrailing) { Button(String(localized: "action.close"), systemImage: "xmark") { dismiss() }.labelStyle(.iconOnly).accessibilityIdentifier("wallet.agent.close") } }
@@ -57,6 +50,22 @@ struct WalletAgentSheet: View {
         .onAppear { if workspace.agentBudgetID == nil { workspace.agentBudgetID = workspace.selectedCard?.id } }
         .onChange(of: workspace.showsStructuredConfirm, initial: true) { _, confirms in
             if confirms { detent = .large }
+        }
+    }
+
+    private var mascotHeader: some View {
+        let layout = dynamicTypeSize.isAccessibilitySize ? AnyLayout(VStackLayout(alignment: .leading, spacing: 8)) : AnyLayout(HStackLayout(spacing: 12))
+        return layout {
+            CloudMascotView(state: workspace.mascotState)
+                .frame(width: workspace.showsStructuredConfirm ? 64 : 100, height: workspace.showsStructuredConfirm ? 60 : 94)
+            VStack(alignment: .leading, spacing: 6) {
+                Text(String(localized: "wallet.agent.heading")).font(.headline)
+                Text(workspace.mascotState.label).font(.subheadline)
+                    .accessibilityIdentifier("wallet.mascot.status")
+                Text(String(localized: "wallet.agent.localCapability"))
+                    .font(.caption).foregroundStyle(PaperTheme.muted)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
         }
     }
 }

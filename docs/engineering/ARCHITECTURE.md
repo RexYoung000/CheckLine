@@ -528,6 +528,10 @@ M4 面板只渲染 `AgentTurn`，不直接调引擎：
 
 ## 十、隐私与数据保留
 
+### 小朵展示层（2026-09-26）
+
+`CheckLineWorkspace.mascotState` 从处理标记、结构化确认和 Agent 反馈派生形象状态，不保存第二份业务状态。`CloudMascotMotion` 是无副作用的姿态采样器，保持 HTML 已认可的轮廓、内色流动与 1.5 秒思考参数；`CloudMascotView` 用原生 Canvas 分层绘制，独立可暂停时钟驱动，支持当前姿态中断衔接、减少动态和场景生命周期。系统 Tab 图标从静态姿态生成 UIImage，保留系统透镜；动画不驱动账本写入、不阻塞任务，不新增 SDK、网络、权限或持久化字段。沿用 bloub Cloud 轮廓和路径/眨眼算法的 MIT 声明随 App 资源保留。
+
 - 完整 Expense、Settlement、WalletLedger 默认仅存用户设备本地；iCloud 尚未进入已确认首发范围；
 - OCR 原图和语音原始数据处理后丢弃；用户明确保存的消费附件单独存设备本地无元数据副本，不上传；
 - 短信、邮件只提取交易必要字段，不保存整段无关内容；
