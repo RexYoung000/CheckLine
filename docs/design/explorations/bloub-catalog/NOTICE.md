@@ -31,6 +31,10 @@
 
 `cloud-states.mjs` / `cloud-states-page.mjs` 与 `2026-09-25-cloud-states.html` 为 CheckLine 的隔离设计提案。待机复用固定上游 `liveliness` / `blinkScale`，抬眼、等待与单眼回应参考 `wide` / `notify` / `wink` 的眼形比例和朝向，适配为正面二维面部；提示点改用本项目颜色。异常为新增的云朵旁感叹提示，原版 `exclaim` 仅在参考区展示。原版引擎用于参考区，未修改 vendor 文件。主体继续调用已确认的聚散引擎，新增当前姿态到目标状态的云团及眼部插值。没有新增外部依赖，不生成 Spine 文件，不连接真实任务或账本。
 
+## 透光材质小样（2026-09-26）
+
+`cloud-material.mjs` / `cloud-material-page.mjs` 与 `2026-09-26-cloud-material.html` 新增分层渐变、模糊内色、边缘厚度和整体悬浮，继续调用原有六状态播放器与已确认聚散采样器。Cloud 轮廓的来源和许可沿用上文。用户提供图片及 Rive 教程仅为材质层次参考，未复制其中的图片、角色或代码；未新增依赖、改动 vendor 文件或生成 Rive / Spine 工程。
+
 ## MIT License
 
 Copyright (c) 2026 Jérémy Perret
