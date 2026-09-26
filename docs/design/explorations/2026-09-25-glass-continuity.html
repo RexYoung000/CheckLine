@@ -168,9 +168,8 @@
 @keyframes ambient-lilac{0%,100%{transform:translate(-6%,-10%) scale(1.04)}25%{transform:translate(22%,17%) scale(1.08)}50%{transform:translate(52%,-6%) scale(.97)}75%{transform:translate(24%,-21%) scale(1.12)}}
 @keyframes ambient-champagne{0%,100%{transform:translate(6%,8%) scale(1.02)}25%{transform:translate(-20%,-24%) scale(1.12)}50%{transform:translate(-52%,9%) scale(1.06)}75%{transform:translate(-22%,25%) scale(.98)}}
 .symbol-backdrop{position:absolute;inset:0 0 auto;height:440px;pointer-events:none;mask-image:linear-gradient(#000 75%,transparent)}
-.ambient-symbol{position:absolute;left:var(--x);top:var(--y);color:var(--symbol-color,#886997);opacity:.38;transform:translate(-50%,-50%) rotate(-12deg);animation:symbol-float var(--duration) ease-in-out infinite;animation-delay:var(--phase)}
+.ambient-symbol{position:absolute;color:var(--symbol-color,#886997);opacity:0;transform:translate(-50%,-50%) rotate(-12deg);will-change:transform,opacity}
 .ambient-symbol svg{display:block;width:var(--size,22px);height:var(--size,22px);stroke-width:1.5}
-@keyframes symbol-float{0%,100%{opacity:.26;transform:translate(calc(-50% - 3px),calc(-50% + 2px)) rotate(-16deg)}40%{opacity:.58}65%{opacity:.42;transform:translate(calc(-50% + 3px),calc(-50% - 2px)) rotate(-7deg)}}
 .app:not(.home-visible) .home-atmosphere *,.app:not(.home-visible) .ambient-light:before,.app:not(.home-visible) .ambient-light:after{animation-play-state:paused}
 .card-water{inset:auto 0 0;background:none;box-shadow:none;opacity:.77;overflow:visible}
 .water-surface{position:absolute;left:0;right:0;top:-13px;height:20px;overflow:hidden}.water-surface .water-wave{left:0;top:0;width:200%;height:24px;fill:var(--water-light);opacity:1;animation:water-flow 5.2s linear infinite}
@@ -229,6 +228,14 @@
 .budget-selector{min-height:56px;padding:14px 16px;margin-bottom:14px;gap:14px;line-height:1.4;border-radius:20px;background:linear-gradient(125deg,#cbb9e51a,#ffffff05);box-shadow:inset 0 1px #ffffff0d}
 .budget-selector>span{flex:1;min-width:0;overflow-wrap:anywhere}.budget-selector>svg{display:block;flex:0 0 20px;width:20px;height:20px;align-self:center}
 
+/* The next budget sits under the active card; only the active face accepts input. */
+.home-card-holder{isolation:isolate}.home-card-holder>.card-wrap{z-index:2}
+.home-card-holder>.card-stack-back{z-index:0;pointer-events:none}
+.next-card-preview{position:absolute;inset:0;z-index:1;opacity:0;pointer-events:none;transform:translateY(-9px) rotate(-4deg) scale(.94);transform-origin:50% 55%;will-change:transform,opacity}
+.next-card-preview .card-wrap{height:100%}.next-card-preview .liquid-card{height:100%;backdrop-filter:none}
+.next-card-preview .water-wave,.next-card-preview .bubble-field i{animation-play-state:paused}
+.home-card-holder.exchanging>.card-wrap{pointer-events:none}
+
 </style>
 </head>
 <body>
@@ -277,6 +284,7 @@
 import {REVIEW_DATE,validDate,addDays,monthStart,monthEnd,dateLabel,monthLabel,inPeriod,sortRecords,recordsFor,projection,budgetDate,periodStatus,weekSeries,retrospectiveImpact} from './glass-data.mjs';
 import {createMascot} from './glass-mascot.mjs?v=20260926-thinking-only';
 import {icon} from './glass-icons.mjs?v=20260926-iconsax';
+import {createAmbientSymbols} from './glass-ambient.mjs?v=20260926-appearances2';
 (function(){
 'use strict';
 const $=function(id){return document.getElementById(id)};
@@ -548,15 +556,14 @@ function handleAction(b){
 function total(budget=s.budget){return projection(s.records,budget).total}
 function budgetRecords(budget=s.budget){return recordsFor(s.records,budget)}
 function header(title,home){return '<header class="topbar">'+ib('settings','user','个人设置','soft')+(title?'<h2>'+title+'</h2>':'<div class="space"></div>')+ib('attention','bell','待处理事项')+ib('menu','menu','功能菜单')+'</header>'}
-function symbols(){const items=[['coffee',18,80,19],['headphones',45,79,18],['book',75,80,19],['globe',2.6,122,18],['heart',97.4,180,18],['star',2.6,236,18],['tent',97.4,292,19],['wave',60,187,27]];return '<div class="symbol-backdrop">'+items.map(([name,x,y,size],i)=>'<span class="ambient-symbol" data-symbol="'+name+'" style="--x:'+x+'%;--y:'+y+'px;--size:'+size+'px;--duration:'+(10+i*.83)+'s;--phase:'+(-i*2.9)+'s;--symbol-color:'+(i%2?'#947347':'#886997')+'">'+icon(name)+'</span>').join('')+'</div>'}
 
-function liquid(budget=s.budget,detail=false){
+function liquid(budget=s.budget,detail=false,preview=false){
  if(!budget)return '';const p=projection(s.records,budget),level=p.level,remaining=p.remaining,amountCap=money(Math.abs(remaining)).length>12?24:money(Math.abs(remaining)).length>9?29:39;
  const bubbles=Array.from({length:29},(_,i)=>'<i class="'+(i>22?'mote':'')+'" style="--x:'+((i*31+13)%89+5)+'%;--y:'+((i*19+12)%76+8)+'%;--size:'+([2,3,2,4,2,6,3,2,4][i%9])+'px;--duration:'+(3.3+(i*1.31)%4.6)+'s;--phase:'+(-i*.71-1.7)+'s;--drift:'+(i%2?-7-i%5:6+i%7)+'px"></i>').join('');
  const wave='<path d="M0 14Q62.5 0 125 14T250 14Q312.5 0 375 14T500 14V32H0Z"/>';
  const water=level>0?'<div class="card-water" style="--level:'+level+'%"><div class="water-surface"><svg class="water-wave" viewBox="0 0 500 30" preserveAspectRatio="none" aria-hidden="true">'+wave+'</svg></div><div class="water-body"></div><div class="bubble-field" aria-hidden="true">'+bubbles+'</div></div>':'<div class="dry"></div>';
  const label=budget.settled?'结算时结余':p.risk==='possible'?'可能超出':p.risk==='confirmed'?'已超出':'还能花';
- return '<div class="card-wrap" data-card-id="'+budget.id+'"><div class="liquid-card '+(budget.tint||'lilac')+' '+(s.insert&&budget===s.budget?'inserted':'')+'">'+water+'<div class="card-shimmer"></div><div class="card-copy"><div class="name">'+esc(budget.name)+'</div><div class="card-cycle">'+(budget.cycle==='once'?'一次性预算':'每月循环')+' · CNY</div><span class="amount-caption">'+label+'</span><span class="amount" style="--amount-cap:'+amountCap+'px">'+money(Math.abs(remaining))+'</span><span class="card-progress">'+(budget.settled?'已结算周期':p.risk!=='none'?'剩余 0%':level.toFixed(0)+'% 剩余')+'</span></div>'+(!detail?'<button class="card-cover" data-action="budget-detail" data-id="'+budget.id+'" aria-label="查看'+esc(budget.name)+'预算详情"></button>':'')+'<button class="card-menu icon-btn" data-action="budget-menu" data-id="'+budget.id+'" aria-label="'+esc(budget.name)+'卡片菜单">•••</button>'+(detail||budget.settled?'':'<button class="mini-plus" data-action="record-for" data-id="'+budget.id+'" aria-label="为'+esc(budget.name)+'记一笔">'+icon('plus')+'</button>')+'</div></div>';
+ return '<div class="card-wrap" data-card-id="'+budget.id+'"><div class="liquid-card '+(budget.tint||'lilac')+' '+(s.insert&&budget===s.budget?'inserted':'')+'">'+water+'<div class="card-shimmer"></div><div class="card-copy"><div class="name">'+esc(budget.name)+'</div><div class="card-cycle">'+(budget.cycle==='once'?'一次性预算':'每月循环')+' · CNY</div><span class="amount-caption">'+label+'</span><span class="amount" style="--amount-cap:'+amountCap+'px">'+money(Math.abs(remaining))+'</span><span class="card-progress">'+(budget.settled?'已结算周期':p.risk!=='none'?'剩余 0%':level.toFixed(0)+'% 剩余')+'</span></div>'+(!detail&&!preview?'<button class="card-cover" data-action="budget-detail" data-id="'+budget.id+'" aria-label="查看'+esc(budget.name)+'预算详情"></button>':'')+(preview?'':'<button class="card-menu icon-btn" data-action="budget-menu" data-id="'+budget.id+'" aria-label="'+esc(budget.name)+'卡片菜单">•••</button>')+(detail||preview||budget.settled?'':'<button class="mini-plus" data-action="record-for" data-id="'+budget.id+'" aria-label="为'+esc(budget.name)+'记一笔">'+icon('plus')+'</button>')+'</div></div>';
 }
 function recordRows(records,compact=false){return sortRecords(records).map(r=>{
  const date=dateLabel(r.date),attached=!!(r.attachment||r.attachments?.length),metadata=compact?date+(r.pending?' · <span class="receipt-pending">待确认</span>':attached?' · 有附件':'')+(r.unbudgeted?' · 未纳入预算':''):date+(attached?' · 有附件':'')+(r.unbudgeted?' · 未纳入预算':'');
@@ -592,7 +599,7 @@ function setupReceipts(){
  deck.addEventListener('keydown',event=>{if(!['ArrowDown','ArrowUp','Home','End'].includes(event.key))return;event.preventDefault();moveReceipts(event.key==='Home'?0:event.key==='End'?budgetRecords().length-1:receiptPosition+(event.key==='ArrowDown'?1:-1));deck.focus({preventScroll:true})});
 }
 function homePage(){
- const card=s.budget?'<div class="home-card-holder" style="position:relative;max-width:520px;margin:auto;container-type:inline-size">'+(s.budgets.length>1?'<div class="card-stack-back"></div>':'')+liquid()+'</div><span class="sr-only" role="status">'+esc(s.budget.name)+'，第'+(s.budgets.findIndex(b=>b.id===s.budget.id)+1)+'张，共'+s.budgets.length+'张</span>':'<button class="create-card" data-action="create"><span class="cross">'+icon('plus')+'</span><strong>创建第一张<br>预算卡</strong><div class="card-foot">设置用途、额度和周期</div></button>';
+ const card=s.budget?'<div class="home-card-holder" style="position:relative;max-width:520px;margin:auto;container-type:inline-size">'+liquid()+(s.budgets.length>1?'<div class="card-stack-back"></div>'+nextPreviewMarkup(adjacentBudget(1)):'')+'</div><span class="sr-only" role="status">'+esc(s.budget.name)+'，第'+(s.budgets.findIndex(b=>b.id===s.budget.id)+1)+'张，共'+s.budgets.length+'张</span>':'<button class="create-card" data-action="create"><span class="cross">'+icon('plus')+'</span><strong>创建第一张<br>预算卡</strong><div class="card-foot">设置用途、额度和周期</div></button>';
  const p=projection(s.records,s.budget),status=s.budget?periodStatus(s.budget):'',contents=s.budget?'<div class="summary-grid '+(money(p.total).length>10?'long-amount':'')+'"><button class="summary" data-action="summary-used"><div class="eyeline">已用'+icon('arrow')+'</div><div class="stat">'+money(p.total)+'</div><div class="track">'+weekBars()+'</div></button><button class="summary" data-action="summary-calendar"><div class="eyeline">'+monthLabel(budgetDate(s.budget))+icon('arrow')+'</div><div class="period-state">'+status+'</div>'+miniCalendar()+'</button></div>'+(p.pending?'<button class="pending-summary" data-action="attention">'+money(p.pending)+' 待确认'+icon('right')+'</button>':'')+'<div class="record-list-head"><div class="section-title">最近记录</div>'+btn('all-records','全部记录 ↗','text-action')+'</div>'+homeReceipts():'<div class="empty-pocket"><div class="inner-seam"><p>创建预算卡后，<br>在这里查看剩余额度与消费。</p></div></div>';
  return header('',true)+'<div class="hero">'+card+'</div><section class="pocket">'+rim()+contents+unbudgetedLink()+'</section>';
 }
@@ -602,15 +609,16 @@ function budgetPage(){
 }
 function detailPage(){const b=s.budgets.find(x=>x.id===s.detail);if(!b)return '';const records=budgetRecords(b),p=projection(s.records,b);return '<section class="budget-detail" aria-label="'+esc(b.name)+'预算详情"><header class="topbar">'+ib('detail-back','back','返回卡夹')+'<h2>'+esc(b.name)+'</h2>'+ib('detail-agent','star','和小朵聊这张卡')+'</header><div class="detail-hero">'+liquid(b,true)+'</div><div class="detail-content"><div class="detail-stats"><div><span>预算线</span><strong>'+money(b.cents)+'</strong></div><div><span>已确认支出</span><strong>'+money(p.confirmed)+'</strong></div></div><div class="detail-meta"><span>'+dateLabel(b.start,true)+(b.end?' — '+dateLabel(b.end,true):' · 无截止日期')+'</span>'+(!b.settled?btn('detail-record','＋ 记一笔','text-action'):'')+'</div>'+(p.pending?'<div class="detail-pending">'+money(p.pending)+' 待确认归属 · 暂计已用 '+money(p.total)+'</div>':'')+'<p class="detail-context">'+(b.settled?'已结算周期，修改前先核对追溯影响。':'仅包含已记录消费，数据覆盖可能不完整。')+'</p><div class="section-title">消费明细 <span>'+records.length+' 笔</span></div>'+(records.length?recordRows(records):'<div class="quiet-empty">还没有消费记录。</div>')+'</div></section>'}
 function render(resetRoll=false){
+ stopHomeMotion();
  if(!s.detail){routeEpoch++;interruptCardFlight();$('detail-host').classList.remove('detail-opening','detail-closing')}
  const oldScroll=$('page').scrollTop,oldRoll=resetRoll?undefined:$('page').querySelector('.cylinder')?.scrollTop;
  $('page').className='page '+(!s.settings&&s.tab==='home'?'home':!s.settings&&s.tab==='budgets'&&s.budgets.length?'budget-page':'');
- $('app').classList.toggle('home-visible',!s.settings&&s.tab==='home');if(!$('home-symbols').children.length)$('home-symbols').innerHTML=symbols();
+ $('app').classList.toggle('home-visible',!s.settings&&s.tab==='home');
  $('page').innerHTML=s.settings?settingsPage():s.tab==='home'?homePage():s.tab==='budgets'?budgetPage():s.tab==='wishes'?wishPage():insightPage();
  $('page').scrollTop=oldScroll;renderDock();renderDetail();renderOverlay();renderToast();updateNotes();setupRoll(oldRoll);setupReceipts();updateHeader();syncMascot();
 }
 function renderDetail(){const host=$('detail-host'),scroll=host.querySelector('.budget-detail')?.scrollTop||0;host.innerHTML=s.detail?detailPage():'';$('app').classList.toggle('detail-open',!!s.detail);if(s.detail){$('page').inert=true;host.querySelector('.budget-detail').scrollTop=scroll;}}
-function updateHeader(){const page=$('page'),header=page.querySelector('.topbar');if(!header)return;header.style.setProperty('--highlight',(15+Math.min(page.scrollTop,300)/4)+'%');header.classList.toggle('on-dark',page.scrollTop>245);const backdrop=$('home-symbols').querySelector('.symbol-backdrop');if(backdrop){const progress=motionReduced()?0:Math.min(page.scrollTop,260);backdrop.style.transform='translateY('+(-progress*.12)+'px)';}}
+function updateHeader(){const page=$('page'),header=page.querySelector('.topbar');if(!header)return;header.style.setProperty('--highlight',(15+Math.min(page.scrollTop,300)/4)+'%');header.classList.toggle('on-dark',page.scrollTop>245);const backdrop=$('home-symbols').querySelector('.symbol-backdrop');if(backdrop){const progress=motionReduced()?0:Math.min(page.scrollTop,260);backdrop.style.transform='translateY('+(-progress*.12)+'px)';}ambient.sync();}
 function motionReduced(){return $('reduce-motion').checked||window.matchMedia('(prefers-reduced-motion: reduce)').matches}
 let cardFlight=null;
 function cardAppearance(card){
@@ -715,7 +723,7 @@ function modalExtras(){
  else if(m==='all-records'){title='全部记录';body='<p class="small muted">按日期倒序 · '+s.records.length+' 笔</p>'+recordRows(s.records);}
  else if(m==='attention'){title='待处理';const rows=s.records.filter(r=>r.pending);body=rows.length?recordRows(rows):'<div class="quiet-empty">没有待确认记录。</div>';}
  else if(m==='select-budget'){title='选择预算';body='<div class="settings-rows">'+s.budgets.map(b=>'<button class="setting-row" data-action="choose-budget" data-id="'+b.id+'" aria-pressed="'+(s.budget?.id===b.id)+'"><span class="row-text">'+esc(b.name)+'</span>'+(s.budget?.id===b.id?icon('check'):'')+'</button>').join('')+'</div>';}
- else if(m.type==='budget-menu'&&b){title=b.name;body='<div class="settings-rows"><button class="setting-row" data-action="open-from-menu" data-id="'+b.id+'">预算详情</button><button class="setting-row" data-action="pin-budget" data-id="'+b.id+'">置顶预算卡</button>'+(s.tab==='home'?'<button class="setting-row" data-action="home-prev">上一张</button><button class="setting-row" data-action="home-next">下一张</button>':'')+'</div><div class="stack-actions"><button class="danger" data-action="delete-budget" data-id="'+b.id+'">查看删除影响</button></div>';}
+ else if(m.type==='budget-menu'&&b){title=b.name;body='<div class="settings-rows"><button class="setting-row" data-action="open-from-menu" data-id="'+b.id+'">预算详情</button><button class="setting-row" data-action="pin-budget" data-id="'+b.id+'">置顶预算卡</button>'+(s.tab==='home'&&s.budgets.length>1?'<button class="setting-row" data-action="home-prev">上一张</button><button class="setting-row" data-action="home-next">下一张</button>':'')+'</div><div class="stack-actions"><button class="danger" data-action="delete-budget" data-id="'+b.id+'">查看删除影响</button></div>';}
  else if(m.type==='delete-budget'&&b){const count=budgetRecords(b).length;title='删除预算卡';body='<h3>'+esc(b.name)+'</h3><p class="small muted">'+(count?'有 '+count+' 笔关联消费。当前网页保留有记录的预算卡。':'这张卡没有消费，删除后可撤销。')+'</p><div class="stack-actions">'+btn('modal-back','保留预算卡','secondary full')+(!count?'<button class="danger" data-action="confirm-delete-budget" data-id="'+b.id+'">删除空卡</button>':'')+'</div>';}
  else if(m.type==='delete-record'&&r){title='删除这笔消费？';const owner=s.budgets.find(b=>b.id===r.budgetID);body='<h3>'+esc(r.name)+' · '+money(r.cents)+'</h3><p class="small muted">'+(owner?.settled?'属于已结算周期，下一步先查看追溯影响。':owner?'删除后暂计已用从 '+money(total(owner))+' 变为 '+money(total(owner)-r.cents)+'。':'删除后会移除这条未纳入记录。')+'</p><div class="stack-actions">'+btn('modal-back','保留记录','secondary full')+'<button class="danger" data-action="confirm-delete-record" data-id="'+r.id+'">'+(owner?.settled?'查看追溯影响':'确认删除 · 可撤销')+'</button></div>';}
  else if(m.type==='record'&&r){const owner=s.budgets.find(b=>b.id===r.budgetID);title='消费详情';body='<section class="record-summary"><h3>'+esc(r.name)+'</h3><p class="detail-money">−'+money(r.cents)+'</p><dl class="record-meta"><div><dt>日期</dt><dd>'+dateLabel(r.date,true)+'</dd></div><div><dt>归属</dt><dd>'+esc(owner?.name||'未纳入预算')+'</dd></div></dl></section>'+(r.pending?'<div class="attribution-prompt"><span class="pending-label">待确认归属</span><button class="primary full" data-action="confirm-attribution" data-id="'+r.id+'">确认当前归属</button></div>':'')+'<div class="record-tools"><button class="secondary" data-action="change-attribution" data-id="'+r.id+'">调整归属</button><button class="secondary" data-action="edit-record" data-id="'+r.id+'">编辑记录</button></div><section class="record-note"><h4>备注与粘贴文字</h4><p class="entry-note">'+esc(r.note||'未添加备注')+'</p>'+recordAttachments(r)+'</section><button class="text-action" data-action="delete-record" data-id="'+r.id+'">查看删除影响</button>';}
@@ -728,11 +736,58 @@ function modalExtras(){
 }
 function snapshot(){return structuredClone({budget:s.budget,budgets:s.budgets,records:s.records,focusID:s.focusID,wishes:s.wishes,wallet:s.wallet,recovery:s.recovery,walletHistory:s.walletHistory})}
 function revealSwipe(row,show){if(!row)return;row.classList.toggle('revealed',show);row.querySelector('.record-row')?.setAttribute('aria-expanded',String(show));const actions=row.querySelector('.swipe-actions');if(actions){actions.setAttribute('aria-hidden',String(!show));actions.querySelectorAll('button').forEach(b=>b.tabIndex=show?0:-1)}}
-function stepHome(delta){
- const i=s.budgets.findIndex(b=>b.id===s.budget?.id),next=s.budgets[(i+delta+s.budgets.length)%s.budgets.length];if(!next)return;
- const fromMenu=!!s.modal;s.modal=null;s.modalStack=[];selectBudget(next.id);render();const card=$('page').querySelector('.hero .card-wrap');
- if(fromMenu)card?.querySelector('.card-menu')?.focus({preventScroll:true});
- if(!motionReduced())card?.animate([{transform:'translateY(-20px) scale(.96)',opacity:.2},{transform:'none',opacity:1}],{duration:440,easing:'cubic-bezier(.2,.85,.25,1.06)'});
+let homeExchange=null,homeReturn=[];
+function adjacentBudget(delta){
+ if(s.budgets.length<2)return null;
+ const i=s.budgets.findIndex(b=>b.id===s.budget?.id);
+ return s.budgets[(i+delta+s.budgets.length)%s.budgets.length];
+}
+function nextPreviewMarkup(budget){
+ return budget?'<div class="next-card-preview" data-next-budget-id="'+budget.id+'" aria-hidden="true" inert>'+liquid(budget,true,true)+'</div>':'';
+}
+function stopHomeMotion(){
+ homeReturn.forEach(a=>a.cancel());homeReturn=[];
+ if(homeExchange){const old=homeExchange;homeExchange=null;old.animations.forEach(a=>a.cancel());old.holder.classList.remove('exchanging');}
+}
+function revealNextCard(card,distance){
+ const holder=card.closest('.home-card-holder'),preview=holder?.querySelector('.next-card-preview');if(!preview)return;
+ const threshold=Math.min(holder.clientWidth,card.offsetHeight)*.3;
+ const progress=Math.min(1,Math.max(0,distance/threshold));
+ preview.style.opacity=String(progress*progress*(3-2*progress));
+ preview.style.transform='translateY('+(-9*(1-progress))+'px) rotate('+(-4*(1-progress))+'deg) scale('+(.94+.06*progress)+')';
+ preview.dataset.progress=progress.toFixed(3);
+ const back=holder.querySelector('.card-stack-back');if(back)back.style.opacity=String(1-progress*.7);
+}
+function returnHomeCard(card,from){
+ const holder=card.closest('.home-card-holder'),preview=holder?.querySelector('.next-card-preview'),back=holder?.querySelector('.card-stack-back');
+ const duration=motionReduced()?0:420;
+ homeReturn.forEach(a=>a.cancel());homeReturn=[];
+ const cardStart={transform:from};card.style.transform='';
+ if(duration)homeReturn.push(card.animate([cardStart,{transform:'scale(.995)'},{transform:'none'}],{duration,easing:'cubic-bezier(.2,.8,.3,1)'}));
+ if(preview){const start={opacity:getComputedStyle(preview).opacity,transform:getComputedStyle(preview).transform};preview.style.opacity='0';preview.style.transform='';preview.dataset.progress='0';if(duration)homeReturn.push(preview.animate([start,{opacity:0,transform:'translateY(-9px) rotate(-4deg) scale(.94)'}],{duration,easing:'cubic-bezier(.2,.8,.3,1)'}));}
+ if(back){const opacity=getComputedStyle(back).opacity;back.style.opacity='';if(duration)homeReturn.push(back.animate([{opacity},{opacity:1}],{duration}));}
+}
+function stepHome(delta,drag=null){
+ if(homeExchange)homeExchange.finish();
+ const next=adjacentBudget(delta);if(!next){if(drag)returnHomeCard(drag.card,drag.card.style.transform);return;}
+ const fromMenu=!!s.modal,holder=$('page').querySelector('.home-card-holder'),card=holder?.querySelector(':scope>.card-wrap>.liquid-card');
+ s.modal=null;s.modalStack=[];renderOverlay();
+ if(!holder||!card||motionReduced()){selectBudget(next.id);render();if(fromMenu)$('page').querySelector('.card-menu')?.focus({preventScroll:true});return;}
+ const preview=holder.querySelector('.next-card-preview');
+ if(preview.dataset.nextBudgetId!==next.id){preview.innerHTML=liquid(next,true,true);preview.dataset.nextBudgetId=next.id;}
+ // Preserve the current dragged pose through release, including an interrupted return.
+ const front={transform:getComputedStyle(card).transform,opacity:getComputedStyle(card).opacity};
+ const behind={transform:getComputedStyle(preview).transform,opacity:getComputedStyle(preview).opacity};
+ homeReturn.forEach(a=>a.cancel());homeReturn=[];
+ const dx=drag?drag.x-drag.startX:delta*20,dy=drag?drag.y-drag.startY:-40;
+ const distance=Math.hypot(dx,dy)||1,travel=Math.max(card.offsetWidth,card.offsetHeight)*1.2;
+ const finishPose='translate3d('+(dx+dx/distance*travel)+'px,'+(dy+dy/distance*travel)+'px,0) rotate('+(dx/distance*8)+'deg)';
+ holder.classList.add('exchanging');selectBudget(next.id);
+ const timing={duration:360,easing:'cubic-bezier(.2,.78,.25,1)',fill:'both'};
+ const animations=[card.animate([front,{transform:finishPose,opacity:0}],timing),preview.animate([behind,{transform:'none',opacity:1}],timing)];
+ const back=holder.querySelector('.card-stack-back');if(back)animations.push(back.animate([{opacity:getComputedStyle(back).opacity},{opacity:0}],timing));
+ const exchange={holder,animations,finish(){if(homeExchange!==exchange)return;homeExchange=null;animations.forEach(a=>a.cancel());render();if(fromMenu)$('page').querySelector('.card-menu')?.focus({preventScroll:true});}};
+ homeExchange=exchange;animations[1].finished.then(exchange.finish).catch(()=>{});
 }
 function extraAction(b){const action=b.dataset.action,id=b.dataset.id;
  if(action==='budget-detail'){openDetail(id,b);return true}if(action==='detail-back'){closeDetail();return true}
@@ -806,12 +861,19 @@ $('app').addEventListener('pointerdown',e=>{
  const handle=e.target.closest('.handle');
  if(handle&&s.agent.open){const panel=handle.closest('.agent-panel'),height=panel.getBoundingClientRect().height,limits=anchors();panel.getAnimations().forEach(a=>a.cancel());panel.style.setProperty('--sheet-height',height+'px');sheetDrag={id:e.pointerId,startY:e.clientY,startH:height,limits,lastY:e.clientY,lastT:performance.now(),velocity:0,panel,moved:false};handle.setPointerCapture(e.pointerId);panel.classList.add('sheet-dragging');return}
  if(e.target.closest('#voice-control')&&e.pointerType!=='mouse'){lastVoiceDown=performance.now();voiceStartY=e.clientY;startVoice();return}
- const row=e.target.closest('.swipe-row'),cover=e.target.closest('.card-cover');if(e.target.closest('.swipe-actions'))return;if(!row&&!cover)return;
+ const row=e.target.closest('.swipe-row'),cover=e.target.closest('.card-cover');if(e.target.closest('.swipe-actions'))return;if(!row&&!cover)return;if(cover&&homeExchange)return;
 
  gesture={id:e.pointerId,startX:e.clientX,startY:e.clientY,x:e.clientX,y:e.clientY,cover,row,wasRevealed:row?.classList.contains('revealed'),swipeOffset:row?new DOMMatrixReadOnly(getComputedStyle(row.querySelector('.swipe-face')).transform).m41:0,lastX:e.clientX,velocityX:0,deck:row?.closest('.receipt-deck:not([data-count="1"])'),receiptStart:receiptLocation,lastY:e.clientY,lastT:performance.now(),velocity:0,vertical:false,card:cover?.closest('.liquid-card'),lifted:false,swiping:false,cancelled:false};
- if(cover){const g=gesture;g.timer=setTimeout(()=>{if(gesture!==g||g.cancelled)return;g.lifted=true;g.rect=g.card.getBoundingClientRect();g.card.classList.add('lifted');cover.setPointerCapture(e.pointerId);moveLift(g,g.x,g.y)},180)}
+ if(cover){const g=gesture;g.timer=setTimeout(()=>{if(gesture!==g||g.cancelled)return;g.lifted=true;const pose=new DOMMatrixReadOnly(getComputedStyle(g.card).transform);g.baseX=pose.m41;g.baseY=pose.m42;homeReturn.forEach(a=>a.cancel());homeReturn=[];g.rect=g.card.closest('.card-wrap').getBoundingClientRect();g.card.classList.add('lifted');cover.setPointerCapture(e.pointerId);moveLift(g,g.x,g.y)},180)}
 });
-function moveLift(g,x,y){if(motionReduced())return;const px=Math.max(-1,Math.min(1,(x-g.rect.left)/g.rect.width*2-1)),py=Math.max(-1,Math.min(1,(y-g.rect.top)/g.rect.height*2-1));const free=s.tab==='home'&&!s.detail;g.card.style.transform='translate3d('+(free?(x-g.startX):0)+'px,'+(free?(y-g.startY):-4)+'px,0) scale(1.025) rotateX('+(-py*6)+'deg) rotateY('+(px*8)+'deg)';g.card.style.setProperty('--shine-x',(50+px*40)+'%');g.card.style.setProperty('--shine-y',(50+py*40)+'%')}
+function moveLift(g,x,y){
+ if(motionReduced())return;
+ const px=Math.max(-1,Math.min(1,(x-g.rect.left)/g.rect.width*2-1)),py=Math.max(-1,Math.min(1,(y-g.rect.top)/g.rect.height*2-1));
+ const free=s.tab==='home'&&!s.detail,dx=x-g.startX+(g.baseX||0),dy=y-g.startY+(g.baseY||0);
+ g.card.style.transform='translate3d('+(free?dx:0)+'px,'+(free?dy:-4)+'px,0) scale(1.025) rotateX('+(-py*6)+'deg) rotateY('+(px*8)+'deg)';
+ g.card.style.setProperty('--shine-x',(50+px*40)+'%');g.card.style.setProperty('--shine-y',(50+py*40)+'%');
+ if(free)revealNextCard(g.card,Math.hypot(dx,dy));
+}
 document.addEventListener('pointermove',e=>{
  if(sheetDrag&&e.pointerId===sheetDrag.id){const g=sheetDrag,now=performance.now(),dy=e.clientY-g.lastY,dt=now-g.lastT;g.velocity=dt>0&&dt<100?g.velocity*.3+(-dy/dt)*.7:0;g.lastY=e.clientY;g.lastT=now;g.moved=g.moved||Math.abs(e.clientY-g.startY)>5;const limits=g.limits;let height=g.startH-(e.clientY-g.startY);if(height<limits[0])height=limits[0]-(limits[0]-height)*.24;if(height>limits[2])height=limits[2]+(height-limits[2])*.2;g.panel.style.setProperty('--sheet-height',height+'px');return}
  const g=gesture;if(!g||g.id!==e.pointerId)return;g.x=e.clientX;g.y=e.clientY;const dx=g.x-g.startX,dy=g.y-g.startY;
@@ -831,7 +893,7 @@ function endGestures(e,cancelled=false){
  if(pressedButton){pressedButton.classList.remove('pressing');if(!motionReduced())pressedButton.classList.add('releasing');pressedButton=null}
  if(sheetDrag&&e.pointerId===sheetDrag.id){const g=sheetDrag;sheetDrag=null;g.panel.classList.remove('sheet-dragging');if(g.moved){lastPanelDrag=performance.now();suppressClickUntil=performance.now()+400;const limits=g.limits,current=g.panel.getBoundingClientRect().height,velocity=performance.now()-g.lastT>120?0:g.velocity,predicted=current+(cancelled?0:velocity*140);let best=0;limits.forEach((h,i)=>{if(Math.abs(h-predicted)<Math.abs(limits[best]-predicted))best=i});s.agent.detent=best;s.agent.expanded=best>0;g.panel.classList.toggle('expanded',best>0);g.panel.dataset.detent=String(best);const label=best===2?'收起到轻输入':best===1?'展开完整内容':'展开面板';g.panel.querySelectorAll('[data-action="expand-agent"]').forEach(button=>button.setAttribute('aria-label',label));const expand=g.panel.querySelector('.agent-head [data-action="expand-agent"]');expand.innerHTML=icon(best===2?'down':'expand');settleSheet(g.panel,limits[best],cancelled?0:velocity);updateNotes()}return}
  const g=gesture;if(g&&e.pointerId===g.id){gesture=null;clearTimeout(g.timer);if(g.vertical){suppressClickUntil=performance.now()+250;const speed=performance.now()-g.lastT<100?g.velocity:0;moveReceipts(cancelled?g.receiptStart:receiptLocation+speed*120/52);}
- else if(g.lifted){suppressClickUntil=performance.now()+450;g.card.classList.remove('lifted');const from=g.card.style.transform;g.card.style.transform='';g.card.style.removeProperty('--shine-x');g.card.style.removeProperty('--shine-y');const dist=Math.hypot(e.clientX-g.startX,e.clientY-g.startY);if(!cancelled&&s.tab==='home'&&!s.detail&&dist>Math.min(g.rect.width,g.rect.height)*.3){stepHome(1)}else if(!motionReduced()){g.card.animate([{transform:from},{transform:'scale(.992)'},{transform:'none'}],{duration:500,easing:'cubic-bezier(.2,.8,.3,1)'})}}
+ else if(g.lifted){suppressClickUntil=performance.now()+450;g.card.classList.remove('lifted');const from=getComputedStyle(g.card).transform;g.card.style.removeProperty('--shine-x');g.card.style.removeProperty('--shine-y');g.x=e.clientX;g.y=e.clientY;const dist=Math.hypot(e.clientX-g.startX,e.clientY-g.startY);if(!cancelled&&s.tab==='home'&&!s.detail&&dist>Math.min(g.rect.width,g.rect.height)*.3){stepHome(1,g)}else{returnHomeCard(g.card,from)}}
  else if(g.cancelled&&!g.swiping){suppressClickUntil=performance.now()+350;}
  else if(g.swiping){suppressClickUntil=performance.now()+350;const width=parseFloat(getComputedStyle(g.row).getPropertyValue('--action-width'))||136,velocity=performance.now()-g.lastT>100?0:g.velocityX,show=cancelled?g.wasRevealed:(g.offset+velocity*90 < -width*.42);g.row.classList.remove('swiping');revealSwipe(g.row,show);g.row.querySelector('.swipe-face').style.transform='';}
  }
@@ -839,7 +901,7 @@ function endGestures(e,cancelled=false){
 }
 document.addEventListener('pointerup',e=>endGestures(e));
 document.addEventListener('pointercancel',e=>endGestures(e,true));
-document.addEventListener('visibilitychange',()=>document.documentElement.classList.toggle('document-hidden',document.hidden));
+document.addEventListener('visibilitychange',()=>{document.documentElement.classList.toggle('document-hidden',document.hidden);ambient.sync();});
 $('page').addEventListener('scroll',updateHeader,{passive:true});
 const appResize=new ResizeObserver(()=>{moveLens(true);const roll=$('page').querySelector('.cylinder');if(roll){roll.style.setProperty('--roll-height',roll.clientHeight+'px');updateRoll()}if(s.agent.open&&!sheetDrag){$('overlay-host').querySelector('.agent-panel')?.style.setProperty('--sheet-height',anchors()[s.agent.detent]+'px')}});appResize.observe($('app'));
 
@@ -853,10 +915,10 @@ document.querySelectorAll('[data-jump]').forEach(function(b){b.addEventListener(
 $('scenario').addEventListener('change',function(){setScenario(this.value)});
 $('viewport').addEventListener('change',function(){document.documentElement.style.setProperty('--preview-width',this.value+'px');$('app').classList.toggle('wide',this.value==='760')});
 $('large-type').addEventListener('change',function(){$('app').classList.toggle('large',this.checked);setupRoll(null);setupReceipts();if(s.agent.open)renderOverlay()});
-$('reduce-motion').addEventListener('change',function(){document.documentElement.classList.toggle('reduce',this.checked);syncMascot();moveLens(true);if(motionReduced()){cardFlight?.animation.finish();if(pageTransition){navEpoch++;pageTransition.animation.cancel();pageTransition.cover.remove();pageTransition=null;render();displayedTab=s.tab}moveReceipts(receiptPosition,false)}updateRoll();if(s.settings==='root')render()});
+$('reduce-motion').addEventListener('change',function(){document.documentElement.classList.toggle('reduce',this.checked);syncMascot();moveLens(true);if(motionReduced()){homeExchange?.finish();homeReturn.forEach(a=>a.finish());cardFlight?.animation.finish();if(pageTransition){navEpoch++;pageTransition.animation.cancel();pageTransition.cover.remove();pageTransition=null;render();displayedTab=s.tab}moveReceipts(receiptPosition,false)}updateRoll();if(s.settings==='root')render()});
 $('reset').addEventListener('click',function(){s.tab='home';$('scenario').value='empty';setScenario('empty')});
 $('demo-fill').addEventListener('click',function(){openAgent(s.budget?'record':'create',s.tab);s.agent.text=s.budget?'今天午餐花了 35 元':'日常生活，每月预算 3000 元';s.agent.mode='text';s.agent.phase='idle';renderOverlay();$('agent-text').focus()});
-notes.home=['玻璃包住液面，卡片落进卡夹','点卡进入详情；短暂按住可拿起，向任意方向拖过短边约三成，换下一张。',['按住卡片后移动，观察倾斜和柔和反光。','点击卡片，进入独立预算详情。','点击已用或九月，观察框体展开。']];
+notes.home=['图标浮现，下一张渐渐清楚','短暂按住顶卡后拖动，下一张的名称、液位和金额逐渐显露；越过短边约三成后松手，按固定顺序循环。',['停留 5–10 秒，观察图标的浮现、漂移、淡出和换位。','按住后小幅拖动再松手，观察顶卡与下一张同步回弹。','拖远后松手，核对新卡、已用与最近记录；轻点仍进入详情。']];
 notes.budgets=['滚动时，视线停在中间','借鉴参考图的圆柱层次。中心卡片清晰，上下逐渐退远，松手吸附。',['上下滚动，或用下方方向按钮。','点中间卡进入详情，再返回原位置。','左滑或打开卡片菜单，查看置顶和删除影响。']];
 notes.agent=['小朵与手动表单，共享草稿','浅色云雾玻璃承接上下文；输入始终在下方。拖动顶部把手，在三个高度间吸附。',['向上拖动顶部把手，展开更多内容。','填写后关闭再打开，核对草稿仍在。','从左侧场景菜单检查保存失败与重试。']];
 
@@ -893,9 +955,10 @@ function modalShell(title,body){return '<div class="overlay '+(typeof s.modal===
 function openModal(modal,source=null){if(s.modal)s.modalStack.push({modal:structuredClone(s.modal),scroll:$('overlay-host').querySelector('.modal-body')?.scrollTop||0,source:s.modalSource});else{s.modalStack=[];s.modalSource=source?.dataset.action||null;s.modalFocus=source||document.activeElement;}s.modal=modal;s.modalScroll=0;renderOverlay();}
 function backModal(){const parent=s.modalStack.pop();if(!parent){closeModal();return}s.modal=parent.modal;s.modalScroll=parent.scroll;s.modalSource=parent.source;renderOverlay();}
 
+const ambient=createAmbientSymbols({host:$('home-symbols'),app:$('app'),page:$('page'),icon,reduced:motionReduced,active:()=>!document.hidden&&s.tab==='home'&&!s.settings&&!s.detail&&!s.modal&&!s.agent.open});
 const mascot=createMascot($('app'));
-matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change',()=>{syncMascot();moveLens(true);});
-function syncMascot(){const a=s.agent;let state=a.phase==='done'?'success':!a.open?'idle':a.error||['denied','voice-error','image-error'].includes(a.phase)?'error':['thinking','saving','transcribing'].includes(a.phase)?'thinking':['review','clarifying','transcript'].includes(a.phase)?'waiting':a.phase==='done'?'success':a.phase==='recording'?'receive':'idle';mascot.sync(state,motionReduced());}
+matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change',()=>{if(motionReduced()){homeExchange?.finish();homeReturn.forEach(a=>a.finish());}syncMascot();moveLens(true);});
+function syncMascot(){const a=s.agent;let state=a.phase==='done'?'success':!a.open?'idle':a.error||['denied','voice-error','image-error'].includes(a.phase)?'error':['thinking','saving','transcribing'].includes(a.phase)?'thinking':['review','clarifying','transcript'].includes(a.phase)?'waiting':a.phase==='done'?'success':a.phase==='recording'?'receive':'idle';mascot.sync(state,motionReduced());ambient.sync();}
 
 setScenario('collection');
 })();
