@@ -158,16 +158,19 @@
 
 
 /* M4 unified surfaces, motion and readable action areas. */
-.app .page{overflow-x:hidden;position:relative;z-index:1}.app .page.home{background:transparent;overscroll-behavior-y:contain}
-.home-atmosphere{position:absolute;inset:0;pointer-events:none;background:#e9e1ed;overflow:hidden;visibility:hidden}.app.home-visible .home-atmosphere{visibility:visible}
-.ambient-light{position:absolute;inset:-70px -30px;overflow:hidden;pointer-events:none;background:#e9e1ed}
-.ambient-light:before,.ambient-light:after{content:"";position:absolute;width:125%;height:85%;left:-16%;top:-18%;filter:blur(28px);will-change:transform;animation:ambient-drift 11s ease-in-out infinite alternate}
-.ambient-light:before{background:radial-gradient(ellipse at 30% 38%,#b8a4e7c4,transparent 65%)}.ambient-light:after{background:radial-gradient(ellipse at 67% 34%,#f7d9a5d9,transparent 61%);animation-duration:14s;animation-delay:-7s;animation-direction:alternate-reverse}
-@keyframes ambient-drift{0%{transform:translate(-10%,-5%) rotate(-12deg)}100%{transform:translate(15%,12%) rotate(14deg)}}
+.app .page{overflow-x:hidden;position:relative;z-index:1}.app .page.home{background:transparent;overscroll-behavior-y:contain;display:flex;flex-direction:column;padding-bottom:0}
+.home>.topbar,.home>.hero{flex-shrink:0}.home>.hero{width:100%;margin:0}.home>.pocket{flex:1 0 auto;padding-bottom:112px;border-radius:0}
+.home-atmosphere{position:absolute;inset:0;pointer-events:none;background:linear-gradient(#e9e1ed 0 440px,#292731 620px);overflow:hidden;visibility:hidden}.app.home-visible .home-atmosphere{visibility:visible}
+.ambient-light{position:absolute;inset:0 0 auto;height:440px;pointer-events:none}
+.ambient-light:before,.ambient-light:after{content:"";position:absolute;width:110%;height:330px;filter:blur(23px);will-change:transform;animation-duration:10s;animation-timing-function:linear;animation-iteration-count:infinite}
+.ambient-light:before{left:-30%;top:-70px;background:radial-gradient(ellipse,#b19adc 8%,#c2a9e8bd 33%,#cab3e84d 53%,transparent 72%);transform:translate(18%,-4%);animation-name:ambient-lilac}
+.ambient-light:after{left:20%;top:-15px;background:radial-gradient(ellipse,#f2cf95 8%,#f5d4a3c7 33%,#f4d9b252 53%,transparent 72%);transform:translate(-18%,10%);animation-name:ambient-champagne}
+@keyframes ambient-lilac{0%,100%{transform:translate(-6%,-10%) scale(1.04)}25%{transform:translate(22%,17%) scale(1.08)}50%{transform:translate(52%,-6%) scale(.97)}75%{transform:translate(24%,-21%) scale(1.12)}}
+@keyframes ambient-champagne{0%,100%{transform:translate(6%,8%) scale(1.02)}25%{transform:translate(-20%,-24%) scale(1.12)}50%{transform:translate(-52%,9%) scale(1.06)}75%{transform:translate(-22%,25%) scale(.98)}}
 .symbol-backdrop{position:absolute;inset:0 0 auto;height:440px;pointer-events:none;mask-image:linear-gradient(#000 75%,transparent)}
-.ambient-symbol{position:absolute;left:var(--x);top:var(--y);color:var(--symbol-color,#987cb2);animation:symbol-float var(--duration) ease-in-out infinite;animation-delay:var(--phase)}
-.ambient-symbol svg{width:var(--size,29px);height:var(--size,29px);stroke-width:1.2}
-@keyframes symbol-float{0%,100%{opacity:.04;transform:translate(-9px,7px) rotate(-17deg)}40%{opacity:.26}65%{opacity:.19;transform:translate(11px,-8px) rotate(-9deg)}}
+.ambient-symbol{position:absolute;left:var(--x);top:var(--y);color:var(--symbol-color,#886997);opacity:.38;transform:translate(-50%,-50%) rotate(-12deg);animation:symbol-float var(--duration) ease-in-out infinite;animation-delay:var(--phase)}
+.ambient-symbol svg{display:block;width:var(--size,22px);height:var(--size,22px);stroke-width:1.5}
+@keyframes symbol-float{0%,100%{opacity:.26;transform:translate(calc(-50% - 3px),calc(-50% + 2px)) rotate(-16deg)}40%{opacity:.58}65%{opacity:.42;transform:translate(calc(-50% + 3px),calc(-50% - 2px)) rotate(-7deg)}}
 .app:not(.home-visible) .home-atmosphere *,.app:not(.home-visible) .ambient-light:before,.app:not(.home-visible) .ambient-light:after{animation-play-state:paused}
 .card-water{inset:auto 0 0;background:none;box-shadow:none;opacity:.77;overflow:visible}
 .water-surface{position:absolute;left:0;right:0;top:-13px;height:20px;overflow:hidden}.water-surface .water-wave{left:0;top:0;width:200%;height:24px;fill:var(--water-light);opacity:1;animation:water-flow 5.2s linear infinite}
@@ -216,8 +219,8 @@
 .record-summary{border:1px solid #e7d3fb20;background:linear-gradient(140deg,#c3a8da1f,#ffffff06);border-radius:23px;padding:20px}.record-summary h3{font-size:calc(20px * var(--fs));font-weight:550;line-height:1.45;overflow-wrap:anywhere}.record-summary .detail-money{margin:12px 0 18px;font-variant-numeric:tabular-nums}.record-meta{display:grid;gap:10px;margin:0;font-size:calc(12px * var(--fs))}.record-meta>div{display:grid;grid-template-columns:44px minmax(0,1fr);gap:16px;line-height:1.5}.record-meta dt{color:var(--muted)}.record-meta dd{margin:0;overflow-wrap:anywhere}
 .record-tools{display:grid;grid-template-columns:1fr 1fr;margin:14px 0;gap:9px;border:0;padding:0}.record-tools .secondary{border-radius:16px;padding:12px 6px;min-height:46px;font-size:calc(13px * var(--fs))}.record-note{border:1px solid #e7d3fb1c;background:#ffffff05;border-radius:20px;padding:16px;margin:14px 0}.record-note h4{margin:0 0 10px;font-size:calc(12px * var(--fs));font-weight:500;color:var(--muted)}.record-note .entry-note{font-size:calc(14px * var(--fs));color:inherit}.attribution-prompt{padding:14px 16px;margin:14px 0;border-radius:20px;background:#e8c79510}.attribution-prompt .primary{margin-top:12px}.mode-switch{background:#a992bd16;border:1px solid #bca8ca2b}.mode-switch svg{width:20px;height:20px}
 .app:has(.overlay) .ambient-symbol,.detail-open .ambient-symbol{animation-play-state:paused}
-.reduce .ambient-symbol{animation:none;opacity:.17;transform:rotate(-12deg)}
-@media(prefers-reduced-motion:reduce){.ambient-symbol{animation:none;opacity:.17;transform:rotate(-12deg)}}
+.reduce .ambient-symbol{animation:none;opacity:.42;transform:translate(-50%,-50%) rotate(-12deg)}
+@media(prefers-reduced-motion:reduce){.ambient-symbol{animation:none;opacity:.42;transform:translate(-50%,-50%) rotate(-12deg)}}
 
 </style>
 </head>
@@ -566,7 +569,7 @@ function handleAction(b){
 function total(budget=s.budget){return projection(s.records,budget).total}
 function budgetRecords(budget=s.budget){return recordsFor(s.records,budget)}
 function header(title,home){return '<header class="topbar">'+ib('settings','user','个人设置','soft')+(title?'<h2>'+title+'</h2>':'<div class="space"></div>')+ib('attention','bell','待处理事项')+ib('menu','menu','功能菜单')+'</header>'}
-function symbols(){const items=[['coffee',83,9,30],['book',28,23,29],['heart',5,49,25],['tent',91,67,33],['headphones',53,8,25],['star',24,78,23],['wave',67,47,26],['globe',4,12,27]];return '<div class="symbol-backdrop">'+items.map(([name,x,y,size],i)=>'<span class="ambient-symbol" style="--x:'+x+'%;--y:'+y+'%;--size:'+size+'px;--duration:'+(9+i*1.17)+'s;--phase:'+(-i*2.9)+'s;--symbol-color:'+(i%2?'#ac9469':'#9b81b5')+'">'+icon(name)+'</span>').join('')+'</div>'}
+function symbols(){const items=[['coffee',18,80,19],['headphones',45,79,18],['book',75,80,19],['globe',2.6,122,18],['heart',97.4,180,18],['star',2.6,236,18],['tent',97.4,292,19],['wave',60,187,27]];return '<div class="symbol-backdrop">'+items.map(([name,x,y,size],i)=>'<span class="ambient-symbol" data-symbol="'+name+'" style="--x:'+x+'%;--y:'+y+'px;--size:'+size+'px;--duration:'+(10+i*.83)+'s;--phase:'+(-i*2.9)+'s;--symbol-color:'+(i%2?'#947347':'#886997')+'">'+icon(name)+'</span>').join('')+'</div>'}
 
 function liquid(budget=s.budget,detail=false){
  if(!budget)return '';const p=projection(s.records,budget),level=p.level,remaining=p.remaining,amountCap=money(Math.abs(remaining)).length>12?24:money(Math.abs(remaining)).length>9?29:39;
@@ -790,11 +793,26 @@ function demoRecords(){return [
  {id:'r6',name:'朋友聚餐',cents:26800,day:20,budgetID:'daily'},
  {id:'r7',name:'地铁与出行',cents:4600,day:19,budgetID:'daily'},
  {id:'r8',name:'本月其他日常消费',cents:58700,day:18,budgetID:'daily'},
- {id:'r9',name:'咖啡豆',cents:19800,day:23,budgetID:'coffee'},
- {id:'r10',name:'山间小屋订金',cents:60000,day:22,budgetID:'travel'},
- {id:'r11',name:'家庭聚餐',cents:98000,day:21,budgetID:'family'},
- {id:'r12',name:'书店',cents:25800,day:20,budgetID:'books'},
- {id:'r13',name:'上一趟住宿',cents:96000,day:18,month:8,budgetID:'summer'}
+ {id:'r9',name:'咖啡豆',cents:12800,day:23,budgetID:'coffee'},
+ {id:'coffee-latte',name:'拿铁',cents:2800,day:22,budgetID:'coffee'},
+ {id:'coffee-cake',name:'芝士蛋糕',cents:2600,day:21,budgetID:'coffee'},
+ {id:'coffee-americano',name:'美式咖啡',cents:1600,day:20,budgetID:'coffee'},
+ {id:'r10',name:'山间小屋订金',cents:42000,day:22,budgetID:'travel'},
+ {id:'travel-train',name:'往返车票',cents:12000,day:21,budgetID:'travel'},
+ {id:'travel-ticket',name:'公园门票',cents:4000,day:20,budgetID:'travel'},
+ {id:'travel-snack',name:'路上补给',cents:2000,day:19,budgetID:'travel'},
+ {id:'r11',name:'家庭聚餐',cents:68000,day:21,budgetID:'family'},
+ {id:'family-groceries',name:'周末食材',cents:18000,day:20,budgetID:'family'},
+ {id:'family-fruit',name:'水果',cents:7200,day:19,budgetID:'family'},
+ {id:'family-breakfast',name:'早餐',cents:4800,day:18,budgetID:'family'},
+ {id:'r12',name:'书店',cents:13800,day:20,budgetID:'books'},
+ {id:'books-novel',name:'小说',cents:6200,day:19,budgetID:'books'},
+ {id:'books-magazine',name:'杂志',cents:3800,day:18,budgetID:'books'},
+ {id:'books-ebook',name:'电子书',cents:2000,day:17,budgetID:'books'},
+ {id:'r13',name:'上一趟住宿',cents:72000,day:18,month:8,budgetID:'summer'},
+ {id:'summer-train',name:'返程车票',cents:14000,day:17,month:8,budgetID:'summer'},
+ {id:'summer-meal',name:'当地餐馆',cents:6000,day:16,month:8,budgetID:'summer'},
+ {id:'summer-museum',name:'博物馆门票',cents:4000,day:15,month:8,budgetID:'summer'}
 ]}
 
 $('app').addEventListener('click',function(e){const b=e.target.closest('[data-action]');if(b&&!b.disabled)handleAction(b)});
