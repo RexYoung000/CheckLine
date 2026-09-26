@@ -157,6 +157,42 @@
 .receipt-pending{color:#745328;font-weight:550}
 .receipt-deck .swipe-actions button{font-size:calc(12px * var(--fs))}
 
+
+/* M4 unified surfaces, motion and readable action areas. */
+.app .page{overflow-x:hidden}.app .page.home{background:#e9e3ed}
+.home .hero{isolation:isolate}.ambient-light{position:absolute;inset:-115px 0 -20px;z-index:-2;overflow:hidden;pointer-events:none;background:#e9e3ed}
+.ambient-light:before,.ambient-light:after{content:"";position:absolute;width:145%;height:150%;left:-22%;top:-30%;filter:blur(24px);animation:ambient-drift 18s ease-in-out infinite alternate}
+.ambient-light:before{background:radial-gradient(ellipse at 33% 44%,#c3b3e6ba,transparent 60%)}.ambient-light:after{background:radial-gradient(ellipse at 68% 40%,#f4dfb59c,transparent 55%);animation-duration:23s;animation-delay:-9s;animation-direction:alternate-reverse}
+@keyframes ambient-drift{from{transform:translate(-8%,-4%) rotate(-8deg)}to{transform:translate(9%,7%) rotate(9deg)}}
+.symbol-backdrop{left:0;right:0;opacity:.3}.symbol-band,.empty-symbols .symbol-band{animation:symbol-drift 24s ease-in-out infinite alternate}
+.symbol-band svg{animation:symbol-reveal 9s ease-in-out infinite alternate}.symbol-band svg:nth-child(3n){animation-delay:-5s;animation-duration:13s}.symbol-band svg:nth-child(3n+1){animation-delay:-9s;animation-duration:16s}
+@keyframes symbol-reveal{0%,15%{opacity:.15;transform:translateY(3px)}65%,100%{opacity:.9;transform:translateY(-3px)}}
+.card-water{inset:auto 0 0;background:none;box-shadow:none;opacity:.77;overflow:visible}
+.water-surface{position:absolute;left:0;right:0;top:-13px;height:20px;overflow:hidden}.water-surface .water-wave{left:0;top:0;width:200%;height:24px;fill:var(--water-light);opacity:1;animation:water-flow 5.2s linear infinite}
+.water-body{position:absolute;inset:7px 0 0;background:linear-gradient(var(--water-light),var(--water))}
+.bubble-field{inset:7px 7px 8px;mask-image:linear-gradient(transparent,#000 18%,#000 80%,transparent)}
+.card-water i{border-width:.7px;box-shadow:inset 0 1px 1px #fffb;background:#fff1}.card-water i.mote{background:#a393bd45}
+.liquid-card .mini-plus{bottom:23px;left:22px}.liquid-card .card-progress{left:auto;right:0;bottom:0;text-align:right;font-size:calc(11px * var(--fs));line-height:1.3}.liquid-card .amount{bottom:22px;right:0}.liquid-card .amount-caption{bottom:68px;right:0;text-align:right}.liquid-card .name{max-width:calc(100% - 40px)}
+.cylinder-item .liquid-card .amount{bottom:18px}.cylinder-item .card-progress{font-size:10px}.cylinder-item .amount-caption{bottom:54px}.cylinder-item .mini-plus{display:none}
+.summary-grid.long-amount{grid-template-columns:1fr}.long-amount .stat{font-size:clamp(19px,7cqw,29px)}.record-row.long-amount{flex-direction:column;align-items:flex-start;gap:4px}.record-row.long-amount .money{font-size:calc(15px * var(--fs))}.receipt-deck:has(.long-amount){--receipt-height:108px}.receipt-deck .record-row.long-amount{justify-content:flex-start}.chart-box .total,.detail-money{font-size:clamp(22px,7.4cqw,30px)!important}
+.period-state{font-size:calc(18px * var(--fs));margin:13px 0 4px;line-height:1.35}.summary .track{height:30px;align-items:flex-end;margin-top:15px}.summary .track i{height:var(--bar);min-height:2px}
+.calendar-mini{gap:3px}.calendar-mini i.has-data{background:#b8a4d7}.calendar-mini i.blank{visibility:hidden}.pending-summary{display:flex;gap:8px;align-items:center;background:none;margin:12px 0 0;min-height:44px;font-size:12px;color:#ebd3a3!important}.pending-summary svg{width:15px}
+.overlay{align-items:center;padding:14px}.overlay:has(.agent-panel){align-items:flex-end;padding:0}
+.modal-panel,.summary-overlay .modal-panel{width:100%;max-height:calc(100% - 12px);padding:0;border-radius:28px;overflow:hidden;display:flex;flex-direction:column;margin:0;animation:none}
+.modal-head{padding:15px 16px;margin:0;min-height:72px;flex-shrink:0;gap:8px;border-bottom:1px solid #d7bed617}.modal-head h3{flex:1;min-width:0;overflow-wrap:anywhere;font-size:calc(19px * var(--fs))}.modal-head .icon-btn{flex:0 0 44px}
+.modal-body{padding:20px;min-height:0;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin;flex:1 1 auto}.modal-body>p{line-height:1.6}.modal-body>h4{margin:18px 0 10px}
+.modal-footer,.agent-footer{flex:0 0 auto;padding:12px 18px 16px;border-top:1px solid #bba5c82a}.modal-footer[hidden],.agent-footer[hidden]{display:none}.modal-footer .stack-actions{margin:0;gap:8px}.modal-footer button,.agent-footer button{min-height:46px}.modal-footer>.primary{width:100%}.modal-footer>.error-box,.agent-footer>.error-box{margin:0 0 10px;padding:10px 12px;font-size:12px;line-height:1.5;max-height:96px;overflow:auto}
+.agent-panel .agent-body{min-height:0;flex:1 1 auto}.agent-panel .agent-footer{background:#eee6f255;padding-bottom:12px}.agent-panel[data-density="compact"] .agent-body{min-height:0}.agent-panel .task-context{font-size:12px}.agent-head .subtitle{font-size:11px!important}
+.agent-panel .result-card{padding:12px 14px}.form-row{flex-wrap:wrap;gap:10px;min-height:54px}.form-row input,.form-row select{min-width:0;max-width:100%;font:inherit}.form-row input[type="date"]{width:160px;background:transparent;border:0;color:inherit}.form-row label{flex:0 0 auto}.form-row input:not([type="date"]){flex:1 1 120px;width:120px}
+.note-field{display:block;font-size:13px;line-height:1.6;margin-top:14px}.note-field textarea{display:block;width:100%;min-height:90px;resize:vertical;background:#ffffff38;border:1px solid #b09bb74a;border-radius:12px;color:inherit;padding:10px;margin-top:8px;font:inherit}.note-count{font-size:11px;text-align:right;margin:7px 0;color:#816b90}.note-count.invalid{color:#9d3e5d}.attachment-editor{margin-top:18px}.file-label{position:relative;cursor:pointer;min-height:44px;display:inline-flex;align-items:center}.file-label input{position:absolute;inset:0;opacity:0;width:100%;cursor:pointer}.attachment-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:6px 0}.attachment-item{position:relative;border-radius:12px;background:#c8b5d52c;min-height:72px;overflow:hidden;font-size:10px}.attachment-item img{width:100%;height:80px;object-fit:cover}.attachment-item>button{position:absolute;top:0;right:0;width:32px;height:32px;background:#493455cf;color:white;border-radius:0 0 0 10px}.attachment-item button svg{width:16px}.attachment-item span{display:grid;padding:9px;overflow-wrap:anywhere}.saved-attachment img{display:block;max-width:100%;max-height:300px;object-fit:contain;border-radius:16px}.record-tools{display:flex;flex-wrap:wrap;gap:8px}.detail-money{font-size:34px;margin:18px 0}.amount-breakdown{display:grid;gap:8px;margin-bottom:16px;font-size:13px}.impact-row{padding:15px 0;border-bottom:1px solid #fff2}.impact-row p{line-height:1.6;font-size:13px}.budget-selector{width:100%;text-align:left;background:#ffffff0c;color:inherit;border:1px solid #ffffff1b;border-radius:16px;min-height:48px;display:flex;justify-content:space-between;align-items:center;gap:10px}.budget-selector svg{width:20px}.calendar-header{align-items:center;gap:8px}.calendar-header>div{flex:1;text-align:center}.modal-body .setting-row{min-height:48px}.setting-row:disabled{opacity:.4}
+.xiaoduo{display:block;width:40px;height:40px;flex:0 0 auto;overflow:visible;pointer-events:none}.agent-entry .xiaoduo{width:41px;height:41px}.agent-head .xiaoduo{width:38px;height:38px}.agent-welcome .welcome-orb{background:none!important;box-shadow:none!important;border:0;transform:none;width:88px;height:80px;margin:0 auto 10px}.welcome-orb .xiaoduo{width:88px;height:80px;margin:auto}.task-mascot .xiaoduo{width:74px;height:70px;margin:8px auto}.agent-welcome h3{margin-top:8px}
+.pocket-transition{position:absolute;inset:0;z-index:5;background:linear-gradient(130deg,#433d4b,#292731 80%);pointer-events:none;box-shadow:0 -10px 25px #33233d22}.dock{z-index:10}.pocket-transition .pocket-rim{top:-24px}
+.large .form-row{align-items:flex-start;flex-direction:column;gap:8px;padding-block:12px}.large .form-row input,.large .form-row select{width:100%;flex:none;min-height:38px;text-align:left}.large .summary-grid{grid-template-columns:1fr}.large .summary{min-height:120px}.large .card-cycle{font-size:12px}.large .card-progress{font-size:12px}
+.app:has(.overlay) #page .ambient-light:before,.app:has(.overlay) #page .ambient-light:after,.app:has(.overlay) #page .symbol-band,.app:has(.overlay) #page .symbol-band svg{animation-play-state:paused}.app:has(.overlay) #page .bubble-field i,.detail-open #page .bubble-field i,.detail-open #page .symbol-band,.detail-open #page .symbol-band svg,.detail-open #page .ambient-light:before,.detail-open #page .ambient-light:after{animation-play-state:paused!important}.document-hidden *{animation-play-state:paused!important}
+.reduce .ambient-light:before,.reduce .ambient-light:after,.reduce .symbol-band,.reduce .symbol-band svg,.reduce .water-wave,.reduce .bubble-field i{animation:none!important}
+@media(prefers-reduced-motion:reduce){.ambient-light:before,.ambient-light:after,.symbol-band,.symbol-band svg,.water-wave,.bubble-field i{animation:none!important}}
+@media(max-width:500px){.liquid-card .amount-caption{bottom:65px}.home .liquid-card{height:228px}}
+
 </style>
 </head>
 <body>
@@ -184,7 +220,7 @@
 </div>
 </aside>
 <main class="preview-column">
-<div class="stage-meta"><b id="state-label">首页 · 空卡夹</b><span>可交互设计稿</span></div>
+<div class="stage-meta"><b id="state-label">首页 · 空卡夹</b><span>审阅日期 · 2026.09.26</span></div>
 <div id="app" class="app">
 <div id="page" class="page home"></div>
 <div id="detail-host"></div><div id="dock"></div><div id="overlay-host"></div><div id="toast-host" aria-live="polite"></div>
@@ -200,7 +236,9 @@
 <p class="boundary">本轮方向：浅紫玻璃与朦胧液面；两处点卡都进详情；圆柱聚焦；Agent 三段抽屉。底部四 Tab + 独立 Agent 结构保留。实际原生透镜与触觉另行验证。</p>
 </aside>
 </div>
-<script>
+<script type="module">
+import {REVIEW_DATE,validDate,addDays,monthStart,monthEnd,dateLabel,monthLabel,inPeriod,sortRecords,recordsFor,projection,budgetDate,periodStatus,weekSeries,retrospectiveImpact} from './glass-data.mjs';
+import {createMascot} from './glass-mascot.mjs';
 (function(){
 'use strict';
 const $=function(id){return document.getElementById(id)};
@@ -236,12 +274,12 @@ function icon(n,cl){return '<svg class="'+(cl||'')+'" viewBox="0 0 24 24" fill="
 function esc(v){return String(v==null?'':v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
 function cents(v){const m=String(v).trim().match(/^(\d{1,9})(?:\.(\d{1,2}))?$/);return m?parseInt(m[1],10)*100+parseInt((m[2]||'').padEnd(2,'0'),10):0}
 function money(c){return new Intl.NumberFormat('zh-CN',{style:'currency',currency:'CNY',maximumFractionDigits:c%100?2:0}).format(c/100)}
-function avatar(){return '<span class="avatar" aria-hidden="true"></span>'}
+function avatar(){return '<svg class="xiaoduo" data-xiaoduo data-small viewBox="-112 -104 224 208" aria-hidden="true"></svg>'}
 function btn(action,label,kind){return '<button class="'+(kind||'primary')+'" data-action="'+action+'">'+label+'</button>'}
 function ib(action,name,label,extra){return '<button class="icon-btn '+(extra||'')+'" data-action="'+action+'" aria-label="'+label+'">'+icon(name)+'</button>'}
 let operation=0,voiceTimer=null,lastVoiceDown=0,voiceStartY=0,panelStartY=null,lastPanelDrag=-1000;
-function freshAgent(){return {open:false,expanded:false,detent:0,recordBudgetID:null,mode:'text',phase:'idle',task:'create',origin:'home',manual:false,text:'',name:'日常生活',amount:'3000',cycle:'monthly',merchant:'午餐',unbudgeted:false,images:0,entries:[],keepAttachment:false,history:[],error:'',seconds:0,discussion:null}}
-let s={tab:'home',budget:null,budgets:[],detail:null,focusID:null,modalSource:null,records:[],wishes:[],completed:false,wallet:0,recovery:0,walletHistory:false,settings:null,modal:null,modalError:'',newWish:'',wishAmount:'',wishSymbol:'star',agent:freshAgent(),failSave:false,denyVoice:false,failImage:false,insert:false,selectedDay:24,toast:null};
+function freshAgent(){return {open:false,expanded:false,detent:0,recordBudgetID:null,mode:'text',phase:'idle',task:'create',origin:'home',manual:false,text:'',name:'',amount:'',cycle:'monthly',start:REVIEW_DATE,end:monthEnd(REVIEW_DATE),merchant:'',date:REVIEW_DATE,note:'',attachments:[],unbudgeted:false,images:0,entries:[],keepAttachment:false,history:[],error:'',seconds:0,discussion:null}}
+let s={modalStack:[],undo:null,calendarMonth:null,selectedDate:REVIEW_DATE,edit:null,change:null,tab:'home',budget:null,budgets:[],detail:null,focusID:null,modalSource:null,records:[],wishes:[],completed:false,wallet:0,recovery:0,walletHistory:false,settings:null,modal:null,modalError:'',newWish:'',wishAmount:'',wishSymbol:'star',agent:freshAgent(),failSave:false,denyVoice:false,failImage:false,insert:false,selectedDay:24,toast:null};
 const notes={
 home:['同一个卡夹，从创建开始','创建卡与真实预算卡共用位置。第一次保存后，预算卡落入卡夹，再带出摘要和最近记录。',['点击「创建第一张预算卡」。','表达需求，或切到手动填写。','确认后观察卡片入夹；也可取消或撤销。']],
 budgets:['空卡槽就是创建入口','从管理页面发起创建，就在管理页面看到新卡。首页与预算页共享同一创建草稿。',['点空卡槽创建。','在 Agent 和手动表单之间切换。','保存后留在预算页，卡槽被真实卡替换。']],
@@ -251,9 +289,9 @@ agent:['先输入，需要时再展开','轻面板把任务、输入和结果放
 settings:['围绕数据与使用来组织','顶部说明数据保存在本机。偏好、数据来源、隐私和关于使用紧凑分组，具体说明放到下一层。',['从页首个人图标进入。','查看来源的可用与尚未接入状态。','逐级返回，恢复进入前的页面。']]
 };
 function rim(){return '<svg class="pocket-rim" viewBox="0 0 390 26" preserveAspectRatio="none" aria-hidden="true"><path d="M0 0C20 0 23 25 48 25H342C367 25 370 0 390 0V26H0Z" fill="currentColor"/></svg>'}
-function miniCalendar(){return '<div class="calendar-mini">'+Array.from({length:28},function(){return '<i></i>'}).join('')+'</div>'}
+function miniCalendar(){const base=calendarMonth(),days=Number(monthEnd(base).slice(-2)),offset=(new Date(base+'T12:00:00Z').getUTCDay()+6)%7,records=budgetRecords();return '<div class="calendar-mini" aria-hidden="true">'+Array.from({length:offset},()=>'<i class="blank"></i>').join('')+Array.from({length:days},(_,i)=>'<i class="'+(records.some(r=>r.date===base.slice(0,8)+String(i+1).padStart(2,'0'))?'has-data':'')+'"></i>').join('')+'</div>'}
 function unbudgetedLink(){const count=s.records.filter(function(r){return r.unbudgeted}).length;return count?'<div style="text-align:center;margin:16px 0">'+btn('unbudgeted','未纳入预算 · '+count+' 笔','secondary')+'</div>':''}
-function weekBars(){const values=Array.from({length:7},(_,i)=>budgetRecords().filter(r=>r.day===18+i).reduce((sum,r)=>sum+r.cents,0)),max=Math.max(1,...values);return values.map((v,i)=>'<i title="9月'+(18+i)+'日 '+money(v)+'" style="height:'+Math.max(2,v/max*58)+'px"></i>').join('')}
+function weekBars(){const values=weekSeries(s.records,s.budget),max=Math.max(1,...values.map(r=>r.cents));return values.map(v=>'<i title="'+dateLabel(v.date)+' '+money(v.cents)+'" style="--bar:'+Math.max(2,v.cents/max*100)+'%;height:'+Math.max(2,v.cents/max*100)+'%"></i>').join('')}
 function walletOverview(){
  if(!s.walletHistory&&!s.recovery)return '<button class="wallet-compact" data-action="wallet"><span class="label">'+icon('star')+'心愿钱包</span><span class="wallet-number">'+money(s.wallet)+'</span></button>';
  return '<button class="wallet-full" data-action="wallet"><div class="label">心愿钱包</div><div class="wallet-number">'+money(s.wallet)+'</div>'+(s.recovery?'<div class="recovery">待恢复差额 '+money(s.recovery)+'</div>':'')+'<p class="caption muted">来自预算结算的额度，不是真实资金。</p></button>'
@@ -264,19 +302,15 @@ function wishPage(){
  let content='';
  if(list.length)content=list.map(function(w){return '<button class="wish-row" data-action="wish-detail" data-id="'+w.id+'"><div class="wish-symbol">'+icon(w.symbol)+'</div><div><strong>'+esc(w.name)+'</strong><span>'+(w.completed?'已经实现':w.cents?'预计 '+money(w.cents):'还没有估价')+'</span></div></button>'}).join('');
  else if(s.completed)content='<div class="analysis-intro">'+icon('check')+'<h3 style="margin-top:16px">还没有已完成的心愿</h3><p>真实购买并确认后，会留在这里。</p>'+btn('wish-active','回到心愿清单','secondary')+'</div>';
- else content='<div class="wishlist-empty"><div class="wish-note" aria-hidden="true">'+icon('star')+'<p>一件你想实现的事，<br>值得留个位置。</p></div><h3>给心愿留个位置</h3><p class="small">先写下来，金额可以以后再补。</p>'+btn('add-wish',icon('plus')+'添加心愿')+'</div>';
- return header('心愿',false)+'<div class="body-pad">'+walletOverview()+segmented+content+'</div>';
+ else content='<div class="wishlist-empty"><div class="wish-note" aria-hidden="true">'+icon('star')+'<p>一件你想实现的事，<br>值得留个位置。</p></div><h3>给心愿留个位置</h3><p class="small">先写下来，金额可以以后再补。</p>'+btn('add-wish',icon('plus')+'添加第一个心愿')+'</div>';
+ return header('心愿',false)+'<div class="body-pad">'+walletOverview()+'<div class="record-list-head"><h3>心愿清单</h3>'+btn('add-wish','＋ 添加心愿','text-action')+'</div>'+segmented+content+'</div>';
 }
-function calendar(disabled){return '<div class="calendar-paper"><div class="calendar-header"><div>2026 年<span class="caption muted" style="display:block;margin-top:5px">九月</span></div><span class="month-number">09</span></div><div class="calendar-grid">'+['一','二','三','四','五','六','日'].map(function(t){return '<div class="day-title">'+t+'</div>'}).join('')+'<div class="blank"></div>'+Array.from({length:30},function(_,i){const day=i+1;return '<button '+(disabled?'disabled':'')+' data-action="day" data-day="'+day+'" class="'+(s.selectedDay===day?'selected ':'')+(budgetRecords().some(r=>r.day===day)?'has-data':'')+'" aria-label="9月'+day+'日">'+day+'</button>'}).join('')+'</div></div>'}
+function calendar(disabled){const base=calendarMonth(),offset=(new Date(base+'T12:00:00Z').getUTCDay()+6)%7,days=Number(monthEnd(base).slice(-2)),rows=budgetRecords();return '<div class="calendar-paper"><div class="calendar-header"><button class="icon-btn" data-action="calendar-prev" aria-label="上个月" '+(disabled?'disabled':'')+'>'+icon('back')+'</button><div>'+base.slice(0,4)+' 年 · '+monthLabel(base)+'</div><button class="icon-btn" data-action="calendar-next" aria-label="下个月" '+(disabled?'disabled':'')+'>'+icon('right')+'</button></div><div class="calendar-grid">'+['一','二','三','四','五','六','日'].map(t=>'<div class="day-title">'+t+'</div>').join('')+Array.from({length:offset},()=>'<div class="blank"></div>').join('')+Array.from({length:days},(_,i)=>{const date=base.slice(0,8)+String(i+1).padStart(2,'0');return '<button '+(disabled?'disabled':'')+' data-action="day" data-date="'+date+'" aria-pressed="'+(s.selectedDate===date)+'" class="'+(s.selectedDate===date?'selected ':'')+(rows.some(r=>r.date===date)?'has-data':'')+'" aria-label="'+dateLabel(date,true)+'">'+(i+1)+'</button>'}).join('')+'</div></div>'}
 function insightPage(){
- let content='';
- if(!s.budget)content='<div class="analysis-intro" style="padding-top:0;margin-bottom:20px"><h3>从一张预算卡，<br>看见开销的变化。</h3><p>有了预算卡，就能按日期回看消费。</p>'+btn('create','创建预算卡')+'</div>'+calendar(true);
- else{
- content='<div class="budget-selector"><span>'+esc(s.budget.name)+'</span>'+icon('down')+'</div>';
- if(budgetRecords().length)content+='<div class="chart-box"><div class="small muted">已记录支出</div><div class="total">'+money(total())+'</div><div class="bars">'+weekBars()+'</div><div class="week-labels"><span>9.18</span><span>9.24</span></div></div>';
- else content+='<div class="analysis-intro" style="padding-top:0"><h3>这张卡还没有消费记录</h3><p>记录第一笔，再慢慢看清花费的节奏。</p>'+btn('record',icon('plus')+'记一笔','secondary')+'</div>';
- content+=calendar(false)+'<div class="section-title">9月'+s.selectedDay+'日</div>'+(budgetRecords().some(r=>r.day===s.selectedDay)?recordRows(budgetRecords().filter(r=>r.day===s.selectedDay)):'<div class="quiet-empty">这一天还没有记录。</div>');
- }
+ let content='';if(!s.budget)content='<div class="analysis-intro"><h3>还没有预算卡</h3>'+btn('create','创建预算卡')+'</div>'+calendar(true);
+ else {const values=weekSeries(s.records,s.budget),p=projection(s.records,s.budget);content='<button class="budget-selector" data-action="select-budget" aria-haspopup="dialog"><span>'+esc(s.budget.name)+'</span>'+icon('down')+'</button>';
+ content+=budgetRecords().length?'<div class="chart-box"><div class="small muted">已记录支出'+(p.pending?' · 含待确认 '+money(p.pending):'')+'</div><div class="total">'+money(p.total)+'</div><div class="bars">'+weekBars()+'</div><div class="week-labels"><span>'+dateLabel(values[0].date)+'</span><span>'+dateLabel(values[6].date)+'</span></div></div>':'<div class="quiet-empty">还没有消费记录<br>'+btn('record','记一笔','secondary')+'</div>';
+ content+=calendar(false)+'<div class="section-title">'+dateLabel(s.selectedDate,true)+'</div>'+dayRecords();}
  return header('分析',false)+'<div class="body-pad">'+content+'</div>';
 }
 function settingRow(key,symbol,title,value){return '<button class="setting-row" data-action="setting" data-setting="'+key+'">'+icon(symbol)+'<span class="row-text">'+title+'</span><span class="row-value">'+value+'</span>'+icon('right','arrow')+'</button>'}
@@ -297,7 +331,7 @@ let lensFrame=0,lensState=null;
 function renderDock(){
  const host=$('dock');host.hidden=!!s.settings||!!s.detail;if(host.hidden)return;
  const tabs=[['home','home','首页'],['budgets','budget','预算'],['wishes','heart','心愿'],['insights','chart','分析']];
- if(!host.querySelector('.tab-group'))host.innerHTML='<nav class="dock" aria-label="主导航"><div class="tab-group"><span class="tab-lens" aria-hidden="true"></span>'+tabs.map(t=>'<button data-action="tab" data-tab="'+t[0]+'" aria-label="'+t[2]+'">'+icon(t[1])+'</button>').join('')+'</div><button class="agent-entry" data-action="agent" aria-label="打开 Agent">'+avatar()+'</button></nav>';
+ if(!host.querySelector('.tab-group'))host.innerHTML='<nav class="dock" aria-label="主导航"><div class="tab-group"><span class="tab-lens" aria-hidden="true"></span>'+tabs.map(t=>'<button data-action="tab" data-tab="'+t[0]+'" aria-label="'+t[2]+'">'+icon(t[1])+'</button>').join('')+'</div><button class="agent-entry" data-action="agent" aria-label="打开小朵">'+avatar()+'</button></nav>';
  host.querySelectorAll('[data-tab]').forEach(b=>{const active=b.dataset.tab===s.tab;b.classList.toggle('active',active);b.setAttribute('aria-current',active?'page':'false')});
  moveLens();
 }
@@ -326,27 +360,25 @@ function updateNotes(){
  document.querySelectorAll('[data-jump]').forEach(function(b){b.classList.toggle('active',b.dataset.jump===key)});
  $('state-label').textContent=s.detail&&!s.agent.open?'预算详情 · '+s.budgets.find(b=>b.id===s.detail)?.name:s.settings?'个人设置'+(s.settings==='root'?'':' · 二级页面'):s.agent.open?'Agent · '+({idle:s.agent.detent===2?'完整对话':s.agent.detent===1?'半展开':'轻输入',clarifying:'补充信息','voice-error':'转写失败',recording:'录音中',transcribing:'转写中',transcript:'核对文字',images:'图片预览',thinking:'处理中',review:'确认结果',saving:'保存中',done:'操作结果',denied:'权限受限','image-error':'识别失败'}[s.agent.phase]||'对话'):({home:'首页',budgets:'预算卡',wishes:'心愿',insights:'分析'}[s.tab])+' · '+(s.tab==='wishes'?(s.wishes.length?'心愿清单':'无心愿'):s.budget?(s.records.length?'有消费记录':'有卡，无记录'):'空卡夹');
 }
-function openAgent(task,origin){
+function openAgent(task,origin,manual=false,budgetID=null){
  const a=s.agent;operation++;const hasDraft=a.text.trim()||a.manual||a.images||!['idle','done'].includes(a.phase);
- if(task&&(task!==a.task||a.phase==='done')){a.task=task;a.phase='idle';a.manual=false;a.mode='text';a.error='';a.text='';a.images=0;a.entries=[];a.keepAttachment=false;a.amount=task==='create'?'3000':'35';a.origin=origin||s.tab}
- else if(!hasDraft)a.origin=origin||s.tab;
- if(!task&&!hasDraft&&a.phase!=='done')a.task=s.budget?'general':'create';
- a.open=true;
- if(a.task==='record'){const selected=s.budgets.find(b=>b.id===a.recordBudgetID&&!b.settled)||s.budgets.find(b=>!b.settled);a.recordBudgetID=selected?.id||null;if(!selected)a.unbudgeted=true;}
- if(a.discussion===null&&s.budget)a.discussion=s.budget.name;if(!a.recordBudgetID&&s.budget)a.recordBudgetID=s.budget.id;
- renderOverlay();updateNotes();setTimeout(function(){const t=$('agent-text');if(t)t.focus({preventScroll:true})},100);
+ if(task&&task!==a.task){s.agentDrafts=s.agentDrafts||{};s.agentDrafts[a.task]=structuredClone(a);const saved=s.agentDrafts[task];s.agent=saved?structuredClone(saved):{...freshAgent(),task};}
+ const next=s.agent;if(next.phase==='done'&&task){const history=next.history;s.agent={...freshAgent(),task,history};}
+ const current=s.agent;current.open=true;current.origin=origin||s.tab;
+ if(!task&&!hasDraft&&current.phase!=='done')current.task=s.budget?'general':'create';
+ if(budgetID){const budget=s.budgets.find(b=>b.id===budgetID);current.recordBudgetID=budgetID;current.discussion=budget?.name;current.unbudgeted=false;}
+ if(!current.recordBudgetID&&s.budget){current.recordBudgetID=s.budget.id;current.discussion=s.budget.name;}
+ if(current.task==='record'&&!s.budgets.length)current.unbudgeted=true;
+ if(manual){current.manual=true;current.phase='idle';current.detent=1;}else current.manual=false;
+ s.modal=null;s.modalStack=[];renderOverlay();updateNotes();
+ if(!manual)requestAnimationFrame(()=>{$('agent-text')?.focus({preventScroll:true})});
 }
-function closeAgent(){
- if(s.agent.phase==='saving')return;
- operation++;stopVoiceTimer();const a=s.agent;
- if(a.phase==='recording'||a.phase==='transcribing'||a.phase==='thinking'){a.phase=a.mode==='image'&&a.images?'images':'idle'}
- a.open=false;renderOverlay();updateNotes();const b=document.querySelector('[data-action="agent"]');if(b)b.focus({preventScroll:true});
-}
+function closeAgent(){if(s.agent.phase==='saving')return;operation++;stopVoiceTimer();const a=s.agent,cancelled=['recording','transcribing','thinking'].includes(a.phase);if(cancelled)a.phase=a.mode==='image'&&a.images?'images':'idle';a.open=false;renderOverlay();updateNotes();if(cancelled)toast('已取消，草稿已保留');document.querySelector('[data-action="agent"]')?.focus({preventScroll:true});}
 function asyncStep(callback,delay){const id=++operation;setTimeout(function(){if(id===operation)callback()},delay)}
 function dots(text){return '<div class="busy"><span class="dots"><i></i><i></i><i></i></span>'+text+'</div>'}
-function budgetFields(){const a=s.agent;return '<div class="form-row"><label for="budget-name">名称</label><input id="budget-name" data-field="name" value="'+esc(a.name)+'" maxlength="80"></div><div class="form-row"><label for="budget-amount">额度 · CNY</label><input id="budget-amount" data-field="amount" inputmode="decimal" value="'+esc(a.amount)+'"></div><div class="form-row"><label for="budget-cycle">周期</label><select id="budget-cycle" data-field="cycle"><option value="monthly" '+(a.cycle==='monthly'?'selected':'')+'>每月循环</option><option value="once" '+(a.cycle==='once'?'selected':'')+'>一次计划</option></select></div>'}
-function attributionOptions(unbudgeted,selectedID){return s.budgets.filter(b=>!b.settled).map(b=>'<option value="'+b.id+'" '+(!unbudgeted&&b.id===(selectedID||s.agent.recordBudgetID||s.budget?.id)?'selected':'')+'>'+esc(b.name)+'</option>').join('')+'<option value="none" '+(unbudgeted||!s.budget?'selected':'')+'>未纳入预算</option>'}
-function recordFields(){const a=s.agent;return '<div class="form-row"><label for="record-name">消费内容</label><input id="record-name" data-field="merchant" value="'+esc(a.merchant)+'" maxlength="80"></div><div class="form-row"><label for="record-amount">金额 · CNY</label><input id="record-amount" data-field="amount" inputmode="decimal" value="'+esc(a.amount)+'"></div><div class="form-row"><label for="record-attribution">归属</label><select id="record-attribution" data-attribution="single">'+attributionOptions(a.unbudgeted)+'</select></div><div class="form-row"><label>日期</label><span style="margin-left:auto;font-size:13px">2026年9月24日</span></div>'}
+function budgetFields(){const a=s.agent;return '<div class="form-row"><label for="budget-name">名称</label><input id="budget-name" data-field="name" value="'+esc(a.name)+'" maxlength="80" placeholder="预算名称"></div><div class="form-row"><label for="budget-amount">额度 · CNY</label><input id="budget-amount" data-field="amount" inputmode="decimal" value="'+esc(a.amount)+'" placeholder="0.00"></div><div class="form-row"><label for="budget-cycle">周期</label><select id="budget-cycle" data-field="cycle"><option value="monthly" '+(a.cycle==='monthly'?'selected':'')+'>每月循环</option><option value="once" '+(a.cycle==='once'?'selected':'')+'>一次性预算</option></select></div><div class="form-row"><label for="budget-start">开始日期</label><input type="date" id="budget-start" data-field="start" value="'+a.start+'"></div><div class="form-row"><label for="budget-end">结束日期'+(a.cycle==='once'?' · 可不填':'')+'</label><input type="date" id="budget-end" data-field="end" value="'+(a.end||'')+'"></div>'}
+function attributionOptions(unbudgeted,selectedID,includeSettled=false){return s.budgets.filter(b=>includeSettled||!b.settled).map(b=>'<option value="'+b.id+'" '+(!unbudgeted&&b.id===(selectedID||s.agent.recordBudgetID||s.budget?.id)?'selected':'')+'>'+esc(b.name)+(b.settled?' · 已结算':'')+'</option>').join('')+'<option value="none" '+(unbudgeted||!s.budget?'selected':'')+'>未纳入预算</option>'}
+function recordFields(){const a=activeDraft(),editing=!!s.edit&&s.modal?.type==='edit-record';return '<div class="form-row"><label for="record-name">消费内容</label><input id="record-name" data-field="merchant" value="'+esc(a.merchant)+'" maxlength="80" placeholder="商家或消费内容"></div><div class="form-row"><label for="record-amount">金额 · CNY</label><input id="record-amount" data-field="amount" inputmode="decimal" value="'+esc(a.amount)+'" placeholder="0.00"></div><div class="form-row"><label for="record-attribution">归属</label><select id="record-attribution" data-attribution="single">'+attributionOptions(a.unbudgeted,a.recordBudgetID,editing)+'</select></div><div class="form-row"><label for="record-date">日期</label><input type="date" id="record-date" data-field="date" value="'+esc(a.date)+'"></div><label class="note-field" for="record-note">备注与粘贴文字<textarea id="record-note" data-field="note" rows="3" placeholder="可选">'+esc(a.note||'')+'</textarea></label><p id="note-count" class="note-count '+((a.note||'').length>10000?'invalid':'')+'" aria-live="polite">'+(a.note||'').length+' / 10,000 字'+((a.note||'').length>10000?' · 请缩短后再保存':'')+'</p>'+attachmentFields(a)}
 function batchFields(){return s.agent.entries.map(function(e,i){return '<section class="batch-row"><h4>第 '+(i+1)+' 笔</h4><div class="form-row"><label for="batch-name-'+i+'">消费内容</label><input id="batch-name-'+i+'" data-entry="'+i+'" data-entry-field="merchant" value="'+esc(e.merchant)+'"></div><div class="form-row"><label for="batch-amount-'+i+'">金额 · CNY</label><input id="batch-amount-'+i+'" data-entry="'+i+'" data-entry-field="amount" inputmode="decimal" value="'+esc(e.amount)+'"></div><div class="form-row"><label for="batch-attribution-'+i+'">归属</label><select id="batch-attribution-'+i+'" data-attribution="'+i+'">'+attributionOptions(e.unbudgeted,e.budgetID)+'</select></div><label class="attachment-option"><input type="checkbox" data-attachment="'+i+'" '+(e.keepAttachment?'checked':'')+'><span>保存对应图片为这一笔的附件</span></label></section>'}).join('')}
 function errorBox(){return s.agent.error?'<div class="error-box" role="alert">'+esc(s.agent.error)+'</div>':''}
 function reviewCard(){
@@ -368,37 +400,30 @@ function imageView(){
  return '<p class="small muted">添加要核对的图片，继续前可以移除。</p>'+thumbs+'<p class="caption muted">'+a.images+' / 5 张 · 仅用于识别</p>'+(a.images?'<div style="margin-top:15px">'+btn('recognize','继续识别','primary full')+'</div>':'');
 }
 function renderAgent(){
- const a=s.agent,expandLabel=a.detent===2?'收起到轻输入':a.detent===1?'展开完整对话':'展开到半屏';let content='',foot='';
- const history=a.expanded?a.history.slice(-6).map(function(m){return '<div class="chat-message '+m.role+'">'+esc(m.text)+'</div>'}).join(''):'';
- if(a.manual)content='<div class="mode-toggle"><span>手动填写 · 草稿仍然保留</span>'+btn('manual','切回 Agent','text-action')+'</div><div class="result-card">'+(a.task==='create'?budgetFields():recordFields())+errorBox()+btn('confirm',a.task==='create'?'创建预算卡':'保存消费','primary full')+'</div>';
- else if(a.phase==='thinking'||a.phase==='saving')content=dots(a.phase==='saving'?'正在保存':'正在整理这条输入');
- else if(a.phase==='clarifying')content='<div class="chat-message assistant">'+esc(a.error)+'</div><div class="mode-toggle"><span>你已经写下的内容仍在</span>'+btn('manual','打开表单','text-action')+'</div>';
- else if(a.phase==='review')content=reviewCard();
- else if(a.phase==='done')content='<div class="result-card"><div class="success-line">'+icon('check')+'已保存</div><h3>'+esc(a.task==='create'?s.budget.name:a.entries.length>1?a.entries.length+' 笔消费':a.merchant)+'</h3><p class="small muted" style="margin-top:8px">'+(a.task==='create'?'预算卡已放入卡夹。':'消费已更新到对应记录。')+'</p>'+btn('view-result','查看结果','text-action')+'</div>';
- else if(a.mode==='voice')content=voiceView();
- else if(a.mode==='image')content=imageView();
- else content='<div class="agent-welcome"><div class="welcome-orb">'+icon('star')+'</div><h3>'+(a.task==='create'?'想给哪部分生活留张卡？':a.task==='record'?'把这笔开销放进来。':'今天，想一起梳理什么？')+'</h3><p>从一件小事开始，也可以先随便聊聊。</p></div><div class="suggestions"><button data-action="suggest-create">为日常生活，留一张预算卡</button>'+(s.budget?'<button data-action="suggest-remaining">'+esc(a.discussion||s.budget.name)+'，这个月还能花多少？</button><button data-action="suggest-record">今天午餐花了 35 元</button>':'')+'</div><div class="mode-toggle"><span>或者，自己慢慢填写</span>'+btn('manual','打开表单','text-action')+'</div>';
- if(!a.manual&&!['review','thinking','saving'].includes(a.phase)){
- foot='<div class="composer">'+(a.mode==='text'?'<textarea id="agent-text" data-field="text" aria-label="告诉 Agent 你的需求" placeholder="'+(a.task==='create'?'例如：日常生活，每月 3000 元':'例如：今天午餐花了 35 元')+'" rows="2">'+esc(a.text)+'</textarea>':'')+'<div class="composer-tools">'+['text','voice','image'].map(function(m){return '<button class="icon-btn '+(a.mode===m?'active':'')+'" data-action="input-mode" data-mode="'+m+'" aria-label="'+({text:'文字输入',voice:'语音输入',image:'图片输入'}[m])+'">'+icon({text:'keyboard',voice:'mic',image:'image'}[m])+'</button>'}).join('')+'<span class="spacer"></span>'+(a.mode==='text'?'<button class="send" data-action="send" aria-label="发送">'+icon('send')+'</button>':'')+'</div></div>';
- }
- return '<div class="overlay"><div class="backdrop" data-action="close-agent"></div><section class="agent-panel '+(a.expanded?'expanded':'')+'" role="dialog" aria-modal="true" aria-label="预算助手"><button class="handle" data-action="expand-agent" aria-label="'+expandLabel+'"></button><header class="agent-head">'+avatar()+'<div class="heading"><h3>预算助手</h3><p class="subtitle">'+(a.task==='create'?'创建预算卡':a.task==='record'?'记一笔':'继续上次的话题')+'</p></div>'+ib('expand-agent',a.detent===2?'down':'expand',expandLabel)+ib('close-agent','close','关闭 Agent')+'</header><div class="task-context"><span>'+(a.task==='create'?'新建 · 一条自己的预算线':a.discussion?'正在聊 · '+esc(a.discussion):'还没有选择讨论的预算')+'</span>'+((s.budget&&a.discussion!==s.budget.name)?btn('current-context','聊聊当前预算','text-action'):'')+'</div><div class="agent-body">'+history+content+'</div>'+foot+'<div class="composer-subtitle">切换输入方式会保留当前草稿</div></section></div>';
+ const a=s.agent,expandLabel=a.detent===2?'收起到轻输入':a.detent===1?'展开完整内容':'展开面板';let content='',foot='';
+ const history=a.expanded&&!a.manual&&!['review','saving'].includes(a.phase)?a.history.slice(-6).map(m=>'<div class="chat-message '+m.role+'">'+esc(m.text)+'</div>').join(''):'';
+ if(a.manual)content='<div class="mode-toggle">'+btn('manual','切换为小朵助手','text-action')+'</div><div class="result-card">'+(a.task==='create'?budgetFields():a.entries.length>1?batchFields():recordFields())+errorBox()+btn('confirm',a.task==='create'?'创建预算卡':'保存消费','primary full')+'</div>';
+ else if(['thinking','saving'].includes(a.phase))content='<div class="task-mascot">'+avatar()+'</div>'+dots(a.phase==='saving'?'正在保存':'正在处理');
+ else if(a.phase==='clarifying')content='<div class="chat-message assistant">'+esc(a.error)+'</div>'+btn('manual','打开表单','text-action');
+ else if(a.phase==='review')content=reviewCard()+'<button class="text-action" data-action="revise-input">返回编辑输入</button>';
+ else if(a.phase==='done')content='<div class="result-card"><div class="success-line">'+icon('check')+'已保存</div><h3>'+esc(a.task==='create'?s.budget.name:a.entries.length>1?a.entries.length+' 笔消费':a.merchant)+'</h3>'+btn('view-result','查看结果','text-action')+'</div>';
+ else if(a.mode==='voice')content=voiceView();else if(a.mode==='image')content=imageView();
+ else content='<div class="agent-welcome"><div class="welcome-orb">'+avatar()+'</div><h3>'+({create:'创建预算卡',record:'记一笔',general:'需要处理什么？'}[a.task])+'</h3></div><div class="suggestions"><button data-action="suggest-create">创建预算卡</button>'+(s.budget?'<button data-action="suggest-remaining">'+esc(a.discussion||s.budget.name)+'还能花多少？</button><button data-action="suggest-record">记录一笔消费</button>':'')+'</div><div class="mode-toggle">'+btn('manual','手动填写','text-action')+'</div>';
+ if(!a.manual&&!['review','thinking','saving'].includes(a.phase))foot='<div class="composer">'+(a.mode==='text'?'<textarea id="agent-text" data-field="text" aria-label="告诉小朵你的需求" placeholder="输入预算问题或消费内容" rows="2">'+esc(a.text)+'</textarea>':'')+'<div class="composer-tools">'+['text','voice','image'].map(m=>'<button class="icon-btn '+(a.mode===m?'active':'')+'" data-action="input-mode" data-mode="'+m+'" aria-label="'+({text:'文字输入',voice:'语音输入',image:'图片输入'}[m])+'">'+icon({text:'keyboard',voice:'mic',image:'image'}[m])+'</button>').join('')+'<span class="spacer"></span>'+(a.mode==='text'?'<button class="send" data-action="send" aria-label="发送">'+icon('send')+'</button>':'')+'</div></div>';
+ const title=a.manual?(a.task==='create'?'创建预算卡':'记一笔'):'小朵',state=a.error?'需要重试':({thinking:'正在处理',saving:'正在保存',review:'等待确认',clarifying:'等待补充',done:'已完成',recording:'正在听'}[a.phase]||'预算助手');
+ return '<div class="overlay"><div class="backdrop" data-action="close-agent"></div><section class="agent-panel '+(a.expanded?'expanded':'')+'" role="dialog" aria-modal="true" aria-label="'+title+'"><button class="handle" data-action="expand-agent" aria-label="'+expandLabel+'"></button><header class="agent-head">'+avatar()+'<div class="heading"><h3>'+title+'</h3><p class="subtitle" role="status">'+(a.manual?'手动填写':state)+'</p></div>'+ib('expand-agent',a.detent===2?'down':'expand',expandLabel)+ib('close-agent','close','关闭面板')+'</header><div class="task-context"><span>'+(a.task==='create'?'新建预算卡':a.discussion?'当前预算 · '+esc(a.discussion):'未选择讨论预算')+'</span>'+((s.budget&&a.discussion!==s.budget.name)?btn('current-context','聊当前预算','text-action'):'')+'</div><div class="agent-body">'+history+content+'</div><footer class="agent-footer"></footer>'+foot+'</section></div>';
 }
 function renderModal(){
- const extra=modalExtras();if(extra)return extra;
- let title='',body='';
- if(s.modal==='wish'){
- title='添加心愿';body='<p class="small muted">先写下想实现的一件事。</p><label class="field"><span>心愿名称</span><input id="wish-name" value="'+esc(s.newWish)+'" placeholder="例如：一副新耳机" maxlength="80"></label><label class="field"><span>预计花费 · 可选</span><input id="wish-amount" value="'+esc(s.wishAmount)+'" inputmode="decimal" placeholder="以后再想也可以"></label><p class="small muted">选一个符号</p><div class="symbol-choices">'+['star','headphones','tent','book','heart'].map(function(n){return '<button data-action="wish-symbol" data-symbol="'+n+'" class="'+(s.wishSymbol===n?'active':'')+'" aria-label="'+({star:'星星',headphones:'耳机',tent:'帐篷',book:'书本',heart:'心愿'}[n])+'">'+icon(n)+'</button>'}).join('')+'</div>'+(s.modalError?'<div class="error-box" role="alert">'+s.modalError+'</div>':'')+btn('save-wish','添加到心愿清单','primary full');
- }else if(s.modal==='wallet'){
- title='心愿钱包';body='<p style="font-size:38px;margin:12px 0">'+money(s.wallet)+'</p><p class="small muted">来自预算结算的额度，不是真实资金。</p><div class="detail-section"><p class="small">心愿不会预先占用这笔额度。真实购买并确认后，再按实际金额从心愿钱包中扣减。</p></div>'+(s.recovery?'<div class="detail-section"><p class="small">待恢复差额：'+money(s.recovery)+'</p></div>':'');
- }else if(s.modal==='attention'){title='待处理';body='<div class="quiet-empty">目前没有需要确认的事项。</div>'}
- else if(s.modal==='unbudgeted'){title='未纳入预算';body='<p class="small muted">这些记录已经保存，尚未计入任何预算卡。</p>'+recordRows(s.records.filter(function(r){return r.unbudgeted}))}
- else if(s.modal==='menu'){title='快捷操作';body='<div class="settings-rows">'+settingAction('create','budget','创建预算卡')+settingAction('record','plus','记一笔')+settingAction('settings','user','个人设置')+'</div>'}
- else if(s.modal&&s.modal.type==='record'){const r=s.records[s.modal.index]||s.records[0];title='消费详情';body=r?'<h3>'+esc(r.name)+'</h3><p style="font-size:36px;margin:18px 0">'+money(r.cents)+'</p><p class="small muted">2026年9月24日 · '+esc(r.unbudgeted?'未纳入预算':s.budget.name)+'</p><div class="detail-section"><p class="small">'+(r.attachment?'已保留图片附件':'没有添加备注或附件')+'</p></div>':''}
- else if(s.modal&&s.modal.type==='wish'){const w=s.wishes.find(function(x){return x.id===s.modal.id});title='心愿详情';body=w?'<div style="text-align:center;margin:20px 0;color:#c6b8ee">'+icon(w.symbol)+'</div><h3>'+esc(w.name)+'</h3><p style="font-size:29px;margin:18px 0">'+(w.cents?money(w.cents):'暂未填写预计花费')+'</p><p class="small muted">'+(w.completed?'已完成的心愿，留在这里。':'添加心愿不会分配或冻结钱包额度。')+'</p>':''}
- return '<div class="overlay"><div class="backdrop" data-action="close-modal"></div><section class="modal-panel" role="dialog" aria-modal="true" aria-label="'+title+'"><header class="modal-head"><h3>'+title+'</h3>'+ib('close-modal','close','关闭')+'</header>'+body+'</section></div>';
+ const extra=modalExtras();if(extra)return extra;let title='',body='';
+ if(s.modal==='wish'){title='添加心愿';body='<label class="field"><span>心愿名称</span><input id="wish-name" value="'+esc(s.newWish)+'" placeholder="心愿名称" maxlength="80"></label><label class="field"><span>预计花费 · 可选</span><input id="wish-amount" value="'+esc(s.wishAmount)+'" inputmode="decimal" placeholder="0.00"></label><p class="small muted">选择符号</p><div class="symbol-choices">'+['star','headphones','tent','book','heart'].map(n=>'<button data-action="wish-symbol" data-symbol="'+n+'" class="'+(s.wishSymbol===n?'active':'')+'" aria-label="'+({star:'星星',headphones:'耳机',tent:'帐篷',book:'书本',heart:'心愿'}[n])+'">'+icon(n)+'</button>').join('')+'</div>'+(s.modalError?'<p role="alert" class="error-box">'+esc(s.modalError)+'</p>':'')+btn('save-wish','添加到心愿清单','primary full');}
+ else if(s.modal==='wallet'){title='心愿钱包';body='<p class="detail-money">'+money(s.wallet)+'</p><p>来自预算结算的虚拟额度，不是真实资金。</p><p class="small muted">真实购买并确认后，按实际金额扣减；添加心愿不会分配或冻结额度。</p>'+(s.recovery?'<p>待恢复差额 '+money(s.recovery)+'</p>':'');}
+ else if(s.modal==='unbudgeted'){title='未纳入预算';body=recordRows(s.records.filter(r=>r.unbudgeted));}
+ else if(s.modal==='menu'){title='快捷操作';body='<div class="settings-rows">'+settingAction('create','budget','创建预算卡')+settingAction('record','plus','记一笔')+settingAction('add-wish','heart','添加心愿')+(s.undo?settingAction('undo','back','撤销：'+esc(s.undo.text)):'')+settingAction('settings','user','个人设置')+'</div>';}
+ else if(s.modal?.type==='wish'){const w=s.wishes.find(w=>w.id===s.modal.id);title='心愿详情';body=w?'<h3>'+esc(w.name)+'</h3><p class="detail-money">'+(w.cents?money(w.cents):'未填写预计花费')+'</p><p class="small muted">'+(w.completed?'已完成':'心愿不会预先占用钱包额度。')+'</p>':'';}
+ return modalShell(title,body);
 }
 function settingAction(action,name,text){return '<button class="setting-row" data-action="'+action+'">'+icon(name)+'<span class="row-text">'+text+'</span>'+icon('right','arrow')+'</button>'}
-function toast(msg,undo){const entry={text:msg,undo:undo||null};s.toast=entry;renderToast();setTimeout(function(){if(s.toast===entry){s.toast=null;renderToast()}},6000)}
+function toast(msg,undo){if(undo)s.undo={text:msg,snapshot:undo};const entry={text:msg,undo:!!undo};s.toast=entry;renderToast();setTimeout(()=>{if(s.toast===entry){s.toast=null;renderToast()}},6000)}
 function renderToast(){$('toast-host').innerHTML=s.toast?'<div class="toast"><span>'+esc(s.toast.text)+'</span><button data-action="'+(s.toast.undo?'undo':'dismiss-toast')+'">'+(s.toast.undo?'撤销':'关闭')+'</button></div>':''}
 function parseInput(){
  const a=s.agent,text=a.text.trim();if(!text)return;
@@ -414,31 +439,25 @@ function parseInput(){
  a.phase='thinking';renderOverlay();updateNotes();
  asyncStep(function(){
   if(a.task==='general'){
-   const discussed=s.budgets.find(b=>b.id===a.recordBudgetID)||s.budget;const reply=discussed?discussed.name+(discussed.settled?'结算时结余 ':'当前还能花 ')+money(discussed.cents-total(discussed))+'。以上只包含已记录的数据。':'可以先从一张预算卡开始，告诉我你想管理的开销。';
+   const discussed=s.budgets.find(b=>b.id===a.recordBudgetID)||s.budget;const p=projection(s.records,discussed);const reply=discussed?discussed.name+(discussed.settled?(p.remaining<0?'结算时超出 ':'结算时结余 '):p.risk==='confirmed'?'已超出 ':p.risk==='possible'?'可能超出 ':'暂计还能花 ')+money(Math.abs(p.remaining))+(p.pending?'，其中待确认 '+money(p.pending):'')+'。以上只包含已记录的数据。':'可以先从一张预算卡开始，告诉我你想管理的开销。';
    a.history.push({role:'assistant',text:reply});a.detent=2;a.expanded=true;a.phase='idle';a.text='';
   }else if(!amount){a.phase='clarifying';a.error=a.task==='create'?'这张卡准备设置多少预算？补上额度后，我们再核对。':'这笔消费是多少钱？补上金额后，我们再核对。'}
-  else a.phase='review';
+  else {a.phase='review';a.detent=Math.max(1,a.detent)}
   renderOverlay();updateNotes();
  },550);
 }
 function confirm(){
  const a=s.agent,value=cents(a.amount),name=(a.task==='create'?a.name:a.merchant).trim(),batch=a.task==='record'&&a.entries.length>1;
- const rows=batch?a.entries:[{merchant:a.merchant,amount:a.amount,unbudgeted:a.unbudgeted,keepAttachment:a.mode==='image'&&a.keepAttachment}];
- if(a.task==='create'?(!value||!name):rows.some(function(e){return !e.merchant.trim()||!cents(e.amount)})){a.error='请补充名称和大于 0 的金额。';renderOverlay();return}
- if(a.phase==='saving')return;
- if(a.task!=='create'&&rows.some(e=>!e.unbudgeted&&s.budgets.find(b=>b.id===(e.budgetID||a.recordBudgetID||s.budget?.id))?.settled)){a.error='该周期已结算，请先选择其他归属；追溯变更需要完整影响预览。';renderOverlay();return}
- const old=snapshot();
- a.manual=false;a.phase='saving';renderOverlay();updateNotes();
- asyncStep(function(){
+ const rows=batch?a.entries.map(e=>({...e,date:e.date||a.date,note:e.note||'',attachments:e.attachments||[]})):[{merchant:a.merchant,amount:a.amount,unbudgeted:a.unbudgeted,budgetID:a.recordBudgetID,date:a.date,note:a.note,attachments:a.attachments,keepAttachment:a.mode==='image'&&a.keepAttachment}];
+ a.error=a.task==='create'?(!value||!name?'请补充名称和大于 0 的额度。':!validDate(a.start)||(a.cycle==='monthly'&&!a.end)||(a.end&&(!validDate(a.end)||a.end<a.start))?'请核对预算开始和结束日期。':''):rows.map(e=>validateRecord(e)).find(Boolean)||'';
+ if(a.error){renderOverlay();return}if(a.phase==='saving')return;
+ const old=snapshot();a.manual=false;a.phase='saving';renderOverlay();updateNotes();
+ asyncStep(()=>{
   if(s.failSave){s.failSave=false;a.phase='review';a.error='没有保存成功。内容仍在，请重试。';renderOverlay();updateNotes();return}
-  a.error='';
-  if(a.task==='create'){s.budget={id:'b'+Date.now(),name:name,cents:value,cycle:a.cycle,tint:'lilac'};s.budgets.push(s.budget);s.focusID=s.budget.id;s.insert=true;a.discussion=name}
-  else rows.forEach(function(e){s.records.unshift({id:'r'+Date.now()+'-'+Math.random().toString(16).slice(2,6),name:e.merchant.trim(),cents:cents(e.amount),day:24,attachment:e.keepAttachment,unbudgeted:!s.budget||e.unbudgeted,budgetID:!s.budget||e.unbudgeted?null:(e.budgetID||a.recordBudgetID||s.budget.id)})});
-  a.history.push({role:'assistant',text:a.task==='create'?'预算卡已创建：'+name:'已保存 '+rows.length+' 笔消费'});
-  a.phase='done';a.text='';
-  if(a.origin!=='agent'){a.open=false;s.tab=a.origin==='insights'?'insights':a.origin==='budgets'?'budgets':'home'}
-  render(a.task==='create');toast(a.task==='create'?'预算卡已创建':rows.length+' 笔消费已保存',old);
-  setTimeout(function(){s.insert=false},650);
+  if(a.task==='create'){s.budget={id:'b'+Date.now(),name,cents:value,cycle:a.cycle,start:a.start,end:a.end||null,tint:'lilac'};s.budgets.push(s.budget);s.focusID=s.budget.id;s.insert=true;a.discussion=name;s.calendarMonth=null;s.selectedDate=budgetDate(s.budget)}
+  else rows.forEach(e=>{const attachments=structuredClone(e.attachments||[]);if(e.keepAttachment)attachments.push({id:'ocr-'+Date.now(),name:'小票（演示）',demo:true});s.records.unshift({id:'r'+Date.now()+'-'+Math.random().toString(16).slice(2,6),name:e.merchant.trim(),cents:cents(e.amount),date:e.date||a.date,note:e.note||'',attachments,unbudgeted:e.unbudgeted,budgetID:e.unbudgeted?null:(e.budgetID||a.recordBudgetID)})});
+  a.error='';a.history.push({role:'assistant',text:a.task==='create'?'预算卡已创建：'+name:'已保存 '+rows.length+' 笔消费'});a.phase='done';a.text='';
+  if(a.origin!=='agent'){a.open=false;s.tab=['insights','budgets'].includes(a.origin)?a.origin:'home'}render(a.task==='create');toast(a.task==='create'?'预算卡已创建':rows.length+' 笔消费已保存',old);setTimeout(()=>s.insert=false,650);
  },430);
 }
 function stopVoiceTimer(){if(voiceTimer){clearInterval(voiceTimer);voiceTimer=null}}
@@ -448,12 +467,12 @@ function startVoice(){
  voiceTimer=setInterval(function(){a.seconds++;const n=$('overlay-host').querySelector('[aria-live]');if(n)n.textContent='正在听 · '+a.seconds+' 秒'},1000);
 }
 function endVoice(cancel){
- const a=s.agent;stopVoiceTimer();if(cancel){a.phase='idle';renderOverlay();updateNotes();return}
- a.phase='transcribing';renderOverlay();updateNotes();asyncStep(function(){a.text=a.task==='create'?'日常生活，每月预算 3000 元':'今天午餐花了 35 元';a.phase='transcript';renderOverlay();updateNotes()},550);
+ const a=s.agent;stopVoiceTimer();if(cancel){a.phase='idle';a.error='';renderOverlay();updateNotes();toast('已取消录音，草稿已保留');return}
+ a.phase='transcribing';renderOverlay();updateNotes();asyncStep(function(){a.text=a.task==='create'?'日常生活，每月预算 3000 元':'今天午餐花了 35 元';a.phase='transcript';a.detent=Math.max(1,a.detent);renderOverlay();updateNotes()},550);
 }
 function recognize(){
  const a=s.agent;if(!a.images)return;a.phase='thinking';renderOverlay();updateNotes();
- asyncStep(function(){if(s.failImage){s.failImage=false;a.phase='image-error'}else{a.task='record';a.merchant='午餐';a.amount='35';a.entries=a.images>1?Array.from({length:a.images},function(_,i){return {merchant:i===0?'午餐':'咖啡',amount:i===0?'35':'18',unbudgeted:!s.budget,keepAttachment:false}}):[];if(a.entries.length>1){a.expanded=true;a.detent=2;}a.phase='review'}renderOverlay();updateNotes()},650);
+ asyncStep(function(){if(s.failImage){s.failImage=false;a.phase='image-error'}else{a.task='record';a.merchant='午餐';a.amount='35';a.entries=a.images>1?Array.from({length:a.images},function(_,i){return {merchant:i===0?'午餐':'咖啡',amount:i===0?'35':'18',unbudgeted:!s.budget,keepAttachment:false}}):[];if(a.entries.length>1){a.expanded=true;a.detent=2;}else a.detent=Math.max(1,a.detent);a.phase='review'}renderOverlay();updateNotes()},650);
 }
 function setScenario(value){
  receiptBudget=null;receiptPosition=receiptLocation=0;
@@ -473,65 +492,66 @@ function setScenario(value){
  if(['collection','dry','long-list'].includes(value)){s.budgets=sampleBudgets();s.records=demoRecords();s.budget=s.budgets[0];s.focusID=s.budget.id;s.tab='home';}
  if(value==='dry'){s.records=s.records.filter(r=>r.budgetID!=='daily');s.records.push({id:'r-dry',name:'当前周期消费',cents:300000,day:24,budgetID:'daily'});s.budgets[1].cents=15000;s.tab='budgets';}
  if(value==='long-list'){for(let i=0;i<12;i++)s.budgets.push({id:'extra'+i,name:['四季的花','小城散步','运动与健康','周末电影'][i%4]+' · '+(i+1),cents:60000+i*10000,cycle:'monthly',tint:['lilac','mint','gold','rose'][i%4]});s.tab='budgets';}
+ normalizeDemo();
  render(true);
 }
 function handleAction(b){
- const action=b.dataset.action,a=s.agent;if(extraAction(b))return;
- if(action==='tab'){s.tab=b.dataset.tab;s.settings=null;s.detail=null;s.toast=null;render();$('page').scrollTop=0}
- else if(action==='create'||action==='record'){s.modal=null;openAgent(action==='create'?'create':'record',s.tab)}
+ const action=b.dataset.action,a=s.agent;if(a.phase==='saving'&&!['expand-agent'].includes(action))return;if(extraAction(b))return;
+ if(action==='tab'){navigateTab(b.dataset.tab);}
+ else if(action==='create'||action==='record'){openAgent(action,s.tab,action==='record',action==='record'?s.budget?.id:null);}
  else if(action==='agent')openAgent(null,'agent');
  else if(action==='close-agent')closeAgent();
- else if(action==='expand-agent'){if(performance.now()-lastPanelDrag<350)return;a.detent=a.detent===2?0:a.detent+1;a.expanded=a.detent>0;renderOverlay();updateNotes()}
- else if(action==='manual'){a.manual=!a.manual;if(a.manual)a.detent=2;a.expanded=a.detent>0;if(a.task==='general')a.task='record';if(a.manual)a.phase='idle';renderOverlay();updateNotes()}
- else if(action==='send')parseInput();
- else if(action==='confirm')confirm();
- else if(action==='input-mode'){operation++;stopVoiceTimer();a.mode=b.dataset.mode;a.manual=false;a.error='';a.phase=a.mode==='image'?(a.images?'images':'idle'):'idle';renderOverlay();updateNotes()}
- else if(action==='suggest-create'){a.text='日常生活，每月预算 3000 元';a.task='create';a.mode='text';renderOverlay();$('agent-text').focus()}
- else if(action==='suggest-remaining'){a.text='这个月还能花多少？';a.task='general';a.mode='text';a.detent=2;parseInput()}
- else if(action==='suggest-record'){a.text='今天午餐花了 35 元';a.task='record';a.mode='text';renderOverlay();$('agent-text').focus()}
- else if(action==='current-context'){a.discussion=s.budget.name;a.recordBudgetID=s.budget.id;renderOverlay()}
- else if(action==='voice-click'){if(performance.now()-lastVoiceDown<450)return;if(a.phase==='recording')endVoice(false);else startVoice()}
+ else if(action==='expand-agent'){if(performance.now()-lastPanelDrag<350)return;a.detent=a.detent===2?0:a.detent+1;renderOverlay();updateNotes();}
+ else if(action==='manual'){a.manual=!a.manual;if(a.manual){a.detent=1;if(a.task==='general')a.task='record';a.phase='idle'}renderOverlay();updateNotes();}
+ else if(action==='revise-input'){a.manual=false;a.phase='idle';renderOverlay();}
+ else if(action==='send')parseInput();else if(action==='confirm')confirm();
+ else if(action==='input-mode'){operation++;stopVoiceTimer();a.mode=b.dataset.mode;if(a.mode!=='text')a.detent=Math.max(1,a.detent);a.manual=false;a.error='';a.phase=a.mode==='image'?(a.images?'images':'idle'):'idle';renderOverlay();updateNotes();}
+ else if(action==='suggest-create'){a.text='日常生活，每月预算 3000 元';a.task='create';a.mode='text';renderOverlay();$('agent-text').focus();}
+ else if(action==='suggest-remaining'){a.text='这个月还能花多少？';a.task='general';a.mode='text';a.detent=2;parseInput();}
+ else if(action==='suggest-record'){a.text='今天午餐花了 35 元';a.task='record';a.mode='text';renderOverlay();$('agent-text').focus();}
+ else if(action==='current-context'){a.discussion=s.budget.name;a.recordBudgetID=s.budget.id;renderOverlay();}
+ else if(action==='voice-click'){if(performance.now()-lastVoiceDown<450)return;if(a.phase==='recording')endVoice(false);else startVoice();}
  else if(action==='voice-cancel')endVoice(true);
- else if(action==='voice-to-text'){a.mode='text';a.phase='idle';renderOverlay()}
- else if(action==='voice-retry'){s.denyVoice=false;a.phase='idle';renderOverlay()}
- else if(action==='add-image'){if(a.images<5)a.images++;a.phase='images';renderOverlay()}
- else if(action==='remove-image'){a.images=Math.max(0,a.images-1);renderOverlay()}
+ else if(action==='voice-to-text'){a.mode='text';a.phase='idle';renderOverlay();}
+ else if(action==='voice-retry'){s.denyVoice=false;a.phase='idle';renderOverlay();}
+ else if(action==='add-image'){if(a.images<5)a.images++;a.phase='images';renderOverlay();}
+ else if(action==='remove-image'){a.images=Math.max(0,a.images-1);renderOverlay();}
  else if(action==='recognize')recognize();
- else if(action==='view-result'){a.open=false;if(!s.detail)s.tab=a.task==='create'?'budgets':'home';render()}
- else if(action==='settings'){s.modal=null;s.settings='root';render();$('page').scrollTop=0}
- else if(action==='settings-back'){s.settings=s.settings==='root'?null:'root';render();$('page').scrollTop=0}
- else if(action==='setting'){s.settings=b.dataset.setting;render();$('page').scrollTop=0}
- else if(action==='add-wish'){s.modal='wish';s.modalError='';renderOverlay()}
- else if(action==='wish-symbol'){s.wishSymbol=b.dataset.symbol;renderOverlay()}
- else if(action==='save-wish'){
-  if(!s.newWish.trim()){s.modalError='先给这个心愿一个名字。';renderOverlay();return}
-  if(s.wishAmount.trim()&&!cents(s.wishAmount)){s.modalError='预计花费请填大于 0 的金额，或暂时留空。';renderOverlay();return}
-  s.wishes.push({id:Date.now(),name:s.newWish.trim(),cents:cents(s.wishAmount),symbol:s.wishSymbol,completed:false});s.modal=null;s.completed=false;s.newWish='';s.wishAmount='';render();toast('心愿已添加，钱包额度保持不变。');
- }
- else if(action==='wish-active'||action==='wish-completed'){s.completed=action==='wish-completed';render()}
- else if(action==='wish-detail'){s.modal={type:'wish',id:Number(b.dataset.id)};renderOverlay()}
- else if(action==='record-detail'){s.modalSource=null;s.modal={type:'record',index:Number(b.dataset.index)};renderOverlay()}
- else if(action==='wallet'||action==='attention'||action==='menu'||action==='unbudgeted'){s.modal=action;renderOverlay()}
- else if(action==='close-modal')closeModal();
- else if(action==='day'){s.selectedDay=Number(b.dataset.day);if(s.modal==='summary-calendar')renderOverlay();else render()}
- else if(action==='dismiss-toast'){s.toast=null;renderToast()}
- else if(action==='undo'){if(s.toast&&s.toast.undo){s.budgets=s.toast.undo.budgets;s.budget=s.budgets.find(b=>b.id===s.toast.undo.budget?.id)||null;s.focusID=s.toast.undo.focusID;s.records=s.toast.undo.records;s.toast=null;s.agent.open=false;s.agent.phase='idle';render(true);toast('已撤销')}}
+ else if(action==='view-result'){a.open=false;if(!s.detail)s.tab=a.task==='create'?'budgets':'home';render();}
+ else if(action==='settings'){s.modal=null;s.modalStack=[];s.settings='root';render();$('page').scrollTop=0;}
+ else if(action==='settings-back'){s.settings=s.settings==='root'?null:'root';render();$('page').scrollTop=0;}
+ else if(action==='setting'){s.settings=b.dataset.setting;render();$('page').scrollTop=0;}
+ else if(action==='add-wish'){s.modalError='';openModal('wish',b);}
+ else if(action==='wish-symbol'){s.wishSymbol=b.dataset.symbol;renderOverlay();}
+ else if(action==='save-wish'){if(!s.newWish.trim()){s.modalError='请填写心愿名称。';renderOverlay();return}if(s.wishAmount.trim()&&!cents(s.wishAmount)){s.modalError='预计花费请填大于 0 的金额，或留空。';renderOverlay();return}const old=snapshot();s.wishes.push({id:Date.now(),name:s.newWish.trim(),cents:cents(s.wishAmount),symbol:s.wishSymbol,completed:false});s.modal=null;s.modalStack=[];s.completed=false;s.newWish='';s.wishAmount='';render();toast('心愿已添加',old);}
+ else if(action==='wish-active'||action==='wish-completed'){s.completed=action==='wish-completed';render();}
+ else if(action==='wish-detail')openModal({type:'wish',id:Number(b.dataset.id)},b);
+ else if(action==='record-detail')openModal({type:'record',id:b.dataset.id},b);
+ else if(['wallet','attention','menu','unbudgeted','select-budget'].includes(action))openModal(action,b);
+ else if(action==='close-modal')closeModal();else if(action==='modal-back')backModal();
+ else if(action==='day'){s.selectedDate=b.dataset.date;s.modalScroll=$('overlay-host').querySelector('.modal-body')?.scrollTop||0;if(s.modal==='summary-calendar')renderOverlay();else render();}
+ else if(action==='calendar-prev'||action==='calendar-next'){const current=calendarMonth();s.calendarMonth=action==='calendar-prev'?monthStart(addDays(current,-1)):addDays(monthEnd(current),1);s.selectedDate=s.calendarMonth;if(s.modal)renderOverlay();else render();}
+ else if(action==='choose-budget'){selectBudget(b.dataset.id);s.modal=null;s.modalStack=[];render();}
+ else if(action==='dismiss-toast'){s.toast=null;renderToast();}
+ else if(action==='undo'&&s.undo){const old=s.undo.snapshot;Object.assign(s,structuredClone(old));s.budget=s.budgets.find(b=>b.id===old.budget?.id)||s.budgets[0]||null;s.undo=null;s.modal=null;s.modalStack=[];s.agent.open=false;s.agent.phase='idle';s.agent.history.push({role:'assistant',text:'刚才的写入已撤销。'});s.detail=null;render(true);toast('已撤销');}
+ else if(action==='remove-draft-attachment'){activeDraft().attachments.splice(Number(b.dataset.index),1);renderOverlay();}
 }
-function total(budget=s.budget){return budget?s.records.filter(r=>!r.unbudgeted&&r.budgetID===budget.id).reduce((a,r)=>a+r.cents,0):0}
-function budgetRecords(budget=s.budget){return budget?s.records.filter(r=>!r.unbudgeted&&r.budgetID===budget.id):[]}
+function total(budget=s.budget){return projection(s.records,budget).total}
+function budgetRecords(budget=s.budget){return recordsFor(s.records,budget)}
 function header(title,home){return '<header class="topbar">'+ib('settings','user','个人设置','soft')+(title?'<h2>'+title+'</h2>':'<div class="space"></div>')+ib('attention','bell','待处理事项')+ib('menu','menu','功能菜单')+'</header>'}
 function symbols(){return '<div class="symbol-backdrop '+(!s.budget?'empty-symbols':'')+'" aria-hidden="true">'+[0,1,2].map((_,i)=>'<div class="symbol-band">'+['coffee','tent','star','headphones','heart','book','coffee','star','tent','headphones'].map((n,j)=>icon(n)).join('')+'</div>').join('')+'</div>'}
 function liquid(budget=s.budget,detail=false){
- if(!budget)return '';const remaining=budget.cents-total(budget),level=Math.max(0,Math.min(100,remaining/budget.cents*100)),amountCap=money(Math.abs(remaining)).length>12?24:money(Math.abs(remaining)).length>9?29:39;
- const bubbles=Array.from({length:15},(_,i)=>'<i class="'+(i>6?'mote':'')+'" style="--x:'+((i*31+13)%93+2)+'%;--y:'+((i*19+12)%83)+'%;--size:'+([4,8,5,3,10,6,4][i%7])+'px;--duration:'+(4.2+(i*1.3)%4.7)+'s;--phase:'+(-i*.81-1.7)+'s;--drift:'+(i%2?-9:11)+'px"></i>').join('');
- const wave='<path d="M0 14Q62.5 0 125 14T250 14Q312.5 0 375 14T500 14V30H0Z"/>';
- const water=level>0?'<div class="card-water" style="--level:'+level+'%"><svg class="water-wave back" viewBox="0 0 500 30" preserveAspectRatio="none" aria-hidden="true">'+wave+'</svg><svg class="water-wave" viewBox="0 0 500 30" preserveAspectRatio="none" aria-hidden="true">'+wave+'</svg><div class="bubble-field" aria-hidden="true">'+bubbles+'</div></div>':'<div class="dry"></div>';
- return '<div class="card-wrap" data-card-id="'+budget.id+'"><div class="liquid-card '+(budget.tint||'lilac')+' '+(s.insert&&budget===s.budget?'inserted':'')+'">'+water+'<div class="card-shimmer"></div><div class="card-copy"><div class="name">'+esc(budget.name)+'</div><div class="card-cycle">'+(budget.cycle==='once'?'一次特别计划':'每月循环')+' · CNY</div><span class="amount-caption">'+(budget.settled?'结算时结余':remaining<0?'已超出':'还能花')+'</span><span class="amount" style="--amount-cap:'+amountCap+'px">'+money(Math.abs(remaining))+'</span><span class="card-progress">'+(budget.settled?'已结算周期':level.toFixed(0)+'% 剩余')+'</span></div>'+(!detail?'<button class="card-cover" data-action="budget-detail" data-id="'+budget.id+'" aria-label="查看'+esc(budget.name)+'预算详情"></button>':'')+'<button class="card-menu icon-btn" data-action="budget-menu" data-id="'+budget.id+'" aria-label="'+esc(budget.name)+'卡片菜单">•••</button>'+(detail||budget.settled?'':'<button class="mini-plus" data-action="record-for" data-id="'+budget.id+'" aria-label="为'+esc(budget.name)+'记一笔">'+icon('plus')+'</button>')+'</div></div>'
+ if(!budget)return '';const p=projection(s.records,budget),level=p.level,remaining=p.remaining,amountCap=money(Math.abs(remaining)).length>12?24:money(Math.abs(remaining)).length>9?29:39;
+ const bubbles=Array.from({length:29},(_,i)=>'<i class="'+(i>22?'mote':'')+'" style="--x:'+((i*31+13)%89+5)+'%;--y:'+((i*19+12)%76+8)+'%;--size:'+([2,3,2,4,2,6,3,2,4][i%9])+'px;--duration:'+(3.3+(i*1.31)%4.6)+'s;--phase:'+(-i*.71-1.7)+'s;--drift:'+(i%2?-7-i%5:6+i%7)+'px"></i>').join('');
+ const wave='<path d="M0 14Q62.5 0 125 14T250 14Q312.5 0 375 14T500 14V32H0Z"/>';
+ const water=level>0?'<div class="card-water" style="--level:'+level+'%"><div class="water-surface"><svg class="water-wave" viewBox="0 0 500 30" preserveAspectRatio="none" aria-hidden="true">'+wave+'</svg></div><div class="water-body"></div><div class="bubble-field" aria-hidden="true">'+bubbles+'</div></div>':'<div class="dry"></div>';
+ const label=budget.settled?'结算时结余':p.risk==='possible'?'可能超出':p.risk==='confirmed'?'已超出':'还能花';
+ return '<div class="card-wrap" data-card-id="'+budget.id+'"><div class="liquid-card '+(budget.tint||'lilac')+' '+(s.insert&&budget===s.budget?'inserted':'')+'">'+water+'<div class="card-shimmer"></div><div class="card-copy"><div class="name">'+esc(budget.name)+'</div><div class="card-cycle">'+(budget.cycle==='once'?'一次性预算':'每月循环')+' · CNY</div><span class="amount-caption">'+label+'</span><span class="amount" style="--amount-cap:'+amountCap+'px">'+money(Math.abs(remaining))+'</span><span class="card-progress">'+(budget.settled?'已结算周期':p.risk!=='none'?'剩余 0%':level.toFixed(0)+'% 剩余')+'</span></div>'+(!detail?'<button class="card-cover" data-action="budget-detail" data-id="'+budget.id+'" aria-label="查看'+esc(budget.name)+'预算详情"></button>':'')+'<button class="card-menu icon-btn" data-action="budget-menu" data-id="'+budget.id+'" aria-label="'+esc(budget.name)+'卡片菜单">•••</button>'+(detail||budget.settled?'':'<button class="mini-plus" data-action="record-for" data-id="'+budget.id+'" aria-label="为'+esc(budget.name)+'记一笔">'+icon('plus')+'</button>')+'</div></div>';
 }
-function recordRows(records,compact=false){return records.map(r=>{
- const date=(r.month||9)+'月'+r.day+'日',metadata=compact?date+(r.pending?' · <span class="receipt-pending">待确认</span>':r.attachment?' · 有附件':'')+(r.unbudgeted?' · 未纳入预算':''):date+(r.attachment?' · 有附件':'')+(r.unbudgeted?' · 未纳入预算':'');
- return '<div class="swipe-row" data-swipe="record" data-record-id="'+r.id+'"><div class="swipe-actions" aria-hidden="true"><button data-action="record-detail" data-index="'+s.records.indexOf(r)+'" tabindex="-1">详情</button><button class="delete" data-action="delete-record" data-id="'+r.id+'" tabindex="-1">删除</button></div><div class="swipe-face"><button class="record-row full" data-action="record-detail" data-index="'+s.records.indexOf(r)+'"><div><strong>'+esc(r.name)+'</strong><p>'+metadata+'</p>'+(!compact&&r.pending?'<span class="pending-label">待确认归属</span>':'')+'</div><span class="money">−'+money(r.cents)+'</span></button><button class="icon-btn" data-action="swipe-reveal" aria-label="'+esc(r.name)+'的更多操作">•••</button></div></div>';
-}).join('')}
+function recordRows(records,compact=false){return sortRecords(records).map(r=>{
+ const date=dateLabel(r.date),attached=!!(r.attachment||r.attachments?.length),metadata=compact?date+(r.pending?' · <span class="receipt-pending">待确认</span>':attached?' · 有附件':'')+(r.unbudgeted?' · 未纳入预算':''):date+(attached?' · 有附件':'')+(r.unbudgeted?' · 未纳入预算':'');
+ return '<div class="swipe-row" data-swipe="record" data-record-id="'+r.id+'"><div class="swipe-actions" aria-hidden="true"><button data-action="record-detail" data-id="'+r.id+'" tabindex="-1">详情</button><button class="delete" data-action="delete-record" data-id="'+r.id+'" tabindex="-1">删除</button></div><div class="swipe-face"><button class="record-row full '+(money(r.cents).length>10?'long-amount':'')+'" data-action="record-detail" data-id="'+r.id+'"><div><strong>'+esc(r.name)+'</strong><p>'+metadata+'</p>'+(!compact&&r.pending?'<span class="pending-label">待确认归属</span>':'')+'</div><span class="money">−'+money(r.cents)+'</span></button><button class="icon-btn" data-action="swipe-reveal" aria-label="'+esc(r.name)+'的更多操作">•••</button></div></div>';
+ }).join('')}
 function homeReceipts(){
  const records=budgetRecords();if(!records.length)return '<div class="quiet-empty">这张卡还没有消费记录<br>'+btn('record','记一笔','text-action')+'</div>';
  return '<div class="recent-roll receipt-deck" data-count="'+records.length+'" role="group" aria-label="最近记录，下拉查看更早记录，上推返回更新记录，也可用上下方向键" tabindex="0">'+recordRows(records,true)+'</div><span class="sr-only" id="receipt-status" role="status"></span>';
@@ -562,21 +582,21 @@ function setupReceipts(){
  deck.addEventListener('keydown',event=>{if(!['ArrowDown','ArrowUp','Home','End'].includes(event.key))return;event.preventDefault();moveReceipts(event.key==='Home'?0:event.key==='End'?budgetRecords().length-1:receiptPosition+(event.key==='ArrowDown'?1:-1));deck.focus({preventScroll:true})});
 }
 function homePage(){
- const card=s.budget?'<div class="home-card-holder" style="position:relative;max-width:520px;margin:auto;container-type:inline-size">'+(s.budgets.length>1?'<div class="card-stack-back"></div>':'')+liquid()+'</div><span class="sr-only" role="status">'+esc(s.budget.name)+'，第'+(s.budgets.findIndex(b=>b.id===s.budget.id)+1)+'张，共'+s.budgets.length+'张</span>':'<button class="create-card" data-action="create"><span class="cross">'+icon('plus')+'</span><strong>创建第一张<br>预算卡</strong><div class="card-foot">先选一部分，你想管理的开销</div></button>';
- const contents=s.budget?'<div class="summary-grid"><button class="summary" data-action="summary-used"><div class="eyeline">已用'+icon('arrow')+'</div><div class="stat">'+money(total())+'</div><div class="track">'+Array.from({length:7},()=>'<i></i>').join('')+'</div></button><button class="summary" data-action="summary-calendar"><div class="eyeline">九月'+icon('arrow')+'</div><div class="stat">6 <span class="caption muted">天剩余</span></div>'+miniCalendar()+'</button></div><div class="record-list-head"><div class="section-title">最近记录</div>'+btn('all-records','全部记录 ↗','text-action')+'</div>'+homeReceipts():'<div class="empty-pocket"><div class="inner-seam"><p>从日常开销开始，<br>也可以是一次旅行、一个计划。</p></div></div>';
- return header('',true)+'<div class="hero">'+symbols()+card+'</div><section class="pocket">'+rim()+contents+unbudgetedLink()+'</section>';
+ const card=s.budget?'<div class="home-card-holder" style="position:relative;max-width:520px;margin:auto;container-type:inline-size">'+(s.budgets.length>1?'<div class="card-stack-back"></div>':'')+liquid()+'</div><span class="sr-only" role="status">'+esc(s.budget.name)+'，第'+(s.budgets.findIndex(b=>b.id===s.budget.id)+1)+'张，共'+s.budgets.length+'张</span>':'<button class="create-card" data-action="create"><span class="cross">'+icon('plus')+'</span><strong>创建第一张<br>预算卡</strong><div class="card-foot">设置用途、额度和周期</div></button>';
+ const p=projection(s.records,s.budget),status=s.budget?periodStatus(s.budget):'',contents=s.budget?'<div class="summary-grid '+(money(p.total).length>10?'long-amount':'')+'"><button class="summary" data-action="summary-used"><div class="eyeline">已用'+icon('arrow')+'</div><div class="stat">'+money(p.total)+'</div><div class="track">'+weekBars()+'</div></button><button class="summary" data-action="summary-calendar"><div class="eyeline">'+monthLabel(budgetDate(s.budget))+icon('arrow')+'</div><div class="period-state">'+status+'</div>'+miniCalendar()+'</button></div>'+(p.pending?'<button class="pending-summary" data-action="attention">'+money(p.pending)+' 待确认'+icon('right')+'</button>':'')+'<div class="record-list-head"><div class="section-title">最近记录</div>'+btn('all-records','全部记录 ↗','text-action')+'</div>'+homeReceipts():'<div class="empty-pocket"><div class="inner-seam"><p>创建预算卡后，<br>在这里查看剩余额度与消费。</p></div></div>';
+ return header('',true)+'<div class="hero"><div class="ambient-light" aria-hidden="true"></div>'+symbols()+card+'</div><section class="pocket">'+rim()+contents+unbudgetedLink()+'</section>';
 }
 function budgetPage(){
  if(!s.budgets.length)return header('预算卡',false)+'<div class="body-pad"><div class="slot-label">我的卡夹</div><button class="empty-slot" data-action="create"><span class="slot-plus">'+icon('plus')+'</span><h3>放入第一张预算卡</h3><span class="small muted">给想管理的开销，一个自己的位置。</span></button><p class="body-copy">日常循环，或者一次特别计划。</p></div>';
  return header('预算卡',false)+'<div class="roll-heading"><h3>我的卡夹 · '+s.budgets.length+' 张</h3>'+btn('create','＋ 新建','text-action')+'</div><div class="cylinder-wrap"><div class="cylinder" tabindex="0" aria-label="预算卡列表，可上下滚动或使用方向键">'+s.budgets.map(b=>'<article class="cylinder-item" data-budget-id="'+b.id+'"><div class="swipe-row cylinder-swipe" data-swipe="budget"><div class="swipe-actions" aria-hidden="true"><button data-action="pin-budget" data-id="'+b.id+'" tabindex="-1">置顶</button><button class="delete" data-action="delete-budget" data-id="'+b.id+'" tabindex="-1">删除</button></div><div class="swipe-face">'+liquid(b)+'</div></div></article>').join('')+'</div><div class="focus-mark" aria-hidden="true"></div></div><div class="roll-controls">'+ib('roll-prev','down','查看上一张预算卡','up')+'<span id="roll-label" aria-live="polite"></span>'+ib('roll-next','down','查看下一张预算卡')+'</div>';
 }
-function detailPage(){const b=s.budgets.find(x=>x.id===s.detail);if(!b)return '';const records=budgetRecords(b),pending=records.filter(r=>r.pending).reduce((a,r)=>a+r.cents,0);return '<section class="budget-detail" aria-label="'+esc(b.name)+'预算详情"><header class="topbar">'+ib('detail-back','back','返回卡夹')+'<h2>'+esc(b.name)+'</h2>'+ib('detail-agent','star','和 Agent 聊这张卡')+'</header><div class="detail-hero">'+liquid(b,true)+'</div><div class="detail-content"><div class="detail-stats"><div><span>预算线</span><strong>'+money(b.cents)+'</strong></div><div><span>已用'+(pending?' · 含待确认':'')+'</span><strong>'+money(total(b))+'</strong></div></div><div class="detail-meta"><span>'+(b.settled?'已结算 · 原周期':b.cycle==='monthly'?'9月1日 — 9月30日':'本次计划')+'</span>'+(!b.settled?btn('detail-record','＋ 记一笔','text-action'):'')+'</div>'+(pending?'<div class="detail-pending">'+money(pending)+' 待确认归属 · 点对应记录处理</div>':'')+'<p class="detail-context">'+(b.settled?'这是已结算周期。修改消费前，需要先查看对原周期和心愿钱包的追溯影响。':'只包含当前已记录的消费；数据覆盖可能不完整。')+'</p><div class="section-title">消费明细 <span>'+records.length+' 笔</span></div>'+(records.length?recordRows(records):'<div class="quiet-empty">第一笔消费会留在这里。</div>')+'</div></section>'}
+function detailPage(){const b=s.budgets.find(x=>x.id===s.detail);if(!b)return '';const records=budgetRecords(b),p=projection(s.records,b);return '<section class="budget-detail" aria-label="'+esc(b.name)+'预算详情"><header class="topbar">'+ib('detail-back','back','返回卡夹')+'<h2>'+esc(b.name)+'</h2>'+ib('detail-agent','star','和小朵聊这张卡')+'</header><div class="detail-hero">'+liquid(b,true)+'</div><div class="detail-content"><div class="detail-stats"><div><span>预算线</span><strong>'+money(b.cents)+'</strong></div><div><span>已确认支出</span><strong>'+money(p.confirmed)+'</strong></div></div><div class="detail-meta"><span>'+dateLabel(b.start,true)+(b.end?' — '+dateLabel(b.end,true):' · 无截止日期')+'</span>'+(!b.settled?btn('detail-record','＋ 记一笔','text-action'):'')+'</div>'+(p.pending?'<div class="detail-pending">'+money(p.pending)+' 待确认归属 · 暂计已用 '+money(p.total)+'</div>':'')+'<p class="detail-context">'+(b.settled?'已结算周期，修改前先核对追溯影响。':'仅包含已记录消费，数据覆盖可能不完整。')+'</p><div class="section-title">消费明细 <span>'+records.length+' 笔</span></div>'+(records.length?recordRows(records):'<div class="quiet-empty">还没有消费记录。</div>')+'</div></section>'}
 function render(resetRoll=false){
  if(!s.detail){routeEpoch++;interruptCardFlight();$('detail-host').classList.remove('detail-opening','detail-closing')}
  const oldScroll=$('page').scrollTop,oldRoll=resetRoll?undefined:$('page').querySelector('.cylinder')?.scrollTop;
  $('page').className='page '+(!s.settings&&s.tab==='home'?'home':!s.settings&&s.tab==='budgets'&&s.budgets.length?'budget-page':'');
  $('page').innerHTML=s.settings?settingsPage():s.tab==='home'?homePage():s.tab==='budgets'?budgetPage():s.tab==='wishes'?wishPage():insightPage();
- $('page').scrollTop=oldScroll;renderDock();renderDetail();renderOverlay();renderToast();updateNotes();setupRoll(oldRoll);setupReceipts();updateHeader();
+ $('page').scrollTop=oldScroll;renderDock();renderDetail();renderOverlay();renderToast();updateNotes();setupRoll(oldRoll);setupReceipts();updateHeader();syncMascot();
 }
 function renderDetail(){const host=$('detail-host'),scroll=host.querySelector('.budget-detail')?.scrollTop||0;host.innerHTML=s.detail?detailPage():'';$('app').classList.toggle('detail-open',!!s.detail);if(s.detail){$('page').inert=true;host.querySelector('.budget-detail').scrollTop=scroll;}}
 function updateHeader(){const page=$('page'),header=page.querySelector('.topbar');if(!header)return;header.style.setProperty('--highlight',(15+Math.min(page.scrollTop,300)/4)+'%');header.classList.toggle('on-dark',page.scrollTop>245);const backdrop=page.querySelector('.symbol-backdrop');if(backdrop){const progress=motionReduced()?0:Math.min(page.scrollTop,260);backdrop.style.transform='translateY('+progress*.18+'px)';backdrop.style.filter='blur('+progress/180+'px)';}}
@@ -629,76 +649,96 @@ function setupRoll(oldScroll){const roll=$('page').querySelector('.cylinder');if
  roll.addEventListener('keydown',e=>{if(e.key==='ArrowDown'||e.key==='ArrowUp'){e.preventDefault();stepRoll(e.key==='ArrowDown'?1:-1)}});updateRoll();
 }
 function updateRoll(){const roll=$('page').querySelector('.cylinder');if(!roll)return;const mid=roll.scrollTop+roll.clientHeight/2;let closest=null,best=Infinity;
- roll.querySelectorAll('.cylinder-item').forEach(item=>{const delta=(item.offsetTop+item.offsetHeight/2-mid)/185,abs=Math.abs(delta);if(abs<best){closest=item;best=abs}item.style.setProperty('--angle',Math.max(-48,Math.min(48,-delta*23))+'deg');item.style.setProperty('--scale',Math.max(.78,1-abs*.075));item.style.setProperty('--opacity',Math.max(.12,1-abs*.27));item.style.setProperty('--brightness',Math.max(.5,1-abs*.14));item.style.setProperty('--blur',Math.max(0,abs-1.12)*1.3+'px');item.classList.remove('focused');item.querySelectorAll('.water-wave').forEach(w=>w.style.animationPlayState=abs>1.5?'paused':'running')});
+ roll.querySelectorAll('.cylinder-item').forEach(item=>{const delta=(item.offsetTop+item.offsetHeight/2-mid)/185,abs=Math.abs(delta);if(abs<best){closest=item;best=abs}item.style.setProperty('--angle',Math.max(-48,Math.min(48,-delta*23))+'deg');item.style.setProperty('--scale',Math.max(.78,1-abs*.075));item.style.setProperty('--opacity',Math.max(.12,1-abs*.27));item.style.setProperty('--brightness',Math.max(.5,1-abs*.14));item.style.setProperty('--blur',Math.max(0,abs-1.12)*1.3+'px');item.classList.remove('focused');item.querySelectorAll('.water-wave,.bubble-field i').forEach(w=>w.style.animationPlayState=abs>1.5?'paused':'running')});
  if(closest){closest.classList.add('focused');s.focusID=closest.dataset.budgetId;$('roll-label').textContent=s.budgets.find(b=>b.id===s.focusID)?.name||'';}
 }
 function stepRoll(direction){const roll=$('page').querySelector('.cylinder');if(!roll)return;const i=s.budgets.findIndex(b=>b.id===s.focusID),b=s.budgets[Math.max(0,Math.min(s.budgets.length-1,i+direction))];if(!b)return;const item=roll.querySelector('[data-budget-id="'+b.id+'"]');roll.scrollTo({top:item.offsetTop-(roll.clientHeight-item.offsetHeight)/2,behavior:motionReduced()?'instant':'smooth'})}
 
-function anchors(){const h=$('app').clientHeight,max=h-20,min=Math.min(max-95,$('app').classList.contains('large')?376:344);return [min,Math.min(max-45,Math.max(min+72,h*.74)),max]}
+function anchors(){
+ const panel=$('overlay-host').querySelector('.agent-panel'),max=Math.max(180,$('app').clientHeight-14);if(!panel)return [Math.min(max,300),Math.min(max,520),max];
+ const body=panel.querySelector('.agent-body'),chrome=[...panel.children].filter(n=>n!==body).reduce((h,n)=>h+n.getBoundingClientRect().height+parseFloat(getComputedStyle(n).marginTop||0)+parseFloat(getComputedStyle(n).marginBottom||0),0)+16;
+ const intrinsic=[...body.children].reduce((h,n)=>h+n.getBoundingClientRect().height+parseFloat(getComputedStyle(n).marginTop||0)+parseFloat(getComputedStyle(n).marginBottom||0),0);
+ const min=Math.min(max,Math.max(210,chrome+Math.min(intrinsic||44,s.agent.manual?170:['done','denied','voice-error','image-error'].includes(s.agent.phase)?220:100)));
+ const middle=Math.min(max,Math.max(min,Math.min(chrome+intrinsic+16,max*.76)));
+ return [min,middle,max];
+}
 const sheetSize=new ResizeObserver(entries=>{for(const entry of entries)entry.target.dataset.density=entry.contentRect.height<420?'compact':'roomy'});
 let overlayEpoch=0;
 function renderOverlay(){
- overlayEpoch++;sheetSize.disconnect();const active=document.activeElement,host=$('overlay-host'),previous=host.querySelector('[role="dialog"]'),wasFocused=previous?.contains(active),activeID=active?.id,oldHeight=previous?.getBoundingClientRect().height||0,isOpen=s.agent.open||!!s.modal;
- if(s.agent.open){if((s.agent.manual||s.agent.mode!=='text'||s.agent.phase==='review')&&s.agent.detent===0)s.agent.detent=1;s.agent.expanded=s.agent.detent>0;}
- host.innerHTML=s.agent.open?renderAgent():s.modal?renderModal():'';$('page').inert=isOpen||!!s.detail;$('dock').inert=isOpen||!!s.detail;$('detail-host').inert=isOpen;
+ const epoch=++overlayEpoch;sheetSize.disconnect();const active=document.activeElement,host=$('overlay-host'),previous=host.querySelector('[role="dialog"]'),wasFocused=previous?.contains(active),activeID=active?.id,oldHeight=previous?.getBoundingClientRect().height||0,isOpen=s.agent.open||!!s.modal;
+ const oldKey=host.dataset.layer||'',newKey=s.agent.open?'agent':s.modal?JSON.stringify(s.modal):'';
+ const previousScroll=oldKey===newKey?host.querySelector('.modal-body')?.scrollTop||0:0;
+ if(!isOpen){$('page').inert=!!s.detail;$('dock').inert=!!s.detail;$('detail-host').inert=false;syncMascot();if(!previous){host.innerHTML='';host.dataset.layer='';return}const current=getComputedStyle(previous);previous.style.pointerEvents='none';const end=previous.classList.contains('agent-panel')?'translateY(70px)':'translateY(12px)';if(motionReduced()){host.innerHTML='';host.dataset.layer='';return}previous.animate([{opacity:current.opacity,transform:current.transform},{opacity:0,transform:end}],{duration:200,easing:'cubic-bezier(.4,0,.8,.5)',fill:'forwards'}).finished.then(()=>{if(overlayEpoch===epoch){host.innerHTML='';host.dataset.layer=''}}).catch(()=>{});return;}
+ if(s.agent.open)s.agent.expanded=s.agent.detent>0;
+ host.innerHTML=s.agent.open?renderAgent():renderModal();host.dataset.layer=newKey;$('page').inert=true;$('dock').inert=true;$('detail-host').inert=true;
  const panel=host.querySelector('[role="dialog"]');if(!panel)return;
- if(s.agent.open){const height=anchors()[s.agent.detent];panel.style.setProperty('--sheet-height',height+'px');panel.dataset.detent=String(s.agent.detent);panel.dataset.density=height<450?'compact':'roomy';sheetSize.observe(panel);if(!motionReduced()&&Math.abs(height-oldHeight)>3)panel.animate([{height:(oldHeight||height*.8)+'px',opacity:previous?1:.3},{height:height+'px',opacity:1}],{duration:390,easing:'cubic-bezier(.2,.9,.25,1.06)'});}
- if(!previous||wasFocused){const preserved=activeID?document.getElementById(activeID):null;(preserved&&panel.contains(preserved)?preserved:panel.querySelector('input,textarea,button'))?.focus({preventScroll:true});}
+ if(s.agent.open){const footer=panel.querySelector('.agent-footer');panel.querySelectorAll('[data-action="confirm"]').forEach(button=>footer.append(button));if(footer.children.length){const error=panel.querySelector('.error-box[role="alert"]');if(error)footer.prepend(error)}if(!footer.children.length)footer.hidden=true;const height=anchors()[s.agent.detent];panel.style.setProperty('--sheet-height',height+'px');panel.dataset.detent=String(s.agent.detent);panel.dataset.density=height<420?'compact':'roomy';sheetSize.observe(panel);if(!motionReduced()&&Math.abs(height-oldHeight)>3)panel.animate([{height:(oldHeight||height*.9)+'px',transform:oldKey==='agent'?'none':'translateY(45px)',opacity:previous?1:0},{height:height+'px',transform:'none',opacity:1}],{duration:340,easing:'cubic-bezier(.2,.85,.25,1.03)'});}
+ else {const body=panel.querySelector('.modal-body'),footer=panel.querySelector('.modal-footer');for(const el of [...body.children])if(el.classList.contains('stack-actions')||['save-wish','save-record-edit'].includes(el.dataset.action))footer.append(el);if(footer.children.length){const error=body.querySelector('.error-box[role="alert"]');if(error)footer.prepend(error)}if(!footer.children.length)footer.hidden=true;body.scrollTop=s.modalScroll??previousScroll;s.modalScroll=null;if(!motionReduced()&&oldKey!==newKey)panel.animate([{opacity:.25,transform:'translateY('+(previous?8:20)+'px)'},{opacity:1,transform:'none'}],{duration:260,easing:'cubic-bezier(.2,.8,.25,1)'});}
+ syncMascot();if(!previous||wasFocused||oldKey!==newKey){const preserved=activeID?document.getElementById(activeID):null;(preserved&&panel.contains(preserved)?preserved:panel.querySelector('button,input,textarea'))?.focus({preventScroll:true});}
 }
 function modalOriginFrame(panel,source){
  const to=source.getBoundingClientRect(),from=panel.getBoundingClientRect(),vertical=Math.max(0,(from.height-to.height)/2),horizontal=Math.max(0,(from.width-to.width)/2);
  return {transform:'translate('+(to.left+to.width/2-from.left-from.width/2)+'px,'+(to.top+to.height/2-from.top-from.height/2)+'px)',clipPath:'inset('+vertical+'px '+horizontal+'px round 22px)',opacity:.4};
 }
-function originModal(action,source){s.modal=action;renderOverlay();const panel=$('overlay-host').querySelector('.modal-panel');if(!motionReduced())panel.animate([modalOriginFrame(panel,source),{transform:'none',clipPath:'inset(0px 0px round 28px)',opacity:1}],{duration:420,easing:'cubic-bezier(.2,.8,.25,1)'});s.modalSource=action;}
-function closeModal(){const epoch=overlayEpoch,panel=$('overlay-host').querySelector('.modal-panel'),source=$('page').querySelector('[data-action="'+s.modalSource+'"]');if(s.modalSource&&panel&&source&&!motionReduced()){s.modalSource=null;panel.animate([{transform:'none',clipPath:'inset(0px 0px round 28px)',opacity:1},modalOriginFrame(panel,source)],{duration:280,easing:'cubic-bezier(.4,0,.8,.4)'}).finished.then(()=>{if(epoch!==overlayEpoch)return;s.modal=null;renderOverlay();source.focus({preventScroll:true})})}else{s.modal=null;s.modalSource=null;renderOverlay()}}
-function modalExtras(){
- let title='',body='',m=s.modal;if(!m)return null;const b=s.budgets.find(x=>x.id===m.id);
- if(m==='summary-used'){title='这张卡的已用';body='<p class="small muted">'+esc(s.budget.name)+' · 九月</p><p style="font-size:38px;margin:14px 0 22px">'+money(total())+'</p>'+recordRows(budgetRecords())+'<p class="caption muted" style="margin-top:15px">待确认金额暂计在内，归属可在对应记录核对。</p>'}
- else if(m==='summary-calendar'){title='消费日历';body=calendar(false)+'<div id="summary-day-records">'+(budgetRecords().some(r=>r.day===s.selectedDay)?recordRows(budgetRecords().filter(r=>r.day===s.selectedDay)):'<p class="small muted" style="padding:18px 0">这一天还没有记录。</p>')+'</div>'}
- else if(m==='all-records'){title='全部记录';body='<p class="small muted" style="margin-bottom:15px">按时间查看 · '+s.records.length+' 笔</p>'+recordRows(s.records)}
- else if(m==='attention'){title='待处理';const pending=s.records.filter(r=>r.pending);body=pending.length?recordRows(pending):'<div class="quiet-empty">目前没有需要确认的事项。</div>'}
- else if(m.type==='budget-menu'&&b){title=b.name;body='<div class="settings-rows">'+('<button class="setting-row" data-action="open-from-menu" data-id="'+b.id+'">'+icon('budget')+'<span class="row-text">预算详情</span></button>')+('<button class="setting-row" data-action="pin-budget" data-id="'+b.id+'">'+icon('star')+'<span class="row-text">置顶预算卡</span></button>')+(s.tab==='home'?'<button class="setting-row" data-action="home-prev">'+icon('back')+'<span class="row-text">上一张</span></button><button class="setting-row" data-action="home-next">'+icon('right')+'<span class="row-text">下一张</span></button>':'')+'</div><div class="stack-actions"><button class="danger" data-action="delete-budget" data-id="'+b.id+'">查看删除影响</button></div>'}
- else if(m.type==='delete-budget'&&b){title='删除这张预算卡？';body='<h3>'+esc(b.name)+'</h3><p class="small muted" style="margin:16px 0">'+(budgetRecords(b).length?'这张卡有 '+budgetRecords(b).length+' 笔关联消费。设计稿先展示影响；正式删除和历史处理规则需要单独落实，当前不执行。':'这是空卡，没有关联消费。移除后可立即撤销。')+'</p><div class="stack-actions">'+btn('close-modal','保留预算卡','secondary full')+(!budgetRecords(b).length?'<button class="danger" data-action="confirm-delete-budget" data-id="'+b.id+'">删除空卡</button>':'')+'</div>'}
- else if(m.type==='delete-record'){const r=s.records.find(x=>x.id===m.id),owner=s.budgets.find(x=>x.id===r?.budgetID);if(!r)return null;title=owner?.settled?'先查看追溯影响':'删除这笔消费？';body='<h3>'+esc(r.name)+' · '+money(r.cents)+'</h3><p class="small muted" style="margin:16px 0">'+(owner?.settled?'这笔消费属于已结算周期。变更会影响原周期和心愿钱包，需要由正式领域服务给出完整影响预览。此设计稿不会直接修改已结算金额。':owner?'删除后，这张卡的已用从 '+money(total(owner))+' 变为 '+money(total(owner)-r.cents)+'。':'删除后，这条未纳入预算的记录将被移除。')+'</p><div class="stack-actions">'+btn('close-modal','保留记录','secondary full')+(!owner?.settled?'<button class="danger" data-action="confirm-delete-record" data-id="'+r.id+'">确认删除 · 可撤销</button>':'')+'</div>'}
- else if(m.type==='record'){const r=s.records[m.index],owner=s.budgets.find(x=>x.id===r?.budgetID);if(!r)return null;title='消费详情';body='<h3>'+esc(r.name)+'</h3><p style="font-size:36px;margin:18px 0">'+money(r.cents)+'</p><p class="small muted">'+(r.month||9)+'月'+r.day+'日 · '+esc(owner?.name||'未纳入预算')+'</p>'+(r.pending?'<div class="detail-section"><span class="pending-label">待确认归属</span><div class="stack-actions">'+(!owner?.settled?'<button class="primary" data-action="confirm-attribution" data-id="'+r.id+'">确认归属：'+esc(owner?.name||'未纳入预算')+'</button>':'<p class="small muted">已结算周期，需先查看追溯影响。</p>')+'<button class="secondary" data-action="change-attribution" data-id="'+r.id+'">选择其他归属</button></div></div>':'')+'<div class="detail-section"><p class="caption muted" style="margin-bottom:9px">备注与粘贴文字</p><p class="entry-note">'+esc(r.note||'尚未添加备注')+'</p>'+(r.attachment?'<div class="attachment-demo">'+icon('image')+' 附件演示 · 咖啡小票<br><span class="caption">用户明确添加的图片副本</span><br><button class="text-action" data-action="remove-attachment" data-id="'+r.id+'">移除附件</button></div>':'')+'</div><button class="text-action" data-action="delete-record" data-id="'+r.id+'">查看删除影响</button>'}
- else if(m.type==='attribution'){const r=s.records.find(x=>x.id===m.id),owner=s.budgets.find(x=>x.id===r?.budgetID);title='调整归属';body=owner?.settled?'<p class="small muted">原周期已经结算。正式流程需先生成追溯影响，当前设计稿保留原记录。</p>':'<p class="small muted" style="margin-bottom:14px">为这笔消费选择唯一归属。</p><div class="settings-rows">'+s.budgets.filter(b=>!b.settled).map(b=>'<button class="setting-row" data-action="apply-attribution" data-id="'+r.id+'" data-budget="'+b.id+'"><span class="row-text">'+esc(b.name)+'</span></button>').join('')+'<button class="setting-row" data-action="apply-attribution" data-id="'+r.id+'" data-budget="none">未纳入预算</button></div>'}
- else return null;
- return '<div class="overlay '+(typeof m==='string'&&m.startsWith('summary-')?'summary-overlay':'')+'"><div class="backdrop" data-action="close-modal"></div><section class="modal-panel" role="dialog" aria-modal="true" aria-label="'+esc(title)+'"><header class="modal-head"><h3>'+esc(title)+'</h3>'+ib('close-modal','close','关闭')+'</header>'+body+'</section></div>';
+function originModal(action,source){s.modalSource=action;openModal(action,source);const panel=$('overlay-host').querySelector('.modal-panel');if(!motionReduced()){panel.getAnimations().forEach(a=>a.cancel());panel.animate([modalOriginFrame(panel,source),{transform:'none',clipPath:'inset(0px 0px round 28px)',opacity:1}],{duration:380,easing:'cubic-bezier(.2,.8,.25,1)'});}}
+function closeModal(){
+ const epoch=++overlayEpoch,panel=$('overlay-host').querySelector('.modal-panel'),source=['summary-used','summary-calendar'].includes(s.modalSource)?$('page').querySelector('[data-action="'+s.modalSource+'"]'):null,focus=s.modalFocus;
+ const finish=()=>{if(epoch!==overlayEpoch)return;s.modal=null;s.modalStack=[];s.modalSource=null;s.modalScroll=null;$('overlay-host').innerHTML='';$('overlay-host').dataset.layer='';renderOverlay();if(focus?.isConnected)focus.focus({preventScroll:true});};
+ if(panel&&!motionReduced()){const style=getComputedStyle(panel),from={transform:style.transform,clipPath:style.clipPath,opacity:style.opacity};panel.getAnimations().forEach(a=>a.cancel());panel.style.pointerEvents='none';panel.animate([from,source?modalOriginFrame(panel,source):{transform:'translateY(15px)',opacity:0}],{duration:240,easing:'cubic-bezier(.4,0,.8,.5)',fill:'forwards'}).finished.then(finish).catch(()=>{});}else finish();
 }
-function snapshot(){return {budget:s.budget?{...s.budget}:null,budgets:s.budgets.map(b=>({...b})),records:s.records.map(r=>({...r})),focusID:s.focusID}}
+function modalExtras(){
+ const m=s.modal;if(!m)return null;let title='',body='';const b=s.budgets.find(x=>x.id===m.id),r=s.records.find(x=>x.id===m.id);
+ if(m==='summary-used'){const p=projection(s.records,s.budget);title='这张卡的已用';body='<p>'+esc(s.budget.name)+'</p><p class="detail-money">'+money(p.total)+'</p><div class="amount-breakdown"><span>已确认 '+money(p.confirmed)+'</span><span>待确认 '+money(p.pending)+'</span></div>'+recordRows(budgetRecords());}
+ else if(m==='summary-calendar'){title='消费日历';body=calendar(false)+'<h4>'+dateLabel(s.selectedDate,true)+'</h4>'+dayRecords();}
+ else if(m==='all-records'){title='全部记录';body='<p class="small muted">按日期倒序 · '+s.records.length+' 笔</p>'+recordRows(s.records);}
+ else if(m==='attention'){title='待处理';const rows=s.records.filter(r=>r.pending);body=rows.length?recordRows(rows):'<div class="quiet-empty">没有待确认记录。</div>';}
+ else if(m==='select-budget'){title='选择预算';body='<div class="settings-rows">'+s.budgets.map(b=>'<button class="setting-row" data-action="choose-budget" data-id="'+b.id+'" aria-pressed="'+(s.budget?.id===b.id)+'"><span class="row-text">'+esc(b.name)+'</span>'+(s.budget?.id===b.id?icon('check'):'')+'</button>').join('')+'</div>';}
+ else if(m.type==='budget-menu'&&b){title=b.name;body='<div class="settings-rows"><button class="setting-row" data-action="open-from-menu" data-id="'+b.id+'">预算详情</button><button class="setting-row" data-action="pin-budget" data-id="'+b.id+'">置顶预算卡</button>'+(s.tab==='home'?'<button class="setting-row" data-action="home-prev">上一张</button><button class="setting-row" data-action="home-next">下一张</button>':'')+'</div><div class="stack-actions"><button class="danger" data-action="delete-budget" data-id="'+b.id+'">查看删除影响</button></div>';}
+ else if(m.type==='delete-budget'&&b){const count=budgetRecords(b).length;title='删除预算卡';body='<h3>'+esc(b.name)+'</h3><p class="small muted">'+(count?'有 '+count+' 笔关联消费。当前网页保留有记录的预算卡。':'这张卡没有消费，删除后可撤销。')+'</p><div class="stack-actions">'+btn('modal-back','保留预算卡','secondary full')+(!count?'<button class="danger" data-action="confirm-delete-budget" data-id="'+b.id+'">删除空卡</button>':'')+'</div>';}
+ else if(m.type==='delete-record'&&r){title='删除这笔消费？';const owner=s.budgets.find(b=>b.id===r.budgetID);body='<h3>'+esc(r.name)+' · '+money(r.cents)+'</h3><p class="small muted">'+(owner?.settled?'属于已结算周期，下一步先查看追溯影响。':owner?'删除后暂计已用从 '+money(total(owner))+' 变为 '+money(total(owner)-r.cents)+'。':'删除后会移除这条未纳入记录。')+'</p><div class="stack-actions">'+btn('modal-back','保留记录','secondary full')+'<button class="danger" data-action="confirm-delete-record" data-id="'+r.id+'">'+(owner?.settled?'查看追溯影响':'确认删除 · 可撤销')+'</button></div>';}
+ else if(m.type==='record'&&r){const owner=s.budgets.find(b=>b.id===r.budgetID);title='消费详情';body='<h3>'+esc(r.name)+'</h3><p class="detail-money">'+money(r.cents)+'</p><p class="small muted">'+dateLabel(r.date,true)+' · '+esc(owner?.name||'未纳入预算')+'</p>'+(r.pending?'<div class="detail-section"><span class="pending-label">待确认归属</span><button class="primary full" data-action="confirm-attribution" data-id="'+r.id+'">确认当前归属</button></div>':'')+'<div class="detail-section record-tools"><button class="secondary" data-action="change-attribution" data-id="'+r.id+'">调整归属</button><button class="secondary" data-action="edit-record" data-id="'+r.id+'">编辑记录</button></div><div class="detail-section"><h4>备注与粘贴文字</h4><p class="entry-note">'+esc(r.note||'未添加备注')+'</p>'+recordAttachments(r)+'</div><button class="text-action" data-action="delete-record" data-id="'+r.id+'">查看删除影响</button>';}
+ else if(m.type==='attribution'&&r){title='调整归属';body='<p class="small muted">'+esc(r.name)+' · '+dateLabel(r.date,true)+'</p><div class="settings-rows">'+s.budgets.map(b=>'<button class="setting-row" data-action="apply-attribution" data-id="'+r.id+'" data-budget="'+b.id+'" '+(!inPeriod(r.date,b)?'disabled':'')+'><span class="row-text">'+esc(b.name)+'</span><span class="caption muted">'+(!inPeriod(r.date,b)?'日期不在周期内':b.settled?'先查看追溯':'')+'</span></button>').join('')+'<button class="setting-row" data-action="apply-attribution" data-id="'+r.id+'" data-budget="none">未纳入预算</button></div>';}
+ else if(m.type==='edit-record'&&r){title='编辑记录';body=recordFields()+(s.edit.error?'<p class="error-box" role="alert">'+esc(s.edit.error)+'</p>':'')+'<button class="primary full" data-action="save-record-edit" data-id="'+r.id+'">保存修改</button>';}
+ else if(m==='retrospective'&&s.change){const c=s.change,i=c.impact;title='追溯影响';body='<p class="small muted">演示重算 · 仅修改本页样例</p>'+i.affected.map(p=>'<div class="impact-row"><h4>'+esc(p.name)+'</h4><p>原周期结余：'+money(p.before)+' → '+money(p.after)+'</p></div>').join('')+'<div class="impact-row"><p>心愿钱包：'+money(s.wallet)+' → '+money(i.wallet)+'</p><p>待恢复差额：'+money(s.recovery)+' → '+money(i.recovery)+'</p></div><p class="small muted">确认后修正原周期。正式 App 的影响由领域服务计算。</p><div class="stack-actions">'+btn('modal-back','返回核对','secondary full')+btn('apply-retrospective','确认追溯调整（演示）','primary full')+'</div>';}
+ else return null;
+ return modalShell(title,body);
+}
+function snapshot(){return structuredClone({budget:s.budget,budgets:s.budgets,records:s.records,focusID:s.focusID,wishes:s.wishes,wallet:s.wallet,recovery:s.recovery,walletHistory:s.walletHistory})}
 function revealSwipe(row,show){if(!row)return;row.classList.toggle('revealed',show);const actions=row.querySelector('.swipe-actions');if(actions){actions.setAttribute('aria-hidden',String(!show));actions.querySelectorAll('button').forEach(b=>b.tabIndex=show?0:-1)}}
 function stepHome(delta){
  const i=s.budgets.findIndex(b=>b.id===s.budget?.id),next=s.budgets[(i+delta+s.budgets.length)%s.budgets.length];if(!next)return;
- const fromMenu=!!s.modal;s.modal=null;s.budget=next;render();const card=$('page').querySelector('.hero .card-wrap');
+ const fromMenu=!!s.modal;s.modal=null;s.modalStack=[];selectBudget(next.id);render();const card=$('page').querySelector('.hero .card-wrap');
  if(fromMenu)card?.querySelector('.card-menu')?.focus({preventScroll:true});
  if(!motionReduced())card?.animate([{transform:'translateY(-20px) scale(.96)',opacity:.2},{transform:'none',opacity:1}],{duration:440,easing:'cubic-bezier(.2,.85,.25,1.06)'});
 }
 function extraAction(b){const action=b.dataset.action,id=b.dataset.id;
- if(action==='budget-detail'){openDetail(id,b);return true}
- if(action==='detail-back'){closeDetail();return true}
- if(action==='open-from-menu'){s.modal=null;renderOverlay();openDetail(id);return true}
- if(action==='budget-menu'||action==='delete-budget'||action==='delete-record'){s.modal={type:action,id};renderOverlay();return true}
+ if(action==='budget-detail'){openDetail(id,b);return true}if(action==='detail-back'){closeDetail();return true}
+ if(action==='open-from-menu'){s.modal=null;s.modalStack=[];renderOverlay();openDetail(id);return true}
+ if(['budget-menu','delete-budget','delete-record'].includes(action)){openModal({type:action,id},b);return true}
  if(action==='home-prev'||action==='home-next'){stepHome(action==='home-prev'?-1:1);return true}
  if(action==='roll-prev'||action==='roll-next'){stepRoll(action==='roll-prev'?-1:1);return true}
  if(action==='summary-used'||action==='summary-calendar'){originModal(action,b);return true}
- if(action==='all-records'){s.modal=action;renderOverlay();return true}
+ if(action==='all-records'){openModal(action,b);return true}
  if(action==='swipe-reveal'){const row=b.closest('.swipe-row');revealSwipe(row,!row.classList.contains('revealed'));return true}
- if(action==='pin-budget'){const old=snapshot(),i=s.budgets.findIndex(b=>b.id===id);if(i<0)return true;s.budgets.unshift(...s.budgets.splice(i,1));s.focusID=id;s.modal=null;render(true);toast('已置顶预算卡',old);return true}
- if(action==='confirm-delete-budget'){const target=s.budgets.find(b=>b.id===id);if(!target||budgetRecords(target).length)return true;const old=snapshot();s.budgets=s.budgets.filter(b=>b.id!==id);if(s.budget?.id===id)s.budget=s.budgets[0]||null;if(s.detail===id)s.detail=null;s.focusID=s.budget?.id||null;s.modal=null;render();toast('空卡已移除',old);return true}
- if(action==='confirm-delete-record'){const r=s.records.find(r=>r.id===id);if(s.budgets.find(b=>b.id===r?.budgetID)?.settled)return true;const old=snapshot();s.records=s.records.filter(r=>r.id!==id);s.modal=null;render();toast('记录已删除',old);return true}
- if(action==='confirm-attribution'||action==='apply-attribution'){const r=s.records.find(r=>r.id===id);if(!r||s.budgets.find(b=>b.id===r.budgetID)?.settled)return true;const old=snapshot();if(action==='apply-attribution'){r.unbudgeted=b.dataset.budget==='none';r.budgetID=r.unbudgeted?null:b.dataset.budget}r.pending=false;s.modal=null;render();toast('归属已确认',old);return true}
- if(action==='change-attribution'){s.modal={type:'attribution',id};renderOverlay();return true}
- if(action==='remove-attachment'){const r=s.records.find(r=>r.id===id);if(r){const old=snapshot();r.attachment=false;renderOverlay();toast('演示附件已移除',old)}return true}
- if(action==='record-for'||action==='detail-record'||action==='detail-agent'){const budget=s.budgets.find(x=>x.id===(id||s.detail));s.agent.recordBudgetID=budget?.id;s.agent.discussion=budget?.name;s.modal=null;openAgent(action==='detail-agent'?'general':'record','agent');return true}
+ if(action==='pin-budget'){const old=snapshot(),i=s.budgets.findIndex(b=>b.id===id);if(i<0)return true;s.budgets.unshift(...s.budgets.splice(i,1));s.focusID=id;s.modal=null;s.modalStack=[];render(true);toast('已置顶预算卡',old);return true}
+ if(action==='confirm-delete-budget'){const target=s.budgets.find(b=>b.id===id);if(!target||budgetRecords(target).length)return true;const old=snapshot();s.budgets=s.budgets.filter(b=>b.id!==id);if(s.budget?.id===id)selectBudget(s.budgets[0]?.id);if(s.detail===id)s.detail=null;s.modal=null;s.modalStack=[];render();toast('空卡已移除',old);return true}
+ if(action==='confirm-delete-record'){commitRecordChange(s.records.filter(r=>r.id!==id),'记录已删除');return true}
+ if(action==='confirm-attribution'||action==='apply-attribution'){const r=s.records.find(r=>r.id===id);if(!r)return true;const next=structuredClone(s.records),row=next.find(r=>r.id===id);if(action==='apply-attribution'){row.unbudgeted=b.dataset.budget==='none';row.budgetID=row.unbudgeted?null:b.dataset.budget;const owner=s.budgets.find(x=>x.id===row.budgetID);if(owner&&!inPeriod(row.date,owner))return true}row.pending=false;commitRecordChange(next,'归属已更新');return true}
+ if(action==='change-attribution'){openModal({type:'attribution',id},b);return true}
+ if(action==='edit-record'){const r=s.records.find(r=>r.id===id);s.edit={merchant:r.name,amount:(r.cents/100).toFixed(2),date:r.date,note:r.note||'',attachments:structuredClone(r.attachments||[]),unbudgeted:!!r.unbudgeted,recordBudgetID:r.budgetID,error:''};if(r.attachment&&!s.edit.attachments.length)s.edit.attachments.push({id:'legacy',name:'咖啡小票（演示）',demo:true});openModal({type:'edit-record',id},b);return true}
+ if(action==='save-record-edit'){const e=s.edit;e.error=validateRecord(e);if(e.error){renderOverlay();return}const next=structuredClone(s.records),r=next.find(r=>r.id===id);Object.assign(r,{name:e.merchant.trim(),cents:cents(e.amount),date:e.date,note:e.note,attachments:structuredClone(e.attachments),attachment:false,unbudgeted:e.unbudgeted,budgetID:e.unbudgeted?null:e.recordBudgetID});commitRecordChange(next,'记录已修改');return true}
+ if(action==='remove-record-attachment'){const next=structuredClone(s.records),r=next.find(r=>r.id===id);r.attachment=false;r.attachments=(r.attachments||[]).filter(a=>a.id!==b.dataset.attachmentId);commitRecordChange(next,'附件已移除');return true}
+ if(action==='apply-retrospective'&&s.change){finishRecordChange(s.change.next,s.change.message,s.change.impact);return true}
+ if(['record-for','detail-record','detail-agent'].includes(action)){const budget=s.budgets.find(x=>x.id===(id||s.detail));openAgent(action==='detail-agent'?'general':'record',action==='detail-agent'?'agent':s.tab,action!=='detail-agent',budget?.id);return true}
  return false;
 }
 function sampleBudgets(){return [
  {id:'daily',name:'日常生活',cents:300000,cycle:'monthly',tint:'lilac'},
- {id:'coffee',name:'咖啡与小小甜点',cents:50000,cycle:'monthly',tint:'mint'},
- {id:'travel',name:'去山里住一个周末',cents:240000,cycle:'once',tint:'gold'},
+ {id:'coffee',name:'咖啡与甜点',cents:50000,cycle:'monthly',tint:'mint'},
+ {id:'travel',name:'周末旅行',cents:240000,cycle:'once',tint:'gold'},
  {id:'family',name:'这个月和爸妈一起吃饭的家庭聚餐预算',cents:160000,cycle:'monthly',tint:'rose'},
- {id:'books',name:'书与灵感',cents:80000,cycle:'monthly',tint:'blue'},
- {id:'summer',name:'八月的小旅行',cents:180000,cycle:'once',tint:'mint',settled:true}
+ {id:'books',name:'购书',cents:80000,cycle:'once',tint:'blue',start:'2026-09-01',end:null},
+ {id:'summer',name:'八月旅行',cents:180000,cycle:'once',tint:'mint',settled:true}
 ]}
 function demoRecords(){return [
  {id:'r1',name:'街角咖啡',cents:3500,day:24,budgetID:'daily',pending:true,attachment:true,note:'下午和朋友见面。\n\n粘贴的订单文字：\n燕麦拿铁 × 1　¥35\n少冰，不额外加糖。'},
@@ -717,10 +757,12 @@ function demoRecords(){return [
 ]}
 
 $('app').addEventListener('click',function(e){const b=e.target.closest('[data-action]');if(b&&!b.disabled)handleAction(b)});
-$('app').addEventListener('input',function(e){if(e.target.dataset.entryField)s.agent.entries[Number(e.target.dataset.entry)][e.target.dataset.entryField]=e.target.value;if(e.target.dataset.field)s.agent[e.target.dataset.field]=e.target.value;if(e.target.id==='wish-name')s.newWish=e.target.value;if(e.target.id==='wish-amount')s.wishAmount=e.target.value});
-$('app').addEventListener('change',function(e){const d=e.target.dataset;if(d.attribution!==undefined){if(d.attribution==='single'){s.agent.unbudgeted=e.target.value==='none';s.agent.recordBudgetID=e.target.value}else{s.agent.entries[Number(d.attribution)].unbudgeted=e.target.value==='none';s.agent.entries[Number(d.attribution)].budgetID=e.target.value}}if(d.attachment!==undefined)s.agent.entries[Number(d.attachment)].keepAttachment=e.target.checked;if(e.target.id==='keep-attachment')s.agent.keepAttachment=e.target.checked;if(d.field)s.agent[d.field]=e.target.value});
+$('app').addEventListener('input',e=>{const d=e.target.dataset;if(d.entryField)s.agent.entries[Number(d.entry)][d.entryField]=e.target.value;if(d.field)activeDraft()[d.field]=e.target.value;if(e.target.id==='wish-name')s.newWish=e.target.value;if(e.target.id==='wish-amount')s.wishAmount=e.target.value;if(e.target.id==='record-note'){const n=e.target.value.length,c=$('note-count');c.textContent=n+' / 10,000 字'+(n>10000?' · 请缩短后再保存':'');c.classList.toggle('invalid',n>10000);}});
+$('app').addEventListener('change',e=>{const d=e.target.dataset,a=activeDraft();if(d.attribution!==undefined){const row=d.attribution==='single'?a:s.agent.entries[Number(d.attribution)];row.unbudgeted=e.target.value==='none';if(d.attribution==='single')row.recordBudgetID=e.target.value;else row.budgetID=e.target.value;}if(d.attachment!==undefined)s.agent.entries[Number(d.attachment)].keepAttachment=e.target.checked;if(e.target.id==='keep-attachment')s.agent.keepAttachment=e.target.checked;if(d.field)a[d.field]=e.target.value;
+ if(e.target.id==='attachment-picker'){const files=[...e.target.files];if(a.attachments.length+files.length>5){a.error='每笔最多 5 张图片，请减少数量。';renderOverlay();return}if(files.some(f=>!f.type.startsWith('image/'))){a.error='请选择图片文件。';renderOverlay();return}files.forEach(f=>a.attachments.push({id:'img-'+crypto.randomUUID(),name:f.name,url:URL.createObjectURL(f)}));a.error='';renderOverlay();}
+});
 let gesture=null,sheetDrag=null,suppressClickUntil=0,pressedButton=null;
-$('app').addEventListener('click',e=>{if(performance.now()<suppressClickUntil){e.preventDefault();e.stopImmediatePropagation()}},true);
+$('app').addEventListener('click',e=>{if(performance.now()<suppressClickUntil&&e.target.closest('.handle,.card-cover,.swipe-row')){e.preventDefault();e.stopImmediatePropagation()}},true);
 $('app').addEventListener('pointerdown',e=>{
  const button=e.target.closest('button');if(button&&!button.disabled&&!motionReduced()){pressedButton=button;button.classList.remove('releasing');button.classList.add('pressing')}
  const handle=e.target.closest('.handle');
@@ -738,7 +780,7 @@ document.addEventListener('pointermove',e=>{
  if(Math.abs(dx)+Math.abs(dy)>9){clearTimeout(g.timer);g.cancelled=true;}
  if(g.deck&&!g.swiping&&(g.vertical||(Math.abs(dy)>8&&Math.abs(dy)>Math.abs(dx)*1.2))){
   if(!g.vertical){cancelAnimationFrame(receiptFrame);clearTimeout(receiptWheelTimer);g.deck.setPointerCapture(e.pointerId);g.deck.querySelectorAll('.revealed').forEach(row=>revealSwipe(row,false));pressedButton?.classList.remove('pressing');pressedButton=null;}
-  g.vertical=true;const now=performance.now(),dt=now-g.lastT;g.velocity=dt>0&&dt<100?g.velocity*.3+(e.clientY-g.lastY)/dt*.7:0;g.lastY=e.clientY;g.lastT=now;layoutReceipts(g.receiptStart+dy/52);e.preventDefault();return;
+  g.vertical=true;const now=performance.now(),dt=now-g.lastT;g.velocity=dt>0&&dt<100?g.velocity*.3+(e.clientY-g.lastY)/dt*.7:0;g.lastY=e.clientY;g.lastT=now;layoutReceipts(g.receiptStart+dy/52);return;
  }
  if(g.row&&!g.vertical&&Math.abs(dx)>14&&Math.abs(dx)>Math.abs(dy)*1.5){g.swiping=true;g.row.querySelector('.swipe-face').style.transform='translateX('+Math.min(0,Math.max(-145,dx+(g.row.classList.contains('revealed')?-136:0)))+'px)';g.row.querySelector('.swipe-actions').style.visibility='visible';}
 },{passive:true});
@@ -754,23 +796,62 @@ function endGestures(e,cancelled=false){
 }
 document.addEventListener('pointerup',e=>endGestures(e));
 document.addEventListener('pointercancel',e=>endGestures(e,true));
+document.addEventListener('visibilitychange',()=>document.documentElement.classList.toggle('document-hidden',document.hidden));
 $('page').addEventListener('scroll',updateHeader,{passive:true});
 const appResize=new ResizeObserver(()=>{moveLens(true);const roll=$('page').querySelector('.cylinder');if(roll){roll.style.setProperty('--roll-height',roll.clientHeight+'px');updateRoll()}if(s.agent.open){$('overlay-host').querySelector('.agent-panel')?.style.setProperty('--sheet-height',anchors()[s.agent.detent]+'px')}});appResize.observe($('app'));
 
 document.addEventListener('keydown',function(e){
- if(e.key==='Escape'){if(s.agent.open){if(s.agent.phase==='recording')endVoice(true);else closeAgent()}else if(s.modal){closeModal()}else if(s.detail){closeDetail()}else if(s.settings){s.settings=s.settings==='root'?null:'root';render()}}
+ if(e.key==='Escape'){if(s.agent.open){if(s.agent.phase==='recording')endVoice(true);else closeAgent()}else if(s.modal){s.modalStack.length?backModal():closeModal()}else if(s.detail){closeDetail()}else if(s.settings){s.settings=s.settings==='root'?null:'root';render()}}
  if(e.key==='Tab'){const dialog=$('app').querySelector('[role="dialog"]');if(dialog){const focusables=Array.from(dialog.querySelectorAll('button:not(:disabled),input,textarea,select')).filter(function(el){return el.offsetParent!==null});const first=focusables[0],last=focusables[focusables.length-1];if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus()}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus()}}}
 });
-document.querySelectorAll('[data-jump]').forEach(function(b){b.addEventListener('click',function(){if(s.agent.phase==='saving')return;operation++;stopVoiceTimer();if(['recording','transcribing','thinking'].includes(s.agent.phase))s.agent.phase='idle';s.modal=null;s.detail=null;s.agent.open=false;s.settings=null;if(b.dataset.jump==='settings')s.settings='root';else if(b.dataset.jump==='agent'){openAgent(null,'agent');return}else s.tab=b.dataset.jump;render();$('page').scrollTop=0})});
+document.querySelectorAll('[data-jump]').forEach(function(b){b.addEventListener('click',function(){if(s.agent.phase==='saving')return;operation++;stopVoiceTimer();if(['recording','transcribing','thinking'].includes(s.agent.phase))s.agent.phase='idle';s.modal=null;s.modalStack=[];s.detail=null;s.agent.open=false;s.settings=null;navEpoch++;pageTransition?.animation.cancel();pageTransition?.cover.remove();pageTransition=null;if(b.dataset.jump==='settings')s.settings='root';else if(b.dataset.jump==='agent'){openAgent(null,'agent');return}else s.tab=b.dataset.jump;displayedTab=s.tab;render();$('page').scrollTop=0})});
 $('scenario').addEventListener('change',function(){setScenario(this.value)});
 $('viewport').addEventListener('change',function(){document.documentElement.style.setProperty('--preview-width',this.value+'px');$('app').classList.toggle('wide',this.value==='760')});
 $('large-type').addEventListener('change',function(){$('app').classList.toggle('large',this.checked);setupRoll(null);setupReceipts();if(s.agent.open)renderOverlay()});
-$('reduce-motion').addEventListener('change',function(){document.documentElement.classList.toggle('reduce',this.checked);moveLens(true);if(motionReduced()){cardFlight?.animation.finish();moveReceipts(receiptPosition,false)}updateRoll();if(s.settings==='root')render()});
+$('reduce-motion').addEventListener('change',function(){document.documentElement.classList.toggle('reduce',this.checked);syncMascot();moveLens(true);if(motionReduced()){cardFlight?.animation.finish();if(pageTransition){navEpoch++;pageTransition.animation.cancel();pageTransition.cover.remove();pageTransition=null;render();displayedTab=s.tab}moveReceipts(receiptPosition,false)}updateRoll();if(s.settings==='root')render()});
 $('reset').addEventListener('click',function(){s.tab='home';$('scenario').value='empty';setScenario('empty')});
 $('demo-fill').addEventListener('click',function(){openAgent(s.budget?'record':'create',s.tab);s.agent.text=s.budget?'今天午餐花了 35 元':'日常生活，每月预算 3000 元';s.agent.mode='text';s.agent.phase='idle';renderOverlay();$('agent-text').focus()});
 notes.home=['玻璃包住液面，卡片落进卡夹','点卡进入详情；短暂按住可拿起，向任意方向拖过短边约三成，换下一张。',['按住卡片后移动，观察倾斜和柔和反光。','点击卡片，进入独立预算详情。','点击已用或九月，观察框体展开。']];
 notes.budgets=['滚动时，视线停在中间','借鉴参考图的圆柱层次。中心卡片清晰，上下逐渐退远，松手吸附。',['上下滚动，或用下方方向按钮。','点中间卡进入详情，再返回原位置。','左滑或打开卡片菜单，查看置顶和删除影响。']];
-notes.agent=['留白，让任务慢慢展开','浅色云雾玻璃承接上下文；输入始终在下方。拖动顶部把手，在三个高度间吸附。',['向上拖动顶部把手，展开更多内容。','填写后关闭再打开，核对草稿仍在。','从左侧场景菜单检查保存失败与重试。']];
+notes.agent=['小朵与手动表单，共享草稿','浅色云雾玻璃承接上下文；输入始终在下方。拖动顶部把手，在三个高度间吸附。',['向上拖动顶部把手，展开更多内容。','填写后关闭再打开，核对草稿仍在。','从左侧场景菜单检查保存失败与重试。']];
+
+
+let pageTransition=null,navEpoch=0,displayedTab='home';
+function navigateTab(target){
+ if(target===s.tab&&!s.settings&&!pageTransition)return;const epoch=++navEpoch,previous=displayedTab;s.tab=target;s.settings=null;s.detail=null;renderDock();
+ const old=pageTransition,cover=old?.cover||document.createElement('div');let start=old?getComputedStyle(cover).transform:null;old?.animation.cancel();
+ if(motionReduced()||(!old&&previous!=='home'&&target!=='home')){cover.remove();pageTransition=null;render();$('page').scrollTop=0;displayedTab=target;$('page').animate([{opacity:.5},{opacity:1}],{duration:motionReduced()?100:170});return;}
+ if(!old){cover.className='pocket-transition';cover.setAttribute('aria-hidden','true');cover.innerHTML=rim();$('app').append(cover);const pocket=$('page').querySelector('.pocket');start='translateY('+(previous==='home'&&pocket?Math.max(0,pocket.getBoundingClientRect().top-$('app').getBoundingClientRect().top):12)+'px)';}
+ const animation=cover.animate([{transform:start,opacity:old?1:previous==='home'?1:0},{transform:'translateY(0)',opacity:1}],{duration:190,easing:'cubic-bezier(.2,.8,.25,1)',fill:'forwards'});pageTransition={cover,animation};
+ animation.finished.then(()=>{if(navEpoch!==epoch)return;render();$('page').scrollTop=0;displayedTab=target;const reveal=cover.animate([{transform:'translateY(0)',opacity:1},{transform:target==='home'?'translateY('+$('app').clientHeight+'px)':'translateY(15px)',opacity:target==='home'?1:0}],{duration:target==='home'?360:180,easing:'cubic-bezier(.22,.8,.25,1)',fill:'forwards'});pageTransition={cover,animation:reveal};reveal.finished.then(()=>{if(navEpoch===epoch){cover.remove();pageTransition=null;}}).catch(()=>{});}).catch(()=>{});
+}
+
+function calendarMonth(){return s.calendarMonth||monthStart(budgetDate(s.budget));}
+function dayRecords(){const rows=budgetRecords().filter(r=>r.date===s.selectedDate);return rows.length?recordRows(rows):'<div class="quiet-empty">这一天还没有记录。</div>'}
+function selectBudget(id){s.budget=s.budgets.find(b=>b.id===id)||null;s.calendarMonth=null;s.selectedDate=budgetDate(s.budget);receiptBudget=null;}
+function normalizeDemo(){
+ navEpoch++;pageTransition?.animation.cancel();pageTransition?.cover.remove();pageTransition=null;displayedTab=s.tab;
+ s.budgets.forEach(b=>{b.start=b.start||(b.settled?'2026-08-01':'2026-09-01');if(b.end===undefined)b.end=b.settled?'2026-08-31':b.cycle==='once'?'2026-10-03':'2026-09-30'});
+ s.records.forEach(r=>{r.date=r.date||'2026-'+String(r.month||9).padStart(2,'0')+'-'+String(r.day||26).padStart(2,'0');r.attachments=r.attachments||[]});
+ s.calendarMonth=null;s.selectedDate=budgetDate(s.budget);s.modalStack=[];s.undo=null;s.edit=null;s.change=null;s.agentDrafts={};
+}
+
+
+function recordAttachments(r){const items=r.attachments?.length?r.attachments:r.attachment?[{id:'legacy',name:'咖啡小票（演示）',demo:true}]:[];return items.map(a=>'<div class="saved-attachment">'+(a.url?'<img src="'+esc(a.url)+'" alt="'+esc(a.name)+'">':'<div class="attachment-demo">'+icon('image')+esc(a.name)+'</div>')+'<button class="text-action" data-action="remove-record-attachment" data-id="'+r.id+'" data-attachment-id="'+a.id+'">移除附件</button></div>').join('');}
+function commitRecordChange(next,message){const impact=retrospectiveImpact(s.records,next,s.budgets,s.wallet,s.recovery);if(impact.affected.length){s.change={next,message,impact};openModal('retrospective');return}finishRecordChange(next,message,impact);}
+function finishRecordChange(next,message,impact){const old=snapshot();s.records=next;s.wallet=impact.wallet;s.recovery=impact.recovery;s.modal=null;s.modalStack=[];s.change=null;s.edit=null;render();toast(message,old);}
+
+function activeDraft(){return s.modal?.type==='edit-record'&&s.edit?s.edit:s.agent;}
+function attachmentFields(a){return '<div class="attachment-editor"><div class="record-list-head"><span>附件 · '+(a.attachments||[]).length+' / 5</span><label class="text-action file-label">添加图片<input type="file" id="attachment-picker" accept="image/*" multiple></label></div><div class="attachment-grid">'+(a.attachments||[]).map((item,i)=>'<div class="attachment-item">'+(item.url?'<img src="'+esc(item.url)+'" alt="'+esc(item.name)+'">':'<span>'+icon('image')+esc(item.name)+'</span>')+'<button data-action="remove-draft-attachment" data-index="'+i+'" aria-label="删除附件 '+(i+1)+'">'+icon('close')+'</button></div>').join('')+'</div><p class="caption muted">此网页只在当前页面临时保留图片。</p></div>';}
+function validateRecord(e){if(!e.merchant?.trim()||!cents(e.amount))return '请补充消费内容和大于 0 的金额。';if(!validDate(e.date))return '请选择有效日期。';if((e.note||'').length>10000)return '备注超过 10,000 字，请缩短后再保存。';if((e.attachments||[]).length+(e.keepAttachment?1:0)>5)return '每笔最多保存 5 张图片。';const b=s.budgets.find(b=>b.id===(e.budgetID||e.recordBudgetID||s.agent.recordBudgetID));if(!e.unbudgeted&&!b)return '请选择预算或未纳入预算。';if(!e.unbudgeted&&b&&!inPeriod(e.date,b))return '日期不在所选预算周期内，请调整日期、归属或选择未纳入预算。';if(!e.unbudgeted&&b?.settled&&s.modal?.type!=='edit-record')return '该周期已结算，请从对应记录查看追溯影响。';return '';}
+function modalShell(title,body){return '<div class="overlay '+(typeof s.modal==='string'&&s.modal.startsWith('summary-')?'summary-overlay':'')+'"><div class="backdrop" data-action="close-modal"></div><section class="modal-panel" role="dialog" aria-modal="true" aria-label="'+esc(title)+'"><header class="modal-head">'+(s.modalStack.length?ib('modal-back','back','返回上一层'):'')+'<h3>'+esc(title)+'</h3>'+ib('close-modal','close','关闭浮层')+'</header><div class="modal-body">'+body+'</div><footer class="modal-footer"></footer></section></div>';}
+function openModal(modal,source=null){if(s.modal)s.modalStack.push({modal:structuredClone(s.modal),scroll:$('overlay-host').querySelector('.modal-body')?.scrollTop||0,source:s.modalSource});else{s.modalStack=[];s.modalSource=source?.dataset.action||null;s.modalFocus=source||document.activeElement;}s.modal=modal;s.modalScroll=0;renderOverlay();}
+function backModal(){const parent=s.modalStack.pop();if(!parent){closeModal();return}s.modal=parent.modal;s.modalScroll=parent.scroll;s.modalSource=parent.source;renderOverlay();}
+
+const mascot=createMascot($('app'));
+matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change',()=>{syncMascot();moveLens(true);});
+function syncMascot(){const a=s.agent;let state=a.phase==='done'?'success':!a.open?'idle':a.error||['denied','voice-error','image-error'].includes(a.phase)?'error':['thinking','saving','transcribing'].includes(a.phase)?'thinking':['review','clarifying','transcript'].includes(a.phase)?'waiting':a.phase==='done'?'success':a.phase==='recording'?'receive':'idle';mascot.sync(state,motionReduced());}
+
 setScenario('collection');
 })();
 </script>
