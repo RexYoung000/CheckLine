@@ -141,6 +141,22 @@
 .reduce .bubble-field i{animation:none!important;bottom:var(--y);opacity:.5}
 @media(prefers-reduced-motion:reduce){.bubble-field i{animation:none!important;bottom:var(--y);opacity:.5}}
 
+
+/* Home receipts retain the existing opaque, three-layer wallet stack. */
+.recent-roll.receipt-deck{--receipt-height:68px;--receipt-step:44px;position:relative;height:182px;max-height:none;overflow:hidden;touch-action:none;user-select:none;isolation:isolate;outline-offset:3px}
+.large .receipt-deck{--receipt-height:80px;--receipt-step:50px}
+.receipt-deck[data-count="1"],.receipt-deck[data-count="1"] .swipe-face{touch-action:pan-y}
+.receipt-deck .swipe-row{position:absolute;top:0;left:3px;right:3px;height:var(--receipt-height);border-radius:17px;transform-origin:50% 0;box-shadow:0 3px 5px #180f2530;will-change:transform}
+.receipt-deck .swipe-face{height:100%;touch-action:none;color:#342841;background:linear-gradient(130deg,color-mix(in srgb,#efe8ff var(--receipt-light,100%),#baaad4),color-mix(in srgb,#d9cef6 var(--receipt-light,100%),#ac98cd));box-shadow:inset 0 1px 0 #ffffff9c,inset 0 -1px 0 #8e769b26}
+.receipt-deck .record-row{height:100%;min-height:0;margin:0;padding:12px 0 12px 15px;gap:8px;align-items:flex-start;color:#342841;background:transparent;text-align:left}
+.receipt-deck .record-row>div{min-width:0;flex:1}
+.receipt-deck .record-row strong{display:block;font-size:calc(14px * var(--fs));font-weight:550;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.receipt-deck .record-row p{opacity:var(--receipt-meta,1);margin-top:5px;font-size:calc(10px * var(--fs));color:#655471;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.receipt-deck .record-row .money{font-size:calc(17px * var(--fs));font-weight:450;letter-spacing:-.5px;flex-shrink:0;padding-top:1px}
+.receipt-deck .swipe-face>.icon-btn{color:#665074;width:36px;height:44px;align-self:flex-start;margin-top:7px;flex-shrink:0}
+.receipt-pending{color:#745328;font-weight:550}
+.receipt-deck .swipe-actions button{font-size:calc(12px * var(--fs))}
+
 </style>
 </head>
 <body>
@@ -440,6 +456,7 @@ function recognize(){
  asyncStep(function(){if(s.failImage){s.failImage=false;a.phase='image-error'}else{a.task='record';a.merchant='午餐';a.amount='35';a.entries=a.images>1?Array.from({length:a.images},function(_,i){return {merchant:i===0?'午餐':'咖啡',amount:i===0?'35':'18',unbudgeted:!s.budget,keepAttachment:false}}):[];if(a.entries.length>1){a.expanded=true;a.detent=2;}a.phase='review'}renderOverlay();updateNotes()},650);
 }
 function setScenario(value){
+ receiptBudget=null;receiptPosition=receiptLocation=0;
  operation++;stopVoiceTimer();s.budget=null;s.budgets=[];s.detail=null;s.focusID=null;s.modalSource=null;s.records=[];s.wishes=[];s.wallet=0;s.recovery=0;s.walletHistory=false;s.completed=false;s.settings=null;s.modal=null;s.toast=null;s.agent=freshAgent();s.failSave=false;s.denyVoice=false;s.failImage=false;s.selectedDay=24;
  if(['budget','wallet','completed','record'].includes(value))s.budget={id:'daily',name:'日常生活',cents:300000,cycle:'monthly',tint:'lilac'};
  if(value==='wallet'){s.wallet=86000;s.walletHistory=true;s.tab='wishes'}
@@ -511,10 +528,42 @@ function liquid(budget=s.budget,detail=false){
  const water=level>0?'<div class="card-water" style="--level:'+level+'%"><svg class="water-wave back" viewBox="0 0 500 30" preserveAspectRatio="none" aria-hidden="true">'+wave+'</svg><svg class="water-wave" viewBox="0 0 500 30" preserveAspectRatio="none" aria-hidden="true">'+wave+'</svg><div class="bubble-field" aria-hidden="true">'+bubbles+'</div></div>':'<div class="dry"></div>';
  return '<div class="card-wrap" data-card-id="'+budget.id+'"><div class="liquid-card '+(budget.tint||'lilac')+' '+(s.insert&&budget===s.budget?'inserted':'')+'">'+water+'<div class="card-shimmer"></div><div class="card-copy"><div class="name">'+esc(budget.name)+'</div><div class="card-cycle">'+(budget.cycle==='once'?'一次特别计划':'每月循环')+' · CNY</div><span class="amount-caption">'+(budget.settled?'结算时结余':remaining<0?'已超出':'还能花')+'</span><span class="amount" style="--amount-cap:'+amountCap+'px">'+money(Math.abs(remaining))+'</span><span class="card-progress">'+(budget.settled?'已结算周期':level.toFixed(0)+'% 剩余')+'</span></div>'+(!detail?'<button class="card-cover" data-action="budget-detail" data-id="'+budget.id+'" aria-label="查看'+esc(budget.name)+'预算详情"></button>':'')+'<button class="card-menu icon-btn" data-action="budget-menu" data-id="'+budget.id+'" aria-label="'+esc(budget.name)+'卡片菜单">•••</button>'+(detail||budget.settled?'':'<button class="mini-plus" data-action="record-for" data-id="'+budget.id+'" aria-label="为'+esc(budget.name)+'记一笔">'+icon('plus')+'</button>')+'</div></div>'
 }
-function recordRows(records){return records.map(r=>'<div class="swipe-row" data-swipe="record"><div class="swipe-actions" aria-hidden="true"><button data-action="record-detail" data-index="'+s.records.indexOf(r)+'" tabindex="-1">详情</button><button class="delete" data-action="delete-record" data-id="'+r.id+'" tabindex="-1">删除</button></div><div class="swipe-face"><button class="record-row full" data-action="record-detail" data-index="'+s.records.indexOf(r)+'"><div><strong>'+esc(r.name)+'</strong><p>9月'+r.day+'日'+(r.attachment?' · 有附件':'')+(r.unbudgeted?' · 未纳入预算':'')+'</p>'+(r.pending?'<span class="pending-label">待确认归属</span>':'')+'</div><span class="money">−'+money(r.cents)+'</span></button><button class="icon-btn" data-action="swipe-reveal" aria-label="'+esc(r.name)+'的更多操作">•••</button></div></div>').join('')}
+function recordRows(records,compact=false){return records.map(r=>{
+ const date=(r.month||9)+'月'+r.day+'日',metadata=compact?date+(r.pending?' · <span class="receipt-pending">待确认</span>':r.attachment?' · 有附件':'')+(r.unbudgeted?' · 未纳入预算':''):date+(r.attachment?' · 有附件':'')+(r.unbudgeted?' · 未纳入预算':'');
+ return '<div class="swipe-row" data-swipe="record" data-record-id="'+r.id+'"><div class="swipe-actions" aria-hidden="true"><button data-action="record-detail" data-index="'+s.records.indexOf(r)+'" tabindex="-1">详情</button><button class="delete" data-action="delete-record" data-id="'+r.id+'" tabindex="-1">删除</button></div><div class="swipe-face"><button class="record-row full" data-action="record-detail" data-index="'+s.records.indexOf(r)+'"><div><strong>'+esc(r.name)+'</strong><p>'+metadata+'</p>'+(!compact&&r.pending?'<span class="pending-label">待确认归属</span>':'')+'</div><span class="money">−'+money(r.cents)+'</span></button><button class="icon-btn" data-action="swipe-reveal" aria-label="'+esc(r.name)+'的更多操作">•••</button></div></div>';
+}).join('')}
+function homeReceipts(){
+ const records=budgetRecords();if(!records.length)return '<div class="quiet-empty">这张卡还没有消费记录<br>'+btn('record','记一笔','text-action')+'</div>';
+ return '<div class="recent-roll receipt-deck" data-count="'+records.length+'" role="group" aria-label="最近记录，下拉查看更早记录，上推返回更新记录，也可用上下方向键" tabindex="0">'+recordRows(records,true)+'</div><span class="sr-only" id="receipt-status" role="status"></span>';
+}
+let receiptPosition=0,receiptLocation=0,receiptBudget=null,receiptFrame=0,receiptWheelTimer=0;
+function layoutReceipts(location){
+ const deck=$('page').querySelector('.receipt-deck');if(!deck)return;const rows=[...deck.children],style=getComputedStyle(deck),step=parseFloat(style.getPropertyValue('--receipt-step')),height=parseFloat(style.getPropertyValue('--receipt-height')),base=Math.min(2,rows.length-1)*step+7;
+ receiptLocation=Math.max(0,Math.min(rows.length-1,location));deck.style.height=base+height+9+'px';
+ rows.forEach((row,i)=>{
+  const depth=i-receiptLocation,visible=depth>-1&&depth<3;row.hidden=!visible;row.inert=!visible;row.style.zIndex=String(rows.length-i);
+  if(!visible)return;const back=Math.max(0,depth),y=depth<0?base-depth*(height+20):base-depth*step;
+  row.style.transform='translateY('+y+'px) scale('+(1-back*.055)+')';row.style.setProperty('--receipt-light',Math.max(0,100-back*50)+'%');row.style.setProperty('--receipt-meta',Math.max(0,1-back*2));
+ });
+}
+function announceReceipt(){const records=budgetRecords(),record=records[receiptPosition],status=$('receipt-status');if(status&&record)status.textContent=record.name+'，第'+(receiptPosition+1)+'笔，共'+records.length+'笔';}
+function moveReceipts(target,animate=true){
+ const records=budgetRecords();if(!records.length)return;cancelAnimationFrame(receiptFrame);clearTimeout(receiptWheelTimer);
+ $('page').querySelectorAll('.receipt-deck .revealed').forEach(row=>revealSwipe(row,false));
+ receiptPosition=Math.max(0,Math.min(records.length-1,Math.round(target)));const from=receiptLocation,to=receiptPosition,started=performance.now();
+ if(!animate||motionReduced()){layoutReceipts(to);announceReceipt();return}
+ const frame=now=>{const p=Math.min(1,(now-started)/240),eased=1-Math.pow(1-p,3);layoutReceipts(from+(to-from)*eased);if(p<1)receiptFrame=requestAnimationFrame(frame);else{receiptFrame=0;announceReceipt()}};receiptFrame=requestAnimationFrame(frame);
+}
+function setupReceipts(){
+ cancelAnimationFrame(receiptFrame);clearTimeout(receiptWheelTimer);const deck=$('page').querySelector('.receipt-deck');if(!deck)return;
+ if(receiptBudget!==s.budget?.id){receiptPosition=0;receiptBudget=s.budget?.id}
+ receiptPosition=Math.max(0,Math.min(budgetRecords().length-1,receiptPosition));layoutReceipts(receiptPosition);announceReceipt();
+ deck.addEventListener('wheel',event=>{if(deck.children.length<2||Math.abs(event.deltaY)<Math.abs(event.deltaX))return;event.preventDefault();cancelAnimationFrame(receiptFrame);deck.querySelectorAll('.revealed').forEach(row=>revealSwipe(row,false));const distance=event.deltaY*(event.deltaMode===1?16:event.deltaMode===2?deck.clientHeight:1);layoutReceipts(receiptLocation+distance/70);clearTimeout(receiptWheelTimer);receiptWheelTimer=setTimeout(()=>moveReceipts(receiptLocation),120)},{passive:false});
+ deck.addEventListener('keydown',event=>{if(!['ArrowDown','ArrowUp','Home','End'].includes(event.key))return;event.preventDefault();moveReceipts(event.key==='Home'?0:event.key==='End'?budgetRecords().length-1:receiptPosition+(event.key==='ArrowDown'?1:-1));deck.focus({preventScroll:true})});
+}
 function homePage(){
  const card=s.budget?'<div class="home-card-holder" style="position:relative;max-width:520px;margin:auto;container-type:inline-size">'+(s.budgets.length>1?'<div class="card-stack-back"></div>':'')+liquid()+'</div><span class="sr-only" role="status">'+esc(s.budget.name)+'，第'+(s.budgets.findIndex(b=>b.id===s.budget.id)+1)+'张，共'+s.budgets.length+'张</span>':'<button class="create-card" data-action="create"><span class="cross">'+icon('plus')+'</span><strong>创建第一张<br>预算卡</strong><div class="card-foot">先选一部分，你想管理的开销</div></button>';
- const contents=s.budget?'<div class="summary-grid"><button class="summary" data-action="summary-used"><div class="eyeline">已用'+icon('arrow')+'</div><div class="stat">'+money(total())+'</div><div class="track">'+Array.from({length:7},()=>'<i></i>').join('')+'</div></button><button class="summary" data-action="summary-calendar"><div class="eyeline">九月'+icon('arrow')+'</div><div class="stat">6 <span class="caption muted">天剩余</span></div>'+miniCalendar()+'</button></div><div class="record-list-head"><div class="section-title">最近记录</div>'+btn('all-records','全部记录 ↗','text-action')+'</div><div class="recent-roll">'+(budgetRecords().length?recordRows(budgetRecords()):'<div class="quiet-empty">这张卡还没有消费记录<br>'+btn('record','记一笔','text-action')+'</div>')+'</div>':'<div class="empty-pocket"><div class="inner-seam"><p>从日常开销开始，<br>也可以是一次旅行、一个计划。</p></div></div>';
+ const contents=s.budget?'<div class="summary-grid"><button class="summary" data-action="summary-used"><div class="eyeline">已用'+icon('arrow')+'</div><div class="stat">'+money(total())+'</div><div class="track">'+Array.from({length:7},()=>'<i></i>').join('')+'</div></button><button class="summary" data-action="summary-calendar"><div class="eyeline">九月'+icon('arrow')+'</div><div class="stat">6 <span class="caption muted">天剩余</span></div>'+miniCalendar()+'</button></div><div class="record-list-head"><div class="section-title">最近记录</div>'+btn('all-records','全部记录 ↗','text-action')+'</div>'+homeReceipts():'<div class="empty-pocket"><div class="inner-seam"><p>从日常开销开始，<br>也可以是一次旅行、一个计划。</p></div></div>';
  return header('',true)+'<div class="hero">'+symbols()+card+'</div><section class="pocket">'+rim()+contents+unbudgetedLink()+'</section>';
 }
 function budgetPage(){
@@ -527,7 +576,7 @@ function render(resetRoll=false){
  const oldScroll=$('page').scrollTop,oldRoll=resetRoll?undefined:$('page').querySelector('.cylinder')?.scrollTop;
  $('page').className='page '+(!s.settings&&s.tab==='home'?'home':!s.settings&&s.tab==='budgets'&&s.budgets.length?'budget-page':'');
  $('page').innerHTML=s.settings?settingsPage():s.tab==='home'?homePage():s.tab==='budgets'?budgetPage():s.tab==='wishes'?wishPage():insightPage();
- $('page').scrollTop=oldScroll;renderDock();renderDetail();renderOverlay();renderToast();updateNotes();setupRoll(oldRoll);updateHeader();
+ $('page').scrollTop=oldScroll;renderDock();renderDetail();renderOverlay();renderToast();updateNotes();setupRoll(oldRoll);setupReceipts();updateHeader();
 }
 function renderDetail(){const host=$('detail-host'),scroll=host.querySelector('.budget-detail')?.scrollTop||0;host.innerHTML=s.detail?detailPage():'';$('app').classList.toggle('detail-open',!!s.detail);if(s.detail){$('page').inert=true;host.querySelector('.budget-detail').scrollTop=scroll;}}
 function updateHeader(){const page=$('page'),header=page.querySelector('.topbar');if(!header)return;header.style.setProperty('--highlight',(15+Math.min(page.scrollTop,300)/4)+'%');header.classList.toggle('on-dark',page.scrollTop>245);const backdrop=page.querySelector('.symbol-backdrop');if(backdrop){const progress=motionReduced()?0:Math.min(page.scrollTop,260);backdrop.style.transform='translateY('+progress*.18+'px)';backdrop.style.filter='blur('+progress/180+'px)';}}
@@ -678,7 +727,7 @@ $('app').addEventListener('pointerdown',e=>{
  if(handle&&s.agent.open){const panel=handle.closest('.agent-panel');sheetDrag={id:e.pointerId,startY:e.clientY,startH:panel.getBoundingClientRect().height,lastY:e.clientY,lastT:performance.now(),velocity:0,panel,moved:false};handle.setPointerCapture(e.pointerId);panel.classList.add('sheet-dragging');return}
  if(e.target.closest('#voice-control')&&e.pointerType!=='mouse'){lastVoiceDown=performance.now();voiceStartY=e.clientY;startVoice();return}
  const row=e.target.closest('.swipe-row'),cover=e.target.closest('.card-cover');if(!row&&!cover)return;
- gesture={id:e.pointerId,startX:e.clientX,startY:e.clientY,x:e.clientX,y:e.clientY,cover,row,card:cover?.closest('.liquid-card'),lifted:false,swiping:false,cancelled:false};
+ gesture={id:e.pointerId,startX:e.clientX,startY:e.clientY,x:e.clientX,y:e.clientY,cover,row,deck:row?.closest('.receipt-deck:not([data-count="1"])'),receiptStart:receiptLocation,lastY:e.clientY,lastT:performance.now(),velocity:0,vertical:false,card:cover?.closest('.liquid-card'),lifted:false,swiping:false,cancelled:false};
  if(cover){const g=gesture;g.timer=setTimeout(()=>{if(gesture!==g||g.cancelled)return;g.lifted=true;g.rect=g.card.getBoundingClientRect();g.card.classList.add('lifted');cover.setPointerCapture(e.pointerId);moveLift(g,g.x,g.y)},180)}
 });
 function moveLift(g,x,y){if(motionReduced())return;const px=Math.max(-1,Math.min(1,(x-g.rect.left)/g.rect.width*2-1)),py=Math.max(-1,Math.min(1,(y-g.rect.top)/g.rect.height*2-1));const free=s.tab==='home'&&!s.detail;g.card.style.transform='translate3d('+(free?(x-g.startX):0)+'px,'+(free?(y-g.startY):-4)+'px,0) scale(1.025) rotateX('+(-py*6)+'deg) rotateY('+(px*8)+'deg)';g.card.style.setProperty('--shine-x',(50+px*40)+'%');g.card.style.setProperty('--shine-y',(50+py*40)+'%')}
@@ -687,12 +736,17 @@ document.addEventListener('pointermove',e=>{
  const g=gesture;if(!g||g.id!==e.pointerId)return;g.x=e.clientX;g.y=e.clientY;const dx=g.x-g.startX,dy=g.y-g.startY;
  if(g.lifted){moveLift(g,g.x,g.y);return}
  if(Math.abs(dx)+Math.abs(dy)>9){clearTimeout(g.timer);g.cancelled=true;}
- if(g.row&&Math.abs(dx)>14&&Math.abs(dx)>Math.abs(dy)*1.5){g.swiping=true;g.row.querySelector('.swipe-face').style.transform='translateX('+Math.min(0,Math.max(-145,dx+(g.row.classList.contains('revealed')?-136:0)))+'px)';g.row.querySelector('.swipe-actions').style.visibility='visible';}
+ if(g.deck&&!g.swiping&&(g.vertical||(Math.abs(dy)>8&&Math.abs(dy)>Math.abs(dx)*1.2))){
+  if(!g.vertical){cancelAnimationFrame(receiptFrame);clearTimeout(receiptWheelTimer);g.deck.setPointerCapture(e.pointerId);g.deck.querySelectorAll('.revealed').forEach(row=>revealSwipe(row,false));pressedButton?.classList.remove('pressing');pressedButton=null;}
+  g.vertical=true;const now=performance.now(),dt=now-g.lastT;g.velocity=dt>0&&dt<100?g.velocity*.3+(e.clientY-g.lastY)/dt*.7:0;g.lastY=e.clientY;g.lastT=now;layoutReceipts(g.receiptStart+dy/52);e.preventDefault();return;
+ }
+ if(g.row&&!g.vertical&&Math.abs(dx)>14&&Math.abs(dx)>Math.abs(dy)*1.5){g.swiping=true;g.row.querySelector('.swipe-face').style.transform='translateX('+Math.min(0,Math.max(-145,dx+(g.row.classList.contains('revealed')?-136:0)))+'px)';g.row.querySelector('.swipe-actions').style.visibility='visible';}
 },{passive:true});
 function endGestures(e,cancelled=false){
  if(pressedButton){pressedButton.classList.remove('pressing');if(!motionReduced())pressedButton.classList.add('releasing');pressedButton=null}
  if(sheetDrag&&e.pointerId===sheetDrag.id){const g=sheetDrag;sheetDrag=null;g.panel.classList.remove('sheet-dragging');if(g.moved){lastPanelDrag=performance.now();suppressClickUntil=performance.now()+400;const limits=anchors(),current=g.panel.getBoundingClientRect().height,velocity=performance.now()-g.lastT>120?0:g.velocity,predicted=current+(cancelled?0:velocity*175);let best=0;limits.forEach((h,i)=>{if(Math.abs(h-predicted)<Math.abs(limits[best]-predicted))best=i});s.agent.detent=best;s.agent.expanded=best>0;renderOverlay();updateNotes()}return}
- const g=gesture;if(g&&e.pointerId===g.id){gesture=null;clearTimeout(g.timer);if(g.lifted){suppressClickUntil=performance.now()+450;g.card.classList.remove('lifted');const from=g.card.style.transform;g.card.style.transform='';g.card.style.removeProperty('--shine-x');g.card.style.removeProperty('--shine-y');const dist=Math.hypot(e.clientX-g.startX,e.clientY-g.startY);if(!cancelled&&s.tab==='home'&&!s.detail&&dist>Math.min(g.rect.width,g.rect.height)*.3){stepHome(1)}else if(!motionReduced()){g.card.animate([{transform:from},{transform:'scale(.992)'},{transform:'none'}],{duration:500,easing:'cubic-bezier(.2,.8,.3,1)'})}}
+ const g=gesture;if(g&&e.pointerId===g.id){gesture=null;clearTimeout(g.timer);if(g.vertical){suppressClickUntil=performance.now()+250;const speed=performance.now()-g.lastT<100?g.velocity:0;moveReceipts(cancelled?g.receiptStart:receiptLocation+speed*120/52);}
+ else if(g.lifted){suppressClickUntil=performance.now()+450;g.card.classList.remove('lifted');const from=g.card.style.transform;g.card.style.transform='';g.card.style.removeProperty('--shine-x');g.card.style.removeProperty('--shine-y');const dist=Math.hypot(e.clientX-g.startX,e.clientY-g.startY);if(!cancelled&&s.tab==='home'&&!s.detail&&dist>Math.min(g.rect.width,g.rect.height)*.3){stepHome(1)}else if(!motionReduced()){g.card.animate([{transform:from},{transform:'scale(.992)'},{transform:'none'}],{duration:500,easing:'cubic-bezier(.2,.8,.3,1)'})}}
  else if(g.cancelled&&!g.swiping){suppressClickUntil=performance.now()+350;}
  else if(g.swiping){suppressClickUntil=performance.now()+400;g.row.querySelector('.swipe-face').style.transform='';g.row.querySelector('.swipe-actions').style.visibility='';revealSwipe(g.row,!cancelled&&e.clientX-g.startX<-35)}
  }
@@ -710,8 +764,8 @@ document.addEventListener('keydown',function(e){
 document.querySelectorAll('[data-jump]').forEach(function(b){b.addEventListener('click',function(){if(s.agent.phase==='saving')return;operation++;stopVoiceTimer();if(['recording','transcribing','thinking'].includes(s.agent.phase))s.agent.phase='idle';s.modal=null;s.detail=null;s.agent.open=false;s.settings=null;if(b.dataset.jump==='settings')s.settings='root';else if(b.dataset.jump==='agent'){openAgent(null,'agent');return}else s.tab=b.dataset.jump;render();$('page').scrollTop=0})});
 $('scenario').addEventListener('change',function(){setScenario(this.value)});
 $('viewport').addEventListener('change',function(){document.documentElement.style.setProperty('--preview-width',this.value+'px');$('app').classList.toggle('wide',this.value==='760')});
-$('large-type').addEventListener('change',function(){$('app').classList.toggle('large',this.checked);setupRoll(null);if(s.agent.open)renderOverlay()});
-$('reduce-motion').addEventListener('change',function(){document.documentElement.classList.toggle('reduce',this.checked);moveLens(true);if(motionReduced())cardFlight?.animation.finish();updateRoll();if(s.settings==='root')render()});
+$('large-type').addEventListener('change',function(){$('app').classList.toggle('large',this.checked);setupRoll(null);setupReceipts();if(s.agent.open)renderOverlay()});
+$('reduce-motion').addEventListener('change',function(){document.documentElement.classList.toggle('reduce',this.checked);moveLens(true);if(motionReduced()){cardFlight?.animation.finish();moveReceipts(receiptPosition,false)}updateRoll();if(s.settings==='root')render()});
 $('reset').addEventListener('click',function(){s.tab='home';$('scenario').value='empty';setScenario('empty')});
 $('demo-fill').addEventListener('click',function(){openAgent(s.budget?'record':'create',s.tab);s.agent.text=s.budget?'今天午餐花了 35 元':'日常生活，每月预算 3000 元';s.agent.mode='text';s.agent.phase='idle';renderOverlay();$('agent-text').focus()});
 notes.home=['玻璃包住液面，卡片落进卡夹','点卡进入详情；短暂按住可拿起，向任意方向拖过短边约三成，换下一张。',['按住卡片后移动，观察倾斜和柔和反光。','点击卡片，进入独立预算详情。','点击已用或九月，观察框体展开。']];
