@@ -3,7 +3,7 @@ import {stateFrame,blendFrames,STATES,smooth} from './cloud-states.mjs';
 import {SHAPE_BY_ID} from './vendor/skins.mjs';
 import {closedPath} from './vendor/shape.mjs';
 import {liveliness,blinkScale} from './vendor/face.mjs';
-const TAU=Math.PI*2,THINKING_PERIOD=2.25,BASE=SHAPE_BY_ID.get('nuage').radii;
+const TAU=Math.PI*2,THINKING_PERIOD=1.8,BASE=SHAPE_BY_ID.get('nuage').radii;
 const mix=(a,b,k)=>a+(b-a)*k;
 const seed=(n,k)=>{let x=(Math.imul(n+19,374761393)^Math.imul(k+7,668265263))>>>0;x=Math.imul(x^(x>>>13),1274126177);return ((x^(x>>>16))>>>0)/4294967295;};
 // Eased seeded targets keep changes reproducible and continuous, with no frame jitter.
