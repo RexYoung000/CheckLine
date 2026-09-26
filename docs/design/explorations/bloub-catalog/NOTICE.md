@@ -35,6 +35,10 @@
 
 `cloud-material.mjs` / `cloud-material-page.mjs` 与 `2026-09-26-cloud-material.html` 新增分层渐变、模糊内色、边缘厚度和整体悬浮，继续调用原有六状态播放器与已确认聚散采样器。Cloud 轮廓的来源和许可沿用上文。用户提供图片及 Rive 教程仅为材质层次参考，未复制其中的图片、角色或代码；未新增依赖、改动 vendor 文件或生成 Rive / Spine 工程。
 
+## 内部流动思考态（2026-09-26）
+
+`cloud-inner-flow.mjs` 新增受限平滑随机的内色色团漂移及轮廓变化、连续流转思考态、沿基础 Cloud 的局部行波、小幅眼神追视与可中断衔接。仍复用固定上游 Cloud 轮廓、路径生成与眨眼，参考范围和 MIT 声明不变。`cloud-material.mjs` 改为完整云壳裁切内部色团；本页已撤下聚散动作，历史聚散页及其采样器保留。未引入 Rive 运行时或外部资产。
+
 ## MIT License
 
 Copyright (c) 2026 Jérémy Perret
