@@ -222,6 +222,13 @@
 .reduce .ambient-symbol{animation:none;opacity:.42;transform:translate(-50%,-50%) rotate(-12deg)}
 @media(prefers-reduced-motion:reduce){.ambient-symbol{animation:none;opacity:.42;transform:translate(-50%,-50%) rotate(-12deg)}}
 
+/* One icon family: two-tone semantic symbols, linear action controls. */
+.app-icon{display:block;flex-shrink:0}.topbar .app-icon.icon-bulk .icon-tone{opacity:.62}.tab-group .app-icon{width:25px;height:25px}.ambient-symbol .app-icon{opacity:.85}
+
+/* The analysis selector has its own balanced inset, independent of old text headers. */
+.budget-selector{min-height:56px;padding:14px 16px;margin-bottom:14px;gap:14px;line-height:1.4;border-radius:20px;background:linear-gradient(125deg,#cbb9e51a,#ffffff05);box-shadow:inset 0 1px #ffffff0d}
+.budget-selector>span{flex:1;min-width:0;overflow-wrap:anywhere}.budget-selector>svg{display:block;flex:0 0 20px;width:20px;height:20px;align-self:center}
+
 </style>
 </head>
 <body>
@@ -269,38 +276,10 @@
 <script type="module">
 import {REVIEW_DATE,validDate,addDays,monthStart,monthEnd,dateLabel,monthLabel,inPeriod,sortRecords,recordsFor,projection,budgetDate,periodStatus,weekSeries,retrospectiveImpact} from './glass-data.mjs';
 import {createMascot} from './glass-mascot.mjs?v=20260926-thinking-only';
+import {icon} from './glass-icons.mjs?v=20260926-iconsax';
 (function(){
 'use strict';
 const $=function(id){return document.getElementById(id)};
-const paths={
-coffee:'<path d="M4 8h12v8a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V8ZM16 9h2a3 3 0 0 1 0 6h-2M7 3v2M12 2v3"/>',
-home:'<path d="M3 11 12 3l9 8M5 10v11h5v-7h4v7h5V10"/>',
-budget:'<rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 3v3h6V3M9 11h6M9 15h4"/>',
-heart:'<path d="M20.8 5.8c-2.4-2.6-6.3-1.5-8.8 1.2-2.5-2.7-6.4-3.8-8.8-1.2-4 4.4 1.7 10 8.8 15 7.1-5 12.8-10.6 8.8-15Z"/>',
-chart:'<path d="M4 21h17M6 17V9h3v8M12 17V3h3v14M18 17v-6h3v6"/>',
-plus:'<path d="M12 5v14M5 12h14"/>',arrow:'<path d="M6 18 18 6M6 6h12v12"/>',
-close:'<path d="m6 6 12 12M6 18 18 6"/>',user:'<circle cx="12" cy="8" r="4"/><path d="M4 21v-2a8 8 0 0 1 16 0v2"/>',
-bell:'<path d="M5 15c2-2 1-6 2-8a5 5 0 0 1 10 0c1 2 0 6 2 8l1 2H4l1-2ZM10 21h4"/>',
-menu:'<path d="M4 6h16M4 12h16M4 18h16"/>',mic:'<rect x="9" y="2" width="6" height="13" rx="3"/><path d="M5 11v1a7 7 0 0 0 14 0v-1M12 19v3M8 22h8"/>',
-image:'<rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8" cy="8" r="1.5"/><path d="m3 17 5-5 4 4 4-6 5 7"/>',
-send:'<path d="m5 12 7-7 7 7M12 5v15"/>',down:'<path d="m6 9 6 6 6-6"/>',back:'<path d="m15 5-7 7 7 7"/>',
-right:'<path d="m9 5 7 7-7 7"/>',expand:'<path d="M14 3h7v7M21 3l-7 7M10 21H3v-7M3 21l7-7"/>',
-check:'<path d="m5 12 4 4L19 6"/>',shield:'<path d="m12 2 8 4v6c0 5-8 10-8 10S4 17 4 12V6l8-4Z"/><path d="m8 12 3 3 5-6"/>',
-phone:'<rect x="6" y="2" width="12" height="20" rx="3"/><path d="M10 5h4M10 19h4"/>',
-globe:'<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c6 5 6 13 0 18-6-5-6-13 0-18Z"/>',
-wave:'<path d="M3 6c4-4 5 4 9 0s5 4 9 0M3 12c4-4 5 4 9 0s5 4 9 0M3 18c4-4 5 4 9 0s5 4 9 0"/>',
-lock:'<rect x="5" y="10" width="14" height="12" rx="3"/><path d="M8 10V6a4 4 0 0 1 8 0v4M12 15v2"/>',
-calendar:'<rect x="3" y="5" width="18" height="16" rx="3"/><path d="M7 2v6M17 2v6M3 11h18"/>',
-keyboard:'<rect x="2" y="5" width="20" height="14" rx="3"/><path d="M5 9h1m3 0h1m3 0h1m3 0h1M5 12h1m3 0h1m3 0h1m3 0h1M6 16h12"/>',
-repeat:'<path d="m17 2 4 4-4 4M3 10V8a2 2 0 0 1 2-2h16M7 22l-4-4 4-4M21 14v2a2 2 0 0 1-2 2H3"/>',
-flag:'<path d="M5 22V3c5-5 9 5 15 0v12c-6 5-10-5-15 0"/>',
-star:'<path d="m12 2 3 7 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1Z"/>',
-headphones:'<path d="M4 15v-3a8 8 0 0 1 16 0v3M4 13h3v8H4a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2ZM20 13h-3v8h3a2 2 0 0 0 2-2v-4a2 2 0 0 0-2-2Z"/>',
-book:'<path d="M3 4c3-1 6-1 9 2 3-3 6-3 9-2v16c-3-1-6-1-9 2-3-3-6-3-9-2V4ZM12 6v16"/>',
-tent:'<path d="m3 21 9-18 9 18H3ZM8 21l4-8 4 8"/>',
-info:'<circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7h.01"/>'
-};
-function icon(n,cl){return '<svg class="'+(cl||'')+'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+(paths[n]||paths.info)+'</svg>'}
 function esc(v){return String(v==null?'':v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
 function cents(v){const m=String(v).trim().match(/^(\d{1,9})(?:\.(\d{1,2}))?$/);return m?parseInt(m[1],10)*100+parseInt((m[2]||'').padEnd(2,'0'),10):0}
 function money(c){return new Intl.NumberFormat('zh-CN',{style:'currency',currency:'CNY',maximumFractionDigits:c%100?2:0}).format(c/100)}
@@ -445,7 +424,7 @@ function renderAgent(){
 }
 function renderModal(){
  const extra=modalExtras();if(extra)return extra;let title='',body='';
- if(s.modal==='wish'){title='添加心愿';body='<label class="field"><span>心愿名称</span><input id="wish-name" value="'+esc(s.newWish)+'" placeholder="心愿名称" maxlength="80"></label><label class="field"><span>预计花费 · 可选</span><input id="wish-amount" value="'+esc(s.wishAmount)+'" inputmode="decimal" placeholder="0.00"></label><p class="small muted">选择符号</p><div class="symbol-choices">'+['star','headphones','tent','book','heart'].map(n=>'<button data-action="wish-symbol" data-symbol="'+n+'" class="'+(s.wishSymbol===n?'active':'')+'" aria-label="'+({star:'星星',headphones:'耳机',tent:'帐篷',book:'书本',heart:'心愿'}[n])+'">'+icon(n)+'</button>').join('')+'</div>'+(s.modalError?'<p role="alert" class="error-box">'+esc(s.modalError)+'</p>':'')+btn('save-wish','添加到心愿清单','primary full');}
+ if(s.modal==='wish'){title='添加心愿';body='<label class="field"><span>心愿名称</span><input id="wish-name" value="'+esc(s.newWish)+'" placeholder="心愿名称" maxlength="80"></label><label class="field"><span>预计花费 · 可选</span><input id="wish-amount" value="'+esc(s.wishAmount)+'" inputmode="decimal" placeholder="0.00"></label><p class="small muted">选择符号</p><div class="symbol-choices">'+['star','headphones','tent','book','heart'].map(n=>'<button data-action="wish-symbol" data-symbol="'+n+'" class="'+(s.wishSymbol===n?'active':'')+'" aria-label="'+({star:'星星',headphones:'耳机',tent:'户外',book:'书本',heart:'心愿'}[n])+'">'+icon(n)+'</button>').join('')+'</div>'+(s.modalError?'<p role="alert" class="error-box">'+esc(s.modalError)+'</p>':'')+btn('save-wish','添加到心愿清单','primary full');}
  else if(s.modal==='wallet'){title='心愿钱包';body='<p class="detail-money">'+money(s.wallet)+'</p><p>来自预算结算的虚拟额度，不是真实资金。</p><p class="small muted">真实购买并确认后，按实际金额扣减；添加心愿不会分配或冻结额度。</p>'+(s.recovery?'<p>待恢复差额 '+money(s.recovery)+'</p>':'');}
  else if(s.modal==='unbudgeted'){title='未纳入预算';body=recordRows(s.records.filter(r=>r.unbudgeted));}
  else if(s.modal==='menu'){title='快捷操作';body='<div class="settings-rows">'+settingAction('create','budget','创建预算卡')+settingAction('record','plus','记一笔')+settingAction('add-wish','heart','添加心愿')+(s.undo?settingAction('undo','back','撤销：'+esc(s.undo.text)):'')+settingAction('settings','user','个人设置')+'</div>';}
