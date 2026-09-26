@@ -10,7 +10,7 @@ export function materialRenderer(svg,{flat=false}={}){
  svg.innerHTML=`<defs>
  <linearGradient id="${id}-shell" x1=".05" y1="0" x2=".68" y2="1"><stop stop-color="#8976bd"/><stop offset=".18" stop-color="#4c317b"/><stop offset=".48" stop-color="#563496"/><stop offset=".79" stop-color="#7860c9"/><stop offset="1" stop-color="#a698ed"/></linearGradient>
  <linearGradient id="${id}-rim" x1="0" y1="0" x2=".68" y2="1"><stop stop-color="#f3e8ff" stop-opacity=".95"/><stop offset=".29" stop-color="#c6b3f9" stop-opacity=".12"/><stop offset=".65" stop-color="#7561b5" stop-opacity=".1"/><stop offset="1" stop-color="#e8ddff" stop-opacity=".8"/></linearGradient>
- <filter id="${id}-blur" x="-50%" y="-50%" width="200%" height="200%" color-interpolation-filters="sRGB"><feGaussianBlur stdDeviation="${small?6.5:9}"/></filter>
+ <filter id="${id}-blur" x="-50%" y="-50%" width="200%" height="200%" color-interpolation-filters="sRGB"><feGaussianBlur stdDeviation="${small?5:7}"/></filter>
  <filter id="${id}-edge" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="2.8"/></filter>
  <filter id="${id}-eye" x="-100%" y="-50%" width="300%" height="200%"><feGaussianBlur stdDeviation="2"/></filter>
  <clipPath id="${id}-clip"><path/></clipPath>

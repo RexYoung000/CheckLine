@@ -4,7 +4,7 @@ const $=s=>document.querySelector(s),all=s=>[...document.querySelectorAll(s)];
 const player=new MaterialStatePlayer(),canvases=all('[data-cloud]');
 let renders=canvases.map(svg=>materialRenderer(svg)),flat=false,time=0,last=0,playing=true,oneShot=false;
 const oldRender=materialRenderer($('#old-avatar'),{flat:true});
-const copy={idle:['今天，从容一点。','我在这里，陪你理清每一笔。','我在这里','粉色与香槟色缓慢漂移、舒展，身体轻轻悬浮。'],receive:['我收到啦。','抬起眼睛，回应你的输入。','收到输入','一次抬眼回应，然后恢复平静。'],thinking:['正在理一理。','一点点线索，慢慢变清楚。','正在思考 · 演示','双色流转，柔波沿边缘传递，眼睛短暂追视。'],waiting:['这笔，需要你看看。','等你确认后，再继续下一步。','等待确认','提示保持可见，安静等待，不自动完成。'],success:['已经处理好了。','一次小小回应，然后继续陪着你。','处理完成 · 演示','短暂眨眼回应，材质和轮廓保持稳定。'],error:['这次没有完成。','内容还在，可以重新试一次。','需要重试 · 演示','用提示和文字说明，避免反复闪动。']};
+const copy={idle:['今天，从容一点。','我在这里，陪你理清每一笔。','我在这里','粉色与香槟色错拍漂移、舒展，身体轻轻悬浮。'],receive:['我收到啦。','抬起眼睛，回应你的输入。','收到输入','抬眼回应一次，内色色团继续飘动。'],thinking:['正在理一理。','一点点线索，慢慢变清楚。','正在思考 · 演示','双色流转，柔波沿边缘传递，眼睛短暂追视。'],waiting:['这笔，需要你看看。','等你确认后，再继续下一步。','等待确认','内色持续飘动，提示保留，等待你确认。'],success:['已经处理好了。','一次小小回应，然后继续陪着你。','处理完成 · 演示','眨眼回应一次，随后色团继续漂移。'],error:['这次没有完成。','内容还在，可以重新试一次。','需要重试 · 演示','内色继续漂移，提示保持清楚。']};
 let selected='idle';
 function draw(){const frame=player.sample();renders.forEach(render=>render(frame,time,player.reduced));oldRender(frame,time,player.reduced);}
 function updateCopy(){const c=copy[selected];all('[data-heading]').forEach(n=>n.textContent=c[0]);all('[data-subtitle]').forEach(n=>n.textContent=c[1]);all('[data-state-label]').forEach(n=>n.textContent=c[2]);$('#motion-status').textContent=`${player.reduced?'静态审阅':!playing?'已暂停':flat?'原纯色对照':c[2]} · ${c[3]}`;}
