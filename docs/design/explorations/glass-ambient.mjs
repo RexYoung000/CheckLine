@@ -1,5 +1,5 @@
 // Decorative lifetimes stay independent of the selected budget and its data.
-export function createAmbientSymbols({host, app, page, icon, reduced, active}) {
+export function createAmbientSymbols({host, app, page, icon, reduced, active, limit=6, staticLimit=4}) {
   const names = ['coffee', 'headphones', 'book', 'globe', 'heart', 'star', 'tent', 'wave'];
   const layer = document.createElement('div');
   layer.className = 'symbol-backdrop';
@@ -28,7 +28,7 @@ export function createAmbientSymbols({host, app, page, icon, reduced, active}) {
   }
 
   function spawn(quiet = false) {
-    if (particles.size >= (quiet ? 4 : 6)) return;
+    if (particles.size >= (quiet ? staticLimit : limit)) return;
     const available = zones();
     if (!available.length) return;
     let placement;
@@ -79,7 +79,7 @@ export function createAmbientSymbols({host, app, page, icon, reduced, active}) {
     if (nextStatic!==staticMode) { clear(); staticMode=nextStatic; }
     if (staticMode) {
       running=false;
-      if (nextActive && !particles.size) for(let i=0;i<4;i++) spawn(true);
+      if (nextActive && !particles.size) for(let i=0;i<staticLimit;i++) spawn(true);
       return;
     }
     if (nextActive===running) return;

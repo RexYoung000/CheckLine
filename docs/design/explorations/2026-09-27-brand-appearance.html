@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>CheckLine · 浅色与深色</title>
+  <link rel="stylesheet" href="./brand-appearance.css?v=2">
+</head>
+<body>
+  <main class="review">
+    <header class="review-heading">
+      <div>
+        <p class="eyebrow">CHECKLINE / MATERIAL STUDY 01</p>
+        <h1>让颜色安静下来。</h1>
+        <p class="review-intro">同一首页，两种明暗。中性底色、鸢尾紫、少量香槟。</p>
+      </div>
+      <a class="original-link" href="./2026-09-25-glass-continuity.html?v=c0dc23e">原交互稿 <span aria-hidden="true">↗</span></a>
+    </header>
+
+    <section class="review-controls" aria-label="对照设置">
+      <div class="view-switch" role="group" aria-label="显示方式">
+        <button type="button" data-view="both" aria-pressed="true">并排</button>
+        <button type="button" data-view="light" aria-pressed="false">浅色</button>
+        <button type="button" data-view="dark" aria-pressed="false">深色</button>
+      </div>
+      <label class="select-control"><span>预算</span><select id="budget-choice">
+        <option value="daily">日常生活 · 待确认</option>
+        <option value="coffee">咖啡与甜点</option>
+        <option value="travel">周末旅行</option>
+        <option value="family">长名称</option>
+        <option value="possible">可能超出</option>
+        <option value="empty">还没有预算卡</option>
+      </select></label>
+      <label class="select-control"><span>宽度</span><select id="preview-width">
+        <option value="390">390 px</option>
+        <option value="350">350 px</option>
+      </select></label>
+      <label class="check-control"><input type="checkbox" id="large-text">大字体</label>
+      <label class="check-control"><input type="checkbox" id="still">静态查看</label>
+    </section>
+    <p class="scope-note">配色与材质对照稿 · 画面内按钮展示外观，完整操作见原交互稿。</p>
+
+    <div class="studies" id="studies" data-view="both">
+      <section class="study" data-appearance="light" aria-labelledby="light-title">
+        <header class="study-heading"><div><span class="theme-dot"></span><h2 id="light-title">浅色</h2></div><span>珍珠灰白 / 鸢尾紫</span></header>
+        <div class="screen" id="screen-light" role="group" aria-label="浅色首页配色示意"></div>
+        <div class="theme-palette" aria-label="浅色色板"><span><i style="--swatch:#F5F4F1"></i>底色</span><span><i style="--swatch:#76618E"></i>主色</span><span><i style="--swatch:#B99C72"></i>点睛</span></div>
+      </section>
+      <section class="study" data-appearance="dark" aria-labelledby="dark-title">
+        <header class="study-heading"><div><span class="theme-dot"></span><h2 id="dark-title">深色</h2></div><span>石墨灰 / 柔紫</span></header>
+        <div class="screen" id="screen-dark" role="group" aria-label="深色首页配色示意"></div>
+        <div class="theme-palette" aria-label="深色色板"><span><i style="--swatch:#1C1B20"></i>底色</span><span><i style="--swatch:#C2ACDC"></i>主色</span><span><i style="--swatch:#D2B78B"></i>点睛</span></div>
+      </section>
+    </div>
+
+    <section class="review-principles" aria-label="本次对照重点">
+      <div><span>01 / 材质</span><h3>薄一点，清楚一点。</h3><p>玻璃留在悬浮导航与卡壳，内容表面保持稳定。</p></div>
+      <div><span>02 / 色彩</span><h3>一种主色，少量温度。</h3><p>液体统一紫色，香槟收在局部高光里。</p></div>
+      <div><span>03 / 层级</span><h3>先看还能花多少。</h3><p>保留卡夹与三层票据，让摘要和装饰退后。</p></div>
+    </section>
+    <footer class="review-footer">2026.09.27 · 独立网页设计提案，金额为隔离演示数据，审阅时钟为 2026.09.26。原生系统玻璃与真机体验另行验证。</footer>
+    <p class="sr-only" role="status" id="review-status"></p>
+  </main>
+  <script type="module" src="./brand-appearance.mjs?v=2"></script>
+</body>
+</html>
