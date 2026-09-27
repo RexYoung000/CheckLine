@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="light">
   <title>CheckLine · 浅色与深色</title>
-  <link rel="stylesheet" href="./brand-appearance.css?v=4">
+  <link rel="stylesheet" href="./brand-appearance.css?v=5">
 </head>
 <body data-card-edge="soft">
   <main class="review">
@@ -40,10 +40,11 @@
         <option value="soft">局部高光 · 新版</option>
         <option value="framed">连续描边 · 上版</option>
       </select></label>
+      <button type="button" class="light-preview" id="light-preview">演示反光</button>
       <label class="check-control"><input type="checkbox" id="large-text">大字体</label>
       <label class="check-control"><input type="checkbox" id="still">静态查看</label>
     </section>
-    <p class="scope-note">切换卡片边缘对比材质，点击小朵预览入口反馈。其余画面展示外观，完整操作见原交互稿。</p>
+    <p class="scope-note" id="material-help">在卡面移动鼠标或触摸按住，观察反光与气泡；键盘聚焦可看固定高光。静态查看会停止连续动效。完整操作见原交互稿。</p>
 
     <div class="studies" id="studies" data-view="both">
       <section class="study" data-appearance="light" aria-labelledby="light-title">
@@ -59,13 +60,13 @@
     </div>
 
     <section class="review-principles" aria-label="本次对照重点">
-      <div><span>01 / 材质</span><h3>留住光，收起框线。</h3><p>卡背只露上沿，局部高光勾出清透卡壳。</p></div>
-      <div><span>02 / 色彩</span><h3>一种主色，少量温度。</h3><p>液体统一紫色，香槟收在局部高光里。</p></div>
+      <div><span>01 / 材质</span><h3>让光跟着手走。</h3><p>悬停泛光、反射光带和局部边缘高光，共同表现卡壳。</p></div>
+      <div><span>02 / 气泡</span><h3>细密、错速的气泡。</h3><p>细粒气泡持续上升，少量大气泡提亮，液位保持预算含义。</p></div>
       <div><span>03 / 小朵</span><h3>一朵自由浮动的云。</h3><p>移除圆形底座，放大轮廓，用柔和投影承接。</p></div>
     </section>
-    <footer class="review-footer">2026.09.27 · 独立网页设计提案，金额为隔离演示数据，审阅时钟为 2026.09.26。原生系统玻璃与真机体验另行验证。</footer>
+    <footer class="review-footer">2026.09.28 · 独立网页设计提案，金额为隔离演示数据，审阅时钟为 2026.09.26。原生系统玻璃与真机体验另行验证。</footer>
     <p class="sr-only" role="status" id="review-status"></p>
   </main>
-  <script type="module" src="./brand-appearance.mjs?v=4"></script>
+  <script type="module" src="./brand-appearance.mjs?v=5"></script>
 </body>
 </html>

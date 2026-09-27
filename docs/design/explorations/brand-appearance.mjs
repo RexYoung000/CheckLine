@@ -1,4 +1,5 @@
 import {icon} from './brand-icons.mjs?v=1';
+import {createCardLight} from './brand-card-light.mjs?v=1';
 import {createMascot} from './glass-mascot.mjs?v=20260927-appearance';
 import {createAmbientSymbols} from './glass-ambient.mjs?v=20260927-appearance';
 import {projection,recordsFor,weekSeries,periodStatus,dateLabel,monthLabel,budgetDate} from './glass-data.mjs';
@@ -31,17 +32,21 @@ const money=cents=>new Intl.NumberFormat('zh-CN',{style:'currency',currency:'CNY
 const esc=text=>String(text).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 let selected='daily';
 const reduced=()=>media.matches||$('still').checked;
-const instances=[...document.querySelectorAll('.screen')].map(screen=>({screen,mascot:createMascot(screen),ambient:null,replyTimer:0,pressAnimation:null,mascotState:'idle'}));
+const instances=[...document.querySelectorAll('.screen')].map(screen=>({screen,mascot:createMascot(screen),ambient:null,cardLight:null,replyTimer:0,pressAnimation:null,mascotState:'idle'}));
 
 function water(p,id){
   if(p.level<=0)return '';
-  const bubbles=Array.from({length:15},(_,i)=>`<i style="--x:${8+i*6}%;--size:${[2,2,3,2,4][i%5]}px;--duration:${5+(i%4)*.8}s;--phase:${-i*1.29}s;--drift:${i%2?-6:7}px"></i>`).join('');
+  const bubbles=Array.from({length:30},(_,i)=>{
+    const seed=n=>((Math.sin((i+1)*n)*43758.5453)%1+1)%1;
+    const size=i%9===0?4.2+seed(12.9):1.5+seed(8.7)*1.4;
+    return `<i style="--x:${5+seed(17.3)*90}%;--size:${size}px;--duration:${3.7+seed(11.6)*3.5}s;--phase:${-seed(5.1)*11}s;--drift:${-11+seed(9.6)*22}px;--peak:${.48+seed(7.9)*.32};--rest:${12+seed(21.4)*69}%"></i>`;
+  }).join('');
   return `<div class="liquid" style="--level:${p.level}%" aria-hidden="true"><svg viewBox="0 0 600 260" preserveAspectRatio="none"><defs><linearGradient id="water-${id}" x1="0" y1="0" x2="0" y2="1"><stop class="water-start"/><stop class="water-end" offset="1"/></linearGradient></defs><path d="M0 14 Q75 0 150 14 T300 14 Q375 0 450 14 T600 14 V260 H0 Z" fill="url(#water-${id})"/></svg><div class="bubble-field">${bubbles}</div></div>`;
 }
 function card(b,p,id){
   if(!b)return `<div class="home-card-holder"><div class="back-card" aria-hidden="true"></div><div class="empty-card create-card"><span class="empty-add" aria-hidden="true">${icon('plus')}</span><h3>创建第一张预算卡</h3></div></div>`;
   const caption=p.risk==='possible'?'可能超出':p.risk==='confirmed'?'已超出':'还能花';
-  return `<div class="home-card-holder"><div class="back-card" aria-hidden="true"></div><section class="budget-card" aria-label="${esc(b.name)}"><div class="card-heading"><h3>${esc(b.name)}</h3><span class="card-menu" aria-hidden="true">···</span></div><p class="card-cycle">${b.cycle==='once'?'一次性预算':'每月循环'} · CNY</p>${water(p,id)}<div class="card-bottom"><span class="record-plus" aria-hidden="true">${icon('plus')}</span><div class="card-value"><p class="value-label">${caption}</p><p class="value-amount">${money(Math.abs(p.remaining))}</p><p class="value-caption">${p.risk==='none'?`${p.level.toFixed(0)}% 剩余`:'含待确认金额'}</p></div></div></section></div>`;
+  return `<div class="home-card-holder"><div class="back-card" aria-hidden="true"></div><section class="budget-card" tabindex="0" aria-label="${esc(b.name)} · 卡片材质预览" aria-describedby="material-help"><div class="card-heading"><h3>${esc(b.name)}</h3><span class="card-menu" aria-hidden="true">···</span></div><p class="card-cycle">${b.cycle==='once'?'一次性预算':'每月循环'} · CNY</p>${water(p,id)}<div class="card-reflection" aria-hidden="true"><i class="reflection-spot"></i><i class="reflection-sweep"></i></div><div class="card-edge-light" aria-hidden="true"></div><div class="card-bottom"><span class="record-plus" aria-hidden="true">${icon('plus')}</span><div class="card-value"><p class="value-label">${caption}</p><p class="value-amount">${money(Math.abs(p.remaining))}</p><p class="value-caption">${p.risk==='none'?`${p.level.toFixed(0)}% 剩余`:'含待确认金额'}</p></div></div></section></div>`;
 }
 function summary(b,p){
   const series=weekSeries(rows,b),maximum=Math.max(1,...series.map(v=>v.cents));
@@ -64,18 +69,23 @@ function render(){
     instance.pressAnimation?.cancel();
     instance.mascotState='idle';
     instance.ambient?.destroy();
+    instance.cardLight?.destroy();
     screen.innerHTML=`<div class="scene-wash" aria-hidden="true"></div><div class="home-symbols" aria-hidden="true"></div><div class="topbar" aria-label="顶部导航外观示意"><span class="nav-glyph" aria-hidden="true">${icon('user')}</span><span class="nav-spacer"></span><span class="nav-glyph" aria-hidden="true">${icon('bell')}</span><span class="nav-glyph" aria-hidden="true">${icon('menu')}</span></div><div class="hero">${card(b,p,screen.id)}</div><div class="pocket ${b?'':'empty-pocket'}"><svg class="pocket-rim" viewBox="0 0 390 26" preserveAspectRatio="none" aria-hidden="true"><path d="M0 0C20 0 23 25 48 25H342C367 25 370 0 390 0V26H0Z" fill="currentColor"/></svg>${b?summary(b,p)+receipts(b):'<div class="empty-copy"><p>预算与消费会显示在这里。</p></div>'}${navigation()}</div>`;
     instance.ambient=createAmbientSymbols({host:screen.querySelector('.home-symbols'),app:screen,page:screen,icon,reduced,active:()=>!document.hidden&&screen.getBoundingClientRect().width>0,limit:3,staticLimit:2});
+    const materialCard=screen.querySelector('.budget-card');
+    instance.cardLight=materialCard?createCardLight({card:materialCard,reduced}):null;
     instance.mascot.sync('idle',reduced());
     instance.ambient.sync();
   }
+  $('light-preview').disabled=reduced()||!b;
   $('review-status').textContent=`两套首页已同步为${b?.name||'空状态'}。`;
 }
 function syncMotion(){
   document.body.classList.toggle('still',reduced());
+  $('light-preview').disabled=reduced()||!budgets.some(b=>b.id===selected);
   for(const instance of instances){
     if(reduced()){instance.pressAnimation?.cancel();clearTimeout(instance.replyTimer);instance.mascotState='idle';}
-    instance.mascot.sync(instance.mascotState,reduced());instance.ambient?.sync();
+    instance.mascot.sync(instance.mascotState,reduced());instance.ambient?.sync();instance.cardLight?.sync();
   }
 }
 for(const instance of instances)instance.screen.addEventListener('click',event=>{
@@ -92,6 +102,10 @@ for(const instance of instances)instance.screen.addEventListener('click',event=>
     instance.replyTimer=setTimeout(()=>{instance.mascotState='idle';instance.mascot.sync('idle',reduced());},1000);
   }
   $('review-status').textContent='小朵入口反馈预览；完整助手会话请打开原交互稿。';
+});
+$('light-preview').addEventListener('click',()=>{
+  instances.forEach(instance=>instance.cardLight?.preview());
+  $('review-status').textContent='反光演示已启动；也可直接在卡面移动鼠标。';
 });
 $('budget-choice').addEventListener('change',e=>{selected=e.target.value;render();});
 $('card-edge').addEventListener('change',e=>{document.body.dataset.cardEdge=e.target.value;});
