@@ -1,4 +1,4 @@
-import {icon} from './glass-icons.mjs';
+import {icon} from './brand-icons.mjs?v=1';
 import {createMascot} from './glass-mascot.mjs?v=20260927-appearance';
 import {createAmbientSymbols} from './glass-ambient.mjs?v=20260927-appearance';
 import {projection,recordsFor,weekSeries,periodStatus,dateLabel,monthLabel,budgetDate} from './glass-data.mjs';
@@ -31,7 +31,7 @@ const money=cents=>new Intl.NumberFormat('zh-CN',{style:'currency',currency:'CNY
 const esc=text=>String(text).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 let selected='daily';
 const reduced=()=>media.matches||$('still').checked;
-const instances=[...document.querySelectorAll('.screen')].map(screen=>({screen,mascot:createMascot(screen),ambient:null}));
+const instances=[...document.querySelectorAll('.screen')].map(screen=>({screen,mascot:createMascot(screen),ambient:null,replyTimer:0,pressAnimation:null,mascotState:'idle'}));
 
 function water(p,id){
   if(p.level<=0)return '';
@@ -55,11 +55,14 @@ function receipts(b){
   const recent=recordsFor(rows,b).slice(0,3);
   return `<div class="records-heading"><h3>最近记录</h3><span>全部记录 ↗</span></div><div class="receipt-stack">${recent.slice().reverse().map((r,i)=>`<article class="receipt ${i===0?'receipt-back':i===1?'receipt-mid':'receipt-front'}"><div><strong>${esc(r.name)}</strong>${i===2?`<p>${dateLabel(r.date)}${r.pending?' · 待确认':''}</p>`:''}</div><span class="receipt-amount">−${money(r.cents)}</span></article>`).join('')}</div><p class="coverage">仅包含已记录消费</p>`;
 }
-function navigation(){return `<div class="navigation" aria-label="底部导航外观示意"><div class="tabs" aria-hidden="true">${['home','budget','heart','chart'].map((n,i)=>`<span class="tab-glyph ${i===0?'active':''}">${icon(n)}</span>`).join('')}</div><div class="assistant-entry" aria-label="小朵助手入口外观"><svg class="xiaoduo" data-xiaoduo data-small viewBox="-112 -104 224 208" aria-hidden="true"></svg></div></div>`;}
+function navigation(){return `<div class="navigation" aria-label="底部导航外观示意"><div class="tabs" aria-hidden="true">${['home','budget','heart','chart'].map((n,i)=>`<span class="tab-glyph ${i===0?'active':''}">${icon(n)}</span>`).join('')}</div><button type="button" class="assistant-entry" aria-label="预览小朵点击反馈"><span class="agent-float"><span class="agent-press"><svg class="xiaoduo" data-xiaoduo data-small viewBox="-112 -104 224 208" aria-hidden="true"></svg></span></span></button></div>`;}
 function render(){
   const b=budgets.find(b=>b.id===selected),p=b?projection(rows,b):null;
   for(const instance of instances){
     const {screen}=instance;
+    clearTimeout(instance.replyTimer);
+    instance.pressAnimation?.cancel();
+    instance.mascotState='idle';
     instance.ambient?.destroy();
     screen.innerHTML=`<div class="scene-wash" aria-hidden="true"></div><div class="home-symbols" aria-hidden="true"></div><div class="topbar" aria-label="顶部导航外观示意"><span class="nav-glyph" aria-hidden="true">${icon('user')}</span><span class="nav-spacer"></span><span class="nav-glyph" aria-hidden="true">${icon('bell')}</span><span class="nav-glyph" aria-hidden="true">${icon('menu')}</span></div><div class="hero">${card(b,p,screen.id)}</div><div class="pocket ${b?'':'empty-pocket'}"><svg class="pocket-rim" viewBox="0 0 390 26" preserveAspectRatio="none" aria-hidden="true"><path d="M0 0C20 0 23 25 48 25H342C367 25 370 0 390 0V26H0Z" fill="currentColor"/></svg>${b?summary(b,p)+receipts(b):'<div class="empty-copy"><p>预算与消费会显示在这里。</p></div>'}${navigation()}</div>`;
     instance.ambient=createAmbientSymbols({host:screen.querySelector('.home-symbols'),app:screen,page:screen,icon,reduced,active:()=>!document.hidden&&screen.getBoundingClientRect().width>0,limit:3,staticLimit:2});
@@ -70,9 +73,28 @@ function render(){
 }
 function syncMotion(){
   document.body.classList.toggle('still',reduced());
-  for(const instance of instances){instance.mascot.sync('idle',reduced());instance.ambient?.sync();}
+  for(const instance of instances){
+    if(reduced()){instance.pressAnimation?.cancel();clearTimeout(instance.replyTimer);instance.mascotState='idle';}
+    instance.mascot.sync(instance.mascotState,reduced());instance.ambient?.sync();
+  }
 }
+for(const instance of instances)instance.screen.addEventListener('click',event=>{
+  const entry=event.target.closest('.assistant-entry');
+  if(!entry)return;
+  clearTimeout(instance.replyTimer);
+  instance.pressAnimation?.cancel();
+  if(!reduced()){
+    instance.pressAnimation=entry.querySelector('.agent-press').animate(
+      [{transform:'scale(.96)'},{transform:'scale(1.055)',offset:.5},{transform:'scale(1)'}],
+      {duration:380,easing:'cubic-bezier(.2,.7,.2,1)'}
+    );
+    instance.mascotState='receive';instance.mascot.sync('receive',false);
+    instance.replyTimer=setTimeout(()=>{instance.mascotState='idle';instance.mascot.sync('idle',reduced());},1000);
+  }
+  $('review-status').textContent='小朵入口反馈预览；完整助手会话请打开原交互稿。';
+});
 $('budget-choice').addEventListener('change',e=>{selected=e.target.value;render();});
+$('card-edge').addEventListener('change',e=>{document.body.dataset.cardEdge=e.target.value;});
 $('preview-width').addEventListener('change',e=>document.documentElement.style.setProperty('--study-width',`${e.target.value}px`));
 $('large-text').addEventListener('change',e=>instances.forEach(({screen})=>screen.classList.toggle('large',e.target.checked)));
 $('still').addEventListener('change',syncMotion);
