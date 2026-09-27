@@ -1,5 +1,5 @@
 import {icon} from './brand-icons.mjs?v=1';
-import {createCardLight} from './brand-card-light.mjs?v=1';
+import {createCardLight} from './brand-card-light.mjs?v=2';
 import {createMascot} from './glass-mascot.mjs?v=20260927-appearance';
 import {createAmbientSymbols} from './glass-ambient.mjs?v=20260927-appearance';
 import {projection,recordsFor,weekSeries,periodStatus,dateLabel,monthLabel,budgetDate} from './glass-data.mjs';
@@ -46,7 +46,7 @@ function water(p,id){
 function card(b,p,id){
   if(!b)return `<div class="home-card-holder"><div class="back-card" aria-hidden="true"></div><div class="empty-card create-card"><span class="empty-add" aria-hidden="true">${icon('plus')}</span><h3>创建第一张预算卡</h3></div></div>`;
   const caption=p.risk==='possible'?'可能超出':p.risk==='confirmed'?'已超出':'还能花';
-  return `<div class="home-card-holder"><div class="back-card" aria-hidden="true"></div><section class="budget-card" tabindex="0" aria-label="${esc(b.name)} · 卡片材质预览" aria-describedby="material-help"><div class="card-heading"><h3>${esc(b.name)}</h3><span class="card-menu" aria-hidden="true">···</span></div><p class="card-cycle">${b.cycle==='once'?'一次性预算':'每月循环'} · CNY</p>${water(p,id)}<div class="card-reflection" aria-hidden="true"><i class="reflection-spot"></i><i class="reflection-sweep"></i></div><div class="card-edge-light" aria-hidden="true"></div><div class="card-bottom"><span class="record-plus" aria-hidden="true">${icon('plus')}</span><div class="card-value"><p class="value-label">${caption}</p><p class="value-amount">${money(Math.abs(p.remaining))}</p><p class="value-caption">${p.risk==='none'?`${p.level.toFixed(0)}% 剩余`:'含待确认金额'}</p></div></div></section></div>`;
+  return `<div class="home-card-holder"><div class="back-card" aria-hidden="true"></div><section class="budget-card" tabindex="0" aria-label="${esc(b.name)} · 卡片材质预览" aria-describedby="material-help"><div class="card-heading"><h3>${esc(b.name)}</h3><span class="card-menu" aria-hidden="true">···</span></div><p class="card-cycle">${b.cycle==='once'?'一次性预算':'每月循环'} · CNY</p>${water(p,id)}<div class="card-reflection" aria-hidden="true"></div><div class="card-edge-light" aria-hidden="true"></div><div class="card-bottom"><span class="record-plus" aria-hidden="true">${icon('plus')}</span><div class="card-value"><p class="value-label">${caption}</p><p class="value-amount">${money(Math.abs(p.remaining))}</p><p class="value-caption">${p.risk==='none'?`${p.level.toFixed(0)}% 剩余`:'含待确认金额'}</p></div></div></section></div>`;
 }
 function summary(b,p){
   const series=weekSeries(rows,b),maximum=Math.max(1,...series.map(v=>v.cents));

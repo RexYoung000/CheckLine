@@ -1,6 +1,5 @@
 // Optical feedback for the HTML material study. No card navigation or data writes.
 export function createCardLight({card,reduced}) {
-  const spot=card.querySelector('.reflection-spot'),sweep=card.querySelector('.reflection-sweep');
   const surface=card.querySelector('.card-reflection'),edge=card.querySelector('.card-edge-light');
   let rect=card.getBoundingClientRect(),x=.32,y=.24,tx=x,ty=y,strength=0;
   let pointer=false,keyboard=false,demoStart=null,frameID=0,last=0,destroyed=false;
@@ -13,8 +12,6 @@ export function createCardLight({card,reduced}) {
     edge.style.opacity=String(strength*.9);
     card.style.setProperty('--glint-x',`${x*100}%`);
     card.style.setProperty('--glint-y',`${y*100}%`);
-    spot.style.transform=`translate3d(${x*rect.width-108}px,${y*rect.height-96}px,0)`;
-    sweep.style.transform=`translate3d(${x*rect.width-55}px,${(y-.5)*rect.height*.16}px,0) rotate(${-28+x*12}deg)`;
     card.dataset.lit=String(strength>.015);
   }
   function step(now){
