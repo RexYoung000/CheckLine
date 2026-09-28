@@ -37,6 +37,35 @@ struct WalletSymbol: View {
     }
 }
 
+private struct WalletTopScrollEdge: ViewModifier {
+    func body(content: Content) -> some View {
+        if #available(iOS 26.0, *) {
+            content.scrollEdgeEffectStyle(.soft, for: .top)
+        } else {
+            content
+        }
+    }
+}
+
+private struct WalletHeaderBar: ViewModifier {
+    var title: String?
+    var workspace: CheckLineWorkspace
+    var light: Bool
+    var onAdd: (() -> Void)?
+
+    func body(content: Content) -> some View {
+        if #available(iOS 26.0, *) {
+            content.safeAreaBar(edge: .top, spacing: 0) { header }
+        } else {
+            content.safeAreaInset(edge: .top, spacing: 0) { header }
+        }
+    }
+
+    private var header: some View {
+        WalletPageHeader(title: title, workspace: workspace, light: light, onAdd: onAdd)
+    }
+}
+
 struct WalletRootPage<Content: View>: View {
     var tab: CheckLineAppTab
     var title: String
@@ -63,6 +92,7 @@ struct WalletRootPage<Content: View>: View {
                     .offset(y: !lightHeader && !reduceMotion ? 16 * (1 - (chrome?.interiorReveal ?? 1)) : 0)
                     .rotation3DEffect(.degrees(!lightHeader && !reduceMotion ? -5 * (1 - (chrome?.interiorReveal ?? 1)) : 0), axis: (x: 1, y: 0, z: 0), anchor: .top, perspective: 0.25)
             }
+            .modifier(WalletTopScrollEdge())
             .scrollDisabled(chrome?.isTransitioning == true)
             .scrollDismissesKeyboard(.interactively)
             .background {
@@ -82,9 +112,7 @@ struct WalletRootPage<Content: View>: View {
                 else { WalletInteriorSurface().ignoresSafeArea() }
             }
             .toolbar(.hidden, for: .navigationBar)
-            .safeAreaInset(edge: .top, spacing: 0) {
-                WalletPageHeader(title: lightHeader ? nil : title, workspace: workspace, light: lightHeader, onAdd: onAdd)
-            }
+            .modifier(WalletHeaderBar(title: lightHeader ? nil : title, workspace: workspace, light: lightHeader, onAdd: onAdd))
             .overlay(alignment: .bottom) {
                 if WalletTabTransition.usesSystemBar && chrome?.isShowingDetail != true {
                     WalletActionFeedback(workspace: workspace)

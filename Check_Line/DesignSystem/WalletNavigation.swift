@@ -55,70 +55,108 @@ struct WalletPageHeader: View {
     private var visibility: Double { light ? 1 - Double(chrome?.pocketClosure ?? 0) : chrome?.interiorReveal ?? 1 }
 
     var body: some View {
-        HStack(spacing: 10) {
-            Button { chrome?.isSettingsPresented = true } label: {
-                Image(systemName: "person.fill")
-                    .font(.system(size: 19, weight: .regular))
-                    .frame(width: 36, height: 36)
-                    .background((light ? PaperTheme.paperInk : PaperTheme.ink).opacity(0.08), in: Circle())
-                    .overlay { Circle().strokeBorder((light ? PaperTheme.paperInk : PaperTheme.ink).opacity(0.10), lineWidth: 0.8) }
-                    .frame(width: 44, height: 44)
+        Group {
+            if #available(iOS 26.0, *) {
+                GlassEffectContainer(spacing: 12) { headerRow }
+            } else {
+                headerRow
             }
-            .accessibilityLabel(String(localized: "tab.settings"))
-            .accessibilityIdentifier("wallet.profile")
+        }
+        .font(.system(size: 20, weight: .regular))
+        .buttonStyle(.plain)
+        .foregroundStyle(light ? PaperTheme.paperInk : PaperTheme.ink)
+        .environment(\.colorScheme, light ? .light : .dark)
+        .opacity(visibility)
+        .offset(y: light ? -12 * (1 - visibility) : 6 * (1 - visibility))
+        .padding(.horizontal, 16)
+        .padding(.vertical, 5)
+    }
+
+    private var headerRow: some View {
+        HStack(spacing: 10) {
+            profileControl
+                .paperGlass(.circle, interactive: true)
             if let title {
                 Text(title).font(.title2.weight(.semibold)).lineLimit(1).minimumScaleFactor(0.7).accessibilityAddTraits(.isHeader)
             } else if DesignPreviewData.isEnabled {
                 Text(String(localized: "wallet.preview")).font(.caption2).foregroundStyle(PaperTheme.paperInk.opacity(0.5))
             }
-            Spacer(minLength: 0)
-            if let onAdd {
-                Button(action: onAdd) { Image(systemName: "plus").frame(width: 44, height: 44) }
-                    .accessibilityLabel(String(localized: "wallet.create"))
-            }
-            if light {
-                Button { chrome?.isAttentionPresented = true } label: {
-                    Image(systemName: "bell")
-                        .overlay(alignment: .topTrailing) {
-                            if !workspace.processingItems.isEmpty {
-                                Circle().fill(PaperTheme.accent).frame(width: 6, height: 6).offset(x: 3, y: -3)
-                            }
-                        }
-                        .frame(width: 44, height: 44)
-                }
-                .accessibilityLabel(String(localized: "wallet.attention.title"))
-                .accessibilityValue(String(format: String(localized: "wallet.attention.count"), workspace.processingItems.count))
-                .accessibilityIdentifier("wallet.attention")
-            }
-            Menu {
-                Button(String(localized: "capture.title"), systemImage: "plus") { workspace.openComposer(.record) }
-                Button(String(localized: "v1.budget.create"), systemImage: "wallet.pass") { workspace.openComposer(.budget) }
-                Button(String(localized: "wallet.budget.manage"), systemImage: "square.grid.2x2") { chrome?.selectedTab = .budgets }
-                if workspace.lastUndo != nil {
-                    Button(String(localized: "action.undo"), systemImage: "arrow.uturn.backward") { workspace.undoLast() }
-                }
-                Divider()
-                Button(String(localized: "tab.settings"), systemImage: "gearshape") { chrome?.isSettingsPresented = true }
-            } label: {
-                Image(systemName: "line.3.horizontal").frame(width: 44, height: 44)
-            }
-            .accessibilityLabel(String(localized: "wallet.functions"))
-            .accessibilityIdentifier("wallet.functions")
+            Spacer(minLength: 8)
+            trailingControls
         }
-        .font(.system(size: 20, weight: .regular))
-        .buttonStyle(.plain)
-        .foregroundStyle(light ? PaperTheme.paperInk : PaperTheme.ink)
-        .opacity(visibility)
-        .offset(y: light ? -12 * (1 - visibility) : 6 * (1 - visibility))
-        .padding(.horizontal, 16).padding(.vertical, 5)
-        .background {
-            if light {
-                PaperTheme.paper.overlay { PaperTheme.canvas.opacity(Double(chrome?.pocketClosure ?? 0)) }
-                    .ignoresSafeArea(edges: .top)
-            } else {
-                Color.clear
-            }
+    }
+
+    private var profileControl: some View {
+        Button { chrome?.isSettingsPresented = true } label: {
+            Image(systemName: "person")
+                .font(.system(size: 20, weight: .medium))
+                .frame(width: 44, height: 44)
+                .contentShape(Circle())
         }
+        .accessibilityLabel(String(localized: "tab.settings"))
+        .accessibilityIdentifier("wallet.profile")
+    }
+
+    @ViewBuilder private var trailingControls: some View {
+        if #available(iOS 26.0, *) {
+            trailingButtons
+                .glassEffect(.regular, in: .capsule)
+        } else {
+            trailingButtons.paperGlass(.capsule)
+        }
+    }
+
+    private var trailingButtons: some View {
+        HStack(spacing: 0) {
+            if let onAdd { createControl(onAdd) }
+            if light { attentionControl }
+            functionsControl
+        }
+    }
+
+    private func createControl(_ action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            Image(systemName: "plus")
+                .frame(width: 44, height: 44)
+                .contentShape(Rectangle())
+        }
+        .accessibilityLabel(String(localized: "wallet.create"))
+        .accessibilityIdentifier("wallet.header.create")
+    }
+
+    private var attentionControl: some View {
+        Button { chrome?.isAttentionPresented = true } label: {
+            Image(systemName: "bell")
+                .overlay(alignment: .topTrailing) {
+                    if !workspace.processingItems.isEmpty {
+                        Circle().fill(PaperTheme.accent).frame(width: 6, height: 6).offset(x: 3, y: -3)
+                    }
+                }
+                .frame(width: 44, height: 44)
+                .contentShape(Rectangle())
+        }
+        .accessibilityLabel(String(localized: "wallet.attention.title"))
+        .accessibilityValue(String(format: String(localized: "wallet.attention.count"), workspace.processingItems.count))
+        .accessibilityIdentifier("wallet.attention")
+    }
+
+    private var functionsControl: some View {
+        Menu {
+            Button(String(localized: "capture.title"), systemImage: "plus") { workspace.openComposer(.record) }
+            Button(String(localized: "v1.budget.create"), systemImage: "wallet.pass") { workspace.openComposer(.budget) }
+            Button(String(localized: "wallet.budget.manage"), systemImage: "square.grid.2x2") { chrome?.selectedTab = .budgets }
+            if workspace.lastUndo != nil {
+                Button(String(localized: "action.undo"), systemImage: "arrow.uturn.backward") { workspace.undoLast() }
+            }
+            Divider()
+            Button(String(localized: "tab.settings"), systemImage: "gearshape") { chrome?.isSettingsPresented = true }
+        } label: {
+            Image(systemName: "ellipsis")
+                .frame(width: 44, height: 44)
+                .contentShape(Rectangle())
+        }
+        .accessibilityLabel(String(localized: "wallet.functions"))
+        .accessibilityIdentifier("wallet.functions")
     }
 }
 

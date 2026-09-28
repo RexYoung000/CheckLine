@@ -5,6 +5,57 @@ import UIKit
 final class WalletNavigationUITests: XCTestCase {
     override func setUpWithError() throws { continueAfterFailure = false }
 
+    func testFloatingHeaderRemainsUsableWhileScrolling() throws {
+        let app = launch(screen: "home")
+        let profile = app.buttons["wallet.profile"]
+        let attention = app.buttons["wallet.attention"]
+        let functions = app.buttons["wallet.functions"]
+        XCTAssertTrue(profile.waitForExistence(timeout: 10))
+        XCTAssertTrue(attention.exists)
+        XCTAssertTrue(functions.exists)
+        XCTAssertGreaterThan(attention.frame.minX - profile.frame.maxX, 40)
+        XCTAssertGreaterThanOrEqual(profile.frame.width, 43)
+        XCTAssertGreaterThanOrEqual(attention.frame.width, 43)
+        XCTAssertGreaterThanOrEqual(functions.frame.width, 43)
+        attach(app, name: "floating-header-home")
+
+        app.swipeUp()
+        XCTAssertTrue(profile.isHittable)
+        XCTAssertTrue(attention.isHittable)
+        XCTAssertTrue(functions.isHittable)
+        attach(app, name: "floating-header-over-scrolled-content")
+
+        attention.tap()
+        XCTAssertTrue(app.navigationBars["待处理事项"].waitForExistence(timeout: 5))
+        app.navigationBars.buttons.firstMatch.tap()
+        XCTAssertTrue(app.navigationBars["待处理事项"].waitForNonExistence(timeout: 5))
+
+        app.buttons["wallet.tab.budgets"].tap()
+        let create = app.buttons["wallet.header.create"]
+        XCTAssertTrue(create.waitForExistence(timeout: 5))
+        XCTAssertTrue(create.isHittable)
+        XCTAssertGreaterThanOrEqual(create.frame.width, 43)
+        attach(app, name: "floating-header-dark-page")
+        create.tap()
+        XCTAssertTrue(app.textFields.firstMatch.waitForExistence(timeout: 5))
+    }
+
+    func testFloatingHeaderProfileAndMenuOpenTheirDestinations() throws {
+        let app = launch(screen: "home")
+        let profile = app.buttons["wallet.profile"]
+        XCTAssertTrue(profile.waitForExistence(timeout: 10))
+        profile.tap()
+        XCTAssertTrue(app.navigationBars["设置"].waitForExistence(timeout: 5))
+        app.navigationBars.buttons.firstMatch.tap()
+        XCTAssertTrue(app.navigationBars["设置"].waitForNonExistence(timeout: 5))
+
+        app.buttons["wallet.functions"].tap()
+        let record = app.buttons["记一笔"].firstMatch
+        XCTAssertTrue(record.waitForExistence(timeout: 5))
+        record.tap()
+        XCTAssertTrue(app.textFields.firstMatch.waitForExistence(timeout: 5))
+    }
+
     func testNativeTabsAndAgentKeepTheCurrentPage() throws {
         guard #available(iOS 27.0, *) else { throw XCTSkip("Native prominent tabs require iOS 27.") }
         try XCTSkipUnless(UIDevice.current.userInterfaceIdiom == .phone, "iPad retains the centered custom navigation.")
