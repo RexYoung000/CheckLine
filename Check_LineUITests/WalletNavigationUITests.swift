@@ -90,11 +90,16 @@ final class WalletNavigationUITests: XCTestCase {
     func testEmptyHomeOffersReadableCreation() throws {
         let app = launch(screen: "empty")
         let create = app.buttons["wallet.empty.createBudget"]
+        let emptyCard = app.buttons["wallet.empty.card"]
         XCTAssertTrue(create.waitForExistence(timeout: 10))
-        XCTAssertTrue(app.staticTexts["还没有预算卡"].isHittable)
+        XCTAssertTrue(emptyCard.isHittable)
         XCTAssertTrue(app.staticTexts["为日常开销或一个计划，创建一张预算卡。"].isHittable)
         XCTAssertTrue(create.isHittable)
         attach(app, name: "empty-home")
+        emptyCard.tap()
+        let agentClose = app.buttons["wallet.agent.close"]
+        XCTAssertTrue(agentClose.waitForExistence(timeout: 5))
+        agentClose.tap()
         create.tap()
         XCTAssertTrue(app.textFields.firstMatch.waitForExistence(timeout: 5))
         attach(app, name: "create-from-empty-home")
@@ -115,6 +120,19 @@ final class WalletNavigationUITests: XCTestCase {
         }
         undo.tap()
         XCTAssertTrue(create.waitForExistence(timeout: 5))
+    }
+
+    func testAnalysisEmptyStatesUseRealDataAndOfferNextAction() throws {
+        let withoutCard = launch(screen: "analysis-empty")
+        XCTAssertTrue(withoutCard.staticTexts["还没有可回看的预算卡"].waitForExistence(timeout: 10))
+        XCTAssertTrue(withoutCard.buttons["创建预算卡"].isHittable)
+        XCTAssertFalse(withoutCard.staticTexts["-¥0"].exists)
+        withoutCard.terminate()
+
+        let withoutRecords = launch(screen: "analysis-no-records")
+        XCTAssertTrue(withoutRecords.staticTexts["这张预算卡还没有消费记录"].waitForExistence(timeout: 10))
+        XCTAssertTrue(withoutRecords.buttons["记一笔"].isHittable)
+        XCTAssertFalse(withoutRecords.staticTexts["-¥0"].exists)
     }
 
     func testNativeLensDragAndDetailReturn() throws {

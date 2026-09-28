@@ -54,7 +54,9 @@ struct BudgetDetailContent: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {
                 if let card {
-                    Text(card.name).font(.subheadline).foregroundStyle(PaperTheme.muted)
+                    if section != .overview {
+                        Text(card.name).font(.subheadline).foregroundStyle(PaperTheme.muted)
+                    }
                     switch section {
                     case .overview:
                         overview(card)
@@ -79,6 +81,7 @@ struct BudgetDetailContent: View {
 
     private func overview(_ card: HomeBudgetCardModel) -> some View {
         VStack(alignment: .leading, spacing: 24) {
+            LiquidBudgetCard(card: card, flows: true)
             VStack(alignment: .leading, spacing: 8) {
                 Text(MoneyFormat.string(-BudgetPresentation.used(card), currencyCode: card.currencyCode))
                     .font(.largeTitle.weight(.medium)).monospacedDigit().lineLimit(1).minimumScaleFactor(0.5)
@@ -191,7 +194,7 @@ struct BudgetDailyChart: View {
     var ledger: Ledger
     var height: CGFloat = 160
     var body: some View {
-        let days = BudgetPresentation.days(count: 14)
+        let days = BudgetPresentation.days(endingAt: BudgetPresentation.referenceDate(card, in: ledger), count: 14)
         Chart(days, id: \.self) { day in
             let amount = BudgetPresentation.dailyAmount(day, card: card, ledger: ledger)
             BarMark(x: .value(String(localized: "wallet.date"), day, unit: .day), y: .value(String(localized: "v1.card.used"), NSDecimalNumber(decimal: amount).doubleValue))
@@ -209,9 +212,19 @@ struct BudgetCalendarView: View {
     @Environment(\.dynamicTypeSize) private var typeSize
     var card: HomeBudgetCardModel
     var ledger: Ledger
-    @State private var month = Calendar.current.startOfDay(for: Date())
-    @State private var selectedDay = Calendar.current.startOfDay(for: Date())
+    @State private var month: Date
+    @State private var selectedDay: Date
     private var calendar: Calendar { .current }
+
+    init(card: HomeBudgetCardModel, ledger: Ledger) {
+        self.card = card
+        self.ledger = ledger
+        let today = Calendar.current.startOfDay(for: Date())
+        let initialDay = card.periodStart <= today && (card.periodEnd.map { today <= $0 } ?? true)
+            ? today : Calendar.current.startOfDay(for: card.periodStart)
+        _month = State(initialValue: initialDay)
+        _selectedDay = State(initialValue: initialDay)
+    }
     private var start: Date { calendar.date(from: calendar.dateComponents([.year, .month], from: month)) ?? month }
     private var days: [Date] {
         (calendar.range(of: .day, in: .month, for: month) ?? 1..<29).compactMap { calendar.date(byAdding: .day, value: $0-1, to: start) }
@@ -253,12 +266,14 @@ struct BudgetCalendarView: View {
                 }
             }
             }
+            let rows = BudgetPresentation.expenses(card, in: ledger).filter { calendar.isDate($0.occurredAt, inSameDayAs: selectedDay) }
             HStack {
                 Text(selectedDay, format: .dateTime.month().day())
                 Spacer()
-                Text(MoneyFormat.string(BudgetPresentation.dailyAmount(selectedDay, card: card, ledger: ledger), currencyCode: card.currencyCode)).monospacedDigit()
+                if !rows.isEmpty {
+                    Text(MoneyFormat.string(BudgetPresentation.dailyAmount(selectedDay, card: card, ledger: ledger), currencyCode: card.currencyCode)).monospacedDigit()
+                }
             }.font(.subheadline).padding(.top, 6)
-            let rows = BudgetPresentation.expenses(card, in: ledger).filter { calendar.isDate($0.occurredAt, inSameDayAs: selectedDay) }
             if rows.isEmpty { Text(String(localized: "wallet.day.empty")).font(.subheadline).foregroundStyle(PaperTheme.muted).padding(.vertical, 16) }
             ForEach(rows) { WalletExpenseRow(expense: $0) }
             Text(String(localized: "wallet.coverage.note")).font(.caption).foregroundStyle(PaperTheme.muted)

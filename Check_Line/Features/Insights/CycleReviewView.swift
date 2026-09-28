@@ -13,18 +13,48 @@ struct CycleReviewView: View {
                         HStack { Text(card.name).font(.headline); Image(systemName: "chevron.down").font(.caption); Spacer() }
                             .foregroundStyle(PaperTheme.ink).frame(minHeight: 44)
                     }
-                    Button { showsDetails = true } label: {
+                    if BudgetPresentation.expenses(card, in: workspace.ledger).isEmpty {
                         PaperCard {
                             VStack(alignment: .leading, spacing: 18) {
-                                HStack { Text(String(localized: "wallet.used.title")).font(.subheadline); Spacer(); Image(systemName: "arrow.up.right") }
-                                Text(MoneyFormat.string(-BudgetPresentation.used(card), currencyCode: card.currencyCode)).font(.largeTitle.weight(.medium)).monospacedDigit().lineLimit(1).minimumScaleFactor(0.5)
-                                BudgetDailyChart(card: card, ledger: workspace.ledger, height: 120)
+                                Image(systemName: "chart.bar.xaxis")
+                                    .font(.system(size: 38, weight: .ultraLight))
+                                    .foregroundStyle(PaperTheme.accent)
+                                Text(String(localized: "wallet.analysis.noRecords"))
+                                    .font(.headline)
+                                Text(String(localized: "wallet.empty.analysis"))
+                                    .font(.subheadline).foregroundStyle(PaperTheme.muted)
+                                Button(String(localized: "capture.title"), systemImage: "plus") {
+                                    workspace.openComposer(.record)
+                                }.buttonStyle(PaperSolidButtonStyle())
                             }
                         }
-                    }.buttonStyle(.plain)
-                    PaperCard { BudgetCalendarView(card: card, ledger: workspace.ledger) }
+                    } else {
+                        Button { showsDetails = true } label: {
+                            PaperCard {
+                                VStack(alignment: .leading, spacing: 18) {
+                                    HStack { Text(String(localized: "wallet.used.title")).font(.subheadline); Spacer(); Image(systemName: "arrow.up.right") }
+                                    Text(MoneyFormat.string(-BudgetPresentation.used(card), currencyCode: card.currencyCode)).font(.largeTitle.weight(.medium)).monospacedDigit().lineLimit(1).minimumScaleFactor(0.5)
+                                    BudgetDailyChart(card: card, ledger: workspace.ledger, height: 120)
+                                }
+                            }
+                        }.buttonStyle(.plain)
+                    }
+                    PaperCard { BudgetCalendarView(card: card, ledger: workspace.ledger).id(card.id) }
                 } else {
-                    PaperEmptyHint(title: String(localized: "v1.insights.empty"), message: String(localized: "wallet.empty.analysis"))
+                    PaperCard {
+                        VStack(alignment: .leading, spacing: 18) {
+                            Image(systemName: "calendar")
+                                .font(.system(size: 52, weight: .ultraLight))
+                                .foregroundStyle(PaperTheme.muted)
+                                .frame(maxWidth: .infinity, minHeight: 130)
+                            Text(String(localized: "v1.insights.empty")).font(.headline)
+                            Text(String(localized: "wallet.analysis.needCard"))
+                                .font(.subheadline).foregroundStyle(PaperTheme.muted)
+                            Button(String(localized: "v1.budget.create"), systemImage: "plus") {
+                                workspace.openComposer(.budget)
+                            }.buttonStyle(PaperSolidButtonStyle())
+                        }
+                    }
                 }
             }.frame(maxWidth: 650)
         }

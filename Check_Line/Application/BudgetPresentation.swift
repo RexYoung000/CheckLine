@@ -37,6 +37,11 @@ nonisolated enum BudgetPresentation {
         (0..<count).compactMap { calendar.date(byAdding: .day, value: $0 - count + 1, to: calendar.startOfDay(for: date)) }
     }
 
+    static func referenceDate(_ card: HomeBudgetCardModel, in ledger: Ledger, now: Date = Date()) -> Date {
+        if card.periodStart <= now && (card.periodEnd.map { now <= $0 } ?? true) { return now }
+        return expenses(card, in: ledger).map(\.occurredAt).max() ?? card.periodEnd ?? card.periodStart
+    }
+
     static func symbol(for expense: Expense) -> String {
         if expense.kind == .refund { return "arrow.uturn.backward" }
         let name = (expense.merchant ?? "").lowercased()

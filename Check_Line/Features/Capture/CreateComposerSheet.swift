@@ -34,6 +34,7 @@ struct CreateComposerSheet: View {
     @State private var showingCurrencyPicker = false
     @State private var showingCardPicker = false
     @State private var showingDatePicker = false
+    @State private var lastFormBridge = ""
     @Environment(\.dismiss) private var dismiss
 
     private let currencies = ["CNY", "USD", "JPY", "EUR"]
@@ -75,6 +76,10 @@ struct CreateComposerSheet: View {
             currency = workspace.ledger.walletSettings.walletCurrencyCode
             if let selected = workspace.selectedCard, let choice = workspace.attributionChoices.first(where: { $0.periodID == selected.periodID }) {
                 attributionID = choice.id
+            }
+            if workspace.composerPrefillFromAgent {
+                prefillFromAgent()
+                workspace.composerPrefillFromAgent = false
             }
         }
         .onChange(of: workspace.showComposer) { _, presented in
@@ -128,11 +133,14 @@ struct CreateComposerSheet: View {
         HStack {
             PaperComposerCloseButton(action: dismiss.callAsFunction)
             Spacer()
-            PaperCapsuleSegment(
-                items: ComposerMode.allCases.map { ($0, $0.title) },
-                selection: $mode
-            )
-            .frame(maxWidth: 220)
+            Text(workspace.composerIntent == .budget ? String(localized: "v1.budget.create") : String(localized: "capture.title"))
+                .font(.headline)
+            Spacer()
+            Button { switchMode() } label: {
+                Image(systemName: mode == .form ? "sparkles" : "square.and.pencil")
+                    .frame(width: 44, height: 44)
+            }
+            .accessibilityLabel(mode == .form ? String(localized: "v1.composer.agent") : String(localized: "v1.composer.form"))
         }
         .padding(.horizontal, 16)
         .padding(.top, 16)
@@ -142,9 +150,6 @@ struct CreateComposerSheet: View {
     private var formBody: some View {
         ScrollView(showsIndicators: false) {
             VStack(spacing: 24) {
-                WalletSymbol(name: workspace.composerIntent == .budget ? "wallet.pass" : "square.and.pencil")
-                    .padding(.top, 8)
-
                 if workspace.composerIntent == .budget {
                     PaperHeroField(
                         placeholder: String(localized: "v1.composer.name.placeholder"),
@@ -344,6 +349,44 @@ struct CreateComposerSheet: View {
 
     private func choiceTitle(_ choice: AttributionChoice) -> String {
         choice.periodID == nil ? String(localized: "v1.unbudgeted") : choice.title
+    }
+
+    private func switchMode() {
+        if mode == .form {
+            let parts = workspace.composerIntent == .budget ? [name, amount] : [merchant, amount, note]
+            let bridged = parts.filter { !$0.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty }.joined(separator: " ")
+            if !bridged.isEmpty && bridged != lastFormBridge {
+                workspace.draftText = bridged
+                lastFormBridge = bridged
+            }
+            mode = .agent
+        } else {
+            prefillFromAgent()
+            mode = .form
+        }
+    }
+
+    private func prefillFromAgent() {
+        if workspace.composerIntent == .budget, let proposal = workspace.budgetProposal {
+            name = proposal.name
+            amount = NSDecimalNumber(decimal: proposal.amount).stringValue
+            currency = proposal.currencyCode
+            repeating = proposal.cycleType == .repeating
+        } else if workspace.composerIntent == .record, let proposal = workspace.captureProposal {
+            amount = proposal.amount.map { NSDecimalNumber(decimal: $0).stringValue } ?? amount
+            merchant = proposal.merchant ?? merchant
+            note = proposal.note ?? note
+            occurredAt = proposal.occurredAt
+            if let choice = workspace.attributionChoices.first(where: { $0.periodID == proposal.periodID }) {
+                attributionID = choice.id
+            }
+        } else if workspace.composerIntent == .record, note.isEmpty {
+            note = workspace.draftText
+        } else if workspace.composerIntent == .budget, name.isEmpty {
+            name = workspace.draftText
+        }
+        let parts = workspace.composerIntent == .budget ? [name, amount] : [merchant, amount, note]
+        lastFormBridge = parts.filter { !$0.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty }.joined(separator: " ")
     }
 
     private func submitForm() {

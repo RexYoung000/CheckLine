@@ -15,8 +15,11 @@ nonisolated struct LiquidMotionClock {
         }
     }
 
+    func elapsedTime(at time: TimeInterval) -> TimeInterval {
+        elapsed + (startedAt.map { max(0, time - $0) } ?? 0)
+    }
+
     func phase(at time: TimeInterval) -> Double {
-        let total = elapsed + (startedAt.map { max(0, time - $0) } ?? 0)
-        return total.truncatingRemainder(dividingBy: Self.period) / Self.period * .pi * 2
+        elapsedTime(at: time).truncatingRemainder(dividingBy: Self.period) / Self.period * .pi * 2
     }
 }

@@ -88,7 +88,7 @@ nonisolated enum CloudMascotMotion {
     }
     private static func lights(_ t: Double, thinking: Bool, reduced: Bool) -> [Light] {
         (0..<2).map { i in
-            var l = Light(position: .init(x: i == 0 ? -13 : 10, y: i == 0 ? -15 : 19), sx: i == 0 ? 1 : 1.08, sy: i == 0 ? 1 : 0.8, opacity: i == 0 ? 0.94 : 1, contour: contour(t, 21 + i * 24))
+            var l = Light(position: .init(x: i == 0 ? -13 : 10, y: i == 0 ? -15 : 19), sx: i == 0 ? 1 : 1.08, sy: i == 0 ? 1 : 0.8, opacity: thinking ? (i == 0 ? 0.94 : 1) : 0, contour: contour(t, 21 + i * 24))
             guard !reduced else { return l }
             if thinking {
                 let phase = tau * t / thinkingPeriod + 0.32 * sin(t * 0.76) + 0.16 * sin(t * 1.37)

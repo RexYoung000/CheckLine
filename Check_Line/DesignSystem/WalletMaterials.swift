@@ -27,10 +27,10 @@ struct WalletInteriorSurface: View {
     var body: some View {
         ZStack(alignment: .top) {
             PaperTheme.canvas
-            LinearGradient(colors: [Color(red: 0.14, green: 0.16, blue: 0.18), PaperTheme.canvas, Color(red: 0.065, green: 0.075, blue: 0.085)], startPoint: .topLeading, endPoint: .bottomTrailing)
-            WalletGrain().opacity(0.22)
+            LinearGradient(colors: [PaperTheme.pocket.opacity(0.65), PaperTheme.canvas], startPoint: .top, endPoint: .bottom)
+            WalletGrain().opacity(0.12)
             RoundedRectangle(cornerRadius: 30, style: .continuous)
-                .strokeBorder(LinearGradient(colors: [.white.opacity(0.075), .clear], startPoint: .top, endPoint: .center), lineWidth: 0.8)
+                .strokeBorder(LinearGradient(colors: [PaperTheme.ink.opacity(0.055), .clear], startPoint: .top, endPoint: .center), lineWidth: 0.8)
                 .padding(.horizontal, 9).padding(.top, 8)
         }
         .accessibilityHidden(true)
@@ -43,8 +43,8 @@ struct WalletReceiptCard: View {
 
     private var colors: [Color] {
         depth == 0
-            ? [Color(red: 0.935, green: 0.908, blue: 1), Color(red: 0.851, green: 0.808, blue: 0.965)]
-            : [Color(red: 0.776, green: 0.722, blue: 0.914), Color(red: 0.839, green: 0.788, blue: 0.949)]
+            ? [Color.paper(light: 0xE5DDEB, dark: 0x413749), Color.paper(light: 0xDDD3E6, dark: 0x3C3244)]
+            : [Color.paper(light: 0xD8CDE2, dark: 0x372F3E), Color.paper(light: 0xCABBD8, dark: 0x2F2934)]
     }
 
     var body: some View {
@@ -56,12 +56,12 @@ struct WalletReceiptCard: View {
             Text(MoneyFormat.string(expense.kind == .refund ? expense.originalAmount : -expense.originalAmount, currencyCode: expense.originalCurrencyCode))
                 .monospacedDigit().lineLimit(1).minimumScaleFactor(0.7)
         }
-        .font(.subheadline).foregroundStyle(Color(red: 0.17, green: 0.145, blue: 0.23))
+        .font(.subheadline).foregroundStyle(PaperTheme.ink)
         .padding(.horizontal, 18).frame(minHeight: 57)
         .background(LinearGradient(colors: colors, startPoint: .topLeading, endPoint: .bottomTrailing), in: RoundedRectangle(cornerRadius: 17, style: .continuous))
         .overlay {
             RoundedRectangle(cornerRadius: 17, style: .continuous)
-                .strokeBorder(LinearGradient(colors: [.white.opacity(0.85), .white.opacity(0.06)], startPoint: .top, endPoint: .bottom), lineWidth: 0.8)
+                .strokeBorder(LinearGradient(colors: [PaperTheme.ink.opacity(0.1), PaperTheme.ink.opacity(0.02)], startPoint: .top, endPoint: .bottom), lineWidth: 0.8)
         }
         .shadow(color: Color(red: 0.09, green: 0.06, blue: 0.14).opacity(0.16), radius: 2, y: 2)
         .accessibilityElement(children: .combine)

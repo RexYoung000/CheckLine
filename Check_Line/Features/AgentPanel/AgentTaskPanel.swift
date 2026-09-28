@@ -1,8 +1,10 @@
 import SwiftUI
 
 struct AgentTaskPanel: View {
+    enum Part: Equatable { case complete, content, footer }
     @Bindable var workspace: CheckLineWorkspace
     var embedded: Bool = false
+    var part: Part = .complete
     var onCreateBudget: (() -> Void)?
     @FocusState private var inputFocused: Bool
 
@@ -27,6 +29,7 @@ struct AgentTaskPanel: View {
 
     private var expanded: some View {
         VStack(alignment: .leading, spacing: PaperTheme.Space.m) {
+            if part != .footer {
             HStack(alignment: .firstTextBaseline) {
                 Text(String(localized: "v1.agent.offline"))
                     .font(PaperTheme.Typography.caption)
@@ -68,10 +71,14 @@ struct AgentTaskPanel: View {
             }
 
             if workspace.showsStructuredConfirm {
-                structuredConfirm
+                structuredFields
+            }
             }
 
-            if !workspace.showsStructuredConfirm {
+            if part != .content {
+            if workspace.showsStructuredConfirm {
+                structuredActions
+            } else {
             HStack(alignment: .bottom, spacing: PaperTheme.Space.s) {
                 PaperField(
                     title: String(localized: "v1.agent.placeholder"),
@@ -99,6 +106,7 @@ struct AgentTaskPanel: View {
                 }
                 .buttonStyle(PaperQuietButtonStyle())
             }
+            }
         }
         .padding(.horizontal, embedded ? 0 : PaperTheme.Space.m)
         .padding(.top, PaperTheme.Space.m)
@@ -110,7 +118,7 @@ struct AgentTaskPanel: View {
             && workspace.isWorking == false
     }
 
-    private var structuredConfirm: some View {
+    private var structuredFields: some View {
         VStack(alignment: .leading, spacing: PaperTheme.Space.m) {
             if let draft = workspace.captureProposal {
                 HStack(alignment: .center, spacing: 12) {
@@ -154,6 +162,11 @@ struct AgentTaskPanel: View {
                 if let end = draft.endDate { Text(end, format: .dateTime.year().month().day()).font(.subheadline) }
             }
 
+        }
+    }
+
+    private var structuredActions: some View {
+        VStack(alignment: .leading, spacing: PaperTheme.Space.s) {
             Button(String(localized: "v1.agent.confirm")) {
                 inputFocused = false
                 workspace.confirmStructured()

@@ -4,13 +4,14 @@ struct CheckLineShellView: View {
     @Bindable var workspace: CheckLineWorkspace
     @State private var chrome = ShellChromeState()
     @State private var showsPreviewDetail = false
+    @AppStorage("checkline.appearance") private var appearance = CheckLineAppearance.system.rawValue
     @Environment(\.walletReduceMotion) private var reduceMotion
     @Environment(\.scenePhase) private var scenePhase
 
     var body: some View {
         rootTabs
         .tint(PaperTheme.accent)
-        .preferredColorScheme((WalletTabTransition.usesImmediateContent ? chrome.selectedTab : chrome.presentedTab) == .home ? .light : .dark)
+        .preferredColorScheme((CheckLineAppearance(rawValue: appearance) ?? .system).colorScheme)
         .overlay(alignment: .bottom) {
             if !WalletTabTransition.usesSystemBar && !chrome.isShowingDetail {
                 VStack(spacing: 8) {
@@ -25,16 +26,16 @@ struct CheckLineShellView: View {
             }
         }
         .environment(\.shellChrome, chrome)
-        .sheet(isPresented: $workspace.showComposer) { CreateComposerSheet(workspace: workspace).preferredColorScheme(.dark) }
+        .sheet(isPresented: $workspace.showComposer) { CreateComposerSheet(workspace: workspace) }
         .sheet(isPresented: $workspace.showAgent, onDismiss: {
             if let intent = workspace.composerAfterAgent {
                 workspace.composerAfterAgent = nil
                 workspace.openComposer(intent)
             }
-        }) { WalletAgentSheet(workspace: workspace).preferredColorScheme(.dark) }
-        .sheet(isPresented: $chrome.isSettingsPresented) { SettingsPlaceholderView().preferredColorScheme(.dark) }
-        .sheet(isPresented: $chrome.isAttentionPresented) { WalletAttentionSheet(workspace: workspace).preferredColorScheme(.dark) }
-        .sheet(isPresented: $showsPreviewDetail) { previewDetail.preferredColorScheme(.dark) }
+        }) { WalletAgentSheet(workspace: workspace) }
+        .sheet(isPresented: $chrome.isSettingsPresented) { SettingsPlaceholderView(workspace: workspace) }
+        .sheet(isPresented: $chrome.isAttentionPresented) { WalletAttentionSheet(workspace: workspace) }
+        .sheet(isPresented: $showsPreviewDetail) { previewDetail }
         .background(PaperTheme.canvas.ignoresSafeArea())
         .task(id: WalletNavigationRequest(tab: chrome.selectedTab, reduceMotion: reduceMotion, active: scenePhase == .active)) {
             if WalletTabTransition.usesImmediateContent { chrome.settleNavigation() }
@@ -47,6 +48,9 @@ struct CheckLineShellView: View {
         .task {
             guard DesignPreviewData.isEnabled else { return }
             if let tab = CheckLineAppTab(rawValue: DesignPreviewData.screen) { chrome.selectedTab = tab; chrome.settleNavigation() }
+            if DesignPreviewData.screen == "budget-empty" { chrome.selectedTab = .budgets; chrome.settleNavigation() }
+            if DesignPreviewData.screen == "wishes-empty" { chrome.selectedTab = .wishes; chrome.settleNavigation() }
+            if ["analysis-empty", "analysis-no-records"].contains(DesignPreviewData.screen) { chrome.selectedTab = .insights; chrome.settleNavigation() }
             if DesignPreviewData.screen == "budget-inline" { chrome.selectedTab = .budgets; chrome.settleNavigation() }
             switch DesignPreviewData.screen {
             case "settings": chrome.isSettingsPresented = true
@@ -95,7 +99,6 @@ struct CheckLineShellView: View {
             }
             .tabViewStyle(.tabBarOnly)
             .tabBarMinimizeBehavior(.never)
-            .toolbarColorScheme(.dark, for: .tabBar)
         } else {
             TabView(selection: WalletTabTransition.usesImmediateContent ? $chrome.selectedTab : $chrome.presentedTab) {
                 ForEach([CheckLineAppTab.home, .budgets, .wishes, .insights]) { tab in
@@ -133,7 +136,6 @@ struct CheckLineShellView: View {
             case .insights: CycleReviewView(workspace: workspace)
             }
         }
-        .environment(\.colorScheme, .dark)
     }
 
     @ViewBuilder private var previewDetail: some View {

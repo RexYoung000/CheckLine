@@ -300,7 +300,7 @@
 /* Matte wallet native UI */
 "wallet.agent.askRemaining" = "还能花多少";
 "wallet.agent.currentBudget" = "聊聊当前预算";
-"wallet.agent.heading" = "小朵 · 预算助手";
+"wallet.agent.heading" = "预算助手";
 "wallet.agent.localCapability" = "可用文字记一笔、查询预算剩余。更多分析尚未接入。";
 "wallet.agent.open" = "打开小朵，预算助手";
 "wallet.agent.prompt" = "记一笔，或问问预算";
@@ -423,3 +423,18 @@
 "wallet.mascot.waiting" = "等你确认或补充";
 "wallet.mascot.success" = "处理好了";
 "wallet.mascot.error" = "没能完成，请再试一次";
+"wallet.appearance.title" = "外观";
+"wallet.appearance.system" = "跟随系统";
+"wallet.appearance.light" = "浅色";
+"wallet.appearance.dark" = "深色";
+"wallet.empty.firstCard" = "创建第一张预算卡";
+"wallet.analysis.noRecords" = "这张预算卡还没有消费记录";
+"wallet.analysis.needCard" = "创建预算卡后，这里会按实际记录显示日期和趋势。";
+"wallet.settings.language" = "语言";
+"wallet.settings.followsSystem" = "跟随系统";
+"wallet.settings.languageBody" = "界面语言目前跟随设备的语言设置，支持简体中文和英语。";
+"wallet.settings.walletCurrency" = "钱包基准币";
+"wallet.settings.currencyBody" = "这里显示当前账本的钱包基准币。跨币种结算需要核对汇率和金额后才能确认，当前版本尚未开放在设置中直接修改基准币。";
+"wallet.settings.aboutBody" = "CheckLine 帮你用预算卡了解还能花多少。当前账本保存在这台设备。";
+"wallet.periodLast7days" = "周期末 7 天";
+"wallet.empty.manual" = "手动填写";

@@ -300,7 +300,7 @@
 /* Matte wallet native UI */
 "wallet.agent.askRemaining" = "How much is left?";
 "wallet.agent.currentBudget" = "Discuss current budget";
-"wallet.agent.heading" = "Xiaoduo · Budget assistant";
+"wallet.agent.heading" = "Budget assistant";
 "wallet.agent.localCapability" = "Record expenses and check your budget by text. Further analysis is not connected yet.";
 "wallet.agent.open" = "Open Xiaoduo, budget assistant";
 "wallet.agent.prompt" = "Add an expense or ask about a budget";
@@ -423,3 +423,18 @@
 "wallet.mascot.waiting" = "Waiting for your input";
 "wallet.mascot.success" = "All done";
 "wallet.mascot.error" = "Couldn’t finish. Please try again.";
+"wallet.appearance.title" = "Appearance";
+"wallet.appearance.system" = "System";
+"wallet.appearance.light" = "Light";
+"wallet.appearance.dark" = "Dark";
+"wallet.empty.firstCard" = "Create your first budget card";
+"wallet.analysis.noRecords" = "No expenses on this card yet";
+"wallet.analysis.needCard" = "Create a budget card to see dates and trends from actual records.";
+"wallet.settings.language" = "Language";
+"wallet.settings.followsSystem" = "Follows system";
+"wallet.settings.languageBody" = "The interface follows your device language. Simplified Chinese and English are supported.";
+"wallet.settings.walletCurrency" = "Wallet base currency";
+"wallet.settings.currencyBody" = "This shows the current ledger's wallet base currency. Cross-currency settlement requires an exchange rate and amount review. Changing the base currency in Settings is not available yet.";
+"wallet.settings.aboutBody" = "CheckLine helps you see what remains on your budget cards. Your current ledger is stored on this device.";
+"wallet.periodLast7days" = "Last 7 days of period";
+"wallet.empty.manual" = "Enter manually";

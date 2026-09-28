@@ -21,6 +21,7 @@ final class CheckLineWorkspace {
     var agentBudgetID: UUID?
     var showAgent: Bool = false
     var composerAfterAgent: ComposerIntent?
+    var composerPrefillFromAgent: Bool = false
     var showComposer: Bool = false
     var composerIntent: ComposerIntent = .budget
     let attachmentStore: ExpenseAttachmentStore

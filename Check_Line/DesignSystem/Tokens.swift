@@ -1,24 +1,55 @@
 import SwiftUI
 import UIKit
 
-/// Shared matte wallet surfaces. Native glass is reserved for controls and navigation.
+enum CheckLineAppearance: String, CaseIterable, Identifiable {
+    case system, light, dark
+
+    var id: String { rawValue }
+    var colorScheme: ColorScheme? {
+        switch self {
+        case .system: nil
+        case .light: .light
+        case .dark: .dark
+        }
+    }
+
+    var title: String {
+        switch self {
+        case .system: String(localized: "wallet.appearance.system")
+        case .light: String(localized: "wallet.appearance.light")
+        case .dark: String(localized: "wallet.appearance.dark")
+        }
+    }
+}
+
+/// Shared brand surfaces. Native glass is reserved for controls and navigation.
 enum PaperTheme {
-    static let canvas = Color(red: 20/255, green: 23/255, blue: 26/255)
-    static let card = Color(red: 34/255, green: 38/255, blue: 43/255)
-    static let ink = Color(red: 248/255, green: 247/255, blue: 252/255)
-    static let muted = Color(red: 184/255, green: 186/255, blue: 197/255)
-    static let accent = Color(red: 182/255, green: 170/255, blue: 255/255)
-    static let paper = Color(red: 246/255, green: 246/255, blue: 240/255)
-    static let paperInk = Color(red: 23/255, green: 24/255, blue: 29/255)
-    static let stroke = Color.white.opacity(0.10)
-    static let lineTrack = Color.white.opacity(0.10)
+    static let canvas = Color.paper(light: 0xF5F4F1, dark: 0x1C1B20)
+    static let card = Color.paper(light: 0xFAF9F6, dark: 0x29262F)
+    static let pocket = Color.paper(light: 0xEEECE9, dark: 0x242228)
+    static let ink = Color.paper(light: 0x302A38, dark: 0xF1ECF5)
+    static let muted = Color.paper(light: 0x645B6D, dark: 0xB6AEBF)
+    static let accent = Color.paper(light: 0x76618E, dark: 0xC2ACDC)
+    static let gold = Color.paper(light: 0xB99C72, dark: 0xD2B78B)
+    static let waterTop = Color.paper(light: 0xD5CCE2, dark: 0x61516F)
+    static let waterBottom = Color.paper(light: 0xA392BC, dark: 0x51415F)
+    static let waveBack = Color.paper(light: 0xB6A2C9, dark: 0x766185)
+    static let paper = canvas
+    static let paperInk = ink
+    static let stroke = ink.opacity(0.10)
+    static let lineTrack = ink.opacity(0.10)
     static let lineInk = accent
-    static let chipIdle = Color.white.opacity(0.07)
-    static let navigationBase = Color(red: 0.19, green: 0.21, blue: 0.23)
+    static let chipIdle = ink.opacity(0.07)
+    static let navigationBase = card
     static let shadow = Color.black.opacity(0.18)
 
     static var canvasUIColor: UIColor {
-        UIColor(red: 20/255, green: 23/255, blue: 26/255, alpha: 1)
+        UIColor { trait in
+            let hex: UInt32 = trait.userInterfaceStyle == .dark ? 0x1C1B20 : 0xF5F4F1
+            return UIColor(red: CGFloat((hex >> 16) & 255) / 255,
+                           green: CGFloat((hex >> 8) & 255) / 255,
+                           blue: CGFloat(hex & 255) / 255, alpha: 1)
+        }
     }
 
     enum Space {

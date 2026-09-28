@@ -4,13 +4,13 @@ struct WalletAgentSheet: View {
     @Bindable var workspace: CheckLineWorkspace
     @Environment(\.dismiss) private var dismiss
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
-    @State private var detent: PresentationDetent = .medium
+    @State private var detent: PresentationDetent = .height(330)
     private var discussion: HomeBudgetCardModel? { workspace.cards.first { $0.id == workspace.agentBudgetID } }
 
     var body: some View {
         NavigationStack {
             ScrollView {
-                VStack(alignment: .leading, spacing: 24) {
+                VStack(alignment: .leading, spacing: 16) {
                     mascotHeader
                     if let discussion {
                         Label(discussion.name, systemImage: "wallet.pass").font(.subheadline)
@@ -29,20 +29,42 @@ struct WalletAgentSheet: View {
                             Label(String(localized: "wallet.agent.askRemaining"), systemImage: "chart.pie")
                         }.buttonStyle(PaperQuietButtonStyle())
                     }
-                    AgentTaskPanel(workspace: workspace, embedded: true) {
+                    AgentTaskPanel(workspace: workspace, embedded: true, part: .content) {
                         workspace.composerAfterAgent = .budget
+                        workspace.composerPrefillFromAgent = true
                         dismiss()
                     }
-                }.padding(22).frame(maxWidth: 650).frame(maxWidth: .infinity)
+                }.padding(.horizontal, 22).padding(.top, 10).frame(maxWidth: 650).frame(maxWidth: .infinity)
             }
             .scrollDismissesKeyboard(.interactively)
             .background(PaperTheme.canvas.ignoresSafeArea())
+            .safeAreaInset(edge: .bottom, spacing: 0) {
+                AgentTaskPanel(workspace: workspace, embedded: true, part: .footer)
+                    .padding(.horizontal, 22)
+                    .padding(.bottom, 8)
+                    .frame(maxWidth: 650)
+                    .frame(maxWidth: .infinity)
+                    .background(PaperTheme.card)
+            }
             .navigationTitle(String(localized: "wallet.mascot.name"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbarBackground(.hidden, for: .navigationBar)
-            .toolbar { ToolbarItem(placement: .topBarTrailing) { Button(String(localized: "action.close"), systemImage: "xmark") { dismiss() }.labelStyle(.iconOnly).accessibilityIdentifier("wallet.agent.close") } }
+            .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button {
+                        workspace.composerAfterAgent = workspace.isEmpty || workspace.budgetProposal != nil ? .budget : .record
+                        workspace.composerPrefillFromAgent = true
+                        dismiss()
+                    } label: { Image(systemName: "square.and.pencil") }
+                    .accessibilityLabel(String(localized: "capture.title"))
+                }
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button(String(localized: "action.close"), systemImage: "xmark") { dismiss() }
+                        .labelStyle(.iconOnly).accessibilityIdentifier("wallet.agent.close")
+                }
+            }
         }
-        .presentationDetents([.medium, .large], selection: $detent)
+        .presentationDetents([.height(330), .medium, .large], selection: $detent)
         .presentationDragIndicator(.visible)
         .presentationBackground(PaperTheme.canvas)
         .tint(PaperTheme.accent)
@@ -57,14 +79,11 @@ struct WalletAgentSheet: View {
         let layout = dynamicTypeSize.isAccessibilitySize ? AnyLayout(VStackLayout(alignment: .leading, spacing: 8)) : AnyLayout(HStackLayout(spacing: 12))
         return layout {
             CloudMascotView(state: workspace.mascotState)
-                .frame(width: workspace.showsStructuredConfirm ? 64 : 100, height: workspace.showsStructuredConfirm ? 60 : 94)
+                .frame(width: 70, height: 66)
             VStack(alignment: .leading, spacing: 6) {
                 Text(String(localized: "wallet.agent.heading")).font(.headline)
                 Text(workspace.mascotState.label).font(.subheadline)
                     .accessibilityIdentifier("wallet.mascot.status")
-                Text(String(localized: "wallet.agent.localCapability"))
-                    .font(.caption).foregroundStyle(PaperTheme.muted)
-                    .fixedSize(horizontal: false, vertical: true)
             }
         }
     }

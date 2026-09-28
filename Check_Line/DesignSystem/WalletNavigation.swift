@@ -6,14 +6,14 @@ struct WalletCardholderSurface: View {
     var opening: CGFloat = 1
     var body: some View {
         WalletPocketShape(opening: opening)
-            .fill(LinearGradient(colors: [Color(red: 0.105, green: 0.12, blue: 0.135), PaperTheme.canvas], startPoint: .topLeading, endPoint: .bottomTrailing))
+            .fill(LinearGradient(colors: [PaperTheme.pocket, PaperTheme.canvas], startPoint: .topLeading, endPoint: .bottomTrailing))
             .overlay(alignment: .top) {
                 WalletPocketRim()
-                    .stroke(LinearGradient(colors: [.white.opacity(0.17), .white.opacity(0.025), .white.opacity(0.11)], startPoint: .leading, endPoint: .trailing), lineWidth: 0.8)
+                    .stroke(LinearGradient(colors: [PaperTheme.ink.opacity(0.13), PaperTheme.ink.opacity(0.02), PaperTheme.ink.opacity(0.08)], startPoint: .leading, endPoint: .trailing), lineWidth: 0.8)
                     .frame(height: 24 * opening)
             }
             .overlay { WalletGrain().opacity(0.24).clipShape(WalletPocketShape(opening: opening)) }
-            .shadow(color: .black.opacity(0.16), radius: 8, y: -4)
+            .shadow(color: .black.opacity(0.08), radius: 8, y: -4)
             .accessibilityHidden(true)
     }
 }
@@ -64,8 +64,7 @@ struct WalletPageHeader: View {
         }
         .font(.system(size: 20, weight: .regular))
         .buttonStyle(.plain)
-        .foregroundStyle(light ? PaperTheme.paperInk : PaperTheme.ink)
-        .environment(\.colorScheme, light ? .light : .dark)
+        .foregroundStyle(PaperTheme.ink)
         .opacity(visibility)
         .offset(y: light ? -12 * (1 - visibility) : 6 * (1 - visibility))
         .padding(.horizontal, 16)
@@ -194,13 +193,12 @@ struct WalletGlassNavigation: View {
 
             WalletAgentButton(workspace: workspace)
         }
-        .environment(\.colorScheme, .dark)
     }
 
     @ViewBuilder private var navigationBackground: some View {
         if #available(iOS 26.0, *) {
             Capsule().fill(.clear)
-                .glassEffect(.regular.tint(PaperTheme.canvas.opacity(0.65)), in: .capsule)
+                .glassEffect(.regular, in: .capsule)
         } else {
             Capsule().fill(.clear).paperGlass(.capsule)
         }
@@ -255,8 +253,7 @@ struct WalletGlassNavigation: View {
 
     private func selectionLabel(_ tab: CheckLineAppTab, selected: Bool) -> some View {
         Image(systemName: tab.systemImage)
-            .symbolVariant(.fill)
-            .font(.system(size: 24, weight: .regular))
+            .font(.system(size: 23, weight: .medium))
             .foregroundStyle(selected ? PaperTheme.accent : PaperTheme.ink)
             .frame(maxWidth: .infinity).frame(height: 50)
             .contentShape(Capsule())
@@ -265,7 +262,7 @@ struct WalletGlassNavigation: View {
     @ViewBuilder private var selectionGlass: some View {
         if #available(iOS 26.0, *) {
             Capsule().fill(.clear)
-                .glassEffect(.regular.tint(PaperTheme.canvas).interactive(!reduceMotion), in: .capsule)
+                .glassEffect(.clear.interactive(!reduceMotion), in: .capsule)
                 .glassEffectID("selected-tab-lens", in: glassNamespace)
                 .glassEffectTransition(.matchedGeometry)
         } else {
@@ -312,16 +309,30 @@ struct WalletActionFeedback: View {
 struct WalletAgentButton: View {
     @Bindable var workspace: CheckLineWorkspace
     @Environment(\.walletReduceMotion) private var reduceMotion
+    @State private var floating = false
 
     var body: some View {
         Button { workspace.showAgent = true } label: {
-            WalletAgentAvatar().scaleEffect(32.0 / 44).frame(width: 60, height: 60)
-                .paperGlass(.circle, interactive: !reduceMotion)
+            ZStack {
+                Ellipse()
+                    .fill(PaperTheme.accent.opacity(0.22))
+                    .frame(width: floating && !reduceMotion ? 24 : 32, height: 6)
+                    .blur(radius: 3)
+                    .offset(y: 28)
+                WalletAgentAvatar(size: 67)
+                    .shadow(color: PaperTheme.accent.opacity(0.15), radius: 8, y: 5)
+                    .offset(y: floating && !reduceMotion ? -5 : 0)
+            }
+            .frame(width: 68, height: 68)
+            .contentShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
         }
-        .buttonStyle(.plain)
+        .buttonStyle(PaperCirclePressStyle())
         .accessibilityLabel(String(localized: "wallet.agent.open"))
         .accessibilityHint(String(localized: "wallet.agent.resume.hint"))
         .accessibilityIdentifier("wallet.agent.avatar")
+        .onAppear { floating = true }
+        .onChange(of: reduceMotion) { _, value in floating = !value }
+        .animation(reduceMotion ? nil : .easeInOut(duration: 4.6).repeatForever(autoreverses: true), value: floating)
     }
 }
 
@@ -338,6 +349,7 @@ enum WalletTabHitTarget {
 }
 
 struct WalletAgentAvatar: View {
+    var size: CGFloat = 44
     @MainActor static let tabImage: UIImage = {
         let renderer = ImageRenderer(content: CloudMascotDrawing(frame: CloudMascotMotion.sample(.idle, elapsed: 0, reduced: true), compact: true).frame(width: 32, height: 32))
         renderer.scale = 3
@@ -345,7 +357,7 @@ struct WalletAgentAvatar: View {
     }()
 
     var body: some View {
-        CloudMascotView().frame(width: 44, height: 44).accessibilityHidden(true)
+        CloudMascotView().frame(width: size, height: size).accessibilityHidden(true)
     }
 }
 

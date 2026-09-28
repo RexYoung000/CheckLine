@@ -19,6 +19,14 @@ struct CloudMascotMotionTests {
         }
     }
 
+    @Test("双色团仅在真实思考状态可见")
+    func internalLightsOnlyDuringThinking() {
+        for state in CloudMascotState.allCases where state != .thinking {
+            #expect(CloudMascotMotion.sample(state, elapsed: 3).lights.allSatisfy { $0.opacity == 0 })
+        }
+        #expect(CloudMascotMotion.sample(.thinking, elapsed: 3).lights.allSatisfy { $0.opacity > 0 })
+    }
+
     @Test("中途取消及再次打断都从当前姿态接续，后台恢复不跳帧")
     func interruptsAndPauses() {
         var player = CloudMascotPlayer()

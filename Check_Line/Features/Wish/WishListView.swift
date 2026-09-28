@@ -38,9 +38,6 @@ struct WishListView: View {
                     VStack(spacing: 20) {
                         WalletSymbol(name: completed ? "checkmark" : "star", size: 72)
                         Text(completed ? String(localized: "wallet.wishes.completedEmpty") : String(localized: "wallet.wishes.empty")).font(.headline)
-                        if !completed {
-                            Button(String(localized: "wallet.wishes.add")) { adding = true }.buttonStyle(PaperSolidButtonStyle())
-                        }
                     }.frame(maxWidth: .infinity).padding(.vertical, 28)
                 } else {
                     LazyVGrid(columns: [GridItem(.adaptive(minimum: 280), spacing: 16)], spacing: 16) {
@@ -61,6 +58,8 @@ struct WishListView: View {
                         }
                     }
                 }
+                Button(String(localized: "wallet.wishes.add"), systemImage: "plus") { adding = true }
+                    .buttonStyle(PaperSolidButtonStyle())
             }
         }
         .sheet(isPresented: $adding) { CreateWishSheet(workspace: workspace) }

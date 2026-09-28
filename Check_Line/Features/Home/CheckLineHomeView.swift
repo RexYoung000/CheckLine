@@ -6,15 +6,17 @@ struct CheckLineHomeView: View {
     @Environment(\.walletReduceMotion) private var reduceMotion
     @Environment(\.dynamicTypeSize) private var typeSize
     @State private var detail: BudgetDetailSection?
-    @State private var inlineDetails = false
     @State private var summaryPopup: BudgetDetailSection?
     @State private var selectedExpense: Expense?
     @Namespace private var summaryNamespace
     @GestureState(resetTransaction: Transaction(animation: .spring(response: 0.3, dampingFraction: 0.8))) private var dragOffset: CGSize = .zero
     @State private var receiptOffset = 0
     @State private var deckHeight: CGFloat = 222
+    @State private var deckWidth: CGFloat = 350
     @State private var flightOffset: CGSize = .zero
     @State private var isCardFlying = false
+    @GestureState(resetTransaction: Transaction(animation: .spring(response: 0.38, dampingFraction: 0.76))) private var touchPoint: CGPoint?
+    @Namespace private var budgetTransition
 
     private var card: HomeBudgetCardModel? { workspace.selectedCard }
     private var closure: CGFloat { reduceMotion ? 0 : chrome?.pocketClosure ?? 0 }
@@ -26,21 +28,26 @@ struct CheckLineHomeView: View {
                     deck(card)
                         .padding(.horizontal, 18)
                         .padding(.top, 12)
-                        .background { GeometryReader { proxy in Color.clear.preference(key: WalletDeckHeightKey.self, value: proxy.size.height) } }
+                        .background { GeometryReader { proxy in
+                            Color.clear
+                                .preference(key: WalletDeckHeightKey.self, value: proxy.size.height)
+                                .preference(key: WalletDeckWidthKey.self, value: proxy.size.width)
+                        } }
                         .onPreferenceChange(WalletDeckHeightKey.self) { deckHeight = $0 }
+                        .onPreferenceChange(WalletDeckWidthKey.self) { deckWidth = $0 }
                         .scaleEffect(1 - closure * 0.035, anchor: .bottom)
                         .rotation3DEffect(.degrees(-6 * Double(closure)), axis: (x: 1, y: 0, z: 0), anchor: .bottom, perspective: 0.35)
                         .offset(y: -24 * closure)
                     VStack(spacing: 18) {
-                    if inlineDetails {
-                        BudgetInlineDetails(workspace: workspace, card: card)
-                    } else {
                     if typeSize.isAccessibilitySize {
                         VStack(spacing: 12) { usedTile(card); dateTile(card) }
                     } else {
-                        HStack(alignment: .top, spacing: 12) { usedTile(card); dateTile(card) }
+                        HStack(alignment: .top, spacing: 0) {
+                            usedTile(card)
+                            Rectangle().fill(PaperTheme.stroke).frame(width: 1).padding(.vertical, 7)
+                            dateTile(card)
+                        }
                     }
-                    receipts(card)
                     if BudgetPresentation.pendingCount(card, in: workspace.ledger) > 0 {
                         Button { detail = .pending } label: {
                             HStack {
@@ -49,24 +56,27 @@ struct CheckLineHomeView: View {
                                 Text(MoneyFormat.string(card.snapshot.pendingAmount, currencyCode: card.currencyCode)).monospacedDigit()
                                 Image(systemName: "chevron.right").font(.caption)
                             }
-                            .font(.subheadline).padding(16).walletSurface(radius: 18)
+                            .font(.subheadline).foregroundStyle(PaperTheme.gold)
+                            .padding(.horizontal, 14).padding(.vertical, 9)
                         }
                         .buttonStyle(.plain)
                     }
                     if workspace.ledger.expenses.values.contains(where: { $0.attributionState == .unbudgeted && $0.wishRedemptionID == nil }) {
                         NavigationLink { UnbudgetedRecordsView(workspace: workspace) } label: {
-                            Label(String(localized: "v1.unbudgeted"), systemImage: "tray").font(.subheadline).frame(maxWidth: .infinity, alignment: .leading).padding(16).walletSurface(radius: 18)
+                            Label(String(localized: "v1.unbudgeted"), systemImage: "tray")
+                                .font(.subheadline).frame(maxWidth: .infinity, alignment: .leading)
+                                .padding(.horizontal, 14).padding(.vertical, 9)
                         }
                         .buttonStyle(.plain)
                     }
-                    }
+                    receipts(card)
                     }
                     .opacity(max(0, 1 - Double(closure) * 2.2))
                     .rotation3DEffect(.degrees(7 * Double(closure)), axis: (x: 1, y: 0, z: 0), anchor: .top, perspective: 0.3)
                     .padding(.horizontal, 16)
-                    .padding(.top, 38)
+                    .padding(.top, 28)
                     .padding(.bottom, 32)
-                    .frame(maxWidth: .infinity, minHeight: 470, alignment: .top)
+                    .frame(maxWidth: .infinity, minHeight: 440, alignment: .top)
                     .background {
                         GeometryReader { proxy in
                             WalletCardholderSurface(opening: 1 - closure)
@@ -76,33 +86,37 @@ struct CheckLineHomeView: View {
                     .padding(.top, -24)
                     .offset(y: -(deckHeight - 24) * closure)
                 }
-                .background(PaperTheme.paper)
                 .frame(maxWidth: 560)
             } else {
-                VStack(spacing: 24) {
-                    WalletSymbol(name: "wallet.pass", size: 80)
-                    VStack(spacing: 10) {
-                        Text(String(localized: "v1.home.empty.title"))
-                            .font(.title2.weight(.semibold))
-                            .foregroundStyle(PaperTheme.paperInk)
-                            .accessibilityAddTraits(.isHeader)
+                VStack(spacing: 0) {
+                    WalletEmptyBudgetCard { workspace.showAgent = true }
+                        .padding(.horizontal, 18)
+                        .padding(.top, 24)
+                    VStack(spacing: 16) {
                         Text(String(localized: "wallet.empty.budget"))
-                            .font(.body)
-                            .foregroundStyle(PaperTheme.paperInk.opacity(0.65))
-                            .fixedSize(horizontal: false, vertical: true)
+                            .font(.body).foregroundStyle(PaperTheme.muted)
+                            .multilineTextAlignment(.center)
+                        Button(String(localized: "wallet.empty.manual")) { workspace.openComposer(.budget) }
+                            .buttonStyle(PaperSolidButtonStyle())
+                            .accessibilityIdentifier("wallet.empty.createBudget")
                     }
-                    .multilineTextAlignment(.center)
-                    Button(String(localized: "v1.budget.create")) { workspace.openComposer(.budget) }
-                        .buttonStyle(PaperSolidButtonStyle(foreground: PaperTheme.paper, background: PaperTheme.paperInk))
-                        .accessibilityIdentifier("wallet.empty.createBudget")
+                    .padding(.horizontal, 28).padding(.top, 48).padding(.bottom, 100)
+                    .frame(maxWidth: .infinity, minHeight: 430, alignment: .top)
+                    .background { WalletCardholderSurface() }
+                    .padding(.top, -24)
                 }
-                .padding(.horizontal, 28)
-                .padding(.vertical, 48)
                 .frame(maxWidth: 560)
             }
         }
         .sheet(item: $detail) { section in
-            if let card { BudgetDetailSheet(workspace: workspace, budgetID: card.id, initialSection: section) }
+            if let card {
+                if #available(iOS 18.0, *), !reduceMotion, section == .overview {
+                    BudgetDetailSheet(workspace: workspace, budgetID: card.id, initialSection: section)
+                        .navigationTransition(.zoom(sourceID: card.id, in: budgetTransition))
+                } else {
+                    BudgetDetailSheet(workspace: workspace, budgetID: card.id, initialSection: section)
+                }
+            }
         }
         .sheet(item: $selectedExpense) { item in WalletExpenseDetail(workspace: workspace, expenseID: item.id) }
         .overlay {
@@ -117,7 +131,7 @@ struct CheckLineHomeView: View {
         .onChange(of: card?.id) { _, _ in receiptOffset = 0 }
         .onAppear {
             guard DesignPreviewData.isEnabled else { return }
-            if DesignPreviewData.screen == "home-inline" { inlineDetails = true }
+            if DesignPreviewData.screen == "home-inline" { detail = .overview }
             if DesignPreviewData.screen == "home-used" { summaryPopup = .overview }
             if DesignPreviewData.screen == "home-calendar" { summaryPopup = .calendar }
         }
@@ -125,20 +139,27 @@ struct CheckLineHomeView: View {
 
     private func deck(_ card: HomeBudgetCardModel) -> some View {
         ZStack(alignment: .topTrailing) {
-            if canChangeCard(1) {
-                RoundedRectangle(cornerRadius: 27)
-                    .fill(LinearGradient(colors: [Color(red: 0.78, green: 0.75, blue: 0.9), Color(red: 0.63, green: 0.60, blue: 0.78)], startPoint: .topLeading, endPoint: .bottomTrailing))
-                    .overlay { RoundedRectangle(cornerRadius: 27).strokeBorder(.white.opacity(0.5), lineWidth: 0.7) }
-                    .padding(.horizontal, 11).offset(y: -9)
+            if let nextCard = adjacentCard(1) {
+                LiquidBudgetCard(card: nextCard)
+                    .padding(.horizontal, 11)
+                    .rotationEffect(.degrees(-2), anchor: .top)
+                    .offset(y: -9)
+                    .opacity(min(0.85, 0.45 + hypot(dragOffset.width, dragOffset.height) / 300))
                     .accessibilityHidden(true)
             }
             ZStack(alignment: .topTrailing) {
-            Button { withAnimation(reduceMotion ? nil : .smooth(duration: 0.28)) { inlineDetails.toggle() } } label: { LiquidBudgetCard(card: card, flows: !workspace.showAgent && !workspace.showComposer && detail == nil && !inlineDetails && chrome?.isSettingsPresented != true && chrome?.isAttentionPresented != true) }
+            Button { detail = .overview } label: {
+                LiquidBudgetCard(card: card, flows: !workspace.showAgent && !workspace.showComposer && detail == nil && chrome?.isSettingsPresented != true && chrome?.isAttentionPresented != true, reflectionPoint: touchPoint)
+                    .modifier(WalletTransitionSource(id: card.id, namespace: budgetTransition))
+            }
                 .buttonStyle(.plain)
                 .highPriorityGesture(LongPressGesture(minimumDuration: 0.16, maximumDistance: 12).sequenced(before: DragGesture(minimumDistance: 0))
                     .updating($dragOffset) { value, offset, _ in
                         guard !reduceMotion, canChangeCard(1), !isCardFlying else { return }
                         if case .second(true, let drag?) = value { offset = drag.translation }
+                    }
+                    .updating($touchPoint) { value, point, _ in
+                        if case .second(true, let drag?) = value { point = drag.location }
                     }
                     .onEnded { value in
                         guard case .second(true, let drag?) = value, canChangeCard(1), !isCardFlying else { return }
@@ -172,10 +193,10 @@ struct CheckLineHomeView: View {
                     }
                 }
                 Divider()
-                Button(String(localized: "wallet.card.details"), systemImage: "arrow.up.right") { inlineDetails = true }
+                Button(String(localized: "wallet.card.details"), systemImage: "arrow.up.right") { detail = .overview }
                 Button(String(localized: "wallet.budget.manage"), systemImage: "wallet.pass") { chrome?.selectedTab = .budgets }
             } label: {
-                Image(systemName: "ellipsis").foregroundStyle(.white).frame(width: 44, height: 44).padding(8)
+                Image(systemName: "ellipsis").foregroundStyle(PaperTheme.ink).frame(width: 44, height: 44).padding(8)
             }
             .accessibilityLabel(String(localized: "wallet.card.more"))
             }
@@ -183,14 +204,17 @@ struct CheckLineHomeView: View {
             Button { workspace.openComposer(.record) } label: {
                 Image(systemName: "plus")
                     .font(.system(size: 20, weight: .medium))
-                    .foregroundStyle(.white)
+                    .foregroundStyle(PaperTheme.ink)
                     .frame(width: 44, height: 44)
-                    .paperGlass(.circle, interactive: true)
+                    .background(PaperTheme.card.opacity(0.15), in: Circle())
+                    .overlay { Circle().strokeBorder(.white.opacity(0.65), lineWidth: 1) }
             }
-            .buttonStyle(.plain)
+            .buttonStyle(PaperCirclePressStyle())
             .accessibilityLabel(String(localized: "capture.title"))
             .padding(.leading, 18).padding(.bottom, 22)
         }
+        .rotation3DEffect(.degrees(reduceMotion ? 0 : Double((0.5 - (touchPoint?.y ?? deckHeight * 0.5) / max(deckHeight, 1)) * 8)), axis: (x: 1, y: 0, z: 0), perspective: 0.35)
+        .rotation3DEffect(.degrees(reduceMotion ? 0 : Double((((touchPoint?.x ?? deckWidth * 0.5) / max(deckWidth, 1)) - 0.5) * 8)), axis: (x: 0, y: 1, z: 0), perspective: 0.35)
         .offset(x: dragOffset.width * 0.7 + flightOffset.width, y: dragOffset.height * 0.7 + flightOffset.height)
         .id(card.id)
         .transition(reduceMotion ? .opacity : .asymmetric(insertion: .offset(y: 18).combined(with: .opacity), removal: .offset(y: -80).combined(with: .opacity)))
@@ -206,9 +230,11 @@ struct CheckLineHomeView: View {
                     .font(.title2.weight(.medium)).monospacedDigit().lineLimit(1).minimumScaleFactor(0.6)
                 HStack(alignment: .bottom) {
                     BudgetMiniBars(card: card, ledger: workspace.ledger)
-                    Text(String(localized: "wallet.last7days")).font(.caption2).foregroundStyle(PaperTheme.muted)
+                    Text(card.periodState == .pendingSettlement ? String(localized: "wallet.periodLast7days") : String(localized: "wallet.last7days"))
+                        .font(.caption2).foregroundStyle(PaperTheme.muted)
                 }
-            }.padding(16).frame(maxWidth: .infinity, minHeight: 137, alignment: .topLeading).walletSurface()
+            }.padding(.horizontal, 14).padding(.vertical, 8)
+                .frame(maxWidth: .infinity, minHeight: 116, alignment: .topLeading)
                 .matchedGeometryEffect(id: BudgetDetailSection.overview.rawValue, in: summaryNamespace, isSource: summaryPopup != .overview)
         }.buttonStyle(.plain)
     }
@@ -216,12 +242,15 @@ struct CheckLineHomeView: View {
     private func dateTile(_ card: HomeBudgetCardModel) -> some View {
         Button { withAnimation(reduceMotion ? nil : .spring(response: 0.38, dampingFraction: 0.86)) { summaryPopup = .calendar } } label: {
             VStack(alignment: .leading, spacing: 16) {
-                tileLabel(Date().formatted(.dateTime.month(.wide)), icon: "arrow.up.right")
+                tileLabel(card.periodStart.formatted(.dateTime.month(.wide)), icon: "arrow.up.right")
                 HStack(alignment: .bottom, spacing: 12) {
                     MiniBudgetCalendar(card: card, ledger: workspace.ledger)
                     Spacer(minLength: 0)
                     VStack(alignment: .trailing, spacing: 4) {
-                        if let end = card.periodEnd {
+                        if card.periodState == .pendingSettlement {
+                            Text(String(localized: "budget.settling.section"))
+                                .font(.subheadline.weight(.medium))
+                        } else if let end = card.periodEnd {
                             Text(max(0, Calendar.current.dateComponents([.day], from: Calendar.current.startOfDay(for: Date()), to: end).day ?? 0), format: .number)
                                 .font(.title.weight(.medium)).monospacedDigit()
                             Text(String(localized: "wallet.daysLeft")).font(.caption2)
@@ -231,7 +260,8 @@ struct CheckLineHomeView: View {
                         }
                     }.foregroundStyle(PaperTheme.muted)
                 }
-            }.padding(16).frame(maxWidth: .infinity, minHeight: 137, alignment: .topLeading).walletSurface()
+            }.padding(.horizontal, 14).padding(.vertical, 8)
+                .frame(maxWidth: .infinity, minHeight: 116, alignment: .topLeading)
                 .matchedGeometryEffect(id: BudgetDetailSection.calendar.rawValue, in: summaryNamespace, isSource: summaryPopup != .calendar)
         }.buttonStyle(.plain)
     }
@@ -259,14 +289,20 @@ struct CheckLineHomeView: View {
     }
 
     private func changeCard(_ direction: Int) {
-        guard let card, let index = workspace.cards.firstIndex(where: { $0.id == card.id }), workspace.cards.indices.contains(index + direction) else { return }
-        workspace.selectedBudgetID = workspace.cards[index + direction].id
+        guard let next = adjacentCard(direction) else { return }
+        workspace.selectedBudgetID = next.id
         PaperHaptics.selection()
     }
 
     private func canChangeCard(_ direction: Int) -> Bool {
-        guard let card, let index = workspace.cards.firstIndex(where: { $0.id == card.id }) else { return false }
-        return workspace.cards.indices.contains(index + direction)
+        adjacentCard(direction) != nil
+    }
+
+    private func adjacentCard(_ direction: Int) -> HomeBudgetCardModel? {
+        guard workspace.cards.count > 1, let card,
+              let index = workspace.cards.firstIndex(where: { $0.id == card.id }) else { return nil }
+        let count = workspace.cards.count
+        return workspace.cards[(index + direction % count + count) % count]
     }
 }
 
@@ -326,11 +362,17 @@ private struct WalletDeckHeightKey: PreferenceKey {
     static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) { value = nextValue() }
 }
 
+private struct WalletDeckWidthKey: PreferenceKey {
+    static var defaultValue: CGFloat { 350 }
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) { value = nextValue() }
+}
+
 struct BudgetMiniBars: View {
     var card: HomeBudgetCardModel
     var ledger: Ledger
     var body: some View {
-        let values = BudgetPresentation.days().map { BudgetPresentation.dailyAmount($0, card: card, ledger: ledger) }
+        let values = BudgetPresentation.days(endingAt: BudgetPresentation.referenceDate(card, in: ledger))
+            .map { BudgetPresentation.dailyAmount($0, card: card, ledger: ledger) }
         let maximum = max(values.max() ?? 0, 1)
         HStack(alignment: .bottom, spacing: 4) {
             ForEach(values.indices, id: \.self) { index in
@@ -346,7 +388,8 @@ struct MiniBudgetCalendar: View {
     var ledger: Ledger
     var body: some View {
         let calendar = Calendar.current
-        let start = calendar.dateInterval(of: .month, for: Date())?.start ?? Date()
+        let reference = BudgetPresentation.referenceDate(card, in: ledger)
+        let start = calendar.dateInterval(of: .month, for: reference)?.start ?? reference
         let range = calendar.range(of: .day, in: .month, for: start) ?? 1..<29
         let leading = (calendar.component(.weekday, from: start) - calendar.firstWeekday + 7) % 7
         LazyVGrid(columns: Array(repeating: GridItem(.fixed(6), spacing: 4), count: 7), spacing: 4) {
@@ -355,7 +398,7 @@ struct MiniBudgetCalendar: View {
                 let date = calendar.date(byAdding: .day, value: day - 1, to: start) ?? start
                 let hasRecords = BudgetPresentation.expenses(card, in: ledger).contains { calendar.isDate($0.occurredAt, inSameDayAs: date) }
                 RoundedRectangle(cornerRadius: 1.5).fill(hasRecords ? PaperTheme.accent : .white.opacity(0.12)).frame(width: 6, height: 6)
-                    .overlay { if calendar.isDateInToday(date) { RoundedRectangle(cornerRadius: 1.5).stroke(.white, lineWidth: 1) } }
+                    .overlay { if calendar.isDate(date, inSameDayAs: reference) { RoundedRectangle(cornerRadius: 1.5).stroke(PaperTheme.accent, lineWidth: 1) } }
             }
         }.frame(width: 66).accessibilityHidden(true)
     }
