@@ -6,6 +6,7 @@ struct CheckLineHomeView: View {
     @Environment(\.walletReduceMotion) private var reduceMotion
     @Environment(\.dynamicTypeSize) private var typeSize
     @State private var detail: BudgetDetailSection?
+    @State private var presentedBudgetID: UUID?
     @State private var summaryPopup: BudgetDetailSection?
     @State private var selectedExpense: Expense?
     @Namespace private var summaryNamespace
@@ -49,7 +50,7 @@ struct CheckLineHomeView: View {
                         }
                     }
                     if BudgetPresentation.pendingCount(card, in: workspace.ledger) > 0 {
-                        Button { detail = .pending } label: {
+                        Button { openDetail(.pending, card: card) } label: {
                             HStack {
                                 Label(String(format: String(localized: "wallet.pending.count"), BudgetPresentation.pendingCount(card, in: workspace.ledger)), systemImage: "clock")
                                 Spacer()
@@ -109,12 +110,12 @@ struct CheckLineHomeView: View {
             }
         }
         .sheet(item: $detail) { section in
-            if let card {
+            if let budgetID = presentedBudgetID {
                 if #available(iOS 18.0, *), !reduceMotion, section == .overview {
-                    BudgetDetailSheet(workspace: workspace, budgetID: card.id, initialSection: section)
-                        .navigationTransition(.zoom(sourceID: card.id, in: budgetTransition))
+                    BudgetDetailSheet(workspace: workspace, budgetID: budgetID, initialSection: section)
+                        .navigationTransition(.zoom(sourceID: budgetID, in: budgetTransition))
                 } else {
-                    BudgetDetailSheet(workspace: workspace, budgetID: card.id, initialSection: section)
+                    BudgetDetailSheet(workspace: workspace, budgetID: budgetID, initialSection: section)
                 }
             }
         }
@@ -131,10 +132,15 @@ struct CheckLineHomeView: View {
         .onChange(of: card?.id) { _, _ in receiptOffset = 0 }
         .onAppear {
             guard DesignPreviewData.isEnabled else { return }
-            if DesignPreviewData.screen == "home-inline" { detail = .overview }
+            if DesignPreviewData.screen == "home-inline", let card { openDetail(.overview, card: card) }
             if DesignPreviewData.screen == "home-used" { summaryPopup = .overview }
             if DesignPreviewData.screen == "home-calendar" { summaryPopup = .calendar }
         }
+    }
+
+    private func openDetail(_ section: BudgetDetailSection, card: HomeBudgetCardModel) {
+        presentedBudgetID = card.id
+        detail = section
     }
 
     private func deck(_ card: HomeBudgetCardModel) -> some View {
@@ -148,12 +154,12 @@ struct CheckLineHomeView: View {
                     .accessibilityHidden(true)
             }
             ZStack(alignment: .topTrailing) {
-            Button { detail = .overview } label: {
+            Button { openDetail(.overview, card: card) } label: {
                 LiquidBudgetCard(card: card, flows: !workspace.showAgent && !workspace.showComposer && detail == nil && chrome?.isSettingsPresented != true && chrome?.isAttentionPresented != true, reflectionPoint: touchPoint)
                     .modifier(WalletTransitionSource(id: card.id, namespace: budgetTransition))
             }
                 .buttonStyle(.plain)
-                .highPriorityGesture(LongPressGesture(minimumDuration: 0.16, maximumDistance: 12).sequenced(before: DragGesture(minimumDistance: 0))
+                .simultaneousGesture(LongPressGesture(minimumDuration: 0.16, maximumDistance: 12).sequenced(before: DragGesture(minimumDistance: 0))
                     .updating($dragOffset) { value, offset, _ in
                         guard !reduceMotion, canChangeCard(1), !isCardFlying else { return }
                         if case .second(true, let drag?) = value { offset = drag.translation }
@@ -193,7 +199,7 @@ struct CheckLineHomeView: View {
                     }
                 }
                 Divider()
-                Button(String(localized: "wallet.card.details"), systemImage: "arrow.up.right") { detail = .overview }
+                Button(String(localized: "wallet.card.details"), systemImage: "arrow.up.right") { openDetail(.overview, card: card) }
                 Button(String(localized: "wallet.budget.manage"), systemImage: "wallet.pass") { chrome?.selectedTab = .budgets }
             } label: {
                 Image(systemName: "ellipsis").foregroundStyle(PaperTheme.ink).frame(width: 44, height: 44).padding(8)
@@ -276,7 +282,7 @@ struct CheckLineHomeView: View {
             HStack {
                 Text(String(localized: "expense.recent.title")).font(.headline)
                 Spacer()
-                Button { detail = .records } label: { Image(systemName: "arrow.up.right").frame(width: 44, height: 44) }
+                Button { openDetail(.records, card: card) } label: { Image(systemName: "arrow.up.right").frame(width: 44, height: 44) }
                     .accessibilityLabel(String(localized: "wallet.records.all"))
             }
             if rows.isEmpty {

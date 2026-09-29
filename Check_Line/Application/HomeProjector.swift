@@ -18,6 +18,7 @@ nonisolated enum HomeProcessingKind: Equatable, Sendable {
     case unbudgetedTransactions(Int)
     case possibleOverrun(budgetName: String)
     case certainOverrun(budgetName: String)
+    case settlementDue(budgetName: String)
     case noDataSources
 }
 
@@ -80,6 +81,10 @@ nonisolated enum HomeProjector {
         }
 
         for card in cards(in: ledger) {
+            if let period = ledger.periods[card.periodID],
+               period.state == .pendingSettlement || CycleEngine.isDue(period, now: Date(), calendar: .current) {
+                items.append(HomeProcessingItem(id: "settlement-\(card.id.uuidString)", kind: .settlementDue(budgetName: card.name)))
+            }
             if card.snapshot.certainOverrunAmount > 0 {
                 items.append(
                     HomeProcessingItem(

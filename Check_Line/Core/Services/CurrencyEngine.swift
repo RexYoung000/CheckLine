@@ -36,6 +36,9 @@ nonisolated enum CurrencyEngine {
         guard let quote, quote.kind != .identity else {
             throw LedgerError.missingExchangeRate(source: sourceCurrencyCode, target: walletCurrencyCode)
         }
+        guard quote.rate > 0, !quote.sourceName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+            throw LedgerError.invalidExchangeRate
+        }
 
         return ConvertedWalletAmount(
             walletSignedAmount: sourceSignedAmount * quote.rate,

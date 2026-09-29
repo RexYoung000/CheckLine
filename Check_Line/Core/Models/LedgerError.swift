@@ -3,6 +3,8 @@ import Foundation
 nonisolated enum LedgerError: Error, Equatable, Sendable {
     case walletCurrencyLocked
     case missingExchangeRate(source: String, target: String)
+    case invalidExchangeRate
+    case staleSettlementPreview
     case insufficientWishWallet
     case periodNotSettled
     case periodAlreadySettled

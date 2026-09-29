@@ -422,6 +422,8 @@ ConfirmationGate 展示最终影响并确认
 
 任何一步失败都回滚整个提交，避免预算结算成功但钱包未更新。
 
+M4 原生入口由预算详情打开全屏结算检查。`CheckLineWorkspace` 使用 `AgentSession` 的结构化 `settlePeriod` 意图取得 Core 预览，经用户接受数据覆盖及金额影响后提交整本账本事务；UI 不自行计算钱包金额。一次性卡可由用户主动结束，循环卡只在到期后进入待结算；跨币种无报价时禁止钱包写入，用户提供的正数暂估汇率附来源和时间快照。心愿真实购买同样使用 `AgentSession` 的 `redeemWish` 确认门禁；钱包历史直接读取已持久化的 `WalletLedgerEntry`，不得生成展示用假分录。
+
 ---
 
 ## 九、Agent 安全边界

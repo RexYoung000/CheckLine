@@ -39,6 +39,17 @@ enum DesignPreviewData {
         let next = calendar.date(byAdding: .month, value: 1, to: start) ?? now
         let end = calendar.date(byAdding: .day, value: -1, to: next) ?? now
         var ledger = Ledger.blank(walletCurrencyCode: "CNY", now: now)
+        if screen == "settlement-loop" {
+            let card = try ledger.insertBudgetCard(
+                name: String(localized: "wallet.demo.trip"), amount: 1_000,
+                currencyCode: "CNY", cycleType: .oneShot, recurrence: nil,
+                startDate: start, endDate: nil, now: now
+            )
+            try record(ledger: &ledger, amount: 250, currencyCode: "CNY", occurredAt: now,
+                       now: now, decision: .confirmed(periodID: card.1.id), merchant: String(localized: "wallet.demo.train"))
+            try LedgerStore.replaceAll(ledger, in: context)
+            return
+        }
         let daily = try ledger.insertBudgetCard(name: String(localized: "wallet.demo.daily"), amount: 3_000, currencyCode: "CNY", cycleType: .repeating, recurrence: .monthly, startDate: start, endDate: end, now: now, sortIndex: 0)
         let trip = try ledger.insertBudgetCard(name: String(localized: "wallet.demo.trip"), amount: 2_400, currencyCode: "CNY", cycleType: .oneShot, recurrence: nil, startDate: start, endDate: nil, now: now, sortIndex: 1)
         if screen == "analysis-no-records" {

@@ -118,8 +118,36 @@ final class CheckLineWorkspace {
         try commitPresentationChange(changed)
     }
 
-    func redeemWish(_ id: UUID, actualAmount: Decimal, currencyCode: String, realPurchaseConfirmed: Bool, now: Date = Date()) throws {
-        let result = try session.execute(intent: .redeemWish(wishID: id, actualAmount: actualAmount, currencyCode: currencyCode, quote: nil), ledger: ledger, now: now, confirmation: .impact(ImpactAcknowledgement(realPurchaseConfirmed: realPurchaseConfirmed)))
+    func previewSettlement(_ periodID: UUID, quote: ExchangeQuote? = nil, now: Date = Date()) throws -> SettlementPreview {
+        let turn = session.turn(intent: .settlePeriod(periodID: periodID, quote: quote), ledger: ledger, now: now)
+        if let refusal = turn.evaluation?.refusal { throw refusal }
+        guard case .settlement(let preview) = turn.evaluation?.impact else { throw AgentRefusal.outOfScope }
+        return preview
+    }
+
+    func settlePeriod(
+        _ periodID: UUID,
+        quote: ExchangeQuote?,
+        reviewedLedger: Ledger,
+        acceptedIncompleteData: Bool,
+        now: Date = Date()
+    ) throws {
+        guard ledger == reviewedLedger else { throw LedgerError.staleSettlementPreview }
+        _ = try previewSettlement(periodID, quote: quote, now: now)
+        let result = try session.execute(
+            intent: .settlePeriod(periodID: periodID, quote: quote),
+            ledger: ledger,
+            now: now,
+            confirmation: .impact(ImpactAcknowledgement(acceptedIncompleteData: acceptedIncompleteData, quote: quote))
+        )
+        try commitPresentationChange(result.ledger)
+        if selectedBudgetID != nil && !cards.contains(where: { $0.id == selectedBudgetID }) {
+            selectedBudgetID = cards.first?.id
+        }
+    }
+
+    func redeemWish(_ id: UUID, actualAmount: Decimal, currencyCode: String, realPurchaseConfirmed: Bool, quote: ExchangeQuote? = nil, now: Date = Date()) throws {
+        let result = try session.execute(intent: .redeemWish(wishID: id, actualAmount: actualAmount, currencyCode: currencyCode, quote: quote), ledger: ledger, now: now, confirmation: .impact(ImpactAcknowledgement(quote: quote, realPurchaseConfirmed: realPurchaseConfirmed)))
         try commitPresentationChange(result.ledger)
         lastUndo = nil
     }

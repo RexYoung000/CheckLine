@@ -178,6 +178,48 @@ final class WalletNavigationUITests: XCTestCase {
         XCTAssertEqual(app.textFields["额度"].value as? String, "1000")
     }
 
+    func testOneShotSettlementReachesWishWalletAndRealPurchase() throws {
+        let app = launch(screen: "settlement-loop")
+        let budgetCard = app.buttons["周末旅行"].firstMatch
+        XCTAssertTrue(budgetCard.waitForExistence(timeout: 10), app.debugDescription)
+        budgetCard.tap()
+        let settle = app.buttons["wallet.budget.settlement"]
+        XCTAssertTrue(settle.waitForExistence(timeout: 5), app.debugDescription)
+        settle.tap()
+        XCTAssertTrue(app.staticTexts["结算后会怎样"].waitForExistence(timeout: 5), app.debugDescription)
+        XCTAssertTrue(app.staticTexts["目前只覆盖主动录入的记录，其他消费可能尚未纳入。"].exists)
+        attach(app, name: "settlement-review")
+
+        let confirm = app.buttons["wallet.settlement.confirm"]
+        XCTAssertFalse(confirm.isEnabled)
+        app.buttons["wallet.settlement.acceptData"].tap()
+        XCTAssertTrue(confirm.isEnabled, app.debugDescription)
+        confirm.tap()
+        XCTAssertTrue(app.staticTexts["本期已结算"].waitForExistence(timeout: 5), app.debugDescription)
+        attach(app, name: "settlement-saved")
+        app.buttons["wallet.settlement.viewWishes"].tap()
+        XCTAssertTrue(app.staticTexts["¥750"].waitForExistence(timeout: 5), app.debugDescription)
+
+        app.buttons["添加心愿"].firstMatch.tap()
+        let name = app.textFields["心愿名称"]
+        XCTAssertTrue(name.waitForExistence(timeout: 5), app.debugDescription)
+        name.tap()
+        name.typeText("耳机")
+        app.buttons["添加心愿"].firstMatch.tap()
+        XCTAssertTrue(app.staticTexts["耳机"].waitForExistence(timeout: 5), app.debugDescription)
+        app.staticTexts["耳机"].tap()
+        app.buttons["已购买，去兑现"].tap()
+        let actual = app.textFields["实际花费"]
+        XCTAssertTrue(actual.waitForExistence(timeout: 5), app.debugDescription)
+        actual.tap()
+        actual.typeText("500")
+        app.switches["我已完成真实购买"].tap()
+        app.buttons["确认兑现"].tap()
+        XCTAssertTrue(app.staticTexts["这个心愿，实现了"].waitForExistence(timeout: 5), app.debugDescription)
+        XCTAssertTrue(app.staticTexts["¥250"].exists, app.debugDescription)
+        attach(app, name: "wish-redeemed-from-settlement")
+    }
+
     func testAnalysisEmptyStatesUseRealDataAndOfferNextAction() throws {
         let withoutCard = launch(screen: "analysis-empty")
         XCTAssertTrue(withoutCard.staticTexts["还没有可回看的预算卡"].waitForExistence(timeout: 10))

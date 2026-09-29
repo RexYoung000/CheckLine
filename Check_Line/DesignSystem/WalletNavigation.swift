@@ -365,7 +365,13 @@ struct WalletAttentionSheet: View {
     @Bindable var workspace: CheckLineWorkspace
     @Environment(\.dismiss) private var dismiss
     private var cards: [HomeBudgetCardModel] {
-        workspace.cards.filter { BudgetPresentation.pendingCount($0, in: workspace.ledger) > 0 || $0.snapshot.certainOverrunAmount > 0 || $0.snapshot.possibleOverrunAmount > 0 }
+        workspace.cards.filter { card in
+            let due = workspace.ledger.periods[card.periodID].map {
+                $0.state == .pendingSettlement || CycleEngine.isDue($0, now: Date(), calendar: .current)
+            } ?? false
+            return due || BudgetPresentation.pendingCount(card, in: workspace.ledger) > 0
+                || card.snapshot.certainOverrunAmount > 0 || card.snapshot.possibleOverrunAmount > 0
+        }
     }
     private var unbudgetedCount: Int {
         workspace.ledger.expenses.values.filter { $0.attributionState == .unbudgeted && $0.wishRedemptionID == nil }.count
@@ -379,14 +385,17 @@ struct WalletAttentionSheet: View {
                     }
                     ForEach(cards) { card in
                         let count = BudgetPresentation.pendingCount(card, in: workspace.ledger)
+                        let due = workspace.ledger.periods[card.periodID].map {
+                            $0.state == .pendingSettlement || CycleEngine.isDue($0, now: Date(), calendar: .current)
+                        } ?? false
                         NavigationLink {
-                            BudgetDetailContent(workspace: workspace, budgetID: card.id, section: count > 0 ? .pending : .overview)
+                            BudgetDetailContent(workspace: workspace, budgetID: card.id, section: due ? .overview : (count > 0 ? .pending : .overview))
                         } label: {
                             HStack(spacing: 14) {
-                                Image(systemName: count > 0 ? "clock" : "exclamationmark.circle").font(.title3).foregroundStyle(PaperTheme.accent)
+                                Image(systemName: due ? "checkmark.seal" : (count > 0 ? "clock" : "exclamationmark.circle")).font(.title3).foregroundStyle(PaperTheme.accent)
                                 VStack(alignment: .leading, spacing: 6) {
                                     Text(card.name).font(.headline)
-                                    Text(count > 0 ? String(format: String(localized: "wallet.pending.count"), count) : (card.snapshot.certainOverrunAmount > 0 ? String(localized: "wallet.overrun") : String(localized: "wallet.possibleOverrun")))
+                                    Text(due ? String(localized: "wallet.attention.settlementDue") : (count > 0 ? String(format: String(localized: "wallet.pending.count"), count) : (card.snapshot.certainOverrunAmount > 0 ? String(localized: "wallet.overrun") : String(localized: "wallet.possibleOverrun"))))
                                         .font(.subheadline).foregroundStyle(PaperTheme.muted)
                                 }
                                 Spacer()

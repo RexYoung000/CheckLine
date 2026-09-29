@@ -48,8 +48,17 @@ struct BudgetDetailContent: View {
     @Bindable var workspace: CheckLineWorkspace
     var budgetID: UUID
     var section: BudgetDetailSection
+    @Environment(\.dismiss) private var dismissDetail
+    @Environment(\.shellChrome) private var chrome
     @State private var expense: Expense?
+    @State private var settlementSelection: SettlementSelection?
     private var card: HomeBudgetCardModel? { workspace.cards.first { $0.id == budgetID } }
+    private var mostRecentSettlement: Settlement? {
+        workspace.ledger.periods(forBudget: budgetID)
+            .reversed()
+            .compactMap { workspace.ledger.settlement(forPeriod: $0.id) }
+            .first
+    }
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {
@@ -65,6 +74,16 @@ struct BudgetDetailContent: View {
                     case .records, .pending:
                         records(card)
                     }
+                } else if let budget = workspace.ledger.budgets[budgetID], let settlement = mostRecentSettlement {
+                    PaperCard {
+                        VStack(alignment: .leading, spacing: 14) {
+                            Text(budget.name).font(.title2.weight(.semibold))
+                            Label(String(localized: "wallet.settlement.saved"), systemImage: "checkmark.circle.fill")
+                                .foregroundStyle(PaperTheme.accent)
+                            PaperFormItem(title: String(localized: "wallet.settlement.confirmed"), value: MoneyFormat.string(settlement.confirmedSpent, currencyCode: settlement.currencyCode))
+                            PaperFormItem(title: String(localized: "wallet.settlement.walletAfter"), value: MoneyFormat.string(workspace.wallet.balance, currencyCode: workspace.ledger.walletSettings.walletCurrencyCode))
+                        }
+                    }
                 } else {
                     ContentUnavailableView(String(localized: "budget.missing"), systemImage: "wallet.pass")
                 }
@@ -77,6 +96,13 @@ struct BudgetDetailContent: View {
         .toolbar(.hidden, for: .tabBar, .bottomBar)
         .toolbarBackground(.hidden, for: .navigationBar)
         .sheet(item: $expense) { item in WalletExpenseDetail(workspace: workspace, expenseID: item.id) }
+        .fullScreenCover(item: $settlementSelection) { selection in
+            SettlementReviewView(workspace: workspace, periodID: selection.id) {
+                settlementSelection = nil
+                dismissDetail()
+                chrome?.selectedTab = .wishes
+            }
+        }
     }
 
     private func overview(_ card: HomeBudgetCardModel) -> some View {
@@ -104,15 +130,29 @@ struct BudgetDetailContent: View {
                     .font(.subheadline).foregroundStyle(PaperTheme.accent)
             }
             VStack(spacing: 12) {
+                Button {
+                    settlementSelection = SettlementSelection(id: card.periodID)
+                } label: {
+                    Label(settlementReady(card) ? String(localized: "wallet.settlement.review") : String(localized: "wallet.settlement.preview"), systemImage: "checkmark.seal")
+                        .frame(maxWidth: .infinity)
+                }
+                .buttonStyle(PaperSolidButtonStyle())
+                .accessibilityIdentifier("wallet.budget.settlement")
                 NavigationLink { BudgetDetailContent(workspace: workspace, budgetID: budgetID, section: .records) } label: {
                     Label(String(localized: "wallet.records.all"), systemImage: "receipt").frame(maxWidth: .infinity)
-                }.buttonStyle(PaperSolidButtonStyle())
+                }.buttonStyle(.plain)
                 NavigationLink { BudgetDetailContent(workspace: workspace, budgetID: budgetID, section: .calendar) } label: {
                     Label(String(localized: "wallet.calendar.title"), systemImage: "calendar").frame(maxWidth: .infinity).frame(minHeight: 44)
                 }.buttonStyle(.plain)
             }
             Text(String(localized: "wallet.coverage.note")).font(.caption).foregroundStyle(PaperTheme.muted)
         }
+    }
+
+    private func settlementReady(_ card: HomeBudgetCardModel) -> Bool {
+        guard card.cycleType == .repeating else { return true }
+        guard let period = workspace.ledger.periods[card.periodID] else { return false }
+        return period.state == .pendingSettlement || CycleEngine.isDue(period, now: Date(), calendar: .current)
     }
 
     private func amountRow(_ key: LocalizedStringKey, _ amount: Decimal, _ card: HomeBudgetCardModel) -> some View {
@@ -188,6 +228,7 @@ struct BudgetInlineDetails: View {
 }
 
 private struct ExpenseSelection: Identifiable { let id: UUID }
+private struct SettlementSelection: Identifiable { let id: UUID }
 
 struct BudgetDailyChart: View {
     var card: HomeBudgetCardModel

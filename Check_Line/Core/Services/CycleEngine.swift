@@ -47,6 +47,7 @@ nonisolated enum CycleEngine {
         var period = try ledger.requirePeriod(periodID)
         var budget = try ledger.requireBudget(period.budgetID)
         guard period.state == .active else { throw LedgerError.periodAlreadySettled }
+        guard budget.cycleType == .oneShot else { throw LedgerError.periodNotReadyToSettle }
         period.state = .pendingSettlement
         budget.state = .pendingSettlement
         budget.updatedAt = now

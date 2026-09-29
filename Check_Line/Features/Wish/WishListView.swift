@@ -63,7 +63,7 @@ struct WishListView: View {
             }
         }
         .sheet(isPresented: $adding) { CreateWishSheet(workspace: workspace) }
-        .sheet(isPresented: $walletDetails) { WishWalletSummaryView(projection: workspace.wallet, currencyCode: workspace.ledger.walletSettings.walletCurrencyCode) }
+        .sheet(isPresented: $walletDetails) { WishWalletSummaryView(workspace: workspace) }
     }
 }
 
@@ -160,15 +160,28 @@ struct WishRedemptionView: View {
     var wishID: UUID
     @Environment(\.dismiss) private var dismiss
     @State private var amount = ""
+    @State private var purchaseCurrency = ""
+    @State private var exchangeRate = ""
+    @State private var quoteDate = Date()
     @State private var purchased = false
     @State private var complete = false
     @State private var failed = false
     private var wish: Wish? { workspace.ledger.wishes[wishID] }
-    private var currency: String { wish?.currencyCode ?? workspace.ledger.walletSettings.walletCurrencyCode }
+    private var walletCurrency: String { workspace.ledger.walletSettings.walletCurrencyCode }
+    private var currency: String { purchaseCurrency.trimmingCharacters(in: .whitespacesAndNewlines).uppercased() }
+    private var currencyValid: Bool { Locale.commonISOCurrencyCodes.contains(currency) }
+    private var needsQuote: Bool { currencyValid && currency != walletCurrency }
+    private var quote: ExchangeQuote? {
+        guard needsQuote, let rate = MoneyFormat.parseAmount(exchangeRate), rate > 0 else { return nil }
+        return .estimated(rate: rate, at: quoteDate, sourceName: "user_provided_estimate")
+    }
     private var parsed: Decimal? { MoneyFormat.parseAmount(amount) }
     private var preview: WishRedemptionPreview? {
-        guard let parsed else { return nil }
-        return try? WishRedemptionEngine.preview(ledger: workspace.ledger, wishID: wishID, actualAmount: parsed, currencyCode: currency, quote: nil, now: Date())
+        guard let parsed, currencyValid else { return nil }
+        return try? WishRedemptionEngine.preview(ledger: workspace.ledger, wishID: wishID, actualAmount: parsed, currencyCode: currency, quote: quote, now: Date())
+    }
+    private var savedRedemption: WishRedemption? {
+        workspace.ledger.redemptions.values.first { $0.wishID == wishID && $0.state == .completed }
     }
     var body: some View {
         NavigationStack {
@@ -180,7 +193,9 @@ struct WishRedemptionView: View {
                         Text(wish.name).font(.title2.weight(.medium))
                         if complete {
                             Text(String(localized: "wallet.wishes.success")).font(.headline).foregroundStyle(PaperTheme.accent)
-                            PaperFormItem(title: String(localized: "wallet.wishes.actual"), value: MoneyFormat.string(parsed ?? 0, currencyCode: currency))
+                            if let savedRedemption {
+                                PaperFormItem(title: String(localized: "wallet.wishes.actual"), value: MoneyFormat.string(savedRedemption.actualAmount, currencyCode: savedRedemption.currencyCode))
+                            }
                             PaperFormItem(title: String(localized: "v1.wish.balance"), value: MoneyFormat.string(workspace.wallet.balance, currencyCode: workspace.ledger.walletSettings.walletCurrencyCode))
                             Button(String(localized: "action.close")) { dismiss() }.buttonStyle(PaperSolidButtonStyle())
                         } else {
@@ -189,10 +204,31 @@ struct WishRedemptionView: View {
                                 Text(currency).font(.subheadline).foregroundStyle(PaperTheme.muted)
                                 TextField("0.00", text: $amount).keyboardType(.decimalPad).font(.largeTitle).monospacedDigit().accessibilityLabel(String(localized: "wallet.wishes.actual"))
                             }.padding(18).walletSurface()
+                            HStack {
+                                Text(String(localized: "wallet.wishes.purchaseCurrency"))
+                                    .font(.subheadline).foregroundStyle(PaperTheme.muted)
+                                Spacer(minLength: 12)
+                                TextField("CNY", text: $purchaseCurrency)
+                                    .textInputAutocapitalization(.characters)
+                                    .autocorrectionDisabled()
+                                    .multilineTextAlignment(.trailing)
+                                    .frame(maxWidth: 110)
+                                    .accessibilityIdentifier("wallet.wishes.purchaseCurrency")
+                            }.padding(18).walletSurface()
+                            if !currencyValid {
+                                Text(String(localized: "wallet.wishes.invalidCurrency"))
+                                    .font(.subheadline).foregroundStyle(PaperTheme.accent)
+                            }
+                            if needsQuote {
+                                WalletExchangeQuoteFields(sourceCurrencyCode: currency, walletCurrencyCode: walletCurrency, rateText: $exchangeRate, quotedAt: $quoteDate)
+                            }
                             if let preview {
+                                if needsQuote {
+                                    PaperFormItem(title: String(localized: "wallet.exchange.walletChange"), value: MoneyFormat.string(preview.walletSignedAmount, currencyCode: walletCurrency))
+                                }
                                 PaperFormItem(title: String(localized: "wallet.wishes.balanceAfter"), value: MoneyFormat.string(preview.balanceAfter, currencyCode: workspace.ledger.walletSettings.walletCurrencyCode))
                             } else if parsed != nil {
-                                Label(currency != workspace.ledger.walletSettings.walletCurrencyCode ? String(localized: "wallet.wishes.exchangeMissing") : String(localized: "wallet.wishes.insufficient"), systemImage: "exclamationmark.circle")
+                                Label(needsQuote && quote == nil ? String(localized: "wallet.wishes.exchangeMissing") : String(localized: "wallet.wishes.insufficient"), systemImage: "exclamationmark.circle")
                                     .font(.subheadline).foregroundStyle(PaperTheme.accent)
                             }
                             Text(String(localized: "wallet.wishes.onlyWallet")).font(.subheadline).foregroundStyle(PaperTheme.muted)
@@ -200,7 +236,7 @@ struct WishRedemptionView: View {
                             if failed { Text(String(localized: "v1.banner.failed")).foregroundStyle(PaperTheme.accent) }
                             Button(String(localized: "wallet.wishes.confirm")) {
                                 guard purchased, let parsed, preview != nil else { return }
-                                do { try workspace.redeemWish(wishID, actualAmount: parsed, currencyCode: currency, realPurchaseConfirmed: purchased); complete = true }
+                                do { try workspace.redeemWish(wishID, actualAmount: parsed, currencyCode: currency, realPurchaseConfirmed: purchased, quote: quote); complete = true }
                                 catch { failed = true }
                             }.buttonStyle(PaperSolidButtonStyle(enabled: purchased && preview != nil)).disabled(!purchased || preview == nil)
                         }
@@ -212,6 +248,9 @@ struct WishRedemptionView: View {
             .navigationTitle(String(localized: "wallet.wishes.redemption")).navigationBarTitleDisplayMode(.inline)
             .toolbarBackground(.hidden, for: .navigationBar)
             .toolbar { ToolbarItem(placement: .topBarTrailing) { Button(String(localized: "action.close"), systemImage: "xmark") { dismiss() }.labelStyle(.iconOnly) } }
+        }
+        .onAppear {
+            if purchaseCurrency.isEmpty { purchaseCurrency = wish?.currencyCode ?? walletCurrency }
         }
     }
 }

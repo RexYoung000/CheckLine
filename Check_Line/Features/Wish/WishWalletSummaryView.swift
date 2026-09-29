@@ -1,9 +1,13 @@
 import SwiftUI
 
 struct WishWalletSummaryView: View {
-    var projection: WalletProjection
-    var currencyCode: String
+    @Bindable var workspace: CheckLineWorkspace
     @Environment(\.dismiss) private var dismiss
+    private var projection: WalletProjection { workspace.wallet }
+    private var currencyCode: String { workspace.ledger.walletSettings.walletCurrencyCode }
+    private var entries: [WalletLedgerEntry] {
+        workspace.ledger.sortedWalletEntries.reversed()
+    }
 
     var body: some View {
         NavigationStack {
@@ -25,6 +29,27 @@ struct WishWalletSummaryView: View {
                             Text(String(localized: "wallet.wishes.recoveryOrder")).font(.caption).foregroundStyle(PaperTheme.muted)
                         }.font(.subheadline)
                     }
+                    VStack(alignment: .leading, spacing: 14) {
+                        Text(String(localized: "wallet.wishes.history")).font(.headline)
+                        if entries.isEmpty {
+                            Text(String(localized: "wallet.wishes.historyEmpty"))
+                                .font(.subheadline).foregroundStyle(PaperTheme.muted)
+                        } else {
+                            ForEach(entries) { entry in
+                                HStack(alignment: .top, spacing: 12) {
+                                    VStack(alignment: .leading, spacing: 5) {
+                                        Text(entryTitle(entry)).font(.subheadline.weight(.medium))
+                                        Text(entry.occurredAt, format: .dateTime.year().month().day().hour().minute())
+                                            .font(.caption).foregroundStyle(PaperTheme.muted)
+                                    }
+                                    Spacer(minLength: 8)
+                                    Text(MoneyFormat.string(entry.walletSignedAmount, currencyCode: currencyCode))
+                                        .font(.subheadline.weight(.semibold)).monospacedDigit()
+                                }
+                                .padding(16).walletSurface(radius: 18)
+                            }
+                        }
+                    }
                     Text(String(localized: "v1.wish.notRealMoney")).font(.subheadline).foregroundStyle(PaperTheme.muted)
                 }.padding(24).frame(maxWidth: 600).frame(maxWidth: .infinity)
             }
@@ -37,5 +62,26 @@ struct WishWalletSummaryView: View {
         .presentationDetents([.medium, .large])
         .presentationDragIndicator(.visible)
         .presentationCornerRadius(PaperTheme.Radius.sheet)
+    }
+
+    private func entryTitle(_ entry: WalletLedgerEntry) -> String {
+        if let settlementID = entry.settlementID,
+           let settlement = workspace.ledger.settlements[settlementID],
+           let period = workspace.ledger.periods[settlement.periodID],
+           let budget = workspace.ledger.budgets[period.budgetID] {
+            return budget.name + " · " + String(localized: entry.walletSignedAmount >= 0 ? "wallet.settlement.surplus" : "wallet.settlement.overrun")
+        }
+        if let redemptionID = entry.wishRedemptionID,
+           let redemption = workspace.ledger.redemptions[redemptionID],
+           let wish = workspace.ledger.wishes[redemption.wishID] {
+            return wish.name + " · " + String(localized: "wallet.wishes.redemption")
+        }
+        switch entry.type {
+        case .surplus: return String(localized: "wallet.settlement.surplus")
+        case .overrun: return String(localized: "wallet.settlement.overrun")
+        case .wishRedemption: return String(localized: "wallet.wishes.redemption")
+        case .refund: return String(localized: "wallet.wishes.refund")
+        case .retrospectiveAdjustment: return String(localized: "wallet.wishes.adjustment")
+        }
     }
 }
