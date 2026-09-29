@@ -81,9 +81,10 @@ struct AgentTaskPanel: View {
             } else {
             HStack(alignment: .bottom, spacing: PaperTheme.Space.s) {
                 PaperField(
-                    title: String(localized: "v1.agent.placeholder"),
+                    title: String(localized: workspace.isEmpty || workspace.pendingBudgetText != nil ? "v1.agent.placeholder.budget" : "v1.agent.placeholder"),
                     text: $workspace.draftText,
-                    axis: .vertical
+                    axis: .vertical,
+                    identifier: "wallet.agent.input"
                 )
                 .focused($inputFocused)
 
@@ -158,6 +159,7 @@ struct AgentTaskPanel: View {
             } else if let draft = workspace.budgetProposal {
                 Text(draft.name).font(.headline)
                 PaperFormItem(title: String(localized: "v1.budget.amount"), value: MoneyFormat.string(draft.amount, currencyCode: draft.currencyCode))
+                PaperFormItem(title: String(localized: "v1.budget.cycle"), value: String(localized: draft.cycleType == .repeating ? "wallet.cycle.monthly" : "v1.cycle.oneShot"))
                 Text(draft.startDate, format: .dateTime.year().month().day()).font(.subheadline)
                 if let end = draft.endDate { Text(end, format: .dateTime.year().month().day()).font(.subheadline) }
             }
@@ -167,7 +169,7 @@ struct AgentTaskPanel: View {
 
     private var structuredActions: some View {
         VStack(alignment: .leading, spacing: PaperTheme.Space.s) {
-            Button(String(localized: "v1.agent.confirm")) {
+            Button(String(localized: workspace.budgetProposal == nil ? "v1.agent.confirm" : "v1.agent.confirm.budget")) {
                 inputFocused = false
                 workspace.confirmStructured()
             }

@@ -122,6 +122,62 @@ final class WalletNavigationUITests: XCTestCase {
         XCTAssertTrue(create.waitForExistence(timeout: 5))
     }
 
+    func testEmptyHomeCreatesFirstCardThroughOfflineAgent() throws {
+        let app = launch(screen: "empty")
+        app.buttons["wallet.empty.card"].tap()
+        let input = app.descendants(matching: .any)["wallet.agent.input"]
+        XCTAssertTrue(input.waitForExistence(timeout: 5), app.debugDescription)
+        input.tap()
+        input.typeText("创建每月餐饮预算1000元")
+        app.buttons["发送"].tap()
+        let confirm = app.buttons["确认创建预算卡"]
+        XCTAssertTrue(confirm.waitForExistence(timeout: 8), app.debugDescription)
+        confirm.tap()
+        XCTAssertTrue(app.buttons["wallet.agent.close"].waitForNonExistence(timeout: 5), app.debugDescription)
+        XCTAssertFalse(app.buttons["wallet.empty.createBudget"].exists)
+        XCTAssertTrue(app.staticTexts["餐饮"].waitForExistence(timeout: 5), app.debugDescription)
+    }
+
+    func testNormalAppKeepsFirstCardAfterRelaunch() throws {
+        let app = XCUIApplication()
+        app.launchArguments = ["-AppleLanguages", "(zh-Hans)", "-AppleLocale", "zh_CN"]
+        app.launch()
+        let create = app.buttons["wallet.empty.createBudget"]
+        XCTAssertTrue(create.waitForExistence(timeout: 10), app.debugDescription)
+        create.tap()
+        let name = app.textFields["输入预算名称"]
+        XCTAssertTrue(name.waitForExistence(timeout: 5))
+        name.tap()
+        name.typeText("重开测试")
+        let amount = app.textFields["额度"]
+        amount.tap()
+        amount.typeText("500")
+        app.buttons.matching(NSPredicate(format: "label == %@ AND identifier != %@", "创建预算卡", "wallet.empty.createBudget")).firstMatch.tap()
+        XCTAssertTrue(app.staticTexts["重开测试"].waitForExistence(timeout: 5), app.debugDescription)
+        app.terminate()
+        app.launch()
+        XCTAssertFalse(create.waitForExistence(timeout: 3), app.debugDescription)
+        XCTAssertTrue(app.staticTexts["重开测试"].waitForExistence(timeout: 8), app.debugDescription)
+    }
+
+    func testAgentDraftMovesIntoManualBudgetForm() throws {
+        let app = launch(screen: "empty")
+        app.buttons["wallet.empty.card"].tap()
+        let input = app.descendants(matching: .any)["wallet.agent.input"]
+        XCTAssertTrue(input.waitForExistence(timeout: 5))
+        input.tap()
+        input.typeText("创建预算卡")
+        app.buttons["发送"].tap()
+        XCTAssertTrue(app.staticTexts["这张预算卡叫什么名字？"].waitForExistence(timeout: 5))
+        input.tap()
+        input.typeText("餐饮 1000元 每月")
+        app.buttons["手动填写"].tap()
+        let name = app.textFields["输入预算名称"]
+        XCTAssertTrue(name.waitForExistence(timeout: 5), app.debugDescription)
+        XCTAssertEqual(name.value as? String, "餐饮")
+        XCTAssertEqual(app.textFields["额度"].value as? String, "1000")
+    }
+
     func testAnalysisEmptyStatesUseRealDataAndOfferNextAction() throws {
         let withoutCard = launch(screen: "analysis-empty")
         XCTAssertTrue(withoutCard.staticTexts["还没有可回看的预算卡"].waitForExistence(timeout: 10))

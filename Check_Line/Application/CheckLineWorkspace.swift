@@ -6,7 +6,9 @@ import SwiftData
 @Observable
 final class CheckLineWorkspace {
     var ledger: Ledger
+    let storageLoadFailed: Bool
     var draftText: String = ""
+    var pendingBudgetText: String?
     var panelExpanded: Bool = false
     var lastTurn: AgentTurn?
     var confirmAmountText: String = ""
@@ -46,11 +48,13 @@ final class CheckLineWorkspace {
         self.attachmentStore = attachmentStore ?? ExpenseAttachmentStore()
         if let loaded = try? LedgerStore.load(from: context, now: now) {
             ledger = loaded
+            storageLoadFailed = false
             if !DesignPreviewData.isEnabled {
                 try? self.attachmentStore.removeOrphans(keeping: Set(loaded.expenses.keys))
             }
         } else {
             ledger = Ledger.blank(walletCurrencyCode: "CNY", now: now)
+            storageLoadFailed = true
         }
         confirmCurrencyCode = ledger.walletSettings.walletCurrencyCode
     }
@@ -197,6 +201,7 @@ final class CheckLineWorkspace {
     func cancelAgentProposal() {
         lastTurn = nil
         confirmAmountText = ""
+        pendingBudgetText = nil
         agentBanner = nil
     }
 
@@ -209,12 +214,23 @@ final class CheckLineWorkspace {
     func submitText(now: Date = Date()) async {
         let text = draftText.trimmingCharacters(in: .whitespacesAndNewlines)
         guard text.isEmpty == false, isWorking == false else { return }
+        if pendingBudgetText != nil && ["取消", "算了", "cancel"].contains(text.lowercased()) {
+            cancelAgentProposal()
+            draftText = ""
+            return
+        }
+        let request: String
+        if let pendingBudgetText, !LocalRegexFallback.isBudgetCreationRequest(text) {
+            request = pendingBudgetText + " " + text
+        } else {
+            request = text
+        }
         panelExpanded = true
         isWorking = true
         banner = nil
         agentBanner = nil
         confirmAmountText = ""
-        if let budgetID = inferQueryBudget(from: text) {
+        if pendingBudgetText == nil, let budgetID = inferQueryBudget(from: text) {
             let turn = session.turn(intent: .queryBudgetStatus(budgetID: budgetID), ledger: ledger, now: now)
             lastTurn = turn
             isWorking = false
@@ -222,9 +238,23 @@ final class CheckLineWorkspace {
             agentBanner = banner
             return
         }
-        let turn = await session.turn(input: .text(text), ledger: ledger, now: now)
+        let turn = await session.turn(input: .text(request), ledger: ledger, now: now)
         lastTurn = turn
         isWorking = false
+        if LocalRegexFallback.isBudgetCreationRequest(request) {
+            switch turn.understand {
+            case .needsClarification:
+                pendingBudgetText = request
+                draftText = ""
+            case .intent(.createBudget):
+                pendingBudgetText = nil
+                draftText = request
+            default:
+                pendingBudgetText = nil
+            }
+        } else {
+            pendingBudgetText = nil
+        }
         applyTurn(turn, now: now)
         agentBanner = banner
     }
@@ -249,7 +279,11 @@ final class CheckLineWorkspace {
             persist(intent: .capture(draft), confirmation: confirmation, now: now, recordedBanner: .recorded)
             return
         }
+        let isFirstCard = isEmpty
         persist(intent: intent, confirmation: .accepted, now: now, recordedBanner: .createdBudget)
+        if isFirstCard && banner == .createdBudget {
+            showAgent = false
+        }
     }
 
     func createBudget(
@@ -419,6 +453,7 @@ final class CheckLineWorkspace {
             if let newBudgetID { selectedBudgetID = newBudgetID }
             banner = recordedBanner
             draftText = ""
+            pendingBudgetText = nil
             lastTurn = nil
             confirmAmountText = ""
             if !keepComposerOpen { showComposer = false }

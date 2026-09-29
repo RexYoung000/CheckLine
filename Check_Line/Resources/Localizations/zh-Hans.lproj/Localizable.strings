@@ -265,6 +265,14 @@
 "v1.agent.needCard" = "还没有预算卡。先创建一张，再记一笔。";
 "v1.agent.offline" = "离线模式 · 本地提取";
 "v1.agent.placeholder" = "例如：星巴克 35 元";
+"v1.agent.placeholder.budget" = "例如：创建每月餐饮预算 1000 元";
+"v1.agent.confirm.budget" = "确认创建预算卡";
+"v1.agent.clarify.name" = "这张预算卡叫什么名字？";
+"v1.agent.clarify.cycle" = "这张卡是每月循环，还是一次性预算？";
+"v1.agent.clarify.currency" = "请补充预算使用的货币。";
+"v1.agent.budgetBridge" = "创建%@预算，额度%@ %@，%@";
+"storage.unavailable.title" = "暂时无法打开本机账本";
+"storage.unavailable.message" = "请重新打开 App。如果仍无法打开，请保留现有数据并反馈；此时不会创建临时预算卡。";
 "v1.agent.send" = "发送";
 "v1.agent.amount" = "金额";
 "v1.agent.attribution" = "结算预算卡";

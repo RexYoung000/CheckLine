@@ -50,6 +50,7 @@ struct CreateComposerSheet: View {
                 } else {
                     AgentTaskPanel(workspace: workspace, embedded: true) {
                         workspace.openComposer(.budget)
+                        prefillFromAgent()
                         mode = .form
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
@@ -353,8 +354,19 @@ struct CreateComposerSheet: View {
 
     private func switchMode() {
         if mode == .form {
-            let parts = workspace.composerIntent == .budget ? [name, amount] : [merchant, amount, note]
-            let bridged = parts.filter { !$0.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty }.joined(separator: " ")
+            let bridged: String
+            if workspace.composerIntent == .budget {
+                bridged = String(
+                    format: String(localized: "v1.agent.budgetBridge"),
+                    locale: .current,
+                    name,
+                    amount,
+                    currency,
+                    String(localized: repeating ? "wallet.cycle.monthly" : "v1.cycle.oneShot")
+                )
+            } else {
+                bridged = [merchant, amount, note].filter { !$0.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty }.joined(separator: " ")
+            }
             if !bridged.isEmpty && bridged != lastFormBridge {
                 workspace.draftText = bridged
                 lastFormBridge = bridged
@@ -382,8 +394,20 @@ struct CreateComposerSheet: View {
             }
         } else if workspace.composerIntent == .record, note.isEmpty {
             note = workspace.draftText
-        } else if workspace.composerIntent == .budget, name.isEmpty {
-            name = workspace.draftText
+        } else if workspace.composerIntent == .budget {
+            let text = [workspace.pendingBudgetText, workspace.draftText]
+                .compactMap { $0 }
+                .filter { !$0.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty }
+                .joined(separator: " ")
+            let candidate = LocalRegexFallback.candidate(from: text)
+            if candidate.intentType == "createBudget" {
+                name = candidate.name ?? name
+                amount = candidate.amount ?? amount
+                currency = candidate.currencyCode ?? currency
+                if let cycle = candidate.cycleType {
+                    repeating = cycle == CycleType.repeating.rawValue
+                }
+            }
         }
         let parts = workspace.composerIntent == .budget ? [name, amount] : [merchant, amount, note]
         lastFormBridge = parts.filter { !$0.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty }.joined(separator: " ")

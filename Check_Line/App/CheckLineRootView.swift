@@ -7,8 +7,10 @@ struct CheckLineRootView: View {
 
     var body: some View {
         Group {
-            if let workspace {
+            if let workspace, workspace.storageLoadFailed == false {
                 CheckLineShellView(workspace: workspace)
+            } else if workspace?.storageLoadFailed == true {
+                StorageUnavailableView()
             } else {
                 ProgressView()
                     .tint(PaperTheme.ink)

@@ -29,16 +29,8 @@ enum CheckLinePersistence {
         return try ModelContainer(for: schema, configurations: configuration)
     }
 
-    static func makeAppContainer() -> ModelContainer {
-        do {
-            return try makeContainer(inMemory: false)
-        } catch {
-            do {
-                return try makeContainer(inMemory: true)
-            } catch {
-                preconditionFailure("CheckLine local ledger container is unavailable.")
-            }
-        }
+    static func makeAppContainer() throws -> ModelContainer {
+        try makeContainer(inMemory: false)
     }
 }
 

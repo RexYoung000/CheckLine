@@ -92,6 +92,78 @@ struct HomeProjectorTests {
 
 @MainActor
 struct CheckLineWorkspaceTests {
+    @Test("卡片与消费在关闭并重新打开本机数据库后仍存在")
+    func cardLoopSurvivesPersistentContainerReopen() throws {
+        let now = TestDates.day(2026, 1, 5)
+        let directory = FileManager.default.temporaryDirectory.appendingPathComponent("checkline-card-loop-\(UUID().uuidString)", isDirectory: true)
+        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: directory) }
+        let configuration = ModelConfiguration(
+            "CardLoop",
+            schema: CheckLinePersistence.schema,
+            url: directory.appendingPathComponent("ledger.store"),
+            cloudKitDatabase: .none
+        )
+        do {
+            let container = try ModelContainer(for: CheckLinePersistence.schema, configurations: configuration)
+            let workspace = CheckLineWorkspace(context: ModelContext(container), now: now, calendar: TestDates.calendar)
+            workspace.createBudget(name: "餐饮", amountText: "1000", currencyCode: "CNY", cycleType: .repeating, now: now)
+            #expect(workspace.banner == .createdBudget)
+            let attributionID = try #require(workspace.attributionChoices.first { $0.periodID != nil }?.id)
+            workspace.recordExpense(amountText: "35", merchant: "咖啡", note: "", attributionID: attributionID, occurredAt: now, now: now)
+            #expect(workspace.banner == .recorded)
+        }
+        let reopened = try ModelContainer(for: CheckLinePersistence.schema, configurations: configuration)
+        let ledger = try LedgerStore.load(from: ModelContext(reopened), now: now)
+        #expect(ledger.budgets.count == 1)
+        #expect(ledger.expenses.count == 1)
+        #expect(HomeProjector.cards(in: ledger).first?.snapshot.availableToSpend == 965)
+    }
+
+    @Test("空账本经小朵创建预算卡再记一笔，可从账本重载")
+    func agentCreatesFirstCardAndRecordsSpending() async throws {
+        let now = TestDates.day(2026, 1, 5)
+        let container = try CheckLinePersistence.makeContainer(inMemory: true)
+        let context = ModelContext(container)
+        let workspace = CheckLineWorkspace(context: context, now: now, calendar: TestDates.calendar)
+        #expect(workspace.isEmpty)
+
+        workspace.draftText = "创建每月餐饮预算 1,000 元"
+        await workspace.submitText(now: now)
+        #expect(workspace.showsStructuredConfirm)
+        #expect(workspace.budgetProposal?.name == "餐饮")
+        workspace.confirmStructured(now: now)
+        #expect(workspace.banner == .createdBudget)
+        #expect(workspace.cards.count == 1)
+        #expect(workspace.cards[0].snapshot.availableToSpend == 1_000)
+
+        let attributionID = try #require(workspace.attributionChoices.first { $0.periodID != nil }?.id)
+        workspace.recordExpense(amountText: "35", merchant: "咖啡", note: "", attributionID: attributionID, occurredAt: now, now: now)
+        #expect(workspace.banner == .recorded)
+        #expect(workspace.cards[0].snapshot.availableToSpend == 965)
+        let reloaded = try LedgerStore.load(from: context, now: now)
+        #expect(reloaded.budgets.count == 1)
+        #expect(reloaded.expenses.count == 1)
+        #expect(HomeProjector.cards(in: reloaded)[0].snapshot.availableToSpend == 965)
+    }
+
+    @Test("小朵逐步追问周期后保留原输入并创建卡片")
+    func agentClarifiesBudgetCycle() async throws {
+        let now = TestDates.day(2026, 1, 5)
+        let container = try CheckLinePersistence.makeContainer(inMemory: true)
+        let workspace = CheckLineWorkspace(context: ModelContext(container), now: now, calendar: TestDates.calendar)
+        workspace.draftText = "创建餐饮预算 1000 元"
+        await workspace.submitText(now: now)
+        #expect(workspace.pendingBudgetText != nil)
+        #expect(workspace.banner == .needsClarification("cycleType"))
+        workspace.draftText = "每月"
+        await workspace.submitText(now: now)
+        #expect(workspace.showsStructuredConfirm)
+        #expect(workspace.budgetProposal?.name == "餐饮")
+        workspace.confirmStructured(now: now)
+        #expect(workspace.cards.count == 1)
+    }
+
     @Test("创建预算卡后写入本地账本，重载后还能花等于额度")
     func createBudgetPersists() throws {
         let now = TestDates.day(2026, 1, 5)

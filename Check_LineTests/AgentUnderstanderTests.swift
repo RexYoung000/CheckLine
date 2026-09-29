@@ -127,9 +127,53 @@ struct LocalRegexFallbackTests {
         #expect(candidate.periodID == nil)
         #expect(candidate.budgetID == nil)
     }
+
+    @Test("离线创建预算卡与普通消费不会混淆")
+    func recognizesBudgetCreation() {
+        let budget = LocalRegexFallback.candidate(from: "创建每月餐饮预算 1,000 元")
+        #expect(budget.intentType == "createBudget")
+        #expect(budget.name == "餐饮")
+        #expect(budget.amount == "1,000")
+        #expect(budget.currencyCode == "CNY")
+        #expect(budget.cycleType == CycleType.repeating.rawValue)
+
+        let spending = LocalRegexFallback.candidate(from: "咖啡 35 元记到餐饮预算卡")
+        #expect(spending.intentType == "capture")
+        #expect(spending.amount == "35")
+
+        let draftBridge = LocalRegexFallback.candidate(from: "创建预算卡 餐饮 1000元 每月")
+        #expect(draftBridge.name == "餐饮")
+        #expect(draftBridge.amount == "1000")
+        #expect(draftBridge.cycleType == CycleType.repeating.rawValue)
+    }
 }
 
 struct IntentValidatorTests {
+    @Test("每月预算默认完整月周期和钱包货币")
+    func monthlyBudgetHasPeriodBounds() {
+        let now = TestDates.day(2026, 1, 5)
+        let ledger = Ledger.blank(walletCurrencyCode: "CNY", now: now)
+        let result = IntentValidator.validate(
+            AgentIntentCandidate(intentType: "createBudget", amount: "1,000", name: "餐饮", cycleType: CycleType.repeating.rawValue),
+            ledger: ledger,
+            now: now,
+            sourceType: .agentText
+        )
+        guard case .intent(.createBudget(let draft)) = result else {
+            Issue.record("expected monthly budget")
+            return
+        }
+        #expect(draft.amount == 1_000)
+        #expect(draft.currencyCode == "CNY")
+        #expect(draft.recurrence == .monthly)
+        #expect(draft.startDate <= now)
+        #expect(draft.endDate != nil)
+        if let end = draft.endDate {
+            #expect(Calendar.current.component(.month, from: end) == 1)
+            #expect(Calendar.current.component(.day, from: end) == 31)
+        }
+    }
+
     @Test("金额必须是正 Decimal 字符串，非法则追问")
     func invalidAmountNeedsClarification() {
         let now = TestDates.day(2026, 1, 5)

@@ -548,7 +548,7 @@ M4 面板只渲染 `AgentTurn`，不直接调引擎：
 当前仓库没有已发布的正式 SwiftData 账本，因此：
 
 - 领域引擎与 `CheckLineSchemaV1` 从本文模型新建，不为旧样机 `budgetIDs` 建立兼容层；
-- App 通过 `CheckLinePersistence.makeAppContainer()` 打开本地容器，失败时回退内存容器；`LedgerStore` 做领域账本整本替换读写；
+- App 通过 `CheckLinePersistence.makeAppContainer()` 打开本地容器；打开容器或解码账本失败时显示不可写的账本错误页，保留原有磁盘文件，不以临时空账本冒充保存成功。`LedgerStore` 做领域账本整本替换读写；
 - 当前启动页通过 `CheckLineWorkspace` 读写 `LedgerStore`；显式 Debug 示例模式使用隔离内存容器，不把 Sample 写入用户账本；
 - `Features/Prototype` 中的 `budgetIDs`、共享消费删除和旧结算保持为历史样机，未挂载到当前启动页；不作为新 Schema 或验收依据；
 - 本轮 `Wish.symbolName` 为可选字段；已验证含符号及空符号的账本保存读取，未验证旧版本磁盘库迁移，不重置现存数据库；

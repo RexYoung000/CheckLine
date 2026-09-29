@@ -265,6 +265,14 @@
 "v1.agent.needCard" = "No budget card yet. Create one before recording spending.";
 "v1.agent.offline" = "Offline · on-device extraction";
 "v1.agent.placeholder" = "Example: Starbucks 35 CNY";
+"v1.agent.placeholder.budget" = "Example: Create a monthly dining budget of 1000 CNY";
+"v1.agent.confirm.budget" = "Create budget card";
+"v1.agent.clarify.name" = "What should this budget card be called?";
+"v1.agent.clarify.cycle" = "Should this budget repeat monthly or be one-time?";
+"v1.agent.clarify.currency" = "Which currency should this budget use?";
+"v1.agent.budgetBridge" = "Create a %@ budget, amount %@ %@, %@";
+"storage.unavailable.title" = "Local ledger unavailable";
+"storage.unavailable.message" = "Reopen the app. If the problem continues, keep your existing data and report it. No temporary budget card will be created.";
 "v1.agent.send" = "Send";
 "v1.agent.amount" = "Amount";
 "v1.agent.attribution" = "Settlement card";

@@ -153,8 +153,13 @@ nonisolated enum WorkspaceBanner: Equatable, Sendable {
             String(localized: "v1.banner.needsAmount")
         case .needsFullscreen:
             String(localized: "v1.banner.needsFullscreen")
-        case .needsClarification:
-            String(localized: "v1.banner.needsClarification")
+        case .needsClarification(let field):
+            switch field {
+            case "name": String(localized: "v1.agent.clarify.name")
+            case "cycleType": String(localized: "v1.agent.clarify.cycle")
+            case "currencyCode": String(localized: "v1.agent.clarify.currency")
+            default: String(localized: "v1.banner.needsClarification")
+            }
         case .failed:
             String(localized: "v1.banner.failed")
         }

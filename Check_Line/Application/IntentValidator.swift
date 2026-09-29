@@ -35,7 +35,7 @@ nonisolated enum IntentValidator {
         case "queryBudgetStatus":
             return validateQuery(candidate, ledger: ledger)
         case "createBudget":
-            return validateCreateBudget(candidate, now: now)
+            return validateCreateBudget(candidate, ledger: ledger, now: now)
         case "adjustPeriodAmount":
             return validateAdjust(candidate, ledger: ledger)
         case "deleteExpense":
@@ -136,6 +136,7 @@ nonisolated enum IntentValidator {
 
     private static func validateCreateBudget(
         _ candidate: AgentIntentCandidate,
+        ledger: Ledger,
         now: Date
     ) -> AgentUnderstandResult {
         guard let name = nonempty(candidate.name) else {
@@ -144,14 +145,28 @@ nonisolated enum IntentValidator {
         guard let amount = parseAmount(candidate.amount) else {
             return .needsClarification(field: "amount", options: [])
         }
-        guard let currency = nonempty(candidate.currencyCode) else {
-            return .needsClarification(field: "currencyCode", options: [])
-        }
+        let currency = nonempty(candidate.currencyCode) ?? ledger.walletSettings.walletCurrencyCode
         guard let cycle = parseCycle(candidate.cycleType) else {
             return .needsClarification(field: "cycleType", options: [CycleType.repeating.rawValue, CycleType.oneShot.rawValue])
         }
-        let start = parseDate(candidate.startDate) ?? now
-        let end = parseDate(candidate.endDate)
+        let calendar = Calendar.current
+        let start: Date
+        if let explicit = parseDate(candidate.startDate) {
+            start = explicit
+        } else if cycle == .repeating {
+            start = calendar.date(from: calendar.dateComponents([.year, .month], from: now)) ?? now
+        } else {
+            start = now
+        }
+        let end: Date?
+        if let explicit = parseDate(candidate.endDate) {
+            end = explicit
+        } else if cycle == .repeating,
+                  let nextMonth = calendar.date(byAdding: .month, value: 1, to: start) {
+            end = calendar.date(byAdding: .day, value: -1, to: nextMonth)
+        } else {
+            end = nil
+        }
         let recurrence: RecurrenceRule? = cycle == .repeating ? .monthly : nil
         return .intent(
             .createBudget(
@@ -238,11 +253,7 @@ nonisolated enum IntentValidator {
 
     private static func parseAmount(_ raw: String?) -> Decimal? {
         guard let trimmed = nonempty(raw) else { return nil }
-        guard let value = Decimal(string: trimmed, locale: Locale(identifier: "en_US_POSIX")) else {
-            return nil
-        }
-        if value > 0 { return value }
-        return nil
+        return MoneyFormat.parseAmount(trimmed)
     }
 
     private static func parseDate(_ raw: String?) -> Date? {

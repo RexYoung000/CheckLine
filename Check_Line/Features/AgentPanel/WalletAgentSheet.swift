@@ -56,7 +56,7 @@ struct WalletAgentSheet: View {
                         workspace.composerPrefillFromAgent = true
                         dismiss()
                     } label: { Image(systemName: "square.and.pencil") }
-                    .accessibilityLabel(String(localized: "capture.title"))
+                    .accessibilityLabel(String(localized: workspace.isEmpty || workspace.budgetProposal != nil ? "wallet.empty.manual" : "capture.title"))
                 }
                 ToolbarItem(placement: .topBarTrailing) {
                     Button(String(localized: "action.close"), systemImage: "xmark") { dismiss() }

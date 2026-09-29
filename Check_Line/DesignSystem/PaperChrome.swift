@@ -137,6 +137,7 @@ struct PaperField: View {
     @Binding var text: String
     var keyboard: UIKeyboardType = .default
     var axis: Axis = .horizontal
+    var identifier: String? = nil
 
     var body: some View {
         VStack(alignment: .leading, spacing: PaperTheme.Space.xs) {
@@ -149,6 +150,7 @@ struct PaperField: View {
                 .foregroundStyle(PaperTheme.ink)
                 .padding(.vertical, 8)
                 .accessibilityLabel(title)
+                .accessibilityIdentifier(identifier ?? title)
         }.padding(14).walletSurface(radius: 18)
     }
 }

@@ -17,7 +17,7 @@
 ## 二、当前工程事实
 
 - 正式工程：`Check_Line.xcodeproj`
-- 主 App Target / Scheme：`Check_Line`
+- 主 App Target：`Check_Line`；本机持久化运行 Scheme：`CheckLine App`；隔离演示 Scheme：`CheckLine Demo`（每次启动重置）
 - 当前平台：iPhone / iPad，最低 iOS 17.0
 - 当前源码根目录：`Check_Line/`
 - 当前阶段：M4。2026-09-22 液面卡夹设计已扩展到原生页面；真机视觉验收未完成。
