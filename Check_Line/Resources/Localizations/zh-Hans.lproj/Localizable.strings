@@ -603,3 +603,25 @@
 "ui.history.snapshotNote" = "以上保留结算快照与后续追溯差额。本期现状按此周期的最新记录展示，钱包当前余额不作为历史结果。";
 "ui.task.invalidAttribution" = "原周期已变化，请重新选择归属";
 "ui.keyboard.done" = "完成输入";
+
+/* Isolated settlement receipt presentation study. */
+"receipt.study.title" = "结算小票 · 原生小样";
+"receipt.study.completed" = "结算完成";
+"receipt.study.periodResult" = "本期结算小票";
+"receipt.study.printing" = "正在出纸";
+"receipt.study.ready" = "已出纸";
+"receipt.study.limit" = "本期额度";
+"receipt.study.recoveryFilled" = "补足待恢复差额";
+"receipt.study.walletAdded" = "转入心愿钱包";
+"receipt.study.walletDeducted" = "从心愿钱包扣减";
+"receipt.study.recoveryAdded" = "新增待恢复差额";
+"receipt.study.paperNote" = "心愿钱包是账本结果，不是真实资金。";
+"receipt.study.scenario" = "示例结果";
+"receipt.study.surplusExample" = "结余示例";
+"receipt.study.overrunExample" = "越线示例";
+"receipt.study.static" = "减少动态效果 · 完整静态结果";
+"receipt.study.replay" = "重播出纸";
+"receipt.study.showAll" = "直接看结果";
+"receipt.study.disclaimer" = "设计演示 · 示例数据，不写入账本";
+"receipt.study.open" = "查看小样";
+"receipt.study.voiceOver" = "VoiceOver · 完整静态结果";

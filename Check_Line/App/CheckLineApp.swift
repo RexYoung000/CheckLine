@@ -41,10 +41,23 @@ struct CheckLineApp: App {
             if storageUnavailable {
                 StorageUnavailableView()
             } else {
-                CheckLineRootView()
+                appContent
             }
         }
         .modelContainer(container)
+    }
+
+    @ViewBuilder
+    private var appContent: some View {
+        #if DEBUG
+        if DesignPreviewData.isEnabled && DesignPreviewData.screen == "settlement-receipt" {
+            SettlementReceiptStudyView()
+        } else {
+            CheckLineRootView()
+        }
+        #else
+        CheckLineRootView()
+        #endif
     }
 }
 

@@ -603,3 +603,25 @@
 "ui.history.snapshotNote" = "This shows the settlement snapshot and later adjustment deltas. The period overview reflects its latest records. The current wallet balance is not a historical result.";
 "ui.task.invalidAttribution" = "The original period changed. Choose a budget again.";
 "ui.keyboard.done" = "Done";
+
+/* Isolated settlement receipt presentation study. */
+"receipt.study.title" = "Settlement receipt · Study";
+"receipt.study.completed" = "Settlement complete";
+"receipt.study.periodResult" = "This period’s receipt";
+"receipt.study.printing" = "Printing";
+"receipt.study.ready" = "Printed";
+"receipt.study.limit" = "Period limit";
+"receipt.study.recoveryFilled" = "Recovery gap filled";
+"receipt.study.walletAdded" = "Added to wish wallet";
+"receipt.study.walletDeducted" = "Deducted from wish wallet";
+"receipt.study.recoveryAdded" = "New recovery gap";
+"receipt.study.paperNote" = "The wish wallet is a ledger result, not real funds.";
+"receipt.study.scenario" = "Example result";
+"receipt.study.surplusExample" = "Surplus";
+"receipt.study.overrunExample" = "Overrun";
+"receipt.study.static" = "Reduced motion · Full static result";
+"receipt.study.replay" = "Print again";
+"receipt.study.showAll" = "Show full result";
+"receipt.study.disclaimer" = "Design demo · Sample data, no ledger changes";
+"receipt.study.open" = "View study";
+"receipt.study.voiceOver" = "VoiceOver · Full static result";
