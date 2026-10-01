@@ -61,6 +61,12 @@ nonisolated struct AgentActionCoordinator {
         now: Date,
         confirmation: AgentConfirmation
     ) throws -> AgentExecution {
+        if case .capture(let draft) = intent, let id = draft.expenseID, ledger.expenses[id] != nil {
+            return AgentExecution(ledger: ledger, undo: nil, query: nil, savedEntityID: id)
+        }
+        if case .createBudget(let draft) = intent, let id = draft.budgetID, ledger.budgets[id] != nil {
+            return AgentExecution(ledger: ledger, undo: nil, query: nil, savedEntityID: id)
+        }
         let evaluation = evaluate(intent: intent, ledger: ledger, now: now)
         try validate(confirmation: confirmation, against: evaluation.gate)
 
@@ -80,7 +86,7 @@ nonisolated struct AgentActionCoordinator {
         default:
             undo = UndoToken(snapshot: snapshot)
         }
-        return AgentExecution(ledger: result.ledger, undo: undo, query: result.query)
+        return AgentExecution(ledger: result.ledger, undo: undo, query: result.query, savedEntityID: result.savedEntityID)
     }
 
     private func validate(confirmation: AgentConfirmation, against gate: GateDecision) throws {
@@ -387,7 +393,7 @@ nonisolated struct AgentActionCoordinator {
             return try performCapture(draft, ledger: ledger, now: now, confirmation: confirmation)
         case .createBudget(let draft):
             var ledger = ledger
-            _ = try ledger.insertBudgetCard(
+            let created = try ledger.insertBudgetCard(
                 name: draft.name,
                 amount: draft.amount,
                 currencyCode: draft.currencyCode,
@@ -395,9 +401,11 @@ nonisolated struct AgentActionCoordinator {
                 recurrence: draft.recurrence,
                 startDate: draft.startDate,
                 endDate: draft.endDate,
-                now: now
+                now: now,
+                id: draft.budgetID ?? UUID(),
+                periodID: draft.periodID ?? UUID()
             )
-            return AgentExecution(ledger: ledger, undo: nil, query: nil)
+            return AgentExecution(ledger: ledger, undo: nil, query: nil, savedEntityID: created.0.id)
         case .adjustPeriodAmount(let periodID, let newAmount):
             var ledger = ledger
             var period = try ledger.requirePeriod(periodID)
@@ -502,7 +510,7 @@ nonisolated struct AgentActionCoordinator {
                 candidate: candidate,
                 now: now
             )
-            return AgentExecution(ledger: ledger, undo: nil, query: nil)
+            return AgentExecution(ledger: ledger, undo: nil, query: nil, savedEntityID: existingID)
         }
 
         var expense = ledger.insertExpense(
@@ -510,7 +518,8 @@ nonisolated struct AgentActionCoordinator {
             currencyCode: currency,
             occurredAt: draft.occurredAt,
             now: now,
-            merchant: draft.merchant
+            merchant: draft.merchant,
+            id: draft.expenseID ?? UUID()
         )
         expense.note = draft.note
         ledger.upsert(expense)
@@ -532,7 +541,7 @@ nonisolated struct AgentActionCoordinator {
             )
         )
 
-        let decision: AttributionDecision
+        var decision: AttributionDecision
         if case .attribution(let confirmed) = confirmation {
             decision = confirmed
         } else if let periodID = draft.periodID {
@@ -546,12 +555,39 @@ nonisolated struct AgentActionCoordinator {
         } else {
             decision = AttributionEngine.suggestPeriod(expense: expense, ledger: ledger, calendar: calendar)
         }
+        let targetID: UUID?
+        switch decision {
+        case .confirmed(let id), .pending(let id, _): targetID = id
+        default: targetID = nil
+        }
+        if let targetID, let original = ledger.periods[targetID] {
+            ledger = try CycleEngine.markDueIfNeeded(ledger: ledger, periodID: targetID, now: now, calendar: calendar)
+            let period = try ledger.requirePeriod(targetID)
+            guard calendar.startOfDay(for: expense.occurredAt) >= calendar.startOfDay(for: original.startDate) else { throw LedgerError.captureDateOutsidePeriod }
+            if let end = CycleEngine.exclusiveEnd(of: period, calendar: calendar), expense.occurredAt >= end {
+                if ledger.budgets[period.budgetID]?.cycleType == .repeating,
+                   CycleEngine.shouldQueue(expenseOccurredAt: expense.occurredAt, period: period, calendar: calendar) {
+                    decision = .queued(budgetID: period.budgetID)
+                } else { throw LedgerError.captureDateOutsidePeriod }
+            }
+        }
+        if case .queued(let id) = decision, let budget = ledger.budgets[id], currency != budget.defaultCurrencyCode {
+            throw LedgerError.missingExchangeRate(source: currency, target: budget.defaultCurrencyCode)
+        }
+        if case .confirmed(let id) = decision, let period = ledger.periods[id],
+           CurrencyEngine.budgetSettlementAmount(expense: expense, periodCurrencyCode: period.currencyCode) == nil {
+            throw LedgerError.missingExchangeRate(source: currency, target: period.currencyCode)
+        }
+        if case .pending(let id, _) = decision, let period = ledger.periods[id],
+           CurrencyEngine.budgetSettlementAmount(expense: expense, periodCurrencyCode: period.currencyCode) == nil {
+            throw LedgerError.missingExchangeRate(source: currency, target: period.currencyCode)
+        }
         ledger = try AttributionEngine.apply(
             ledger: ledger,
             expenseID: expense.id,
             decision: decision,
             now: now
         )
-        return AgentExecution(ledger: ledger, undo: nil, query: nil)
+        return AgentExecution(ledger: ledger, undo: nil, query: nil, savedEntityID: expense.id)
     }
 }

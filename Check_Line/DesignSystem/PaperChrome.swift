@@ -264,7 +264,7 @@ struct PaperHeroField: View {
 
     var body: some View {
         TextField("", text: $text, prompt: Text(placeholder).foregroundStyle(PaperTheme.muted))
-            .font(keyboard == .decimalPad ? .largeTitle.weight(.medium) : .title2.weight(.medium))
+            .font(keyboard == .decimalPad || keyboard == .numbersAndPunctuation ? .largeTitle.weight(.medium) : .title2.weight(.medium))
             .multilineTextAlignment(.center)
             .foregroundStyle(PaperTheme.ink)
             .keyboardType(keyboard)

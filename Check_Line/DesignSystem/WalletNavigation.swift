@@ -148,6 +148,7 @@ struct WalletPageHeader: View {
                 Button(String(localized: "action.undo"), systemImage: "arrow.uturn.backward") { workspace.undoLast() }
             }
             Divider()
+            Button(String(localized: "ui.sources.title"), systemImage: "tray.and.arrow.down") { chrome?.isSourcesPresented = true }
             Button(String(localized: "tab.settings"), systemImage: "gearshape") { chrome?.isSettingsPresented = true }
         } label: {
             Image(systemName: "ellipsis")

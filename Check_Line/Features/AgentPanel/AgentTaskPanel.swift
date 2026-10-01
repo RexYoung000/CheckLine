@@ -20,6 +20,18 @@ struct AgentTaskPanel: View {
                 }
             }
             .padding(.horizontal, embedded ? 0 : 16)
+            .onChange(of: inputFocused) { _, focused in
+                if focused { workspace.panelExpanded = true }
+            }
+            .onChange(of: workspace.confirmAmountText) { _, amount in
+                if workspace.captureProposal != nil { workspace.taskDraft.amount = amount }
+            }
+            .onChange(of: workspace.confirmCurrencyCode) { _, code in
+                if workspace.captureProposal != nil { workspace.taskDraft.currency = code }
+            }
+            .onChange(of: workspace.selectedAttributionID) { _, id in
+                if workspace.captureProposal != nil { workspace.taskDraft.attributionID = id }
+            }
             .onChange(of: workspace.panelExpanded) { _, expanded in
                 if expanded == false {
                     inputFocused = false
@@ -126,7 +138,7 @@ struct AgentTaskPanel: View {
                 PaperField(
                     title: String(localized: "v1.agent.amount"),
                     text: $workspace.confirmAmountText,
-                    keyboard: .decimalPad
+                    keyboard: AmountKeyboard.type
                 )
                 Picker(String(localized: "v1.budget.currency"), selection: $workspace.confirmCurrencyCode) {
                     ForEach(Array(Set(["CNY", "USD", "JPY", "EUR", workspace.confirmCurrencyCode])).sorted(), id: \.self) { code in

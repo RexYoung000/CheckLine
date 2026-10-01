@@ -86,12 +86,17 @@ struct WalletRootPage<Content: View>: View {
     var lightHeader = false
     var fullPaperBackground = false
     var onAdd: (() -> Void)?
+    var detailPresented: Binding<Bool> = .constant(false)
+    var detail: (() -> AnyView)? = nil
     @ViewBuilder var content: () -> Content
     @Environment(\.shellChrome) private var chrome
     @Environment(\.walletReduceMotion) private var reduceMotion
 
+    @State private var path = NavigationPath()
+    private enum RootDetailRoute: Hashable { case detail }
+
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $path) {
             ZStack {
                 if lightHeader {
                     WalletHomeBackdrop(showsSymbols: !fullPaperBackground).ignoresSafeArea()
@@ -137,6 +142,16 @@ struct WalletRootPage<Content: View>: View {
                 if lightHeader && tab == .home { reader.scrollTo("wallet-page-top", anchor: .top) }
             }
             }
+            }
+            .environment(\.budgetWorkspacePush, { path.append($0) })
+            .navigationDestination(for: BudgetWorkspaceRoute.self) { BudgetWorkspaceDestination(workspace: workspace, route: $0) }
+            .navigationDestination(for: RootDetailRoute.self) { _ in detail?() }
+            .onChange(of: detailPresented.wrappedValue) { _, showing in
+                if showing && path.isEmpty { path.append(RootDetailRoute.detail) }
+            }
+            .onChange(of: path.count) { _, count in
+                if chrome?.selectedTab == tab { chrome?.isShowingDetail = count > 0 }
+                if count == 0 && detailPresented.wrappedValue { detailPresented.wrappedValue = false }
             }
         }
     }
@@ -221,6 +236,8 @@ struct LiquidBudgetCard: View {
     var card: HomeBudgetCardModel
     var flows = false
     var reflectionPoint: CGPoint?
+    var remainingChange: BudgetRemainingChange?
+    var remainingMotionContext = RemainingMotionContext()
     @Environment(\.walletReduceMotion) private var reduceMotion
     @Environment(\.scenePhase) private var scenePhase
     @Environment(\.dynamicTypeSize) private var typeSize
@@ -262,9 +279,9 @@ struct LiquidBudgetCard: View {
                 HStack {
                     Spacer(minLength: 0)
                     VStack(alignment: .trailing, spacing: 5) {
-                        Text(BudgetPresentation.remaining(card) >= 0 ? String(localized: "v1.card.remaining") : (card.snapshot.certainOverrunAmount > 0 ? String(localized: "wallet.overrun") : String(localized: "wallet.possibleOverrun")))
+                        Text(BudgetPresentation.remaining(card) >= 0 ? String(localized: "v1.card.remaining") : (card.snapshot.certainOverrunAmount > 0 ? String(localized: card.snapshot.possibleOverrunAmount > 0 ? "wallet.provisionalOverrun" : "wallet.overrun") : String(localized: "wallet.possibleOverrun")))
                             .font(.caption)
-                        Text(MoneyFormat.string(abs(BudgetPresentation.remaining(card)), currencyCode: card.currencyCode))
+                        BudgetRemainingAmountText(card: card, change: remainingChange, context: remainingMotionContext)
                             .font(.system(.largeTitle).weight(.medium)).monospacedDigit()
                             .lineLimit(1).minimumScaleFactor(0.5)
                         if BudgetPresentation.remaining(card) >= 0 {
@@ -397,6 +414,7 @@ struct WalletExpenseRow: View {
                 .font(.subheadline).monospacedDigit().lineLimit(1).minimumScaleFactor(0.65)
         }
         .foregroundStyle(PaperTheme.ink).padding(.vertical, 10)
+        .contentShape(Rectangle())
         .accessibilityElement(children: .combine)
     }
 }

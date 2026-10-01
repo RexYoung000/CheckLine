@@ -35,8 +35,21 @@ final class ExpenseAttachmentStore {
     }
 
     @discardableResult
-    func add(imageData: Data, to expenseID: UUID) throws -> ExpenseAttachment {
+    func add(imageData: Data, to expenseID: UUID, id: UUID = UUID()) throws -> ExpenseAttachment {
+        if let saved = attachments(for: expenseID).first(where: { $0.id == id }) { return saved }
         guard attachments(for: expenseID).count < Self.maximumPerExpense else { throw ExpenseAttachmentError.limitReached }
+        let sanitized = try Self.sanitize(imageData)
+        var directory = root.appendingPathComponent(expenseID.uuidString, isDirectory: true)
+        try fileManager.createDirectory(at: directory, withIntermediateDirectories: true)
+        var values = URLResourceValues()
+        values.isExcludedFromBackup = true
+        try directory.setResourceValues(values)
+        let destination = directory.appendingPathComponent(id.uuidString).appendingPathExtension("jpg")
+        try sanitized.write(to: destination, options: .atomic)
+        return ExpenseAttachment(id: id, url: destination)
+    }
+
+    static func sanitize(_ imageData: Data) throws -> Data {
         guard let source = CGImageSourceCreateWithData(imageData as CFData, nil),
               let thumbnail = CGImageSourceCreateThumbnailAtIndex(source, 0, [
                 kCGImageSourceCreateThumbnailFromImageAlways: true,
@@ -49,15 +62,7 @@ final class ExpenseAttachmentStore {
         let sanitized = renderer.jpegData(withCompressionQuality: 0.88) { _ in
             image.draw(in: CGRect(origin: .zero, size: size))
         }
-        var directory = root.appendingPathComponent(expenseID.uuidString, isDirectory: true)
-        try fileManager.createDirectory(at: directory, withIntermediateDirectories: true)
-        var values = URLResourceValues()
-        values.isExcludedFromBackup = true
-        try directory.setResourceValues(values)
-        let id = UUID()
-        let destination = directory.appendingPathComponent(id.uuidString).appendingPathExtension("jpg")
-        try sanitized.write(to: destination, options: .atomic)
-        return ExpenseAttachment(id: id, url: destination)
+        return sanitized
     }
 
     func remove(_ attachmentID: UUID, from expenseID: UUID) throws {

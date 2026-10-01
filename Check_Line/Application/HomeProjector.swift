@@ -57,6 +57,18 @@ nonisolated enum HomeProjector {
             }
     }
 
+    static func card(budgetID: UUID, periodID: UUID?, in ledger: Ledger) -> HomeBudgetCardModel? {
+        if let periodID, ledger.periods[periodID] == nil { return nil }
+        guard let budget = ledger.budgets[budgetID],
+              let period = periodID.flatMap({ ledger.periods[$0] }) ?? displayPeriod(for: budgetID, ledger: ledger) ?? ledger.periods(forBudget: budgetID).last,
+              period.budgetID == budgetID else { return nil }
+        return HomeBudgetCardModel(id: budgetID, periodID: period.id, name: budget.name, cycleType: budget.cycleType,
+                                   currencyCode: period.currencyCode,
+                                   snapshot: BudgetEngine.periodSnapshot(period: period, expenses: Array(ledger.expenses.values)),
+                                   periodState: period.state, periodStart: period.startDate, periodEnd: period.endDate,
+                                   cycleProgress: cycleProgress(period: period, now: Date()))
+    }
+
     static func cycleProgress(period: BudgetPeriod, now: Date) -> Double? {
         if period.state == .pendingSettlement {
             return 1
@@ -139,6 +151,8 @@ nonisolated enum WorkspaceBanner: Equatable, Sendable {
     case needsFullscreen
     case needsClarification(String)
     case failed
+    case needsConversion
+    case needsPeriod
 
     var localizedText: String {
         switch self {
@@ -165,6 +179,10 @@ nonisolated enum WorkspaceBanner: Equatable, Sendable {
             case "currencyCode": String(localized: "v1.agent.clarify.currency")
             default: String(localized: "v1.banner.needsClarification")
             }
+        case .needsPeriod:
+            String(localized: "ui.draft.dateMismatch")
+        case .needsConversion:
+            String(localized: "ui.currency.unconverted")
         case .failed:
             String(localized: "v1.banner.failed")
         }

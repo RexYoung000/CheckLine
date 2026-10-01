@@ -58,7 +58,7 @@ enum DesignPreviewData {
         }
         let samples: [(Decimal, String, Int)] = [(38, String(localized: "wallet.demo.lunch"), 0), (22, String(localized: "wallet.demo.coffee"), 1), (6, String(localized: "wallet.demo.train"), 2), (120, String(localized: "wallet.demo.grocery"), 3), (90, String(localized: "wallet.demo.lunch"), 4), (184, String(localized: "wallet.demo.grocery"), 6), (220, String(localized: "wallet.demo.grocery"), 8), (1_000, String(localized: "wallet.demo.grocery"), 12)]
         for (amount, merchant, days) in samples {
-            let date = calendar.date(byAdding: .day, value: -days, to: now) ?? now
+            let date = max(start, calendar.date(byAdding: .day, value: -days, to: now) ?? now)
             try record(ledger: &ledger, amount: amount, currencyCode: "CNY", occurredAt: date, now: now, decision: .confirmed(periodID: daily.1.id), merchant: merchant)
         }
         try record(ledger: &ledger, amount: 40, currencyCode: "CNY", occurredAt: now, now: now, decision: .pending(periodID: daily.1.id, confidence: DecimalMath.parse("0.4")), merchant: String(localized: "wallet.demo.coffee"))

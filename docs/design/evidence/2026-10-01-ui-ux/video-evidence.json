@@ -1,0 +1,19 @@
+[
+  {
+    "source": "native-accessibility-touch-raw.mp4",
+    "recordingStart": 1790844557.739233,
+    "clipStart": 25.19776701927185,
+    "duration": 23,
+    "speed": "original; trimming only",
+    "testResult": "/tmp/checkline-ui-oct01-final-accessible-touch.xcresult"
+  },
+  {
+    "video": "native-system-reduce-motion-touch.mp4",
+    "source": "native-system-touch-raw.mp4",
+    "offsetSeconds": 112.02482986450195,
+    "durationSeconds": 31.158,
+    "speed": 1,
+    "testResult": "/tmp/checkline-ui-oct01-system-video-final.xcresult",
+    "scenario": "System Settings Reduce Motion -> app static motion state -> manual/Agent input and save"
+  }
+]

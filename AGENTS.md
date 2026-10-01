@@ -22,8 +22,8 @@
 - 当前源码根目录：`Check_Line/`
 - 当前阶段：M4。2026-09-22 液面卡夹设计已扩展到原生页面；真机视觉验收未完成。
 - 当前启动页：`CheckLineRootView`（TabView 内容：首页 / 预算 / 心愿 / 分析；底部左侧原生玻璃导航、右侧 Agent 头像。记一笔在卡片加号和功能菜单，个人设置在页首头像）。`Features/Prototype` 只作历史参考
-- 当前已有：M1 账本、`LedgerStore`、`AgentSession`、`CheckLineWorkspace`、统一材质 Token、预算详情、消费日历、预设符号心愿与同币种兑现全屏确认
-- 当前尚无：结算全屏确认、跨币种兑现汇率输入、已启用云端 LLM、端侧 Speech/Vision、被动数据来源、真机视觉验收
+- 当前已有：M1 账本、`LedgerStore`、`AgentSession`、`CheckLineWorkspace`、统一材质 Token、共享 Agent / 手动任务面板与本机草稿、完整预算工作区与周期子页面、消费日历、结算与异币种汇率确认、月度预算金额编辑、预设符号心愿与兑现全屏确认
+- 当前尚无：已启用云端 LLM、端侧 Speech/Vision、被动数据来源、真机视觉验收
 
 不得把 `Features/Prototype` 的多预算关系、悬浮“文本/语音”入口、旧结算流程或旧统计日历当作当前需求。四 Tab 的职责以 `DESIGN.md` 3.1.2 为准，不是旧样机那一套。
 

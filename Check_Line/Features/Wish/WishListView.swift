@@ -85,7 +85,7 @@ struct CreateWishSheet: View {
                         .onChange(of: name) { _, value in if value.count > 80 { name = String(value.prefix(80)) } }
                     HStack {
                         Text(workspace.ledger.walletSettings.walletCurrencyCode).foregroundStyle(PaperTheme.muted)
-                        TextField("", text: $amount, prompt: Text(String(localized: "wallet.wishes.estimate")).foregroundStyle(PaperTheme.muted)).keyboardType(.decimalPad).accessibilityLabel(String(localized: "wallet.wishes.estimate"))
+                        TextField("", text: $amount, prompt: Text(String(localized: "wallet.wishes.estimate")).foregroundStyle(PaperTheme.muted)).keyboardType(AmountKeyboard.type).accessibilityLabel(String(localized: "wallet.wishes.estimate"))
                     }.padding(18).walletSurface(radius: 18)
                     Text(String(localized: "wallet.wishes.symbol")).font(.subheadline).foregroundStyle(PaperTheme.muted)
                     LazyVGrid(columns: [GridItem(.adaptive(minimum: 56), spacing: 16)], spacing: 16) {
@@ -202,7 +202,7 @@ struct WishRedemptionView: View {
                             Text(String(localized: "wallet.wishes.actual")).font(.subheadline).foregroundStyle(PaperTheme.muted)
                             HStack {
                                 Text(currency).font(.subheadline).foregroundStyle(PaperTheme.muted)
-                                TextField("0.00", text: $amount).keyboardType(.decimalPad).font(.largeTitle).monospacedDigit().accessibilityLabel(String(localized: "wallet.wishes.actual"))
+                                TextField("0.00", text: $amount).keyboardType(AmountKeyboard.type).font(.largeTitle).monospacedDigit().accessibilityLabel(String(localized: "wallet.wishes.actual"))
                             }.padding(18).walletSurface()
                             HStack {
                                 Text(String(localized: "wallet.wishes.purchaseCurrency"))

@@ -50,7 +50,7 @@ struct SettingsPlaceholderView: View {
                     }.walletSurface()
                     VStack(spacing: 0) {
                         settingsRow(title: String(localized: "wallet.settings.sourcesTitle"), symbol: "tray.and.arrow.down", summary: String(localized: "wallet.settings.manual")) {
-                            settingsDetail(title: String(localized: "wallet.settings.sourcesTitle"), body: String(localized: "v1.settings.sources"))
+                            SourceReviewView()
                         }
                         Divider().padding(.leading, 54)
                         settingsRow(title: String(localized: "wallet.settings.privacyTitle"), symbol: "lock.shield", summary: String(localized: "wallet.settings.device")) {

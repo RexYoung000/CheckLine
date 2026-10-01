@@ -1,0 +1,383 @@
+{
+  "note": "Distinct tests aggregated across successful device and targeted repair runs; not a single clean whole-suite run. Initial failures are recorded separately below.",
+  "distinctPassed": 21,
+  "latestPassingCases": {
+    "BudgetAmountEditUITests/testBudgetAmountPreviewCancelAndConfirmedOverrun()": {
+      "result": "Passed",
+      "bundle": "/tmp/checkline-ui-oct01-route-acceptance.xcresult",
+      "devices": [
+        {
+          "architecture": "arm64",
+          "deviceId": "4F40866F-E156-4594-8ECE-E3C1D680E691",
+          "deviceName": "iPhone 18 Pro",
+          "modelName": "iPhone 18 Pro",
+          "osBuildNumber": "24A434",
+          "osVersion": "27.0",
+          "platform": "iOS Simulator"
+        }
+      ]
+    },
+    "BudgetAmountEditUITests/testBudgetListEntryAndRecordSuccessRemainUsable()": {
+      "result": "Passed",
+      "bundle": "/tmp/checkline-ui-oct01-route-acceptance.xcresult",
+      "devices": [
+        {
+          "architecture": "arm64",
+          "deviceId": "4F40866F-E156-4594-8ECE-E3C1D680E691",
+          "deviceName": "iPhone 18 Pro",
+          "modelName": "iPhone 18 Pro",
+          "osBuildNumber": "24A434",
+          "osVersion": "27.0",
+          "platform": "iOS Simulator"
+        }
+      ]
+    },
+    "BudgetAmountEditUITests/testInvalidPrecisionPendingOnlyAndReduceMotion()": {
+      "result": "Passed",
+      "bundle": "/tmp/checkline-ui-oct01-route-acceptance.xcresult",
+      "devices": [
+        {
+          "architecture": "arm64",
+          "deviceId": "4F40866F-E156-4594-8ECE-E3C1D680E691",
+          "deviceName": "iPhone 18 Pro",
+          "modelName": "iPhone 18 Pro",
+          "osBuildNumber": "24A434",
+          "osVersion": "27.0",
+          "platform": "iOS Simulator"
+        }
+      ]
+    },
+    "TaskEnvironmentUITests/testSystemReduceMotionIsReflectedInAppAndTaskStillWorks()": {
+      "result": "Passed",
+      "bundle": "/tmp/checkline-ui-oct01-system-video-final.xcresult",
+      "devices": [
+        {
+          "architecture": "arm64",
+          "deviceId": "4F40866F-E156-4594-8ECE-E3C1D680E691",
+          "deviceName": "iPhone 18 Pro",
+          "modelName": "iPhone 18 Pro",
+          "osBuildNumber": "24A434",
+          "osVersion": "27.0",
+          "platform": "iOS Simulator"
+        }
+      ]
+    },
+    "TaskWorkspaceUITests/testImportDesignStatesNeverClaimLiveConnection()": {
+      "result": "Passed",
+      "bundle": "/tmp/checkline-ui-oct01-final-flows.xcresult",
+      "devices": [
+        {
+          "architecture": "arm64",
+          "deviceId": "4F40866F-E156-4594-8ECE-E3C1D680E691",
+          "deviceName": "iPhone 18 Pro",
+          "modelName": "iPhone 18 Pro",
+          "osBuildNumber": "24A434",
+          "osVersion": "27.0",
+          "platform": "iOS Simulator"
+        }
+      ]
+    },
+    "TaskWorkspaceUITests/testSharedTaskSwitchRetainsFieldsAndClosesToSamePage()": {
+      "result": "Passed",
+      "bundle": "/tmp/checkline-ui-oct01-task-clipping-final.xcresult",
+      "devices": [
+        {
+          "architecture": "arm64",
+          "deviceId": "4F40866F-E156-4594-8ECE-E3C1D680E691",
+          "deviceName": "iPhone 18 Pro",
+          "modelName": "iPhone 18 Pro",
+          "osBuildNumber": "24A434",
+          "osVersion": "27.0",
+          "platform": "iOS Simulator"
+        }
+      ]
+    },
+    "WalletNavigationUITests/testAnalysisEmptyStatesUseRealDataAndOfferNextAction()": {
+      "result": "Passed",
+      "bundle": "/tmp/checkline-ui-oct01-routes-final.xcresult",
+      "devices": [
+        {
+          "architecture": "arm64",
+          "deviceId": "4F40866F-E156-4594-8ECE-E3C1D680E691",
+          "deviceName": "iPhone 18 Pro",
+          "modelName": "iPhone 18 Pro",
+          "osBuildNumber": "24A434",
+          "osVersion": "27.0",
+          "platform": "iOS Simulator"
+        }
+      ]
+    },
+    "WalletNavigationUITests/testEmptyHomeCreatesFirstCardThroughOfflineAgent()": {
+      "result": "Passed",
+      "bundle": "/tmp/checkline-ui-oct01-routes-final.xcresult",
+      "devices": [
+        {
+          "architecture": "arm64",
+          "deviceId": "4F40866F-E156-4594-8ECE-E3C1D680E691",
+          "deviceName": "iPhone 18 Pro",
+          "modelName": "iPhone 18 Pro",
+          "osBuildNumber": "24A434",
+          "osVersion": "27.0",
+          "platform": "iOS Simulator"
+        }
+      ]
+    },
+    "WalletNavigationUITests/testEmptyHomeOffersReadableCreation()": {
+      "result": "Passed",
+      "bundle": "/tmp/checkline-ui-oct01-routes-final.xcresult",
+      "devices": [
+        {
+          "architecture": "arm64",
+          "deviceId": "4F40866F-E156-4594-8ECE-E3C1D680E691",
+          "deviceName": "iPhone 18 Pro",
+          "modelName": "iPhone 18 Pro",
+          "osBuildNumber": "24A434",
+          "osVersion": "27.0",
+          "platform": "iOS Simulator"
+        }
+      ]
+    },
+    "WalletNavigationUITests/testFloatingHeaderProfileAndMenuOpenTheirDestinations()": {
+      "result": "Passed",
+      "bundle": "/tmp/checkline-ui-oct01-routes-final.xcresult",
+      "devices": [
+        {
+          "architecture": "arm64",
+          "deviceId": "4F40866F-E156-4594-8ECE-E3C1D680E691",
+          "deviceName": "iPhone 18 Pro",
+          "modelName": "iPhone 18 Pro",
+          "osBuildNumber": "24A434",
+          "osVersion": "27.0",
+          "platform": "iOS Simulator"
+        }
+      ]
+    },
+    "WalletNavigationUITests/testFloatingHeaderRemainsUsableWhileScrolling()": {
+      "result": "Passed",
+      "bundle": "/tmp/checkline-ui-oct01-routes-final.xcresult",
+      "devices": [
+        {
+          "architecture": "arm64",
+          "deviceId": "4F40866F-E156-4594-8ECE-E3C1D680E691",
+          "deviceName": "iPhone 18 Pro",
+          "modelName": "iPhone 18 Pro",
+          "osBuildNumber": "24A434",
+          "osVersion": "27.0",
+          "platform": "iOS Simulator"
+        }
+      ]
+    },
+    "WalletNavigationUITests/testNativeLensDragAndDetailReturn()": {
+      "result": "Passed",
+      "bundle": "/tmp/checkline-ui-oct01-routes-final.xcresult",
+      "devices": [
+        {
+          "architecture": "arm64",
+          "deviceId": "4F40866F-E156-4594-8ECE-E3C1D680E691",
+          "deviceName": "iPhone 18 Pro",
+          "modelName": "iPhone 18 Pro",
+          "osBuildNumber": "24A434",
+          "osVersion": "27.0",
+          "platform": "iOS Simulator"
+        }
+      ]
+    },
+    "WalletNavigationUITests/testNativeTabsAndAgentKeepTheCurrentPage()": {
+      "result": "Passed",
+      "bundle": "/tmp/checkline-ui-oct01-final-flows.xcresult",
+      "devices": [
+        {
+          "architecture": "arm64",
+          "deviceId": "4F40866F-E156-4594-8ECE-E3C1D680E691",
+          "deviceName": "iPhone 18 Pro",
+          "modelName": "iPhone 18 Pro",
+          "osBuildNumber": "24A434",
+          "osVersion": "27.0",
+          "platform": "iOS Simulator"
+        }
+      ]
+    },
+    "WalletNavigationUITests/testNormalAppKeepsFirstCardAfterRelaunch()": {
+      "result": "Passed",
+      "bundle": "/tmp/checkline-ui-oct01-routes-final.xcresult",
+      "devices": [
+        {
+          "architecture": "arm64",
+          "deviceId": "4F40866F-E156-4594-8ECE-E3C1D680E691",
+          "deviceName": "iPhone 18 Pro",
+          "modelName": "iPhone 18 Pro",
+          "osBuildNumber": "24A434",
+          "osVersion": "27.0",
+          "platform": "iOS Simulator"
+        }
+      ]
+    },
+    "WalletNavigationUITests/testOneShotSettlementReachesWishWalletAndRealPurchase()": {
+      "result": "Passed",
+      "bundle": "/tmp/checkline-ui-oct01-routes-final.xcresult",
+      "devices": [
+        {
+          "architecture": "arm64",
+          "deviceId": "4F40866F-E156-4594-8ECE-E3C1D680E691",
+          "deviceName": "iPhone 18 Pro",
+          "modelName": "iPhone 18 Pro",
+          "osBuildNumber": "24A434",
+          "osVersion": "27.0",
+          "platform": "iOS Simulator"
+        }
+      ]
+    },
+    "TaskWorkspaceUITests/testWorkspaceRecordsPendingDetailAndBackRestore()": {
+      "result": "Passed",
+      "bundle": "/tmp/checkline-ui-oct01-pending-action-final.xcresult",
+      "devices": [
+        {
+          "architecture": "arm64",
+          "deviceId": "4F40866F-E156-4594-8ECE-E3C1D680E691",
+          "deviceName": "iPhone 18 Pro",
+          "modelName": "iPhone 18 Pro",
+          "osBuildNumber": "24A434",
+          "osVersion": "27.0",
+          "platform": "iOS Simulator"
+        }
+      ]
+    },
+    "WalletNavigationUITests/testAgentDraftMovesIntoManualBudgetForm()": {
+      "result": "Passed",
+      "bundle": "/tmp/checkline-ui-oct01-final-flows.xcresult",
+      "devices": [
+        {
+          "architecture": "arm64",
+          "deviceId": "4F40866F-E156-4594-8ECE-E3C1D680E691",
+          "deviceName": "iPhone 18 Pro",
+          "modelName": "iPhone 18 Pro",
+          "osBuildNumber": "24A434",
+          "osVersion": "27.0",
+          "platform": "iOS Simulator"
+        }
+      ]
+    },
+    "TaskEnvironmentUITests/testVoiceOverCanReadAndSaveManualRecord()": {
+      "result": "Passed",
+      "bundle": "/tmp/checkline-ui-oct01-task-clipping-final.xcresult",
+      "devices": [
+        {
+          "architecture": "arm64",
+          "deviceId": "4F40866F-E156-4594-8ECE-E3C1D680E691",
+          "deviceName": "iPhone 18 Pro",
+          "modelName": "iPhone 18 Pro",
+          "osBuildNumber": "24A434",
+          "osVersion": "27.0",
+          "platform": "iOS Simulator"
+        }
+      ]
+    },
+    "TaskWorkspaceUITests/testManagementDesignRecoveryAndImpactConfirmation()": {
+      "result": "Passed",
+      "bundle": "/tmp/checkline-ui-oct01-final-flows.xcresult",
+      "devices": [
+        {
+          "architecture": "arm64",
+          "deviceId": "4F40866F-E156-4594-8ECE-E3C1D680E691",
+          "deviceName": "iPhone 18 Pro",
+          "modelName": "iPhone 18 Pro",
+          "osBuildNumber": "24A434",
+          "osVersion": "27.0",
+          "platform": "iOS Simulator"
+        }
+      ]
+    },
+    "TaskEnvironmentUITests/testPersistentDraftSurvivesAppRelaunchWithoutSubmittingLedger()": {
+      "result": "Passed",
+      "bundle": "/tmp/checkline-ui-oct01-draft-relaunch-v2.xcresult",
+      "devices": [
+        {
+          "architecture": "arm64",
+          "deviceId": "3CB2FE0C-0CBD-4108-B7B9-6BCD71DA63EF",
+          "deviceName": "CheckLine Draft Restore QA",
+          "modelName": "iPhone 18 Pro",
+          "osBuildNumber": "24A434",
+          "osVersion": "27.0",
+          "platform": "iOS Simulator"
+        }
+      ]
+    },
+    "TaskEnvironmentUITests/testEnglishTaskKeepsItsFieldsAndSaveReachableWithKeyboard()": {
+      "result": "Passed",
+      "bundle": "/tmp/checkline-ui-oct01-ipad-clipping-final.xcresult",
+      "devices": [
+        {
+          "architecture": "arm64",
+          "deviceId": "E80011AE-ADA0-42AB-9E2B-3C9DAB20C77A",
+          "deviceName": "iPad mini (A17 Pro)",
+          "modelName": "iPad mini (A17 Pro)",
+          "osBuildNumber": "23F77",
+          "osVersion": "26.5",
+          "platform": "iOS Simulator"
+        }
+      ]
+    }
+  },
+  "runs": [
+    {
+      "bundle": "/tmp/checkline-ui-oct01-routes-final.xcresult",
+      "passed": 15,
+      "failed": 2
+    },
+    {
+      "bundle": "/tmp/checkline-ui-oct01-route-acceptance.xcresult",
+      "passed": 8,
+      "failed": 0
+    },
+    {
+      "bundle": "/tmp/checkline-ui-oct01-final-flows.xcresult",
+      "passed": 7,
+      "failed": 0
+    },
+    {
+      "bundle": "/tmp/checkline-ui-oct01-draft-relaunch-v2.xcresult",
+      "passed": 1,
+      "failed": 0
+    },
+    {
+      "bundle": "/tmp/checkline-ui-oct01-small-keyboard-final.xcresult",
+      "passed": 1,
+      "failed": 0
+    },
+    {
+      "bundle": "/tmp/checkline-ui-oct01-ipad-keyboard-fixed.xcresult",
+      "passed": 1,
+      "failed": 0
+    },
+    {
+      "bundle": "/tmp/checkline-ui-oct01-final-accessible-touch.xcresult",
+      "passed": 3,
+      "failed": 0
+    },
+    {
+      "bundle": "/tmp/checkline-ui-oct01-pending-action-final.xcresult",
+      "passed": 1,
+      "failed": 0
+    },
+    {
+      "bundle": "/tmp/checkline-ui-oct01-system-video-final.xcresult",
+      "passed": 1,
+      "failed": 0
+    },
+    {
+      "bundle": "/tmp/checkline-ui-oct01-small-clipping-fixed.xcresult",
+      "passed": 1,
+      "failed": 0
+    },
+    {
+      "bundle": "/tmp/checkline-ui-oct01-ipad-clipping-final.xcresult",
+      "passed": 1,
+      "failed": 0
+    },
+    {
+      "bundle": "/tmp/checkline-ui-oct01-task-clipping-final.xcresult",
+      "passed": 2,
+      "failed": 0
+    }
+  ]
+}

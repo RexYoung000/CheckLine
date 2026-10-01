@@ -51,6 +51,7 @@ final class ShellChromeState {
     var stageOpacity: Double = 1
     var isTransitioning = false
     var isSettingsPresented = false
+    var isSourcesPresented = false
     var isAttentionPresented = false
     var isShowingDetail = false
     var isCreateMenuPresented = false

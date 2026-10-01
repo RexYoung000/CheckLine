@@ -10,6 +10,7 @@ struct CheckLineShellView: View {
 
     var body: some View {
         rootTabs
+        .accessibilityHidden(workspace.showComposer || workspace.showAgent)
         .tint(PaperTheme.accent)
         .preferredColorScheme((CheckLineAppearance(rawValue: appearance) ?? .system).colorScheme)
         .overlay(alignment: .bottom) {
@@ -26,13 +27,14 @@ struct CheckLineShellView: View {
             }
         }
         .environment(\.shellChrome, chrome)
-        .sheet(isPresented: $workspace.showComposer) { CreateComposerSheet(workspace: workspace) }
-        .sheet(isPresented: $workspace.showAgent, onDismiss: {
-            if let intent = workspace.composerAfterAgent {
-                workspace.composerAfterAgent = nil
-                workspace.openComposer(intent)
-            }
-        }) { WalletAgentSheet(workspace: workspace) }
+        .sheet(isPresented: Binding(get: { workspace.showComposer || workspace.showAgent }, set: {
+            if !$0 { workspace.showComposer = false; workspace.showAgent = false }
+        })) { CreateComposerSheet(workspace: workspace) }
+        .sheet(isPresented: $chrome.isSourcesPresented) {
+            NavigationStack { SourceReviewView().toolbar { ToolbarItem(placement: .topBarTrailing) {
+                Button(String(localized: "action.close"), systemImage: "xmark") { chrome.isSourcesPresented = false }.labelStyle(.iconOnly)
+            } } }.presentationDetents([.large]).presentationBackground(PaperTheme.canvas)
+        }
         .sheet(isPresented: $chrome.isSettingsPresented) { SettingsPlaceholderView(workspace: workspace) }
         .sheet(isPresented: $chrome.isAttentionPresented) { WalletAttentionSheet(workspace: workspace) }
         .sheet(isPresented: $showsPreviewDetail) { previewDetail }
@@ -57,12 +59,13 @@ struct CheckLineShellView: View {
             case "attention": chrome.isAttentionPresented = true
             case "agent": workspace.showAgent = true
             case "agent-confirm":
+                workspace.beginTask(.record, mode: "agent")
                 workspace.draftText = String(localized: "wallet.demo.coffee") + " 35"
                 await workspace.submitText()
                 workspace.showAgent = true
             case "record": workspace.openComposer(.record)
             case "create-budget": workspace.openComposer(.budget)
-            case "create-wish", "budget-detail", "records", "calendar", "wish-detail", "redemption", "agent-mascot": showsPreviewDetail = true
+            case "create-wish", "budget-detail", "records", "calendar", "wish-detail", "redemption", "agent-mascot", "import-review", "management-review": showsPreviewDetail = true
             default: break
             }
             if DesignPreviewData.runsMotionTour {
@@ -142,6 +145,8 @@ struct CheckLineShellView: View {
         if DesignPreviewData.isEnabled {
             switch DesignPreviewData.screen {
             #if DEBUG
+            case "import-review": NavigationStack { ImportReviewPrototype() }
+            case "management-review": NavigationStack { ManagementReviewPrototype() }
             case "agent-mascot": CloudMascotReview()
             #endif
             case "create-wish": CreateWishSheet(workspace: workspace)

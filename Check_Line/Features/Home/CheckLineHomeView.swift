@@ -5,10 +5,12 @@ struct CheckLineHomeView: View {
     @Environment(\.shellChrome) private var chrome
     @Environment(\.walletReduceMotion) private var reduceMotion
     @Environment(\.dynamicTypeSize) private var typeSize
+    @State private var editingCard: HomeBudgetCardModel?
     @State private var detail: BudgetDetailSection?
     @State private var presentedBudgetID: UUID?
     @State private var summaryPopup: BudgetDetailSection?
     @State private var selectedExpense: Expense?
+    @State private var previewApplied = false
     @Namespace private var summaryNamespace
     @GestureState(resetTransaction: Transaction(animation: .spring(response: 0.3, dampingFraction: 0.8))) private var dragOffset: CGSize = .zero
     @State private var receiptOffset = 0
@@ -23,7 +25,11 @@ struct CheckLineHomeView: View {
     private var closure: CGFloat { reduceMotion ? 0 : chrome?.pocketClosure ?? 0 }
 
     var body: some View {
-        WalletRootPage(tab: .home, title: String(localized: "tab.home"), workspace: workspace, lightHeader: true, fullPaperBackground: card == nil) {
+        WalletRootPage(tab: .home, title: String(localized: "tab.home"), workspace: workspace, lightHeader: true, fullPaperBackground: card == nil,
+                       detailPresented: Binding(get: { detail != nil }, set: { if !$0 { detail = nil } }),
+                       detail: {
+            AnyView(HomeBudgetDetailView(workspace: workspace, budgetID: presentedBudgetID ?? card?.id ?? UUID(), initialSection: detail ?? .overview))
+        }) {
             if let card {
                 VStack(spacing: 0) {
                     deck(card)
@@ -109,15 +115,8 @@ struct CheckLineHomeView: View {
                 .frame(maxWidth: 560)
             }
         }
-        .sheet(item: $detail) { section in
-            if let budgetID = presentedBudgetID {
-                if #available(iOS 18.0, *), !reduceMotion, section == .overview {
-                    BudgetDetailSheet(workspace: workspace, budgetID: budgetID, initialSection: section)
-                        .navigationTransition(.zoom(sourceID: budgetID, in: budgetTransition))
-                } else {
-                    BudgetDetailSheet(workspace: workspace, budgetID: budgetID, initialSection: section)
-                }
-            }
+        .fullScreenCover(item: $editingCard) { card in
+            BudgetAmountEditorView(workspace: workspace, card: card)
         }
         .sheet(item: $selectedExpense) { item in WalletExpenseDetail(workspace: workspace, expenseID: item.id) }
         .overlay {
@@ -131,7 +130,8 @@ struct CheckLineHomeView: View {
         }
         .onChange(of: card?.id) { _, _ in receiptOffset = 0 }
         .onAppear {
-            guard DesignPreviewData.isEnabled else { return }
+            guard DesignPreviewData.isEnabled && !previewApplied else { return }
+            previewApplied = true
             if DesignPreviewData.screen == "home-inline", let card { openDetail(.overview, card: card) }
             if DesignPreviewData.screen == "home-used" { summaryPopup = .overview }
             if DesignPreviewData.screen == "home-calendar" { summaryPopup = .calendar }
@@ -155,10 +155,15 @@ struct CheckLineHomeView: View {
             }
             ZStack(alignment: .topTrailing) {
             Button { openDetail(.overview, card: card) } label: {
-                LiquidBudgetCard(card: card, flows: !workspace.showAgent && !workspace.showComposer && detail == nil && chrome?.isSettingsPresented != true && chrome?.isAttentionPresented != true, reflectionPoint: touchPoint)
+                LiquidBudgetCard(card: card, flows: !workspace.showAgent && !workspace.showComposer && detail == nil && chrome?.isSettingsPresented != true && chrome?.isAttentionPresented != true, reflectionPoint: touchPoint,
+                    remainingChange: workspace.remainingAmountChange,
+                    remainingMotionContext: RemainingMotionContext(
+                        isHomeCurrent: chrome?.selectedTab == .home,
+                        isExposed: !workspace.showComposer && !workspace.showAgent && editingCard == nil && detail == nil && summaryPopup == nil && selectedExpense == nil && chrome?.isSettingsPresented != true && chrome?.isAttentionPresented != true))
                     .modifier(WalletTransitionSource(id: card.id, namespace: budgetTransition))
             }
                 .buttonStyle(.plain)
+                .accessibilityIdentifier("wallet.home.card")
                 .simultaneousGesture(LongPressGesture(minimumDuration: 0.16, maximumDistance: 12).sequenced(before: DragGesture(minimumDistance: 0))
                     .updating($dragOffset) { value, offset, _ in
                         guard !reduceMotion, canChangeCard(1), !isCardFlying else { return }
@@ -199,12 +204,16 @@ struct CheckLineHomeView: View {
                     }
                 }
                 Divider()
+                if BudgetAmountEditEngine.isEditable(budgetID: card.id, periodID: card.periodID, ledger: workspace.ledger) {
+                    Button(String(localized: "wallet.budget.edit.title"), systemImage: "pencil") { editingCard = card }
+                }
                 Button(String(localized: "wallet.card.details"), systemImage: "arrow.up.right") { openDetail(.overview, card: card) }
                 Button(String(localized: "wallet.budget.manage"), systemImage: "wallet.pass") { chrome?.selectedTab = .budgets }
             } label: {
                 Image(systemName: "ellipsis").foregroundStyle(PaperTheme.ink).frame(width: 44, height: 44).padding(8)
             }
             .accessibilityLabel(String(localized: "wallet.card.more"))
+            .accessibilityIdentifier("wallet.home.card.more")
             }
         .overlay(alignment: .bottomLeading) {
             Button { workspace.openComposer(.record) } label: {

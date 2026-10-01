@@ -13,7 +13,7 @@ struct WalletExchangeQuoteFields: View {
             Text(String(format: String(localized: "wallet.exchange.rateHint"), sourceCurrencyCode, walletCurrencyCode))
                 .font(.subheadline).foregroundStyle(PaperTheme.muted)
             TextField(String(localized: "wallet.exchange.rate"), text: $rateText)
-                .keyboardType(.decimalPad)
+                .keyboardType(AmountKeyboard.type)
                 .textContentType(.none)
                 .padding(16).walletSurface(radius: 18)
                 .accessibilityIdentifier("wallet.exchange.rate")

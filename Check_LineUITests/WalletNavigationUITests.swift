@@ -171,7 +171,7 @@ final class WalletNavigationUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["这张预算卡叫什么名字？"].waitForExistence(timeout: 5))
         input.tap()
         input.typeText("餐饮 1000元 每月")
-        app.buttons["手动填写"].tap()
+        app.buttons["wallet.task.switchMode"].tap()
         let name = app.textFields["输入预算名称"]
         XCTAssertTrue(name.waitForExistence(timeout: 5), app.debugDescription)
         XCTAssertEqual(name.value as? String, "餐饮")

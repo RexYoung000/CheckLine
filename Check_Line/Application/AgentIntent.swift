@@ -20,6 +20,7 @@ nonisolated struct CaptureDraft: Equatable, Sendable {
     var tagNames: [String] = []
     var isMultiItem: Bool = false
     var sourceType: SourceType = .agentText
+    var expenseID: UUID? = nil
 }
 
 nonisolated struct CreateBudgetDraft: Equatable, Sendable {
@@ -30,6 +31,8 @@ nonisolated struct CreateBudgetDraft: Equatable, Sendable {
     var recurrence: RecurrenceRule?
     var startDate: Date
     var endDate: Date?
+    var budgetID: UUID? = nil
+    var periodID: UUID? = nil
 }
 
 nonisolated enum AgentIntent: Equatable, Sendable {
@@ -92,4 +95,5 @@ nonisolated struct AgentExecution: Equatable, Sendable {
     var ledger: Ledger
     var undo: UndoToken?
     var query: PeriodBudgetSnapshot?
+    var savedEntityID: UUID? = nil
 }
