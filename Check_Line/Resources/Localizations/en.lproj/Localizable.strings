@@ -605,7 +605,7 @@
 "ui.keyboard.done" = "Done";
 
 /* Isolated settlement receipt presentation study. */
-"receipt.study.title" = "Settlement receipt · Study";
+"receipt.study.title" = "Settlement receipt";
 "receipt.study.completed" = "Settlement complete";
 "receipt.study.periodResult" = "This period’s receipt";
 "receipt.study.printing" = "Printing";
@@ -625,3 +625,18 @@
 "receipt.study.disclaimer" = "Design demo · Sample data, no ledger changes";
 "receipt.study.open" = "View study";
 "receipt.study.voiceOver" = "VoiceOver · Full static result";
+
+/* Settlement receipt refinement. */
+"receipt.study.movements" = "Where it went";
+"receipt.study.after" = "After settlement";
+"receipt.study.wallet" = "Wish wallet";
+"receipt.study.recovery" = "Recovery gap";
+"receipt.study.showDetails" = "View period details";
+"receipt.study.hideDetails" = "Hide period details";
+"receipt.study.expanded" = "Expanded";
+"receipt.study.collapsed" = "Collapsed";
+"receipt.study.options" = "Demo options";
+"receipt.study.returnBudget" = "Back to budget";
+"receipt.study.budgetPreview" = "Budget · Design demo";
+"receipt.study.walletPreview" = "Wish wallet · Design demo";
+"receipt.study.backToReceipt" = "Back to receipt";

@@ -13,6 +13,9 @@ struct SettlementReceiptStudyView: View {
     @State private var replayID = UUID()
     @State private var paperID = UUID()
     @State private var showingStudy = true
+    @State private var viewedResults: Set<Bool> = []
+    @State private var detailsExpanded = false
+    @State private var showingWallet = false
 
     private var staticPresentation: Bool { reduceMotion || voiceOver }
     private var result: ReceiptFixture { overrun ? .overrun : .surplus }
@@ -34,32 +37,24 @@ struct SettlementReceiptStudyView: View {
                     }
                     .safeAreaInset(edge: .bottom, spacing: 0) { controls }
                 } else {
-                    ContentUnavailableView {
-                        Label("receipt.study.title", systemImage: "doc.text")
-                    } description: {
-                        Text("receipt.study.disclaimer")
-                    } actions: {
-                        Button("receipt.study.open") { showingStudy = true; replay() }
-                            .buttonStyle(PaperSolidButtonStyle())
-                            .frame(maxWidth: 320)
-                            .accessibilityIdentifier("receipt.open")
-                    }
+                    budgetPreview
                 }
             }
             .background(PaperTheme.canvas)
             .foregroundStyle(PaperTheme.ink)
-            .navigationTitle(String(localized: "receipt.study.title"))
+            .navigationTitle(String(localized: showingStudy ? "receipt.study.title" : "receipt.study.budgetPreview"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button {
-                        finishImmediately()
-                        showingStudy = false
-                    } label: { Image(systemName: "xmark") }
-                    .accessibilityLabel(Text("action.close"))
-                    .accessibilityIdentifier("receipt.close")
+                if showingStudy && !showingWallet {
+                    ToolbarItem(placement: .topBarTrailing) { studyOptions }
+                    ToolbarItem(placement: .topBarTrailing) {
+                        Button { returnToBudget() } label: { Image(systemName: "xmark") }
+                            .accessibilityLabel(Text("action.close"))
+                            .accessibilityIdentifier("receipt.close")
+                    }
                 }
             }
+            .navigationDestination(isPresented: $showingWallet) { walletPreview }
         }
         .tint(PaperTheme.accent)
         .task(id: replayID) {
@@ -67,12 +62,12 @@ struct SettlementReceiptStudyView: View {
             // A replay cancels this task and resets presentation without queuing another feed.
             try? await Task.sleep(for: .milliseconds(180))
             guard !Task.isCancelled else { return }
-            withAnimation(.linear(duration: 1.35)) { feed = 1 }
+            withAnimation(.easeInOut(duration: 1.35)) { feed = 1 }
             try? await Task.sleep(for: .milliseconds(1_350))
             guard !Task.isCancelled else { return }
             printing = false
         }
-        .onAppear { replay() }
+        .onAppear { presentResult() }
         .onDisappear { finishImmediately() }
         .onChange(of: staticPresentation) { _, _ in finishImmediately() }
         .onChange(of: scenePhase) { _, phase in
@@ -83,13 +78,22 @@ struct SettlementReceiptStudyView: View {
     private var heading: some View {
         VStack(spacing: 8) {
             Label("receipt.study.completed", systemImage: "checkmark.circle")
-                .font(PaperTheme.Typography.title)
+                .font(.subheadline.weight(.medium))
                 .foregroundStyle(PaperTheme.accent)
+            Text("wallet.demo.daily").font(PaperTheme.Typography.cardName)
             Text(period)
-                .font(PaperTheme.Typography.meta)
+                .font(.caption)
                 .foregroundStyle(PaperTheme.muted)
+            Text(overrun ? "wallet.settlement.overrun" : "wallet.settlement.surplus")
+                .font(.subheadline).foregroundStyle(PaperTheme.muted)
+                .padding(.top, 4)
+            Text(money(result.difference))
+                .font(PaperTheme.Typography.remaining.weight(.semibold))
+                .monospacedDigit()
+                .fixedSize(horizontal: false, vertical: true)
+                .accessibilityIdentifier("receipt.amount")
         }
-        .accessibilityElement(children: .combine)
+        .accessibilityElement(children: .contain)
     }
 
     private var period: String {
@@ -103,10 +107,11 @@ struct SettlementReceiptStudyView: View {
         let progress = feed
         return VStack(spacing: 0) {
             HStack(spacing: 8) {
-                Circle().fill(PaperTheme.accent).frame(width: 5, height: 5)
+                Circle().fill(PaperTheme.accent).frame(width: 5, height: 5).accessibilityHidden(true)
                 Text("CheckLine")
                     .font(.system(.caption, design: .monospaced).weight(.medium))
                     .tracking(1.2)
+                    .accessibilityHidden(true)
                 Spacer()
                 Text(printing ? "receipt.study.printing" : "receipt.study.ready")
                     .font(.caption)
@@ -116,7 +121,6 @@ struct SettlementReceiptStudyView: View {
             .padding(.horizontal, 16)
             .padding(.vertical, 12)
             .background(PaperTheme.pocket, in: UnevenRoundedRectangle(topLeadingRadius: 16, topTrailingRadius: 16))
-            .accessibilityHidden(true)
 
             receipt
                 .padding(.horizontal, 10)
@@ -126,9 +130,16 @@ struct SettlementReceiptStudyView: View {
                 .id(paperID)
                 .clipped()
                 .overlay(alignment: .top) {
-                    Capsule().fill(Color.black.opacity(0.78)).frame(height: 5)
-                        .padding(.horizontal, 5).offset(y: -2)
-                        .accessibilityHidden(true)
+                    ZStack(alignment: .top) {
+                        LinearGradient(colors: [.black, .clear], startPoint: .top, endPoint: .bottom)
+                            .frame(height: 22)
+                            .padding(.horizontal, 10)
+                            .opacity(0.08 + Double(1 - progress) * 0.12)
+                        Capsule().fill(Color.black.opacity(0.78)).frame(height: 5)
+                            .padding(.horizontal, 5).offset(y: -2)
+                    }
+                    .accessibilityHidden(true)
+                    .allowsHitTesting(false)
                 }
         }
         .accessibilityElement(children: .contain)
@@ -136,52 +147,63 @@ struct SettlementReceiptStudyView: View {
 
     private var receipt: some View {
         VStack(spacing: 0) {
-            VStack(spacing: 7) {
-                Text("wallet.demo.daily")
-                    .font(PaperTheme.Typography.cardName)
-                Text("receipt.study.periodResult")
-                    .font(.caption).foregroundStyle(PaperTheme.muted)
-                Text(overrun ? "wallet.settlement.overrun" : "wallet.settlement.surplus")
-                    .font(.subheadline).foregroundStyle(PaperTheme.muted)
-                    .padding(.top, 12)
-                Text(money(result.difference))
-                    .font(PaperTheme.Typography.remaining.weight(.semibold))
-                    .monospacedDigit()
-                    .fixedSize(horizontal: false, vertical: true)
-                    .accessibilityIdentifier("receipt.amount")
-            }
-            .frame(maxWidth: .infinity)
-            .padding(.bottom, 18)
-            rule
-            VStack(spacing: 12) {
-                row("receipt.study.limit", money(3_000))
-                row("wallet.settlement.confirmed", money(result.spent))
-            }.padding(.vertical, 14)
-            rule
+            sectionTitle("receipt.study.movements")
             VStack(spacing: 12) {
                 row(overrun ? "receipt.study.walletDeducted" : "receipt.study.recoveryFilled", money(result.firstMovement))
                 row(overrun ? "receipt.study.recoveryAdded" : "receipt.study.walletAdded", money(result.secondMovement))
             }.padding(.vertical, 14)
             rule
+            sectionTitle("receipt.study.after").padding(.top, 16)
             VStack(spacing: 12) {
-                row("wallet.settlement.walletAfter", money(result.walletAfter))
-                row("wallet.settlement.recoveryAfter", money(result.recoveryAfter))
-            }.padding(.top, 18)
+                row("receipt.study.wallet", money(result.walletAfter))
+                    .accessibilityIdentifier("receipt.walletAfter")
+                row("receipt.study.recovery", money(result.recoveryAfter))
+                    .accessibilityIdentifier("receipt.recoveryAfter")
+            }.padding(.vertical, 14)
+            rule
+            Button {
+                finishImmediately()
+                withAnimation(staticPresentation ? nil : PaperTheme.Motion.panel) {
+                    detailsExpanded.toggle()
+                }
+            } label: {
+                HStack {
+                    Text(detailsExpanded ? "receipt.study.hideDetails" : "receipt.study.showDetails")
+                    Spacer(minLength: 8)
+                    Image(systemName: detailsExpanded ? "chevron.up" : "chevron.down")
+                        .font(.caption.weight(.semibold))
+                }
+                .font(.subheadline)
+                .frame(minHeight: 44)
+                .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+            .foregroundStyle(PaperTheme.accent)
+            .accessibilityIdentifier("receipt.details")
+            .accessibilityValue(Text(detailsExpanded ? "receipt.study.expanded" : "receipt.study.collapsed"))
+            if detailsExpanded {
+                VStack(spacing: 12) {
+                    row("receipt.study.limit", money(3_000)).accessibilityIdentifier("receipt.limitRow")
+                    row("wallet.settlement.confirmed", money(result.spent)).accessibilityIdentifier("receipt.spentRow")
+                }.padding(.bottom, 12)
+            }
             Text("receipt.study.paperNote")
                 .font(.caption).foregroundStyle(PaperTheme.muted)
                 .multilineTextAlignment(.center)
-                .padding(.top, 20)
+                .padding(.top, 8)
         }
         .padding(.horizontal, 22)
         .padding(.top, 22)
         .padding(.bottom, 20)
         .background(PaperTheme.card)
         .clipShape(ReceiptPaper())
-        .overlay(alignment: .top) {
-            LinearGradient(colors: [.black.opacity(0.10), .clear], startPoint: .top, endPoint: .bottom)
-                .frame(height: 18).accessibilityHidden(true)
-        }
         .shadow(color: PaperTheme.shadow.opacity(0.55), radius: 9, y: 5)
+    }
+
+    private func sectionTitle(_ key: LocalizedStringKey) -> some View {
+        Text(key).font(.caption.weight(.medium)).foregroundStyle(PaperTheme.muted)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .accessibilityAddTraits(.isHeader)
     }
 
     private var rule: some View {
@@ -209,27 +231,19 @@ struct SettlementReceiptStudyView: View {
 
     private var controls: some View {
         VStack(spacing: 10) {
-            Picker("receipt.study.scenario", selection: $overrun) {
-                Text("receipt.study.surplusExample").tag(false)
-                Text("receipt.study.overrunExample").tag(true)
+            Button("receipt.study.returnBudget") { returnToBudget() }
+                .buttonStyle(PaperSolidButtonStyle())
+                .accessibilityIdentifier("receipt.returnBudget")
+            Button("wallet.settlement.viewWishes") {
+                finishImmediately()
+                showingWallet = true
             }
-            .pickerStyle(.segmented)
-            .accessibilityIdentifier("receipt.scenario")
-            .onChange(of: overrun) { _, _ in replay() }
-
+            .frame(maxWidth: .infinity, minHeight: 44)
+            .accessibilityIdentifier("receipt.viewWallet")
             if staticPresentation {
                 Label(voiceOver ? "receipt.study.voiceOver" : "receipt.study.static", systemImage: "figure.stand")
-                    .font(.subheadline).foregroundStyle(PaperTheme.muted)
+                    .font(.caption).foregroundStyle(PaperTheme.muted)
                     .accessibilityIdentifier("receipt.static")
-            } else {
-                HStack(spacing: 16) {
-                    Button("receipt.study.replay", systemImage: "arrow.clockwise") { replay() }
-                        .frame(maxWidth: .infinity, minHeight: 44)
-                        .accessibilityIdentifier("receipt.replay")
-                    Button("receipt.study.showAll") { finishImmediately() }
-                        .frame(maxWidth: .infinity, minHeight: 44)
-                        .accessibilityIdentifier("receipt.finish")
-                }.buttonStyle(.bordered)
             }
             Text("receipt.study.disclaimer")
                 .font(.caption).foregroundStyle(PaperTheme.muted)
@@ -239,6 +253,77 @@ struct SettlementReceiptStudyView: View {
         .padding(.horizontal, 24).padding(.top, 14).padding(.bottom, 10)
         .frame(maxWidth: .infinity)
         .background(PaperTheme.canvas)
+    }
+
+    private var studyOptions: some View {
+        Menu {
+            if !staticPresentation {
+                Button("receipt.study.replay", systemImage: "arrow.clockwise") { replay() }
+                    .accessibilityIdentifier("receipt.replay")
+                Button("receipt.study.showAll") { finishImmediately() }
+                    .accessibilityIdentifier("receipt.finish")
+            }
+            Picker("receipt.study.scenario", selection: $overrun) {
+                Text("receipt.study.surplusExample").tag(false)
+                Text("receipt.study.overrunExample").tag(true)
+            }
+        } label: { Image(systemName: "ellipsis") }
+        .accessibilityLabel(Text("receipt.study.options"))
+        .accessibilityIdentifier("receipt.options")
+        .onChange(of: overrun) { _, _ in
+            detailsExpanded = false
+            presentResult()
+        }
+    }
+
+    private var budgetPreview: some View {
+        VStack(spacing: 20) {
+            Spacer()
+            Image(systemName: "doc.text").font(.largeTitle).foregroundStyle(PaperTheme.accent)
+            Text("wallet.demo.daily").font(PaperTheme.Typography.title)
+            Text(period).font(.subheadline).foregroundStyle(PaperTheme.muted)
+            Label("receipt.study.completed", systemImage: "checkmark.circle")
+                .foregroundStyle(PaperTheme.accent)
+            Button("receipt.study.open") {
+                showingStudy = true
+                presentResult()
+            }
+            .buttonStyle(PaperSolidButtonStyle())
+            .accessibilityIdentifier("receipt.open")
+            Text("receipt.study.disclaimer").font(.caption).foregroundStyle(PaperTheme.muted)
+            Spacer()
+        }.frame(maxWidth: 400).padding(24).frame(maxWidth: .infinity)
+    }
+
+    private var walletPreview: some View {
+        ScrollView {
+            VStack(spacing: 20) {
+                Text("receipt.study.wallet").font(PaperTheme.Typography.title)
+                Text(money(result.walletAfter)).font(PaperTheme.Typography.remaining).monospacedDigit()
+                    .accessibilityIdentifier("receipt.walletPreviewAmount")
+                row("receipt.study.recovery", money(result.recoveryAfter))
+                Text("receipt.study.paperNote").font(.subheadline).foregroundStyle(PaperTheme.muted)
+                Text("receipt.study.disclaimer").font(.caption).foregroundStyle(PaperTheme.muted)
+                Button("receipt.study.backToReceipt") { showingWallet = false }
+                    .buttonStyle(PaperSolidButtonStyle())
+                    .accessibilityIdentifier("receipt.backFromWallet")
+            }.frame(maxWidth: 400).padding(24).frame(maxWidth: .infinity)
+        }
+        .background(PaperTheme.canvas)
+        .foregroundStyle(PaperTheme.ink)
+        .navigationTitle(String(localized: "receipt.study.walletPreview"))
+        .navigationBarTitleDisplayMode(.inline)
+    }
+
+    private func returnToBudget() {
+        finishImmediately()
+        showingStudy = false
+    }
+
+    private func presentResult() {
+        let isFirstView = viewedResults.insert(overrun).inserted
+        if isFirstView { replay() }
+        else { finishImmediately() }
     }
 
     private func replay() {

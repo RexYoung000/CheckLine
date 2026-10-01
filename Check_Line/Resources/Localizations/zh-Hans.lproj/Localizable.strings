@@ -605,7 +605,7 @@
 "ui.keyboard.done" = "完成输入";
 
 /* Isolated settlement receipt presentation study. */
-"receipt.study.title" = "结算小票 · 原生小样";
+"receipt.study.title" = "结算小票";
 "receipt.study.completed" = "结算完成";
 "receipt.study.periodResult" = "本期结算小票";
 "receipt.study.printing" = "正在出纸";
@@ -625,3 +625,18 @@
 "receipt.study.disclaimer" = "设计演示 · 示例数据，不写入账本";
 "receipt.study.open" = "查看小样";
 "receipt.study.voiceOver" = "VoiceOver · 完整静态结果";
+
+/* Settlement receipt refinement. */
+"receipt.study.movements" = "资金去向";
+"receipt.study.after" = "结算后";
+"receipt.study.wallet" = "心愿钱包";
+"receipt.study.recovery" = "待恢复差额";
+"receipt.study.showDetails" = "查看本期明细";
+"receipt.study.hideDetails" = "收起本期明细";
+"receipt.study.expanded" = "已展开";
+"receipt.study.collapsed" = "已收起";
+"receipt.study.options" = "演示选项";
+"receipt.study.returnBudget" = "返回预算";
+"receipt.study.budgetPreview" = "预算 · 设计示例";
+"receipt.study.walletPreview" = "心愿钱包 · 设计示例";
+"receipt.study.backToReceipt" = "返回结算小票";
