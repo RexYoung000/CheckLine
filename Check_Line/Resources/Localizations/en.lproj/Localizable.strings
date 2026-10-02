@@ -264,8 +264,8 @@
 "v1.agent.expand.hint" = "Opens the panel without leaving Home";
 "v1.agent.needCard" = "No budget card yet. Create one before recording spending.";
 "v1.agent.offline" = "Offline · on-device extraction";
-"v1.agent.placeholder" = "Example: Starbucks 35 CNY";
-"v1.agent.placeholder.budget" = "Example: Create a monthly dining budget of 1000 CNY";
+"v1.agent.placeholder" = "Tell Xiaoduo: lunch 35 CNY";
+"v1.agent.placeholder.budget" = "Tell Xiaoduo: monthly dining budget 1500 CNY";
 "v1.agent.confirm.budget" = "Create budget card";
 "v1.agent.clarify.name" = "What should this budget card be called?";
 "v1.agent.clarify.cycle" = "Should this budget repeat monthly or be one-time?";
@@ -498,7 +498,7 @@
 "wallet.empty.manual" = "Enter manually";
 
 // Monthly budget amount editing
-"wallet.budget.edit.title" = "Edit budget";
+"wallet.budget.edit.title" = "Adjust monthly limit";
 "wallet.budget.edit.amount" = "Monthly budget amount";
 "wallet.budget.edit.inputHint" = "Enter an amount greater than 0, with up to two decimal places.";
 "wallet.budget.edit.scope" = "After confirmation, the month shown above and all future months use the new amount. Settled months, expenses and the wish wallet stay unchanged.";
@@ -524,15 +524,15 @@
 // 2026-10-01 unified tasks and workspace
 "ui.agent.suggestions" = "Suggestions and help";
 "ui.agent.local" = "Local text understanding is available. Voice, image recognition and cloud models are not connected.";
-"ui.agent.helpFill" = "Ask Xiaoduo to help fill this in";
+"ui.agent.helpFill" = "Ask Xiaoduo";
 "ui.task.manual" = "Fill in manually";
 "ui.task.options" = "Task options";
 "ui.draft.discard" = "Discard this draft";
 "ui.draft.failed" = "The draft could not be saved. Please retry. An unreadable draft must be explicitly discarded before starting again.";
 "ui.record.extras" = "Notes, text and attachments";
 "ui.currency.unconverted" = "Without a supported conversion, choose a budget in the same currency or Unbudgeted. The original amount and currency are preserved.";
-"ui.create.monthDates" = "This period starts on %@ and ends on the last day of this month, then repeats monthly.";
-"ui.create.onceDates" = "Starts on %@ with no deadline. Review and settle when the plan is complete.";
+"ui.create.monthDates" = "Starts %@, ends at month end, repeats monthly.";
+"ui.create.onceDates" = "Starts %@. Settle when finished.";
 "ui.period.current" = "Current period";
 "ui.period.settled" = "Settled · Historical period";
 "ui.period.due" = "Ready for review";
@@ -640,3 +640,29 @@
 "receipt.study.budgetPreview" = "Budget · Design demo";
 "receipt.study.walletPreview" = "Wish wallet · Design demo";
 "receipt.study.backToReceipt" = "Back to receipt";
+
+"ui.agent.voice" = "Voice input";
+"ui.agent.voiceUnavailable" = "Voice input is not connected yet. You can type for now.";
+"ui.agent.working" = "One moment, I’m checking the details.";
+"ui.agent.createPrompt" = "What would you like to budget for?";
+"ui.agent.remainingPrompt" = "You have %@ left on this card this period.";
+"ui.agent.cardRemaining" = "“%@” has %@ left this period.";
+"ui.agent.recordPrompt" = "Tell me about this purchase.";
+"ui.wish.virtualBalanceNote" = "Virtual allowance from budget surplus, not real money.";
+"ui.wish.walletRules" = "How the wallet changes";
+"ui.wish.purchaseHelp" = "About redemption";
+"ui.analysis.periodRange" = "%@ – %@";
+"ui.analysis.periodFrom" = "From %@";
+"ui.source.notConnected" = "Not connected";
+"ui.sources.details" = "How sources work";
+
+"ui.coverage.title" = "Data coverage";
+"ui.workspace.manageHelp" = "Management details";
+"ui.calendar.outsidePeriod" = "This date is outside the selected budget period";
+"ui.record.correctionHelp" = "Editing and retrospective changes";
+"ui.record.confirmAttributionPrompt" = "Assign this transaction to “%@”?";
+
+"ui.agent.inputLabel" = "Message Xiaoduo";
+
+"ui.agent.shortRecordExample" = "Lunch 35 CNY";
+"ui.agent.shortBudgetExample" = "Create budget";

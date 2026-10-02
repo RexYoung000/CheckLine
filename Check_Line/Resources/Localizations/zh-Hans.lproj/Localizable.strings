@@ -264,8 +264,8 @@
 "v1.agent.expand.hint" = "展开底部面板，不离开首页";
 "v1.agent.needCard" = "还没有预算卡。先创建一张，再记一笔。";
 "v1.agent.offline" = "离线模式 · 本地提取";
-"v1.agent.placeholder" = "例如：星巴克 35 元";
-"v1.agent.placeholder.budget" = "例如：创建每月餐饮预算 1000 元";
+"v1.agent.placeholder" = "可以跟小朵说一声：午餐 35 元";
+"v1.agent.placeholder.budget" = "可以跟小朵说一声：每月餐饮预算 1500 元";
 "v1.agent.confirm.budget" = "确认创建预算卡";
 "v1.agent.clarify.name" = "这张预算卡叫什么名字？";
 "v1.agent.clarify.cycle" = "这张卡是每月循环，还是一次性预算？";
@@ -498,7 +498,7 @@
 "wallet.empty.manual" = "手动填写";
 
 // Monthly budget amount editing
-"wallet.budget.edit.title" = "编辑预算";
+"wallet.budget.edit.title" = "调整月度额度";
 "wallet.budget.edit.amount" = "每月预算额度";
 "wallet.budget.edit.inputHint" = "输入大于 0 的金额，最多两位小数。";
 "wallet.budget.edit.scope" = "确认后，上方所示月份立即使用新额度，以后每个月也沿用新额度。已结算月份、消费记录和心愿钱包不变。";
@@ -531,8 +531,8 @@
 "ui.draft.failed" = "草稿未能保存。请重试；无法读取的草稿需明确放弃后才能重新填写。";
 "ui.record.extras" = "备注、文字与附件";
 "ui.currency.unconverted" = "异币种尚无可用换算时，请选择同币种预算卡或「未纳入预算」。原始金额与币种会保留。";
-"ui.create.monthDates" = "本期从 %@ 开始，到本月最后一天结束；以后按月循环。";
-"ui.create.onceDates" = "从 %@ 开始，不设截止日期；事情完成后由你主动结算。";
+"ui.create.monthDates" = "%@ 起，月底结束，按月循环。";
+"ui.create.onceDates" = "%@ 起，完成后主动结算。";
 "ui.period.current" = "本期";
 "ui.period.settled" = "已结算 · 历史周期";
 "ui.period.due" = "待结算";
@@ -640,3 +640,29 @@
 "receipt.study.budgetPreview" = "预算 · 设计示例";
 "receipt.study.walletPreview" = "心愿钱包 · 设计示例";
 "receipt.study.backToReceipt" = "返回结算小票";
+
+"ui.agent.voice" = "语音输入";
+"ui.agent.voiceUnavailable" = "语音输入尚未接通，可先输入文字。";
+"ui.agent.working" = "稍等，我正在整理。";
+"ui.agent.createPrompt" = "想给哪件事定个预算？";
+"ui.agent.remainingPrompt" = "这张卡本期还能花 %@。";
+"ui.agent.cardRemaining" = "“%@”本期还能花 %@。";
+"ui.agent.recordPrompt" = "把这笔消费告诉我吧。";
+"ui.wish.virtualBalanceNote" = "预算结余形成，非真实资金。";
+"ui.wish.walletRules" = "钱包如何变化";
+"ui.wish.purchaseHelp" = "兑现说明";
+"ui.analysis.periodRange" = "%@ – %@";
+"ui.analysis.periodFrom" = "自 %@ 起";
+"ui.source.notConnected" = "尚未接通";
+"ui.sources.details" = "使用说明";
+
+"ui.coverage.title" = "数据覆盖";
+"ui.workspace.manageHelp" = "管理说明";
+"ui.calendar.outsidePeriod" = "所选日期不在本周期";
+"ui.record.correctionHelp" = "修改与追溯说明";
+"ui.record.confirmAttributionPrompt" = "这笔归到「%@」？";
+
+"ui.agent.inputLabel" = "告诉小朵";
+
+"ui.agent.shortRecordExample" = "午餐 35 元";
+"ui.agent.shortBudgetExample" = "创建预算卡";

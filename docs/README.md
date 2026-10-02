@@ -34,6 +34,7 @@
 | 文件或目录 | 作用 |
 |------------|------|
 | `design/DESIGN.md` | 设计原则、已确认交互契约（3.1，含四 Tab）、本轮 App 手感 Token（3.1.5）和目标视口清单（3.1.6）；2026-08-01 旧样机只作历史参考 |
+| `design/2026-10-02-ui-cleanup-validation.md` | 原生区块布局、Agent 信息减负、语音入口边界及本轮截图／触控验证 |
 | `design/2026-10-01-ui-ux-implementation-validation.md` | 统一任务、卡片工作区、导入设计状态与本轮原生验证边界 |
 | `design/2026-09-22-interaction-audit.md` | 本轮模拟器试用前的交互问题、修复、验证证据与已知缺项 |
 | `design/explorations/` | 视觉探索，不直接作为实现要求 |

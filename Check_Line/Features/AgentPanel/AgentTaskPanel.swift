@@ -7,6 +7,8 @@ struct AgentTaskPanel: View {
     var part: Part = .complete
     var onCreateBudget: (() -> Void)?
     @FocusState private var inputFocused: Bool
+    @State private var showingVoiceNotice = false
+    @Environment(\.dynamicTypeSize) private var typeSize
 
     var body: some View {
         expanded
@@ -37,17 +39,19 @@ struct AgentTaskPanel: View {
                     inputFocused = false
                 }
             }
+            .alert(String(localized: "ui.agent.voice"), isPresented: $showingVoiceNotice) {
+                Button(String(localized: "action.close"), role: .cancel) { }
+            } message: {
+                Text(String(localized: "ui.agent.voiceUnavailable"))
+            }
     }
 
     private var expanded: some View {
         VStack(alignment: .leading, spacing: PaperTheme.Space.m) {
             if part != .footer {
-            HStack(alignment: .firstTextBaseline) {
-                Text(String(localized: "v1.agent.offline"))
-                    .font(PaperTheme.Typography.caption)
-                    .foregroundStyle(PaperTheme.muted)
-                Spacer()
-                if embedded == false {
+            if embedded == false {
+                HStack {
+                    Spacer()
                     Button(String(localized: "v1.agent.collapse")) {
                         inputFocused = false
                         workspace.collapsePanel()
@@ -58,7 +62,7 @@ struct AgentTaskPanel: View {
                 }
             }
 
-            if workspace.isEmpty {
+            if workspace.isEmpty && !embedded {
                 VStack(alignment: .leading, spacing: PaperTheme.Space.s) {
                     Text(String(localized: "v1.agent.needCard"))
                         .font(PaperTheme.Typography.meta)
@@ -74,7 +78,7 @@ struct AgentTaskPanel: View {
                 }
             }
 
-            if let banner = workspace.agentBanner {
+            if !embedded, let banner = workspace.agentBanner {
                 Text(banner.localizedText)
                     .font(PaperTheme.Typography.meta)
                     .foregroundStyle(PaperTheme.ink)
@@ -91,26 +95,32 @@ struct AgentTaskPanel: View {
             if workspace.showsStructuredConfirm {
                 structuredActions
             } else {
-            HStack(alignment: .bottom, spacing: PaperTheme.Space.s) {
-                PaperField(
-                    title: String(localized: workspace.isEmpty || workspace.pendingBudgetText != nil ? "v1.agent.placeholder.budget" : "v1.agent.placeholder"),
-                    text: $workspace.draftText,
-                    axis: .vertical,
-                    identifier: "wallet.agent.input"
-                )
-                .focused($inputFocused)
-
-                Button(String(localized: "v1.agent.send")) {
-                    inputFocused = false
-                    Task { await workspace.submitText() }
+            VStack(alignment: .leading, spacing: 12) {
+                TextField("", text: $workspace.draftText,
+                          prompt: Text(inputPlaceholder).font(typeSize.isAccessibilitySize ? .caption : .body).foregroundStyle(PaperTheme.muted), axis: .vertical)
+                    .font(.body).lineLimit(typeSize.isAccessibilitySize ? 1...2 : 2...4)
+                    .focused($inputFocused)
+                    .accessibilityLabel(String(localized: "ui.agent.inputLabel"))
+                    .accessibilityIdentifier("wallet.agent.input")
+                HStack(spacing: 8) {
+                    Spacer()
+                    Button { showingVoiceNotice = true } label: {
+                        Image(systemName: "mic").font(.system(size: 20)).frame(width: 44, height: 44)
+                    }.accessibilityLabel(String(localized: "ui.agent.voice"))
+                        .accessibilityIdentifier("wallet.agent.voice")
+                    Button {
+                        inputFocused = false
+                        Task { await workspace.submitText() }
+                    } label: {
+                        Image(systemName: "arrow.up").font(.system(size: 20, weight: .semibold))
+                            .foregroundStyle(canSend ? Color.white : PaperTheme.muted)
+                            .frame(width: 44, height: 44)
+                            .background(canSend ? PaperTheme.accent : PaperTheme.stroke, in: Circle())
+                    }.disabled(!canSend)
+                        .accessibilityLabel(String(localized: "v1.agent.send"))
+                        .accessibilityIdentifier("wallet.agent.send")
                 }
-                .buttonStyle(
-                    PaperSolidButtonStyle(
-                        enabled: canSend
-                    )
-                )
-                .disabled(canSend == false)
-            }
+            }.padding(16).walletSurface(radius: 24)
             }
 
             if workspace.lastUndo != nil && !workspace.showsStructuredConfirm {
@@ -129,6 +139,13 @@ struct AgentTaskPanel: View {
     private var canSend: Bool {
         workspace.draftText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty == false
             && workspace.isWorking == false
+    }
+
+    private var inputPlaceholder: String {
+        let budget = workspace.isEmpty || workspace.pendingBudgetText != nil || workspace.composerIntent == .budget
+        return String(localized: typeSize.isAccessibilitySize
+                      ? (budget ? "ui.agent.shortBudgetExample" : "ui.agent.shortRecordExample")
+                      : (budget ? "v1.agent.placeholder.budget" : "v1.agent.placeholder"))
     }
 
     private var structuredFields: some View {

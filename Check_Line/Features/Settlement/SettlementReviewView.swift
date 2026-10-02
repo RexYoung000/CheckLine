@@ -203,23 +203,24 @@ struct SettlementReviewView: View {
         VStack(alignment: .leading, spacing: 14) {
             Text(String(localized: "wallet.settlement.dataTitle")).font(.headline)
             let pending = workspace.ledger.expenses(inPeriod: period.id).filter { $0.attributionState == .pending }
-            Button { showPending = true } label: {
-                PaperFormItem(
-                    title: String(localized: "wallet.settlement.pending"),
-                    value: "\(pending.count) · \(MoneyFormat.string(periodSnapshot?.pendingAmount ?? 0, currencyCode: period.currencyCode))",
-                    showArrow: !pending.isEmpty
-                )
-            }
-            .buttonStyle(.plain).disabled(pending.isEmpty)
             let unbudgeted = workspace.ledger.expenses.values.filter { $0.attributionState == .unbudgeted && $0.wishRedemptionID == nil }
-            Button { showUnbudgeted = true } label: {
-                PaperFormItem(title: String(localized: "wallet.settlement.unbudgeted"), value: String(unbudgeted.count), showArrow: !unbudgeted.isEmpty)
+            PaperCard {
+                VStack(spacing: 14) {
+                    Button { showPending = true } label: {
+                        dataReviewRow(
+                            String(localized: "wallet.settlement.pending"),
+                            value: "\(pending.count) · \(MoneyFormat.string(periodSnapshot?.pendingAmount ?? 0, currencyCode: period.currencyCode))",
+                            showsArrow: !pending.isEmpty
+                        )
+                    }
+                    .buttonStyle(.plain).disabled(pending.isEmpty)
+                    Button { showUnbudgeted = true } label: {
+                        dataReviewRow(String(localized: "wallet.settlement.unbudgeted"), value: String(unbudgeted.count), showsArrow: !unbudgeted.isEmpty)
+                    }
+                    .buttonStyle(.plain).disabled(unbudgeted.isEmpty)
+                }
             }
-            .buttonStyle(.plain).disabled(unbudgeted.isEmpty)
-            if workspace.ledger.dataSources.isEmpty {
-                Label(String(localized: "wallet.settlement.manualCoverage"), systemImage: "info.circle")
-                    .font(.subheadline).foregroundStyle(PaperTheme.muted)
-            } else {
+            if !workspace.ledger.dataSources.isEmpty {
                 ForEach(workspace.ledger.dataSources.values.sorted { $0.sourceType.rawValue < $1.sourceType.rawValue }) { source in
                     PaperFormItem(
                         title: sourceTitle(source.sourceType),
@@ -235,6 +236,18 @@ struct SettlementReviewView: View {
             Text(String(localized: "wallet.settlement.missingData"))
                 .font(.caption).foregroundStyle(PaperTheme.muted)
         }
+    }
+
+    private func dataReviewRow(_ title: String, value: String, showsArrow: Bool) -> some View {
+        HStack(spacing: 12) {
+            impactRow(title, value)
+            if showsArrow {
+                Image(systemName: "chevron.right").font(.caption).foregroundStyle(PaperTheme.muted)
+            }
+        }
+        .frame(maxWidth: .infinity, minHeight: 44, alignment: .leading)
+        .contentShape(Rectangle())
+        .accessibilityElement(children: .combine)
     }
 
     private func walletImpact(_ preview: SettlementPreview) -> some View {

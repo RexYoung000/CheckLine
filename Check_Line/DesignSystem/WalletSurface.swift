@@ -234,6 +234,7 @@ struct LiquidWave: Shape {
 
 struct LiquidBudgetCard: View {
     var card: HomeBudgetCardModel
+    var showsRemainingRatio = true
     var flows = false
     var reflectionPoint: CGPoint?
     var remainingChange: BudgetRemainingChange?
@@ -284,7 +285,7 @@ struct LiquidBudgetCard: View {
                         BudgetRemainingAmountText(card: card, change: remainingChange, context: remainingMotionContext)
                             .font(.system(.largeTitle).weight(.medium)).monospacedDigit()
                             .lineLimit(1).minimumScaleFactor(0.5)
-                        if BudgetPresentation.remaining(card) >= 0 {
+                        if showsRemainingRatio && BudgetPresentation.remaining(card) >= 0 {
                             Text("\(Int((BudgetPresentation.fill(card) * 100).rounded()))% " + String(localized: "budget.remaining.short"))
                                 .font(.caption2).foregroundStyle(PaperTheme.muted)
                         }

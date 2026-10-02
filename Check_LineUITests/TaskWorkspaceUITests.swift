@@ -28,6 +28,35 @@ final class TaskWorkspaceUITests: XCTestCase {
         XCTAssertEqual(amount.value as? String, "12.34")
     }
 
+    func testVoiceEntryKeepsTheTaskAndManualFallback() {
+        let app = launch("agent")
+        let input = app.descendants(matching: .any).matching(identifier: "wallet.agent.input").firstMatch
+        XCTAssertTrue(input.waitForExistence(timeout: 8))
+        input.tap(); input.typeText("午餐 35 元")
+        app.buttons["wallet.agent.voice"].tap()
+        XCTAssertTrue(app.alerts.firstMatch.waitForExistence(timeout: 5))
+        XCTAssertTrue(app.alerts.staticTexts["语音输入尚未接通，可先输入文字。"].exists)
+        app.alerts.buttons["关闭"].tap()
+        XCTAssertEqual(input.value as? String, "午餐 35 元")
+        app.buttons["wallet.task.switchMode"].tap()
+        let amount = app.textFields["输入金额"]
+        XCTAssertTrue(amount.waitForExistence(timeout: 5))
+        XCTAssertEqual(amount.value as? String, "35")
+        attach(app, "voice-fallback-retains-task")
+    }
+
+    func testCalendarDistinguishesDatesOutsideSelectedPeriod() {
+        let app = launch("calendar")
+        let previous = app.buttons["上个月"]
+        XCTAssertTrue(previous.waitForExistence(timeout: 8))
+        previous.tap()
+        let outside = app.staticTexts["所选日期不在本周期"]
+        XCTAssertTrue(outside.waitForExistence(timeout: 5))
+        attach(app, "calendar-outside-selected-period")
+        app.buttons["下个月"].tap()
+        XCTAssertTrue(outside.waitForNonExistence(timeout: 5))
+    }
+
     func testWorkspaceRecordsPendingDetailAndBackRestore() {
         let app = launch("home-inline")
         let records = app.buttons["wallet.workspace.records"]

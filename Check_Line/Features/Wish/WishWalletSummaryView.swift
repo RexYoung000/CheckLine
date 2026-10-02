@@ -3,6 +3,8 @@ import SwiftUI
 struct WishWalletSummaryView: View {
     @Bindable var workspace: CheckLineWorkspace
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.dynamicTypeSize) private var typeSize
+    @State private var rulesExpanded = false
     private var projection: WalletProjection { workspace.wallet }
     private var currencyCode: String { workspace.ledger.walletSettings.walletCurrencyCode }
     private var entries: [WalletLedgerEntry] {
@@ -22,35 +24,27 @@ struct WishWalletSummaryView: View {
                     if projection.recoveryGap > 0 {
                         PaperFormItem(title: String(localized: "v1.wish.recovery"), value: MoneyFormat.string(projection.recoveryGap, currencyCode: currencyCode))
                     }
-                    PaperCard {
+                    Text(String(localized: "ui.wish.virtualBalanceNote")).font(.caption).foregroundStyle(PaperTheme.muted)
+                    DisclosureGroup(String(localized: "ui.wish.walletRules"), isExpanded: $rulesExpanded) {
                         VStack(alignment: .leading, spacing: 16) {
                             Label(String(localized: "wallet.wishes.settlementIn"), systemImage: "arrow.down.left")
                             Label(String(localized: "wallet.wishes.redemptionOut"), systemImage: "arrow.up.right")
                             Text(String(localized: "wallet.wishes.recoveryOrder")).font(.caption).foregroundStyle(PaperTheme.muted)
-                        }.font(.subheadline)
-                    }
+                        }.font(.subheadline).padding(.top, 12)
+                    }.font(.subheadline).tint(PaperTheme.accent)
                     VStack(alignment: .leading, spacing: 14) {
                         Text(String(localized: "wallet.wishes.history")).font(.headline)
                         if entries.isEmpty {
                             Text(String(localized: "wallet.wishes.historyEmpty"))
                                 .font(.subheadline).foregroundStyle(PaperTheme.muted)
                         } else {
-                            ForEach(entries) { entry in
-                                HStack(alignment: .top, spacing: 12) {
-                                    VStack(alignment: .leading, spacing: 5) {
-                                        Text(entryTitle(entry)).font(.subheadline.weight(.medium))
-                                        Text(entry.occurredAt, format: .dateTime.year().month().day().hour().minute())
-                                            .font(.caption).foregroundStyle(PaperTheme.muted)
-                                    }
-                                    Spacer(minLength: 8)
-                                    Text(MoneyFormat.string(entry.walletSignedAmount, currencyCode: currencyCode))
-                                        .font(.subheadline.weight(.semibold)).monospacedDigit()
+                            VStack(spacing: 4) {
+                                ForEach(entries) { entry in
+                                    entryRow(entry)
                                 }
-                                .padding(16).walletSurface(radius: 18)
-                            }
+                            }.padding(4).walletSurface()
                         }
                     }
-                    Text(String(localized: "v1.wish.notRealMoney")).font(.subheadline).foregroundStyle(PaperTheme.muted)
                 }.padding(24).frame(maxWidth: 600).frame(maxWidth: .infinity)
             }
             .background(PaperTheme.canvas.ignoresSafeArea())
@@ -62,6 +56,25 @@ struct WishWalletSummaryView: View {
         .presentationDetents([.medium, .large])
         .presentationDragIndicator(.visible)
         .presentationCornerRadius(PaperTheme.Radius.sheet)
+    }
+
+    private func entryRow(_ entry: WalletLedgerEntry) -> some View {
+        let layout = typeSize.isAccessibilitySize
+            ? AnyLayout(VStackLayout(alignment: .leading, spacing: 8))
+            : AnyLayout(HStackLayout(alignment: .top, spacing: 12))
+        return layout {
+            VStack(alignment: .leading, spacing: 5) {
+                Text(entryTitle(entry)).font(.subheadline.weight(.medium))
+                Text(entry.occurredAt, format: .dateTime.year().month().day().hour().minute())
+                    .font(.caption).foregroundStyle(PaperTheme.muted)
+            }
+            if !typeSize.isAccessibilitySize { Spacer(minLength: 8) }
+            Text(MoneyFormat.string(entry.walletSignedAmount, currencyCode: currencyCode))
+                .font(.subheadline.weight(.semibold)).monospacedDigit()
+                .fixedSize(horizontal: false, vertical: true)
+        }
+        .padding(14).frame(maxWidth: .infinity, alignment: .leading)
+        .accessibilityElement(children: .combine)
     }
 
     private func entryTitle(_ entry: WalletLedgerEntry) -> String {

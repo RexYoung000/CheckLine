@@ -1,0 +1,421 @@
+{
+  "date": "2026-10-02",
+  "scope": "Native simulator verification; import and management design states remain isolated; no physical-device acceptance",
+  "distinctPassedCases": 16,
+  "caseRuns": {
+    "Check_LineUITests.BudgetAmountEditUITests/testBudgetAmountPreviewCancelAndConfirmedOverrun": [
+      "ui2"
+    ],
+    "Check_LineUITests.BudgetAmountEditUITests/testBudgetListEntryAndRecordSuccessRemainUsable": [
+      "ui2"
+    ],
+    "Check_LineUITests.BudgetAmountEditUITests/testInvalidPrecisionPendingOnlyAndReduceMotion": [
+      "ui2"
+    ],
+    "Check_LineUITests.TaskEnvironmentUITests/testEnglishTaskKeepsItsFieldsAndSaveReachableWithKeyboard": [
+      "ui2",
+      "ipad"
+    ],
+    "Check_LineUITests.TaskEnvironmentUITests/testPersistentDraftSurvivesAppRelaunchWithoutSubmittingLedger": [
+      "ui2"
+    ],
+    "Check_LineUITests.TaskWorkspaceUITests/testImportDesignStatesNeverClaimLiveConnection": [
+      "ui2"
+    ],
+    "Check_LineUITests.TaskWorkspaceUITests/testManagementDesignRecoveryAndImpactConfirmation": [
+      "ui2"
+    ],
+    "Check_LineUITests.TaskWorkspaceUITests/testSharedTaskSwitchRetainsFieldsAndClosesToSamePage": [
+      "ui2",
+      "a11y-fix"
+    ],
+    "Check_LineUITests.TaskWorkspaceUITests/testVoiceEntryKeepsTheTaskAndManualFallback": [
+      "ui2",
+      "a11y-fix"
+    ],
+    "Check_LineUITests.TaskWorkspaceUITests/testWorkspaceRecordsPendingDetailAndBackRestore": [
+      "ui2",
+      "final-ui",
+      "recorded-workspace"
+    ],
+    "Check_LineUITests.WalletNavigationUITests/testAgentDraftMovesIntoManualBudgetForm": [
+      "ui2"
+    ],
+    "Check_LineUITests.WalletNavigationUITests/testOneShotSettlementReachesWishWalletAndRealPurchase": [
+      "ui2"
+    ],
+    "Check_LineUITests.TaskEnvironmentUITests/testSystemReduceMotionIsReflectedInAppAndTaskStillWorks": [
+      "final-ui"
+    ],
+    "Check_LineUITests.TaskWorkspaceUITests/testCalendarDistinguishesDatesOutsideSelectedPeriod": [
+      "final-ui"
+    ],
+    "Check_LineUITests.TaskEnvironmentUITests/testLargeTypeAgentKeepsVoiceAndManualSaveReachable": [
+      "small-final"
+    ],
+    "Check_LineUITests.TaskEnvironmentUITests/testVoiceOverCanReadAndSaveManualRecord": [
+      "voiceover"
+    ]
+  },
+  "runs": [
+    {
+      "bundle": "/tmp/checkline-ui-cleanup-ui2.xcresult",
+      "log": "/tmp/checkline-ui-cleanup-ui2.log",
+      "passedCases": [
+        "Check_LineUITests.BudgetAmountEditUITests/testBudgetAmountPreviewCancelAndConfirmedOverrun",
+        "Check_LineUITests.BudgetAmountEditUITests/testBudgetListEntryAndRecordSuccessRemainUsable",
+        "Check_LineUITests.BudgetAmountEditUITests/testInvalidPrecisionPendingOnlyAndReduceMotion",
+        "Check_LineUITests.TaskEnvironmentUITests/testEnglishTaskKeepsItsFieldsAndSaveReachableWithKeyboard",
+        "Check_LineUITests.TaskEnvironmentUITests/testPersistentDraftSurvivesAppRelaunchWithoutSubmittingLedger",
+        "Check_LineUITests.TaskWorkspaceUITests/testImportDesignStatesNeverClaimLiveConnection",
+        "Check_LineUITests.TaskWorkspaceUITests/testManagementDesignRecoveryAndImpactConfirmation",
+        "Check_LineUITests.TaskWorkspaceUITests/testSharedTaskSwitchRetainsFieldsAndClosesToSamePage",
+        "Check_LineUITests.TaskWorkspaceUITests/testVoiceEntryKeepsTheTaskAndManualFallback",
+        "Check_LineUITests.TaskWorkspaceUITests/testWorkspaceRecordsPendingDetailAndBackRestore",
+        "Check_LineUITests.WalletNavigationUITests/testAgentDraftMovesIntoManualBudgetForm",
+        "Check_LineUITests.WalletNavigationUITests/testOneShotSettlementReachesWishWalletAndRealPurchase"
+      ],
+      "summary": {
+        "devicesAndConfigurations": [
+          {
+            "device": {
+              "architecture": "arm64",
+              "deviceId": "95864BCD-8AB8-476C-AC79-4E047B2D9CC8",
+              "deviceName": "CheckLine Card Loop QA",
+              "modelName": "iPhone 17 Pro",
+              "osBuildNumber": "23F77",
+              "osVersion": "26.5",
+              "platform": "iOS Simulator"
+            },
+            "expectedFailures": 0,
+            "failedTests": 0,
+            "passedTests": 12,
+            "skippedTests": 0,
+            "testPlanConfiguration": {
+              "configurationId": "1",
+              "configurationName": "Test Scheme Action"
+            }
+          }
+        ],
+        "environmentDescription": "CheckLine UI · Built with macOS 27.0.1",
+        "expectedFailures": 0,
+        "failedTests": 0,
+        "finishTime": 1790951384.285,
+        "passedTests": 12,
+        "result": "Passed",
+        "runtimeWarnings": [
+          {
+            "issueType": "Runtime Warning",
+            "message": "Invalid frame dimension (negative or non-finite)."
+          },
+          {
+            "issueType": "Runtime Warning",
+            "message": "Invalid frame dimension (negative or non-finite)."
+          },
+          {
+            "issueType": "Runtime Warning",
+            "message": "Invalid frame dimension (negative or non-finite)."
+          },
+          {
+            "issueType": "Runtime Warning",
+            "message": "Invalid frame dimension (negative or non-finite)."
+          }
+        ],
+        "skippedTests": 0,
+        "startTime": 1790951161.388,
+        "statistics": [],
+        "testFailures": [],
+        "title": "Test - CheckLine UI",
+        "topInsights": [],
+        "totalTestCount": 12
+      }
+    },
+    {
+      "bundle": "/tmp/checkline-ui-cleanup-final-ui.xcresult",
+      "log": "/tmp/checkline-ui-cleanup-final-ui.log",
+      "passedCases": [
+        "Check_LineUITests.TaskEnvironmentUITests/testSystemReduceMotionIsReflectedInAppAndTaskStillWorks",
+        "Check_LineUITests.TaskWorkspaceUITests/testCalendarDistinguishesDatesOutsideSelectedPeriod",
+        "Check_LineUITests.TaskWorkspaceUITests/testWorkspaceRecordsPendingDetailAndBackRestore"
+      ],
+      "summary": {
+        "devicesAndConfigurations": [
+          {
+            "device": {
+              "architecture": "arm64",
+              "deviceId": "95864BCD-8AB8-476C-AC79-4E047B2D9CC8",
+              "deviceName": "CheckLine Card Loop QA",
+              "modelName": "iPhone 17 Pro",
+              "osBuildNumber": "23F77",
+              "osVersion": "26.5",
+              "platform": "iOS Simulator"
+            },
+            "expectedFailures": 0,
+            "failedTests": 0,
+            "passedTests": 3,
+            "skippedTests": 0,
+            "testPlanConfiguration": {
+              "configurationId": "1",
+              "configurationName": "Test Scheme Action"
+            }
+          }
+        ],
+        "environmentDescription": "CheckLine UI · Built with macOS 27.0.1",
+        "expectedFailures": 0,
+        "failedTests": 0,
+        "finishTime": 1790951492.443,
+        "passedTests": 3,
+        "result": "Passed",
+        "runtimeWarnings": [
+          {
+            "issueType": "Runtime Warning",
+            "message": "Invalid frame dimension (negative or non-finite)."
+          }
+        ],
+        "skippedTests": 0,
+        "startTime": 1790951411.688,
+        "statistics": [],
+        "testFailures": [],
+        "title": "Test - CheckLine UI",
+        "topInsights": [],
+        "totalTestCount": 3
+      }
+    },
+    {
+      "bundle": "/tmp/checkline-ui-cleanup-a11y-fix.xcresult",
+      "log": "/tmp/checkline-ui-cleanup-a11y-fix.log",
+      "passedCases": [
+        "Check_LineUITests.TaskWorkspaceUITests/testSharedTaskSwitchRetainsFieldsAndClosesToSamePage",
+        "Check_LineUITests.TaskWorkspaceUITests/testVoiceEntryKeepsTheTaskAndManualFallback"
+      ],
+      "summary": {
+        "devicesAndConfigurations": [
+          {
+            "device": {
+              "architecture": "arm64",
+              "deviceId": "95864BCD-8AB8-476C-AC79-4E047B2D9CC8",
+              "deviceName": "CheckLine Card Loop QA",
+              "modelName": "iPhone 17 Pro",
+              "osBuildNumber": "23F77",
+              "osVersion": "26.5",
+              "platform": "iOS Simulator"
+            },
+            "expectedFailures": 0,
+            "failedTests": 0,
+            "passedTests": 2,
+            "skippedTests": 0,
+            "testPlanConfiguration": {
+              "configurationId": "1",
+              "configurationName": "Test Scheme Action"
+            }
+          }
+        ],
+        "environmentDescription": "CheckLine UI · Built with macOS 27.0.1",
+        "expectedFailures": 0,
+        "failedTests": 0,
+        "finishTime": 1790951667.509,
+        "passedTests": 2,
+        "result": "Passed",
+        "runtimeWarnings": [
+          {
+            "issueType": "Runtime Warning",
+            "message": "Invalid frame dimension (negative or non-finite)."
+          }
+        ],
+        "skippedTests": 0,
+        "startTime": 1790951621.388,
+        "statistics": [],
+        "testFailures": [],
+        "title": "Test - CheckLine UI",
+        "topInsights": [],
+        "totalTestCount": 2
+      }
+    },
+    {
+      "bundle": "/tmp/checkline-ui-cleanup-small-final.xcresult",
+      "log": "/tmp/checkline-ui-cleanup-small-final.log",
+      "passedCases": [
+        "Check_LineUITests.TaskEnvironmentUITests/testLargeTypeAgentKeepsVoiceAndManualSaveReachable"
+      ],
+      "summary": {
+        "devicesAndConfigurations": [
+          {
+            "device": {
+              "architecture": "arm64",
+              "deviceId": "8E4FF520-0EB8-4A70-AF2B-3A293B010942",
+              "deviceName": "CheckLine UI Small",
+              "modelName": "iPhone SE (3rd generation)",
+              "osBuildNumber": "23F77",
+              "osVersion": "26.5",
+              "platform": "iOS Simulator"
+            },
+            "expectedFailures": 0,
+            "failedTests": 0,
+            "passedTests": 1,
+            "skippedTests": 0,
+            "testPlanConfiguration": {
+              "configurationId": "1",
+              "configurationName": "Test Scheme Action"
+            }
+          }
+        ],
+        "environmentDescription": "CheckLine UI · Built with macOS 27.0.1",
+        "expectedFailures": 0,
+        "failedTests": 0,
+        "finishTime": 1790952023.323,
+        "passedTests": 1,
+        "result": "Passed",
+        "runtimeWarnings": [],
+        "skippedTests": 0,
+        "startTime": 1790952005.242,
+        "statistics": [],
+        "testFailures": [],
+        "title": "Test - CheckLine UI",
+        "topInsights": [],
+        "totalTestCount": 1
+      }
+    },
+    {
+      "bundle": "/tmp/checkline-ui-cleanup-voiceover.xcresult",
+      "log": "/tmp/checkline-ui-cleanup-voiceover.log",
+      "passedCases": [
+        "Check_LineUITests.TaskEnvironmentUITests/testVoiceOverCanReadAndSaveManualRecord"
+      ],
+      "summary": {
+        "devicesAndConfigurations": [
+          {
+            "device": {
+              "architecture": "arm64",
+              "deviceId": "3CB2FE0C-0CBD-4108-B7B9-6BCD71DA63EF",
+              "deviceName": "CheckLine Draft Restore QA",
+              "modelName": "iPhone 18 Pro",
+              "osBuildNumber": "24A434",
+              "osVersion": "27.0",
+              "platform": "iOS Simulator"
+            },
+            "expectedFailures": 0,
+            "failedTests": 0,
+            "passedTests": 1,
+            "skippedTests": 0,
+            "testPlanConfiguration": {
+              "configurationId": "1",
+              "configurationName": "Test Scheme Action"
+            }
+          }
+        ],
+        "environmentDescription": "CheckLine UI · Built with macOS 27.0.1",
+        "expectedFailures": 0,
+        "failedTests": 0,
+        "finishTime": 1790951832.631,
+        "passedTests": 1,
+        "result": "Passed",
+        "runtimeWarnings": [
+          {
+            "issueType": "Runtime Warning",
+            "message": "Invalid frame dimension (negative or non-finite)."
+          }
+        ],
+        "skippedTests": 0,
+        "startTime": 1790951789.281,
+        "statistics": [],
+        "testFailures": [],
+        "title": "Test - CheckLine UI",
+        "topInsights": [],
+        "totalTestCount": 1
+      }
+    },
+    {
+      "bundle": "/tmp/checkline-ui-cleanup-ipad.xcresult",
+      "log": "/tmp/checkline-ui-cleanup-ipad.log",
+      "passedCases": [
+        "Check_LineUITests.TaskEnvironmentUITests/testEnglishTaskKeepsItsFieldsAndSaveReachableWithKeyboard"
+      ],
+      "summary": {
+        "devicesAndConfigurations": [
+          {
+            "device": {
+              "architecture": "arm64",
+              "deviceId": "E80011AE-ADA0-42AB-9E2B-3C9DAB20C77A",
+              "deviceName": "iPad mini (A17 Pro)",
+              "modelName": "iPad mini (A17 Pro)",
+              "osBuildNumber": "23F77",
+              "osVersion": "26.5",
+              "platform": "iOS Simulator"
+            },
+            "expectedFailures": 0,
+            "failedTests": 0,
+            "passedTests": 1,
+            "skippedTests": 0,
+            "testPlanConfiguration": {
+              "configurationId": "1",
+              "configurationName": "Test Scheme Action"
+            }
+          }
+        ],
+        "environmentDescription": "CheckLine UI · Built with macOS 27.0.1",
+        "expectedFailures": 0,
+        "failedTests": 0,
+        "finishTime": 1790951906.143,
+        "passedTests": 1,
+        "result": "Passed",
+        "runtimeWarnings": [
+          {
+            "issueType": "Runtime Warning",
+            "message": "Invalid frame dimension (negative or non-finite)."
+          }
+        ],
+        "skippedTests": 0,
+        "startTime": 1790951879.067,
+        "statistics": [],
+        "testFailures": [],
+        "title": "Test - CheckLine UI",
+        "topInsights": [],
+        "totalTestCount": 1
+      }
+    },
+    {
+      "bundle": "/tmp/checkline-ui-cleanup-recorded-workspace.xcresult",
+      "log": "/tmp/checkline-ui-cleanup-recorded-workspace.log",
+      "passedCases": [
+        "Check_LineUITests.TaskWorkspaceUITests/testWorkspaceRecordsPendingDetailAndBackRestore"
+      ],
+      "summary": {
+        "devicesAndConfigurations": [
+          {
+            "device": {
+              "architecture": "arm64",
+              "deviceId": "95864BCD-8AB8-476C-AC79-4E047B2D9CC8",
+              "deviceName": "CheckLine Card Loop QA",
+              "modelName": "iPhone 17 Pro",
+              "osBuildNumber": "23F77",
+              "osVersion": "26.5",
+              "platform": "iOS Simulator"
+            },
+            "expectedFailures": 0,
+            "failedTests": 0,
+            "passedTests": 1,
+            "skippedTests": 0,
+            "testPlanConfiguration": {
+              "configurationId": "1",
+              "configurationName": "Test Scheme Action"
+            }
+          }
+        ],
+        "environmentDescription": "CheckLine UI · Built with macOS 27.0.1",
+        "expectedFailures": 0,
+        "failedTests": 0,
+        "finishTime": 1790952515.868,
+        "passedTests": 1,
+        "result": "Passed",
+        "runtimeWarnings": [],
+        "skippedTests": 0,
+        "startTime": 1790952494.519,
+        "statistics": [],
+        "testFailures": [],
+        "title": "Test - CheckLine UI",
+        "topInsights": [],
+        "totalTestCount": 1
+      }
+    }
+  ]
+}

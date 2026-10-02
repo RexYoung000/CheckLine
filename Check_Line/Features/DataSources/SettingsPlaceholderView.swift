@@ -53,7 +53,7 @@ struct SettingsPlaceholderView: View {
                             SourceReviewView()
                         }
                         Divider().padding(.leading, 54)
-                        settingsRow(title: String(localized: "wallet.settings.privacyTitle"), symbol: "lock.shield", summary: String(localized: "wallet.settings.device")) {
+                        settingsRow(title: String(localized: "wallet.settings.privacyTitle"), symbol: "lock.shield") {
                             settingsDetail(title: String(localized: "wallet.settings.privacyTitle"), body: String(localized: "v1.settings.privacy"))
                         }
                         Divider().padding(.leading, 54)
@@ -75,18 +75,31 @@ struct SettingsPlaceholderView: View {
         .presentationCornerRadius(PaperTheme.Radius.sheet)
     }
 
-    private func settingsRow<Destination: View>(title: String, symbol: String, summary: String, @ViewBuilder destination: () -> Destination) -> some View {
+    private func settingsRow<Destination: View>(title: String, symbol: String, summary: String? = nil, @ViewBuilder destination: () -> Destination) -> some View {
         NavigationLink(destination: destination) {
             HStack(spacing: 14) {
                 Image(systemName: symbol).font(.body).foregroundStyle(PaperTheme.accent).frame(width: 34)
-                VStack(alignment: .leading, spacing: 3) {
-                    Text(title).font(.body).foregroundStyle(PaperTheme.ink)
-                    Text(summary).font(.caption).foregroundStyle(PaperTheme.muted).lineLimit(1)
+                ViewThatFits(in: .horizontal) {
+                    HStack(spacing: 12) {
+                        Text(title).font(.body).foregroundStyle(PaperTheme.ink)
+                            .fixedSize(horizontal: true, vertical: true)
+                        Spacer(minLength: 0)
+                        if let summary {
+                            Text(summary).font(.subheadline).foregroundStyle(PaperTheme.muted)
+                                .fixedSize(horizontal: true, vertical: true)
+                        }
+                    }
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text(title).font(.body).foregroundStyle(PaperTheme.ink)
+                        if let summary {
+                            Text(summary).font(.subheadline).foregroundStyle(PaperTheme.muted)
+                        }
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
                 }
-                Spacer(minLength: 0)
                 Image(systemName: "chevron.right").font(.caption.weight(.semibold)).foregroundStyle(PaperTheme.muted)
-            }.padding(.vertical, 6)
-        }.buttonStyle(.plain).padding(.horizontal, 16).frame(minHeight: 64)
+            }.padding(.vertical, 12)
+        }.buttonStyle(.plain).padding(.horizontal, 16).frame(minHeight: 56)
     }
 
     private func settingsDetail(title: String, body: String) -> some View {

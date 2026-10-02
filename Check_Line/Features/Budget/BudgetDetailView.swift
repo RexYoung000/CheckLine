@@ -59,9 +59,12 @@ struct BudgetDetailContent: View {
     var periodID: UUID? = nil
     @Environment(\.dismiss) private var dismissDetail
     @Environment(\.shellChrome) private var chrome
+    @Environment(\.dynamicTypeSize) private var typeSize
     @State private var settlementSelection: SettlementSelection?
     @State private var editingCard: HomeBudgetCardModel?
     @State private var pendingOnly = false
+    @State private var managementHelpExpanded = false
+    @State private var coverageExpanded = false
     private var card: HomeBudgetCardModel? { HomeProjector.card(budgetID: budgetID, periodID: periodID, in: workspace.ledger) }
     var body: some View {
         ScrollView {
@@ -91,22 +94,21 @@ struct BudgetDetailContent: View {
 
     private func overview(_ card: HomeBudgetCardModel) -> some View {
         VStack(alignment: .leading, spacing: 22) {
-            VStack(alignment: .leading, spacing: 16) {
-                HStack {
-                    Label(String(localized: card.periodState == .settled ? "ui.period.settled" : card.periodState == .pendingSettlement ? "ui.period.due" : "ui.period.current"), systemImage: card.periodState == .settled ? "checkmark.seal" : "calendar")
-                    Spacer()
-                    Text(card.currencyCode)
-                }.font(.caption).foregroundStyle(PaperTheme.muted)
+            VStack(alignment: .leading, spacing: 8) {
+                if card.periodState == .settled || dueForSettlement(card) {
+                    Label(String(localized: card.periodState == .settled ? "ui.period.settled" : "ui.period.due"), systemImage: card.periodState == .settled ? "checkmark.seal" : "calendar")
+                        .font(.caption).foregroundStyle(PaperTheme.muted)
+                }
                 periodDates(card)
-                Text(String(localized: "v1.card.remaining")).font(.subheadline).foregroundStyle(PaperTheme.muted)
-                Text(MoneyFormat.string(BudgetPresentation.remaining(card), currencyCode: card.currencyCode))
-                    .font(PaperTheme.Typography.remaining).monospacedDigit().minimumScaleFactor(0.6)
-                ProgressView(value: BudgetPresentation.fill(card)).tint(PaperTheme.accent)
-                    .accessibilityLabel(String(localized: "ui.workspace.progress"))
-                amountRow("v1.card.used", BudgetPresentation.used(card), card)
-                amountRow("wallet.budget.limit", card.snapshot.budgetAmount, card)
-                if BudgetPresentation.pendingCount(card, in: workspace.ledger) > 0 { amountRow("v1.card.pending", card.snapshot.pendingAmount, card) }
-            }.padding(20).walletSurface()
+            }
+            LiquidBudgetCard(card: card, showsRemainingRatio: false)
+            let metricsLayout = typeSize.isAccessibilitySize
+                ? AnyLayout(VStackLayout(alignment: .leading, spacing: 16))
+                : AnyLayout(HStackLayout(alignment: .top, spacing: 20))
+            metricsLayout {
+                amountMetric("v1.card.used", BudgetPresentation.used(card), card)
+                amountMetric("wallet.budget.limit", card.snapshot.budgetAmount, card)
+            }.padding(18).walletSurface()
 
             if card.periodState == .settled,
                let settlement = workspace.ledger.settlements.values.first(where: { $0.periodID == card.periodID }) {
@@ -128,7 +130,15 @@ struct BudgetDetailContent: View {
 
             if BudgetPresentation.pendingCount(card, in: workspace.ledger) > 0 {
                 NavigationLink(value: BudgetWorkspaceRoute.budget(budgetID, card.periodID, .pending)) {
-                    Label(String(format: String(localized: "wallet.pending.count"), BudgetPresentation.pendingCount(card, in: workspace.ledger)), systemImage: "clock")
+                    let pendingLayout = typeSize.isAccessibilitySize
+                        ? AnyLayout(VStackLayout(alignment: .leading, spacing: 8))
+                        : AnyLayout(HStackLayout(alignment: .center, spacing: 12))
+                    pendingLayout {
+                        Label(String(format: String(localized: "wallet.pending.count"), BudgetPresentation.pendingCount(card, in: workspace.ledger)), systemImage: "clock")
+                        if !typeSize.isAccessibilitySize { Spacer(minLength: 8) }
+                        Text(MoneyFormat.string(card.snapshot.pendingAmount, currencyCode: card.currencyCode)).monospacedDigit()
+                        if !typeSize.isAccessibilitySize { Image(systemName: "chevron.right").font(.caption) }
+                    }.font(.subheadline).foregroundStyle(PaperTheme.accent)
                         .frame(maxWidth: .infinity, alignment: .leading).padding(18).walletSurface()
                 }.buttonStyle(.plain).accessibilityIdentifier("wallet.workspace.pending")
             }
@@ -138,35 +148,77 @@ struct BudgetDetailContent: View {
                 Label(String(localized: card.snapshot.certainOverrunAmount > 0 ? "v1.card.status.certain" : "v1.card.status.possible"), systemImage: "exclamationmark.circle").font(.subheadline)
             }
             if card.periodState != .settled {
-                Button { settlementSelection = SettlementSelection(id: card.periodID) } label: {
-                    Label(String(localized: settlementReady(card) ? "wallet.settlement.review" : "wallet.settlement.preview"), systemImage: "checkmark.seal").frame(maxWidth: .infinity)
-                }.buttonStyle(PaperSolidButtonStyle()).accessibilityIdentifier("wallet.budget.settlement")
-                Button { workspace.openComposer(.record, budgetID: card.id) } label: {
-                    Label(String(localized: "capture.title"), systemImage: "plus").frame(maxWidth: .infinity)
-                }.buttonStyle(PaperQuietButtonStyle())
+                let actionLayout = typeSize.isAccessibilitySize
+                    ? AnyLayout(VStackLayout(spacing: 10))
+                    : AnyLayout(HStackLayout(alignment: .center, spacing: 12))
+                actionLayout {
+                    if dueForSettlement(card) {
+                        settlementAction(card, primary: true)
+                        recordAction(card, primary: false)
+                    } else {
+                        recordAction(card, primary: true)
+                        settlementAction(card, primary: false)
+                    }
+                }
             }
-            VStack(spacing: 8) {
-                NavigationLink(value: BudgetWorkspaceRoute.budget(budgetID, card.periodID, .records)) { destinationRow("wallet.records.all", "receipt") }
+            LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 12), count: typeSize.isAccessibilitySize ? 1 : 2), spacing: 12) {
+                NavigationLink(value: BudgetWorkspaceRoute.budget(budgetID, card.periodID, .records)) { destinationBlock("wallet.records.all", "receipt") }
                     .accessibilityIdentifier("wallet.workspace.records")
-                NavigationLink(value: BudgetWorkspaceRoute.budget(budgetID, card.periodID, .calendar)) { destinationRow("wallet.calendar.title", "calendar") }
-                NavigationLink(value: BudgetWorkspaceRoute.budget(budgetID, card.periodID, .history)) { destinationRow("ui.workspace.history", "clock.arrow.circlepath") }
-                NavigationLink(value: BudgetWorkspaceRoute.budget(budgetID, card.periodID, .information)) { destinationRow("ui.workspace.manage", "slider.horizontal.3") }
+                NavigationLink(value: BudgetWorkspaceRoute.budget(budgetID, card.periodID, .calendar)) { destinationBlock("wallet.calendar.title", "calendar") }
+                NavigationLink(value: BudgetWorkspaceRoute.budget(budgetID, card.periodID, .history)) { destinationBlock("ui.workspace.history", "clock.arrow.circlepath") }
+                NavigationLink(value: BudgetWorkspaceRoute.budget(budgetID, card.periodID, .information)) { destinationBlock("ui.workspace.manage", "slider.horizontal.3") }
             }.buttonStyle(.plain)
-            Text(String(localized: "wallet.coverage.note")).font(.caption).foregroundStyle(PaperTheme.muted)
+            DisclosureGroup(String(localized: "ui.coverage.title"), isExpanded: $coverageExpanded) {
+                Text(String(localized: "wallet.coverage.note")).font(.subheadline).foregroundStyle(PaperTheme.muted).padding(.top, 8)
+            }.font(.subheadline).tint(PaperTheme.accent)
         }
     }
 
-    private func destinationRow(_ key: String, _ symbol: String) -> some View {
-        HStack { Label(String(localized: String.LocalizationValue(key)), systemImage: symbol); Spacer(); Image(systemName: "chevron.right").font(.caption) }
-            .font(.body).padding(18).walletSurface()
+    private func destinationBlock(_ key: String, _ symbol: String) -> some View {
+        VStack(alignment: .leading, spacing: 14) {
+            HStack {
+                Image(systemName: symbol).font(.title3).foregroundStyle(PaperTheme.accent)
+                Spacer(minLength: 8)
+                Image(systemName: "arrow.up.right").font(.caption).foregroundStyle(PaperTheme.muted)
+            }
+            Text(String(localized: String.LocalizationValue(key))).font(.subheadline.weight(.medium))
+                .fixedSize(horizontal: false, vertical: true)
+        }.padding(18).frame(maxWidth: .infinity, minHeight: 104, alignment: .leading).walletSurface()
+    }
+
+    private func amountMetric(_ key: LocalizedStringKey, _ amount: Decimal, _ card: HomeBudgetCardModel) -> some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text(key).font(.caption).foregroundStyle(PaperTheme.muted)
+            Text(MoneyFormat.string(amount, currencyCode: card.currencyCode)).font(.title3.weight(.medium)).monospacedDigit()
+                .fixedSize(horizontal: false, vertical: true)
+        }.frame(maxWidth: .infinity, alignment: .leading).accessibilityElement(children: .combine)
+    }
+
+    @ViewBuilder private func recordAction(_ card: HomeBudgetCardModel, primary: Bool) -> some View {
+        let button = Button { workspace.openComposer(.record, budgetID: card.id) } label: {
+            Label(String(localized: "capture.title"), systemImage: "plus").frame(maxWidth: .infinity)
+        }
+        if primary { button.buttonStyle(PaperSolidButtonStyle()) }
+        else { button.buttonStyle(PaperQuietButtonStyle()) }
+    }
+
+    @ViewBuilder private func settlementAction(_ card: HomeBudgetCardModel, primary: Bool) -> some View {
+        let button = Button { settlementSelection = SettlementSelection(id: card.periodID) } label: {
+            Label(String(localized: settlementReady(card) ? "wallet.settlement.review" : "wallet.settlement.preview"), systemImage: "checkmark.seal").frame(maxWidth: .infinity)
+        }.accessibilityIdentifier("wallet.budget.settlement")
+        if primary { button.buttonStyle(PaperSolidButtonStyle()) }
+        else { button.buttonStyle(PaperQuietButtonStyle()) }
     }
 
     private func periodDates(_ card: HomeBudgetCardModel) -> some View {
-        VStack(alignment: .leading, spacing: 4) {
-            Text(card.periodStart, format: .dateTime.year().month().day())
-            if let end = card.periodEnd { Text(end, format: .dateTime.year().month().day()) }
-            else { Text(String(localized: "wallet.noDeadline")) }
+        Group {
+            if let end = card.periodEnd {
+                Text(card.periodStart.formatted(.dateTime.year().month().day()) + " – " + end.formatted(.dateTime.year().month().day()))
+            } else {
+                Text(card.periodStart.formatted(.dateTime.year().month().day()) + " · " + String(localized: "wallet.noDeadline"))
+            }
         }.font(.caption).foregroundStyle(PaperTheme.muted)
+            .fixedSize(horizontal: false, vertical: true)
     }
 
     private var history: some View {
@@ -186,19 +238,26 @@ struct BudgetDetailContent: View {
     private func information(_ card: HomeBudgetCardModel) -> some View {
         Group {
             VStack(spacing: 16) {
-                PaperFormItem(title: String(localized: "budget.name"), value: card.name)
-                PaperFormItem(title: String(localized: "v1.budget.currency"), value: card.currencyCode)
-                PaperFormItem(title: String(localized: "v1.budget.cycle"), value: String(localized: card.cycleType == .repeating ? "wallet.cycle.monthly" : "v1.cycle.oneShot"))
+                VStack(alignment: .leading, spacing: 18) {
+                    BudgetDetailMetadataRow(title: String(localized: "budget.name"), value: card.name)
+                    BudgetDetailMetadataRow(title: String(localized: "v1.budget.currency"), value: card.currencyCode)
+                    BudgetDetailMetadataRow(title: String(localized: "v1.budget.cycle"), value: String(localized: card.cycleType == .repeating ? "wallet.cycle.monthly" : "v1.cycle.oneShot"))
+                }.padding(20).walletSurface()
                 if BudgetAmountEditEngine.isEditable(budgetID: budgetID, periodID: card.periodID, ledger: workspace.ledger) {
                     Button(String(localized: "wallet.budget.edit.title")) { editingCard = card }.buttonStyle(PaperSolidButtonStyle())
                 }
-                Text(String(localized: "ui.manage.boundary")).font(.caption).foregroundStyle(PaperTheme.muted)
+                DisclosureGroup(String(localized: "ui.workspace.manageHelp"), isExpanded: $managementHelpExpanded) {
+                    Text(String(localized: "ui.manage.boundary")).font(.subheadline).foregroundStyle(PaperTheme.muted).padding(.top, 8)
+                }.font(.subheadline).tint(PaperTheme.accent)
             }.frame(maxWidth: 760).frame(maxWidth: .infinity)
         }.background(PaperTheme.canvas).navigationTitle(String(localized: "ui.workspace.manage")).navigationBarTitleDisplayMode(.inline)
     }
 
     private func settlementReady(_ card: HomeBudgetCardModel) -> Bool {
-        card.cycleType == .oneShot || card.periodState == .pendingSettlement || workspace.ledger.periods[card.periodID].map { CycleEngine.isDue($0, now: Date(), calendar: .current) } == true
+        card.cycleType == .oneShot || dueForSettlement(card)
+    }
+    private func dueForSettlement(_ card: HomeBudgetCardModel) -> Bool {
+        card.periodState == .pendingSettlement || workspace.ledger.periods[card.periodID].map { CycleEngine.isDue($0, now: Date(), calendar: .current) } == true
     }
     private func amountRow(_ key: LocalizedStringKey, _ amount: Decimal, _ card: HomeBudgetCardModel) -> some View {
         HStack { Text(key); Spacer(); Text(MoneyFormat.string(amount, currencyCode: card.currencyCode)).monospacedDigit() }.font(.subheadline)
@@ -284,6 +343,25 @@ struct BudgetInlineDetails: View {
     }
 }
 
+private struct BudgetDetailMetadataRow: View {
+    let title: String
+    let value: String
+    @Environment(\.dynamicTypeSize) private var typeSize
+
+    var body: some View {
+        let layout = typeSize.isAccessibilitySize
+            ? AnyLayout(VStackLayout(alignment: .leading, spacing: 6))
+            : AnyLayout(HStackLayout(alignment: .firstTextBaseline, spacing: 16))
+        layout {
+            Text(title).font(.subheadline).foregroundStyle(PaperTheme.muted)
+            if !typeSize.isAccessibilitySize { Spacer(minLength: 8) }
+            Text(value).font(.subheadline).foregroundStyle(PaperTheme.ink)
+                .multilineTextAlignment(typeSize.isAccessibilitySize ? .leading : .trailing)
+                .fixedSize(horizontal: false, vertical: true)
+        }.frame(maxWidth: .infinity, alignment: .leading).accessibilityElement(children: .combine)
+    }
+}
+
 private struct ExpenseSelection: Identifiable { let id: UUID }
 private struct SettlementSelection: Identifiable { let id: UUID }
 
@@ -312,6 +390,7 @@ struct BudgetCalendarView: View {
     var ledger: Ledger
     @State private var month: Date
     @State private var selectedDay: Date
+    @State private var coverageExpanded = false
     private var calendar: Calendar { .current }
 
     init(card: HomeBudgetCardModel, ledger: Ledger) {
@@ -351,7 +430,8 @@ struct BudgetCalendarView: View {
                 ForEach(0..<leadingDays, id: \.self) { _ in Color.clear.frame(height: 40) }
                 ForEach(Array(days.enumerated()), id: \.element) { index, day in
                     let selected = calendar.isDate(day, inSameDayAs: selectedDay)
-                    let opacity = values[index] == 0 ? 0.06 : 0.16 + 0.45 * NSDecimalNumber(decimal: max(0, values[index]) / maximum).doubleValue
+                    let inPeriod = containsInSelectedPeriod(day)
+                    let opacity = !inPeriod ? 0.025 : values[index] == 0 ? 0.06 : 0.16 + 0.45 * NSDecimalNumber(decimal: max(0, values[index]) / maximum).doubleValue
                     Button { selectedDay = day } label: {
                         Text(calendar.component(.day, from: day), format: .number)
                             .font(.subheadline.monospacedDigit()).frame(maxWidth: .infinity, minHeight: 44)
@@ -359,7 +439,7 @@ struct BudgetCalendarView: View {
                             .background(selected ? PaperTheme.accent : PaperTheme.accent.opacity(opacity), in: RoundedRectangle(cornerRadius: 11))
                     }.buttonStyle(.plain)
                         .accessibilityLabel(day.formatted(date: .complete, time: .omitted))
-                        .accessibilityValue(MoneyFormat.string(values[index], currencyCode: card.currencyCode))
+                        .accessibilityValue(inPeriod ? MoneyFormat.string(values[index], currencyCode: card.currencyCode) : String(localized: "ui.calendar.outsidePeriod"))
                         .accessibilityAddTraits(selected ? .isSelected : [])
                 }
             }
@@ -368,16 +448,23 @@ struct BudgetCalendarView: View {
             HStack {
                 Text(selectedDay, format: .dateTime.month().day())
                 Spacer()
-                if !rows.isEmpty {
+                if containsInSelectedPeriod(selectedDay) && !rows.isEmpty {
                     Text(MoneyFormat.string(BudgetPresentation.dailyAmount(selectedDay, card: card, ledger: ledger), currencyCode: card.currencyCode)).monospacedDigit()
                 }
             }.font(.subheadline).padding(.top, 6)
-            if rows.isEmpty { Text(String(localized: "wallet.day.empty")).font(.subheadline).foregroundStyle(PaperTheme.muted).padding(.vertical, 16) }
-            ForEach(rows) { row in
-                NavigationLink(value: BudgetWorkspaceRoute.expense(row.id)) { WalletExpenseRow(expense: row) }
-                    .buttonStyle(.plain)
+            if !containsInSelectedPeriod(selectedDay) {
+                Label(String(localized: "ui.calendar.outsidePeriod"), systemImage: "exclamationmark.circle")
+                    .font(.subheadline).foregroundStyle(PaperTheme.muted).padding(.vertical, 16)
+            } else {
+                if rows.isEmpty { Text(String(localized: "wallet.day.empty")).font(.subheadline).foregroundStyle(PaperTheme.muted).padding(.vertical, 16) }
+                ForEach(rows) { row in
+                    NavigationLink(value: BudgetWorkspaceRoute.expense(row.id)) { WalletExpenseRow(expense: row) }
+                        .buttonStyle(.plain)
+                }
             }
-            Text(String(localized: "wallet.coverage.note")).font(.caption).foregroundStyle(PaperTheme.muted)
+            DisclosureGroup(String(localized: "ui.coverage.title"), isExpanded: $coverageExpanded) {
+                Text(String(localized: "wallet.coverage.note")).font(.subheadline).foregroundStyle(PaperTheme.muted).padding(.top, 8)
+            }.font(.subheadline).tint(PaperTheme.accent)
         }
         .onChange(of: selectedDay) { _, day in
             if !calendar.isDate(day, equalTo: month, toGranularity: .month) { month = day }
@@ -387,6 +474,11 @@ struct BudgetCalendarView: View {
         month = calendar.date(byAdding: .month, value: value, to: start) ?? month
         selectedDay = calendar.date(from: calendar.dateComponents([.year, .month], from: month)) ?? month
     }
+    private func containsInSelectedPeriod(_ day: Date) -> Bool {
+        let date = calendar.startOfDay(for: day)
+        guard date >= calendar.startOfDay(for: card.periodStart) else { return false }
+        return card.periodEnd.map { date <= calendar.startOfDay(for: $0) } ?? true
+    }
 }
 
 struct WalletExpenseDetail: View {
@@ -394,7 +486,9 @@ struct WalletExpenseDetail: View {
     var expenseID: UUID
     var standalone = true
     @State private var extrasExpanded = false
+    @State private var correctionHelpExpanded = false
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.dynamicTypeSize) private var typeSize
     @State private var pickerItems: [PhotosPickerItem] = []
     @State private var attachments: [ExpenseAttachment] = []
     @State private var attachmentToDelete: UUID?
@@ -432,21 +526,33 @@ struct WalletExpenseDetail: View {
                 VStack(alignment: .leading, spacing: 24) {
                     if let expense {
                         WalletSymbol(name: BudgetPresentation.symbol(for: expense))
-                        Text(MoneyFormat.string(expense.kind == .refund ? expense.originalAmount : -expense.originalAmount, currencyCode: expense.originalCurrencyCode)).font(.largeTitle.weight(.medium)).monospacedDigit()
+                        let amountLayout = typeSize.isAccessibilitySize
+                            ? AnyLayout(VStackLayout(alignment: .leading, spacing: 6))
+                            : AnyLayout(HStackLayout(alignment: .firstTextBaseline, spacing: 10))
+                        amountLayout {
+                            Text(MoneyFormat.string(expense.kind == .refund ? expense.originalAmount : -expense.originalAmount, currencyCode: expense.originalCurrencyCode)).font(.largeTitle.weight(.medium)).monospacedDigit()
+                                .fixedSize(horizontal: false, vertical: true)
+                            Text(expense.originalCurrencyCode).font(.subheadline).foregroundStyle(PaperTheme.muted)
+                        }.accessibilityElement(children: .combine)
                         Text(expense.merchant ?? String(localized: "v1.card.record.untitled")).font(.title3)
                         Text(expense.occurredAt, format: .dateTime.year().month().day().hour().minute()).font(.subheadline).foregroundStyle(PaperTheme.muted)
-                        Label(String(localized: expense.attributionState == .pending ? "v1.card.pending" : expense.attributionState == .unbudgeted ? "v1.unbudgeted" : "ui.record.confirmed"), systemImage: expense.attributionState == .pending ? "clock" : "checkmark.circle")
-                            .font(.subheadline).foregroundStyle(PaperTheme.accent)
-                        PaperFormItem(title: String(localized: "v1.budget.currency"), value: expense.originalCurrencyCode)
-                        PaperFormItem(title: String(localized: "v1.agent.attribution"), value: expense.budgetPeriodID.flatMap { workspace.ledger.periods[$0] }.flatMap { workspace.ledger.budgets[$0.budgetID]?.name } ?? String(localized: "v1.unbudgeted"))
                         let sources = Array(Set(workspace.ledger.evidences(forExpense: expense.id).map { $0.sourceType.rawValue })).sorted()
-                        PaperFormItem(title: String(localized: "ui.record.source"), value: sources.isEmpty ? String(localized: "ui.source.unknown") : sources.map { String(localized: String.LocalizationValue("ui.source." + $0)) }.joined(separator: " · "))
+                        VStack(alignment: .leading, spacing: 18) {
+                            Label(String(localized: expense.attributionState == .pending ? "v1.card.pending" : expense.attributionState == .unbudgeted ? "v1.unbudgeted" : "ui.record.confirmed"), systemImage: expense.attributionState == .pending ? "clock" : "checkmark.circle")
+                                .font(.subheadline).foregroundStyle(PaperTheme.accent)
+                            BudgetDetailMetadataRow(title: String(localized: "v1.agent.attribution"), value: attributionTitle(expense))
+                            BudgetDetailMetadataRow(title: String(localized: "ui.record.source"), value: sources.isEmpty ? String(localized: "ui.source.unknown") : sources.map { String(localized: String.LocalizationValue("ui.source." + $0)) }.joined(separator: " · "))
+                        }.padding(20).walletSurface()
                         if expense.attributionState == .pending { pendingActions(expense) }
                         DisclosureGroup(String(localized: "ui.record.extras"), isExpanded: $extrasExpanded) {
                             if let note = expense.note, !note.isEmpty { Text(note).font(.body).textSelection(.enabled) }
                             attachmentSection
                         }
-                        if expense.attributionState != .pending { Text(String(localized: "ui.record.correctionBoundary")).font(.caption).foregroundStyle(PaperTheme.muted) }
+                        if expense.attributionState != .pending {
+                            DisclosureGroup(String(localized: "ui.record.correctionHelp"), isExpanded: $correctionHelpExpanded) {
+                                Text(String(localized: "ui.record.correctionBoundary")).font(.subheadline).foregroundStyle(PaperTheme.muted).padding(.top, 8)
+                            }.font(.subheadline).tint(PaperTheme.accent)
+                        }
 
                     }
                 }.frame(maxWidth: 760, alignment: .leading).frame(maxWidth: .infinity).padding(24)
@@ -459,7 +565,8 @@ struct WalletExpenseDetail: View {
 
     private func pendingActions(_ expense: Expense) -> some View {
         VStack(alignment: .leading, spacing: 12) {
-            Label(String(localized: "v1.card.pending"), systemImage: "clock")
+            Text(String(format: String(localized: "ui.record.confirmAttributionPrompt"), attributionTitle(expense)))
+                .font(.subheadline).foregroundStyle(PaperTheme.muted)
             Button(String(localized: "wallet.expense.confirmAttribution")) {
                 do {
                     if let id = expense.budgetPeriodID, workspace.ledger.periods[id]?.state == .settled {
@@ -478,6 +585,10 @@ struct WalletExpenseDetail: View {
                 }
             }
         }.frame(maxWidth: .infinity, alignment: .leading)
+    }
+
+    private func attributionTitle(_ expense: Expense) -> String {
+        expense.budgetPeriodID.flatMap { workspace.ledger.periods[$0] }.flatMap { workspace.ledger.budgets[$0.budgetID]?.name } ?? String(localized: "v1.unbudgeted")
     }
 
     private func changeAttribution(to periodID: UUID?, expense: Expense) {

@@ -56,12 +56,12 @@ struct CreateComposerSheet: View {
     @State private var pickerItems: [PhotosPickerItem] = []
     @State private var extrasExpanded = false
     @State private var conversationExpanded = false
-    @State private var suggestionsExpanded = false
     @State private var discardRequested = false
     @State private var detent: PresentationDetent = .large
     @FocusState private var formFocused: Bool
     @Environment(\.dynamicTypeSize) private var typeSize
     @Environment(\.walletReduceMotion) private var reduceMotion
+    @Environment(\.shellChrome) private var chrome
     @State private var isImportingImages = false
     @State private var attachmentError: String?
     @State private var showingCurrencyPicker = false
@@ -82,22 +82,8 @@ struct CreateComposerSheet: View {
                 } else {
                     ScrollView {
                         VStack(alignment: .leading, spacing: 12) {
-                            if let card = workspace.cards.first(where: { $0.id == workspace.taskDraft.contextBudgetID }) {
-                                Label(card.name, systemImage: "wallet.pass").font(.subheadline).foregroundStyle(PaperTheme.muted)
-                            }
-                            if !workspace.showsStructuredConfirm {
-                                DisclosureGroup(String(localized: "ui.agent.suggestions"), isExpanded: $suggestionsExpanded) {
-                                    if let card = workspace.selectedCard {
-                                        Button(String(localized: "wallet.agent.askRemaining")) {
-                                            workspace.draftText = card.name + " " + String(localized: "wallet.agent.askRemaining")
-                                            Task { await workspace.submitText() }
-                                        }.buttonStyle(PaperQuietButtonStyle())
-                                    }
-                                    Text(String(localized: "ui.agent.local"))
-                                        .font(.caption).foregroundStyle(PaperTheme.muted)
-                                }
-                            }
-                            if !workspace.conversation.isEmpty {
+                            agentGreeting
+                            if conversationExpanded && !workspace.conversation.isEmpty {
                                 DisclosureGroup(String(localized: "ui.agent.conversation"), isExpanded: $conversationExpanded) {
                                     ForEach(workspace.conversation) { entry in
                                         VStack(alignment: .leading, spacing: 4) {
@@ -130,7 +116,7 @@ struct CreateComposerSheet: View {
                 ).accessibilityIdentifier("wallet.composer.save").padding(.top, 12).background(PaperTheme.canvas)
             } else {
                 AgentTaskPanel(workspace: workspace, embedded: true, part: .footer)
-                    .padding(.horizontal, 22).padding(.bottom, 8).background(PaperTheme.card)
+                    .padding(.horizontal, 22).padding(.bottom, 8).background(PaperTheme.canvas)
             }
         }
         .frame(maxWidth: .infinity)
@@ -218,23 +204,26 @@ struct CreateComposerSheet: View {
     private var header: some View {
         VStack(spacing: 8) {
             HStack {
-                Button { dismiss() } label: { Image(systemName: "xmark").frame(width: 44, height: 44) }
+                Button { dismiss() } label: { Image(systemName: "xmark").font(.system(size: 17)).frame(width: 44, height: 44) }
                     .accessibilityLabel(String(localized: "action.close"))
                     .accessibilityIdentifier(mode == .agent ? "wallet.agent.close" : "wallet.composer.close")
                 Spacer()
-                if mode == .agent { CloudMascotView(state: workspace.mascotState).frame(width: 28, height: 28).accessibilityHidden(true) }
-                Text(mode == .agent ? String(localized: "wallet.mascot.name") : String(localized: workspace.composerIntent == .budget ? "v1.budget.create" : "capture.title"))
-                    .font(.headline)
-                Spacer()
+                if mode == .form {
+                    Text(String(localized: workspace.composerIntent == .budget ? "v1.budget.create" : "capture.title")).font(.headline)
+                    Spacer()
+                }
+                if mode == .agent { modeToggle }
                 Menu {
+                    if mode == .agent && !workspace.conversation.isEmpty {
+                        Button(String(localized: "ui.agent.conversation"), systemImage: "bubble.left.and.bubble.right") {
+                            conversationExpanded.toggle(); detent = .large
+                        }
+                    }
                     Button(String(localized: "ui.draft.discard"), role: .destructive) { discardRequested = true }
-                } label: { Image(systemName: "ellipsis").frame(width: 44, height: 44) }
+                } label: { Image(systemName: "ellipsis").font(.system(size: 17)).frame(width: 44, height: 44) }
                 .accessibilityLabel(String(localized: "ui.task.options"))
             }
-            Button { switchMode() } label: {
-                Label(String(localized: mode == .form ? "ui.agent.helpFill" : "ui.task.manual"), systemImage: mode == .form ? "sparkles" : "square.and.pencil")
-                    .font(.subheadline.weight(.medium)).frame(minHeight: 44)
-            }.accessibilityIdentifier("wallet.task.switchMode")
+            if mode == .form { modeToggle }
             if workspace.draftStorageFailed {
                 Text(String(localized: "ui.draft.failed")).font(.caption).foregroundStyle(.red)
                 if !workspace.draftLoadFailed {
@@ -242,6 +231,46 @@ struct CreateComposerSheet: View {
                 }
             }
         }.padding(.horizontal, 16).padding(.top, 12)
+    }
+
+    private var agentGreeting: some View {
+        let layout = typeSize.isAccessibilitySize ? AnyLayout(VStackLayout(alignment: .leading, spacing: 12)) : AnyLayout(HStackLayout(alignment: .center, spacing: 12))
+        return layout {
+            CloudMascotView(state: workspace.mascotState).frame(width: 82, height: 80).accessibilityHidden(true)
+            Text(agentPrompt).font(.subheadline).foregroundStyle(PaperTheme.ink)
+                .fixedSize(horizontal: false, vertical: true)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(14).background(PaperTheme.card, in: RoundedRectangle(cornerRadius: 22))
+                .accessibilityIdentifier("wallet.agent.prompt")
+        }
+    }
+
+    private var agentPrompt: String {
+        if workspace.isWorking { return String(localized: "ui.agent.working") }
+        if let banner = workspace.agentBanner { return banner.localizedText }
+        if workspace.composerIntent == .budget || workspace.isEmpty { return String(localized: "ui.agent.createPrompt") }
+        if let card = workspace.cards.first(where: { $0.id == workspace.taskDraft.contextBudgetID }) {
+            let remaining = BudgetPresentation.remaining(card)
+            if remaining < 0 { return String(localized: card.snapshot.certainOverrunAmount > 0 ? "v1.card.status.certain" : "v1.card.status.possible") }
+            let value = MoneyFormat.string(remaining, currencyCode: card.currencyCode)
+            if workspace.selectedCard?.id != card.id || chrome?.selectedTab == .wishes || chrome?.selectedTab == .insights {
+                return String(format: String(localized: "ui.agent.cardRemaining"), card.name, value)
+            }
+            return String(format: String(localized: "ui.agent.remainingPrompt"), value)
+        }
+        return String(localized: "ui.agent.recordPrompt")
+    }
+
+    private var modeToggle: some View {
+        Button { switchMode() } label: {
+            if typeSize.isAccessibilitySize {
+                Image(systemName: mode == .form ? "sparkles" : "square.and.pencil").font(.system(size: 20)).frame(width: 44, height: 44)
+            } else {
+                Label(String(localized: mode == .form ? "ui.agent.helpFill" : "ui.task.manual"), systemImage: mode == .form ? "sparkles" : "square.and.pencil")
+                    .font(.subheadline.weight(.medium)).frame(minHeight: 44)
+            }
+        }.accessibilityIdentifier("wallet.task.switchMode")
+            .accessibilityLabel(String(localized: mode == .form ? "ui.agent.helpFill" : "ui.task.manual"))
     }
 
     private var formBody: some View {
@@ -252,70 +281,40 @@ struct CreateComposerSheet: View {
                         placeholder: String(localized: "v1.composer.name.placeholder"),
                         text: field(\.name)
                     ).focused($formFocused)
-                    PaperCapsuleSegment(
-                        items: [
-                            (true, String(localized: "wallet.cycle.monthly")),
-                            (false, String(localized: "v1.cycle.oneShot")),
-                        ],
-                        selection: field(\.repeating)
-                    )
-                    .padding(.horizontal, 20)
-
-                    VStack(spacing: 12) {
+                    VStack(alignment: .leading, spacing: 16) {
                         HStack(spacing: 12) {
-                            Text(String(localized: "v1.budget.amount"))
-                                .font(.body)
-                                .foregroundStyle(PaperTheme.muted)
+                            Text(String(localized: "v1.budget.amount")).foregroundStyle(PaperTheme.muted)
                             TextField("0", text: field(\.amount))
                                 .focused($formFocused)
                                 .accessibilityLabel(String(localized: "v1.budget.amount"))
-                                .keyboardType(AmountKeyboard.type)
-                                .multilineTextAlignment(.trailing)
-                                .font(.body)
-                                .foregroundStyle(PaperTheme.ink)
+                                .keyboardType(AmountKeyboard.type).multilineTextAlignment(.trailing)
+                                .font(.title2.weight(.medium))
+                            currencyButton
                         }
-                        .padding(.horizontal, 16)
-                        .frame(minHeight: 52)
-                        .walletSurface()
-                        .accessibilityLabel(String(localized: "v1.budget.amount"))
-
-                        PaperFormItem(
-                            title: String(localized: "v1.budget.currency"),
-                            value: currency,
-                            showArrow: true
-                        ) {
-                            showingCurrencyPicker = true
-                        }
-                    }
+                    }.padding(18).walletSurface()
+                    VStack(alignment: .leading, spacing: 14) {
+                        PaperCapsuleSegment(
+                            items: [(true, String(localized: "wallet.cycle.monthly")), (false, String(localized: "v1.cycle.oneShot"))],
+                            selection: field(\.repeating)
+                        )
                     let start = Calendar.current.dateInterval(of: .month, for: Date())?.start ?? Date()
-                    Text(String(format: String(localized: repeating ? "ui.create.monthDates" : "ui.create.onceDates"), start.formatted(date: .abbreviated, time: .omitted)))
-                        .font(.caption).foregroundStyle(PaperTheme.muted).frame(maxWidth: .infinity, alignment: .leading)
+                        Text(String(format: String(localized: repeating ? "ui.create.monthDates" : "ui.create.onceDates"), start.formatted(date: .abbreviated, time: .omitted)))
+                            .font(.caption).foregroundStyle(PaperTheme.muted).fixedSize(horizontal: false, vertical: true)
+                    }.padding(18).walletSurface()
                 } else {
-                    VStack(spacing: 8) {
-                        Button(currency) { showingCurrencyPicker = true }.font(.subheadline).frame(minHeight: 44).accessibilityLabel(String(localized: "v1.budget.currency"))
+                    HStack(alignment: .firstTextBaseline, spacing: 8) {
+                        currencyButton
                         PaperHeroField(
                             placeholder: String(localized: "v1.composer.amount.placeholder"),
-                            text: field(\.amount),
-                            keyboard: AmountKeyboard.type
+                            text: field(\.amount), keyboard: AmountKeyboard.type
                         ).focused($formFocused)
-                    }
-
-                    VStack(spacing: 12) {
-                        merchantRow
-                        PaperFormItem(
-                            title: String(localized: "v1.agent.attribution"),
-                            value: currentAttributionTitle,
-                            showArrow: true
-                        ) {
-                            showingCardPicker = true
-                        }
-                        PaperFormItem(
-                            title: String(localized: "v1.composer.date"),
-                            value: occurredAt.formatted(date: .long, time: .omitted),
-                            showArrow: true
-                        ) {
-                            showingDatePicker = true
-                        }
+                    }.padding(.vertical, 16)
+                    VStack(spacing: 16) {
+                        VStack(spacing: 0) {
+                            merchantRow
+                            selectionRow("v1.agent.attribution", value: currentAttributionTitle) { showingCardPicker = true }
+                            selectionRow("v1.composer.date", value: occurredAt.formatted(date: .abbreviated, time: .omitted)) { showingDatePicker = true }
+                        }.padding(4).walletSurface()
                         DisclosureGroup(isExpanded: $extrasExpanded) {
                             noteCard
                             PaperField(title: String(localized: "ui.record.rawText"), text: field(\.text), axis: .vertical).focused($formFocused)
@@ -347,6 +346,28 @@ struct CreateComposerSheet: View {
         .disabled(workspace.taskDraft.committedEntityID != nil)
     }
 
+    private var currencyButton: some View {
+        Button { showingCurrencyPicker = true } label: {
+            HStack(spacing: 4) { Text(currency); Image(systemName: "chevron.down").font(.caption2) }
+                .font(.subheadline.weight(.medium)).frame(minHeight: 44)
+        }.accessibilityLabel(String(localized: "v1.budget.currency"))
+            .accessibilityValue(currency)
+    }
+
+    private func selectionRow(_ key: String.LocalizationValue, value: String, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            let layout = typeSize.isAccessibilitySize ? AnyLayout(VStackLayout(alignment: .leading, spacing: 8)) : AnyLayout(HStackLayout(spacing: 12))
+            layout {
+                Text(String(localized: key)).foregroundStyle(PaperTheme.muted)
+                if !typeSize.isAccessibilitySize { Spacer(minLength: 8) }
+                HStack {
+                    Text(value).multilineTextAlignment(typeSize.isAccessibilitySize ? .leading : .trailing)
+                    Image(systemName: "chevron.down").font(.caption2).foregroundStyle(PaperTheme.muted)
+                }
+            }.font(.body).padding(16).frame(maxWidth: .infinity, alignment: .leading).frame(minHeight: 52).contentShape(Rectangle())
+        }.buttonStyle(.plain)
+    }
+
     private var merchantRow: some View {
         HStack(spacing: 12) {
             Text(String(localized: "v1.composer.merchant"))
@@ -361,7 +382,6 @@ struct CreateComposerSheet: View {
         }
         .padding(.horizontal, 16)
         .frame(minHeight: 52)
-        .walletSurface()
     }
 
     private var noteCard: some View {

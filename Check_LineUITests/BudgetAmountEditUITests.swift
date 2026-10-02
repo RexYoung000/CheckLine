@@ -57,7 +57,7 @@ final class BudgetAmountEditUITests: XCTestCase {
         let budgetMenu = app.buttons.matching(identifier: "wallet.budget.card.more").firstMatch
         XCTAssertTrue(budgetMenu.waitForExistence(timeout: 5))
         budgetMenu.tap()
-        app.buttons["编辑预算"].tap()
+        app.buttons["调整月度额度"].tap()
         XCTAssertTrue(app.textFields["wallet.budget.edit.amount"].waitForExistence(timeout: 5))
         app.buttons["wallet.budget.edit.cancel"].tap()
         app.buttons["wallet.tab.home"].tap()
@@ -82,7 +82,7 @@ final class BudgetAmountEditUITests: XCTestCase {
         let more = app.buttons["wallet.home.card.more"]
         XCTAssertTrue(more.waitForExistence(timeout: 10))
         more.tap()
-        let edit = app.buttons["编辑预算"]
+        let edit = app.buttons["调整月度额度"]
         XCTAssertTrue(edit.waitForExistence(timeout: 5))
         edit.tap()
         XCTAssertTrue(app.textFields["wallet.budget.edit.amount"].waitForExistence(timeout: 5))

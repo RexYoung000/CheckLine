@@ -187,7 +187,7 @@ final class WalletNavigationUITests: XCTestCase {
         XCTAssertTrue(settle.waitForExistence(timeout: 5), app.debugDescription)
         settle.tap()
         XCTAssertTrue(app.staticTexts["结算后会怎样"].waitForExistence(timeout: 5), app.debugDescription)
-        XCTAssertTrue(app.staticTexts["目前只覆盖主动录入的记录，其他消费可能尚未纳入。"].exists)
+        XCTAssertTrue(app.staticTexts["未连接的来源与漏记消费不会自动出现在此处；空白日期不代表没有消费。"].exists)
         attach(app, name: "settlement-review")
 
         let confirm = app.buttons["wallet.settlement.confirm"]

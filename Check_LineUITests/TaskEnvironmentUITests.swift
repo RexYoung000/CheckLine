@@ -116,6 +116,29 @@ final class TaskEnvironmentUITests: XCTestCase {
         attach(app, "english-task-saved")
     }
 
+    func testLargeTypeAgentKeepsVoiceAndManualSaveReachable() {
+        let app = XCUIApplication()
+        app.launchArguments = ["-design-preview", "-design-screen", "agent", "-AppleLanguages", "(en)", "-AppleLocale", "en_US", "-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXXXL"]
+        app.launch()
+        let input = app.descendants(matching: .any).matching(identifier: "wallet.agent.input").firstMatch
+        XCTAssertTrue(input.waitForExistence(timeout: 8))
+        input.tap(); input.typeText("lunch 35 CNY")
+        XCTAssertTrue(app.buttons["wallet.agent.send"].isHittable)
+        XCTAssertTrue(app.buttons["wallet.agent.voice"].isHittable)
+        attach(app, "large-type-agent-keyboard")
+        app.buttons["wallet.agent.voice"].tap()
+        XCTAssertTrue(app.alerts.firstMatch.waitForExistence(timeout: 5))
+        app.alerts.buttons["Close"].tap()
+        app.buttons["wallet.task.switchMode"].tap()
+        let amount = app.textFields["Amount"]
+        XCTAssertTrue(amount.waitForExistence(timeout: 5))
+        XCTAssertEqual(amount.value as? String, "35")
+        XCTAssertTrue(app.buttons["wallet.composer.save"].isHittable)
+        app.buttons["wallet.composer.save"].tap()
+        XCTAssertTrue(amount.waitForNonExistence(timeout: 5))
+        attach(app, "large-type-agent-manual-saved")
+    }
+
     private func launch(_ screen: String) -> XCUIApplication {
         let app = XCUIApplication()
         app.launchArguments = ["-design-preview", "-design-screen", screen, "-AppleLanguages", "(zh-Hans)", "-AppleLocale", "zh_CN"]

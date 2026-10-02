@@ -10,8 +10,13 @@ struct CycleReviewView: View {
                     Menu {
                         ForEach(workspace.cards) { item in Button(item.name) { workspace.selectedBudgetID = item.id } }
                     } label: {
-                        HStack { Text(card.name).font(.headline); Image(systemName: "chevron.down").font(.caption); Spacer() }
-                            .foregroundStyle(PaperTheme.ink).frame(minHeight: 44)
+                        VStack(alignment: .leading, spacing: 5) {
+                            HStack { Text(card.name).font(.headline); Image(systemName: "chevron.down").font(.caption); Spacer() }
+                            Text(periodSummary(card))
+                                .font(.subheadline).foregroundStyle(PaperTheme.muted)
+                                .fixedSize(horizontal: false, vertical: true)
+                        }
+                        .foregroundStyle(PaperTheme.ink).frame(minHeight: 44)
                     }
                     if BudgetPresentation.expenses(card, in: workspace.ledger).isEmpty {
                         PaperCard {
@@ -21,8 +26,6 @@ struct CycleReviewView: View {
                                     .foregroundStyle(PaperTheme.accent)
                                 Text(String(localized: "wallet.analysis.noRecords"))
                                     .font(.headline)
-                                Text(String(localized: "wallet.empty.analysis"))
-                                    .font(.subheadline).foregroundStyle(PaperTheme.muted)
                                 Button(String(localized: "capture.title"), systemImage: "plus") {
                                     workspace.openComposer(.record)
                                 }.buttonStyle(PaperSolidButtonStyle())
@@ -48,8 +51,6 @@ struct CycleReviewView: View {
                                 .foregroundStyle(PaperTheme.muted)
                                 .frame(maxWidth: .infinity, minHeight: 130)
                             Text(String(localized: "v1.insights.empty")).font(.headline)
-                            Text(String(localized: "wallet.analysis.needCard"))
-                                .font(.subheadline).foregroundStyle(PaperTheme.muted)
                             Button(String(localized: "v1.budget.create"), systemImage: "plus") {
                                 workspace.openComposer(.budget)
                             }.buttonStyle(PaperSolidButtonStyle())
@@ -61,5 +62,13 @@ struct CycleReviewView: View {
         .sheet(isPresented: $showsDetails) {
             if let card = workspace.selectedCard { BudgetDetailSheet(workspace: workspace, budgetID: card.id, initialSection: .overview) }
         }
+    }
+
+    private func periodSummary(_ card: HomeBudgetCardModel) -> String {
+        let start = card.periodStart.formatted(date: .abbreviated, time: .omitted)
+        if let end = card.periodEnd {
+            return String(format: String(localized: "ui.analysis.periodRange"), start, end.formatted(date: .abbreviated, time: .omitted))
+        }
+        return String(format: String(localized: "ui.analysis.periodFrom"), start)
     }
 }

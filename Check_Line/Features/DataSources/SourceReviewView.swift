@@ -4,10 +4,34 @@ struct SourceReviewView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 18) {
-                Text(String(localized: "ui.sources.boundary")).font(.body)
-                ForEach(["manual", "agentText", "applePay", "sms", "email", "statement"], id: \.self) { source in
-                    PaperFormItem(title: String(localized: String.LocalizationValue("ui.source." + source)),
-                                  value: String(localized: source == "manual" || source == "agentText" ? "ui.source.available" : "ui.source.unavailable"))
+                PaperCard {
+                    VStack(alignment: .leading, spacing: 16) {
+                        Text(String(localized: "ui.source.available"))
+                            .font(.subheadline.weight(.semibold)).foregroundStyle(PaperTheme.muted)
+                        ForEach(["manual", "agentText"], id: \.self) { source in
+                            Label(String(localized: String.LocalizationValue("ui.source." + source)), systemImage: "checkmark.circle")
+                                .font(.body).foregroundStyle(PaperTheme.ink)
+                                .accessibilityValue(String(localized: "ui.source.available"))
+                        }
+                    }
+                }
+                PaperCard {
+                    VStack(alignment: .leading, spacing: 16) {
+                        Text(String(localized: "ui.source.unavailable"))
+                            .font(.subheadline.weight(.semibold)).foregroundStyle(PaperTheme.muted)
+                        ForEach(["applePay", "sms", "email", "statement"], id: \.self) { source in
+                            Text(String(localized: String.LocalizationValue("ui.source." + source)))
+                                .font(.body).foregroundStyle(PaperTheme.ink)
+                                .fixedSize(horizontal: false, vertical: true)
+                                .accessibilityValue(String(localized: "ui.source.notConnected"))
+                        }
+                    }
+                }
+                DisclosureGroup(String(localized: "ui.sources.details")) {
+                    Text(String(localized: "ui.sources.boundary"))
+                        .font(.subheadline).foregroundStyle(PaperTheme.muted)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .padding(.top, 8)
                 }
                 #if DEBUG
                 if DesignPreviewData.isEnabled {

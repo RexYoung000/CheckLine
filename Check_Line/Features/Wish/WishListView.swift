@@ -5,6 +5,7 @@ struct WishListView: View {
     @State private var completed = false
     @State private var adding = false
     @State private var walletDetails = false
+    @Environment(\.dynamicTypeSize) private var typeSize
     private var wishes: [Wish] {
         workspace.ledger.wishes.values.filter { completed ? $0.state == .completed : $0.state == .active }
             .sorted { $0.createdAt == $1.createdAt ? $0.name < $1.name : $0.createdAt > $1.createdAt }
@@ -26,7 +27,7 @@ struct WishListView: View {
                                 Label(String(localized: "v1.wish.recovery") + " " + MoneyFormat.string(workspace.wallet.recoveryGap, currencyCode: workspace.ledger.walletSettings.walletCurrencyCode), systemImage: "arrow.counterclockwise")
                                     .font(.subheadline).foregroundStyle(PaperTheme.accent)
                             }
-                            Text(String(localized: "v1.wish.notRealMoney")).font(.caption).foregroundStyle(PaperTheme.muted)
+                            Text(String(localized: "ui.wish.virtualBalanceNote")).font(.caption).foregroundStyle(PaperTheme.muted)
                         }
                     }
                 }.buttonStyle(.plain)
@@ -38,28 +39,30 @@ struct WishListView: View {
                     VStack(spacing: 20) {
                         WalletSymbol(name: completed ? "checkmark" : "star", size: 72)
                         Text(completed ? String(localized: "wallet.wishes.completedEmpty") : String(localized: "wallet.wishes.empty")).font(.headline)
+                        Button(String(localized: "wallet.wishes.add"), systemImage: "plus") { adding = true }
+                            .buttonStyle(PaperSolidButtonStyle())
                     }.frame(maxWidth: .infinity).padding(.vertical, 28)
                 } else {
-                    LazyVGrid(columns: [GridItem(.adaptive(minimum: 280), spacing: 16)], spacing: 16) {
+                    LazyVStack(spacing: 4) {
                         ForEach(wishes) { wish in
                             NavigationLink { WishDetailView(workspace: workspace, wishID: wish.id) } label: {
-                                HStack(spacing: 16) {
-                                    WalletSymbol(name: wish.symbolName ?? "star")
-                                    VStack(alignment: .leading, spacing: 8) {
-                                        Text(wish.name).font(.headline).lineLimit(2)
+                                HStack(spacing: 14) {
+                                    WalletSymbol(name: wish.symbolName ?? "star", size: 48)
+                                    VStack(alignment: .leading, spacing: 6) {
+                                        Text(wish.name).font(.headline).lineLimit(typeSize.isAccessibilitySize ? nil : 2)
                                         if let amount = wish.targetAmount {
                                             Text(MoneyFormat.string(amount, currencyCode: wish.currencyCode ?? workspace.ledger.walletSettings.walletCurrencyCode)).font(.subheadline.monospacedDigit()).foregroundStyle(PaperTheme.muted)
+                                                .fixedSize(horizontal: false, vertical: true)
                                         }
                                     }
                                     Spacer(minLength: 0)
                                     Image(systemName: completed ? "checkmark.circle" : "arrow.up.right").font(.caption).foregroundStyle(PaperTheme.muted)
-                                }.padding(18).frame(maxWidth: .infinity, minHeight: 110, alignment: .leading).walletSurface()
+                                }.padding(14).frame(maxWidth: .infinity, minHeight: 82, alignment: .leading)
+                                    .contentShape(Rectangle())
                             }.buttonStyle(.plain)
                         }
-                    }
+                    }.padding(4).walletSurface()
                 }
-                Button(String(localized: "wallet.wishes.add"), systemImage: "plus") { adding = true }
-                    .buttonStyle(PaperSolidButtonStyle())
             }
         }
         .sheet(isPresented: $adding) { CreateWishSheet(workspace: workspace) }
@@ -117,6 +120,7 @@ struct WishDetailView: View {
     @Bindable var workspace: CheckLineWorkspace
     var wishID: UUID
     @State private var redeem = false
+    @State private var explanationExpanded = false
     private var wish: Wish? { workspace.ledger.wishes[wishID] }
     var body: some View {
         ScrollView {
@@ -140,10 +144,19 @@ struct WishDetailView: View {
                             VStack(alignment: .leading, spacing: 12) {
                                 Text(String(localized: "v1.wish.balance")).font(.subheadline).foregroundStyle(PaperTheme.muted)
                                 Text(MoneyFormat.string(workspace.wallet.balance, currencyCode: workspace.ledger.walletSettings.walletCurrencyCode)).font(.title2).monospacedDigit()
-                                Text(String(localized: "wallet.wishes.noReservation")).font(.caption).foregroundStyle(PaperTheme.muted)
+                                if workspace.wallet.recoveryGap > 0 {
+                                    Label(String(localized: "v1.wish.recovery") + " " + MoneyFormat.string(workspace.wallet.recoveryGap, currencyCode: workspace.ledger.walletSettings.walletCurrencyCode), systemImage: "arrow.counterclockwise")
+                                        .font(.subheadline).foregroundStyle(PaperTheme.accent)
+                                }
+                                Text(String(localized: "ui.wish.virtualBalanceNote")).font(.caption).foregroundStyle(PaperTheme.muted)
                             }
                         }
                         Button(String(localized: "wallet.wishes.purchased")) { redeem = true }.buttonStyle(PaperSolidButtonStyle())
+                        DisclosureGroup(String(localized: "ui.wish.purchaseHelp"), isExpanded: $explanationExpanded) {
+                            Text(String(localized: "wallet.wishes.noReservation"))
+                                .font(.subheadline).foregroundStyle(PaperTheme.muted)
+                                .padding(.top, 8)
+                        }.font(.subheadline).tint(PaperTheme.accent)
                     }
                 }.padding(24).frame(maxWidth: 650).frame(maxWidth: .infinity)
             }

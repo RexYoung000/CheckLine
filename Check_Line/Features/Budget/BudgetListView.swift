@@ -20,10 +20,6 @@ struct BudgetListView: View {
                 if workspace.isEmpty {
                     WalletEmptyBudgetCard { workspace.openComposer(.budget) }
                         .frame(maxWidth: 560)
-                    Text(String(localized: "wallet.empty.budget"))
-                        .font(.subheadline).foregroundStyle(PaperTheme.muted)
-                    Button(String(localized: "v1.budget.create")) { workspace.openComposer(.budget) }
-                        .buttonStyle(PaperSolidButtonStyle())
                 } else {
                     HStack {
                         Text(String(localized: "wallet.budget.collection")).font(.subheadline)
