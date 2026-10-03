@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>CheckLine · 小朵 App Icon 姿态探索</title>
+  <style>
+    :root {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: #322d3a;
+      background: #f6f5f3;
+      font-synthesis: none;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; }
+    main { width: min(1180px, 100%); margin: 0 auto; padding: 48px 28px 32px; }
+    header { margin-bottom: 40px; }
+    .eyebrow { margin: 0 0 10px; color: #766d80; font-size: 13px; letter-spacing: .04em; }
+    h1 { margin: 0; font-size: clamp(28px, 3vw, 38px); font-weight: 650; letter-spacing: -.025em; }
+    .intro { margin: 12px 0 0; font-size: 15px; color: #766d80; line-height: 1.6; }
+    .directions { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px; }
+    article { min-width: 0; }
+    h2 { margin: 0 0 18px; font-size: 19px; font-weight: 600; letter-spacing: -.02em; line-height: 1.4; }
+    figure { margin: 0; }
+    .icon { display: block; object-fit: contain; border-radius: 22.4%; }
+    .hero { width: 100%; height: auto; aspect-ratio: 1; }
+    figcaption { margin: 18px 0 24px; color: #766d80; font-size: 14px; line-height: 1.65; min-height: 47px; }
+    .desktop { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; padding: 18px; border-radius: 18px; }
+    .desktop + .desktop { margin-top: 10px; }
+    .desktop.light { background: #eeebf2; color: #766d80; }
+    .desktop.dark { background: #2d2834; color: #d3cbdc; }
+    .desktop-label { margin: 0; font-size: 12px; }
+    .samples { display: flex; align-items: center; gap: 20px; }
+    .sample { display: flex; flex-direction: column; align-items: center; gap: 7px; }
+    .sample.large img { width: 60px; height: 60px; }
+    .sample.small img { width: 32px; height: 32px; }
+    .sample span { font-size: 11px; white-space: nowrap; }
+    .reference { display: flex; flex-wrap: wrap; align-items: center; gap: 18px; margin-top: 40px; padding-top: 24px; border-top: 1px solid #e6e1e9; }
+    .reference img { width: 96px; height: 96px; flex: 0 0 96px; }
+    .reference-copy { flex: 1 1 210px; min-width: 0; }
+    .reference-title { margin: 0 0 5px; font-size: 13px; font-weight: 600; }
+    .reference-description { margin: 0; color: #766d80; font-size: 13px; line-height: 1.65; }
+    footer { margin-top: 24px; color: #827a8b; font-size: 12px; line-height: 1.7; }
+    @media (max-width: 820px) {
+      main { max-width: 520px; padding: 32px 24px; }
+      header { margin-bottom: 32px; }
+      .directions { grid-template-columns: minmax(0, 1fr); gap: 44px; }
+      figcaption { min-height: 0; }
+    }
+    @media (max-width: 320px) {
+      main { padding-inline: 16px; }
+      .desktop { padding: 14px; }
+      .samples { gap: 14px; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <p class="eyebrow">CHECKLINE · APP ICON</p>
+      <h1>让小朵有一点自己的性格。</h1>
+      <p class="intro">同一只液位小朵，比较三个姿态与小尺寸表现。</p>
+    </header>
+    <section class="directions" aria-label="小朵 App Icon 的三个姿态候选">
+      <article>
+        <h2>① 侧身回望 · 专注</h2>
+        <figure>
+          <img class="icon hero" src="01-turn.png" alt="紫色液位小朵身体轻转侧面，双眼随身体透视朝向画面中心" width="1254" height="1254">
+          <figcaption>身体轻转侧面，云瓣与双眼产生前后关系；液面留在身体内部。</figcaption>
+        </figure>
+        <div class="desktop light">
+          <p class="desktop-label">浅色桌面</p>
+          <div class="samples" aria-label="侧身回望的浅色桌面小尺寸预览">
+            <div class="sample large"><img class="icon" src="01-turn.png" alt="" width="60" height="60"><span>60 px</span></div>
+            <div class="sample small"><img class="icon" src="01-turn.png" alt="" width="32" height="32"><span>32 px</span></div>
+          </div>
+        </div>
+        <div class="desktop dark">
+          <p class="desktop-label">深色桌面</p>
+          <div class="samples" aria-label="侧身回望的深色桌面小尺寸预览">
+            <div class="sample large"><img class="icon" src="01-turn.png" alt="" width="60" height="60"><span>60 px</span></div>
+            <div class="sample small"><img class="icon" src="01-turn.png" alt="" width="32" height="32"><span>32 px</span></div>
+          </div>
+        </div>
+      </article>
+      <article>
+        <h2>② 轻歪头 · 俏皮</h2>
+        <figure>
+          <img class="icon hero" src="02-playful.png" alt="紫色液位小朵轻轻歪头，一只眼睛轻眨，云瓣随姿态变化" width="1254" height="1254">
+          <figcaption>轻歪头与轻眨眼一起变化，身体略有形变，液面保持自然。</figcaption>
+        </figure>
+        <div class="desktop light">
+          <p class="desktop-label">浅色桌面</p>
+          <div class="samples" aria-label="轻歪头的浅色桌面小尺寸预览">
+            <div class="sample large"><img class="icon" src="02-playful.png" alt="" width="60" height="60"><span>60 px</span></div>
+            <div class="sample small"><img class="icon" src="02-playful.png" alt="" width="32" height="32"><span>32 px</span></div>
+          </div>
+        </div>
+        <div class="desktop dark">
+          <p class="desktop-label">深色桌面</p>
+          <div class="samples" aria-label="轻歪头的深色桌面小尺寸预览">
+            <div class="sample large"><img class="icon" src="02-playful.png" alt="" width="60" height="60"><span>60 px</span></div>
+            <div class="sample small"><img class="icon" src="02-playful.png" alt="" width="32" height="32"><span>32 px</span></div>
+          </div>
+        </div>
+      </article>
+      <article>
+        <h2>③ 贴边探头 · 好奇</h2>
+        <figure>
+          <img class="icon hero" src="03-peek.png" alt="紫色液位小朵靠近画面边缘探头，脸部朝向画面内侧，局部云瓣裁切" width="1254" height="1254">
+          <figcaption>靠近边缘、向画面内侧探头，局部裁切让脸与云形更靠前。</figcaption>
+        </figure>
+        <div class="desktop light">
+          <p class="desktop-label">浅色桌面</p>
+          <div class="samples" aria-label="贴边探头的浅色桌面小尺寸预览">
+            <div class="sample large"><img class="icon" src="03-peek.png" alt="" width="60" height="60"><span>60 px</span></div>
+            <div class="sample small"><img class="icon" src="03-peek.png" alt="" width="32" height="32"><span>32 px</span></div>
+          </div>
+        </div>
+        <div class="desktop dark">
+          <p class="desktop-label">深色桌面</p>
+          <div class="samples" aria-label="贴边探头的深色桌面小尺寸预览">
+            <div class="sample large"><img class="icon" src="03-peek.png" alt="" width="60" height="60"><span>60 px</span></div>
+            <div class="sample small"><img class="icon" src="03-peek.png" alt="" width="32" height="32"><span>32 px</span></div>
+          </div>
+        </div>
+      </article>
+    </section>
+    <aside class="reference" aria-label="第二轮液位小朵参考">
+      <img class="icon" src="reference.png" alt="Rex 提供的第二轮正面液位小朵截图，作为相同形象的参考" width="96" height="96">
+      <div class="reference-copy">
+        <p class="reference-title">沿用这一只液位小朵</p>
+        <p class="reference-description">保留紫色云形与内部液面，这一轮只比较角度、重心和表情。</p>
+      </div>
+    </aside>
+    <footer>候选未定，未替换 App 图标。圆角为 CSS 对照遮罩，非系统实际裁切；浅深桌面使用同一图片，不代表独立深色或着色资源。</footer>
+  </main>
+</body>
+</html>

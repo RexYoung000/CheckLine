@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>小朵 · 三种性格</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #f6f5f3; color: #322d3a; font-family: -apple-system, BlinkMacSystemFont, sans-serif; }
+    main { max-width: 1080px; margin: auto; padding: 28px 16px; }
+    h1 { margin: 0 0 8px; font-size: 24px; letter-spacing: -.03em; }
+    .intro { margin: 0 0 24px; color: #766d80; font-size: 13px; }
+    .grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+    figure { min-width: 0; margin: 0; }
+    img { display: block; width: 100%; height: auto; border-radius: 22.4%; }
+    figcaption { margin: 12px 0 0; font-size: 15px; font-weight: 600; line-height: 1.4; }
+    figcaption span { display: block; margin-top: 5px; color: #766d80; font-size: 12px; font-weight: 400; }
+    .desktop { margin-top: 24px; border-radius: 18px; padding: 16px 12px; }
+    .light { background: #eeebf2; }
+    .dark { margin-top: 10px; background: #2d2834; color: #e4ddec; }
+    .desktop p { margin: 0 0 12px; font-size: 12px; }
+    .desktop .grid { justify-items: center; }
+    .desktop img { width: 60px; height: 60px; }
+    footer { margin-top: 20px; color: #766d80; font-size: 12px; line-height: 1.6; }
+    a { color: inherit; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>小朵，换个姿态。</h1>
+    <p class="intro">同一只液位小朵，三种性格。</p>
+    <section class="grid" aria-label="三个姿态候选">
+      <figure><img src="01-turn.png" alt="小朵轻侧身，双眼有前后关系" width="1254" height="1254"><figcaption>① 轻侧身<span>专注、温和</span></figcaption></figure>
+      <figure><img src="02-playful.png" alt="小朵轻歪头，眨一只眼睛" width="1254" height="1254"><figcaption>② 轻歪头<span>俏皮、亲近</span></figcaption></figure>
+      <figure><img src="03-peek.png" alt="小朵从画面边缘斜着探头" width="1254" height="1254"><figcaption>③ 贴边探头<span>好奇、有动势</span></figcaption></figure>
+    </section>
+    <section class="desktop light" aria-label="浅色背景 60 像素对照">
+      <p>浅色背景 · 60 px</p>
+      <div class="grid"><img src="01-turn.png" alt="轻侧身缩略图"><img src="02-playful.png" alt="轻歪头缩略图"><img src="03-peek.png" alt="贴边探头缩略图"></div>
+    </section>
+    <section class="desktop dark" aria-label="深色背景 60 像素对照">
+      <p>深色背景 · 60 px</p>
+      <div class="grid"><img src="01-turn.png" alt="轻侧身缩略图"><img src="02-playful.png" alt="轻歪头缩略图"><img src="03-peek.png" alt="贴边探头缩略图"></div>
+    </section>
+    <footer>姿态探索，待选择。<a href="index.html">查看大图与 32 px 对照 →</a></footer>
+  </main>
+</body>
+</html>
