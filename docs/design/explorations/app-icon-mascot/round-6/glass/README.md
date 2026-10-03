@@ -1,6 +1,6 @@
 # CheckLine · Icon Composer 玻璃材质
 
-2026-10-03。Rex 暂时保留轻量留白轮廓，要求使用已安装的 Apple 工具增加一点玻璃质感。本轮只做可编辑材质工程和官方渲染对照，正式 App Icon 尚未替换。
+2026-10-03。Rex 暂时保留轻量留白轮廓，要求使用已安装的 Apple 工具增加一点玻璃质感。以下保留最初材质探索与静态验证记录；随后 Rex 已授权实装，正式唯一资源为 `Check_Line/Resources/AppIcon.icon`，已随 Release 1.0（3）覆盖安装到手机，不能继续用探索副本覆盖正式资源。真实原生截图、构建及安装状态见 [实装证据](../../../../evidence/2026-10-03-glass-icon-native/README.md)。
 
 [打开整套对照](index.html) · [深色前后对照](dark.html) · [最新可编辑工程](CheckLine-Glass-Dark.icon) · [上一轮轮廓](../README.md)
 

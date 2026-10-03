@@ -1,0 +1,214 @@
+{
+  "date": "2026-10-03",
+  "scheme": "CheckLine App",
+  "scope": "Accepted native glass App Icon integration and in-place phone installation",
+  "resource": {
+    "path": "Check_Line/Resources/AppIcon.icon",
+    "files": [
+      {
+        "path": "Assets/mark.svg",
+        "sha256": "f31813ee5c3944bf7031fb0606f7ba3b6affd0c1e68eb60ef371ecb85006732f",
+        "acceptedCandidateMatches": true
+      },
+      {
+        "path": "icon.json",
+        "sha256": "d646772bf75d4d769fadd68ffbc5db60020bc9240c1595208243773a5fe355fc",
+        "acceptedCandidateMatches": true
+      }
+    ],
+    "previousAppIconCatalogRemoved": true
+  },
+  "build": {
+    "xcode": "27.0",
+    "debugSimulator": "passed",
+    "signedReleaseIPhone": "passed",
+    "codesignVerify": "passed",
+    "products": {
+      "debug": {
+        "CFBundleIdentifier": "Rex.Check-Line",
+        "CFBundleShortVersionString": "1.0",
+        "CFBundleVersion": "3",
+        "MinimumOSVersion": "17.0",
+        "CFBundleIcons": {
+          "CFBundlePrimaryIcon": {
+            "CFBundleIconFiles": [
+              "AppIcon60x60"
+            ],
+            "CFBundleIconName": "AppIcon"
+          }
+        },
+        "CFBundleIcons~ipad": {
+          "CFBundlePrimaryIcon": {
+            "CFBundleIconFiles": [
+              "AppIcon60x60",
+              "AppIcon76x76"
+            ],
+            "CFBundleIconName": "AppIcon"
+          }
+        },
+        "compiledAssets": [
+          "AppIcon60x60@2x.png",
+          "Assets.car",
+          "AppIcon76x76@2x~ipad.png"
+        ]
+      },
+      "phone": {
+        "CFBundleIdentifier": "Rex.Check-Line",
+        "CFBundleShortVersionString": "1.0",
+        "CFBundleVersion": "3",
+        "MinimumOSVersion": "17.0",
+        "CFBundleIcons": {
+          "CFBundlePrimaryIcon": {
+            "CFBundleIconFiles": [
+              "AppIcon60x60"
+            ],
+            "CFBundleIconName": "AppIcon"
+          }
+        },
+        "CFBundleIcons~ipad": {
+          "CFBundlePrimaryIcon": {
+            "CFBundleIconFiles": [
+              "AppIcon60x60",
+              "AppIcon76x76"
+            ],
+            "CFBundleIconName": "AppIcon"
+          }
+        },
+        "compiledAssets": [
+          "AppIcon60x60@2x.png",
+          "Assets.car",
+          "AppIcon76x76@2x~ipad.png"
+        ]
+      }
+    },
+    "compiledAppIconEntries": [
+      {
+        "Name": "AppIcon_Assets/Color-1",
+        "AssetType": "Color",
+        "Idiom": "universal"
+      },
+      {
+        "Name": "AppIcon_Assets/Color-2",
+        "AssetType": "Color",
+        "Idiom": "universal"
+      },
+      {
+        "Name": "AppIcon_Assets/Color-3",
+        "AssetType": "Color",
+        "Idiom": "universal"
+      },
+      {
+        "Name": "AppIcon_Assets/Color-4",
+        "AssetType": "Color",
+        "Idiom": "universal"
+      },
+      {
+        "Name": "AppIcon",
+        "AssetType": "Icon Image",
+        "Idiom": "phone"
+      },
+      {
+        "Name": "AppIcon",
+        "AssetType": "Icon Image",
+        "Appearance": "UIAppearanceDark",
+        "Idiom": "phone"
+      },
+      {
+        "Name": "AppIcon",
+        "AssetType": "Icon Image",
+        "Appearance": "ISAppearanceTintable",
+        "Idiom": "phone"
+      },
+      {
+        "Name": "AppIcon/Group",
+        "AssetType": "IconGroup",
+        "Appearance": "UIAppearanceDark",
+        "Idiom": "universal"
+      },
+      {
+        "Name": "AppIcon/Group",
+        "AssetType": "IconGroup",
+        "Appearance": "UIAppearanceLight",
+        "Idiom": "universal"
+      },
+      {
+        "Name": "AppIcon/Group",
+        "AssetType": "IconGroup",
+        "Appearance": "ISAppearanceTintable",
+        "Idiom": "universal"
+      },
+      {
+        "Name": "AppIcon",
+        "AssetType": "IconImageStack",
+        "Appearance": "UIAppearanceDark",
+        "Idiom": "universal"
+      },
+      {
+        "Name": "AppIcon",
+        "AssetType": "IconImageStack",
+        "Appearance": "UIAppearanceLight",
+        "Idiom": "universal"
+      },
+      {
+        "Name": "AppIcon",
+        "AssetType": "IconImageStack",
+        "Appearance": "ISAppearanceTintable",
+        "Idiom": "universal"
+      },
+      {
+        "Name": "AppIcon",
+        "AssetType": "MultiSized Image",
+        "Idiom": "phone"
+      },
+      {
+        "Name": "AppIcon_Assets/mark",
+        "AssetType": "Vector",
+        "Idiom": "universal"
+      }
+    ]
+  },
+  "phone": {
+    "model": "iPhone 12",
+    "os": "27.0",
+    "installation": "in-place update",
+    "installOutcome": "success",
+    "launchOutcome": "success",
+    "installedApp": {
+      "bundleIdentifier": "Rex.Check-Line",
+      "name": "CheckLine",
+      "version": "1.0",
+      "bundleVersion": "3"
+    },
+    "appProcessCreated": true,
+    "uninstalledOrReset": false,
+    "ledgerReadOrCompared": false,
+    "visiblePhoneScreenObserved": false
+  },
+  "simulators": [
+    {
+      "os": "27.0",
+      "normalAppOpenedFromIcon": true,
+      "modesObserved": [
+        "default / light appearance",
+        "dark icon",
+        "tinted / gray / 100 percent brightness / wallpaper source",
+        "clear / light"
+      ],
+      "restoredTo": "default icon / light appearance"
+    },
+    {
+      "os": "26.5",
+      "normalAppOpenedFromIcon": true,
+      "homeScreenObserved": true,
+      "existingLedgerUnchangedByTest": true
+    }
+  ],
+  "notRun": [
+    "iOS 17 home screen",
+    "iPad home screen",
+    "clear dark mode",
+    "other tint colors",
+    "physical phone visual and touch acceptance",
+    "domain regression for this static resource change"
+  ]
+}

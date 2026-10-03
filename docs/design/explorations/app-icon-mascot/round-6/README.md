@@ -45,3 +45,5 @@ Rex 对「继续留白方向，稍微减轻左下实体、让边界更轻快」�
 ## 后续：官方玻璃材质
 
 Rex 要求沿用当前轮廓，使用本机 Apple Icon Composer 增加一点玻璃质感。已制作可编辑原生 `.icon`，用官方 `ictool` 导出 Default 27、Dark 27 与 Default 26 的静态效果，并比较初始磨砂与更透光前景。几何与配色来源保持轻量稿，正式 AppIcon 尚未替换。制作来源、可复现命令与验证边界见 [玻璃材质对照](glass/README.md)。
+
+随后 Rex 已授权采用浅／深色玻璃版本，正式资源复制为 `Check_Line/Resources/AppIcon.icon` 并实际编译。Release 1.0（3）已覆盖安装到 iPhone 12，版本查询与启动成功；本页保留前期探索历史，最新来源与真机验收范围见 [实装证据](../../../evidence/2026-10-03-glass-icon-native/README.md)。

@@ -18,7 +18,9 @@
 
 `ShellChromeState` 分离用户选择与当前呈现页面：系统栏即时选中与换页，兼容回退按既有卡夹过渡执行。iPad 使用原居中限宽布局，避免系统 prominent 入口分布到屏幕两端；根页进入详情时隐藏底栏。Agent 不写入四页面选择状态，不创建新会话。系统栏模式的操作反馈浮在页面安全区内，兼容模式的反馈仍在自有导航上方，不能遮挡底栏按钮。导航不修改业务数据。磨砂材质与不透明票据在 DesignSystem 共享。
 
-2026-10-03 图标试装由 `CheckLineIcon` / `CheckLineIconLabel` 统一显示，`CheckLineIconAssets` 将既有符号名映射到 Asset Catalog 的本地模板矢量图。系统 Tab 直接使用同一资源的模板 UIImage，保留系统导航行为。Hugeicons 免费 Stroke Rounded 4.3.5 的选用几何、MIT 许可和校验值保存在仓库，通过 `scripts/design/import-hugeicons.py` 重建；不引入运行时图标库、网络请求或新 SDK。`Wish.symbolName` 与账本 Schema 不变，未知历史符号保留系统回退。AppIcon 是独立原创静态资源。方向与验收边界见 DESIGN 3.1.14。
+2026-10-03 图标试装由 `CheckLineIcon` / `CheckLineIconLabel` 统一显示，`CheckLineIconAssets` 将既有符号名映射到 Asset Catalog 的本地模板矢量图。系统 Tab 直接使用同一资源的模板 UIImage，保留系统导航行为。Hugeicons 免费 Stroke Rounded 4.3.5 的选用几何、MIT 许可和校验值保存在仓库，通过 `scripts/design/import-hugeicons.py` 重建；不引入运行时图标库、网络请求或新 SDK。`Wish.symbolName` 与账本 Schema 不变，未知历史符号保留系统回退。功能图标方向与验收边界见 DESIGN 3.1.14。
+
+2026-10-03 Rex 授权接入留白玻璃 App Icon。正式唯一来源为 `Resources/AppIcon.icon`，沿 Icon Composer 可编辑图层与 Dark 独立填充；Xcode 27 编译动态图标与旧系统降级，不把已裁切预览 PNG 当作 AppIcon 输入。同步目录自动加入 App Target，`ASSETCATALOG_COMPILER_APPICON_NAME` 继续为 `AppIcon`；移除旧液位卡 AppIcon 图集，功能资源生成不得重新生成该旧图集。试装保持 `Rex.Check-Line`、签名团队、SwiftData Schema 与正常启动 Scheme，使用覆盖安装保留本机账本。系统外观与降级的实际验证范围记录在本轮证据中。
 | 系统权限 / iCloud | 未启用；SwiftData 配置为 `cloudKitDatabase: .none` |
 
 旧样机的 `budgetIDs` 多预算关系、共享消费删除和旧结算只用于追溯，不是新 Schema 或验收依据。`BudgetEngine` 的 Decimal 基础计算可以继续复用；命名和输入结构在新模型落地时同步收敛。

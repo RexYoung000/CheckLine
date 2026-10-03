@@ -41,6 +41,10 @@ Debug Scheme 的 Arguments Passed On Launch 可添加 `-design-preview`。该模
 
 当前文档入口统一放在 `docs/`，不要把 README 等开发文档放进 App Target；Xcode 会把目标目录内的非源码文件当作 App 资源处理。
 
+### 原生 App Icon
+
+正式图标的唯一来源为 `Check_Line/Resources/AppIcon.icon`，使用 Icon Composer 编辑图层和按外观覆盖的颜色。文件名与 `ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon` 一致，由同步目录自动加入 Target。本轮以 Xcode 27.0 实际编译原生图层和旧系统兼容图片，最低 iOS 17.0 保持；iOS 17 主屏尚未运行验证。旧 `AppIcon.appiconset` 已移除，不再另维护预裁切 PNG，功能图标导入脚本仍只生成功能资源。来源、构建和真机安装证据见 [本轮实装](../design/evidence/2026-10-03-glass-icon-native/README.md)。
+
 ```text
 Check_Line/
 ├── App/                 # 当前 App 入口
