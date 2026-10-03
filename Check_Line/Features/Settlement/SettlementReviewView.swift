@@ -6,6 +6,7 @@ struct WalletExchangeQuoteFields: View {
     var walletCurrencyCode: String
     @Binding var rateText: String
     @Binding var quotedAt: Date
+    var showsProvenance = true
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -18,10 +19,14 @@ struct WalletExchangeQuoteFields: View {
                 .padding(16).walletSurface(radius: 18)
                 .accessibilityIdentifier("wallet.exchange.rate")
                 .onChange(of: rateText) { _, _ in quotedAt = Date() }
-            Text(String(localized: "wallet.exchange.userEstimate"))
-                .font(.caption).foregroundStyle(PaperTheme.muted)
-            Text(quotedAt, format: .dateTime.year().month().day().hour().minute())
-                .font(.caption).foregroundStyle(PaperTheme.muted)
+            if showsProvenance {
+                Text(String(localized: "wallet.exchange.userEstimate"))
+                    .font(.caption).foregroundStyle(PaperTheme.muted)
+                    .accessibilityIdentifier("wallet.exchange.provenance.input")
+                Text(quotedAt, format: .dateTime.year().month().day().hour().minute())
+                    .font(.caption).foregroundStyle(PaperTheme.muted)
+                    .accessibilityIdentifier("wallet.exchange.provenance.time")
+            }
         }
     }
 }
@@ -81,7 +86,8 @@ struct SettlementReviewView: View {
                                     sourceCurrencyCode: period.currencyCode,
                                     walletCurrencyCode: walletCurrency,
                                     rateText: $exchangeRate,
-                                    quotedAt: $quoteDate
+                                    quotedAt: $quoteDate,
+                                    showsProvenance: preview == nil
                                 )
                                 if quote == nil {
                                     Label(String(localized: "wallet.exchange.required"), systemImage: "exclamationmark.circle")
@@ -259,6 +265,7 @@ struct SettlementReviewView: View {
                     impactRow(String(localized: "wallet.exchange.rate"), preview.conversion.rate.formatted())
                     Text(String(localized: "wallet.exchange.userEstimate") + " · " + preview.conversion.quotedAt.formatted(date: .abbreviated, time: .shortened))
                         .font(.caption).foregroundStyle(PaperTheme.muted)
+                        .accessibilityIdentifier("wallet.exchange.provenance.preview")
                 }
                 impactRow(String(localized: "wallet.settlement.walletBefore"), MoneyFormat.string(workspace.wallet.balance, currencyCode: walletCurrency))
                 impactRow(String(localized: "wallet.settlement.walletAfter"), MoneyFormat.string(preview.balanceAfter, currencyCode: walletCurrency))

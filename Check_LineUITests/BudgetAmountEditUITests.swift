@@ -12,7 +12,7 @@ final class BudgetAmountEditUITests: XCTestCase {
         XCTAssertTrue(app.buttons["wallet.budget.edit.save"].waitForExistence(timeout: 5))
         XCTAssertTrue(app.staticTexts["确定超支（仅已确认）"].exists)
         XCTAssertTrue(app.staticTexts["可能额外超支（待确认）"].exists)
-        XCTAssertTrue(app.staticTexts["以后每月额度"].exists)
+        XCTAssertTrue(app.descendants(matching: .any)["wallet.budget.edit.newMonthlyAmount"].label.contains("本月及以后每月"))
         attach(app, "budget-edit-certain-and-possible-overrun")
         app.buttons["wallet.budget.edit.back"].tap()
         let field = app.textFields["wallet.budget.edit.amount"]

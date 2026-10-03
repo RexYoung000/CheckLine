@@ -93,7 +93,7 @@ final class WalletNavigationUITests: XCTestCase {
         let emptyCard = app.buttons["wallet.empty.card"]
         XCTAssertTrue(create.waitForExistence(timeout: 10))
         XCTAssertTrue(emptyCard.isHittable)
-        XCTAssertTrue(app.staticTexts["为日常开销或一个计划，创建一张预算卡。"].isHittable)
+        XCTAssertFalse(app.staticTexts["为日常开销或一个计划，创建一张预算卡。"].exists)
         XCTAssertTrue(create.isHittable)
         attach(app, name: "empty-home")
         emptyCard.tap()

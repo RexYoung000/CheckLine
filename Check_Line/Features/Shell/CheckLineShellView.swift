@@ -4,6 +4,9 @@ struct CheckLineShellView: View {
     @Bindable var workspace: CheckLineWorkspace
     @State private var chrome = ShellChromeState()
     @State private var showsPreviewDetail = false
+    #if DEBUG
+    @State private var previewExpenseID: UUID?
+    #endif
     @AppStorage("checkline.appearance") private var appearance = CheckLineAppearance.system.rawValue
     @Environment(\.walletReduceMotion) private var reduceMotion
     @Environment(\.scenePhase) private var scenePhase
@@ -54,6 +57,11 @@ struct CheckLineShellView: View {
             if DesignPreviewData.screen == "wishes-empty" { chrome.selectedTab = .wishes; chrome.settleNavigation() }
             if ["analysis-empty", "analysis-no-records"].contains(DesignPreviewData.screen) { chrome.selectedTab = .insights; chrome.settleNavigation() }
             if DesignPreviewData.screen == "budget-inline" { chrome.selectedTab = .budgets; chrome.settleNavigation() }
+            #if DEBUG
+            if DesignPreviewData.screen == "retrospective-record" {
+                previewExpenseID = workspace.ledger.expenses.values.first(where: { $0.attributionState == .pending })?.id
+            }
+            #endif
             switch DesignPreviewData.screen {
             case "settings": chrome.isSettingsPresented = true
             case "attention": chrome.isAttentionPresented = true
@@ -65,7 +73,7 @@ struct CheckLineShellView: View {
                 workspace.showAgent = true
             case "record": workspace.openComposer(.record)
             case "create-budget": workspace.openComposer(.budget)
-            case "create-wish", "budget-detail", "records", "calendar", "wish-detail", "redemption", "agent-mascot", "import-review", "management-review": showsPreviewDetail = true
+            case "create-wish", "budget-detail", "records", "calendar", "wish-detail", "redemption", "agent-mascot", "import-review", "management-review", "retrospective-record", "settlement-fx": showsPreviewDetail = true
             default: break
             }
             if DesignPreviewData.runsMotionTour {
@@ -145,6 +153,14 @@ struct CheckLineShellView: View {
         if DesignPreviewData.isEnabled {
             switch DesignPreviewData.screen {
             #if DEBUG
+            case "settlement-fx":
+                if let period = workspace.ledger.periods.values.first(where: { $0.state == .pendingSettlement }) {
+                    SettlementReviewView(workspace: workspace, periodID: period.id, onShowWishes: { chrome.selectedTab = .wishes })
+                }
+            case "retrospective-record":
+                if let previewExpenseID {
+                    NavigationStack { WalletExpenseDetail(workspace: workspace, expenseID: previewExpenseID) }
+                }
             case "import-review": NavigationStack { ImportReviewPrototype() }
             case "management-review": NavigationStack { ManagementReviewPrototype() }
             case "agent-mascot": CloudMascotReview()

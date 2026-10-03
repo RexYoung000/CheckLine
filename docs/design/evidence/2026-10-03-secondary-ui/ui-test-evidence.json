@@ -1,0 +1,130 @@
+{
+  "distinctPassingUITestCount": 15,
+  "distinctPassingUITests": [
+    "AmountReviewRefinementUITests/testCompletedWishEmptyReturnsToActiveAndKeepsHeaderCreation",
+    "AmountReviewRefinementUITests/testMonthlyAmountPairsStayCompleteAtLargeEnglishText",
+    "AmountReviewRefinementUITests/testSettlementQuoteProvenanceRemainsVisibleWithoutDuplication",
+    "AmountReviewRefinementUITests/testWishPurchaseKeepsCurrencyQuoteAndExplicitConfirmation",
+    "BudgetAmountEditUITests/testBudgetAmountPreviewCancelAndConfirmedOverrun",
+    "BudgetAmountEditUITests/testBudgetListEntryAndRecordSuccessRemainUsable",
+    "BudgetAmountEditUITests/testInvalidPrecisionPendingOnlyAndReduceMotion",
+    "EmptyStateRefinementUITests/testAnalysisWithoutRecordsRetainsDateBrowsingAndCoverage",
+    "EmptyStateRefinementUITests/testEmptyHomeKeepsAgentAndManualBudgetEntries",
+    "GroupedRecordsAccessibilityUITests/testVoiceOverReadsFullDateAndPendingStateBeforeOpeningRecord",
+    "SecondaryRefinementUITests/testRetrospectiveConfirmationKeepsPendingOnCancelAndConfirmsOnce",
+    "TaskEnvironmentUITests/testEnglishTaskKeepsItsFieldsAndSaveReachableWithKeyboard",
+    "TaskWorkspaceUITests/testWorkspaceRecordsPendingDetailAndBackRestore",
+    "WalletNavigationUITests/testEmptyHomeOffersReadableCreation",
+    "WalletNavigationUITests/testOneShotSettlementReachesWishWalletAndRealPurchase"
+  ],
+  "runs": [
+    {
+      "bundle": "/tmp/checkline-secondary-oct03-ui.xcresult",
+      "summaryFile": "initial-test-summary.json",
+      "passedTests": [
+        "AmountReviewRefinementUITests/testCompletedWishEmptyReturnsToActiveAndKeepsHeaderCreation",
+        "BudgetAmountEditUITests/testBudgetListEntryAndRecordSuccessRemainUsable",
+        "BudgetAmountEditUITests/testInvalidPrecisionPendingOnlyAndReduceMotion",
+        "EmptyStateRefinementUITests/testAnalysisWithoutRecordsRetainsDateBrowsingAndCoverage",
+        "EmptyStateRefinementUITests/testEmptyHomeKeepsAgentAndManualBudgetEntries",
+        "TaskEnvironmentUITests/testEnglishTaskKeepsItsFieldsAndSaveReachableWithKeyboard",
+        "TaskWorkspaceUITests/testWorkspaceRecordsPendingDetailAndBackRestore",
+        "WalletNavigationUITests/testEmptyHomeOffersReadableCreation",
+        "WalletNavigationUITests/testOneShotSettlementReachesWishWalletAndRealPurchase"
+      ],
+      "countsTowardDistinctPassingCases": false,
+      "warnings": [
+        "<unknown>:0: warning: -[Check_LineUITests.BudgetAmountEditUITests testBudgetListEntryAndRecordSuccessRemainUsable] : Invalid frame dimension (negative or non-finite).",
+        "<unknown>:0: warning: -[Check_LineUITests.TaskEnvironmentUITests testEnglishTaskKeepsItsFieldsAndSaveReachableWithKeyboard] : Invalid frame dimension (negative or non-finite).",
+        "<unknown>:0: warning: -[Check_LineUITests.WalletNavigationUITests testEmptyHomeOffersReadableCreation] : Invalid frame dimension (negative or non-finite)."
+      ]
+    },
+    {
+      "bundle": "/tmp/checkline-secondary-oct03-ui-final.xcresult",
+      "summaryFile": "main-test-summary.json",
+      "passedTests": [
+        "AmountReviewRefinementUITests/testCompletedWishEmptyReturnsToActiveAndKeepsHeaderCreation",
+        "AmountReviewRefinementUITests/testMonthlyAmountPairsStayCompleteAtLargeEnglishText",
+        "BudgetAmountEditUITests/testBudgetAmountPreviewCancelAndConfirmedOverrun",
+        "BudgetAmountEditUITests/testBudgetListEntryAndRecordSuccessRemainUsable",
+        "BudgetAmountEditUITests/testInvalidPrecisionPendingOnlyAndReduceMotion",
+        "EmptyStateRefinementUITests/testAnalysisWithoutRecordsRetainsDateBrowsingAndCoverage",
+        "EmptyStateRefinementUITests/testEmptyHomeKeepsAgentAndManualBudgetEntries",
+        "SecondaryRefinementUITests/testRetrospectiveConfirmationKeepsPendingOnCancelAndConfirmsOnce",
+        "TaskEnvironmentUITests/testEnglishTaskKeepsItsFieldsAndSaveReachableWithKeyboard",
+        "TaskWorkspaceUITests/testWorkspaceRecordsPendingDetailAndBackRestore",
+        "WalletNavigationUITests/testEmptyHomeOffersReadableCreation",
+        "WalletNavigationUITests/testOneShotSettlementReachesWishWalletAndRealPurchase"
+      ],
+      "countsTowardDistinctPassingCases": true,
+      "warnings": [
+        "<unknown>:0: warning: -[Check_LineUITests.BudgetAmountEditUITests testBudgetListEntryAndRecordSuccessRemainUsable] : Invalid frame dimension (negative or non-finite).",
+        "<unknown>:0: warning: -[Check_LineUITests.TaskEnvironmentUITests testEnglishTaskKeepsItsFieldsAndSaveReachableWithKeyboard] : Invalid frame dimension (negative or non-finite).",
+        "<unknown>:0: warning: -[Check_LineUITests.WalletNavigationUITests testEmptyHomeOffersReadableCreation] : Invalid frame dimension (negative or non-finite)."
+      ]
+    },
+    {
+      "bundle": "/tmp/checkline-secondary-oct03-amount-final.xcresult",
+      "summaryFile": "amount-test-summary.json",
+      "passedTests": [
+        "AmountReviewRefinementUITests/testCompletedWishEmptyReturnsToActiveAndKeepsHeaderCreation",
+        "AmountReviewRefinementUITests/testMonthlyAmountPairsStayCompleteAtLargeEnglishText",
+        "AmountReviewRefinementUITests/testSettlementQuoteProvenanceRemainsVisibleWithoutDuplication",
+        "AmountReviewRefinementUITests/testWishPurchaseKeepsCurrencyQuoteAndExplicitConfirmation",
+        "SecondaryRefinementUITests/testRetrospectiveConfirmationKeepsPendingOnCancelAndConfirmsOnce"
+      ],
+      "countsTowardDistinctPassingCases": true,
+      "warnings": []
+    },
+    {
+      "bundle": "/tmp/checkline-secondary-oct03-voiceover.xcresult",
+      "summaryFile": "voiceover-test-summary.json",
+      "passedTests": [
+        "GroupedRecordsAccessibilityUITests/testVoiceOverReadsFullDateAndPendingStateBeforeOpeningRecord"
+      ],
+      "countsTowardDistinctPassingCases": true,
+      "warnings": []
+    },
+    {
+      "bundle": "/tmp/checkline-secondary-oct03-small-final.xcresult",
+      "summaryFile": "small-final-test-summary.json",
+      "passedTests": [
+        "AmountReviewRefinementUITests/testMonthlyAmountPairsStayCompleteAtLargeEnglishText",
+        "BudgetAmountEditUITests/testBudgetAmountPreviewCancelAndConfirmedOverrun",
+        "BudgetAmountEditUITests/testBudgetListEntryAndRecordSuccessRemainUsable",
+        "BudgetAmountEditUITests/testInvalidPrecisionPendingOnlyAndReduceMotion"
+      ],
+      "countsTowardDistinctPassingCases": true,
+      "warnings": [
+        "<unknown>:0: warning: -[Check_LineUITests.BudgetAmountEditUITests testBudgetListEntryAndRecordSuccessRemainUsable] : Invalid frame dimension (negative or non-finite)."
+      ]
+    },
+    {
+      "bundle": "/tmp/checkline-secondary-oct03-ipad.xcresult",
+      "summaryFile": "ipad-test-summary.json",
+      "passedTests": [
+        "AmountReviewRefinementUITests/testWishPurchaseKeepsCurrencyQuoteAndExplicitConfirmation"
+      ],
+      "countsTowardDistinctPassingCases": true,
+      "warnings": []
+    },
+    {
+      "bundle": "/tmp/checkline-secondary-oct03-recorded.xcresult",
+      "summaryFile": "recorded-test-summary.json",
+      "passedTests": [
+        "SecondaryRefinementUITests/testRetrospectiveConfirmationKeepsPendingOnCancelAndConfirmsOnce"
+      ],
+      "countsTowardDistinctPassingCases": true,
+      "warnings": []
+    }
+  ],
+  "releaseBuild": {
+    "result": "BUILD SUCCEEDED",
+    "log": "/tmp/checkline-secondary-oct03-release-delivery.log"
+  },
+  "recording": {
+    "file": "13-retrospective-native-touch.mp4",
+    "durationSeconds": 16.526667,
+    "speed": "original; no retiming"
+  }
+}

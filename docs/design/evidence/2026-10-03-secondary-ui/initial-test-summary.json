@@ -1,0 +1,95 @@
+{
+  "devicesAndConfigurations" : [
+    {
+      "device" : {
+        "architecture" : "arm64",
+        "deviceId" : "95864BCD-8AB8-476C-AC79-4E047B2D9CC8",
+        "deviceName" : "CheckLine Card Loop QA",
+        "modelName" : "iPhone 17 Pro",
+        "osBuildNumber" : "23F77",
+        "osVersion" : "26.5",
+        "platform" : "iOS Simulator"
+      },
+      "expectedFailures" : 0,
+      "failedTests" : 5,
+      "passedTests" : 9,
+      "skippedTests" : 0,
+      "testPlanConfiguration" : {
+        "configurationId" : "1",
+        "configurationName" : "Test Scheme Action"
+      }
+    }
+  ],
+  "environmentDescription" : "CheckLine UI · Built with macOS 27.0.1",
+  "expectedFailures" : 0,
+  "failedTests" : 5,
+  "finishTime" : 1790989992.297,
+  "passedTests" : 9,
+  "result" : "Failed",
+  "runtimeWarnings" : [
+    {
+      "issueType" : "Runtime Warning",
+      "message" : "Invalid frame dimension (negative or non-finite)."
+    },
+    {
+      "issueType" : "Runtime Warning",
+      "message" : "Invalid frame dimension (negative or non-finite)."
+    },
+    {
+      "issueType" : "Runtime Warning",
+      "message" : "Invalid frame dimension (negative or non-finite)."
+    }
+  ],
+  "skippedTests" : 0,
+  "startTime" : 1790989756.189,
+  "statistics" : [
+
+  ],
+  "testFailures" : [
+    {
+      "failureText" : "Failed to get matching snapshot: No matches found for Elements matching predicate '\"wallet.budget.edit.newMonthlyAmount\" IN identifiers' from input {(\n    Window (Main),\n    Window,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Button, identifier: 'wallet.agent.avatar', label: '打开小朵，预算助手',\n    NavigationBar, identifier: '调整月度额度',\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Button, identifier: 'wallet.tab.home', label: '首页', Selected,\n    Button, identifier: 'wallet.tab.budgets', label: '预算',\n    Button, identifier: 'wallet.tab.wishes', label: '心愿',\n    Button, identifier: 'wallet.tab.insights', label: '分析',\n    Other,\n    Other, identifier: 'wallet.budget.edit.cancel', label: '取消',\n    StaticText, label: '调整月度额度',\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Other,\n    Button, identifier: 'wallet.budget.edit.cancel', label: '取消',\n    Other,\n    Other,\n    ScrollView,\n    Button, identifier: 'wallet.budget.edit.save', label: '确认保存',\n    Button, identifier: 'wallet.budget.edit.back', label: '返回修改金额',\n    Other,\n    Other,\n    Other,\n    Other,\n    Other, label: '垂直滚动条, 1页', value: 0%,\n    Other,\n    Other,\n    StaticText, label: '日常生活',\n    StaticText, label: '2026年10月',\n    StaticText, label: '确认后，上方所示月份立即使用新额度，以后每个月也沿用新额度。已结算月份、消费记录和心愿钱包不变。',\n    StaticText, label: '预览变化',\n    StaticText, identifier: 'wallet.budget.edit.amountComparison', label: '本月原额度、¥3,000',\n    StaticText, identifier: 'wallet.budget.edit.amountComparison', label: '本月及以后每月、¥1,600.25',\n    StaticText, label: '已用、¥1,680',\n    StaticText, label: '待确认、¥40',\n    StaticText, identifier: 'wallet.budget.edit.remainingComparison', label: '原剩余（含待确认）、¥1,280',\n    StaticText, identifier: 'wallet.budget.edit.remainingComparison', label: '新剩余（含待确认）、-¥119.75',\n    StaticText, label: '确定超支（仅已确认）、¥79.75',\n    StaticText, label: '可能额外超支（待确认）、¥40',\n    StaticText, label: '待确认金额只影响暂计剩余和可能超支，不代表已确定支出。',\n    Other,\n    Other,\n    Other,\n    StaticText, label: '本月原额度',\n    StaticText, label: '¥3,000',\n    StaticText, label: '本月及以后每月',\n    StaticText, label: '¥1,600.25',\n    StaticText, label: '已用',\n    StaticText, label: '¥1,680',\n    StaticText, label: '待确认',\n    StaticText, label: '¥40',\n    StaticText, label: '原剩余（含待确认）',\n    StaticText, label: '¥1,280',\n    StaticText, label: '新剩余（含待确认）',\n    StaticText, label: '-¥119.75',\n    StaticText, label: '确定超支（仅已确认）',\n    StaticText, label: '¥79.75',\n    StaticText, label: '可能额外超支（待确认）',\n    StaticText, label: '¥40',\n    Other,\n    Other,\n    Other,\n    Other,\n    Image, identifier: 'heart', label: '喜欢',\n    Image, identifier: 'globe', label: '地球仪键',\n    Image, identifier: 'book.closed', label: 'book.closed',\n    Image, identifier: 'headphones', label: '有声书',\n    ScrollView,\n    Button, identifier: 'wallet.profile', label: '我的',\n    StaticText, label: '示例数据',\n    Button, identifier: 'wallet.attention', label: '待处理事项', value: 1 项待处理,\n    Button, identifier: 'wallet.functions', label: '功能菜单',\n    Other,\n    Other,\n    Other,\n    Other, label: '垂直滚动条, 2页', value: 0%,\n    Button,\n    Other,\n    Button, identifier: 'wallet.home.card.more', label: '更多卡片操作',\n    Button, identifier: 'plus', label: '记一笔',\n    Button, identifier: 'wallet.home.card', label: '日常生活', value: 还能花 ¥1,280,\n    Button, label: '已用、-¥1,720、最近 7 天',\n    Button, label: '十月、28、天剩余',\n    Button, label: '1 笔待确认、¥40',\n    StaticText, label: '最近记录',\n    Button, identifier: 'arrow.up.right', label: '全部记录',\n    Button, label: '地铁、-¥6',\n    Button, label: '咖啡、-¥22',\n    Button, label: '午餐、-¥38',\n    Other,\n    Image, identifier: 'ellipsis', label: '更多',\n    Button,\n    Other,\n    Other,\n    StaticText, label: '日常生活',\n    StaticText, label: '循环 · CNY',\n    StaticText, label: '还能花',\n    StaticText, label: '¥1,280',\n    StaticText, label: '43% 剩余',\n    StaticText, label: '已用',\n    Image, identifier: 'arrow.up.right', label: 'arrow.up.right',\n    StaticText, label: '-¥1,720',\n    Other,\n    StaticText, label: '最近 7 天',\n    StaticText, label: '十月',\n    Image, identifier: 'arrow.up.right', label: 'arrow.up.right',\n    Other,\n    StaticText, label: '28',\n    StaticText, label: '天剩余',\n    Image, identifier: 'clock', label: '时钟',\n    StaticText, label: '1 笔待确认',\n    StaticText, label: '¥40',\n    Image, identifier: 'chevron.right', label: '前进',\n    Image, identifier: 'tram', label: '火车',\n    StaticText, label: '地铁',\n    StaticText, label: '-¥6',\n    Image, identifier: 'cup.and.saucer', label: 'cup.and.saucer',\n    StaticText, label: '咖啡',\n    StaticText, label: '-¥22',\n    Image, identifier: 'fork.knife', label: '食物',\n    StaticText, label: '午餐',\n    StaticText, label: '-¥38',\n    Image, identifier: 'ellipsis', label: '更多'\n)}",
+      "targetName" : "Check_LineUITests",
+      "testIdentifier" : 5,
+      "testIdentifierString" : "BudgetAmountEditUITests/testBudgetAmountPreviewCancelAndConfirmedOverrun()",
+      "testIdentifierURL" : "test://com.apple.xcode/Check_Line/Check_LineUITests/BudgetAmountEditUITests/testBudgetAmountPreviewCancelAndConfirmedOverrun",
+      "testName" : "testBudgetAmountPreviewCancelAndConfirmedOverrun()"
+    },
+    {
+      "failureText" : "XCTAssertTrue failed",
+      "targetName" : "Check_LineUITests",
+      "testIdentifier" : 2,
+      "testIdentifierString" : "AmountReviewRefinementUITests/testMonthlyAmountPairsStayCompleteAtLargeEnglishText()",
+      "testIdentifierURL" : "test://com.apple.xcode/Check_Line/Check_LineUITests/AmountReviewRefinementUITests/testMonthlyAmountPairsStayCompleteAtLargeEnglishText",
+      "testName" : "testMonthlyAmountPairsStayCompleteAtLargeEnglishText()"
+    },
+    {
+      "failureText" : "XCTAssertTrue failed",
+      "targetName" : "Check_LineUITests",
+      "testIdentifier" : 10,
+      "testIdentifierString" : "SecondaryRefinementUITests/testRetrospectiveConfirmationKeepsPendingOnCancelAndConfirmsOnce()",
+      "testIdentifierURL" : "test://com.apple.xcode/Check_Line/Check_LineUITests/SecondaryRefinementUITests/testRetrospectiveConfirmationKeepsPendingOnCancelAndConfirmsOnce",
+      "testName" : "testRetrospectiveConfirmationKeepsPendingOnCancelAndConfirmsOnce()"
+    },
+    {
+      "failureText" : "Rex.Check-Line crashed",
+      "targetName" : "Check_LineUITests",
+      "testIdentifier" : 3,
+      "testIdentifierString" : "AmountReviewRefinementUITests/testSettlementQuoteProvenanceRemainsVisibleWithoutDuplication()",
+      "testIdentifierURL" : "test://com.apple.xcode/Check_Line/Check_LineUITests/AmountReviewRefinementUITests/testSettlementQuoteProvenanceRemainsVisibleWithoutDuplication",
+      "testName" : "testSettlementQuoteProvenanceRemainsVisibleWithoutDuplication()"
+    },
+    {
+      "failureText" : "XCTAssertTrue failed",
+      "targetName" : "Check_LineUITests",
+      "testIdentifier" : 4,
+      "testIdentifierString" : "AmountReviewRefinementUITests/testWishPurchaseKeepsCurrencyQuoteAndExplicitConfirmation()",
+      "testIdentifierURL" : "test://com.apple.xcode/Check_Line/Check_LineUITests/AmountReviewRefinementUITests/testWishPurchaseKeepsCurrencyQuoteAndExplicitConfirmation",
+      "testName" : "testWishPurchaseKeepsCurrencyQuoteAndExplicitConfirmation()"
+    }
+  ],
+  "title" : "Test - CheckLine UI",
+  "topInsights" : [
+
+  ],
+  "totalTestCount" : 14
+}

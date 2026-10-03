@@ -18,20 +18,8 @@ struct CycleReviewView: View {
                         }
                         .foregroundStyle(PaperTheme.ink).frame(minHeight: 44)
                     }
-                    if BudgetPresentation.expenses(card, in: workspace.ledger).isEmpty {
-                        PaperCard {
-                            VStack(alignment: .leading, spacing: 18) {
-                                Image(systemName: "chart.bar.xaxis")
-                                    .font(.system(size: 38, weight: .ultraLight))
-                                    .foregroundStyle(PaperTheme.accent)
-                                Text(String(localized: "wallet.analysis.noRecords"))
-                                    .font(.headline)
-                                Button(String(localized: "capture.title"), systemImage: "plus") {
-                                    workspace.openComposer(.record)
-                                }.buttonStyle(PaperSolidButtonStyle())
-                            }
-                        }
-                    } else {
+                    let hasRecords = !BudgetPresentation.expenses(card, in: workspace.ledger).isEmpty
+                    if hasRecords {
                         Button { showsDetails = true } label: {
                             PaperCard {
                                 VStack(alignment: .leading, spacing: 18) {
@@ -42,7 +30,20 @@ struct CycleReviewView: View {
                             }
                         }.buttonStyle(.plain)
                     }
-                    PaperCard { BudgetCalendarView(card: card, ledger: workspace.ledger).id(card.id) }
+                    PaperCard {
+                        VStack(alignment: .leading, spacing: 20) {
+                            if !hasRecords {
+                                Text(String(localized: "wallet.analysis.noRecords"))
+                                    .font(.headline)
+                                Button(String(localized: "capture.title"), systemImage: "plus") {
+                                    workspace.openComposer(.record)
+                                }
+                                .buttonStyle(PaperSolidButtonStyle())
+                                .accessibilityIdentifier("wallet.analysis.empty.record")
+                            }
+                            BudgetCalendarView(card: card, ledger: workspace.ledger, showsEmptyDayMessage: hasRecords).id(card.id)
+                        }
+                    }
                 } else {
                     PaperCard {
                         VStack(alignment: .leading, spacing: 18) {

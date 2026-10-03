@@ -274,12 +274,13 @@ struct BudgetDetailContent: View {
             }.pickerStyle(.segmented)
             if rows.isEmpty { ContentUnavailableView(String(localized: "v1.card.records.empty"), systemImage: "receipt") }
             ForEach(days, id: \.self) { day in
+                let dayRows = rows.filter { Calendar.current.isDate($0.occurredAt, inSameDayAs: day) }
                 Text(day, format: .dateTime.year().month().day()).font(.subheadline.weight(.semibold)).foregroundStyle(PaperTheme.muted)
                 VStack(spacing: 0) {
-                    ForEach(rows.filter { Calendar.current.isDate($0.occurredAt, inSameDayAs: day) }) { row in
-                        NavigationLink(value: BudgetWorkspaceRoute.expense(row.id)) { WalletExpenseRow(expense: row).contentShape(Rectangle()) }
+                    ForEach(Array(dayRows.enumerated()), id: \.element.id) { index, row in
+                        NavigationLink(value: BudgetWorkspaceRoute.expense(row.id)) { WalletExpenseRow(expense: row, showsDate: false).contentShape(Rectangle()) }
                             .buttonStyle(.plain)
-                        Divider().overlay(PaperTheme.stroke)
+                        if index < dayRows.count - 1 { Divider().overlay(PaperTheme.stroke) }
                     }
                 }
             }
@@ -388,14 +389,16 @@ struct BudgetCalendarView: View {
     @Environment(\.dynamicTypeSize) private var typeSize
     var card: HomeBudgetCardModel
     var ledger: Ledger
+    var showsEmptyDayMessage: Bool
     @State private var month: Date
     @State private var selectedDay: Date
     @State private var coverageExpanded = false
     private var calendar: Calendar { .current }
 
-    init(card: HomeBudgetCardModel, ledger: Ledger) {
+    init(card: HomeBudgetCardModel, ledger: Ledger, showsEmptyDayMessage: Bool = true) {
         self.card = card
         self.ledger = ledger
+        self.showsEmptyDayMessage = showsEmptyDayMessage
         let today = Calendar.current.startOfDay(for: Date())
         let initialDay = card.periodStart <= today && (card.periodEnd.map { today <= $0 } ?? true)
             ? today : Calendar.current.startOfDay(for: card.periodStart)
@@ -456,7 +459,7 @@ struct BudgetCalendarView: View {
                 Label(String(localized: "ui.calendar.outsidePeriod"), systemImage: "exclamationmark.circle")
                     .font(.subheadline).foregroundStyle(PaperTheme.muted).padding(.vertical, 16)
             } else {
-                if rows.isEmpty { Text(String(localized: "wallet.day.empty")).font(.subheadline).foregroundStyle(PaperTheme.muted).padding(.vertical, 16) }
+                if rows.isEmpty && showsEmptyDayMessage { Text(String(localized: "wallet.day.empty")).font(.subheadline).foregroundStyle(PaperTheme.muted).padding(.vertical, 16) }
                 ForEach(rows) { row in
                     NavigationLink(value: BudgetWorkspaceRoute.expense(row.id)) { WalletExpenseRow(expense: row) }
                         .buttonStyle(.plain)

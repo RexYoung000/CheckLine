@@ -585,6 +585,11 @@
 "ui.directory.archived" = "Archived budgets";
 "ui.impact.originalPeriod" = "Original period";
 "ui.impact.change" = "Spending change";
+"ui.impact.confirmPendingSummary" = "Confirming this expense updates the original period’s settlement and wish wallet.";
+"ui.impact.walletTitle" = "Wallet after correction";
+"ui.wish.viewActive" = "View active wishes";
+"ui.wish.walletImpact" = "Wallet impact";
+"ui.budget.edit.newMonthlyAmount" = "This and future months";
 "ui.record.historicalMoveBoundary" = "Moving a record from a settled period requires a complete retrospective review. This entry is not available yet.";
 "ui.agent.conversation" = "This conversation";
 "ui.agent.you" = "You";

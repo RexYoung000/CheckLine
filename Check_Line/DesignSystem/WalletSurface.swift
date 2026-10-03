@@ -398,14 +398,17 @@ private struct BudgetBubbleField: View {
 
 struct WalletExpenseRow: View {
     var expense: Expense
+    var showsDate = true
     var body: some View {
         HStack(spacing: 12) {
             Image(systemName: BudgetPresentation.symbol(for: expense))
                 .foregroundStyle(PaperTheme.accent).frame(width: 36, height: 40)
             VStack(alignment: .leading, spacing: 4) {
                 Text(expense.merchant ?? String(localized: "v1.card.record.untitled")).font(.subheadline).lineLimit(2)
-                Text(expense.occurredAt, format: .dateTime.month().day())
-                    .font(.caption).foregroundStyle(PaperTheme.muted)
+                if showsDate {
+                    Text(expense.occurredAt, format: .dateTime.month().day())
+                        .font(.caption).foregroundStyle(PaperTheme.muted)
+                }
                 if expense.attributionState == .pending {
                     Text(String(localized: "v1.card.pending")).font(.caption).foregroundStyle(PaperTheme.accent)
                 }
@@ -417,5 +420,6 @@ struct WalletExpenseRow: View {
         .foregroundStyle(PaperTheme.ink).padding(.vertical, 10)
         .contentShape(Rectangle())
         .accessibilityElement(children: .combine)
+        .accessibilityValue(showsDate ? "" : expense.occurredAt.formatted(date: .abbreviated, time: .omitted))
     }
 }

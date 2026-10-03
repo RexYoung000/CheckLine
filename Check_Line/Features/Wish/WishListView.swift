@@ -35,12 +35,19 @@ struct WishListView: View {
                     Text(String(localized: "wallet.wishes.active")).tag(false)
                     Text(String(localized: "wallet.wishes.completed")).tag(true)
                 }.pickerStyle(.segmented)
+                    .accessibilityIdentifier("wallet.wishes.filter")
                 if wishes.isEmpty {
                     VStack(spacing: 20) {
                         WalletSymbol(name: completed ? "checkmark" : "star", size: 72)
                         Text(completed ? String(localized: "wallet.wishes.completedEmpty") : String(localized: "wallet.wishes.empty")).font(.headline)
-                        Button(String(localized: "wallet.wishes.add"), systemImage: "plus") { adding = true }
-                            .buttonStyle(PaperSolidButtonStyle())
+                        if completed {
+                            Button(String(localized: "ui.wish.viewActive")) { completed = false }
+                                .buttonStyle(PaperSolidButtonStyle())
+                                .accessibilityIdentifier("wallet.wishes.viewActive")
+                        } else {
+                            Button(String(localized: "wallet.wishes.add"), systemImage: "plus") { adding = true }
+                                .buttonStyle(PaperSolidButtonStyle())
+                        }
                     }.frame(maxWidth: .infinity).padding(.vertical, 28)
                 } else {
                     LazyVStack(spacing: 4) {
@@ -172,6 +179,7 @@ struct WishRedemptionView: View {
     @Bindable var workspace: CheckLineWorkspace
     var wishID: UUID
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.dynamicTypeSize) private var typeSize
     @State private var amount = ""
     @State private var purchaseCurrency = ""
     @State private var exchangeRate = ""
@@ -212,46 +220,24 @@ struct WishRedemptionView: View {
                             PaperFormItem(title: String(localized: "v1.wish.balance"), value: MoneyFormat.string(workspace.wallet.balance, currencyCode: workspace.ledger.walletSettings.walletCurrencyCode))
                             Button(String(localized: "action.close")) { dismiss() }.buttonStyle(PaperSolidButtonStyle())
                         } else {
-                            Text(String(localized: "wallet.wishes.actual")).font(.subheadline).foregroundStyle(PaperTheme.muted)
-                            HStack {
-                                Text(currency).font(.subheadline).foregroundStyle(PaperTheme.muted)
-                                TextField("0.00", text: $amount).keyboardType(AmountKeyboard.type).font(.largeTitle).monospacedDigit().accessibilityLabel(String(localized: "wallet.wishes.actual"))
-                            }.padding(18).walletSurface()
-                            HStack {
-                                Text(String(localized: "wallet.wishes.purchaseCurrency"))
-                                    .font(.subheadline).foregroundStyle(PaperTheme.muted)
-                                Spacer(minLength: 12)
-                                TextField("CNY", text: $purchaseCurrency)
-                                    .textInputAutocapitalization(.characters)
-                                    .autocorrectionDisabled()
-                                    .multilineTextAlignment(.trailing)
-                                    .frame(maxWidth: 110)
-                                    .accessibilityIdentifier("wallet.wishes.purchaseCurrency")
-                            }.padding(18).walletSurface()
+                            purchaseFields
                             if !currencyValid {
                                 Text(String(localized: "wallet.wishes.invalidCurrency"))
                                     .font(.subheadline).foregroundStyle(PaperTheme.accent)
                             }
-                            if needsQuote {
-                                WalletExchangeQuoteFields(sourceCurrencyCode: currency, walletCurrencyCode: walletCurrency, rateText: $exchangeRate, quotedAt: $quoteDate)
-                            }
-                            if let preview {
-                                if needsQuote {
-                                    PaperFormItem(title: String(localized: "wallet.exchange.walletChange"), value: MoneyFormat.string(preview.walletSignedAmount, currencyCode: walletCurrency))
-                                }
-                                PaperFormItem(title: String(localized: "wallet.wishes.balanceAfter"), value: MoneyFormat.string(preview.balanceAfter, currencyCode: workspace.ledger.walletSettings.walletCurrencyCode))
-                            } else if parsed != nil {
-                                Label(needsQuote && quote == nil ? String(localized: "wallet.wishes.exchangeMissing") : String(localized: "wallet.wishes.insufficient"), systemImage: "exclamationmark.circle")
-                                    .font(.subheadline).foregroundStyle(PaperTheme.accent)
+                            if needsQuote || parsed != nil {
+                                walletImpact
                             }
                             Text(String(localized: "wallet.wishes.onlyWallet")).font(.subheadline).foregroundStyle(PaperTheme.muted)
                             Toggle(String(localized: "wallet.wishes.purchaseConfirmed"), isOn: $purchased).tint(PaperTheme.accent)
+                                .accessibilityIdentifier("wallet.wishes.purchaseConfirmed")
                             if failed { Text(String(localized: "v1.banner.failed")).foregroundStyle(PaperTheme.accent) }
                             Button(String(localized: "wallet.wishes.confirm")) {
                                 guard purchased, let parsed, preview != nil else { return }
                                 do { try workspace.redeemWish(wishID, actualAmount: parsed, currencyCode: currency, realPurchaseConfirmed: purchased, quote: quote); complete = true }
                                 catch { failed = true }
                             }.buttonStyle(PaperSolidButtonStyle(enabled: purchased && preview != nil)).disabled(!purchased || preview == nil)
+                                .accessibilityIdentifier("wallet.wishes.confirm")
                         }
                     }
                 }.padding(24).frame(maxWidth: 600).frame(maxWidth: .infinity)
@@ -265,5 +251,58 @@ struct WishRedemptionView: View {
         .onAppear {
             if purchaseCurrency.isEmpty { purchaseCurrency = wish?.currencyCode ?? walletCurrency }
         }
+    }
+
+    private var purchaseFields: some View {
+        let layout = typeSize.isAccessibilitySize ? AnyLayout(VStackLayout(alignment: .leading, spacing: 18)) : AnyLayout(HStackLayout(alignment: .top, spacing: 18))
+        return layout {
+            VStack(alignment: .leading, spacing: 8) {
+                Text(String(localized: "wallet.wishes.actual")).font(.subheadline).foregroundStyle(PaperTheme.muted)
+                TextField("0.00", text: $amount)
+                    .keyboardType(AmountKeyboard.type).font(.largeTitle).monospacedDigit()
+                    .accessibilityLabel(String(localized: "wallet.wishes.actual"))
+                    .accessibilityIdentifier("wallet.wishes.actual")
+            }.frame(maxWidth: .infinity, alignment: .leading)
+            VStack(alignment: .leading, spacing: 8) {
+                Text(String(localized: "wallet.wishes.purchaseCurrency")).font(.subheadline).foregroundStyle(PaperTheme.muted)
+                TextField("CNY", text: $purchaseCurrency)
+                    .textInputAutocapitalization(.characters).autocorrectionDisabled()
+                    .font(.title3).monospacedDigit()
+                    .multilineTextAlignment(typeSize.isAccessibilitySize ? .leading : .trailing)
+                    .accessibilityLabel(String(localized: "wallet.wishes.purchaseCurrency"))
+                    .accessibilityIdentifier("wallet.wishes.purchaseCurrency")
+            }.frame(maxWidth: typeSize.isAccessibilitySize ? .infinity : 110, alignment: .leading)
+        }.padding(18).walletSurface()
+    }
+
+    private var walletImpact: some View {
+        PaperCard {
+            VStack(alignment: .leading, spacing: 16) {
+                Text(String(localized: "ui.wish.walletImpact")).font(.headline)
+                if needsQuote {
+                    WalletExchangeQuoteFields(sourceCurrencyCode: currency, walletCurrencyCode: walletCurrency, rateText: $exchangeRate, quotedAt: $quoteDate)
+                }
+                if let preview {
+                    if needsQuote {
+                        walletImpactRow("wallet.exchange.walletChange", amount: preview.walletSignedAmount)
+                    }
+                    walletImpactRow("wallet.wishes.balanceAfter", amount: preview.balanceAfter)
+                } else if parsed != nil {
+                    Label(needsQuote && quote == nil ? String(localized: "wallet.wishes.exchangeMissing") : String(localized: "wallet.wishes.insufficient"), systemImage: "exclamationmark.circle")
+                        .font(.subheadline).foregroundStyle(PaperTheme.accent)
+                }
+            }
+        }
+    }
+
+    private func walletImpactRow(_ key: String, amount: Decimal) -> some View {
+        let layout = typeSize.isAccessibilitySize ? AnyLayout(VStackLayout(alignment: .leading, spacing: 6)) : AnyLayout(HStackLayout(alignment: .firstTextBaseline, spacing: 12))
+        return layout {
+            Text(String(localized: String.LocalizationValue(key))).font(.subheadline).foregroundStyle(PaperTheme.muted)
+            if !typeSize.isAccessibilitySize { Spacer(minLength: 8) }
+            Text(MoneyFormat.string(amount, currencyCode: walletCurrency)).font(.subheadline.weight(.medium)).monospacedDigit()
+                .multilineTextAlignment(typeSize.isAccessibilitySize ? .leading : .trailing)
+        }.accessibilityElement(children: .combine)
+            .accessibilityIdentifier(key)
     }
 }

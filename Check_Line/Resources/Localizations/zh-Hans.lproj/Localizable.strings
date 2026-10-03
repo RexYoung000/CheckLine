@@ -585,6 +585,11 @@
 "ui.directory.archived" = "已归档预算卡";
 "ui.impact.originalPeriod" = "原周期";
 "ui.impact.change" = "本次消费影响";
+"ui.impact.confirmPendingSummary" = "确认这笔消费后，将修正原周期的结算结果与心愿钱包。";
+"ui.impact.walletTitle" = "修正后的钱包";
+"ui.wish.viewActive" = "查看想实现";
+"ui.wish.walletImpact" = "钱包变化";
+"ui.budget.edit.newMonthlyAmount" = "本月及以后每月";
 "ui.record.historicalMoveBoundary" = "已结算周期的改归属需要完整追溯核对，当前入口尚未开放。";
 "ui.agent.conversation" = "本次对话";
 "ui.agent.you" = "你";

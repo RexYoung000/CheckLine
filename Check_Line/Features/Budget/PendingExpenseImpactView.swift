@@ -6,17 +6,23 @@ struct PendingExpenseImpactView: View {
     var preview: RetrospectivePreview
     var onClose: () -> Void
     @State private var errorText: String?
+    @Environment(\.dynamicTypeSize) private var typeSize
 
     var body: some View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 22) {
                     Label(String(localized: "wallet.expense.retrospectiveImpact"), systemImage: "clock.arrow.circlepath").font(.title2.weight(.semibold))
-                    PaperFormItem(title: String(localized: "ui.impact.originalPeriod"), value: workspace.ledger.periods[preview.periodID]?.startDate.formatted(date: .abbreviated, time: .omitted) ?? "")
-                    PaperFormItem(title: String(localized: "ui.impact.change"), value: MoneyFormat.string(preview.amountDelta, currencyCode: preview.sourceCurrencyCode))
-                    PaperFormItem(title: String(localized: "wallet.settlement.walletAfter"), value: MoneyFormat.string(preview.balanceAfter, currencyCode: workspace.ledger.walletSettings.walletCurrencyCode))
-                    PaperFormItem(title: String(localized: "v1.wish.recovery"), value: MoneyFormat.string(preview.recoveryGapAfter, currencyCode: workspace.ledger.walletSettings.walletCurrencyCode))
-                    Text(String(localized: "ui.design.impact")).font(.subheadline).foregroundStyle(PaperTheme.muted)
+                    Text(String(localized: "ui.impact.confirmPendingSummary")).font(.subheadline).foregroundStyle(PaperTheme.muted)
+                    VStack(alignment: .leading, spacing: 16) {
+                        impactRow("ui.impact.originalPeriod", periodRange)
+                        impactRow("ui.impact.change", MoneyFormat.string(preview.amountDelta, currencyCode: preview.sourceCurrencyCode))
+                    }.padding(18).walletSurface(radius: 22)
+                    VStack(alignment: .leading, spacing: 16) {
+                        Text(String(localized: "ui.impact.walletTitle")).font(.headline)
+                        impactRow("v1.wish.balance", MoneyFormat.string(preview.balanceAfter, currencyCode: workspace.ledger.walletSettings.walletCurrencyCode))
+                        impactRow("v1.wish.recovery", MoneyFormat.string(preview.recoveryGapAfter, currencyCode: workspace.ledger.walletSettings.walletCurrencyCode))
+                    }.padding(18).walletSurface(radius: 22)
                     if let errorText { Text(errorText).font(.subheadline).foregroundStyle(.red) }
                 }.padding(22).frame(maxWidth: 650).frame(maxWidth: .infinity)
             }.background(PaperTheme.canvas)
@@ -30,5 +36,21 @@ struct PendingExpenseImpactView: View {
                 }.padding(20).frame(maxWidth: 650).frame(maxWidth: .infinity).background(PaperTheme.canvas)
             }.navigationBarTitleDisplayMode(.inline)
         }
+    }
+
+    private var periodRange: String {
+        guard let period = workspace.ledger.periods[preview.periodID] else { return "" }
+        let start = period.startDate.formatted(date: .abbreviated, time: .omitted)
+        return period.endDate.map { start + " – " + $0.formatted(date: .abbreviated, time: .omitted) } ?? start
+    }
+
+    private func impactRow(_ key: String.LocalizationValue, _ value: String) -> some View {
+        let layout = typeSize.isAccessibilitySize ? AnyLayout(VStackLayout(alignment: .leading, spacing: 6)) : AnyLayout(HStackLayout(alignment: .firstTextBaseline, spacing: 12))
+        return layout {
+            Text(String(localized: key)).font(.subheadline).foregroundStyle(PaperTheme.muted)
+            if !typeSize.isAccessibilitySize { Spacer(minLength: 8) }
+            Text(value).font(.subheadline.weight(.medium)).monospacedDigit()
+                .multilineTextAlignment(typeSize.isAccessibilitySize ? .leading : .trailing)
+        }.accessibilityElement(children: .combine)
     }
 }

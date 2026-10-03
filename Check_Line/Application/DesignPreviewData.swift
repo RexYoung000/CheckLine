@@ -39,6 +39,35 @@ enum DesignPreviewData {
         let next = calendar.date(byAdding: .month, value: 1, to: start) ?? now
         let end = calendar.date(byAdding: .day, value: -1, to: next) ?? now
         var ledger = Ledger.blank(walletCurrencyCode: "CNY", now: now)
+        if screen == "settlement-fx" {
+            ledger = try WalletLedger.setWalletCurrency(ledger: ledger, currencyCode: "CNY", now: now)
+            let card = try ledger.insertBudgetCard(name: String(localized: "wallet.demo.trip"), amount: 100,
+                                                   currencyCode: "USD", cycleType: .oneShot, recurrence: nil,
+                                                   startDate: start, endDate: nil, now: now)
+            try record(ledger: &ledger, amount: 25, currencyCode: "USD", occurredAt: now, now: now,
+                       decision: .confirmed(periodID: card.1.id), merchant: String(localized: "wallet.demo.train"))
+            ledger = try WalletLedger.append(ledger: ledger, type: .surplus, sourceSignedAmount: 860,
+                                              sourceCurrencyCode: "CNY", quote: nil, at: now).0
+            ledger = try CycleEngine.beginManualSettlement(ledger: ledger, periodID: card.1.id, now: now)
+            try LedgerStore.replaceAll(ledger, in: context)
+            return
+        }
+        if screen == "retrospective-record" {
+            let previousStart = calendar.date(byAdding: .month, value: -1, to: start) ?? start
+            let previousEnd = calendar.date(byAdding: .day, value: -1, to: start) ?? start
+            let card = try ledger.insertBudgetCard(name: String(localized: "wallet.demo.daily"), amount: 1_000,
+                                                   currencyCode: "CNY", cycleType: .oneShot, recurrence: nil,
+                                                   startDate: previousStart, endDate: previousEnd, now: previousStart)
+            try record(ledger: &ledger, amount: 250, currencyCode: "CNY", occurredAt: previousStart, now: previousStart,
+                       decision: .confirmed(periodID: card.1.id), merchant: String(localized: "wallet.demo.train"))
+            try record(ledger: &ledger, amount: 40, currencyCode: "CNY", occurredAt: previousEnd, now: previousEnd,
+                       decision: .pending(periodID: card.1.id, confidence: DecimalMath.parse("0.4")), merchant: String(localized: "wallet.demo.coffee"))
+            ledger = try CycleEngine.markDueIfNeeded(ledger: ledger, periodID: card.1.id, now: now, calendar: calendar)
+            ledger = try SettlementEngine.commit(ledger: ledger, periodID: card.1.id, now: now, calendar: calendar,
+                                                  quote: nil, acceptedIncompleteData: true)
+            try LedgerStore.replaceAll(ledger, in: context)
+            return
+        }
         if screen == "settlement-loop" {
             let card = try ledger.insertBudgetCard(
                 name: String(localized: "wallet.demo.trip"), amount: 1_000,

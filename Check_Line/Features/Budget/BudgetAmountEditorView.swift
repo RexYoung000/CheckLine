@@ -59,6 +59,7 @@ struct BudgetAmountEditorView: View {
                         }
                         Button(String(localized: "ui.draft.discard")) { discardRequested = true }.frame(minHeight: 44)
                     }
+                    if typeSize.isAccessibilitySize { actions }
                 }
                 .padding(22).frame(maxWidth: 640, alignment: .leading).frame(maxWidth: .infinity)
             }
@@ -73,23 +74,10 @@ struct BudgetAmountEditorView: View {
                 }
             }
             .safeAreaInset(edge: .bottom) {
-                VStack(spacing: 10) {
-                    if let preview {
-                        Button(String(localized: "wallet.budget.edit.save")) { save(preview) }
-                            .buttonStyle(PaperSolidButtonStyle()).disabled(isSaving || !isEditable || workspace.budgetDraftStorageFailed)
-                            .accessibilityIdentifier("wallet.budget.edit.save")
-                        Button(String(localized: "wallet.budget.edit.back")) {
-                            self.preview = nil
-                            errorText = nil
-                        }.frame(minHeight: 44).disabled(isSaving)
-                            .accessibilityIdentifier("wallet.budget.edit.back")
-                    } else {
-                        Button(String(localized: "wallet.budget.edit.preview")) { review() }
-                            .buttonStyle(PaperSolidButtonStyle()).disabled(!isEditable || isSaving || workspace.budgetDraftStorageFailed)
-                            .accessibilityIdentifier("wallet.budget.edit.preview")
-                    }
-                }.padding(.horizontal, 22).padding(.vertical, 12)
-                    .frame(maxWidth: 640).frame(maxWidth: .infinity).background(PaperTheme.canvas)
+                if !typeSize.isAccessibilitySize {
+                    actions.padding(.horizontal, 22).padding(.vertical, 12)
+                        .frame(maxWidth: 640).frame(maxWidth: .infinity).background(PaperTheme.canvas)
+                }
             }
             .onChange(of: amountText) { _, text in
                 workspace.retainBudgetAmountDraft(text, for: card)
@@ -111,20 +99,44 @@ struct BudgetAmountEditorView: View {
         }
     }
 
+    private var actions: some View {
+        VStack(spacing: 10) {
+            if let preview {
+                Button(String(localized: "wallet.budget.edit.save")) { save(preview) }
+                    .buttonStyle(PaperSolidButtonStyle()).disabled(isSaving || !isEditable || workspace.budgetDraftStorageFailed)
+                    .accessibilityIdentifier("wallet.budget.edit.save")
+                Button(String(localized: "wallet.budget.edit.back")) {
+                    self.preview = nil
+                    errorText = nil
+                }.frame(minHeight: 44).disabled(isSaving)
+                    .accessibilityIdentifier("wallet.budget.edit.back")
+            } else {
+                Button(String(localized: "wallet.budget.edit.preview")) { review() }
+                    .buttonStyle(PaperSolidButtonStyle()).disabled(!isEditable || isSaving || workspace.budgetDraftStorageFailed)
+                    .accessibilityIdentifier("wallet.budget.edit.preview")
+            }
+        }
+    }
+
     private func impact(_ preview: BudgetAmountEditPreview) -> some View {
         VStack(alignment: .leading, spacing: 16) {
             Text(String(localized: "wallet.budget.edit.preview")).font(.headline)
-            row("wallet.budget.edit.oldAmount", preview.previousAmount, preview)
-            row("wallet.budget.edit.newAmount", preview.newAmount, preview)
+            comparison(
+                beforeKey: "wallet.budget.edit.oldAmount", before: preview.previousAmount,
+                afterKey: "ui.budget.edit.newMonthlyAmount", after: preview.newAmount,
+                currencyCode: preview.currencyCode
+            )
             if preview.previousDefaultAmount != preview.previousAmount {
                 row("wallet.budget.edit.oldDefault", preview.previousDefaultAmount, preview)
             }
-            row("wallet.budget.edit.newDefault", preview.newAmount, preview)
             Divider()
             row("v1.card.used", preview.snapshotAfter.confirmedSpent, preview)
             row("v1.card.pending", preview.snapshotAfter.pendingAmount, preview)
-            row("wallet.budget.edit.remainingBefore", preview.snapshotBefore.remaining - preview.snapshotBefore.pendingAmount, preview)
-            row("wallet.budget.edit.remainingAfter", preview.snapshotAfter.remaining - preview.snapshotAfter.pendingAmount, preview)
+            comparison(
+                beforeKey: "wallet.budget.edit.remainingBefore", before: preview.snapshotBefore.remaining - preview.snapshotBefore.pendingAmount,
+                afterKey: "wallet.budget.edit.remainingAfter", after: preview.snapshotAfter.remaining - preview.snapshotAfter.pendingAmount,
+                currencyCode: preview.currencyCode
+            )
             if preview.snapshotAfter.certainOverrunAmount > 0 {
                 row("wallet.budget.edit.certain", preview.snapshotAfter.certainOverrunAmount, preview)
             }
@@ -135,6 +147,24 @@ struct BudgetAmountEditorView: View {
                 Text(String(localized: "wallet.budget.edit.pendingHint")).font(.subheadline).foregroundStyle(PaperTheme.muted)
             }
         }.padding(18).walletSurface(radius: 22)
+    }
+
+    private func comparison(beforeKey: String, before: Decimal, afterKey: String, after: Decimal, currencyCode: String) -> some View {
+        let layout = typeSize.isAccessibilitySize ? AnyLayout(VStackLayout(alignment: .leading, spacing: 16)) : AnyLayout(HStackLayout(alignment: .top, spacing: 16))
+        return layout {
+            amountColumn(beforeKey, amount: before, currencyCode: currencyCode)
+            amountColumn(afterKey, amount: after, currencyCode: currencyCode)
+        }
+    }
+
+    private func amountColumn(_ key: String, amount: Decimal, currencyCode: String) -> some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text(String(localized: String.LocalizationValue(key))).font(.subheadline).foregroundStyle(PaperTheme.muted)
+            Text(MoneyFormat.string(amount, currencyCode: currencyCode)).font(.title3.weight(.medium)).monospacedDigit()
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .accessibilityElement(children: .combine)
+        .accessibilityIdentifier(key == "ui.budget.edit.newMonthlyAmount" ? "wallet.budget.edit.newMonthlyAmount" : key)
     }
 
     private func row(_ key: String, _ value: Decimal, _ preview: BudgetAmountEditPreview) -> some View {

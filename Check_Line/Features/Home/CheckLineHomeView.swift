@@ -99,15 +99,12 @@ struct CheckLineHomeView: View {
                     WalletEmptyBudgetCard { workspace.showAgent = true }
                         .padding(.horizontal, 18)
                         .padding(.top, 24)
-                    VStack(spacing: 16) {
-                        Text(String(localized: "wallet.empty.budget"))
-                            .font(.body).foregroundStyle(PaperTheme.muted)
-                            .multilineTextAlignment(.center)
+                    VStack(spacing: 0) {
                         Button(String(localized: "wallet.empty.manual")) { workspace.openComposer(.budget) }
-                            .buttonStyle(PaperSolidButtonStyle())
+                            .buttonStyle(PaperQuietButtonStyle())
                             .accessibilityIdentifier("wallet.empty.createBudget")
                     }
-                    .padding(.horizontal, 28).padding(.top, 48).padding(.bottom, 100)
+                    .padding(.horizontal, 28).padding(.top, 36).padding(.bottom, 100)
                     .frame(maxWidth: .infinity, minHeight: 430, alignment: .top)
                     .background { WalletCardholderSurface() }
                     .padding(.top, -24)
