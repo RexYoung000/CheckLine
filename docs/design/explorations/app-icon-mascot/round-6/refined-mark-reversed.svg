@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024" role="img" aria-labelledby="title">
+  <title id="title">CheckLine 留白精修：右上余白与左下实体</title>
+
+  <path fill="#FAF7F1" fill-rule="evenodd" d="M346 234H678C754 234 798 278 798 354V674C798 750 754 794 678 794H346C270 794 226 750 226 674V354C226 278 270 234 346 234Z M464 314H668C702 314 718 330 718 364V608C718 642 702 658 668 658H562C542 658 531 652 519 637L431 515C419 499 414 480 414 458V364C414 330 430 314 464 314Z"/>
+</svg>

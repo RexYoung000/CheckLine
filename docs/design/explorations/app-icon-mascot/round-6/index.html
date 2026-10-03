@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CheckLine · 留白精修</title>
+  <style>
+    :root { color-scheme: light; --paper: #f7f5f2; --ink: #302c38; --muted: #79727f; --purple: #725d93; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--paper); color: var(--ink); font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif; -webkit-font-smoothing: antialiased; }
+    main { max-width: 800px; margin: auto; padding: 28px 18px 24px; }
+    .eyebrow { margin: 0 0 8px; font-size: 10px; letter-spacing: .12em; font-weight: 600; color: var(--purple); }
+    h1 { margin: 0; font-size: clamp(26px, 5vw, 34px); line-height: 1.3; letter-spacing: -.035em; font-weight: 650; }
+    header > p:last-child { margin: 10px 0 23px; color: var(--muted); font-size: 12px; line-height: 1.5; }
+    .columns { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+    .candidate { min-width: 0; }
+    .hero { display: block; width: 100%; aspect-ratio: 1; border-radius: 23%; }
+    h2 { margin: 13px 0 5px; font-size: 14px; font-weight: 650; }
+    .candidate p { margin: 0; font-size: 12px; line-height: 1.5; color: var(--muted); }
+    .signature { display: flex; align-items: center; justify-content: center; gap: 10px; margin: 21px 0; }
+    .signature img { width: 34px; height: 34px; }
+    .wordmark { font-size: 19px; font-weight: 650; letter-spacing: -.04em; }
+    .wordmark span { display: block; margin-top: 2px; font-size: 10px; font-weight: 400; letter-spacing: .05em; color: var(--muted); }
+    .scale { padding: 14px; background: #ede9f1; border-radius: 18px; margin-top: 11px; }
+    .scale.dark { background: #292530; color: #eee9f2; }
+    .scale > p, .mono > p { margin: 0 0 12px; font-size: 10px; line-height: 1.4; color: var(--muted); }
+    .dark > p { color: #b9b0c4; }
+    figure { margin: 0; min-width: 0; }
+    .samples { display: flex; justify-content: center; align-items: end; gap: 14px; flex-wrap: wrap; }
+    .thumb { display: block; border-radius: 23%; }
+    .size60 { width: 60px; height: 60px; }
+    .size32 { width: 32px; height: 32px; }
+    figcaption { font-size: 9px; color: var(--muted); text-align: center; margin-top: 6px; }
+    .dark figcaption { color: #b9b0c4; }
+    .mono { margin-top: 19px; }
+    .mono-cell { padding: 12px; border-radius: 16px; background: #ede9f1; }
+    .mono-cell.dark { background: #292530; }
+    .mono-cell img { display: block; margin: auto; width: 76px; height: 76px; }
+    footer { margin-top: 20px; font-size: 10px; line-height: 1.6; color: var(--muted); }
+    footer p { margin: 0 0 10px; }
+    a { color: var(--purple); text-underline-offset: 3px; }
+    a:focus-visible { outline: 2px solid var(--purple); outline-offset: 4px; border-radius: 2px; }
+    @media (max-width: 390px) { main { padding-inline: 12px; } .columns { gap: 12px; } .samples { gap: 10px; } .scale { padding-inline: 10px; } }
+  </style>
+</head>
+<body>
+<main>
+  <header>
+    <p class="eyebrow">CHECKLINE · APP ICON</p>
+    <h1>留白，继续精修。</h1>
+    <p>保留预算里的余地，让轮廓更有个性。</p>
+  </header>
+  <section class="columns" aria-label="留白图标精修前后对照">
+    <article class="candidate">
+      <img class="hero" src="before-icon.svg" alt="原稿：右上偏心留白，内侧左下为大圆弧">
+      <h2>原稿</h2>
+      <p>大圆弧内角，较细的上边与右边。</p>
+    </article>
+    <article class="candidate">
+      <img class="hero" src="refined-icon.svg" alt="精修：内侧左下为平滑斜切，上边与右边稍加厚">
+      <h2>精修</h2>
+      <p>平滑斜切，薄边更稳，左下更厚实。</p>
+    </article>
+  </section>
+  <div class="signature" aria-label="精修标记与品牌名称组合示意">
+    <img src="refined-mark.svg" alt="" aria-hidden="true">
+    <div class="wordmark">CheckLine<span>预算线</span></div>
+  </div>
+  <section class="scale" aria-label="浅色背景上的实际尺寸对照">
+    <p>浅色背景 · 左原稿 / 右精修</p>
+    <div class="columns">
+      <div class="samples">
+        <figure><img class="thumb size60" src="before-icon.svg" alt="原稿 60 像素"><figcaption>60</figcaption></figure>
+        <figure><img class="thumb size32" src="before-icon.svg" alt="原稿 32 像素"><figcaption>32</figcaption></figure>
+      </div>
+      <div class="samples">
+        <figure><img class="thumb size60" src="refined-icon.svg" alt="精修 60 像素"><figcaption>60</figcaption></figure>
+        <figure><img class="thumb size32" src="refined-icon.svg" alt="精修 32 像素"><figcaption>32</figcaption></figure>
+      </div>
+    </div>
+  </section>
+  <section class="scale dark" aria-label="深色背景上的实际尺寸对照">
+    <p>深色背景 · 左原稿 / 右精修</p>
+    <div class="columns">
+      <div class="samples">
+        <figure><img class="thumb size60" src="before-icon.svg" alt="原稿 60 像素"><figcaption>60</figcaption></figure>
+        <figure><img class="thumb size32" src="before-icon.svg" alt="原稿 32 像素"><figcaption>32</figcaption></figure>
+      </div>
+      <div class="samples">
+        <figure><img class="thumb size60" src="refined-icon.svg" alt="精修 60 像素"><figcaption>60</figcaption></figure>
+        <figure><img class="thumb size32" src="refined-icon.svg" alt="精修 32 像素"><figcaption>32</figcaption></figure>
+      </div>
+    </div>
+  </section>
+  <section class="mono" aria-label="精修标记的单色与反白对照">
+    <p>精修轮廓 · 单色 / 反白</p>
+    <div class="columns">
+      <div class="mono-cell"><img src="refined-mark.svg" alt="精修标记单色"></div>
+      <div class="mono-cell dark"><img src="refined-mark-reversed.svg" alt="精修标记反白"></div>
+    </div>
+  </section>
+  <footer>
+    <p>精修候选，尚未替换正式图标。比例静态；CSS 圆角、背景对照与反白不等于系统裁切或系统外观。品牌名称排版仅作示意。</p>
+    <a href="http://127.0.0.1:8798/index.html">查看上一稿</a>
+  </footer>
+</main>
+</body>
+</html>

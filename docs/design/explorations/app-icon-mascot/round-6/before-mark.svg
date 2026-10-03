@@ -1,0 +1,4 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024" role="img" aria-labelledby="title">
+  <title id="title">留白标记，单色透明底</title>
+  <path fill="#725D93" fill-rule="evenodd" d="M346 234H678C754 234 798 278 798 354V674C798 750 754 794 678 794H346C270 794 226 750 226 674V354C226 278 270 234 346 234Z M466 304H678C711 304 728 321 728 354V618C728 651 711 668 678 668H550C476 668 416 608 416 534V354C416 321 433 304 466 304Z"/>
+</svg>
