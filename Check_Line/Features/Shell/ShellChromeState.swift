@@ -53,6 +53,8 @@ final class ShellChromeState {
     var isSettingsPresented = false
     var isSourcesPresented = false
     var isAttentionPresented = false
+    var attentionDestination: BudgetWorkspaceRoute?
+    var workspaceRequest: WalletWorkspaceRequest?
     var isShowingDetail = false
     var isCreateMenuPresented = false
 
@@ -149,6 +151,13 @@ final class ShellChromeState {
         try await minimumDuration
         try Task.checkCancellation()
     }
+}
+
+/// A single delivery to the originating tab after the task picker has closed.
+struct WalletWorkspaceRequest: Identifiable {
+    let id = UUID()
+    let tab: CheckLineAppTab
+    let route: BudgetWorkspaceRoute
 }
 
 struct WalletNavigationRequest: Hashable {

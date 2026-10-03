@@ -152,7 +152,16 @@ struct WalletRootPage<Content: View>: View {
                 if chrome?.selectedTab == tab { chrome?.isShowingDetail = count > 0 }
                 if count == 0 && detailPresented.wrappedValue { detailPresented.wrappedValue = false }
             }
+            .onChange(of: chrome?.workspaceRequest?.id) { _, _ in openRequestedWorkspace() }
+            .onAppear { openRequestedWorkspace() }
         }
+    }
+
+    private func openRequestedWorkspace() {
+        guard let chrome, let request = chrome.workspaceRequest,
+              request.tab == tab, chrome.selectedTab == tab else { return }
+        chrome.workspaceRequest = nil
+        path.append(request.route)
     }
 }
 
@@ -234,6 +243,7 @@ struct LiquidWave: Shape {
 struct LiquidBudgetCard: View {
     var card: HomeBudgetCardModel
     var showsRemainingRatio = true
+    var bottomInset: CGFloat = 22
     var flows = false
     var reflectionPoint: CGPoint?
     var remainingChange: BudgetRemainingChange?
@@ -292,6 +302,7 @@ struct LiquidBudgetCard: View {
                 }
             }
             .padding(22)
+            .padding(.bottom, max(0, bottomInset - 22))
             .foregroundStyle(PaperTheme.ink)
         }
         .frame(minHeight: typeSize.isAccessibilitySize ? 280 : 258)

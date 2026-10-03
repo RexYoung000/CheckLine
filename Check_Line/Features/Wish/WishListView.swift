@@ -2,16 +2,21 @@ import SwiftUI
 
 struct WishListView: View {
     @Bindable var workspace: CheckLineWorkspace
-    @State private var completed = false
     @State private var adding = false
     @State private var walletDetails = false
     @Environment(\.dynamicTypeSize) private var typeSize
-    private var wishes: [Wish] {
-        workspace.ledger.wishes.values.filter { completed ? $0.state == .completed : $0.state == .active }
-            .sorted { $0.createdAt == $1.createdAt ? $0.name < $1.name : $0.createdAt > $1.createdAt }
+    private var activeWishes: [Wish] { wishes(in: .active) }
+    private var completedWishes: [Wish] { wishes(in: .completed) }
+    private func wishes(in state: WishState) -> [Wish] {
+        workspace.ledger.wishes.values.filter { $0.state == state }
+            .sorted {
+                let lhs = state == .completed ? $0.completedAt ?? $0.createdAt : $0.createdAt
+                let rhs = state == .completed ? $1.completedAt ?? $1.createdAt : $1.createdAt
+                return lhs == rhs ? $0.name < $1.name : lhs > rhs
+            }
     }
     var body: some View {
-        WalletRootPage(tab: .wishes, title: String(localized: "wallet.wishes.title"), workspace: workspace, onAdd: { adding = true }) {
+        WalletRootPage(tab: .wishes, title: String(localized: "wallet.wishes.title"), workspace: workspace, onAdd: activeWishes.isEmpty ? nil : { adding = true }) {
             VStack(alignment: .leading, spacing: 24) {
                 Button { walletDetails = true } label: {
                     PaperCard {
@@ -27,53 +32,59 @@ struct WishListView: View {
                                 CheckLineIconLabel(String(localized: "v1.wish.recovery") + " " + MoneyFormat.string(workspace.wallet.recoveryGap, currencyCode: workspace.ledger.walletSettings.walletCurrencyCode), symbol: "arrow.counterclockwise")
                                     .font(.subheadline).foregroundStyle(PaperTheme.accent)
                             }
-                            Text(String(localized: "ui.wish.virtualBalanceNote")).font(.caption).foregroundStyle(PaperTheme.muted)
                         }
                     }
                 }.buttonStyle(.plain)
-                Picker(String(localized: "wallet.wishes.filter"), selection: $completed) {
-                    Text(String(localized: "wallet.wishes.active")).tag(false)
-                    Text(String(localized: "wallet.wishes.completed")).tag(true)
-                }.pickerStyle(.segmented)
-                    .accessibilityIdentifier("wallet.wishes.filter")
-                if wishes.isEmpty {
+                if activeWishes.isEmpty {
                     VStack(spacing: 20) {
-                        WalletSymbol(name: completed ? "checkmark" : "star", size: 72)
-                        Text(completed ? String(localized: "wallet.wishes.completedEmpty") : String(localized: "wallet.wishes.empty")).font(.headline)
-                        if completed {
-                            Button(String(localized: "ui.wish.viewActive")) { completed = false }
-                                .buttonStyle(PaperSolidButtonStyle())
-                                .accessibilityIdentifier("wallet.wishes.viewActive")
-                        } else {
-                            Button(String(localized: "wallet.wishes.add"), iconSymbol: "plus") { adding = true }
-                                .buttonStyle(PaperSolidButtonStyle())
-                        }
+                        WalletSymbol(name: "star", size: 72)
+                        Button(String(localized: "wallet.wishes.add"), iconSymbol: "plus") { adding = true }
+                            .buttonStyle(PaperSolidButtonStyle())
+                            .accessibilityIdentifier("wallet.wishes.empty.add")
                     }.frame(maxWidth: .infinity).padding(.vertical, 28)
                 } else {
-                    LazyVStack(spacing: 4) {
-                        ForEach(wishes) { wish in
-                            NavigationLink { WishDetailView(workspace: workspace, wishID: wish.id) } label: {
-                                HStack(spacing: 14) {
-                                    WalletSymbol(name: wish.symbolName ?? "star", size: 48)
-                                    VStack(alignment: .leading, spacing: 6) {
-                                        Text(wish.name).font(.headline).lineLimit(typeSize.isAccessibilitySize ? nil : 2)
-                                        if let amount = wish.targetAmount {
-                                            Text(MoneyFormat.string(amount, currencyCode: wish.currencyCode ?? workspace.ledger.walletSettings.walletCurrencyCode)).font(.subheadline.monospacedDigit()).foregroundStyle(PaperTheme.muted)
-                                                .fixedSize(horizontal: false, vertical: true)
-                                        }
-                                    }
-                                    Spacer(minLength: 0)
-                                    CheckLineIcon(symbol: completed ? "checkmark.circle" : "arrow.up.right", size: 20).font(.caption).foregroundStyle(PaperTheme.muted)
-                                }.padding(14).frame(maxWidth: .infinity, minHeight: 82, alignment: .leading)
-                                    .contentShape(Rectangle())
-                            }.buttonStyle(.plain)
-                        }
-                    }.padding(4).walletSurface()
+                    wishRows(activeWishes)
+                }
+                if !completedWishes.isEmpty {
+                    VStack(alignment: .leading, spacing: 14) {
+                        Text(String(format: String(localized: "ui.wish.completedCount"), completedWishes.count))
+                            .font(.subheadline.weight(.medium)).foregroundStyle(PaperTheme.muted)
+                            .accessibilityAddTraits(.isHeader)
+                            .accessibilityIdentifier("wallet.wishes.completed.heading")
+                        wishRows(completedWishes)
+                    }
                 }
             }
         }
         .sheet(isPresented: $adding) { CreateWishSheet(workspace: workspace) }
         .sheet(isPresented: $walletDetails) { WishWalletSummaryView(workspace: workspace) }
+    }
+
+    private func wishRows(_ wishes: [Wish]) -> some View {
+        LazyVStack(spacing: 4) {
+            ForEach(wishes) { wish in
+                NavigationLink { WishDetailView(workspace: workspace, wishID: wish.id) } label: {
+                    HStack(spacing: 14) {
+                        WalletSymbol(name: wish.symbolName ?? "star", size: 48)
+                        VStack(alignment: .leading, spacing: 6) {
+                            Text(wish.name).font(.headline).lineLimit(typeSize.isAccessibilitySize ? nil : 2)
+                            if wish.state == .completed, let date = wish.completedAt {
+                                Text(date, format: .dateTime.year().month().day())
+                                    .font(.subheadline).foregroundStyle(PaperTheme.muted)
+                            } else if let amount = wish.targetAmount {
+                                Text(MoneyFormat.string(amount, currencyCode: wish.currencyCode ?? workspace.ledger.walletSettings.walletCurrencyCode))
+                                    .font(.subheadline.monospacedDigit()).foregroundStyle(PaperTheme.muted)
+                                    .fixedSize(horizontal: false, vertical: true)
+                            }
+                        }
+                        Spacer(minLength: 0)
+                        CheckLineIcon(symbol: wish.state == .completed ? "checkmark.circle" : "arrow.up.right", size: 20)
+                            .foregroundStyle(PaperTheme.muted)
+                    }.padding(14).frame(maxWidth: .infinity, minHeight: 82, alignment: .leading)
+                        .contentShape(Rectangle())
+                }.buttonStyle(.plain)
+            }
+        }.padding(4).walletSurface()
     }
 }
 
@@ -155,7 +166,6 @@ struct WishDetailView: View {
                                     CheckLineIconLabel(String(localized: "v1.wish.recovery") + " " + MoneyFormat.string(workspace.wallet.recoveryGap, currencyCode: workspace.ledger.walletSettings.walletCurrencyCode), symbol: "arrow.counterclockwise")
                                         .font(.subheadline).foregroundStyle(PaperTheme.accent)
                                 }
-                                Text(String(localized: "ui.wish.virtualBalanceNote")).font(.caption).foregroundStyle(PaperTheme.muted)
                             }
                         }
                         Button(String(localized: "wallet.wishes.purchased")) { redeem = true }.buttonStyle(PaperSolidButtonStyle())

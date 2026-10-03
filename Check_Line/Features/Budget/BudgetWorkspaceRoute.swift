@@ -3,6 +3,7 @@ import SwiftUI
 nonisolated enum BudgetWorkspaceRoute: Hashable {
     case budget(UUID, UUID?, BudgetDetailSection)
     case expense(UUID)
+    case unbudgeted
 }
 
 private struct BudgetWorkspacePushKey: EnvironmentKey {
@@ -24,6 +25,8 @@ struct BudgetWorkspaceDestination: View {
             BudgetDetailContent(workspace: workspace, budgetID: id, section: section, periodID: period)
         case .expense(let id):
             WalletExpenseDetail(workspace: workspace, expenseID: id, standalone: false)
+        case .unbudgeted:
+            UnbudgetedRecordsView(workspace: workspace)
         }
     }
 }

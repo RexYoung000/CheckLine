@@ -39,7 +39,16 @@ struct CheckLineShellView: View {
             } } }.presentationDetents([.large]).presentationBackground(PaperTheme.canvas)
         }
         .sheet(isPresented: $chrome.isSettingsPresented) { SettingsPlaceholderView(workspace: workspace) }
-        .sheet(isPresented: $chrome.isAttentionPresented) { WalletAttentionSheet(workspace: workspace) }
+        .sheet(isPresented: $chrome.isAttentionPresented, onDismiss: {
+            guard let route = chrome.attentionDestination else { return }
+            chrome.attentionDestination = nil
+            chrome.workspaceRequest = WalletWorkspaceRequest(tab: chrome.selectedTab, route: route)
+        }) {
+            WalletAttentionSheet(workspace: workspace) { route in
+                chrome.attentionDestination = route
+                chrome.isAttentionPresented = false
+            }
+        }
         .sheet(isPresented: $showsPreviewDetail) { previewDetail }
         .background(PaperTheme.canvas.ignoresSafeArea())
         .task(id: WalletNavigationRequest(tab: chrome.selectedTab, reduceMotion: reduceMotion, active: scenePhase == .active)) {
@@ -64,7 +73,7 @@ struct CheckLineShellView: View {
             #endif
             switch DesignPreviewData.screen {
             case "settings": chrome.isSettingsPresented = true
-            case "attention": chrome.isAttentionPresented = true
+            case "attention", "attention-overdue": chrome.isAttentionPresented = true
             case "agent": workspace.showAgent = true
             case "agent-confirm":
                 workspace.beginTask(.record, mode: "agent")

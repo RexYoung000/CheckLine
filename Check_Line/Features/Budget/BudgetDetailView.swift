@@ -79,6 +79,7 @@ struct BudgetDetailContent: View {
             }.padding(22).frame(maxWidth: 760).frame(maxWidth: .infinity)
         }
         .background(PaperTheme.canvas.ignoresSafeArea()).foregroundStyle(PaperTheme.ink)
+        .accessibilityIdentifier("wallet.workspace.page")
         .navigationTitle(section == .overview ? card?.name ?? String(localized: "ui.workspace.title") : section.title)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar(.visible, for: .navigationBar).toolbar(.hidden, for: .tabBar, .bottomBar)

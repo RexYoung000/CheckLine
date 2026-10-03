@@ -1,0 +1,143 @@
+{
+  "date": "2026-10-03",
+  "domain": {
+    "devicesAndConfigurations": [
+      {
+        "device": {
+          "architecture": "arm64",
+          "deviceId": "95864BCD-8AB8-476C-AC79-4E047B2D9CC8",
+          "deviceName": "CheckLine Card Loop QA",
+          "modelName": "iPhone 17 Pro",
+          "osBuildNumber": "23F77",
+          "osVersion": "26.5",
+          "platform": "iOS Simulator"
+        },
+        "expectedFailures": 0,
+        "failedTests": 0,
+        "passedTests": 171,
+        "skippedTests": 0,
+        "testPlanConfiguration": {
+          "configurationId": "1",
+          "configurationName": "Test Scheme Action"
+        }
+      }
+    ],
+    "environmentDescription": "CheckLine App · Built with macOS 27.0.1",
+    "expectedFailures": 0,
+    "failedTests": 0,
+    "finishTime": 1791017237.507,
+    "passedTests": 147,
+    "result": "Passed",
+    "runtimeWarnings": [],
+    "skippedTests": 0,
+    "startTime": 1791017184.421,
+    "statistics": [
+      {
+        "subtitle": "31 test runs",
+        "title": "7 tests ran with dynamic parameters"
+      }
+    ],
+    "testFailures": [],
+    "title": "Test - CheckLine App",
+    "topInsights": [
+      {
+        "category": "Longest Test Runs",
+        "impact": "67% of duration",
+        "text": "3 longest test runs with outlier durations exceeding 0.36s (three standard deviations)"
+      }
+    ],
+    "totalTestCount": 147
+  },
+  "uiDistinctPassed": 10,
+  "uiBatches": [
+    {
+      "resultBundle": "/tmp/checkline-feedback-complete.xcresult",
+      "devices": [
+        {
+          "architecture": "arm64",
+          "deviceId": "3CB2FE0C-0CBD-4108-B7B9-6BCD71DA63EF",
+          "deviceName": "CheckLine Draft Restore QA",
+          "modelName": "iPhone 18 Pro",
+          "osBuildNumber": "24A434",
+          "osVersion": "27.0",
+          "platform": "iOS Simulator"
+        }
+      ],
+      "includedTests": [
+        {
+          "test": "AmountReviewRefinementUITests/testCompletedWishUsesStaticSectionAndKeepsDetailAndCreation()",
+          "result": "Passed"
+        },
+        {
+          "test": "AmountReviewRefinementUITests/testEmptyWishKeepsOneAddActionWithoutRepeatedHeadings()",
+          "result": "Passed"
+        },
+        {
+          "test": "EmptyStateRefinementUITests/testAnalysisWithoutRecordsRetainsDateBrowsingAndCoverage()",
+          "result": "Passed"
+        },
+        {
+          "test": "HomeFeedbackUITests/testAnalysisRecordEntryUsesFullPageAndKeepsSelectedCard()",
+          "result": "Passed"
+        },
+        {
+          "test": "HomeFeedbackUITests/testPendingTaskReturnsToHomeWithoutChangingSelectedCard()",
+          "result": "Passed"
+        },
+        {
+          "test": "HomeFeedbackUITests/testVoiceOverCanReadAndOpenOverdueTask()",
+          "result": "Passed"
+        },
+        {
+          "test": "TaskWorkspaceUITests/testWorkspaceRecordsPendingDetailAndBackRestore()",
+          "result": "Passed"
+        }
+      ]
+    },
+    {
+      "resultBundle": "/tmp/checkline-feedback-gesture-final.xcresult",
+      "devices": [
+        {
+          "architecture": "arm64",
+          "deviceId": "8E4FF520-0EB8-4A70-AF2B-3A293B010942",
+          "deviceName": "CheckLine UI Small",
+          "modelName": "iPhone SE (3rd generation)",
+          "osBuildNumber": "23F77",
+          "osVersion": "26.5",
+          "platform": "iOS Simulator"
+        }
+      ],
+      "includedTests": [
+        {
+          "test": "HomeFeedbackUITests/testEmptyPeriodSummariesRemainCompactInBothThemes()",
+          "result": "Passed"
+        },
+        {
+          "test": "HomeFeedbackUITests/testOverdueTaskOpensFullWorkspaceAndReturnsToHome()",
+          "result": "Passed"
+        }
+      ]
+    },
+    {
+      "resultBundle": "/tmp/checkline-feedback-large-actions-final.xcresult",
+      "devices": [
+        {
+          "architecture": "arm64",
+          "deviceId": "8E4FF520-0EB8-4A70-AF2B-3A293B010942",
+          "deviceName": "CheckLine UI Small",
+          "modelName": "iPhone SE (3rd generation)",
+          "osBuildNumber": "23F77",
+          "osVersion": "26.5",
+          "platform": "iOS Simulator"
+        }
+      ],
+      "includedTests": [
+        {
+          "test": "HomeFeedbackUITests/testLargeEnglishHomeKeepsCaptureAndSummaryActionsReachable()",
+          "result": "Passed"
+        }
+      ]
+    }
+  ],
+  "note": "Small batch includes two passed cases only. Its initial large-font scrolling failure is superseded by the separately listed final touch case. Earlier test assumptions and app gesture correction are recorded in README."
+}

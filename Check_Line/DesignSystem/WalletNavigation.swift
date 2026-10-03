@@ -1,19 +1,19 @@
 import SwiftUI
 import UIKit
 
-/// The dark front of the wallet rises at both edges and overlaps the budget card.
+/// The matte front rises at both edges and visibly covers the card's lower edge.
 struct WalletCardholderSurface: View {
     var opening: CGFloat = 1
     var body: some View {
         WalletPocketShape(opening: opening)
-            .fill(LinearGradient(colors: [PaperTheme.pocket, PaperTheme.canvas], startPoint: .topLeading, endPoint: .bottomTrailing))
+            .fill(LinearGradient(colors: [PaperTheme.cardholderSurface, PaperTheme.cardholderBottom], startPoint: .top, endPoint: .bottom))
             .overlay(alignment: .top) {
                 WalletPocketRim()
-                    .stroke(LinearGradient(colors: [PaperTheme.ink.opacity(0.13), PaperTheme.ink.opacity(0.02), PaperTheme.ink.opacity(0.08)], startPoint: .leading, endPoint: .trailing), lineWidth: 0.8)
-                    .frame(height: 24 * opening)
+                    .stroke(LinearGradient(colors: [PaperTheme.ink.opacity(0.22), PaperTheme.ink.opacity(0.08), PaperTheme.ink.opacity(0.19)], startPoint: .leading, endPoint: .trailing), lineWidth: 0.8)
+                    .frame(height: 26 * opening)
             }
             .overlay { WalletGrain().opacity(0.24).clipShape(WalletPocketShape(opening: opening)) }
-            .shadow(color: .black.opacity(0.08), radius: 8, y: -4)
+            .shadow(color: .black.opacity(0.14), radius: 5, y: -3)
             .accessibilityHidden(true)
     }
 }
@@ -21,7 +21,7 @@ struct WalletCardholderSurface: View {
 private struct WalletPocketRim: Shape {
     func path(in rect: CGRect) -> Path {
         var path = Path()
-        let shoulder = min(48, rect.width * 0.14)
+        let shoulder = min(58, rect.width * 0.16)
         path.move(to: .zero)
         path.addCurve(to: CGPoint(x: shoulder, y: rect.height), control1: CGPoint(x: shoulder * 0.4, y: 0), control2: CGPoint(x: shoulder * 0.45, y: rect.height))
         path.addLine(to: CGPoint(x: rect.width - shoulder, y: rect.height))
@@ -37,7 +37,7 @@ private struct WalletPocketShape: Shape {
         set { opening = newValue }
     }
     func path(in rect: CGRect) -> Path {
-        var path = WalletPocketRim().path(in: CGRect(x: 0, y: 0, width: rect.width, height: min(24 * opening, rect.height)))
+        var path = WalletPocketRim().path(in: CGRect(x: 0, y: 0, width: rect.width, height: min(26 * opening, rect.height)))
         path.addLine(to: CGPoint(x: rect.width, y: rect.height))
         path.addLine(to: CGPoint(x: 0, y: rect.height))
         path.closeSubpath()
@@ -364,6 +364,7 @@ struct WalletAgentAvatar: View {
 
 struct WalletAttentionSheet: View {
     @Bindable var workspace: CheckLineWorkspace
+    let onOpenWorkspace: (BudgetWorkspaceRoute) -> Void
     @Environment(\.dismiss) private var dismiss
     private var cards: [HomeBudgetCardModel] {
         workspace.cards.filter { card in
@@ -393,8 +394,8 @@ struct WalletAttentionSheet: View {
                         let due = workspace.ledger.periods[card.periodID].map {
                             $0.state == .pendingSettlement || CycleEngine.isDue($0, now: Date(), calendar: .current)
                         } ?? false
-                        NavigationLink {
-                            BudgetDetailContent(workspace: workspace, budgetID: card.id, section: due ? .overview : (count > 0 ? .pending : .overview))
+                        Button {
+                            onOpenWorkspace(.budget(card.id, card.periodID, due ? .overview : (count > 0 ? .pending : .overview)))
                         } label: {
                             HStack(spacing: 14) {
                                 CheckLineIcon(symbol: due ? "checkmark.seal" : (count > 0 ? "clock" : "exclamationmark.circle")).font(.title3).foregroundStyle(PaperTheme.accent)
@@ -406,17 +407,17 @@ struct WalletAttentionSheet: View {
                                 Spacer()
                                 CheckLineIcon(symbol: "chevron.right", size: 20).font(.caption)
                             }.padding(18).walletSurface()
-                        }.buttonStyle(.plain)
+                        }.buttonStyle(.plain).accessibilityIdentifier("wallet.attention.budget.\(card.id.uuidString)")
                     }
                     if unbudgetedCount > 0 {
-                        NavigationLink { UnbudgetedRecordsView(workspace: workspace) } label: {
+                        Button { onOpenWorkspace(.unbudgeted) } label: {
                             HStack {
                                 CheckLineIconLabel(String(localized: "v1.unbudgeted"), symbol: "tray")
                                 Spacer()
                                 Text(unbudgetedCount, format: .number)
                                 CheckLineIcon(symbol: "chevron.right", size: 20).font(.caption)
                             }.padding(18).walletSurface()
-                        }.buttonStyle(.plain)
+                        }.buttonStyle(.plain).accessibilityIdentifier("wallet.attention.unbudgeted")
                     }
                 }.padding(20).frame(maxWidth: 650).frame(maxWidth: .infinity)
             }

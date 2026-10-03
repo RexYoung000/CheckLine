@@ -7,22 +7,58 @@ final class AmountReviewRefinementUITests: XCTestCase {
         if #available(iOS 27.0, *) { try XCUIDevice.shared.voiceOverService.disable() }
     }
 
-    func testCompletedWishEmptyReturnsToActiveAndKeepsHeaderCreation() {
+    func testCompletedWishUsesStaticSectionAndKeepsDetailAndCreation() {
         let app = launch("wishes")
-        let filter = app.segmentedControls["wallet.wishes.filter"]
-        XCTAssertTrue(filter.waitForExistence(timeout: 8))
-        filter.buttons["已实现"].tap()
-        let viewActive = app.buttons["wallet.wishes.viewActive"]
-        XCTAssertTrue(viewActive.waitForExistence(timeout: 5))
-        XCTAssertTrue(app.buttons["wallet.header.create"].isHittable)
-        attach(app, "completed-wish-empty-return-action")
+        let wish = app.staticTexts["一副新耳机"]
+        XCTAssertTrue(wish.waitForExistence(timeout: 8))
+        XCTAssertFalse(app.segmentedControls["wallet.wishes.filter"].exists)
+        XCTAssertTrue(app.staticTexts["心愿余额"].exists)
+        XCTAssertFalse(app.staticTexts["预算结余形成，非真实资金。"].exists)
+        wish.tap()
+        let purchased = app.buttons["已购买，去兑现"]
+        reveal(purchased, in: app)
+        purchased.tap()
+        let amount = app.textFields["wallet.wishes.actual"]
+        XCTAssertTrue(amount.waitForExistence(timeout: 5))
+        replace(amount, with: "100")
+        let realPurchase = app.switches["wallet.wishes.purchaseConfirmed"]
+        reveal(realPurchase, in: app)
+        realPurchase.tap()
+        let confirm = app.buttons["wallet.wishes.confirm"]
+        reveal(confirm, in: app)
+        confirm.tap()
+        XCTAssertTrue(app.staticTexts["这个心愿，实现了"].waitForExistence(timeout: 5))
+        app.buttons["关闭"].firstMatch.tap()
+        XCTAssertTrue(app.staticTexts["已实现"].waitForExistence(timeout: 5))
+        XCTAssertFalse(purchased.exists)
+        app.navigationBars.buttons.element(boundBy: 0).tap()
 
-        viewActive.tap()
-        XCTAssertTrue(filter.buttons["想实现"].isSelected)
-        XCTAssertTrue(app.staticTexts["一副新耳机"].exists)
-        XCTAssertFalse(viewActive.exists)
-        attach(app, "completed-wish-empty-returned-to-active")
+        let completed = app.staticTexts["wallet.wishes.completed.heading"]
+        reveal(completed, in: app)
+        XCTAssertEqual(completed.label, "已实现 · 1")
+        XCTAssertFalse(app.buttons["已实现"].exists)
+        reveal(wish, in: app)
+        wish.tap()
+        XCTAssertTrue(app.staticTexts["已实现"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["¥100"].exists)
+        XCTAssertFalse(purchased.exists)
+        attach(app, "completed-wish-static-detail")
+        app.navigationBars.buttons.element(boundBy: 0).tap()
+        XCTAssertTrue(app.buttons["wallet.header.create"].isHittable)
+        attach(app, "completed-wish-static-section")
         app.buttons["wallet.header.create"].tap()
+        XCTAssertTrue(app.textFields["心愿名称"].waitForExistence(timeout: 5))
+    }
+
+    func testEmptyWishKeepsOneAddActionWithoutRepeatedHeadings() {
+        let app = launch("wishes-empty")
+        let add = app.buttons["wallet.wishes.empty.add"]
+        XCTAssertTrue(add.waitForExistence(timeout: 8))
+        XCTAssertTrue(add.isHittable)
+        XCTAssertFalse(app.buttons["wallet.header.create"].exists)
+        XCTAssertFalse(app.staticTexts["留一个想实现的心愿"].exists)
+        XCTAssertFalse(app.staticTexts["预算结余形成，非真实资金。"].exists)
+        add.tap()
         XCTAssertTrue(app.textFields["心愿名称"].waitForExistence(timeout: 5))
     }
 

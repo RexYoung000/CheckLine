@@ -23,6 +23,7 @@ struct CheckLineHomeView: View {
 
     private var card: HomeBudgetCardModel? { workspace.selectedCard }
     private var closure: CGFloat { reduceMotion ? 0 : chrome?.pocketClosure ?? 0 }
+    private let cardholderOverlap: CGFloat = 48
 
     var body: some View {
         WalletRootPage(tab: .home, title: String(localized: "tab.home"), workspace: workspace, lightHeader: true, fullPaperBackground: card == nil,
@@ -49,11 +50,11 @@ struct CheckLineHomeView: View {
                     if typeSize.isAccessibilitySize {
                         VStack(spacing: 12) { usedTile(card); dateTile(card) }
                     } else {
-                        HStack(alignment: .top, spacing: 0) {
+                        HStack(alignment: .top, spacing: 12) {
                             usedTile(card)
-                            Rectangle().fill(PaperTheme.stroke).frame(width: 1).padding(.vertical, 7)
                             dateTile(card)
                         }
+                        .fixedSize(horizontal: false, vertical: true)
                     }
                     if BudgetPresentation.pendingCount(card, in: workspace.ledger) > 0 {
                         Button { openDetail(.pending, card: card) } label: {
@@ -81,17 +82,17 @@ struct CheckLineHomeView: View {
                     .opacity(max(0, 1 - Double(closure) * 2.2))
                     .rotation3DEffect(.degrees(7 * Double(closure)), axis: (x: 1, y: 0, z: 0), anchor: .top, perspective: 0.3)
                     .padding(.horizontal, 16)
-                    .padding(.top, 28)
+                    .padding(.top, cardholderOverlap + 10)
                     .padding(.bottom, 32)
                     .frame(maxWidth: .infinity, minHeight: 440, alignment: .top)
                     .background {
                         GeometryReader { proxy in
                             WalletCardholderSurface(opening: 1 - closure)
-                                .frame(height: proxy.size.height + (deckHeight - 24) * closure)
+                                .frame(height: proxy.size.height + (deckHeight - cardholderOverlap) * closure)
                         }
                     }
-                    .padding(.top, -24)
-                    .offset(y: -(deckHeight - 24) * closure)
+                    .padding(.top, -cardholderOverlap)
+                    .offset(y: -(deckHeight - cardholderOverlap) * closure)
                 }
                 .frame(maxWidth: 560)
             } else {
@@ -106,7 +107,6 @@ struct CheckLineHomeView: View {
                     }
                     .padding(.horizontal, 28).padding(.top, 36).padding(.bottom, 100)
                     .frame(maxWidth: .infinity, minHeight: 430, alignment: .top)
-                    .background { WalletCardholderSurface() }
                     .padding(.top, -24)
                 }
                 .frame(maxWidth: 560)
@@ -143,7 +143,7 @@ struct CheckLineHomeView: View {
     private func deck(_ card: HomeBudgetCardModel) -> some View {
         ZStack(alignment: .topTrailing) {
             if let nextCard = adjacentCard(1) {
-                LiquidBudgetCard(card: nextCard)
+                LiquidBudgetCard(card: nextCard, bottomInset: 44)
                     .padding(.horizontal, 11)
                     .rotationEffect(.degrees(-2), anchor: .top)
                     .offset(y: -9)
@@ -152,7 +152,7 @@ struct CheckLineHomeView: View {
             }
             ZStack(alignment: .topTrailing) {
             Button { openDetail(.overview, card: card) } label: {
-                LiquidBudgetCard(card: card, flows: !workspace.showAgent && !workspace.showComposer && detail == nil && chrome?.isSettingsPresented != true && chrome?.isAttentionPresented != true, reflectionPoint: touchPoint,
+                LiquidBudgetCard(card: card, bottomInset: 44, flows: !workspace.showAgent && !workspace.showComposer && detail == nil && chrome?.isSettingsPresented != true && chrome?.isAttentionPresented != true, reflectionPoint: touchPoint,
                     remainingChange: workspace.remainingAmountChange,
                     remainingMotionContext: RemainingMotionContext(
                         isHomeCurrent: chrome?.selectedTab == .home,
@@ -161,35 +161,9 @@ struct CheckLineHomeView: View {
             }
                 .buttonStyle(.plain)
                 .accessibilityIdentifier("wallet.home.card")
-                .simultaneousGesture(LongPressGesture(minimumDuration: 0.16, maximumDistance: 12).sequenced(before: DragGesture(minimumDistance: 0))
-                    .updating($dragOffset) { value, offset, _ in
-                        guard !reduceMotion, canChangeCard(1), !isCardFlying else { return }
-                        if case .second(true, let drag?) = value { offset = drag.translation }
-                    }
-                    .updating($touchPoint) { value, point, _ in
-                        if case .second(true, let drag?) = value { point = drag.location }
-                    }
-                    .onEnded { value in
-                        guard case .second(true, let drag?) = value, canChangeCard(1), !isCardFlying else { return }
-                        let distance = hypot(drag.translation.width, drag.translation.height)
-                        if distance >= min(deckHeight, 300) * 0.3 {
-                            isCardFlying = true
-                            withTransaction(Transaction(animation: nil)) {
-                                flightOffset = CGSize(width: drag.translation.width * 0.7, height: drag.translation.height * 0.7)
-                            }
-                            withAnimation(.easeOut(duration: 0.15)) {
-                                flightOffset = CGSize(width: drag.translation.width / distance * 360, height: drag.translation.height / distance * 360)
-                            }
-                            Task { @MainActor in
-                                try? await Task.sleep(for: .milliseconds(150))
-                                withTransaction(Transaction(animation: nil)) {
-                                    changeCard(1)
-                                    flightOffset = .zero
-                                    isCardFlying = false
-                                }
-                            }
-                        }
-                    })
+                .modifier(WalletHomeCardDragModifier(
+                    enabled: !reduceMotion && !typeSize.isAccessibilitySize && canChangeCard(1),
+                    gesture: cardDragGesture))
                 .accessibilityActions {
                     if canChangeCard(1) { Button(String(localized: "wallet.card.next")) { changeCard(1) } }
                     if canChangeCard(-1) { Button(String(localized: "wallet.card.previous")) { changeCard(-1) } }
@@ -225,7 +199,8 @@ struct CheckLineHomeView: View {
             }
             .buttonStyle(PaperCirclePressStyle())
             .accessibilityLabel(String(localized: "capture.title"))
-            .padding(.leading, 18).padding(.bottom, 22)
+            .accessibilityIdentifier("wallet.home.capture")
+            .padding(.leading, 18).padding(.bottom, 34)
         }
         .rotation3DEffect(.degrees(reduceMotion ? 0 : Double((0.5 - (touchPoint?.y ?? deckHeight * 0.5) / max(deckHeight, 1)) * 8)), axis: (x: 1, y: 0, z: 0), perspective: 0.35)
         .rotation3DEffect(.degrees(reduceMotion ? 0 : Double((((touchPoint?.x ?? deckWidth * 0.5) / max(deckWidth, 1)) - 0.5) * 8)), axis: (x: 0, y: 1, z: 0), perspective: 0.35)
@@ -234,6 +209,40 @@ struct CheckLineHomeView: View {
         .transition(reduceMotion ? .opacity : .asymmetric(insertion: .offset(y: 18).combined(with: .opacity), removal: .offset(y: -80).combined(with: .opacity)))
         }
         .padding(.top, 8)
+    }
+
+    private var cardDragGesture: some Gesture {
+        LongPressGesture(minimumDuration: 0.16, maximumDistance: 12)
+            .sequenced(before: DragGesture(minimumDistance: 0))
+            .updating($dragOffset) { value, offset, _ in
+                guard !reduceMotion, !typeSize.isAccessibilitySize, canChangeCard(1), !isCardFlying else { return }
+                if case .second(true, let drag?) = value { offset = drag.translation }
+            }
+            .updating($touchPoint) { value, point, _ in
+                if case .second(true, let drag?) = value { point = drag.location }
+            }
+            .onEnded { value in
+                guard !reduceMotion, !typeSize.isAccessibilitySize,
+                      case .second(true, let drag?) = value, canChangeCard(1), !isCardFlying else { return }
+                let distance = hypot(drag.translation.width, drag.translation.height)
+                if distance >= min(deckHeight, 300) * 0.3 {
+                    isCardFlying = true
+                    withTransaction(Transaction(animation: nil)) {
+                        flightOffset = CGSize(width: drag.translation.width * 0.7, height: drag.translation.height * 0.7)
+                    }
+                    withAnimation(.easeOut(duration: 0.15)) {
+                        flightOffset = CGSize(width: drag.translation.width / distance * 360, height: drag.translation.height / distance * 360)
+                    }
+                    Task { @MainActor in
+                        try? await Task.sleep(for: .milliseconds(150))
+                        withTransaction(Transaction(animation: nil)) {
+                            changeCard(1)
+                            flightOffset = .zero
+                            isCardFlying = false
+                        }
+                    }
+                }
+            }
     }
 
     private func usedTile(_ card: HomeBudgetCardModel) -> some View {
@@ -247,10 +256,12 @@ struct CheckLineHomeView: View {
                     Text(card.periodState == .pendingSettlement ? String(localized: "wallet.periodLast7days") : String(localized: "wallet.last7days"))
                         .font(.caption2).foregroundStyle(PaperTheme.muted)
                 }
-            }.padding(.horizontal, 14).padding(.vertical, 8)
-                .frame(maxWidth: .infinity, minHeight: 116, alignment: .topLeading)
+            }.padding(14)
+                .frame(maxWidth: .infinity, minHeight: 136, alignment: .topLeading)
+                .background(PaperTheme.cardholderSummary, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
                 .matchedGeometryEffect(id: BudgetDetailSection.overview.rawValue, in: summaryNamespace, isSource: summaryPopup != .overview)
         }.buttonStyle(.plain)
+            .accessibilityIdentifier("wallet.home.summary.used")
     }
 
     private func dateTile(_ card: HomeBudgetCardModel) -> some View {
@@ -274,10 +285,12 @@ struct CheckLineHomeView: View {
                         }
                     }.foregroundStyle(PaperTheme.muted)
                 }
-            }.padding(.horizontal, 14).padding(.vertical, 8)
-                .frame(maxWidth: .infinity, minHeight: 116, alignment: .topLeading)
+            }.padding(14)
+                .frame(maxWidth: .infinity, minHeight: 136, alignment: .topLeading)
+                .background(PaperTheme.cardholderSummary, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
                 .matchedGeometryEffect(id: BudgetDetailSection.calendar.rawValue, in: summaryNamespace, isSource: summaryPopup != .calendar)
         }.buttonStyle(.plain)
+            .accessibilityIdentifier("wallet.home.summary.calendar")
     }
 
     private func tileLabel(_ title: String, icon: String) -> some View {
@@ -289,6 +302,7 @@ struct CheckLineHomeView: View {
         return VStack(spacing: 12) {
             HStack {
                 Text(String(localized: "expense.recent.title")).font(.headline)
+                    .accessibilityIdentifier("wallet.home.records.title")
                 Spacer()
                 Button { openDetail(.records, card: card) } label: { CheckLineIcon(symbol: "arrow.up.right").frame(width: 44, height: 44) }
                     .accessibilityLabel(String(localized: "wallet.records.all"))
@@ -317,6 +331,21 @@ struct CheckLineHomeView: View {
               let index = workspace.cards.firstIndex(where: { $0.id == card.id }) else { return nil }
         let count = workspace.cards.count
         return workspace.cards[(index + direction % count + count) % count]
+    }
+}
+
+/// Absent when extracting a card is unavailable, so scrolling retains the native gesture path.
+private struct WalletHomeCardDragModifier<CardGesture: Gesture>: ViewModifier {
+    var enabled: Bool
+    var gesture: CardGesture
+
+    @ViewBuilder
+    func body(content: Content) -> some View {
+        if enabled {
+            content.simultaneousGesture(gesture)
+        } else {
+            content
+        }
     }
 }
 
@@ -411,7 +440,7 @@ struct MiniBudgetCalendar: View {
             ForEach(Array(range), id: \.self) { day in
                 let date = calendar.date(byAdding: .day, value: day - 1, to: start) ?? start
                 let hasRecords = BudgetPresentation.expenses(card, in: ledger).contains { calendar.isDate($0.occurredAt, inSameDayAs: date) }
-                RoundedRectangle(cornerRadius: 1.5).fill(hasRecords ? PaperTheme.accent : .white.opacity(0.12)).frame(width: 6, height: 6)
+                RoundedRectangle(cornerRadius: 1.5).fill(hasRecords ? PaperTheme.accent : PaperTheme.ink.opacity(0.13)).frame(width: 6, height: 6)
                     .overlay { if calendar.isDate(date, inSameDayAs: reference) { RoundedRectangle(cornerRadius: 1.5).stroke(PaperTheme.accent, lineWidth: 1) } }
             }
         }.frame(width: 66).accessibilityHidden(true)

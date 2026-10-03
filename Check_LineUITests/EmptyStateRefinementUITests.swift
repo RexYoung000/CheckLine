@@ -34,7 +34,7 @@ final class EmptyStateRefinementUITests: XCTestCase {
         let app = launch("analysis-no-records")
         let record = app.buttons["wallet.analysis.empty.record"]
         XCTAssertTrue(record.waitForExistence(timeout: 10), app.debugDescription)
-        XCTAssertTrue(app.staticTexts["这张预算卡还没有消费记录"].exists)
+        XCTAssertTrue(app.staticTexts["还没有消费记录"].exists)
         XCTAssertFalse(app.staticTexts["本期已用"].exists)
         XCTAssertFalse(app.staticTexts["-¥0"].exists)
         let previousMonth = app.buttons["上个月"]
@@ -61,7 +61,7 @@ final class EmptyStateRefinementUITests: XCTestCase {
         XCTAssertTrue(app.textFields["输入金额"].waitForExistence(timeout: 5), app.debugDescription)
         app.buttons["wallet.composer.close"].tap()
         XCTAssertTrue(record.waitForExistence(timeout: 5))
-        XCTAssertTrue(app.staticTexts["这张预算卡还没有消费记录"].exists)
+        XCTAssertTrue(app.staticTexts["还没有消费记录"].exists)
     }
 
     private func launch(_ screen: String) -> XCUIApplication {

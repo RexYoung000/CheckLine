@@ -24,7 +24,6 @@ struct WishWalletSummaryView: View {
                     if projection.recoveryGap > 0 {
                         PaperFormItem(title: String(localized: "v1.wish.recovery"), value: MoneyFormat.string(projection.recoveryGap, currencyCode: currencyCode))
                     }
-                    Text(String(localized: "ui.wish.virtualBalanceNote")).font(.caption).foregroundStyle(PaperTheme.muted)
                     DisclosureGroup(String(localized: "ui.wish.walletRules"), isExpanded: $rulesExpanded) {
                         VStack(alignment: .leading, spacing: 16) {
                             CheckLineIconLabel(String(localized: "wallet.wishes.settlementIn"), symbol: "arrow.down.left")

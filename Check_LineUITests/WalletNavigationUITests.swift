@@ -229,7 +229,7 @@ final class WalletNavigationUITests: XCTestCase {
         withoutCard.terminate()
 
         let withoutRecords = launch(screen: "analysis-no-records")
-        XCTAssertTrue(withoutRecords.staticTexts["这张预算卡还没有消费记录"].waitForExistence(timeout: 10))
+        XCTAssertTrue(withoutRecords.staticTexts["还没有消费记录"].waitForExistence(timeout: 10))
         XCTAssertTrue(withoutRecords.buttons["记一笔"].isHittable)
         XCTAssertFalse(withoutRecords.staticTexts["-¥0"].exists)
     }

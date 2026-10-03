@@ -290,7 +290,7 @@
 "v1.banner.failed" = "That action did not finish";
 "v1.wish.entry" = "Wish wallet";
 "v1.wish.title" = "Wish wallet";
-"v1.wish.balance" = "Wallet balance";
+"v1.wish.balance" = "Wish balance";
 "v1.wish.recovery" = "Recovery gap";
 "v1.wish.notRealMoney" = "This is a virtual surplus line, not real money.";
 "v1.wish.empty" = "No wishes yet. Redemption needs a real-purchase confirm and will land here later.";
@@ -486,7 +486,7 @@
 "wallet.appearance.light" = "Light";
 "wallet.appearance.dark" = "Dark";
 "wallet.empty.firstCard" = "Create your first budget card";
-"wallet.analysis.noRecords" = "No expenses on this card yet";
+"wallet.analysis.noRecords" = "No expenses yet";
 "wallet.analysis.needCard" = "Create a budget card to see dates and trends from actual records.";
 "wallet.settings.language" = "Language";
 "wallet.settings.followsSystem" = "Follows system";
@@ -671,3 +671,5 @@
 
 "ui.agent.shortRecordExample" = "Lunch 35 CNY";
 "ui.agent.shortBudgetExample" = "Create budget";
+
+"ui.wish.completedCount" = "Completed · %ld";

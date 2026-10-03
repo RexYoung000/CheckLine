@@ -290,7 +290,7 @@
 "v1.banner.failed" = "没有完成这次操作";
 "v1.wish.entry" = "心愿钱包";
 "v1.wish.title" = "心愿钱包";
-"v1.wish.balance" = "钱包余额";
+"v1.wish.balance" = "心愿余额";
 "v1.wish.recovery" = "待恢复差额";
 "v1.wish.notRealMoney" = "这是预算结余形成的虚拟额度，不是真实资金。";
 "v1.wish.empty" = "还没有心愿。兑现需要确认真实购买，本页稍后接入。";
@@ -486,7 +486,7 @@
 "wallet.appearance.light" = "浅色";
 "wallet.appearance.dark" = "深色";
 "wallet.empty.firstCard" = "创建第一张预算卡";
-"wallet.analysis.noRecords" = "这张预算卡还没有消费记录";
+"wallet.analysis.noRecords" = "还没有消费记录";
 "wallet.analysis.needCard" = "创建预算卡后，这里会按实际记录显示日期和趋势。";
 "wallet.settings.language" = "语言";
 "wallet.settings.followsSystem" = "跟随系统";
@@ -671,3 +671,5 @@
 
 "ui.agent.shortRecordExample" = "午餐 35 元";
 "ui.agent.shortBudgetExample" = "创建预算卡";
+
+"ui.wish.completedCount" = "已实现 · %ld";

@@ -39,6 +39,16 @@ enum DesignPreviewData {
         let next = calendar.date(byAdding: .month, value: 1, to: start) ?? now
         let end = calendar.date(byAdding: .day, value: -1, to: next) ?? now
         var ledger = Ledger.blank(walletCurrencyCode: "CNY", now: now)
+        if ["home-overdue", "attention-overdue"].contains(screen) {
+            let previousStart = calendar.date(byAdding: .month, value: -1, to: start) ?? start
+            let previousEnd = calendar.date(byAdding: .day, value: -1, to: start) ?? start
+            let card = try ledger.insertBudgetCard(name: String(localized: "wallet.demo.trip"), amount: 500,
+                                                   currencyCode: "CNY", cycleType: .repeating, recurrence: .monthly,
+                                                   startDate: previousStart, endDate: previousEnd, now: previousStart)
+            ledger = try CycleEngine.markDueIfNeeded(ledger: ledger, periodID: card.1.id, now: now, calendar: calendar)
+            try LedgerStore.replaceAll(ledger, in: context)
+            return
+        }
         if screen == "settlement-fx" {
             ledger = try WalletLedger.setWalletCurrency(ledger: ledger, currencyCode: "CNY", now: now)
             let card = try ledger.insertBudgetCard(name: String(localized: "wallet.demo.trip"), amount: 100,
