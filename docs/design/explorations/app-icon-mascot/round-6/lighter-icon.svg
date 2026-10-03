@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024" role="img" aria-labelledby="title">
+  <title id="title">CheckLine 留白精修：更轻的左下实体与舒展余白</title>
+  <rect width="1024" height="1024" fill="#725D93"/>
+  <path fill="#FAF7F1" fill-rule="evenodd" d="M346 234H678C754 234 798 278 798 354V674C798 750 754 794 678 794H346C270 794 226 750 226 674V354C226 278 270 234 346 234Z M420 314H668C702 314 718 330 718 364V640C718 674 702 690 668 690H518C498 690 487 684 475 669L387 547C375 531 370 512 370 490V364C370 330 386 314 420 314Z"/>
+</svg>
