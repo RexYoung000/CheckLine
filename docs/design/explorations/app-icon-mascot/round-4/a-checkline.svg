@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024" role="img" aria-labelledby="title">
+  <title id="title">CheckLine：开放的 C 与一条边界线</title>
+  <rect width="1024" height="1024" fill="#725D93"/>
+  <path fill="#FAF7F1" d="M754 286C694 223 608 188 511 188C332 188 218 321 218 497C218 686 345 805 527 805H774C806 805 832 779 832 747C832 715 806 689 774 689H532C419 689 336 613 336 500C336 389 413 306 522 306C582 306 636 330 678 371C700 393 736 393 758 370C781 347 778 312 754 286Z"/>
+</svg>

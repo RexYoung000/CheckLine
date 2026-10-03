@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024" role="img" aria-labelledby="title">
+  <title id="title">CheckLine：确认与边界组成的一笔勾线</title>
+  <rect width="1024" height="1024" fill="#725D93"/>
+  <path fill="#FAF7F1" d="M216 544L337 664C370 697 422 695 453 660L677 410H794C827 410 853 384 853 351C853 318 827 292 794 292H652C631 292 612 301 598 316L389 550L300 461C277 438 240 438 217 461C194 484 193 521 216 544Z"/>
+</svg>
