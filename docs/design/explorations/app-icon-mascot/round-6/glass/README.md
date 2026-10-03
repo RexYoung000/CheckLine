@@ -2,7 +2,7 @@
 
 2026-10-03。Rex 暂时保留轻量留白轮廓，要求使用已安装的 Apple 工具增加一点玻璃质感。本轮只做可编辑材质工程和官方渲染对照，正式 App Icon 尚未替换。
 
-[打开对照](index.html) · [可编辑工程](CheckLine-Glass.icon) · [上一轮轮廓](../README.md)
+[打开整套对照](index.html) · [深色前后对照](dark.html) · [最新可编辑工程](CheckLine-Glass-Dark.icon) · [上一轮轮廓](../README.md)
 
 ## 来源与制作
 
@@ -27,7 +27,7 @@
 
 ```sh
 '/Applications/Xcode.app/Contents/Applications/Icon Composer.app/Contents/Executables/ictool' \
-  docs/design/explorations/app-icon-mascot/round-6/glass/CheckLine-Glass.icon \
+  docs/design/explorations/app-icon-mascot/round-6/glass/CheckLine-Glass-Dark.icon \
   --export-image \
   --output-file docs/design/explorations/app-icon-mascot/round-6/glass/default-27.png \
   --platform iOS --rendition Default \
@@ -43,3 +43,15 @@
 ![原稿与官方玻璃材质对照](comparison.jpg)
 
 `.icon` 保留工具初建时的共享方形 / watchOS 圆形预览声明，这不是给 CheckLine 新增 watchOS Target。工程未接入 Xcode App 资源；未验证模拟器、真机主屏、动态照明、系统 Mono / Tinted 或旧版系统降级。此次没有业务逻辑或原生页面改动，不运行金额业务回归。App 内小朵和已接受的功能图标沿用既有约定。
+
+## 深色反馈修正
+
+Rex 认为自动深色不好看；实际旧图为黑底暗紫前景，下半部在小尺寸下较弱。本轮只调整 Dark 外观，保留轻量轮廓与浅色，制作 `CheckLine-Glass-Dark.icon`。原 `.icon`、`dark-27.png`、`comparison.jpg` 继续保存最初玻璃探索；`dark-before-27.png` 与 `dark-before-icon.json` 是修改前快照。
+
+- Dark 背景改为紫灰 `#423A50`，前景为浅紫 `#E8DDEF`；参数是已渲染候选，未成为品牌 Token。组透光 0.65 与中性阴影 0.5 保留，不通过加厚路径提升辨认。
+- 使用原生 `fill-specializations`，基础背景沿用原紫色，标记基础填充为 `automatic`，只有 `appearance: dark` 覆盖成指定 `solid`。不会把深色前景颜色写进 SVG，也不使用 CSS 制作图标材质。
+- 字段结构来自 [Apple 官方 Landmarks 示例 ZIP](https://docs-assets.developer.apple.com/published/a88428e6793e/LandmarksBuildingAnAppWithLiquidGlass.zip) 内的 `Landmarks/Landmarks/Resources/Landmarks App Icon.icon/icon.json`：图层使用无 `appearance` 的基础值与 `appearance: dark` 的 `value.solid`；本机 IconComposerFoundation 符号确认顶层背景与 Layer 均使用可按外观覆盖的 Fill。顶层背景和图层覆盖已被官方 `ictool` 成功读取并实际渲染，输出确实呈现指定配色。
+- `dark-refined-27.png` 为新工程的 iOS / Dark / 27 / 1024 × 1024 官方导出。新工程的 Default 27 导出与已有 `default-27.png` **逐字节一致**（SHA256 `ef65864a8e4f7b10fe9bdc050f0c151d74f86139e2412ca56bcc7b84cdc56493`），浅色没有随深色覆盖变化。原矢量路径、组和图层数量也保持一致。
+- 实际浏览器在 470 px 查看前后对照：8 个图片均加载，无横向溢出，60 / 32 px 实际尺寸正确，控制台无错误／警告。独立视觉复核确认 32 px 新图的薄边和下缘较旧图更清楚，几何轮廓连续，未发现必须修复的偏移；最新整套预览也已检查，13 个图片均加载且无横向溢出。本轮证据仍只是官方静态渲染，正式采用和主屏实际体验待 Rex 验收。
+
+![深色材质修正前后](dark-comparison.jpg)
