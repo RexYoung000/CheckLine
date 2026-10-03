@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CheckLine · 余地与边界</title>
+  <style>
+    :root { color-scheme: light; --paper: #f7f5f2; --ink: #302c38; --muted: #77717f; --purple: #624394; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--paper); color: var(--ink); font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", sans-serif; -webkit-font-smoothing: antialiased; }
+    main { width: min(100%, 820px); margin: 0 auto; padding: 28px 18px 24px; }
+    header { margin-bottom: 23px; }
+    .eyebrow { margin: 0 0 9px; color: var(--purple); font-size: 10px; font-weight: 600; letter-spacing: .12em; }
+    h1 { margin: 0; font-size: clamp(24px, 4vw, 34px); line-height: 1.3; font-weight: 650; letter-spacing: -.035em; }
+    .intro { margin: 10px 0 0; color: var(--muted); font-size: 12px; line-height: 1.5; }
+    .directions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+    .direction { min-width: 0; }
+    .hero { display: block; width: 100%; aspect-ratio: 1; border-radius: 23%; }
+    h2 { margin: 13px 0 7px; font-size: 14px; line-height: 1.4; font-weight: 650; }
+    .purpose { margin: 0; min-height: 36px; font-size: 12px; line-height: 1.5; }
+    .signature { display: flex; align-items: center; gap: 9px; min-height: 57px; margin-top: 7px; }
+    .signature img { width: 31px; height: 31px; flex: 0 0 31px; }
+    .wordmark { min-width: 0; font-size: 14px; font-weight: 650; letter-spacing: -.03em; white-space: nowrap; }
+    .wordmark span { display: block; margin-top: 2px; color: var(--muted); font-size: 10px; font-weight: 400; letter-spacing: .05em; }
+    .scale-panel { margin-top: 13px; padding: 13px 14px 14px; border-radius: 18px; background: #ede9f1; }
+    .scale-panel.dark { margin-top: 10px; background: #292530; color: #e8e2ed; }
+    .scale-label { margin: 0 0 12px; color: var(--muted); font-size: 10px; line-height: 1.3; }
+    .dark .scale-label { color: #b9b0c4; }
+    .samples { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+    .sample { display: flex; justify-content: center; align-items: flex-end; gap: 14px; flex-wrap: wrap; min-width: 0; }
+    figure { margin: 0; flex: 0 0 auto; }
+    .thumb { display: block; border-radius: 23%; }
+    .size60 { width: 60px; height: 60px; }
+    .size32 { width: 32px; height: 32px; }
+    figcaption { margin-top: 5px; text-align: center; color: var(--muted); font-size: 9px; }
+    .dark figcaption { color: #b9b0c4; }
+    .outline-panel { margin-top: 17px; }
+    .outline-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+    .outline-row figure { justify-self: center; }
+    .outline { display: block; width: 76px; height: 76px; }
+    footer { margin-top: 22px; color: var(--muted); font-size: 10px; line-height: 1.65; }
+    footer p { margin: 0 0 9px; }
+    a { color: var(--purple); text-underline-offset: 3px; }
+    a:focus-visible { outline: 2px solid var(--purple); outline-offset: 4px; border-radius: 2px; }
+    @media (max-width: 390px) {
+      main { padding-inline: 12px; }
+      .directions, .samples, .outline-row { gap: 12px; }
+      .sample { gap: 10px; }
+      .signature { gap: 7px; }
+      .wordmark { font-size: 12px; }
+      .scale-panel { padding-inline: 10px; }
+    }
+  </style>
+</head>
+<body>
+<main>
+  <header>
+    <p class="eyebrow">CHECKLINE · APP ICON</p>
+    <h1>看清余地，按自己的计划花。</h1>
+    <p class="intro">已确认定位：看清预算还能花多少。</p>
+  </header>
+
+  <section class="directions" aria-label="两种原创品牌图标方向">
+    <article class="direction">
+      <img class="hero" src="a-space.svg" alt="留白方向：一块预算范围中的完整剩余空间">
+      <h2>① 留白 · 继续精修</h2>
+      <p class="purpose">用偏心留白表达预算里的余地。</p>
+      <div class="signature" aria-label="留白符号与品牌名称排版示意">
+        <img src="a-mark.svg" alt="" aria-hidden="true">
+        <div class="wordmark">CheckLine<span>预算线</span></div>
+      </div>
+    </article>
+    <article class="direction">
+      <img class="hero" src="b-boundary.svg" alt="边界方向：已有消费与设定上限之间的一段距离">
+      <h2>② 边界 · 暂不推荐</h2>
+      <p class="purpose">距离感成立，但易被看成括号或表情。</p>
+      <div class="signature" aria-label="边界符号与品牌名称排版示意">
+        <img src="b-mark.svg" alt="" aria-hidden="true">
+        <div class="wordmark">CheckLine<span>预算线</span></div>
+      </div>
+    </article>
+  </section>
+
+  <section class="scale-panel" aria-label="浅色桌面上的实际尺寸缩略对照">
+    <p class="scale-label">浅色桌面 · 60 / 32 px</p>
+    <div class="samples">
+      <div class="sample">
+        <figure><img class="thumb size60" src="a-space.svg" alt="留白方向 60 像素"><figcaption>60</figcaption></figure>
+        <figure><img class="thumb size32" src="a-space.svg" alt="留白方向 32 像素"><figcaption>32</figcaption></figure>
+      </div>
+      <div class="sample">
+        <figure><img class="thumb size60" src="b-boundary.svg" alt="边界方向 60 像素"><figcaption>60</figcaption></figure>
+        <figure><img class="thumb size32" src="b-boundary.svg" alt="边界方向 32 像素"><figcaption>32</figcaption></figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="scale-panel dark" aria-label="深色桌面上的实际尺寸缩略对照">
+    <p class="scale-label">深色桌面 · 60 / 32 px</p>
+    <div class="samples">
+      <div class="sample">
+        <figure><img class="thumb size60" src="a-space.svg" alt="留白方向 60 像素"><figcaption>60</figcaption></figure>
+        <figure><img class="thumb size32" src="a-space.svg" alt="留白方向 32 像素"><figcaption>32</figcaption></figure>
+      </div>
+      <div class="sample">
+        <figure><img class="thumb size60" src="b-boundary.svg" alt="边界方向 60 像素"><figcaption>60</figcaption></figure>
+        <figure><img class="thumb size32" src="b-boundary.svg" alt="边界方向 32 像素"><figcaption>32</figcaption></figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="outline-panel" aria-label="单色轮廓对照">
+    <p class="scale-label">单色轮廓</p>
+    <div class="outline-row">
+      <figure><img class="outline" src="a-mark.svg" alt="留白方向单色轮廓"><figcaption>① 留白</figcaption></figure>
+      <figure><img class="outline" src="b-mark.svg" alt="边界方向单色轮廓"><figcaption>② 边界</figcaption></figure>
+    </div>
+  </section>
+
+  <footer>
+    <p>构图探索，比例静态，不代表实际预算；未替换正式图标。CSS 圆角并非系统裁切，浅深背景不是系统变体；品牌名称排版仅作示意。</p>
+    <a href="http://127.0.0.1:8797/index.html">返回上一轮方向</a>
+  </footer>
+</main>
+</body>
+</html>
