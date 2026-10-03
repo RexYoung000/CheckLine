@@ -1,6 +1,6 @@
 # 小朵 App Icon 构图候选
 
-2026-10-03，Rex 已接受 Hugeicons 功能图标，桌面 App Icon 继续讨论。本目录只用于比较角色与预算的主次，**三个候选均未接受，也未替换 AppIcon 资源**。
+2026-10-03，Rex 已接受 Hugeicons 功能图标，桌面 App Icon 继续讨论。本目录只用于比较角色与预算的主次。Rex 随后明确不满意本组三个 App Icon，**第一轮不采用，也未替换 AppIcon 资源**。继续比较 [第二轮：小朵特写／液位小朵／云形标志](round-2/README.md)，新候选仍待确认。
 
 ![三种构图与实际尺寸缩略](mascot-icon-comparison.png)
 
