@@ -49,7 +49,7 @@ struct WalletReceiptCard: View {
 
     var body: some View {
         HStack(spacing: 12) {
-            Image(systemName: BudgetPresentation.symbol(for: expense))
+            CheckLineIcon(symbol: BudgetPresentation.symbol(for: expense), size: 20)
                 .font(.system(size: 19, weight: .regular)).frame(width: 22).accessibilityHidden(true)
             Text(expense.merchant ?? String(localized: "v1.card.record.untitled")).lineLimit(1)
             Spacer(minLength: 8)

@@ -206,7 +206,7 @@ struct PaperFormItem: View {
                     .lineLimit(typeSize.isAccessibilitySize ? 2 : 1)
                     .minimumScaleFactor(0.7)
                 if showArrow {
-                    Image(systemName: "chevron.right")
+                    CheckLineIcon(symbol: "chevron.right", size: 20)
                         .font(.system(size: 14, weight: .semibold))
                         .foregroundStyle(PaperTheme.muted)
                 }
@@ -233,7 +233,7 @@ struct PaperComposerCloseButton: View {
 
     var body: some View {
         Button(action: action) {
-            Image(systemName: "xmark")
+            CheckLineIcon(symbol: "xmark", size: 20)
                 .font(.system(size: 16, weight: .medium))
                 .foregroundStyle(PaperTheme.ink)
                 .frame(width: 44, height: 44)
@@ -248,7 +248,7 @@ struct PaperHeroIcon: View {
     var systemImage: String
 
     var body: some View {
-        Image(systemName: systemImage)
+        CheckLineIcon(symbol: systemImage, size: 32)
             .font(.system(size: 32, weight: .medium))
             .foregroundStyle(PaperTheme.ink)
             .frame(width: 80, height: 80)

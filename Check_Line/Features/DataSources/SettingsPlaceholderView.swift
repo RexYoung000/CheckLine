@@ -11,7 +11,7 @@ struct SettingsPlaceholderView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 20) {
                     HStack(spacing: 14) {
-                        Image(systemName: "iphone.gen3")
+                        CheckLineIcon(symbol: "iphone.gen3")
                             .font(.title3)
                             .foregroundStyle(PaperTheme.accent)
                             .frame(width: 48, height: 48)
@@ -67,7 +67,7 @@ struct SettingsPlaceholderView: View {
             .background(PaperTheme.canvas.ignoresSafeArea())
             .navigationTitle(String(localized: "v1.settings.title")).navigationBarTitleDisplayMode(.inline)
             .toolbarBackground(.hidden, for: .navigationBar)
-            .toolbar { ToolbarItem(placement: .topBarTrailing) { Button(String(localized: "action.close"), systemImage: "xmark") { dismiss() }.labelStyle(.iconOnly) } }
+            .toolbar { ToolbarItem(placement: .topBarTrailing) { Button(String(localized: "action.close"), iconSymbol: "xmark") { dismiss() }.labelStyle(.iconOnly) } }
         }
         .presentationBackground(PaperTheme.canvas)
         .presentationDetents([.large])
@@ -78,7 +78,7 @@ struct SettingsPlaceholderView: View {
     private func settingsRow<Destination: View>(title: String, symbol: String, summary: String? = nil, @ViewBuilder destination: () -> Destination) -> some View {
         NavigationLink(destination: destination) {
             HStack(spacing: 14) {
-                Image(systemName: symbol).font(.body).foregroundStyle(PaperTheme.accent).frame(width: 34)
+                CheckLineIcon(symbol: symbol).font(.body).foregroundStyle(PaperTheme.accent).frame(width: 34)
                 ViewThatFits(in: .horizontal) {
                     HStack(spacing: 12) {
                         Text(title).font(.body).foregroundStyle(PaperTheme.ink)
@@ -97,7 +97,7 @@ struct SettingsPlaceholderView: View {
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
                 }
-                Image(systemName: "chevron.right").font(.caption.weight(.semibold)).foregroundStyle(PaperTheme.muted)
+                CheckLineIcon(symbol: "chevron.right", size: 20).font(.caption.weight(.semibold)).foregroundStyle(PaperTheme.muted)
             }.padding(.vertical, 12)
         }.buttonStyle(.plain).padding(.horizontal, 16).frame(minHeight: 56)
     }

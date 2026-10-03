@@ -105,14 +105,14 @@ struct AgentTaskPanel: View {
                 HStack(spacing: 8) {
                     Spacer()
                     Button { showingVoiceNotice = true } label: {
-                        Image(systemName: "mic").font(.system(size: 20)).frame(width: 44, height: 44)
+                        CheckLineIcon(symbol: "mic", size: 20).frame(width: 44, height: 44)
                     }.accessibilityLabel(String(localized: "ui.agent.voice"))
                         .accessibilityIdentifier("wallet.agent.voice")
                     Button {
                         inputFocused = false
                         Task { await workspace.submitText() }
                     } label: {
-                        Image(systemName: "arrow.up").font(.system(size: 20, weight: .semibold))
+                        CheckLineIcon(symbol: "arrow.up", size: 20)
                             .foregroundStyle(canSend ? Color.white : PaperTheme.muted)
                             .frame(width: 44, height: 44)
                             .background(canSend ? PaperTheme.accent : PaperTheme.stroke, in: Circle())

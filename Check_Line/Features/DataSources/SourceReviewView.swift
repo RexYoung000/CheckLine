@@ -9,7 +9,7 @@ struct SourceReviewView: View {
                         Text(String(localized: "ui.source.available"))
                             .font(.subheadline.weight(.semibold)).foregroundStyle(PaperTheme.muted)
                         ForEach(["manual", "agentText"], id: \.self) { source in
-                            Label(String(localized: String.LocalizationValue("ui.source." + source)), systemImage: "checkmark.circle")
+                            CheckLineIconLabel(String(localized: String.LocalizationValue("ui.source." + source)), symbol: "checkmark.circle")
                                 .font(.body).foregroundStyle(PaperTheme.ink)
                                 .accessibilityValue(String(localized: "ui.source.available"))
                         }
@@ -36,7 +36,7 @@ struct SourceReviewView: View {
                 #if DEBUG
                 if DesignPreviewData.isEnabled {
                     NavigationLink { ImportReviewPrototype() } label: {
-                        Label(String(localized: "ui.import.title"), systemImage: "tray.and.arrow.down")
+                        CheckLineIconLabel(String(localized: "ui.import.title"), symbol: "tray.and.arrow.down")
                     }.buttonStyle(PaperQuietButtonStyle())
                     NavigationLink { ManagementReviewPrototype() } label: { Text(String(localized: "ui.design.manage")) }
                         .buttonStyle(PaperQuietButtonStyle())
@@ -68,7 +68,7 @@ struct ImportReviewPrototype: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
-                Label(String(localized: "ui.import.demo"), systemImage: "testtube.2")
+                CheckLineIconLabel(String(localized: "ui.import.demo"), symbol: "testtube.2")
                     .font(.caption).foregroundStyle(PaperTheme.accent)
                 Text(String(localized: String.LocalizationValue(title))).font(.title2.weight(.semibold))
                 switch phase {
@@ -76,7 +76,7 @@ struct ImportReviewPrototype: View {
                     Text(String(localized: "ui.sources.boundary")).font(.subheadline)
                     Button(String(localized: "ui.import.start")) { phase = .processing }.buttonStyle(PaperSolidButtonStyle())
                 case .processing:
-                    Label(String(localized: "ui.import.processing"), systemImage: "hourglass")
+                    CheckLineIconLabel(String(localized: "ui.import.processing"), symbol: "hourglass")
                     Button(String(localized: "ui.import.continue")) { phase = .review }.buttonStyle(PaperSolidButtonStyle())
                 case .review:
                     Toggle(isOn: $included) {
@@ -90,20 +90,24 @@ struct ImportReviewPrototype: View {
                         Text(String(localized: "v1.unbudgeted")).tag("ui.source.unbudgeted")
                         Text(String(localized: "wallet.demo.daily")).tag("wallet.demo.daily")
                     }.pickerStyle(.menu)
-                    Label(String(localized: "ui.import.duplicate"), systemImage: "doc.on.doc").padding(18).walletSurface()
+                    CheckLineIconLabel(String(localized: "ui.import.duplicate"), symbol: "doc.on.doc").padding(18).walletSurface()
                     Button(String(localized: "ui.import.confirm")) { phase = .confirm }.buttonStyle(PaperSolidButtonStyle(enabled: included)).disabled(!included)
                 case .empty:
-                    ContentUnavailableView(String(localized: "ui.import.empty"), systemImage: "tray")
+                    ContentUnavailableView {
+                        Label { Text(String(localized: "ui.import.empty")) } icon: {
+                            CheckLineIcon(symbol: "tray", size: 48)
+                        }
+                    }
                     Button(String(localized: "ui.import.reset")) { phase = .source }.buttonStyle(PaperQuietButtonStyle())
                 case .failed:
-                    Label(String(localized: "ui.import.failed"), systemImage: "exclamationmark.circle")
+                    CheckLineIconLabel(String(localized: "ui.import.failed"), symbol: "exclamationmark.circle")
                     Button(String(localized: "ui.import.retry")) { phase = .review }.buttonStyle(PaperSolidButtonStyle())
                 case .confirm:
                     Text(String(localized: "ui.import.impact"))
                     Button(String(localized: "ui.import.submit")) { phase = .result }.buttonStyle(PaperSolidButtonStyle())
                     Button(String(localized: "action.cancel")) { phase = .review }.buttonStyle(PaperQuietButtonStyle())
                 case .result:
-                    Label(String(localized: "ui.import.result"), systemImage: "checkmark.circle")
+                    CheckLineIconLabel(String(localized: "ui.import.result"), symbol: "checkmark.circle")
                     Button(String(localized: "ui.import.reset")) { phase = .source }.buttonStyle(PaperQuietButtonStyle())
                 }
             }.padding(22).frame(maxWidth: 760).frame(maxWidth: .infinity)
@@ -126,7 +130,7 @@ struct ManagementReviewPrototype: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
-                Label(String(localized: "ui.import.demo"), systemImage: "testtube.2").font(.caption)
+                CheckLineIconLabel(String(localized: "ui.import.demo"), symbol: "testtube.2").font(.caption)
                 switch phase {
                 case .detail:
                     PaperFormItem(title: String(localized: "v1.composer.merchant"), value: String(localized: "wallet.demo.coffee"))
@@ -136,15 +140,19 @@ struct ManagementReviewPrototype: View {
                     Text(String(localized: "ui.design.impact")).font(.subheadline)
                     Button(String(localized: "ui.design.previewCorrection")) { phase = .processing }.buttonStyle(PaperSolidButtonStyle())
                 case .empty:
-                    ContentUnavailableView(String(localized: "ui.manage.empty"), systemImage: "receipt")
+                    ContentUnavailableView {
+                        Label { Text(String(localized: "ui.manage.empty")) } icon: {
+                            CheckLineIcon(symbol: "receipt", size: 48)
+                        }
+                    }
                 case .processing:
-                    Label(String(localized: "ui.manage.processing"), systemImage: "hourglass")
+                    CheckLineIconLabel(String(localized: "ui.manage.processing"), symbol: "hourglass")
                     Button(String(localized: "ui.import.continue")) { showImpact = true }.buttonStyle(PaperSolidButtonStyle())
                 case .failed:
-                    Label(String(localized: "ui.manage.failed"), systemImage: "exclamationmark.circle")
+                    CheckLineIconLabel(String(localized: "ui.manage.failed"), symbol: "exclamationmark.circle")
                     Button(String(localized: "ui.draft.retry")) { phase = .processing }.buttonStyle(PaperSolidButtonStyle())
                 case .result:
-                    Label(String(localized: "ui.design.completed"), systemImage: "checkmark.circle")
+                    CheckLineIconLabel(String(localized: "ui.design.completed"), symbol: "checkmark.circle")
                     Button(String(localized: "ui.manage.back")) { phase = .detail }.buttonStyle(PaperQuietButtonStyle())
                 }
             }.padding(22)

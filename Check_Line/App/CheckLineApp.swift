@@ -63,10 +63,12 @@ struct CheckLineApp: App {
 
 struct StorageUnavailableView: View {
     var body: some View {
-        ContentUnavailableView(
-            String(localized: "storage.unavailable.title"),
-            systemImage: "externaldrive.badge.exclamationmark",
-            description: Text(String(localized: "storage.unavailable.message"))
-        )
+        ContentUnavailableView {
+            Label { Text(String(localized: "storage.unavailable.title")) } icon: {
+                CheckLineIcon(symbol: "externaldrive.badge.exclamationmark", size: 48)
+            }
+        } description: {
+            Text(String(localized: "storage.unavailable.message"))
+        }
     }
 }

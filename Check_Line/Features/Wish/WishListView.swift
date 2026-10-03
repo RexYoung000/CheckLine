@@ -17,14 +17,14 @@ struct WishListView: View {
                     PaperCard {
                         VStack(alignment: .leading, spacing: 16) {
                             HStack {
-                                Label(String(localized: "v1.wish.balance"), systemImage: "sparkle").font(.subheadline)
+                                CheckLineIconLabel(String(localized: "v1.wish.balance"), symbol: "sparkle").font(.subheadline)
                                 Spacer()
-                                Image(systemName: "arrow.up.right").font(.caption)
+                                CheckLineIcon(symbol: "arrow.up.right", size: 20).font(.caption)
                             }.foregroundStyle(PaperTheme.muted)
                             Text(MoneyFormat.string(workspace.wallet.balance, currencyCode: workspace.ledger.walletSettings.walletCurrencyCode))
                                 .font(.largeTitle.weight(.medium)).monospacedDigit().lineLimit(1).minimumScaleFactor(0.5)
                             if workspace.wallet.recoveryGap > 0 {
-                                Label(String(localized: "v1.wish.recovery") + " " + MoneyFormat.string(workspace.wallet.recoveryGap, currencyCode: workspace.ledger.walletSettings.walletCurrencyCode), systemImage: "arrow.counterclockwise")
+                                CheckLineIconLabel(String(localized: "v1.wish.recovery") + " " + MoneyFormat.string(workspace.wallet.recoveryGap, currencyCode: workspace.ledger.walletSettings.walletCurrencyCode), symbol: "arrow.counterclockwise")
                                     .font(.subheadline).foregroundStyle(PaperTheme.accent)
                             }
                             Text(String(localized: "ui.wish.virtualBalanceNote")).font(.caption).foregroundStyle(PaperTheme.muted)
@@ -45,7 +45,7 @@ struct WishListView: View {
                                 .buttonStyle(PaperSolidButtonStyle())
                                 .accessibilityIdentifier("wallet.wishes.viewActive")
                         } else {
-                            Button(String(localized: "wallet.wishes.add"), systemImage: "plus") { adding = true }
+                            Button(String(localized: "wallet.wishes.add"), iconSymbol: "plus") { adding = true }
                                 .buttonStyle(PaperSolidButtonStyle())
                         }
                     }.frame(maxWidth: .infinity).padding(.vertical, 28)
@@ -63,7 +63,7 @@ struct WishListView: View {
                                         }
                                     }
                                     Spacer(minLength: 0)
-                                    Image(systemName: completed ? "checkmark.circle" : "arrow.up.right").font(.caption).foregroundStyle(PaperTheme.muted)
+                                    CheckLineIcon(symbol: completed ? "checkmark.circle" : "arrow.up.right", size: 20).font(.caption).foregroundStyle(PaperTheme.muted)
                                 }.padding(14).frame(maxWidth: .infinity, minHeight: 82, alignment: .leading)
                                     .contentShape(Rectangle())
                             }.buttonStyle(.plain)
@@ -118,7 +118,7 @@ struct CreateWishSheet: View {
             .background(PaperTheme.canvas.ignoresSafeArea())
             .navigationTitle(String(localized: "wallet.wishes.add")).navigationBarTitleDisplayMode(.inline)
             .toolbarBackground(.hidden, for: .navigationBar)
-            .toolbar { ToolbarItem(placement: .topBarTrailing) { Button(String(localized: "action.close"), systemImage: "xmark") { dismiss() }.labelStyle(.iconOnly) } }
+            .toolbar { ToolbarItem(placement: .topBarTrailing) { Button(String(localized: "action.close"), iconSymbol: "xmark") { dismiss() }.labelStyle(.iconOnly) } }
         }.presentationDetents([.large]).presentationBackground(PaperTheme.canvas).presentationCornerRadius(30)
     }
 }
@@ -142,7 +142,7 @@ struct WishDetailView: View {
                         }
                     }
                     if wish.state == .completed {
-                        Label(String(localized: "wallet.wishes.completed"), systemImage: "checkmark.circle").foregroundStyle(PaperTheme.accent)
+                        CheckLineIconLabel(String(localized: "wallet.wishes.completed"), symbol: "checkmark.circle").foregroundStyle(PaperTheme.accent)
                         if let redemption = workspace.ledger.redemptions.values.first(where: { $0.wishID == wish.id && $0.state == .completed }) {
                             PaperFormItem(title: String(localized: "wallet.wishes.actual"), value: MoneyFormat.string(redemption.actualAmount, currencyCode: redemption.currencyCode))
                         }
@@ -152,7 +152,7 @@ struct WishDetailView: View {
                                 Text(String(localized: "v1.wish.balance")).font(.subheadline).foregroundStyle(PaperTheme.muted)
                                 Text(MoneyFormat.string(workspace.wallet.balance, currencyCode: workspace.ledger.walletSettings.walletCurrencyCode)).font(.title2).monospacedDigit()
                                 if workspace.wallet.recoveryGap > 0 {
-                                    Label(String(localized: "v1.wish.recovery") + " " + MoneyFormat.string(workspace.wallet.recoveryGap, currencyCode: workspace.ledger.walletSettings.walletCurrencyCode), systemImage: "arrow.counterclockwise")
+                                    CheckLineIconLabel(String(localized: "v1.wish.recovery") + " " + MoneyFormat.string(workspace.wallet.recoveryGap, currencyCode: workspace.ledger.walletSettings.walletCurrencyCode), symbol: "arrow.counterclockwise")
                                         .font(.subheadline).foregroundStyle(PaperTheme.accent)
                                 }
                                 Text(String(localized: "ui.wish.virtualBalanceNote")).font(.caption).foregroundStyle(PaperTheme.muted)
@@ -210,7 +210,7 @@ struct WishRedemptionView: View {
                 VStack(alignment: .leading, spacing: 24) {
                     if let wish {
                         HStack { Spacer(); WalletSymbol(name: wish.symbolName ?? "star", size: 90)
-                            .overlay(alignment: .bottomTrailing) { if complete { Image(systemName: "checkmark.circle.fill").font(.title2).foregroundStyle(PaperTheme.accent, PaperTheme.canvas).offset(x: 8, y: 8) } }; Spacer() }.padding(.vertical, 20)
+                            .overlay(alignment: .bottomTrailing) { if complete { CheckLineIcon(symbol: "checkmark.circle.fill", size: 32).font(.title2).foregroundStyle(PaperTheme.accent, PaperTheme.canvas).offset(x: 8, y: 8) } }; Spacer() }.padding(.vertical, 20)
                         Text(wish.name).font(.title2.weight(.medium))
                         if complete {
                             Text(String(localized: "wallet.wishes.success")).font(.headline).foregroundStyle(PaperTheme.accent)
@@ -246,7 +246,7 @@ struct WishRedemptionView: View {
             .background(PaperTheme.canvas.ignoresSafeArea())
             .navigationTitle(String(localized: "wallet.wishes.redemption")).navigationBarTitleDisplayMode(.inline)
             .toolbarBackground(.hidden, for: .navigationBar)
-            .toolbar { ToolbarItem(placement: .topBarTrailing) { Button(String(localized: "action.close"), systemImage: "xmark") { dismiss() }.labelStyle(.iconOnly) } }
+            .toolbar { ToolbarItem(placement: .topBarTrailing) { Button(String(localized: "action.close"), iconSymbol: "xmark") { dismiss() }.labelStyle(.iconOnly) } }
         }
         .onAppear {
             if purchaseCurrency.isEmpty { purchaseCurrency = wish?.currencyCode ?? walletCurrency }
@@ -288,7 +288,7 @@ struct WishRedemptionView: View {
                     }
                     walletImpactRow("wallet.wishes.balanceAfter", amount: preview.balanceAfter)
                 } else if parsed != nil {
-                    Label(needsQuote && quote == nil ? String(localized: "wallet.wishes.exchangeMissing") : String(localized: "wallet.wishes.insufficient"), systemImage: "exclamationmark.circle")
+                    CheckLineIconLabel(needsQuote && quote == nil ? String(localized: "wallet.wishes.exchangeMissing") : String(localized: "wallet.wishes.insufficient"), symbol: "exclamationmark.circle")
                         .font(.subheadline).foregroundStyle(PaperTheme.accent)
                 }
             }

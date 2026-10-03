@@ -35,7 +35,7 @@ struct CheckLineShellView: View {
         })) { CreateComposerSheet(workspace: workspace) }
         .sheet(isPresented: $chrome.isSourcesPresented) {
             NavigationStack { SourceReviewView().toolbar { ToolbarItem(placement: .topBarTrailing) {
-                Button(String(localized: "action.close"), systemImage: "xmark") { chrome.isSourcesPresented = false }.labelStyle(.iconOnly)
+                Button(String(localized: "action.close"), iconSymbol: "xmark") { chrome.isSourcesPresented = false }.labelStyle(.iconOnly)
             } } }.presentationDetents([.large]).presentationBackground(PaperTheme.canvas)
         }
         .sheet(isPresented: $chrome.isSettingsPresented) { SettingsPlaceholderView(workspace: workspace) }
@@ -133,7 +133,8 @@ struct CheckLineShellView: View {
     }
 
     private func tabLabel(_ tab: CheckLineAppTab) -> some View {
-        Image(systemName: tab.systemImage)
+        Image(uiImage: CheckLineIconAssets.templateImage(for: tab.systemImage))
+            .renderingMode(.template)
             .accessibilityLabel(tab.title)
             .accessibilityIdentifier("wallet.tab.\(tab.rawValue)")
     }

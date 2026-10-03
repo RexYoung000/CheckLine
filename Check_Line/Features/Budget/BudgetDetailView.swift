@@ -27,7 +27,7 @@ struct BudgetDetailSheet: View {
         NavigationStack(path: $path) {
             HomeBudgetDetailView(workspace: workspace, budgetID: budgetID, initialSection: initialSection)
                 .toolbar { ToolbarItem(placement: .topBarTrailing) {
-                    Button(String(localized: "action.close"), systemImage: "xmark") { dismiss() }.labelStyle(.iconOnly)
+                    Button(String(localized: "action.close"), iconSymbol: "xmark") { dismiss() }.labelStyle(.iconOnly)
                 } }
             .environment(\.budgetWorkspacePush, { path.append($0) })
             .navigationDestination(for: BudgetWorkspaceRoute.self) { BudgetWorkspaceDestination(workspace: workspace, route: $0) }
@@ -75,7 +75,7 @@ struct BudgetDetailContent: View {
                     else if section == .information { information(card) }
                     else if section == .calendar { BudgetCalendarView(card: card, ledger: workspace.ledger) }
                     else { records(card) }
-                } else { ContentUnavailableView(String(localized: "budget.missing"), systemImage: "wallet.pass") }
+                } else { ContentUnavailableView { Label { Text(String(localized: "budget.missing")) } icon: { CheckLineIcon(symbol: "wallet.pass", size: 48) } } }
             }.padding(22).frame(maxWidth: 760).frame(maxWidth: .infinity)
         }
         .background(PaperTheme.canvas.ignoresSafeArea()).foregroundStyle(PaperTheme.ink)
@@ -96,7 +96,7 @@ struct BudgetDetailContent: View {
         VStack(alignment: .leading, spacing: 22) {
             VStack(alignment: .leading, spacing: 8) {
                 if card.periodState == .settled || dueForSettlement(card) {
-                    Label(String(localized: card.periodState == .settled ? "ui.period.settled" : "ui.period.due"), systemImage: card.periodState == .settled ? "checkmark.seal" : "calendar")
+                    CheckLineIconLabel(String(localized: card.periodState == .settled ? "ui.period.settled" : "ui.period.due"), symbol: card.periodState == .settled ? "checkmark.seal" : "calendar", size: 16)
                         .font(.caption).foregroundStyle(PaperTheme.muted)
                 }
                 periodDates(card)
@@ -134,18 +134,18 @@ struct BudgetDetailContent: View {
                         ? AnyLayout(VStackLayout(alignment: .leading, spacing: 8))
                         : AnyLayout(HStackLayout(alignment: .center, spacing: 12))
                     pendingLayout {
-                        Label(String(format: String(localized: "wallet.pending.count"), BudgetPresentation.pendingCount(card, in: workspace.ledger)), systemImage: "clock")
+                        CheckLineIconLabel(String(format: String(localized: "wallet.pending.count"), BudgetPresentation.pendingCount(card, in: workspace.ledger)), symbol: "clock")
                         if !typeSize.isAccessibilitySize { Spacer(minLength: 8) }
                         Text(MoneyFormat.string(card.snapshot.pendingAmount, currencyCode: card.currencyCode)).monospacedDigit()
-                        if !typeSize.isAccessibilitySize { Image(systemName: "chevron.right").font(.caption) }
+                        if !typeSize.isAccessibilitySize { CheckLineIcon(symbol: "chevron.right", size: 16) }
                     }.font(.subheadline).foregroundStyle(PaperTheme.accent)
                         .frame(maxWidth: .infinity, alignment: .leading).padding(18).walletSurface()
                 }.buttonStyle(.plain).accessibilityIdentifier("wallet.workspace.pending")
             }
             let missing = BudgetPresentation.expenses(card, in: workspace.ledger).filter { CurrencyEngine.budgetSettlementAmount(expense: $0, periodCurrencyCode: card.currencyCode) == nil }.count
-            if missing > 0 { Label(String(format: String(localized: "ui.coverage.unconverted"), missing), systemImage: "exclamationmark.circle").font(.subheadline) }
+            if missing > 0 { CheckLineIconLabel(String(format: String(localized: "ui.coverage.unconverted"), missing), symbol: "exclamationmark.circle").font(.subheadline) }
             if card.snapshot.certainOverrunAmount > 0 || card.snapshot.possibleOverrunAmount > 0 {
-                Label(String(localized: card.snapshot.certainOverrunAmount > 0 ? "v1.card.status.certain" : "v1.card.status.possible"), systemImage: "exclamationmark.circle").font(.subheadline)
+                CheckLineIconLabel(String(localized: card.snapshot.certainOverrunAmount > 0 ? "v1.card.status.certain" : "v1.card.status.possible"), symbol: "exclamationmark.circle").font(.subheadline)
             }
             if card.periodState != .settled {
                 let actionLayout = typeSize.isAccessibilitySize
@@ -177,9 +177,9 @@ struct BudgetDetailContent: View {
     private func destinationBlock(_ key: String, _ symbol: String) -> some View {
         VStack(alignment: .leading, spacing: 14) {
             HStack {
-                Image(systemName: symbol).font(.title3).foregroundStyle(PaperTheme.accent)
+                CheckLineIcon(symbol: symbol, size: 24).foregroundStyle(PaperTheme.accent)
                 Spacer(minLength: 8)
-                Image(systemName: "arrow.up.right").font(.caption).foregroundStyle(PaperTheme.muted)
+                CheckLineIcon(symbol: "arrow.up.right", size: 16).foregroundStyle(PaperTheme.muted)
             }
             Text(String(localized: String.LocalizationValue(key))).font(.subheadline.weight(.medium))
                 .fixedSize(horizontal: false, vertical: true)
@@ -196,7 +196,7 @@ struct BudgetDetailContent: View {
 
     @ViewBuilder private func recordAction(_ card: HomeBudgetCardModel, primary: Bool) -> some View {
         let button = Button { workspace.openComposer(.record, budgetID: card.id) } label: {
-            Label(String(localized: "capture.title"), systemImage: "plus").frame(maxWidth: .infinity)
+            CheckLineIconLabel(String(localized: "capture.title"), symbol: "plus").frame(maxWidth: .infinity)
         }
         if primary { button.buttonStyle(PaperSolidButtonStyle()) }
         else { button.buttonStyle(PaperQuietButtonStyle()) }
@@ -204,7 +204,7 @@ struct BudgetDetailContent: View {
 
     @ViewBuilder private func settlementAction(_ card: HomeBudgetCardModel, primary: Bool) -> some View {
         let button = Button { settlementSelection = SettlementSelection(id: card.periodID) } label: {
-            Label(String(localized: settlementReady(card) ? "wallet.settlement.review" : "wallet.settlement.preview"), systemImage: "checkmark.seal").frame(maxWidth: .infinity)
+            CheckLineIconLabel(String(localized: settlementReady(card) ? "wallet.settlement.review" : "wallet.settlement.preview"), symbol: "checkmark.seal").frame(maxWidth: .infinity)
         }.accessibilityIdentifier("wallet.budget.settlement")
         if primary { button.buttonStyle(PaperSolidButtonStyle()) }
         else { button.buttonStyle(PaperQuietButtonStyle()) }
@@ -225,10 +225,10 @@ struct BudgetDetailContent: View {
         Group {
             VStack(spacing: 12) {
                 let periods = workspace.ledger.periods(forBudget: budgetID).filter { $0.state == .settled }.reversed()
-                if periods.isEmpty { ContentUnavailableView(String(localized: "ui.history.empty"), systemImage: "clock.arrow.circlepath") }
+                if periods.isEmpty { ContentUnavailableView { Label { Text(String(localized: "ui.history.empty")) } icon: { CheckLineIcon(symbol: "clock.arrow.circlepath", size: 48) } } }
                 ForEach(Array(periods), id: \.id) { period in
                     NavigationLink(value: BudgetWorkspaceRoute.budget(budgetID, period.id, .overview)) {
-                        HStack { Text(period.startDate, format: .dateTime.year().month()); Spacer(); Label(String(localized: "ui.period.settled"), systemImage: "checkmark.seal"); Image(systemName: "chevron.right") }.padding(18).walletSurface()
+                        HStack { Text(period.startDate, format: .dateTime.year().month()); Spacer(); CheckLineIconLabel(String(localized: "ui.period.settled"), symbol: "checkmark.seal"); CheckLineIcon(symbol: "chevron.right") }.padding(18).walletSurface()
                     }.buttonStyle(.plain)
                 }
             }.frame(maxWidth: 760).frame(maxWidth: .infinity)
@@ -272,7 +272,7 @@ struct BudgetDetailContent: View {
                 Text(String(localized: "wallet.records.all")).tag(false)
                 Text(String(localized: "v1.card.pending") + " · \(all.filter { $0.attributionState == .pending }.count)").tag(true)
             }.pickerStyle(.segmented)
-            if rows.isEmpty { ContentUnavailableView(String(localized: "v1.card.records.empty"), systemImage: "receipt") }
+            if rows.isEmpty { ContentUnavailableView { Label { Text(String(localized: "v1.card.records.empty")) } icon: { CheckLineIcon(symbol: "receipt", size: 48) } } }
             ForEach(days, id: \.self) { day in
                 let dayRows = rows.filter { Calendar.current.isDate($0.occurredAt, inSameDayAs: day) }
                 Text(day, format: .dateTime.year().month().day()).font(.subheadline.weight(.semibold)).foregroundStyle(PaperTheme.muted)
@@ -416,8 +416,8 @@ struct BudgetCalendarView: View {
             HStack {
                 Text(month, format: .dateTime.year().month(.wide)).font(.headline)
                 Spacer()
-                Button { changeMonth(-1) } label: { Image(systemName: "chevron.left").frame(width: 44, height: 44) }.accessibilityLabel(String(localized: "wallet.month.previous"))
-                Button { changeMonth(1) } label: { Image(systemName: "chevron.right").frame(width: 44, height: 44) }.accessibilityLabel(String(localized: "wallet.month.next"))
+                Button { changeMonth(-1) } label: { CheckLineIcon(symbol: "chevron.left").frame(width: 44, height: 44) }.accessibilityLabel(String(localized: "wallet.month.previous"))
+                Button { changeMonth(1) } label: { CheckLineIcon(symbol: "chevron.right").frame(width: 44, height: 44) }.accessibilityLabel(String(localized: "wallet.month.next"))
             }
             let values = days.map { BudgetPresentation.dailyAmount($0, card: card, ledger: ledger) }
             let maximum = max(values.max() ?? 0, 1)
@@ -456,7 +456,7 @@ struct BudgetCalendarView: View {
                 }
             }.font(.subheadline).padding(.top, 6)
             if !containsInSelectedPeriod(selectedDay) {
-                Label(String(localized: "ui.calendar.outsidePeriod"), systemImage: "exclamationmark.circle")
+                CheckLineIconLabel(String(localized: "ui.calendar.outsidePeriod"), symbol: "exclamationmark.circle")
                     .font(.subheadline).foregroundStyle(PaperTheme.muted).padding(.vertical, 16)
             } else {
                 if rows.isEmpty && showsEmptyDayMessage { Text(String(localized: "wallet.day.empty")).font(.subheadline).foregroundStyle(PaperTheme.muted).padding(.vertical, 16) }
@@ -541,7 +541,7 @@ struct WalletExpenseDetail: View {
                         Text(expense.occurredAt, format: .dateTime.year().month().day().hour().minute()).font(.subheadline).foregroundStyle(PaperTheme.muted)
                         let sources = Array(Set(workspace.ledger.evidences(forExpense: expense.id).map { $0.sourceType.rawValue })).sorted()
                         VStack(alignment: .leading, spacing: 18) {
-                            Label(String(localized: expense.attributionState == .pending ? "v1.card.pending" : expense.attributionState == .unbudgeted ? "v1.unbudgeted" : "ui.record.confirmed"), systemImage: expense.attributionState == .pending ? "clock" : "checkmark.circle")
+                            CheckLineIconLabel(String(localized: expense.attributionState == .pending ? "v1.card.pending" : expense.attributionState == .unbudgeted ? "v1.unbudgeted" : "ui.record.confirmed"), symbol: expense.attributionState == .pending ? "clock" : "checkmark.circle")
                                 .font(.subheadline).foregroundStyle(PaperTheme.accent)
                             BudgetDetailMetadataRow(title: String(localized: "v1.agent.attribution"), value: attributionTitle(expense))
                             BudgetDetailMetadataRow(title: String(localized: "ui.record.source"), value: sources.isEmpty ? String(localized: "ui.source.unknown") : sources.map { String(localized: String.LocalizationValue("ui.source." + $0)) }.joined(separator: " · "))
@@ -562,7 +562,7 @@ struct WalletExpenseDetail: View {
             }
             .background(PaperTheme.canvas.ignoresSafeArea())
             .navigationTitle(String(localized: "wallet.expense.title")).navigationBarTitleDisplayMode(.inline)
-            .toolbar { if standalone { ToolbarItem(placement: .topBarTrailing) { Button(String(localized: "action.close"), systemImage: "xmark") { dismiss() }.labelStyle(.iconOnly) } } }
+            .toolbar { if standalone { ToolbarItem(placement: .topBarTrailing) { Button(String(localized: "action.close"), iconSymbol: "xmark") { dismiss() }.labelStyle(.iconOnly) } } }
             .toolbarBackground(.hidden, for: .navigationBar)
     }
 
@@ -612,18 +612,18 @@ struct WalletExpenseDetail: View {
                         Image(uiImage: image).resizable().scaledToFit().frame(maxWidth: .infinity, maxHeight: 240)
                     }
                     Button(role: .destructive) { attachmentToDelete = attachment.id } label: {
-                        Image(systemName: "trash").frame(width: 44, height: 44)
+                        CheckLineIcon(symbol: "trash").frame(width: 44, height: 44)
                     }.accessibilityLabel(String(localized: "wallet.expense.deleteAttachment"))
                 }
             }
             if attachments.count < ExpenseAttachmentStore.maximumPerExpense {
                 PhotosPicker(selection: $pickerItems, maxSelectionCount: ExpenseAttachmentStore.maximumPerExpense - attachments.count, matching: .images) {
-                    Label(String(localized: "wallet.expense.addAttachment"), systemImage: "photo.badge.plus")
+                    CheckLineIconLabel(String(localized: "wallet.expense.addAttachment"), symbol: "photo.badge.plus")
                 }
                 Button {
                     if let data = UIPasteboard.general.image?.pngData() { saveAttachment(data) }
                     else { errorText = String(localized: "wallet.expense.noClipboardImage") }
-                } label: { Label(String(localized: "wallet.expense.pasteImage"), systemImage: "doc.on.clipboard") }
+                } label: { CheckLineIconLabel(String(localized: "wallet.expense.pasteImage"), symbol: "doc.on.clipboard") }
             }
         }
     }

@@ -46,12 +46,12 @@ struct BudgetListView: View {
                         } label: {
                             HStack {
                                 VStack(alignment: .leading, spacing: 6) {
-                                    Label(budget.name, systemImage: "archivebox")
+                                    CheckLineIconLabel(budget.name, symbol: "archivebox")
                                     if let period = workspace.ledger.periods(forBudget: budget.id).last {
                                         Text(period.startDate, format: .dateTime.year().month().day()).font(.caption).foregroundStyle(PaperTheme.muted)
                                     }
                                 }
-                                Spacer(); Image(systemName: "chevron.right")
+                                Spacer(); CheckLineIcon(symbol: "chevron.right")
                             }.padding(18).walletSurface()
                         }.buttonStyle(.plain)
                     }
@@ -90,25 +90,25 @@ struct BudgetListView: View {
                     }
                 Menu {
                     if BudgetAmountEditEngine.isEditable(budgetID: card.id, periodID: card.periodID, ledger: workspace.ledger) {
-                        Button(String(localized: "wallet.budget.edit.title"), systemImage: "pencil") { editingCard = card }
+                        Button(String(localized: "wallet.budget.edit.title"), iconSymbol: "pencil") { editingCard = card }
                     }
-                    Button(String(localized: "wallet.card.showHome"), systemImage: "house") {
+                    Button(String(localized: "wallet.card.showHome"), iconSymbol: "house") {
                         workspace.selectedBudgetID = card.id
                         chrome?.selectedTab = .home
                     }
-                    Button(String(localized: "wallet.card.pin"), systemImage: "pin") { workspace.pinBudget(card.id) }
-                } label: { Image(systemName: "ellipsis").frame(width: 44, height: 44).padding(8).foregroundStyle(PaperTheme.ink) }
+                    Button(String(localized: "wallet.card.pin"), iconSymbol: "pin") { workspace.pinBudget(card.id) }
+                } label: { CheckLineIcon(symbol: "ellipsis").frame(width: 44, height: 44).padding(8).foregroundStyle(PaperTheme.ink) }
                     .accessibilityLabel(String(localized: "wallet.card.more"))
                     .accessibilityIdentifier("wallet.budget.card.more")
             }
-            Label(String(localized: card.periodState == .pendingSettlement ? "ui.period.due" : (card.cycleType == .repeating ? "wallet.cycle.monthly" : "v1.cycle.oneShot")), systemImage: "calendar")
+            CheckLineIconLabel(String(localized: card.periodState == .pendingSettlement ? "ui.period.due" : (card.cycleType == .repeating ? "wallet.cycle.monthly" : "v1.cycle.oneShot")), symbol: "calendar", size: 16)
                 .font(.caption).foregroundStyle(PaperTheme.muted)
             HStack(spacing: 4) {
                 Text(card.periodStart, format: .dateTime.year().month().day())
                 if let end = card.periodEnd { Text("–"); Text(end, format: .dateTime.month().day()) }
             }.font(.caption).foregroundStyle(PaperTheme.muted)
             if BudgetPresentation.pendingCount(card, in: workspace.ledger) > 0 {
-                Label(String(format: String(localized: "wallet.pending.count"), BudgetPresentation.pendingCount(card, in: workspace.ledger)), systemImage: "clock")
+                CheckLineIconLabel(String(format: String(localized: "wallet.pending.count"), BudgetPresentation.pendingCount(card, in: workspace.ledger)), symbol: "clock", size: 16)
                     .font(.caption).foregroundStyle(PaperTheme.gold)
             }
         }.frame(maxWidth: .infinity)

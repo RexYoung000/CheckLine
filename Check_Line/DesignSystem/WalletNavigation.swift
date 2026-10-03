@@ -87,7 +87,7 @@ struct WalletPageHeader: View {
 
     private var profileControl: some View {
         Button { chrome?.isSettingsPresented = true } label: {
-            Image(systemName: "person")
+            CheckLineIcon(symbol: "person", size: 20)
                 .font(.system(size: 20, weight: .medium))
                 .frame(width: 44, height: 44)
                 .contentShape(Circle())
@@ -115,7 +115,7 @@ struct WalletPageHeader: View {
 
     private func createControl(_ action: @escaping () -> Void) -> some View {
         Button(action: action) {
-            Image(systemName: "plus")
+            CheckLineIcon(symbol: "plus")
                 .frame(width: 44, height: 44)
                 .contentShape(Rectangle())
         }
@@ -125,7 +125,7 @@ struct WalletPageHeader: View {
 
     private var attentionControl: some View {
         Button { chrome?.isAttentionPresented = true } label: {
-            Image(systemName: "bell")
+            CheckLineIcon(symbol: "bell")
                 .overlay(alignment: .topTrailing) {
                     if !workspace.processingItems.isEmpty {
                         Circle().fill(PaperTheme.accent).frame(width: 6, height: 6).offset(x: 3, y: -3)
@@ -141,17 +141,17 @@ struct WalletPageHeader: View {
 
     private var functionsControl: some View {
         Menu {
-            Button(String(localized: "capture.title"), systemImage: "plus") { workspace.openComposer(.record) }
-            Button(String(localized: "v1.budget.create"), systemImage: "wallet.pass") { workspace.openComposer(.budget) }
-            Button(String(localized: "wallet.budget.manage"), systemImage: "square.grid.2x2") { chrome?.selectedTab = .budgets }
+            Button(String(localized: "capture.title"), iconSymbol: "plus") { workspace.openComposer(.record) }
+            Button(String(localized: "v1.budget.create"), iconSymbol: "wallet.pass") { workspace.openComposer(.budget) }
+            Button(String(localized: "wallet.budget.manage"), iconSymbol: "square.grid.2x2") { chrome?.selectedTab = .budgets }
             if workspace.lastUndo != nil {
-                Button(String(localized: "action.undo"), systemImage: "arrow.uturn.backward") { workspace.undoLast() }
+                Button(String(localized: "action.undo"), iconSymbol: "arrow.uturn.backward") { workspace.undoLast() }
             }
             Divider()
-            Button(String(localized: "ui.sources.title"), systemImage: "tray.and.arrow.down") { chrome?.isSourcesPresented = true }
-            Button(String(localized: "tab.settings"), systemImage: "gearshape") { chrome?.isSettingsPresented = true }
+            Button(String(localized: "ui.sources.title"), iconSymbol: "tray.and.arrow.down") { chrome?.isSourcesPresented = true }
+            Button(String(localized: "tab.settings"), iconSymbol: "gearshape") { chrome?.isSettingsPresented = true }
         } label: {
-            Image(systemName: "ellipsis")
+            CheckLineIcon(symbol: "ellipsis")
                 .frame(width: 44, height: 44)
                 .contentShape(Rectangle())
         }
@@ -253,7 +253,7 @@ struct WalletGlassNavigation: View {
     }
 
     private func selectionLabel(_ tab: CheckLineAppTab, selected: Bool) -> some View {
-        Image(systemName: tab.systemImage)
+        CheckLineIcon(symbol: tab.systemImage)
             .font(.system(size: 23, weight: .medium))
             .foregroundStyle(selected ? PaperTheme.accent : PaperTheme.ink)
             .frame(maxWidth: .infinity).frame(height: 50)
@@ -293,7 +293,7 @@ struct WalletActionFeedback: View {
                         .font(.subheadline.weight(.semibold))
                         .frame(minHeight: 44)
                 }
-                Button(String(localized: "action.close"), systemImage: "xmark") {
+                Button(String(localized: "action.close"), iconSymbol: "xmark") {
                     workspace.dismissActionFeedback()
                 }
                 .labelStyle(.iconOnly)
@@ -382,7 +382,11 @@ struct WalletAttentionSheet: View {
             ScrollView {
                 VStack(spacing: 14) {
                     if cards.isEmpty && unbudgetedCount == 0 {
-                        ContentUnavailableView(String(localized: "wallet.attention.empty"), systemImage: "bell.badge")
+                        ContentUnavailableView {
+                            Label { Text(String(localized: "wallet.attention.empty")) } icon: {
+                                CheckLineIcon(symbol: "bell.badge", size: 48)
+                            }
+                        }
                     }
                     ForEach(cards) { card in
                         let count = BudgetPresentation.pendingCount(card, in: workspace.ledger)
@@ -393,24 +397,24 @@ struct WalletAttentionSheet: View {
                             BudgetDetailContent(workspace: workspace, budgetID: card.id, section: due ? .overview : (count > 0 ? .pending : .overview))
                         } label: {
                             HStack(spacing: 14) {
-                                Image(systemName: due ? "checkmark.seal" : (count > 0 ? "clock" : "exclamationmark.circle")).font(.title3).foregroundStyle(PaperTheme.accent)
+                                CheckLineIcon(symbol: due ? "checkmark.seal" : (count > 0 ? "clock" : "exclamationmark.circle")).font(.title3).foregroundStyle(PaperTheme.accent)
                                 VStack(alignment: .leading, spacing: 6) {
                                     Text(card.name).font(.headline)
                                     Text(due ? String(localized: "wallet.attention.settlementDue") : (count > 0 ? String(format: String(localized: "wallet.pending.count"), count) : (card.snapshot.certainOverrunAmount > 0 ? String(localized: "wallet.overrun") : String(localized: "wallet.possibleOverrun"))))
                                         .font(.subheadline).foregroundStyle(PaperTheme.muted)
                                 }
                                 Spacer()
-                                Image(systemName: "chevron.right").font(.caption)
+                                CheckLineIcon(symbol: "chevron.right", size: 20).font(.caption)
                             }.padding(18).walletSurface()
                         }.buttonStyle(.plain)
                     }
                     if unbudgetedCount > 0 {
                         NavigationLink { UnbudgetedRecordsView(workspace: workspace) } label: {
                             HStack {
-                                Label(String(localized: "v1.unbudgeted"), systemImage: "tray")
+                                CheckLineIconLabel(String(localized: "v1.unbudgeted"), symbol: "tray")
                                 Spacer()
                                 Text(unbudgetedCount, format: .number)
-                                Image(systemName: "chevron.right").font(.caption)
+                                CheckLineIcon(symbol: "chevron.right", size: 20).font(.caption)
                             }.padding(18).walletSurface()
                         }.buttonStyle(.plain)
                     }
@@ -421,7 +425,7 @@ struct WalletAttentionSheet: View {
             .toolbarBackground(.hidden, for: .navigationBar)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button(String(localized: "action.close"), systemImage: "xmark") { dismiss() }.labelStyle(.iconOnly)
+                    Button(String(localized: "action.close"), iconSymbol: "xmark") { dismiss() }.labelStyle(.iconOnly)
                 }
             }
         }

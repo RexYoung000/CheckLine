@@ -10,10 +10,10 @@ struct RootCreateButton: View {
             PaperHaptics.light()
             action()
         } label: {
-            Image(systemName: showsClose ? "xmark" : "plus")
+            CheckLineIcon(symbol: showsClose ? "xmark" : "plus", size: PaperTheme.Dock.icon)
                 .font(.system(size: PaperTheme.Dock.icon, weight: .semibold))
                 .foregroundStyle(PaperTheme.ink)
-                .contentTransition(reduceMotion ? .identity : .symbolEffect(.replace))
+                .contentTransition(reduceMotion ? .identity : .opacity)
                 .frame(width: PaperTheme.Dock.control, height: PaperTheme.Dock.control)
                 .contentShape(Circle())
                 .paperGlass(.circle, interactive: true)

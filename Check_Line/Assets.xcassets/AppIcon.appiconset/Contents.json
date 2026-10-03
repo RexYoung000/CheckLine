@@ -1,11 +1,13 @@
 {
   "images" : [
     {
+      "filename" : "CheckLine-light.png",
       "idiom" : "universal",
       "platform" : "ios",
       "size" : "1024x1024"
     },
     {
+      "filename" : "CheckLine-dark.png",
       "appearances" : [
         {
           "appearance" : "luminosity",
@@ -17,6 +19,7 @@
       "size" : "1024x1024"
     },
     {
+      "filename" : "CheckLine-tinted.png",
       "appearances" : [
         {
           "appearance" : "luminosity",

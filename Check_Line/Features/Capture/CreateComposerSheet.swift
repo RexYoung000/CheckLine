@@ -204,7 +204,7 @@ struct CreateComposerSheet: View {
     private var header: some View {
         VStack(spacing: 8) {
             HStack {
-                Button { dismiss() } label: { Image(systemName: "xmark").font(.system(size: 17)).frame(width: 44, height: 44) }
+                Button { dismiss() } label: { CheckLineIcon(symbol: "xmark", size: 17).frame(width: 44, height: 44) }
                     .accessibilityLabel(String(localized: "action.close"))
                     .accessibilityIdentifier(mode == .agent ? "wallet.agent.close" : "wallet.composer.close")
                 Spacer()
@@ -215,12 +215,12 @@ struct CreateComposerSheet: View {
                 if mode == .agent { modeToggle }
                 Menu {
                     if mode == .agent && !workspace.conversation.isEmpty {
-                        Button(String(localized: "ui.agent.conversation"), systemImage: "bubble.left.and.bubble.right") {
+                        Button(String(localized: "ui.agent.conversation"), iconSymbol: "bubble.left.and.bubble.right") {
                             conversationExpanded.toggle(); detent = .large
                         }
                     }
                     Button(String(localized: "ui.draft.discard"), role: .destructive) { discardRequested = true }
-                } label: { Image(systemName: "ellipsis").font(.system(size: 17)).frame(width: 44, height: 44) }
+                } label: { CheckLineIcon(symbol: "ellipsis", size: 17).frame(width: 44, height: 44) }
                 .accessibilityLabel(String(localized: "ui.task.options"))
             }
             if mode == .form { modeToggle }
@@ -264,9 +264,9 @@ struct CreateComposerSheet: View {
     private var modeToggle: some View {
         Button { switchMode() } label: {
             if typeSize.isAccessibilitySize {
-                Image(systemName: mode == .form ? "sparkles" : "square.and.pencil").font(.system(size: 20)).frame(width: 44, height: 44)
+                CheckLineIcon(symbol: mode == .form ? "sparkles" : "square.and.pencil", size: 20).frame(width: 44, height: 44)
             } else {
-                Label(String(localized: mode == .form ? "ui.agent.helpFill" : "ui.task.manual"), systemImage: mode == .form ? "sparkles" : "square.and.pencil")
+                CheckLineIconLabel(String(localized: mode == .form ? "ui.agent.helpFill" : "ui.task.manual"), symbol: mode == .form ? "sparkles" : "square.and.pencil")
                     .font(.subheadline.weight(.medium)).frame(minHeight: 44)
             }
         }.accessibilityIdentifier("wallet.task.switchMode")
@@ -320,7 +320,7 @@ struct CreateComposerSheet: View {
                             PaperField(title: String(localized: "ui.record.rawText"), text: field(\.text), axis: .vertical).focused($formFocused)
                             attachmentInput
                         } label: {
-                            Label(note.isEmpty && workspace.draftText.isEmpty && workspace.taskDraft.attachments.isEmpty ? String(localized: "ui.record.extras") : String(format: String(localized: "ui.record.extrasCount"), note.count + workspace.draftText.count, workspace.taskDraft.attachments.count), systemImage: "text.badge.plus")
+                            CheckLineIconLabel(note.isEmpty && workspace.draftText.isEmpty && workspace.taskDraft.attachments.isEmpty ? String(localized: "ui.record.extras") : String(format: String(localized: "ui.record.extrasCount"), note.count + workspace.draftText.count, workspace.taskDraft.attachments.count), symbol: "text.badge.plus")
                         }.padding(16).walletSurface()
                         if hasCurrencyMismatch {
                             Text(String(localized: "ui.currency.unconverted")).font(.caption).foregroundStyle(PaperTheme.muted)
@@ -348,7 +348,7 @@ struct CreateComposerSheet: View {
 
     private var currencyButton: some View {
         Button { showingCurrencyPicker = true } label: {
-            HStack(spacing: 4) { Text(currency); Image(systemName: "chevron.down").font(.caption2) }
+            HStack(spacing: 4) { Text(currency); CheckLineIcon(symbol: "chevron.down", size: 14) }
                 .font(.subheadline.weight(.medium)).frame(minHeight: 44)
         }.accessibilityLabel(String(localized: "v1.budget.currency"))
             .accessibilityValue(currency)
@@ -362,7 +362,7 @@ struct CreateComposerSheet: View {
                 if !typeSize.isAccessibilitySize { Spacer(minLength: 8) }
                 HStack {
                     Text(value).multilineTextAlignment(typeSize.isAccessibilitySize ? .leading : .trailing)
-                    Image(systemName: "chevron.down").font(.caption2).foregroundStyle(PaperTheme.muted)
+                    CheckLineIcon(symbol: "chevron.down", size: 14).foregroundStyle(PaperTheme.muted)
                 }
             }.font(.body).padding(16).frame(maxWidth: .infinity, alignment: .leading).frame(minHeight: 52).contentShape(Rectangle())
         }.buttonStyle(.plain)
@@ -434,18 +434,18 @@ struct CreateComposerSheet: View {
                     Text(String(localized: "wallet.expense.attachments")).font(.caption)
                     Spacer()
                     Button(role: .destructive) { workspace.taskDraft.attachments.removeAll { $0.id == attachment.id } } label: {
-                        Image(systemName: "trash").frame(width: 44, height: 44)
+                        CheckLineIcon(symbol: "trash").frame(width: 44, height: 44)
                     }.accessibilityLabel(String(localized: "wallet.expense.deleteAttachment"))
                 }
             }
             if totalCount < ExpenseAttachmentStore.maximumPerExpense {
                 PhotosPicker(selection: $pickerItems, maxSelectionCount: ExpenseAttachmentStore.maximumPerExpense - totalCount, matching: .images) {
-                    Label(String(localized: "wallet.expense.addAttachment"), systemImage: "photo.badge.plus")
+                    CheckLineIconLabel(String(localized: "wallet.expense.addAttachment"), symbol: "photo.badge.plus")
                 }
                 Button {
                     if let data = UIPasteboard.general.image?.pngData() { addAttachmentData(data) }
                     else { attachmentError = String(localized: "wallet.expense.noClipboardImage") }
-                } label: { Label(String(localized: "wallet.expense.pasteImage"), systemImage: "doc.on.clipboard") }
+                } label: { CheckLineIconLabel(String(localized: "wallet.expense.pasteImage"), symbol: "doc.on.clipboard") }
             }
         }
         .padding(16)

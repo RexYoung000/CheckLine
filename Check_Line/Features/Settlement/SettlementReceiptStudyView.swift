@@ -48,7 +48,7 @@ struct SettlementReceiptStudyView: View {
                 if showingStudy && !showingWallet {
                     ToolbarItem(placement: .topBarTrailing) { studyOptions }
                     ToolbarItem(placement: .topBarTrailing) {
-                        Button { returnToBudget() } label: { Image(systemName: "xmark") }
+                        Button { returnToBudget() } label: { CheckLineIcon(symbol: "xmark") }
                             .accessibilityLabel(Text("action.close"))
                             .accessibilityIdentifier("receipt.close")
                     }
@@ -77,7 +77,7 @@ struct SettlementReceiptStudyView: View {
 
     private var heading: some View {
         VStack(spacing: 8) {
-            Label("receipt.study.completed", systemImage: "checkmark.circle")
+            CheckLineIconLabel(String(localized: "receipt.study.completed"), symbol: "checkmark.circle")
                 .font(.subheadline.weight(.medium))
                 .foregroundStyle(PaperTheme.accent)
             Text("wallet.demo.daily").font(PaperTheme.Typography.cardName)
@@ -170,8 +170,7 @@ struct SettlementReceiptStudyView: View {
                 HStack {
                     Text(detailsExpanded ? "receipt.study.hideDetails" : "receipt.study.showDetails")
                     Spacer(minLength: 8)
-                    Image(systemName: detailsExpanded ? "chevron.up" : "chevron.down")
-                        .font(.caption.weight(.semibold))
+                    CheckLineIcon(symbol: detailsExpanded ? "chevron.up" : "chevron.down", size: 16)
                 }
                 .font(.subheadline)
                 .frame(minHeight: 44)
@@ -241,7 +240,7 @@ struct SettlementReceiptStudyView: View {
             .frame(maxWidth: .infinity, minHeight: 44)
             .accessibilityIdentifier("receipt.viewWallet")
             if staticPresentation {
-                Label(voiceOver ? "receipt.study.voiceOver" : "receipt.study.static", systemImage: "figure.stand")
+                CheckLineIconLabel(String(localized: voiceOver ? "receipt.study.voiceOver" : "receipt.study.static"), symbol: "figure.stand", size: 16)
                     .font(.caption).foregroundStyle(PaperTheme.muted)
                     .accessibilityIdentifier("receipt.static")
             }
@@ -258,7 +257,7 @@ struct SettlementReceiptStudyView: View {
     private var studyOptions: some View {
         Menu {
             if !staticPresentation {
-                Button("receipt.study.replay", systemImage: "arrow.clockwise") { replay() }
+                Button(String(localized: "receipt.study.replay"), iconSymbol: "arrow.clockwise") { replay() }
                     .accessibilityIdentifier("receipt.replay")
                 Button("receipt.study.showAll") { finishImmediately() }
                     .accessibilityIdentifier("receipt.finish")
@@ -267,7 +266,7 @@ struct SettlementReceiptStudyView: View {
                 Text("receipt.study.surplusExample").tag(false)
                 Text("receipt.study.overrunExample").tag(true)
             }
-        } label: { Image(systemName: "ellipsis") }
+        } label: { CheckLineIcon(symbol: "ellipsis") }
         .accessibilityLabel(Text("receipt.study.options"))
         .accessibilityIdentifier("receipt.options")
         .onChange(of: overrun) { _, _ in
@@ -279,10 +278,10 @@ struct SettlementReceiptStudyView: View {
     private var budgetPreview: some View {
         VStack(spacing: 20) {
             Spacer()
-            Image(systemName: "doc.text").font(.largeTitle).foregroundStyle(PaperTheme.accent)
+            CheckLineIcon(symbol: "doc.text", size: 36).foregroundStyle(PaperTheme.accent)
             Text("wallet.demo.daily").font(PaperTheme.Typography.title)
             Text(period).font(.subheadline).foregroundStyle(PaperTheme.muted)
-            Label("receipt.study.completed", systemImage: "checkmark.circle")
+            CheckLineIconLabel(String(localized: "receipt.study.completed"), symbol: "checkmark.circle")
                 .foregroundStyle(PaperTheme.accent)
             Button("receipt.study.open") {
                 showingStudy = true

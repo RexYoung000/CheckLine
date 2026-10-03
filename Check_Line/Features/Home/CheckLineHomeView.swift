@@ -58,10 +58,10 @@ struct CheckLineHomeView: View {
                     if BudgetPresentation.pendingCount(card, in: workspace.ledger) > 0 {
                         Button { openDetail(.pending, card: card) } label: {
                             HStack {
-                                Label(String(format: String(localized: "wallet.pending.count"), BudgetPresentation.pendingCount(card, in: workspace.ledger)), systemImage: "clock")
+                                CheckLineIconLabel(String(format: String(localized: "wallet.pending.count"), BudgetPresentation.pendingCount(card, in: workspace.ledger)), symbol: "clock")
                                 Spacer()
                                 Text(MoneyFormat.string(card.snapshot.pendingAmount, currencyCode: card.currencyCode)).monospacedDigit()
-                                Image(systemName: "chevron.right").font(.caption)
+                                CheckLineIcon(symbol: "chevron.right", size: 20).font(.caption)
                             }
                             .font(.subheadline).foregroundStyle(PaperTheme.gold)
                             .padding(.horizontal, 14).padding(.vertical, 9)
@@ -70,7 +70,7 @@ struct CheckLineHomeView: View {
                     }
                     if workspace.ledger.expenses.values.contains(where: { $0.attributionState == .unbudgeted && $0.wishRedemptionID == nil }) {
                         NavigationLink { UnbudgetedRecordsView(workspace: workspace) } label: {
-                            Label(String(localized: "v1.unbudgeted"), systemImage: "tray")
+                            CheckLineIconLabel(String(localized: "v1.unbudgeted"), symbol: "tray")
                                 .font(.subheadline).frame(maxWidth: .infinity, alignment: .leading)
                                 .padding(.horizontal, 14).padding(.vertical, 9)
                         }
@@ -196,25 +196,27 @@ struct CheckLineHomeView: View {
                 }
             Menu {
                 ForEach(workspace.cards) { item in
-                    Button { workspace.selectedBudgetID = item.id } label: {
-                        if item.id == card.id { Label(item.name, systemImage: "checkmark") } else { Text(item.name) }
+                    if item.id == card.id {
+                        Button(item.name, iconSymbol: "checkmark") { workspace.selectedBudgetID = item.id }
+                    } else {
+                        Button(item.name) { workspace.selectedBudgetID = item.id }
                     }
                 }
                 Divider()
                 if BudgetAmountEditEngine.isEditable(budgetID: card.id, periodID: card.periodID, ledger: workspace.ledger) {
-                    Button(String(localized: "wallet.budget.edit.title"), systemImage: "pencil") { editingCard = card }
+                    Button(String(localized: "wallet.budget.edit.title"), iconSymbol: "pencil") { editingCard = card }
                 }
-                Button(String(localized: "wallet.card.details"), systemImage: "arrow.up.right") { openDetail(.overview, card: card) }
-                Button(String(localized: "wallet.budget.manage"), systemImage: "wallet.pass") { chrome?.selectedTab = .budgets }
+                Button(String(localized: "wallet.card.details"), iconSymbol: "arrow.up.right") { openDetail(.overview, card: card) }
+                Button(String(localized: "wallet.budget.manage"), iconSymbol: "wallet.pass") { chrome?.selectedTab = .budgets }
             } label: {
-                Image(systemName: "ellipsis").foregroundStyle(PaperTheme.ink).frame(width: 44, height: 44).padding(8)
+                CheckLineIcon(symbol: "ellipsis").foregroundStyle(PaperTheme.ink).frame(width: 44, height: 44).padding(8)
             }
             .accessibilityLabel(String(localized: "wallet.card.more"))
             .accessibilityIdentifier("wallet.home.card.more")
             }
         .overlay(alignment: .bottomLeading) {
             Button { workspace.openComposer(.record) } label: {
-                Image(systemName: "plus")
+                CheckLineIcon(symbol: "plus", size: 20)
                     .font(.system(size: 20, weight: .medium))
                     .foregroundStyle(PaperTheme.ink)
                     .frame(width: 44, height: 44)
@@ -267,7 +269,7 @@ struct CheckLineHomeView: View {
                                 .font(.title.weight(.medium)).monospacedDigit()
                             Text(String(localized: "wallet.daysLeft")).font(.caption2)
                         } else {
-                            Image(systemName: "infinity").font(.title2)
+                            CheckLineIcon(symbol: "infinity", size: 32).font(.title2)
                             Text(String(localized: "wallet.noDeadline")).font(.caption2)
                         }
                     }.foregroundStyle(PaperTheme.muted)
@@ -279,7 +281,7 @@ struct CheckLineHomeView: View {
     }
 
     private func tileLabel(_ title: String, icon: String) -> some View {
-        HStack { Text(title); Spacer(); Image(systemName: icon) }.font(.caption).foregroundStyle(PaperTheme.muted)
+        HStack { Text(title); Spacer(); CheckLineIcon(symbol: icon, size: 20) }.font(.caption).foregroundStyle(PaperTheme.muted)
     }
 
     private func receipts(_ card: HomeBudgetCardModel) -> some View {
@@ -288,7 +290,7 @@ struct CheckLineHomeView: View {
             HStack {
                 Text(String(localized: "expense.recent.title")).font(.headline)
                 Spacer()
-                Button { openDetail(.records, card: card) } label: { Image(systemName: "arrow.up.right").frame(width: 44, height: 44) }
+                Button { openDetail(.records, card: card) } label: { CheckLineIcon(symbol: "arrow.up.right").frame(width: 44, height: 44) }
                     .accessibilityLabel(String(localized: "wallet.records.all"))
             }
             if rows.isEmpty {
@@ -333,7 +335,7 @@ private struct HomeSummaryOverlay: View {
                     HStack {
                         Text(section.title).font(.headline)
                         Spacer()
-                        Button(action: close) { Image(systemName: "xmark").frame(width: 44, height: 44) }
+                        Button(action: close) { CheckLineIcon(symbol: "xmark").frame(width: 44, height: 44) }
                             .accessibilityLabel(String(localized: "action.close"))
                     }.padding(.horizontal, 22).padding(.top, 14)
                     ScrollView {

@@ -40,12 +40,11 @@ struct WalletSymbol: View {
     var name: String
     var size: CGFloat = 56
     var body: some View {
-        Image(systemName: name)
+        CheckLineIcon(symbol: name, size: size * 0.42)
             .font(.system(size: size * 0.42, weight: .regular))
             .foregroundStyle(PaperTheme.accent)
             .frame(width: size, height: size)
             .background(PaperTheme.accent.opacity(0.11), in: RoundedRectangle(cornerRadius: size * 0.32, style: .continuous))
-            .overlay { RoundedRectangle(cornerRadius: size * 0.32, style: .continuous).strokeBorder(PaperTheme.accent.opacity(0.18), lineWidth: 0.8) }
             .accessibilityHidden(true)
     }
 }
@@ -182,7 +181,7 @@ struct WalletHomeBackdrop: View {
                                 : (index == 2 ? 0.055 : 0.945)
                             let y = index < 2 ? 0.10 + 0.14 * symbolSeed(index, Int(turn), 67)
                                 : 0.25 + 0.24 * symbolSeed(index, Int(turn), 67)
-                            Image(systemName: symbols[(index + Int(turn.magnitude) % symbols.count) % symbols.count])
+                            CheckLineIcon(symbol: symbols[(index + Int(turn.magnitude) % symbols.count) % symbols.count], size: 15 + CGFloat(index % 3) * 2)
                                 .font(.system(size: 15 + CGFloat(index % 3) * 2, weight: .light))
                                 .foregroundStyle(PaperTheme.accent)
                                 .opacity(reduceMotion ? 0.11 : 0.17 * pow(sin(.pi * progress), 2))
@@ -345,7 +344,7 @@ struct WalletEmptyBudgetCard: View {
     var body: some View {
         Button(action: action) {
             VStack(spacing: 16) {
-                Image(systemName: "plus")
+                CheckLineIcon(symbol: "plus")
                     .font(.title3.weight(.medium))
                     .frame(width: 52, height: 52)
                     .background(PaperTheme.accent.opacity(0.12), in: Circle())
@@ -401,7 +400,7 @@ struct WalletExpenseRow: View {
     var showsDate = true
     var body: some View {
         HStack(spacing: 12) {
-            Image(systemName: BudgetPresentation.symbol(for: expense))
+            CheckLineIcon(symbol: BudgetPresentation.symbol(for: expense))
                 .foregroundStyle(PaperTheme.accent).frame(width: 36, height: 40)
             VStack(alignment: .leading, spacing: 4) {
                 Text(expense.merchant ?? String(localized: "v1.card.record.untitled")).font(.subheadline).lineLimit(2)

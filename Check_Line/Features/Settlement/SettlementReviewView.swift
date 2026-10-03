@@ -90,14 +90,14 @@ struct SettlementReviewView: View {
                                     showsProvenance: preview == nil
                                 )
                                 if quote == nil {
-                                    Label(String(localized: "wallet.exchange.required"), systemImage: "exclamationmark.circle")
+                                    CheckLineIconLabel(String(localized: "wallet.exchange.required"), symbol: "exclamationmark.circle")
                                         .font(.subheadline).foregroundStyle(PaperTheme.accent)
                                 }
                             }
                             if let preview {
                                 walletImpact(preview)
                             } else if !needsQuote || quote != nil {
-                                Label(String(localized: "wallet.settlement.previewUnavailable"), systemImage: "exclamationmark.circle")
+                                CheckLineIconLabel(String(localized: "wallet.settlement.previewUnavailable"), symbol: "exclamationmark.circle")
                                     .foregroundStyle(PaperTheme.accent)
                             }
                             if !isDue {
@@ -106,11 +106,11 @@ struct SettlementReviewView: View {
                             }
                         }
                         if let errorText {
-                            Label(errorText, systemImage: "exclamationmark.circle")
+                            CheckLineIconLabel(errorText, symbol: "exclamationmark.circle")
                                 .font(.subheadline).foregroundStyle(PaperTheme.accent)
                         }
                     } else {
-                        ContentUnavailableView(String(localized: "budget.missing"), systemImage: "wallet.pass")
+                        ContentUnavailableView { Label { Text(String(localized: "budget.missing")) } icon: { CheckLineIcon(symbol: "wallet.pass", size: 48) } }
                     }
                 }
                 .padding(22)
@@ -125,7 +125,7 @@ struct SettlementReviewView: View {
             .toolbarBackground(.hidden, for: .navigationBar)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button(String(localized: "action.close"), systemImage: "xmark") { dismiss() }
+                    Button(String(localized: "action.close"), iconSymbol: "xmark") { dismiss() }
                         .labelStyle(.iconOnly)
                 }
             }
@@ -184,7 +184,7 @@ struct SettlementReviewView: View {
             }
             .font(.subheadline).foregroundStyle(PaperTheme.muted)
             if completed {
-                Label(String(localized: "wallet.settlement.saved"), systemImage: "checkmark.circle.fill")
+                CheckLineIconLabel(String(localized: "wallet.settlement.saved"), symbol: "checkmark.circle.fill")
                     .foregroundStyle(PaperTheme.accent)
             }
         }
@@ -235,7 +235,7 @@ struct SettlementReviewView: View {
                     )
                 }
                 if preview?.hasCoverageGap == true {
-                    Label(String(localized: "wallet.settlement.coverageGap"), systemImage: "exclamationmark.circle")
+                    CheckLineIconLabel(String(localized: "wallet.settlement.coverageGap"), symbol: "exclamationmark.circle")
                         .font(.subheadline).foregroundStyle(PaperTheme.accent)
                 }
             }
@@ -248,7 +248,7 @@ struct SettlementReviewView: View {
         HStack(spacing: 12) {
             impactRow(title, value)
             if showsArrow {
-                Image(systemName: "chevron.right").font(.caption).foregroundStyle(PaperTheme.muted)
+                CheckLineIcon(symbol: "chevron.right", size: 16).foregroundStyle(PaperTheme.muted)
             }
         }
         .frame(maxWidth: .infinity, minHeight: 44, alignment: .leading)
@@ -321,8 +321,8 @@ struct SettlementReviewView: View {
             } else {
                 Button { accepted.toggle() } label: {
                     HStack(alignment: .top, spacing: 12) {
-                        Image(systemName: accepted ? "checkmark.circle.fill" : "circle")
-                            .font(.title3).foregroundStyle(PaperTheme.accent)
+                        CheckLineIcon(symbol: accepted ? "checkmark.circle.fill" : "circle", size: 24)
+                            .foregroundStyle(PaperTheme.accent)
                         Text(String(localized: "wallet.settlement.acceptData"))
                             .font(.subheadline).multilineTextAlignment(.leading)
                         Spacer(minLength: 0)

@@ -52,6 +52,7 @@ final class WalletNavigationUITests: XCTestCase {
         app.buttons["wallet.functions"].tap()
         let record = app.buttons["记一笔"].firstMatch
         XCTAssertTrue(record.waitForExistence(timeout: 5))
+        attach(app, name: "function-menu-icons")
         record.tap()
         XCTAssertTrue(app.textFields.firstMatch.waitForExistence(timeout: 5))
     }

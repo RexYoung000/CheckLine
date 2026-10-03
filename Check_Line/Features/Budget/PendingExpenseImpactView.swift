@@ -12,7 +12,7 @@ struct PendingExpenseImpactView: View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 22) {
-                    Label(String(localized: "wallet.expense.retrospectiveImpact"), systemImage: "clock.arrow.circlepath").font(.title2.weight(.semibold))
+                    CheckLineIconLabel(String(localized: "wallet.expense.retrospectiveImpact"), symbol: "clock.arrow.circlepath", size: 24).font(.title2.weight(.semibold))
                     Text(String(localized: "ui.impact.confirmPendingSummary")).font(.subheadline).foregroundStyle(PaperTheme.muted)
                     VStack(alignment: .leading, spacing: 16) {
                         impactRow("ui.impact.originalPeriod", periodRange)

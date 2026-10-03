@@ -1,0 +1,493 @@
+{
+  "package": "@hugeicons/core-free-icons",
+  "version": "4.3.5",
+  "tarball": "https://registry.npmjs.org/@hugeicons/core-free-icons/-/core-free-icons-4.3.5.tgz",
+  "sha1": "1969f7225bdd501a3a92942ebe498c00b79817e2",
+  "license": "MIT",
+  "family": "Stroke Rounded",
+  "icons": [
+    {
+      "asset": "CLIconHome",
+      "export": "Home09Icon",
+      "symbols": [
+        "house"
+      ]
+    },
+    {
+      "asset": "CLIconBudget",
+      "export": "Wallet05Icon",
+      "symbols": [
+        "wallet.pass"
+      ]
+    },
+    {
+      "asset": "CLIconWish",
+      "export": "HeartIcon",
+      "symbols": [
+        "heart",
+        "heart.fill"
+      ]
+    },
+    {
+      "asset": "CLIconAnalysis",
+      "export": "ChartColumnIcon",
+      "symbols": [
+        "chart.bar.xaxis"
+      ]
+    },
+    {
+      "asset": "CLIconPerson",
+      "export": "User02Icon",
+      "symbols": [
+        "person"
+      ]
+    },
+    {
+      "asset": "CLIconAdd",
+      "export": "Add01Icon",
+      "symbols": [
+        "plus"
+      ]
+    },
+    {
+      "asset": "CLIconBell",
+      "export": "Notification01Icon",
+      "symbols": [
+        "bell",
+        "bell.badge"
+      ]
+    },
+    {
+      "asset": "CLIconMore",
+      "export": "MoreHorizontalIcon",
+      "symbols": [
+        "ellipsis"
+      ]
+    },
+    {
+      "asset": "CLIconSettings",
+      "export": "Settings01Icon",
+      "symbols": [
+        "gearshape"
+      ]
+    },
+    {
+      "asset": "CLIconDirectory",
+      "export": "GridViewIcon",
+      "symbols": [
+        "square.grid.2x2"
+      ]
+    },
+    {
+      "asset": "CLIconUndo",
+      "export": "Undo02Icon",
+      "symbols": [
+        "arrow.uturn.backward"
+      ]
+    },
+    {
+      "asset": "CLIconImport",
+      "export": "InboxDownloadIcon",
+      "symbols": [
+        "tray.and.arrow.down"
+      ]
+    },
+    {
+      "asset": "CLIconInbox",
+      "export": "InboxIcon",
+      "symbols": [
+        "tray"
+      ]
+    },
+    {
+      "asset": "CLIconClose",
+      "export": "Cancel01Icon",
+      "symbols": [
+        "xmark"
+      ]
+    },
+    {
+      "asset": "CLIconBack",
+      "export": "ArrowLeft01Icon",
+      "symbols": [
+        "chevron.left"
+      ]
+    },
+    {
+      "asset": "CLIconNext",
+      "export": "ArrowRight01Icon",
+      "symbols": [
+        "chevron.right"
+      ]
+    },
+    {
+      "asset": "CLIconDown",
+      "export": "ArrowDown01Icon",
+      "symbols": [
+        "chevron.down"
+      ]
+    },
+    {
+      "asset": "CLIconUp",
+      "export": "ArrowUp01Icon",
+      "symbols": [
+        "chevron.up"
+      ]
+    },
+    {
+      "asset": "CLIconSend",
+      "export": "ArrowUp02Icon",
+      "symbols": [
+        "arrow.up"
+      ]
+    },
+    {
+      "asset": "CLIconOpen",
+      "export": "ArrowUpRight01Icon",
+      "symbols": [
+        "arrow.up.right"
+      ]
+    },
+    {
+      "asset": "CLIconIncoming",
+      "export": "ArrowDownLeft01Icon",
+      "symbols": [
+        "arrow.down.left"
+      ]
+    },
+    {
+      "asset": "CLIconClock",
+      "export": "Clock01Icon",
+      "symbols": [
+        "clock"
+      ]
+    },
+    {
+      "asset": "CLIconHistory",
+      "export": "HistoryIcon",
+      "symbols": [
+        "clock.arrow.circlepath",
+        "arrow.counterclockwise"
+      ]
+    },
+    {
+      "asset": "CLIconReplay",
+      "export": "RotateClockwiseIcon",
+      "symbols": [
+        "arrow.clockwise"
+      ]
+    },
+    {
+      "asset": "CLIconCalendar",
+      "export": "Calendar03Icon",
+      "symbols": [
+        "calendar"
+      ]
+    },
+    {
+      "asset": "CLIconReceipt",
+      "export": "ReceiptTextIcon",
+      "symbols": [
+        "receipt"
+      ]
+    },
+    {
+      "asset": "CLIconEdit",
+      "export": "PencilEdit02Icon",
+      "symbols": [
+        "square.and.pencil",
+        "pencil"
+      ]
+    },
+    {
+      "asset": "CLIconPin",
+      "export": "Pin02Icon",
+      "symbols": [
+        "pin"
+      ]
+    },
+    {
+      "asset": "CLIconMic",
+      "export": "Mic01Icon",
+      "symbols": [
+        "mic"
+      ]
+    },
+    {
+      "asset": "CLIconChat",
+      "export": "Chatting01Icon",
+      "symbols": [
+        "bubble.left.and.bubble.right"
+      ]
+    },
+    {
+      "asset": "CLIconText",
+      "export": "ClipboardTypeIcon",
+      "symbols": [
+        "text.badge.plus"
+      ]
+    },
+    {
+      "asset": "CLIconAttachment",
+      "export": "ImageAdd01Icon",
+      "symbols": [
+        "photo.badge.plus"
+      ]
+    },
+    {
+      "asset": "CLIconPaste",
+      "export": "ClipboardPasteIcon",
+      "symbols": [
+        "doc.on.clipboard"
+      ]
+    },
+    {
+      "asset": "CLIconDelete",
+      "export": "Delete02Icon",
+      "symbols": [
+        "trash"
+      ]
+    },
+    {
+      "asset": "CLIconDocument",
+      "export": "FileTextIcon",
+      "symbols": [
+        "doc.text"
+      ]
+    },
+    {
+      "asset": "CLIconCopy",
+      "export": "Copy01Icon",
+      "symbols": [
+        "doc.on.doc"
+      ]
+    },
+    {
+      "asset": "CLIconArchive",
+      "export": "Archive02Icon",
+      "symbols": [
+        "archivebox"
+      ]
+    },
+    {
+      "asset": "CLIconCheck",
+      "export": "Tick02Icon",
+      "symbols": [
+        "checkmark"
+      ]
+    },
+    {
+      "asset": "CLIconConfirmed",
+      "export": "CheckmarkCircle02Icon",
+      "symbols": [
+        "checkmark.circle",
+        "checkmark.circle.fill"
+      ]
+    },
+    {
+      "asset": "CLIconCircle",
+      "export": "CircleIcon",
+      "symbols": [
+        "circle"
+      ]
+    },
+    {
+      "asset": "CLIconSettled",
+      "export": "CheckmarkBadge02Icon",
+      "symbols": [
+        "checkmark.seal"
+      ]
+    },
+    {
+      "asset": "CLIconWarning",
+      "export": "AlertCircleIcon",
+      "symbols": [
+        "exclamationmark.circle"
+      ]
+    },
+    {
+      "asset": "CLIconInfo",
+      "export": "InformationCircleIcon",
+      "symbols": [
+        "info.circle"
+      ]
+    },
+    {
+      "asset": "CLIconAccessible",
+      "export": "UniversalAccessIcon",
+      "symbols": [
+        "figure.stand"
+      ]
+    },
+    {
+      "asset": "CLIconPrivacy",
+      "export": "ShieldCheckIcon",
+      "symbols": [
+        "lock.shield"
+      ]
+    },
+    {
+      "asset": "CLIconDevice",
+      "export": "SmartPhone01Icon",
+      "symbols": [
+        "iphone.gen3"
+      ]
+    },
+    {
+      "asset": "CLIconStorage",
+      "export": "HardDriveIcon",
+      "symbols": [
+        "externaldrive.badge.exclamationmark"
+      ]
+    },
+    {
+      "asset": "CLIconCurrency",
+      "export": "BanknoteIcon",
+      "symbols": [
+        "banknote"
+      ]
+    },
+    {
+      "asset": "CLIconWorld",
+      "export": "Globe02Icon",
+      "symbols": [
+        "globe"
+      ]
+    },
+    {
+      "asset": "CLIconWater",
+      "export": "WavesIcon",
+      "symbols": [
+        "water.waves"
+      ]
+    },
+    {
+      "asset": "CLIconLab",
+      "export": "TestTube02Icon",
+      "symbols": [
+        "testtube.2"
+      ]
+    },
+    {
+      "asset": "CLIconWaiting",
+      "export": "HourglassIcon",
+      "symbols": [
+        "hourglass"
+      ]
+    },
+    {
+      "asset": "CLIconInfinity",
+      "export": "Infinity01Icon",
+      "symbols": [
+        "infinity"
+      ]
+    },
+    {
+      "asset": "CLIconSparkle",
+      "export": "SparklesIcon",
+      "symbols": [
+        "sparkle",
+        "sparkles"
+      ]
+    },
+    {
+      "asset": "CLIconCoffee",
+      "export": "Coffee02Icon",
+      "symbols": [
+        "cup.and.saucer"
+      ]
+    },
+    {
+      "asset": "CLIconTransit",
+      "export": "TramIcon",
+      "symbols": [
+        "tram"
+      ]
+    },
+    {
+      "asset": "CLIconMeal",
+      "export": "Restaurant02Icon",
+      "symbols": [
+        "fork.knife"
+      ]
+    },
+    {
+      "asset": "CLIconGroceries",
+      "export": "ShoppingBag02Icon",
+      "symbols": [
+        "bag"
+      ]
+    },
+    {
+      "asset": "CLIconStar",
+      "export": "StarIcon",
+      "symbols": [
+        "star"
+      ]
+    },
+    {
+      "asset": "CLIconHeadphones",
+      "export": "HeadphonesIcon",
+      "symbols": [
+        "headphones"
+      ]
+    },
+    {
+      "asset": "CLIconTent",
+      "export": "TentIcon",
+      "symbols": [
+        "tent"
+      ]
+    },
+    {
+      "asset": "CLIconAirplane",
+      "export": "Airplane02Icon",
+      "symbols": [
+        "airplane"
+      ]
+    },
+    {
+      "asset": "CLIconCamera",
+      "export": "Camera01Icon",
+      "symbols": [
+        "camera"
+      ]
+    },
+    {
+      "asset": "CLIconBicycle",
+      "export": "Bicycle01Icon",
+      "symbols": [
+        "bicycle"
+      ]
+    },
+    {
+      "asset": "CLIconGift",
+      "export": "GiftIcon",
+      "symbols": [
+        "gift"
+      ]
+    },
+    {
+      "asset": "CLIconBook",
+      "export": "Book02Icon",
+      "symbols": [
+        "book",
+        "book.closed"
+      ]
+    },
+    {
+      "asset": "CLIconGame",
+      "export": "GameController01Icon",
+      "symbols": [
+        "gamecontroller"
+      ]
+    },
+    {
+      "asset": "CLIconSofa",
+      "export": "Sofa01Icon",
+      "symbols": [
+        "sofa"
+      ]
+    }
+  ]
+}

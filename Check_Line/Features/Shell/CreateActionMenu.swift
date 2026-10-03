@@ -35,7 +35,7 @@ struct CreateActionMenu: View {
     private func menuButton(_ title: String, systemImage: String, action: @escaping () -> Void) -> some View {
         Button(action: action) {
             HStack(spacing: 10) {
-                Image(systemName: systemImage)
+                CheckLineIcon(symbol: systemImage)
                     .font(.body.weight(.semibold))
                 Text(title)
                     .font(.body.weight(.semibold))

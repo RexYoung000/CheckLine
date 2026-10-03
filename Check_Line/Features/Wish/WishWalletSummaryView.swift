@@ -27,8 +27,8 @@ struct WishWalletSummaryView: View {
                     Text(String(localized: "ui.wish.virtualBalanceNote")).font(.caption).foregroundStyle(PaperTheme.muted)
                     DisclosureGroup(String(localized: "ui.wish.walletRules"), isExpanded: $rulesExpanded) {
                         VStack(alignment: .leading, spacing: 16) {
-                            Label(String(localized: "wallet.wishes.settlementIn"), systemImage: "arrow.down.left")
-                            Label(String(localized: "wallet.wishes.redemptionOut"), systemImage: "arrow.up.right")
+                            CheckLineIconLabel(String(localized: "wallet.wishes.settlementIn"), symbol: "arrow.down.left")
+                            CheckLineIconLabel(String(localized: "wallet.wishes.redemptionOut"), symbol: "arrow.up.right")
                             Text(String(localized: "wallet.wishes.recoveryOrder")).font(.caption).foregroundStyle(PaperTheme.muted)
                         }.font(.subheadline).padding(.top, 12)
                     }.font(.subheadline).tint(PaperTheme.accent)
@@ -50,7 +50,7 @@ struct WishWalletSummaryView: View {
             .background(PaperTheme.canvas.ignoresSafeArea())
             .navigationTitle(String(localized: "v1.wish.title")).navigationBarTitleDisplayMode(.inline)
             .toolbarBackground(.hidden, for: .navigationBar)
-            .toolbar { ToolbarItem(placement: .topBarTrailing) { Button(String(localized: "action.close"), systemImage: "xmark") { dismiss() }.labelStyle(.iconOnly) } }
+            .toolbar { ToolbarItem(placement: .topBarTrailing) { Button(String(localized: "action.close"), iconSymbol: "xmark") { dismiss() }.labelStyle(.iconOnly) } }
         }
         .presentationBackground(PaperTheme.canvas)
         .presentationDetents([.medium, .large])
