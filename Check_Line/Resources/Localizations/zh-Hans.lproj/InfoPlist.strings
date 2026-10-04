@@ -1,1 +1,3 @@
 "CFBundleDisplayName" = "预算线";
+"NSMicrophoneUsageDescription" = "预算线使用麦克风在设备上把预算指令转成文字，不保存录音。";
+"NSSpeechRecognitionUsageDescription" = "预算线在设备上识别语音，供你检查并发送文字。";

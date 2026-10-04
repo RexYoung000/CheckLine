@@ -92,45 +92,117 @@ struct CreateWishSheet: View {
     @Bindable var workspace: CheckLineWorkspace
     @State private var name = ""
     @State private var amount = ""
-    @State private var symbol = "star"
-    @State private var hasError = false
+    @State private var currency: String
+    @State private var errorText: String?
+    @FocusState private var fieldFocused: Bool
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.dynamicTypeSize) private var typeSize
+
+    init(workspace: CheckLineWorkspace) {
+        self.workspace = workspace
+        _currency = State(initialValue: workspace.ledger.walletSettings.walletCurrencyCode)
+    }
+
+    private var currencies: [String] {
+        let preferred = [workspace.ledger.walletSettings.walletCurrencyCode, "CNY", "USD", "EUR", "JPY", "HKD", "GBP"]
+        var seen = Set<String>()
+        return (preferred + Locale.commonISOCurrencyCodes.sorted()).filter { seen.insert($0).inserted }
+    }
+
     var body: some View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 24) {
-                    HStack { Spacer(); WalletSymbol(name: symbol, size: 84); Spacer() }.padding(.vertical, 12)
-                    TextField("", text: $name, prompt: Text(String(localized: "wallet.wishes.name")).foregroundStyle(PaperTheme.muted))
-                        .font(.title3).padding(18).walletSurface(radius: 18)
-                        .accessibilityLabel(String(localized: "wallet.wishes.name"))
-                        .onChange(of: name) { _, value in if value.count > 80 { name = String(value.prefix(80)) } }
-                    HStack {
-                        Text(workspace.ledger.walletSettings.walletCurrencyCode).foregroundStyle(PaperTheme.muted)
-                        TextField("", text: $amount, prompt: Text(String(localized: "wallet.wishes.estimate")).foregroundStyle(PaperTheme.muted)).keyboardType(AmountKeyboard.type).accessibilityLabel(String(localized: "wallet.wishes.estimate"))
+                    VStack(alignment: .leading, spacing: 12) {
+                        Text(String(localized: "wallet.wishes.name"))
+                            .font(.subheadline).foregroundStyle(PaperTheme.muted)
+                        TextField("", text: $name)
+                            .font(.title3).focused($fieldFocused)
+                            .accessibilityLabel(String(localized: "wallet.wishes.name"))
+                            .accessibilityIdentifier("wallet.wishes.name")
+                            .onChange(of: name) { _, value in if value.count > 80 { name = String(value.prefix(80)) } }
                     }.padding(18).walletSurface(radius: 18)
-                    Text(String(localized: "wallet.wishes.symbol")).font(.subheadline).foregroundStyle(PaperTheme.muted)
-                    LazyVGrid(columns: [GridItem(.adaptive(minimum: 56), spacing: 16)], spacing: 16) {
-                        ForEach(WishSymbols.allowed, id: \.self) { choice in
-                            Button { symbol = choice } label: {
-                                WalletSymbol(name: choice).overlay { RoundedRectangle(cornerRadius: 18).strokeBorder(symbol == choice ? PaperTheme.accent : .clear, lineWidth: 3) }
-                            }.buttonStyle(.plain)
-                                .accessibilityLabel(Text(LocalizedStringKey("wallet.symbol." + choice)))
-                                .accessibilityAddTraits(symbol == choice ? .isSelected : [])
-                        }
+                    estimateFields
+                    if let errorText {
+                        Text(errorText).font(.subheadline).foregroundStyle(PaperTheme.accent)
+                            .accessibilityIdentifier("wallet.wishes.create.error")
                     }
-                    if hasError { Text(String(localized: "wallet.wishes.invalid")).font(.subheadline).foregroundStyle(PaperTheme.accent) }
                     Button(String(localized: "wallet.wishes.add")) {
-                        do { try workspace.createWish(name: name, amountText: amount, symbolName: symbol); dismiss() }
-                        catch { hasError = true }
-                    }.buttonStyle(PaperSolidButtonStyle()).disabled(name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                        do {
+                            try workspace.createWish(name: name, amountText: amount, currencyCode: currency)
+                            dismiss()
+                        } catch WorkspaceInputError.invalidCurrency {
+                            errorText = String(localized: "ui.wish.chooseCurrency")
+                        } catch LedgerError.zeroOrNegativeAmount {
+                            errorText = String(localized: "wallet.wishes.invalid")
+                        } catch WorkspaceInputError.missingName {
+                            errorText = String(localized: "wallet.wishes.invalid")
+                        } catch {
+                            errorText = String(localized: "v1.banner.failed")
+                        }
+                    }.buttonStyle(PaperSolidButtonStyle())
+                        .disabled(name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                        .accessibilityIdentifier("wallet.wishes.create.save")
                 }.padding(22).frame(maxWidth: 560).frame(maxWidth: .infinity)
             }
             .scrollDismissesKeyboard(.interactively)
             .background(PaperTheme.canvas.ignoresSafeArea())
             .navigationTitle(String(localized: "wallet.wishes.add")).navigationBarTitleDisplayMode(.inline)
             .toolbarBackground(.hidden, for: .navigationBar)
-            .toolbar { ToolbarItem(placement: .topBarTrailing) { Button(String(localized: "action.close"), iconSymbol: "xmark") { dismiss() }.labelStyle(.iconOnly) } }
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button(String(localized: "action.close"), iconSymbol: "xmark") { dismiss() }.labelStyle(.iconOnly)
+                }
+                ToolbarItemGroup(placement: .keyboard) {
+                    Spacer()
+                    Button(String(localized: "ui.keyboard.done")) { fieldFocused = false }
+                }
+            }
         }.presentationDetents([.large]).presentationBackground(PaperTheme.canvas).presentationCornerRadius(30)
+    }
+
+    private var estimateFields: some View {
+        let layout = typeSize.isAccessibilitySize
+            ? AnyLayout(VStackLayout(alignment: .leading, spacing: 20))
+            : AnyLayout(HStackLayout(alignment: .top, spacing: 18))
+        return layout {
+            VStack(alignment: .leading, spacing: 12) {
+                Text(String(localized: "wallet.wishes.estimate"))
+                    .font(.subheadline).foregroundStyle(PaperTheme.muted)
+                TextField("0.00", text: $amount)
+                    .keyboardType(AmountKeyboard.type).font(.largeTitle).monospacedDigit()
+                    .focused($fieldFocused)
+                    .accessibilityLabel(String(localized: "wallet.wishes.estimate"))
+                    .accessibilityIdentifier("wallet.wishes.estimate")
+            }.frame(maxWidth: .infinity, alignment: .leading)
+            VStack(alignment: .leading, spacing: 8) {
+                Text(String(localized: "v1.budget.currency"))
+                    .font(.subheadline).foregroundStyle(PaperTheme.muted)
+                Menu {
+                    Picker(String(localized: "v1.budget.currency"), selection: $currency) {
+                        ForEach(currencies, id: \.self) { code in
+                            Text(currencyTitle(code)).tag(code)
+                        }
+                    }
+                } label: {
+                    HStack(spacing: 8) {
+                        Text(currency).font(.body.weight(.medium)).monospacedDigit()
+                        CheckLineIcon(symbol: "chevron.down", size: 12)
+                    }
+                    .foregroundStyle(PaperTheme.ink)
+                    .padding(.horizontal, 14).frame(minHeight: 44)
+                    .background(PaperTheme.accent.opacity(0.1), in: Capsule())
+                }
+                .accessibilityLabel(String(localized: "v1.budget.currency"))
+                .accessibilityValue(currency)
+                .accessibilityIdentifier("wallet.wishes.currency")
+            }
+        }.padding(18).walletSurface(radius: 18)
+    }
+
+    private func currencyTitle(_ code: String) -> String {
+        guard let name = Locale.current.localizedString(forCurrencyCode: code) else { return code }
+        return code + " · " + name
     }
 }
 

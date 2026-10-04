@@ -1,1 +1,3 @@
 "CFBundleDisplayName" = "CheckLine";
+"NSMicrophoneUsageDescription" = "CheckLine uses the microphone to transcribe your budget instructions on this device. Audio is not saved.";
+"NSSpeechRecognitionUsageDescription" = "CheckLine transcribes your voice on this device so you can review and send the text.";

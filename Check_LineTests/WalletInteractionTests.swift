@@ -106,12 +106,14 @@ struct WalletInteractionTests {
         await workspace.submitText(now: now)
         #expect(workspace.confirmAmountText.isEmpty)
         #expect(!workspace.canConfirmProposal)
-        workspace.confirmAmountText = "22"
+        workspace.draftText = "22元"
+        await workspace.submitText(now: now)
         #expect(workspace.canConfirmProposal)
         workspace.cancelAgentProposal()
         workspace.confirmStructured(now: now)
         #expect(workspace.ledger.expenses.isEmpty)
-        #expect(workspace.draftText == "咖啡")
+        #expect(workspace.taskSourceText == "咖啡\n22元")
+        #expect(workspace.draftText.isEmpty)
         #expect(!workspace.showsStructuredConfirm)
         workspace.lastTurn = AgentTurn(understand: .needsClarification(field: "amount", options: []), evaluation: nil, isOfflineMode: true)
         #expect(!workspace.showsStructuredConfirm)

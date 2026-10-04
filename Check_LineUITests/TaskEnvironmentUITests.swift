@@ -94,7 +94,7 @@ final class TaskEnvironmentUITests: XCTestCase {
         XCTAssertEqual(name.value as? String, "草稿恢复样例")
         XCTAssertEqual(amount.value as? String, "123.45")
         attach(app, "persistent-task-relaunch")
-        app.buttons["任务选项"].tap(); app.buttons["放弃这份草稿"].tap(); app.buttons["放弃这份草稿"].firstMatch.tap()
+        app.buttons["任务选项"].tap(); app.buttons["放弃这份草稿"].tap(); app.alerts["清除未保存的内容？"].buttons["放弃草稿"].tap()
     }
 
     func testEnglishTaskKeepsItsFieldsAndSaveReachableWithKeyboard() {
@@ -128,7 +128,7 @@ final class TaskEnvironmentUITests: XCTestCase {
         attach(app, "large-type-agent-keyboard")
         app.buttons["wallet.agent.voice"].tap()
         XCTAssertTrue(app.alerts.firstMatch.waitForExistence(timeout: 5))
-        app.alerts.buttons["Close"].tap()
+        app.alerts.buttons["Cancel"].tap()
         app.buttons["wallet.task.switchMode"].tap()
         let amount = app.textFields["Amount"]
         XCTAssertTrue(amount.waitForExistence(timeout: 5))

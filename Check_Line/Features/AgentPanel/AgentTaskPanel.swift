@@ -3,6 +3,7 @@ import SwiftUI
 struct AgentTaskPanel: View {
     enum Part: Equatable { case complete, content, footer }
     @Bindable var workspace: CheckLineWorkspace
+    @Bindable var voiceCapture: VoiceCaptureController
     var embedded: Bool = false
     var part: Part = .complete
     var onCreateBudget: (() -> Void)?
@@ -32,17 +33,20 @@ struct AgentTaskPanel: View {
                 if workspace.captureProposal != nil { workspace.taskDraft.currency = code }
             }
             .onChange(of: workspace.selectedAttributionID) { _, id in
-                if workspace.captureProposal != nil { workspace.taskDraft.attributionID = id }
+                if workspace.captureProposal != nil {
+                    workspace.taskDraft.attributionID = id
+                }
             }
             .onChange(of: workspace.panelExpanded) { _, expanded in
                 if expanded == false {
                     inputFocused = false
                 }
             }
-            .alert(String(localized: "ui.agent.voice"), isPresented: $showingVoiceNotice) {
-                Button(String(localized: "action.close"), role: .cancel) { }
+            .alert(String(localized: "ui.voice.permission.title"), isPresented: $showingVoiceNotice) {
+                Button(String(localized: "action.cancel"), role: .cancel) { }
+                Button(String(localized: "ui.voice.permission.start")) { beginVoiceInput() }
             } message: {
-                Text(String(localized: "ui.agent.voiceUnavailable"))
+                Text(String(localized: "ui.voice.permission.detail"))
             }
     }
 
@@ -87,14 +91,17 @@ struct AgentTaskPanel: View {
             }
 
             if workspace.showsStructuredConfirm {
-                structuredFields
+                VStack(alignment: .leading, spacing: 18) {
+                    structuredFields.disabled(voiceCapture.isActive)
+                    structuredActions.disabled(voiceCapture.isActive)
+                }
+                .padding(18)
+                .walletSurface(radius: 24)
+                .accessibilityIdentifier("wallet.agent.confirmation")
             }
             }
 
             if part != .content {
-            if workspace.showsStructuredConfirm {
-                structuredActions
-            } else {
             VStack(alignment: .leading, spacing: 12) {
                 TextField("", text: $workspace.draftText,
                           prompt: Text(inputPlaceholder).font(typeSize.isAccessibilitySize ? .caption : .body).foregroundStyle(PaperTheme.muted), axis: .vertical)
@@ -102,12 +109,35 @@ struct AgentTaskPanel: View {
                     .focused($inputFocused)
                     .accessibilityLabel(String(localized: "ui.agent.inputLabel"))
                     .accessibilityIdentifier("wallet.agent.input")
+                    .disabled(voiceCapture.isActive)
+                if let statusKey = voiceCapture.statusKey {
+                    Text(LocalizedStringKey(statusKey)).font(.caption).foregroundStyle(PaperTheme.muted)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .accessibilityIdentifier("wallet.agent.voice.status")
+                }
+                if voiceCapture.canOpenSettings {
+                    Button(String(localized: "ui.voice.settings")) {
+                        if let url = URL(string: UIApplication.openSettingsURLString) { UIApplication.shared.open(url) }
+                    }.font(.subheadline).frame(minHeight: 44)
+                }
                 HStack(spacing: 8) {
+                    if voiceCapture.isActive {
+                        Button(String(localized: "ui.voice.cancel")) { voiceCapture.cancel() }
+                            .font(.subheadline).frame(minHeight: 44)
+                            .accessibilityIdentifier("wallet.agent.voice.cancel")
+                    }
                     Spacer()
-                    Button { showingVoiceNotice = true } label: {
-                        CheckLineIcon(symbol: "mic", size: 20).frame(width: 44, height: 44)
-                    }.accessibilityLabel(String(localized: "ui.agent.voice"))
+                    Button {
+                        if voiceCapture.isListening { voiceCapture.finish() }
+                        else if voiceCapture.needsPermissionExplanation { showingVoiceNotice = true }
+                        else { beginVoiceInput() }
+                    } label: {
+                        CheckLineIcon(symbol: voiceCapture.isListening ? "stop.fill" : "mic", size: 20)
+                            .frame(width: 44, height: 44)
+                            .background(voiceCapture.isListening ? PaperTheme.accent.opacity(0.15) : Color.clear, in: Circle())
+                    }.accessibilityLabel(String(localized: voiceCapture.isListening ? "ui.voice.finish" : "ui.agent.voice"))
                         .accessibilityIdentifier("wallet.agent.voice")
+                        .disabled(workspace.isWorking || (voiceCapture.isActive && !voiceCapture.isListening))
                     Button {
                         inputFocused = false
                         Task { await workspace.submitText() }
@@ -121,7 +151,6 @@ struct AgentTaskPanel: View {
                         .accessibilityIdentifier("wallet.agent.send")
                 }
             }.padding(16).walletSurface(radius: 24)
-            }
 
             if workspace.lastUndo != nil && !workspace.showsStructuredConfirm {
                 Button(String(localized: "action.undo")) {
@@ -136,12 +165,26 @@ struct AgentTaskPanel: View {
         .padding(.bottom, PaperTheme.Space.s)
     }
 
+    private func beginVoiceInput() {
+        inputFocused = false
+        workspace.panelExpanded = true
+        let taskID = workspace.taskDraft.entityID
+        let initialText = workspace.draftText
+        Task {
+            await voiceCapture.start(initialText: initialText) { text in
+                guard workspace.taskDraft.entityID == taskID else { return }
+                workspace.draftText = text
+            }
+        }
+    }
+
     private var canSend: Bool {
         workspace.draftText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty == false
-            && workspace.isWorking == false
+            && workspace.isWorking == false && !voiceCapture.isActive
     }
 
     private var inputPlaceholder: String {
+        if workspace.showsStructuredConfirm { return String(localized: "ui.agent.followupPlaceholder") }
         let budget = workspace.isEmpty || workspace.pendingBudgetText != nil || workspace.composerIntent == .budget
         return String(localized: typeSize.isAccessibilitySize
                       ? (budget ? "ui.agent.shortBudgetExample" : "ui.agent.shortRecordExample")
@@ -179,7 +222,11 @@ struct AgentTaskPanel: View {
                                 PaperChoiceChip(
                                     title: choice.periodID == nil ? String(localized: "v1.unbudgeted") : choice.title,
                                     value: choice.id,
-                                    selection: $workspace.selectedAttributionID
+                                    selection: Binding(get: { workspace.selectedAttributionID }, set: {
+                                        workspace.selectedAttributionID = $0
+                                        workspace.taskDraft.attributionID = $0
+                                        workspace.taskDraft.explicitAttribution = true
+                                    })
                                 )
                             }
                         }
@@ -205,7 +252,7 @@ struct AgentTaskPanel: View {
             .buttonStyle(PaperSolidButtonStyle(enabled: workspace.canConfirmProposal))
             .disabled(!workspace.canConfirmProposal)
             Button(String(localized: "wallet.agent.cancelProposal")) {
-                workspace.cancelAgentProposal()
+                workspace.discardTask()
                 inputFocused = true
             }.buttonStyle(PaperQuietButtonStyle())
         }

@@ -148,6 +148,7 @@ nonisolated enum WorkspaceBanner: Equatable, Sendable {
     case refusedRecommend
     case refusedOutOfScope
     case needsAmount
+    case readyToConfirm
     case needsFullscreen
     case needsClarification(String)
     case failed
@@ -170,6 +171,8 @@ nonisolated enum WorkspaceBanner: Equatable, Sendable {
             String(localized: "v1.banner.refuseScope")
         case .needsAmount:
             String(localized: "v1.banner.needsAmount")
+        case .readyToConfirm:
+            String(localized: "ui.agent.readyToConfirm")
         case .needsFullscreen:
             String(localized: "v1.banner.needsFullscreen")
         case .needsClarification(let field):
@@ -177,6 +180,7 @@ nonisolated enum WorkspaceBanner: Equatable, Sendable {
             case "name": String(localized: "v1.agent.clarify.name")
             case "cycleType": String(localized: "v1.agent.clarify.cycle")
             case "currencyCode": String(localized: "v1.agent.clarify.currency")
+            case "input": String(localized: "ui.agent.clarifyInput")
             default: String(localized: "v1.banner.needsClarification")
             }
         case .needsPeriod:

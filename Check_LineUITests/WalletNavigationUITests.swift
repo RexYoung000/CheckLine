@@ -169,7 +169,7 @@ final class WalletNavigationUITests: XCTestCase {
         input.tap()
         input.typeText("创建预算卡")
         app.buttons["发送"].tap()
-        XCTAssertTrue(app.staticTexts["这张预算卡叫什么名字？"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts.matching(NSPredicate(format: "label CONTAINS %@", "这张预算卡叫什么名字？")).firstMatch.waitForExistence(timeout: 5))
         input.tap()
         input.typeText("餐饮 1000元 每月")
         app.buttons["wallet.task.switchMode"].tap()

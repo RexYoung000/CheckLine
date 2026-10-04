@@ -9,19 +9,19 @@
 | 项目 | 当前状态 |
 |------|----------|
 | 工程 | `Check_Line.xcodeproj` |
-| App Target / 共享 Scheme | `Check_Line` / `CheckLine Demo`（隔离示例账本）、`CheckLine UI`（正常启动及 UI 测试） |
+| App Target / 共享 Scheme | `Check_Line` / `CheckLine App`（正常持久化启动及领域测试）、`CheckLine Demo`（隔离示例账本）、`CheckLine UI`（UI 测试） |
 | 平台 | iPhone / iPad，最低 iOS 17.0 |
 | 当前 UI | iOS 27+ iPhone 使用可见的系统 `TabView` 底栏，四页面 Tab + `.prominent` Agent，系统负责透镜与触摸追踪；Agent 选择由入口绑定转为原会话面板，页面选择保留。iPad 与 iOS 17–26 的 `WalletGlassNavigation` 为自定义兼容回退，不等同系统透镜。空首页使用完整米白背景。验收状态见 ROADMAP |
 | 正式数据层 | 首页与 Agent 经 `CheckLineWorkspace` 读写本地 `LedgerStore`（无 CloudKit） |
 | Test Target | `Check_LineTests` 覆盖领域引擎、理解管线、`AgentSession` 与首页工作区持久化；`Check_LineUITests` / `CheckLine UI` Scheme 在隔离预览账本上点击系统 Tab、Agent 与空首页创建入口 |
 | 网络 / 后端 / AI | `CloudLLMProvider` 已实现且默认关闭；App 入口不启用、启动无网络请求 |
+| 系统权限 / iCloud | 麦克风与 Speech 仅用户触发后按需申请；端侧转写代码已接入、实际音频识别尚未验证。iCloud 未启用，SwiftData 使用 `cloudKitDatabase: .none` |
 
 `ShellChromeState` 分离用户选择与当前呈现页面：系统栏即时选中与换页，兼容回退按既有卡夹过渡执行。iPad 使用原居中限宽布局，避免系统 prominent 入口分布到屏幕两端；根页进入详情时隐藏底栏。Agent 不写入四页面选择状态，不创建新会话。系统栏模式的操作反馈浮在页面安全区内，兼容模式的反馈仍在自有导航上方，不能遮挡底栏按钮。导航不修改业务数据。磨砂材质与不透明票据在 DesignSystem 共享。
 
 2026-10-03 图标试装由 `CheckLineIcon` / `CheckLineIconLabel` 统一显示，`CheckLineIconAssets` 将既有符号名映射到 Asset Catalog 的本地模板矢量图。系统 Tab 直接使用同一资源的模板 UIImage，保留系统导航行为。Hugeicons 免费 Stroke Rounded 4.3.5 的选用几何、MIT 许可和校验值保存在仓库，通过 `scripts/design/import-hugeicons.py` 重建；不引入运行时图标库、网络请求或新 SDK。`Wish.symbolName` 与账本 Schema 不变，未知历史符号保留系统回退。功能图标方向与验收边界见 DESIGN 3.1.14。
 
 2026-10-03 Rex 授权接入留白玻璃 App Icon。正式唯一来源为 `Resources/AppIcon.icon`，沿 Icon Composer 可编辑图层与 Dark 独立填充；Xcode 27 编译动态图标与旧系统降级，不把已裁切预览 PNG 当作 AppIcon 输入。同步目录自动加入 App Target，`ASSETCATALOG_COMPILER_APPICON_NAME` 继续为 `AppIcon`；移除旧液位卡 AppIcon 图集，功能资源生成不得重新生成该旧图集。试装保持 `Rex.Check-Line`、签名团队、SwiftData Schema 与正常启动 Scheme，使用覆盖安装保留本机账本。系统外观与降级的实际验证范围记录在本轮证据中。
-| 系统权限 / iCloud | 未启用；SwiftData 配置为 `cloudKitDatabase: .none` |
 
 旧样机的 `budgetIDs` 多预算关系、共享消费删除和旧结算只用于追溯，不是新 Schema 或验收依据。`BudgetEngine` 的 Decimal 基础计算可以继续复用；命名和输入结构在新模型落地时同步收敛。
 
@@ -498,11 +498,24 @@ protocol LLMProvider: Sendable {
 - 图片：先 Vision OCR → text，用同一条 prompt。
 - 如果用户显式 opt-in「发给模型帮我看」，才发 base64（V1 不默认开启）。
 
-#### 9.1.4 一问一答与追问
+#### 9.1.4 当前任务中的连续追问（2026-10-04 修订）
 
-- 模型只返回一次。
-- 返回 `needsClarification(field, options)` 时，UI 展示选项/表单，用户选完后本地组装 `AgentIntent`，不再调模型。
-- 不存在多轮 session / history。
+- 当前会话显示用户输入与 Agent 回复；缺字段不替换为完整表单，追问后继续接收输入。必要字段齐全后在会话中展示结构化核对，仍经 `ConfirmationGate` 与确定性服务执行。
+- 本地补充回答只合入当前未完成任务，明确切换任务时不把旧金额或商家带到新任务。泛化意向如「想录一笔」不能保存为商家，未知意图不能直接写消费。
+- 对话历史不持久化、不上传；任务字段继续使用现有本机草稿，关闭／恢复、手动切换和保存失败保留输入。云端协议仍默认关闭，仅一次请求返回结构化候选；真实服务与多轮云端上下文在接入方案确认后另行实施。
+- `TaskDraft` 增加可选 `agentRequestText` 与 `pendingAgentField`，只保存当前任务已发送原文和待补字段，旧草稿缺少这两项时仍可解码；不保存助手回复。成功、放弃或明确换任务时清理，不跨任务拼接。
+
+#### 9.1.4.1 端侧语音输入（2026-10-04 已接入，实际识别待验证）
+
+- `VoiceCaptureController` 管理麦克风授权、Speech 授权、音频生命周期与端侧转写，不写入账本。先检查语言和 `supportsOnDeviceRecognition`，请求设置 `requiresOnDeviceRecognition = true`；不自动降级到网络识别，不保存音频文件或输出音频／转写日志。
+- 转写进入当前输入草稿，由用户编辑并发送。取消恢复录音前输入，结束保留已转写文字；关闭面板或进入后台停止麦克风。异步旧回调不能覆盖新一轮输入或重新开启采集；原始音频不落盘、不记日志。
+- 权限拒绝、不支持、无结果、音频中断和失败保留文字路径。实际音频识别与真机权限流程尚未运行验证；云端模型仍未配置启用。
+
+#### 9.1.4.2 心愿创建币种（2026-10-04 修正）
+
+- 创建入口显式传入用户选择的 `currencyCode`，校验后保存在现有 `Wish.currencyCode`，金额继续使用 `Decimal`。默认钱包基准币仅作为初始值，不得覆盖用户选择。
+- 创建界面已移除装饰图标与符号选项，既有 `symbolName` 数据与显示兼容保留；币种有独立可操作的选择控件，预计花费可留空。
+- 不新增模型字段或迁移，不在创建心愿时换汇或写钱包；跨币种购买仍由既有兑现服务展示换算并确认。
 
 #### 9.1.5 离线降级
 

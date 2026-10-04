@@ -64,7 +64,7 @@ nonisolated enum IntentValidator {
             }
             amount = parsed
         } else {
-            amount = nil
+            return .needsClarification(field: "amount", options: [])
         }
 
         let periodUUID: UUID?

@@ -71,14 +71,15 @@ struct CycleReviewView: View {
                 } else {
                     PaperCard {
                         VStack(alignment: .leading, spacing: 18) {
-                            CheckLineIcon(symbol: "calendar", size: 48)
-                                .font(.system(size: 52, weight: .ultraLight))
-                                .foregroundStyle(PaperTheme.muted)
-                                .frame(maxWidth: .infinity, minHeight: 130)
-                            Text(String(localized: "v1.insights.empty")).font(.headline)
+                            Text(String(localized: "v1.insights.empty")).font(.title3.weight(.semibold))
+                                .fixedSize(horizontal: false, vertical: true)
+                            Text(String(localized: "ui.analysis.empty.explanation"))
+                                .font(.subheadline).foregroundStyle(PaperTheme.muted)
+                                .fixedSize(horizontal: false, vertical: true)
                             Button(String(localized: "v1.budget.create"), iconSymbol: "plus") {
                                 workspace.openComposer(.budget)
                             }.buttonStyle(PaperSolidButtonStyle())
+                                .accessibilityIdentifier("wallet.analysis.empty.createBudget")
                         }
                     }
                 }

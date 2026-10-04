@@ -27,6 +27,14 @@ struct SourceReviewView: View {
                         }
                     }
                 }
+                HStack(alignment: .top, spacing: 12) {
+                    CheckLineIcon(symbol: "mic", size: 20).foregroundStyle(PaperTheme.accent)
+                        .accessibilityHidden(true)
+                    VStack(alignment: .leading, spacing: 6) {
+                        Text(String(localized: "ui.source.voice")).font(.subheadline.weight(.medium))
+                        Text(String(localized: "ui.source.voiceDetail")).font(.caption).foregroundStyle(PaperTheme.muted)
+                    }
+                }.frame(maxWidth: .infinity, alignment: .leading)
                 DisclosureGroup(String(localized: "ui.sources.details")) {
                     Text(String(localized: "ui.sources.boundary"))
                         .font(.subheadline).foregroundStyle(PaperTheme.muted)

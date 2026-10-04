@@ -284,7 +284,7 @@
 "v1.banner.query" = "Balance based on recorded expenses: %@. Pending entries are listed separately.";
 "v1.banner.refuseRecommend" = "CheckLine will not recommend what to buy";
 "v1.banner.refuseScope" = "That is outside the budget loop";
-"v1.banner.needsAmount" = "An amount is still needed";
+"v1.banner.needsAmount" = "What’s the amount?";
 "v1.banner.needsFullscreen" = "Settlement, wish redemption, and late fixes need a full-screen confirm that is not wired yet";
 "v1.banner.needsClarification" = "More detail is needed";
 "v1.banner.failed" = "That action did not finish";
@@ -297,7 +297,7 @@
 "v1.settings.entry" = "Settings";
 "v1.settings.title" = "Settings";
 "v1.settings.privacy" = "The full ledger stays on this device. Cloud understanding is off by default.";
-"v1.settings.sources" = "Manual and text entry are available. Apple Pay, SMS, email, voice and image capture are not connected, and their permissions have not been requested.";
+"v1.settings.sources" = "Manual entry, text and on-device voice transcription are supported. Apple Pay, SMS, email and image recognition are not connected.";
 "v1.preview.longName" = "This month’s family dinner budget with my parents";
 "v1.budget.settle.later" = "Settlement needs a full-screen confirm and is not wired yet.";
 "v1.insights.empty" = "No budget cards to review yet";
@@ -523,7 +523,7 @@
 
 // 2026-10-01 unified tasks and workspace
 "ui.agent.suggestions" = "Suggestions and help";
-"ui.agent.local" = "Local text understanding is available. Voice, image recognition and cloud models are not connected.";
+"ui.agent.local" = "Local text understanding is available, with voice transcription on supported devices and languages. Image recognition and cloud models are not connected.";
 "ui.agent.helpFill" = "Ask Xiaoduo";
 "ui.task.manual" = "Fill in manually";
 "ui.task.options" = "Task options";
@@ -557,7 +557,7 @@
 "ui.source.email" = "Email";
 "ui.source.statement" = "Statement import";
 "ui.sources.title" = "Sources and import";
-"ui.sources.boundary" = "Only local manual entry and Text Agent are available. Other sources and statement parsing are not connected. All sources are optional.";
+"ui.sources.boundary" = "Manual and text entry stay on this device. Voice requires on-device support for your device and language. Other sources and statement parsing are not connected. All sources are optional.";
 "ui.import.title" = "Import statements";
 "ui.import.demo" = "Design demo · Fictional data · No files read or ledger writes";
 "ui.import.start" = "Choose a sample statement";
@@ -673,3 +673,53 @@
 "ui.agent.shortBudgetExample" = "Create budget";
 
 "ui.wish.completedCount" = "Completed · %ld";
+
+/* 2026-10-04 phone feedback */
+"ui.draft.discard.title" = "Clear unsaved changes?";
+"ui.draft.keep" = "Keep draft";
+"ui.draft.discard.action" = "Discard draft";
+"ui.analysis.empty.explanation" = "Create a budget card to review spending by date.";
+"ui.voice.permission.title" = "Speak to Xiaoduo";
+"ui.voice.permission.detail" = "Microphone and speech recognition access are needed. Audio is transcribed on your device. You can edit the text before sending it.";
+"ui.voice.permission.start" = "Start voice input";
+"ui.voice.finish" = "Finish recording";
+"ui.voice.cancel" = "Cancel recording";
+"ui.voice.settings" = "Open Settings";
+"ui.wish.chooseCurrency" = "Choose a valid currency.";
+"ui.wish.balanceSummary" = "The result of settled budgets and redeemed wishes";
+"ui.wish.balanceHistory" = "Balance changes";
+"ui.wish.balanceAbout" = "About this balance";
+"ui.wish.balanceMeaning" = "This tracks how budget surpluses are used. It is not a bank account balance.";
+"ui.wish.balanceRecoveryRule" = "Overspending first reduces the wish balance. Any shortfall becomes a recovery gap. Future surpluses cover that gap before adding to the balance.";
+"ui.wish.balanceSurplus" = "Budget surplus";
+"ui.wish.balanceAdds" = "Adds after settlement";
+"ui.wish.balanceOverrun" = "Overspending";
+"ui.wish.balanceSubtracts" = "Deducts after settlement";
+"ui.wish.balancePurchase" = "Wish purchase";
+"ui.wish.balancePurchaseSubtracts" = "Deducts after confirmation";
+"ui.wish.balanceRecoveryNext" = "Future budget surpluses cover this amount before adding to your wish balance.";
+
+"voice.capture.requestingPermission" = "Waiting for permission…";
+"voice.capture.listening" = "Listening. Tap to finish.";
+"voice.capture.finishing" = "Finishing transcription…";
+"voice.capture.microphoneDenied" = "Microphone access is off. Allow it in Settings or keep typing.";
+"voice.capture.speechDenied" = "Speech recognition is off. Allow it in Settings or keep typing.";
+"voice.capture.speechRestricted" = "Speech recognition is restricted on this device. You can keep typing.";
+"voice.capture.onDeviceUnavailable" = "On-device transcription is unavailable for this language. You can keep typing.";
+"voice.capture.recognitionUnavailable" = "Speech recognition is unavailable. Try again later or type instead.";
+"voice.capture.audioUnavailable" = "The microphone is unavailable. Try again or type instead.";
+"voice.capture.noSpeech" = "No speech recognized. Try again.";
+"voice.capture.interrupted" = "Recording was interrupted. Your text is kept.";
+"voice.capture.failed" = "Transcription could not finish. Your text is kept.";
+"voice.capture.start" = "Voice input";
+"voice.capture.finish" = "Finish recording";
+"voice.capture.cancel" = "Cancel recording";
+"voice.capture.openSettings" = "Open Settings";
+"voice.capture.permission.title" = "Use voice input";
+"voice.capture.permission.message" = "Allow microphone and speech access to transcribe on this device. Audio is not saved. Review the text before sending.";
+"voice.capture.permission.continue" = "Continue";
+
+"ui.agent.readyToConfirm" = "Take a look. I’ll save it when you confirm.";
+"ui.agent.clarifyInput" = "What expense or budget would you like to add?";
+"ui.agent.followupPlaceholder" = "Add a detail, e.g. change to 40 USD";
+"ui.source.voiceDetail" = "Transcription on supported devices and languages";

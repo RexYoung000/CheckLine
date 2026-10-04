@@ -7,7 +7,8 @@
 - Xcode 26 或更高（本轮验证：Xcode 27.0 / iOS 27 模拟器）
 - iOS 17+ Simulator Runtime，或可用于开发签名的 Apple ID 与真机
 - 正式工程：`Check_Line.xcodeproj`
-- 主 Scheme / Target：`Check_Line`
+- 正常运行 / 领域测试 Scheme：`CheckLine App`；主 Target：`Check_Line`
+- UI 测试 Scheme：`CheckLine UI`；隔离演示 Scheme：`CheckLine Demo`
 - App 默认显示名：`CheckLine`；简体中文环境显示「预算线」
 
 当前产品先以 iPhone/iPad App 为主。正式页面已读写本地 SwiftData 账本；macOS Target、Widget Extension 和 iCloud 是否进入首发仍待确认，不提前创建空 Target 或启用 Capability。
@@ -15,7 +16,7 @@
 ## 二、打开与运行
 
 1. 用 Xcode 打开仓库根目录下的 `Check_Line.xcodeproj`。
-2. Scheme 选择 `Check_Line`。
+2. Scheme 选择 `CheckLine App`。
 3. Destination 选择 iOS 17+ 的 iPhone/iPad 模拟器，或完成签名的真机。
 4. 按 `Cmd + R` 启动；按 `Cmd + B` 仅构建。
 
@@ -25,7 +26,7 @@
 
 Debug Scheme 的 Arguments Passed On Launch 可添加 `-design-preview`。该模式使用独立内存容器、标注「示例数据」，不读取或覆盖用户账本，Release 构建不启用。
 
-模拟器手动试用可直接选择共享 Scheme **CheckLine Demo**，设备选 iPhone 18 Pro，按 `⌘R`。它已带 `-design-preview`，没有自动跳页序列；当前运行中操作会真实修改隔离的内存账本，重新运行时示例数据恢复。普通 `Check_Line` Scheme 继续使用持久化账本。Demo 的 Profile / Archive 不带调试参数，也不能作为示例数据试用入口。
+模拟器手动试用可直接选择共享 Scheme **CheckLine Demo**，设备选 iPhone 18 Pro，按 `⌘R`。它已带 `-design-preview`，没有自动跳页序列；当前运行中操作会真实修改隔离的内存账本，重新运行时示例数据恢复。普通 `CheckLine App` Scheme 继续使用持久化账本。Demo 的 Profile / Archive 不带调试参数，也不能作为示例数据试用入口。
 
 可附加 `-design-screen wishes` 直接预览页面。支持 `home`、`empty`、`budgets`、`wishes`、`insights`、`settings`、`agent`、`agent-confirm`、`attention`、`record`、`create-budget`、`create-wish`、`budget-detail`、`records`、`calendar`、`wish-detail`、`redemption`。`agent-confirm` 通过本地解析生成未提交的测试草稿；`empty` 使用空内存账本。详情直达只用于布局检查，不能代替真实点击路径验证。
 
@@ -33,7 +34,9 @@ Debug Scheme 的 Arguments Passed On Launch 可添加 `-design-preview`。该模
 
 附加 `-design-motion-tour` 会通过实际导航状态依次展示首页 → 预算 → 心愿 → 首页、中途返回及连续改选。仅在隔离 Debug 示例模式生效，用于录制原生过渡和检查取消逻辑；不是触控操作证据，可与 `-design-reduce-motion` 组合检查淡入降级。
 
-验收入口：预算页 `+` 创建卡片，卡片进入详情；心愿页 `+` 选符号并创建，心愿详情进入真实购买确认；分析页点日期看当天记录；底部右侧 Agent 头像打开面板，首页卡片 `+` 或页首功能菜单打开记一笔；左上个人头像打开设置，首页铃铛打开待处理事项（可用 `-design-screen attention` 直达布局预览）。
+验收入口：预算页 `+` 创建卡片，卡片进入详情；心愿页「添加心愿」或 `+` 填名称、可选金额并选择币种，心愿详情进入真实购买确认；分析页在有预算卡时点日期看当天记录；底部右侧 Agent 头像打开面板，首页卡片 `+` 或页首功能菜单打开记一笔；左上个人头像打开设置，首页铃铛打开待处理事项（可用 `-design-screen attention` 直达布局预览）。
+
+语音入口已接入端侧转写：点击麦克风后说明用途并按需索权，转写供用户检查、编辑，再点击发送。当前语言不支持端侧时继续使用文字，不回退网络。取消、关闭或切后台会停止采集，不保存音频；实际音频识别与真机权限流程尚未验证。云端模型尚未配置启用。
 
 ## 三、磁盘与 Xcode 结构
 
@@ -50,6 +53,7 @@ Check_Line/
 ├── App/                 # 当前 App 入口
 ├── Application/         # Agent 意图、ConfirmationGate、协调器与撤销
 ├── Capture/Text/        # 文字只提取事实，不写账本
+├── Capture/Voice/       # 端侧转写与音频生命周期，只输出可编辑文字
 ├── Core/Services/       # M1 领域引擎（纯 Swift，不依赖 SwiftUI）
 ├── Core/Models/         # 领域 struct / Ledger
 ├── Core/Persistence/    # Schema V1、本地容器、LedgerStore
@@ -84,22 +88,36 @@ xcodebuild -project Check_Line.xcodeproj -list
 # 构建模拟器版本（设备名与 OS 按本机已安装运行时调整）
 xcodebuild \
   -project Check_Line.xcodeproj \
-  -scheme Check_Line \
+  -scheme 'CheckLine App' \
   -destination 'platform=iOS Simulator,name=iPhone 18 Pro,OS=27.0' \
   build
 ```
 
-当前已建立 `Check_LineTests` Swift Testing Target。使用 Xcode 的 `Cmd + U` 或以下命令运行测试：
+`CheckLine App` 的 Test Action 指向 `Check_LineTests` Swift Testing Target。选择该 Scheme 后使用 `Cmd + U`，或以下命令运行领域与应用层测试：
 
 ```bash
 xcodebuild \
   -project Check_Line.xcodeproj \
-  -scheme Check_Line \
+  -scheme 'CheckLine App' \
   -destination 'platform=iOS Simulator,name=iPhone 18 Pro,OS=27.0' \
   -parallel-testing-enabled NO \
   -collect-test-diagnostics never \
   test
 ```
+
+`CheckLine UI` 的 Test Action 指向 `Check_LineUITests`。UI 回归单独运行，例如本次手机反馈的三条隔离操作路径：
+
+```bash
+xcodebuild \
+  -project Check_Line.xcodeproj \
+  -scheme 'CheckLine UI' \
+  -destination 'platform=iOS Simulator,name=iPhone 18 Pro,OS=27.0' \
+  -parallel-testing-enabled NO \
+  -only-testing:Check_LineUITests/PhoneFeedbackUITests \
+  test
+```
+
+这些用例自行传入 `-design-preview`，使用隔离账本。正常试用只打开 `CheckLine.app`，不要手动打开 `Check_LineUITests-Runner.app`。
 
 新增正式领域服务或 SwiftData 行为时，必须在同一实施切片补齐对应测试，不能用 App 编译成功代替业务规则验证。
 
@@ -107,7 +125,8 @@ xcodebuild \
 
 - 模拟器使用本地签名，不需要开发者证书；需要安装运行时不要禁用构建的默认签名步骤。
 - 真机运行时在 Xcode 的 Signing & Capabilities 中选择 Rex 的 Team。
-- iCloud、App Groups、Widget、通知、语音、自动化和邮箱/AI 网络能力只在对应实现切片进入当前里程碑并完成隐私审查后开启。
+- 麦克风与 Speech 的中英文用途说明已随端侧转写接入，仅由用户点击触发；不得在启动时索权或自动回退网络。
+- iCloud、App Groups、Widget、通知、自动化和邮箱/AI 网络能力只在对应实现切片进入当前里程碑并完成隐私审查后开启。
 - 不提交 `xcuserdata/`、DerivedData、证书、Provisioning Profile、脚本密钥与 `.env`。
 
 ## 七、迁移后基线

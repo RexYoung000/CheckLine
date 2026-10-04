@@ -17,6 +17,8 @@ enum ComposerMode: String, CaseIterable, Identifiable {
 
 struct CreateComposerSheet: View {
     @Bindable var workspace: CheckLineWorkspace
+    @State private var voiceCapture = VoiceCaptureController()
+    @Environment(\.scenePhase) private var scenePhase
     private var mode: ComposerMode {
         get { ComposerMode(rawValue: workspace.taskDraft.mode) ?? .form }
         nonmutating set { workspace.taskDraft.mode = newValue.rawValue }
@@ -55,7 +57,6 @@ struct CreateComposerSheet: View {
     }
     @State private var pickerItems: [PhotosPickerItem] = []
     @State private var extrasExpanded = false
-    @State private var conversationExpanded = false
     @State private var discardRequested = false
     @State private var detent: PresentationDetent = .large
     @FocusState private var formFocused: Bool
@@ -80,26 +81,31 @@ struct CreateComposerSheet: View {
                 if mode == .form {
                     formBody
                 } else {
-                    ScrollView {
-                        VStack(alignment: .leading, spacing: 12) {
-                            agentGreeting
-                            if conversationExpanded && !workspace.conversation.isEmpty {
-                                DisclosureGroup(String(localized: "ui.agent.conversation"), isExpanded: $conversationExpanded) {
+                    ScrollViewReader { proxy in
+                        ScrollView {
+                            VStack(alignment: .leading, spacing: 16) {
+                                if workspace.conversation.isEmpty {
+                                    agentGreeting
+                                } else {
                                     ForEach(workspace.conversation) { entry in
-                                        VStack(alignment: .leading, spacing: 4) {
-                                            Text(String(localized: entry.isUser ? "ui.agent.you" : "wallet.mascot.name")).font(.caption).foregroundStyle(PaperTheme.muted)
-                                            Text(entry.text).font(.subheadline).textSelection(.enabled)
-                                        }.frame(maxWidth: .infinity, alignment: .leading).padding(12).walletSurface(radius: 16)
+                                        conversationBubble(entry)
                                     }
                                 }
+                                AgentTaskPanel(workspace: workspace, voiceCapture: voiceCapture, embedded: true, part: .content) {
+                                    workspace.composerIntent = .budget
+                                    workspace.beginTask(.budget, mode: "form")
+                                    mode = .form
+                                }
+                                Color.clear.frame(height: 1).id("agent.latest")
+                            }.padding(.horizontal, 22).padding(.top, 8).padding(.bottom, 12)
+                        }
+                        .scrollDismissesKeyboard(.interactively).clipped()
+                        .onChange(of: workspace.conversation.count) { _, _ in
+                            withAnimation(reduceMotion ? nil : PaperTheme.Motion.panel) {
+                                proxy.scrollTo("agent.latest", anchor: .bottom)
                             }
-                            AgentTaskPanel(workspace: workspace, embedded: true, part: .content) {
-                                workspace.composerIntent = .budget
-                                workspace.beginTask(.budget, mode: "form")
-                                mode = .form
-                            }
-                        }.padding(.horizontal, 22).padding(.top, 8)
-                    }.scrollDismissesKeyboard(.interactively).clipped()
+                        }
+                    }
                 }
             }
 
@@ -115,7 +121,7 @@ struct CreateComposerSheet: View {
                     action: submitForm
                 ).accessibilityIdentifier("wallet.composer.save").padding(.top, 12).background(PaperTheme.canvas)
             } else {
-                AgentTaskPanel(workspace: workspace, embedded: true, part: .footer)
+                AgentTaskPanel(workspace: workspace, voiceCapture: voiceCapture, embedded: true, part: .footer)
                     .padding(.horizontal, 22).padding(.bottom, 8).background(PaperTheme.canvas)
             }
         }
@@ -138,19 +144,29 @@ struct CreateComposerSheet: View {
             if workspace.showAgent {
                 workspace.resumeAgentTask()
             }
-            extrasExpanded = !note.isEmpty || !workspace.draftText.isEmpty || !workspace.taskDraft.attachments.isEmpty
-            detent = mode == .form || typeSize.isAccessibilitySize ? .large : .height(360)
+            extrasExpanded = !note.isEmpty || !workspace.taskSourceText.isEmpty || !workspace.taskDraft.attachments.isEmpty
+            detent = mode == .form || typeSize.isAccessibilitySize || !workspace.conversation.isEmpty || workspace.showsStructuredConfirm ? .large : .height(360)
         }
         .onChange(of: workspace.panelExpanded) { _, expanded in if expanded { detent = .large } }
         .onChange(of: workspace.showsStructuredConfirm) { _, confirming in if confirming { detent = .large } }
         .onChange(of: typeSize) { _, size in if size.isAccessibilitySize { detent = .large } }
-        .confirmationDialog(String(localized: "ui.draft.discard"), isPresented: $discardRequested, titleVisibility: .visible) {
-            Button(String(localized: "ui.draft.discard"), role: .destructive) { workspace.discardTask() }
+        .alert(String(localized: "ui.draft.discard.title"), isPresented: $discardRequested) {
+            Button(String(localized: "ui.draft.keep"), role: .cancel) { }
+            Button(String(localized: "ui.draft.discard.action"), role: .destructive) {
+                voiceCapture.stopForInterruption()
+                workspace.discardTask()
+            }
         }
         .onChange(of: workspace.showComposer) { _, presented in
             if presented == false && !workspace.showAgent { dismiss() }
         }
+        .onDisappear { voiceCapture.stopForInterruption() }
+        .onChange(of: scenePhase) { _, phase in
+            if phase == .background { voiceCapture.stopForInterruption() }
+        }
+        .onChange(of: workspace.taskDraft.entityID) { _, _ in voiceCapture.stopForInterruption() }
         .onChange(of: mode) { _, mode in
+            voiceCapture.stopForInterruption()
             if mode == .form { workspace.banner = nil; detent = .large }
         }
         .onChange(of: pickerItems) { _, items in Task { await importImages(items) } }
@@ -214,16 +230,14 @@ struct CreateComposerSheet: View {
                 }
                 if mode == .agent { modeToggle }
                 Menu {
-                    if mode == .agent && !workspace.conversation.isEmpty {
-                        Button(String(localized: "ui.agent.conversation"), iconSymbol: "bubble.left.and.bubble.right") {
-                            conversationExpanded.toggle(); detent = .large
-                        }
-                    }
                     Button(String(localized: "ui.draft.discard"), role: .destructive) { discardRequested = true }
                 } label: { CheckLineIcon(symbol: "ellipsis", size: 17).frame(width: 44, height: 44) }
                 .accessibilityLabel(String(localized: "ui.task.options"))
+                .accessibilityIdentifier("wallet.task.options")
             }
-            if mode == .form { modeToggle }
+            if mode == .form {
+                modeToggle.frame(maxWidth: .infinity, alignment: .trailing).padding(.trailing, 6)
+            }
             if workspace.draftStorageFailed {
                 Text(String(localized: "ui.draft.failed")).font(.caption).foregroundStyle(.red)
                 if !workspace.draftLoadFailed {
@@ -231,6 +245,33 @@ struct CreateComposerSheet: View {
                 }
             }
         }.padding(.horizontal, 16).padding(.top, 12)
+    }
+
+    private func conversationBubble(_ entry: AgentConversationEntry) -> some View {
+        HStack(alignment: .top, spacing: 10) {
+            if entry.isUser { Spacer(minLength: 32) }
+            if !entry.isUser {
+                CloudMascotView(state: .idle).frame(width: 36, height: 36).accessibilityHidden(true)
+            }
+            Text(entry.text)
+                .font(.body).foregroundStyle(PaperTheme.ink)
+                .fixedSize(horizontal: false, vertical: true)
+                .textSelection(.enabled)
+                .padding(14)
+                .background(entry.isUser ? PaperTheme.accent.opacity(0.12) : PaperTheme.card,
+                            in: RoundedRectangle(cornerRadius: 20))
+                .accessibilityLabel(String(localized: entry.isUser ? "ui.agent.you" : "wallet.mascot.name") + "，" + entry.text)
+            if !entry.isUser { Spacer(minLength: 12) }
+        }.id(entry.id)
+    }
+
+    private var cyclePicker: some View {
+        Picker(String(localized: "v1.budget.cycle"), selection: field(\.repeating)) {
+            Text(String(localized: "wallet.cycle.monthly")).tag(true)
+            Text(String(localized: "v1.cycle.oneShot")).tag(false)
+        }
+        .frame(minHeight: 44)
+        .accessibilityIdentifier("wallet.composer.cycle")
     }
 
     private var agentGreeting: some View {
@@ -293,10 +334,11 @@ struct CreateComposerSheet: View {
                         }
                     }.padding(18).walletSurface()
                     VStack(alignment: .leading, spacing: 14) {
-                        PaperCapsuleSegment(
-                            items: [(true, String(localized: "wallet.cycle.monthly")), (false, String(localized: "v1.cycle.oneShot"))],
-                            selection: field(\.repeating)
-                        )
+                        if typeSize.isAccessibilitySize {
+                            cyclePicker.pickerStyle(.menu)
+                        } else {
+                            cyclePicker.pickerStyle(.segmented).controlSize(.large)
+                        }
                     let start = Calendar.current.dateInterval(of: .month, for: Date())?.start ?? Date()
                         Text(String(format: String(localized: repeating ? "ui.create.monthDates" : "ui.create.onceDates"), start.formatted(date: .abbreviated, time: .omitted)))
                             .font(.caption).foregroundStyle(PaperTheme.muted).fixedSize(horizontal: false, vertical: true)
@@ -317,10 +359,10 @@ struct CreateComposerSheet: View {
                         }.padding(4).walletSurface()
                         DisclosureGroup(isExpanded: $extrasExpanded) {
                             noteCard
-                            PaperField(title: String(localized: "ui.record.rawText"), text: field(\.text), axis: .vertical).focused($formFocused)
+                            PaperField(title: String(localized: "ui.record.rawText"), text: Binding(get: { workspace.taskSourceText }, set: { workspace.taskSourceText = $0 }), axis: .vertical).focused($formFocused)
                             attachmentInput
                         } label: {
-                            CheckLineIconLabel(note.isEmpty && workspace.draftText.isEmpty && workspace.taskDraft.attachments.isEmpty ? String(localized: "ui.record.extras") : String(format: String(localized: "ui.record.extrasCount"), note.count + workspace.draftText.count, workspace.taskDraft.attachments.count), symbol: "text.badge.plus")
+                            CheckLineIconLabel(note.isEmpty && workspace.taskSourceText.isEmpty && workspace.taskDraft.attachments.isEmpty ? String(localized: "ui.record.extras") : String(format: String(localized: "ui.record.extrasCount"), note.count + workspace.taskSourceText.count, workspace.taskDraft.attachments.count), symbol: "text.badge.plus")
                         }.padding(16).walletSurface()
                         if hasCurrencyMismatch {
                             Text(String(localized: "ui.currency.unconverted")).font(.caption).foregroundStyle(PaperTheme.muted)
@@ -518,11 +560,10 @@ struct CreateComposerSheet: View {
                 attributionID = workspace.selectedAttributionID
                 workspace.taskDraft.explicitAttribution = true
             } else if workspace.budgetProposal == nil && workspace.taskDraft.committedEntityID == nil {
-                let request = [workspace.pendingBudgetText, workspace.draftText].compactMap { $0 }.joined(separator: " ")
-                workspace.taskDraft.apply(LocalRegexFallback.candidate(from: request))
+                workspace.absorbUnsentAgentInputForManual()
             }
             mode = .form
-            extrasExpanded = !note.isEmpty || !workspace.draftText.isEmpty || !workspace.taskDraft.attachments.isEmpty
+            extrasExpanded = !note.isEmpty || !workspace.taskSourceText.isEmpty || !workspace.taskDraft.attachments.isEmpty
         }
         withAnimation(reduceMotion ? nil : PaperTheme.Motion.panel) { detent = .large }
     }

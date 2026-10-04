@@ -35,8 +35,8 @@ final class TaskWorkspaceUITests: XCTestCase {
         input.tap(); input.typeText("午餐 35 元")
         app.buttons["wallet.agent.voice"].tap()
         XCTAssertTrue(app.alerts.firstMatch.waitForExistence(timeout: 5))
-        XCTAssertTrue(app.alerts.staticTexts["语音输入尚未接通，可先输入文字。"].exists)
-        app.alerts.buttons["关闭"].tap()
+        XCTAssertTrue(app.alerts.staticTexts["需要麦克风和语音识别权限。声音仅在设备上转成文字，确认发送前可以修改。"].exists)
+        app.alerts.buttons["取消"].tap()
         XCTAssertEqual(input.value as? String, "午餐 35 元")
         app.buttons["wallet.task.switchMode"].tap()
         let amount = app.textFields["输入金额"]

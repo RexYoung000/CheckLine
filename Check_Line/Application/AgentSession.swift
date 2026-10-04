@@ -8,7 +8,7 @@ nonisolated struct AgentTurn: Equatable, Sendable {
 
     var presentation: AgentPresentation {
         if case .needsClarification = understand {
-            return .confirmStructured
+            return .panel
         }
         return evaluation?.presentation ?? .panel
     }

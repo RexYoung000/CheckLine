@@ -91,8 +91,9 @@ struct BudgetAmountEditorView: View {
             }
         }
         .interactiveDismissDisabled(isSaving)
-        .confirmationDialog(String(localized: "ui.draft.discard"), isPresented: $discardRequested) {
-            Button(String(localized: "ui.draft.discard"), role: .destructive) {
+        .alert(String(localized: "ui.draft.discard.title"), isPresented: $discardRequested) {
+            Button(String(localized: "ui.draft.keep"), role: .cancel) { }
+            Button(String(localized: "ui.draft.discard.action"), role: .destructive) {
                 workspace.discardBudgetAmountDraft(for: card)
                 if !workspace.budgetDraftStorageFailed { amountText = card.snapshot.budgetAmount.description }
             }

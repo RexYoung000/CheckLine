@@ -10,6 +10,9 @@ nonisolated struct TaskDraft: Codable, Equatable, Sendable {
     var committedEntityID: UUID?
     var mode = "form"
     var text = ""
+    // Optional so drafts saved before conversational entry remain readable.
+    var agentRequestText: String? = nil
+    var pendingAgentField: String? = nil
     var name = ""
     var amount = ""
     var currency = "CNY"
@@ -24,7 +27,7 @@ nonisolated struct TaskDraft: Codable, Equatable, Sendable {
     var attachments: [TaskAttachment] = []
 
     var key: String { [kind, contextBudgetID?.uuidString ?? "global", contextPeriodID?.uuidString ?? "global"].joined(separator: "_") }
-    var hasInput: Bool { fieldsTouched || !text.isEmpty || !name.isEmpty || !amount.isEmpty || !merchant.isEmpty || !note.isEmpty || !attachments.isEmpty || committedEntityID != nil }
+    var hasInput: Bool { fieldsTouched || !text.isEmpty || agentRequestText?.isEmpty == false || !name.isEmpty || !amount.isEmpty || !merchant.isEmpty || !note.isEmpty || !attachments.isEmpty || committedEntityID != nil }
 
     /// Only explicit parser fields replace user input; defaults never replace a chosen date.
     mutating func apply(_ candidate: AgentIntentCandidate) {

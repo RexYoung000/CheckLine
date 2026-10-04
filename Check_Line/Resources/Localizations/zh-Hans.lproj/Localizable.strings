@@ -284,7 +284,7 @@
 "v1.banner.query" = "按当前已录入消费，余额 %@；待确认另列。";
 "v1.banner.refuseRecommend" = "不能根据消费推荐你该买什么";
 "v1.banner.refuseScope" = "这超出预算循环的范围";
-"v1.banner.needsAmount" = "还需要金额";
+"v1.banner.needsAmount" = "金额是多少？";
 "v1.banner.needsFullscreen" = "结算、心愿兑现或追溯需要全屏确认，本页尚未接入";
 "v1.banner.needsClarification" = "还需要你补全信息";
 "v1.banner.failed" = "没有完成这次操作";
@@ -297,7 +297,7 @@
 "v1.settings.entry" = "设置";
 "v1.settings.title" = "设置";
 "v1.settings.privacy" = "完整账本保存在这台设备。云端理解默认关闭。";
-"v1.settings.sources" = "当前支持手动和文字录入。Apple Pay、短信、邮件、语音与图片识别尚未接入，也没有请求这些权限。";
+"v1.settings.sources" = "支持手动、文字和设备端语音转写。Apple Pay、短信、邮件与图片识别尚未接入。";
 "v1.preview.longName" = "这个月和爸妈一起吃饭的家庭聚餐预算";
 "v1.budget.settle.later" = "结算需要全屏确认，稍后接入。";
 "v1.insights.empty" = "还没有可回看的预算卡";
@@ -523,7 +523,7 @@
 
 // 2026-10-01 unified tasks and workspace
 "ui.agent.suggestions" = "建议与帮助";
-"ui.agent.local" = "当前使用本地文字理解。语音、图片识别和云端模型尚未接通。";
+"ui.agent.local" = "当前使用本地文字理解，支持的设备和语言可使用语音转写。图片识别和云端模型尚未接通。";
 "ui.agent.helpFill" = "请小朵帮我填";
 "ui.task.manual" = "手动填写";
 "ui.task.options" = "任务选项";
@@ -557,7 +557,7 @@
 "ui.source.email" = "邮件";
 "ui.source.statement" = "账单导入";
 "ui.sources.title" = "数据来源与导入";
-"ui.sources.boundary" = "当前仅本机手动输入和文字 Agent 可用。其他来源及账单解析尚未接通，所有来源都可跳过。";
+"ui.sources.boundary" = "手动和文字录入在本机处理，语音取决于设备与语言的端侧支持。其他来源及账单解析尚未接通，所有来源都可跳过。";
 "ui.import.title" = "一键导入";
 "ui.import.demo" = "设计演示 · 虚构数据 · 不读取文件，不写入账本";
 "ui.import.start" = "选择示例账单";
@@ -673,3 +673,53 @@
 "ui.agent.shortBudgetExample" = "创建预算卡";
 
 "ui.wish.completedCount" = "已实现 · %ld";
+
+/* 2026-10-04 phone feedback */
+"ui.draft.discard.title" = "清除未保存的内容？";
+"ui.draft.keep" = "保留草稿";
+"ui.draft.discard.action" = "放弃草稿";
+"ui.analysis.empty.explanation" = "创建预算卡后，在这里回看消费和日期。";
+"ui.voice.permission.title" = "用语音告诉小朵";
+"ui.voice.permission.detail" = "需要麦克风和语音识别权限。声音仅在设备上转成文字，确认发送前可以修改。";
+"ui.voice.permission.start" = "开始语音输入";
+"ui.voice.finish" = "结束录音";
+"ui.voice.cancel" = "取消录音";
+"ui.voice.settings" = "打开设置";
+"ui.wish.chooseCurrency" = "请选择有效币种。";
+"ui.wish.balanceSummary" = "预算结算与心愿兑现的累计结果";
+"ui.wish.balanceHistory" = "余额变动";
+"ui.wish.balanceAbout" = "了解心愿余额";
+"ui.wish.balanceMeaning" = "这里记录预算结余的去向，不代表银行卡中的真实余额。";
+"ui.wish.balanceRecoveryRule" = "预算越线时，先扣心愿余额，不足的部分记为待恢复差额。之后的结余先补齐差额，再增加余额。";
+"ui.wish.balanceSurplus" = "预算结余";
+"ui.wish.balanceAdds" = "结算后增加";
+"ui.wish.balanceOverrun" = "预算越线";
+"ui.wish.balanceSubtracts" = "结算后减少";
+"ui.wish.balancePurchase" = "心愿购买";
+"ui.wish.balancePurchaseSubtracts" = "确认后减少";
+"ui.wish.balanceRecoveryNext" = "之后的预算结余会先补齐这部分，再增加心愿余额。";
+
+"voice.capture.requestingPermission" = "正在等待授权…";
+"voice.capture.listening" = "正在听，点一下结束";
+"voice.capture.finishing" = "正在整理文字…";
+"voice.capture.microphoneDenied" = "麦克风未开启，可到设置中允许，或继续输入文字。";
+"voice.capture.speechDenied" = "语音识别未开启，可到设置中允许，或继续输入文字。";
+"voice.capture.speechRestricted" = "此设备限制了语音识别，请继续输入文字。";
+"voice.capture.onDeviceUnavailable" = "当前语言暂不支持本机转写，请继续输入文字。";
+"voice.capture.recognitionUnavailable" = "语音识别暂不可用，请稍后再试或输入文字。";
+"voice.capture.audioUnavailable" = "暂时无法使用麦克风，请再试一次或输入文字。";
+"voice.capture.noSpeech" = "没有听清，再说一次吧。";
+"voice.capture.interrupted" = "录音已中断，已有文字已保留。";
+"voice.capture.failed" = "这次转写未完成，已有文字已保留。";
+"voice.capture.start" = "语音输入";
+"voice.capture.finish" = "结束录音";
+"voice.capture.cancel" = "取消录音";
+"voice.capture.openSettings" = "打开设置";
+"voice.capture.permission.title" = "用语音输入";
+"voice.capture.permission.message" = "开启麦克风和语音识别后，在本机转成文字。录音不保存，你检查后再发送。";
+"voice.capture.permission.continue" = "继续";
+
+"ui.agent.readyToConfirm" = "核对一下，确认后我就保存。";
+"ui.agent.clarifyInput" = "想记哪笔消费，或创建什么预算？";
+"ui.agent.followupPlaceholder" = "也可以继续补充，比如：改成 40 元";
+"ui.source.voiceDetail" = "在支持的设备和语言上转成文字";

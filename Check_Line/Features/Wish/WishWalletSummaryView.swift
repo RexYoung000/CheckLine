@@ -15,24 +15,22 @@ struct WishWalletSummaryView: View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 24) {
-                    WalletSymbol(name: "sparkles", size: 72)
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text(String(localized: "v1.wish.balance")).font(.subheadline).foregroundStyle(PaperTheme.muted)
+                    VStack(alignment: .leading, spacing: 12) {
                         Text(MoneyFormat.string(projection.balance, currencyCode: currencyCode))
                             .font(.largeTitle.weight(.medium)).monospacedDigit().lineLimit(1).minimumScaleFactor(0.5)
+                            .accessibilityLabel(String(localized: "v1.wish.balance"))
+                            .accessibilityValue(MoneyFormat.string(projection.balance, currencyCode: currencyCode))
+                            .accessibilityIdentifier("wallet.wishes.balance.detail")
+                        Text(String(localized: "ui.wish.balanceSummary"))
+                            .font(.subheadline).foregroundStyle(PaperTheme.muted)
                     }
                     if projection.recoveryGap > 0 {
-                        PaperFormItem(title: String(localized: "v1.wish.recovery"), value: MoneyFormat.string(projection.recoveryGap, currencyCode: currencyCode))
+                        recoverySummary
                     }
-                    DisclosureGroup(String(localized: "ui.wish.walletRules"), isExpanded: $rulesExpanded) {
-                        VStack(alignment: .leading, spacing: 16) {
-                            CheckLineIconLabel(String(localized: "wallet.wishes.settlementIn"), symbol: "arrow.down.left")
-                            CheckLineIconLabel(String(localized: "wallet.wishes.redemptionOut"), symbol: "arrow.up.right")
-                            Text(String(localized: "wallet.wishes.recoveryOrder")).font(.caption).foregroundStyle(PaperTheme.muted)
-                        }.font(.subheadline).padding(.top, 12)
-                    }.font(.subheadline).tint(PaperTheme.accent)
+                    balanceChanges
                     VStack(alignment: .leading, spacing: 14) {
-                        Text(String(localized: "wallet.wishes.history")).font(.headline)
+                        Text(String(localized: "ui.wish.balanceHistory"))
+                            .font(.headline).accessibilityAddTraits(.isHeader)
                         if entries.isEmpty {
                             Text(String(localized: "wallet.wishes.historyEmpty"))
                                 .font(.subheadline).foregroundStyle(PaperTheme.muted)
@@ -44,17 +42,66 @@ struct WishWalletSummaryView: View {
                             }.padding(4).walletSurface()
                         }
                     }
+                    DisclosureGroup(String(localized: "ui.wish.balanceAbout"), isExpanded: $rulesExpanded) {
+                        VStack(alignment: .leading, spacing: 12) {
+                            Text(String(localized: "ui.wish.balanceMeaning"))
+                            Text(String(localized: "ui.wish.balanceRecoveryRule"))
+                            Text(String(localized: "wallet.wishes.noReservation"))
+                        }
+                        .font(.subheadline).foregroundStyle(PaperTheme.muted)
+                        .fixedSize(horizontal: false, vertical: true).padding(.top, 12)
+                    }.font(.subheadline).tint(PaperTheme.accent)
+                        .accessibilityIdentifier("wallet.wishes.balance.about")
                 }.padding(24).frame(maxWidth: 600).frame(maxWidth: .infinity)
             }
             .background(PaperTheme.canvas.ignoresSafeArea())
-            .navigationTitle(String(localized: "v1.wish.title")).navigationBarTitleDisplayMode(.inline)
+            .navigationTitle(String(localized: "v1.wish.balance")).navigationBarTitleDisplayMode(.inline)
             .toolbarBackground(.hidden, for: .navigationBar)
             .toolbar { ToolbarItem(placement: .topBarTrailing) { Button(String(localized: "action.close"), iconSymbol: "xmark") { dismiss() }.labelStyle(.iconOnly) } }
         }
         .presentationBackground(PaperTheme.canvas)
-        .presentationDetents([.medium, .large])
+        .presentationDetents(typeSize.isAccessibilitySize ? [.large] : [.medium, .large])
         .presentationDragIndicator(.visible)
         .presentationCornerRadius(PaperTheme.Radius.sheet)
+    }
+
+    private var balanceChanges: some View {
+        let layout = typeSize.isAccessibilitySize
+            ? AnyLayout(VStackLayout(alignment: .leading, spacing: 12))
+            : AnyLayout(HStackLayout(alignment: .top, spacing: 10))
+        return layout {
+            changeSummary(title: "ui.wish.balanceSurplus", detail: "ui.wish.balanceAdds", symbol: "plus")
+            changeSummary(title: "ui.wish.balanceOverrun", detail: "ui.wish.balanceSubtracts", symbol: "minus")
+            changeSummary(title: "ui.wish.balancePurchase", detail: "ui.wish.balancePurchaseSubtracts", symbol: "minus")
+        }
+    }
+
+    private func changeSummary(title: String.LocalizationValue, detail: String.LocalizationValue, symbol: String) -> some View {
+        VStack(alignment: .leading, spacing: 8) {
+            CheckLineIcon(symbol: symbol, size: 20).foregroundStyle(PaperTheme.accent)
+                .accessibilityHidden(true)
+            Text(String(localized: title)).font(.subheadline.weight(.medium))
+            Text(String(localized: detail)).font(.caption).foregroundStyle(PaperTheme.muted)
+        }
+        .fixedSize(horizontal: false, vertical: true)
+        .padding(14).frame(maxWidth: .infinity, alignment: .leading)
+        .walletSurface(radius: 18)
+        .accessibilityElement(children: .combine)
+    }
+
+    private var recoverySummary: some View {
+        PaperCard {
+            VStack(alignment: .leading, spacing: 10) {
+                Text(String(localized: "v1.wish.recovery"))
+                    .font(.subheadline).foregroundStyle(PaperTheme.muted)
+                Text(MoneyFormat.string(projection.recoveryGap, currencyCode: currencyCode))
+                    .font(.title2.weight(.medium)).monospacedDigit()
+                Text(String(localized: "ui.wish.balanceRecoveryNext"))
+                    .font(.subheadline).foregroundStyle(PaperTheme.muted)
+            }
+        }
+        .accessibilityElement(children: .combine)
+        .accessibilityIdentifier("wallet.wishes.balance.recovery")
     }
 
     private func entryRow(_ entry: WalletLedgerEntry) -> some View {

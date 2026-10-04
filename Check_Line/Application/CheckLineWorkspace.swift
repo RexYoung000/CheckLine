@@ -24,6 +24,18 @@ final class CheckLineWorkspace {
         get { taskDraft.text }
         set { taskDraft.text = newValue }
     }
+    var taskSourceText: String {
+        get {
+            [taskDraft.agentRequestText, taskDraft.text.isEmpty ? nil : taskDraft.text]
+                .compactMap { $0 }.joined(separator: "\n")
+        }
+        set {
+            taskDraft.agentRequestText = nil
+            taskDraft.pendingAgentField = nil
+            taskDraft.text = newValue
+            taskDraft.fieldsTouched = true
+        }
+    }
     let draftStore: TaskDraftStore
     var lastSavedEntityID: UUID?
     var pendingBudgetText: String?
@@ -136,9 +148,12 @@ final class CheckLineWorkspace {
         try commitPresentationChange(RetrospectiveAdjustmentEngine.confirm(ledger: ledger, preview: preview, quote: nil, now: now))
     }
 
-    func createWish(name: String, amountText: String, symbolName: String, now: Date = Date()) throws {
+    func createWish(name: String, amountText: String, currencyCode: String? = nil, symbolName: String = "star", now: Date = Date()) throws {
         let name = name.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !name.isEmpty else { throw WorkspaceInputError.missingName }
+        let currency = (currencyCode ?? ledger.walletSettings.walletCurrencyCode)
+            .trimmingCharacters(in: .whitespacesAndNewlines).uppercased()
+        guard Locale.commonISOCurrencyCodes.contains(currency) else { throw WorkspaceInputError.invalidCurrency }
         let amount: Decimal?
         if amountText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty { amount = nil }
         else {
@@ -147,7 +162,7 @@ final class CheckLineWorkspace {
         }
         var changed = ledger
         changed.upsert(Wish(id: UUID(), name: name, targetAmount: amount,
-                            currencyCode: ledger.walletSettings.walletCurrencyCode,
+                            currencyCode: currency,
                             referenceURL: nil, state: .active, createdAt: now,
                             completedAt: nil, symbolName: WishSymbols.allowed.contains(symbolName) ? symbolName : "star"))
         try commitPresentationChange(changed)
@@ -362,85 +377,159 @@ final class CheckLineWorkspace {
 
     func submitText(now: Date = Date()) async {
         let text = draftText.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard text.isEmpty == false, isWorking == false else { return }
-        if pendingBudgetText != nil && ["取消", "算了", "cancel"].contains(text.lowercased()) {
-            cancelAgentProposal()
-            draftText = ""
-            return
-        }
+        guard !text.isEmpty, !isWorking, taskDraft.committedEntityID == nil else { return }
         conversation.append(AgentConversationEntry(isUser: true, text: text))
         if conversation.count > 24 { conversation.removeFirst(conversation.count - 24) }
-        let request: String
-        if let pendingBudgetText, !LocalRegexFallback.isBudgetCreationRequest(text) {
-            request = pendingBudgetText + " " + text
-        } else {
-            request = text
+        if ["取消", "算了", "cancel"].contains(text.lowercased()) {
+            discardTask()
+            agentBanner = .needsClarification("input")
+            rememberAgentReply()
+            return
         }
         panelExpanded = true
         isWorking = true
+        defer { isWorking = false }
         banner = nil
         agentBanner = nil
-        confirmAmountText = ""
-        if pendingBudgetText == nil, let budgetID = inferQueryBudget(from: text) {
-            let turn = session.turn(intent: .queryBudgetStatus(budgetID: budgetID), ledger: ledger, now: now)
+
+        switch BudgetLoopInterpreter.interpret(text: text) {
+        case .recommendPurchase, .outOfScope:
+            let turn = await session.turn(input: .text(text), ledger: ledger, now: now)
+            draftText = ""
             lastTurn = turn
-            isWorking = false
+            applyTurn(turn, now: now)
+            agentBanner = banner
+            rememberAgentReply()
+            return
+        default: break
+        }
+
+        if let budgetID = inferQueryBudget(from: text) {
+            let turn = session.turn(intent: .queryBudgetStatus(budgetID: budgetID), ledger: ledger, now: now)
+            draftText = ""
+            lastTurn = turn
             applyTurn(turn, now: now)
             agentBanner = banner
             rememberAgentReply()
             return
         }
-        let candidate = LocalRegexFallback.candidate(from: request)
-        let turn: AgentTurn
-        if candidate.intentType == "createBudget" || (candidate.intentType == "capture" && taskDraft.hasInput && (taskDraft.formTouched || !taskDraft.attachments.isEmpty || taskDraft.explicitAttribution)) {
-            if candidate.intentType == "createBudget", taskDraft.kind != "budget" {
-                beginTask(.budget, mode: "agent", now: now)
-                taskDraft.text = request
+
+        var candidate = LocalRegexFallback.candidate(from: text)
+        let hasActiveTask = taskDraft.agentRequestText != nil || taskDraft.pendingAgentField != nil
+        let explicitStart = LocalRegexFallback.isBudgetCreationRequest(text) || LocalRegexFallback.isExplicitRecordRequest(text)
+        if hasActiveTask && !explicitStart {
+            if LocalRegexFallback.isAmountReply(text) {
+                candidate = AgentIntentCandidate(intentType: taskDraft.kind == "budget" ? "createBudget" : "capture",
+                                                 amount: LocalRegexFallback.extractAmount(from: text),
+                                                 currencyCode: LocalRegexFallback.extractCurrency(from: text))
+            } else if LocalRegexFallback.isCurrencyReply(text) {
+                candidate = AgentIntentCandidate(intentType: taskDraft.kind == "budget" ? "createBudget" : "capture",
+                                                 currencyCode: LocalRegexFallback.extractCurrency(from: text))
+            } else if taskDraft.kind == "budget", let cycle = LocalRegexFallback.extractBudgetCycle(from: text) {
+                let onlyCycle = text.range(of: #"(?i)^\s*(?:每月(?:循环)?|每个月|月度|按月|一次性(?:预算)?|单次|monthly|one-time|one time)(?:就好|吧|即可)?\s*[。.!！]?\s*$"#, options: .regularExpression) != nil
+                candidate = AgentIntentCandidate(intentType: "createBudget",
+                                                 amount: LocalRegexFallback.extractAmount(from: text),
+                                                 currencyCode: LocalRegexFallback.extractCurrency(from: text),
+                                                 name: onlyCycle ? nil : LocalRegexFallback.extractBudgetName(from: text),
+                                                 cycleType: cycle)
+            } else if taskDraft.kind == "budget", taskDraft.pendingAgentField == "name",
+                      candidate.intentType == "needsClarification", text.count <= 40 {
+                candidate = AgentIntentCandidate(intentType: "createBudget", name: text)
             }
+        }
+
+        let turn: AgentTurn
+        if candidate.intentType == "createBudget" || candidate.intentType == "capture" {
+            let kind: ComposerIntent = candidate.intentType == "createBudget" ? .budget : .record
+            // A bare new expense description is not an amount correction. Never
+            // reuse the previous number just because both messages are captures.
+            let startsAnotherExpense = kind == .record && hasActiveTask && !taskDraft.amount.isEmpty
+                && candidate.amount == nil && candidate.merchant != nil
+            let continuesTask = hasActiveTask && taskDraft.kind == kind.rawValue && !explicitStart && !startsAnotherExpense
+            let hasExplicitFields = taskDraft.formTouched || taskDraft.fieldsTouched
+                || taskDraft.explicitAttribution || !taskDraft.attachments.isEmpty
+            let keepsManualFields = hasExplicitFields && taskDraft.kind == kind.rawValue && !hasActiveTask
+            if !continuesTask && !keepsManualFields {
+                startAgentTask(kind, now: now)
+            }
+            composerIntent = kind
             taskDraft.apply(candidate)
+            let previousText = taskDraft.agentRequestText
+            taskDraft.agentRequestText = [previousText, text].compactMap { $0 }.joined(separator: "\n")
+            draftText = ""
+
             var merged = candidate
             merged.amount = taskDraft.amount.isEmpty ? nil : taskDraft.amount
             merged.currencyCode = taskDraft.currency
-            if candidate.intentType == "createBudget" {
-                merged.name = taskDraft.name
-                merged.cycleType = candidate.cycleType ?? (taskDraft.formTouched ? (taskDraft.repeating ? "repeating" : "oneShot") : nil)
-                merged.startDate = ISO8601DateFormatter().string(from: monthBounds(now: now).start)
+            if kind == .budget {
+                merged.name = taskDraft.name.isEmpty ? nil : taskDraft.name
+                merged.cycleType = candidate.cycleType
+                    ?? ((taskDraft.formTouched || LocalRegexFallback.extractBudgetCycle(from: taskDraft.agentRequestText ?? "") != nil)
+                        ? (taskDraft.repeating ? "repeating" : "oneShot") : nil)
             } else {
                 merged.merchant = taskDraft.merchant.isEmpty ? nil : taskDraft.merchant
                 merged.note = taskDraft.note.isEmpty ? nil : taskDraft.note
                 merged.occurredAt = ISO8601DateFormatter().string(from: taskDraft.occurredAt)
-                if taskDraft.explicitAttribution, taskDraft.attributionID != "unbudgeted" { merged.periodID = taskDraft.attributionID }
+                if taskDraft.explicitAttribution, taskDraft.attributionID != "unbudgeted" {
+                    merged.periodID = taskDraft.attributionID
+                }
             }
-            switch IntentValidator.validate(merged, ledger: ledger, now: now, sourceType: .agentText) {
-            case .intent(let intent): turn = session.turn(intent: intent, ledger: ledger, now: now)
-            case .needsClarification: turn = await session.turn(input: .text(request), ledger: ledger, now: now)
+            let result = IntentValidator.validate(merged, ledger: ledger, now: now, sourceType: .agentText)
+            if case .intent(let intent) = result {
+                turn = session.turn(intent: intent, ledger: ledger, now: now)
+                taskDraft.pendingAgentField = nil
+                pendingBudgetText = nil
+            } else {
+                turn = AgentTurn(understand: result, evaluation: nil, isOfflineMode: session.isOfflineMode)
+                if case .needsClarification(let field, _) = result { taskDraft.pendingAgentField = field }
+                pendingBudgetText = kind == .budget ? taskDraft.agentRequestText : nil
             }
         } else {
-            turn = await session.turn(input: .text(request), ledger: ledger, now: now)
-            if case .intent(.capture(let draft)) = turn.understand {
-                taskDraft.apply(candidate)
-                if taskDraft.amount.isEmpty { taskDraft.amount = draft.amount?.description ?? "" }
-            }
+            // Unknown requests and domain refusals retain the text path; they cannot become an empty record.
+            turn = await session.turn(input: .text(text), ledger: ledger, now: now)
+            draftText = ""
         }
         lastTurn = turn
-        isWorking = false
-        if LocalRegexFallback.isBudgetCreationRequest(request) {
-            switch turn.understand {
-            case .needsClarification:
-                pendingBudgetText = request
-                draftText = ""
-            case .intent(.createBudget):
-                pendingBudgetText = nil
-                draftText = request
-            default:
-                pendingBudgetText = nil
-            }
-        } else {
-            pendingBudgetText = nil
-        }
         applyTurn(turn, now: now)
         agentBanner = banner
         rememberAgentReply()
+    }
+
+    private func startAgentTask(_ kind: ComposerIntent, now: Date) {
+        let card = cards.first { $0.id == (taskDraft.contextBudgetID ?? agentBudgetID) } ?? selectedCard
+        var fresh = TaskDraft(kind: kind.rawValue,
+                              contextBudgetID: kind == .record ? card?.id : nil,
+                              contextPeriodID: kind == .record ? card?.periodID : nil)
+        fresh.mode = "agent"
+        fresh.occurredAt = now
+        fresh.currency = kind == .record ? card?.currencyCode ?? ledger.walletSettings.walletCurrencyCode : ledger.walletSettings.walletCurrencyCode
+        fresh.attributionID = kind == .record ? card?.periodID.uuidString ?? "unbudgeted" : "unbudgeted"
+        taskDraft = fresh
+        lastTurn = nil
+        pendingBudgetText = nil
+        confirmAmountText = ""
+    }
+
+    /// Switching to the form may incorporate text the user has not sent yet.
+    /// Previously parsed source text is evidence only, never a second source of field values.
+    func absorbUnsentAgentInputForManual() {
+        let text = draftText.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !text.isEmpty, taskDraft.committedEntityID == nil else { return }
+        var candidate: AgentIntentCandidate
+        if LocalRegexFallback.isAmountReply(text) {
+            candidate = .capture(amount: LocalRegexFallback.extractAmount(from: text),
+                                 currencyCode: LocalRegexFallback.extractCurrency(from: text))
+        } else if LocalRegexFallback.isCurrencyReply(text) {
+            candidate = .capture(currencyCode: LocalRegexFallback.extractCurrency(from: text))
+        } else if taskDraft.kind == "budget" {
+            candidate = LocalRegexFallback.candidate(from: LocalRegexFallback.isBudgetCreationRequest(text) ? text : "创建预算卡 " + text)
+            if !taskDraft.name.isEmpty, candidate.amount == nil, candidate.cycleType != nil {
+                candidate.name = nil
+            }
+        } else {
+            candidate = LocalRegexFallback.candidate(from: text)
+        }
+        taskDraft.apply(candidate)
     }
 
     private func rememberAgentReply() {
@@ -582,6 +671,7 @@ final class CheckLineWorkspace {
             taskDraft = fresh
         }
         lastTurn = nil
+        pendingBudgetText = taskDraft.kind == "budget" && taskDraft.pendingAgentField != nil ? taskDraft.agentRequestText : nil
         validateRestoredTask()
     }
 
@@ -615,6 +705,10 @@ final class CheckLineWorkspace {
     }
 
     private func validateRestoredTask() {
+        pendingBudgetText = taskDraft.kind == "budget" && taskDraft.pendingAgentField != nil ? taskDraft.agentRequestText : nil
+        if let field = taskDraft.pendingAgentField {
+            agentBanner = field == "amount" ? .needsAmount : .needsClarification(field)
+        }
         if taskDraft.kind == "record" && !attributionChoices.contains(where: { $0.id == taskDraft.attributionID }) {
             banner = .needsPeriod
         }
@@ -649,7 +743,9 @@ final class CheckLineWorkspace {
             try attachmentStore.add(imageData: attachment.data, to: id, id: attachment.id)
         }
         try draftStore.remove(taskDraft.key)
-        taskDraft = TaskDraft(kind: taskDraft.kind, contextBudgetID: taskDraft.contextBudgetID, contextPeriodID: taskDraft.contextPeriodID)
+        var fresh = TaskDraft(kind: taskDraft.kind, contextBudgetID: taskDraft.contextBudgetID, contextPeriodID: taskDraft.contextPeriodID)
+        fresh.mode = taskDraft.mode
+        taskDraft = fresh
     }
 
     func undoLast(now: Date = Date()) {
@@ -663,6 +759,7 @@ final class CheckLineWorkspace {
             banner = .failed
             agentBanner = .failed
         }
+        if showAgent || (showComposer && taskDraft.mode == "agent") { rememberAgentReply() }
     }
 
     func expandPanel() {
@@ -696,6 +793,7 @@ final class CheckLineWorkspace {
                     }
                 }
             case .confirmStructured:
+                banner = .readyToConfirm
                 if case .capture(let draft) = intent {
                     let card = cards.first { $0.periodID == draft.periodID || $0.id == draft.budgetID }
                         ?? cards.first { $0.id == agentBudgetID } ?? selectedCard
@@ -804,7 +902,7 @@ final class CheckLineWorkspace {
     }
 }
 
-nonisolated enum WorkspaceInputError: Error { case missingName, draftUnavailable }
+nonisolated enum WorkspaceInputError: Error, Equatable { case missingName, draftUnavailable, invalidCurrency }
 
 nonisolated enum WishSymbols {
     static let allowed = ["star", "headphones", "tent", "airplane", "camera", "bicycle", "gift", "book", "gamecontroller", "sofa"]
