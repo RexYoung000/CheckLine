@@ -97,6 +97,7 @@ struct AgentTaskPanel: View {
                 }
                 .padding(18)
                 .walletSurface(radius: 24)
+                .accessibilityElement(children: .contain)
                 .accessibilityIdentifier("wallet.agent.confirmation")
             }
             }
@@ -180,7 +181,7 @@ struct AgentTaskPanel: View {
 
     private var canSend: Bool {
         workspace.draftText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty == false
-            && workspace.isWorking == false && !voiceCapture.isActive
+            && workspace.isWorking == false && !voiceCapture.isActive && !workspace.attachmentImportBlocksSubmission
     }
 
     private var inputPlaceholder: String {
@@ -192,55 +193,52 @@ struct AgentTaskPanel: View {
     }
 
     private var structuredFields: some View {
-        VStack(alignment: .leading, spacing: PaperTheme.Space.m) {
-            if let draft = workspace.captureProposal {
-                HStack(alignment: .center, spacing: 12) {
-                PaperField(
-                    title: String(localized: "v1.agent.amount"),
-                    text: $workspace.confirmAmountText,
-                    keyboard: AmountKeyboard.type
-                )
-                Picker(String(localized: "v1.budget.currency"), selection: $workspace.confirmCurrencyCode) {
-                    ForEach(Array(Set(["CNY", "USD", "JPY", "EUR", workspace.confirmCurrencyCode])).sorted(), id: \.self) { code in
-                        Text(code).tag(code)
-                    }
-                }.pickerStyle(.menu).labelsHidden().fixedSize().frame(minHeight: 44)
-                    .accessibilityLabel(String(localized: "v1.budget.currency"))
-                }
-                if let merchant = draft.merchant {
-                    PaperFormItem(title: String(localized: "v1.composer.merchant"), value: merchant)
-                }
-                PaperFormItem(title: String(localized: "v1.composer.date"), value: draft.occurredAt.formatted(date: .abbreviated, time: .omitted))
-
-                VStack(alignment: .leading, spacing: PaperTheme.Space.s) {
-                    Text(String(localized: "v1.agent.attribution"))
-                        .font(PaperTheme.Typography.caption)
-                        .foregroundStyle(PaperTheme.muted)
-                    ScrollView(.horizontal, showsIndicators: false) {
-                        HStack(spacing: PaperTheme.Space.s) {
-                            ForEach(workspace.attributionChoices) { choice in
-                                PaperChoiceChip(
-                                    title: choice.periodID == nil ? String(localized: "v1.unbudgeted") : choice.title,
-                                    value: choice.id,
-                                    selection: Binding(get: { workspace.selectedAttributionID }, set: {
-                                        workspace.selectedAttributionID = $0
-                                        workspace.taskDraft.attributionID = $0
-                                        workspace.taskDraft.explicitAttribution = true
-                                    })
-                                )
-                            }
-                        }
-                    }
-                }
-            } else if let draft = workspace.budgetProposal {
-                Text(draft.name).font(.headline)
-                PaperFormItem(title: String(localized: "v1.budget.amount"), value: MoneyFormat.string(draft.amount, currencyCode: draft.currencyCode))
-                PaperFormItem(title: String(localized: "v1.budget.cycle"), value: String(localized: draft.cycleType == .repeating ? "wallet.cycle.monthly" : "v1.cycle.oneShot"))
-                Text(draft.startDate, format: .dateTime.year().month().day()).font(.subheadline)
-                if let end = draft.endDate { Text(end, format: .dateTime.year().month().day()).font(.subheadline) }
+        Button {
+            workspace.taskDraft.formTouched = true
+            if workspace.captureProposal != nil {
+                workspace.taskDraft.amount = workspace.confirmAmountText
+                workspace.taskDraft.currency = workspace.confirmCurrencyCode
+                workspace.taskDraft.attributionID = workspace.selectedAttributionID
+                workspace.taskDraft.explicitAttribution = true
             }
-
-        }
+            workspace.taskDraft.mode = "form"
+        } label: {
+            VStack(alignment: .leading, spacing: 12) {
+                HStack(alignment: .firstTextBaseline, spacing: 12) {
+                    Text(MoneyFormat.parseAmount(workspace.taskDraft.amount).map {
+                        MoneyFormat.string($0, currencyCode: workspace.taskDraft.currency)
+                    } ?? String(localized: "v1.agent.amount"))
+                        .font(.title.weight(.medium)).monospacedDigit()
+                        .fixedSize(horizontal: false, vertical: true)
+                    Spacer(minLength: 0)
+                    CheckLineIcon(symbol: "square.and.pencil", size: 20).foregroundStyle(PaperTheme.accent)
+                }
+                if workspace.captureProposal != nil {
+                    if !workspace.taskDraft.merchant.isEmpty {
+                        Text(workspace.taskDraft.merchant).font(.headline)
+                    }
+                    Text(workspace.taskDraft.occurredAt, format: .dateTime.year().month().day())
+                        .font(.subheadline).foregroundStyle(PaperTheme.muted)
+                    Text(workspace.attributionChoices.first(where: { $0.id == workspace.selectedAttributionID })?.title
+                         ?? String(localized: "ui.task.invalidAttribution"))
+                        .font(.subheadline).foregroundStyle(PaperTheme.muted)
+                } else if let draft = workspace.budgetProposal {
+                    Text(draft.name).font(.headline)
+                    Text(String(localized: draft.cycleType == .repeating ? "wallet.cycle.monthly" : "v1.cycle.oneShot"))
+                        .font(.subheadline).foregroundStyle(PaperTheme.muted)
+                    Text(draft.startDate, format: .dateTime.year().month().day())
+                        .font(.caption).foregroundStyle(PaperTheme.muted)
+                }
+            }.foregroundStyle(PaperTheme.ink).frame(maxWidth: .infinity, alignment: .leading)
+                .contentShape(Rectangle())
+        }.buttonStyle(.plain)
+            .accessibilityLabel(String(localized: "ui.task.editFields"))
+            .accessibilityValue([workspace.taskDraft.amount + " " + workspace.taskDraft.currency,
+                                 workspace.captureProposal == nil ? workspace.taskDraft.name : workspace.taskDraft.merchant,
+                                 workspace.taskDraft.occurredAt.formatted(date: .abbreviated, time: .omitted),
+                                 workspace.attributionChoices.first(where: { $0.id == workspace.selectedAttributionID })?.title ?? ""]
+                .filter { !$0.isEmpty }.joined(separator: ", "))
+            .accessibilityIdentifier("wallet.agent.editFields")
     }
 
     private var structuredActions: some View {
@@ -251,8 +249,8 @@ struct AgentTaskPanel: View {
             }
             .buttonStyle(PaperSolidButtonStyle(enabled: workspace.canConfirmProposal))
             .disabled(!workspace.canConfirmProposal)
-            Button(String(localized: "wallet.agent.cancelProposal")) {
-                workspace.discardTask()
+            Button(String(localized: "ui.task.keepEditing")) {
+                workspace.leaveTaskReview()
                 inputFocused = true
             }.buttonStyle(PaperQuietButtonStyle())
         }

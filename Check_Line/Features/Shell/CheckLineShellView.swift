@@ -81,8 +81,17 @@ struct CheckLineShellView: View {
                 await workspace.submitText()
                 workspace.showAgent = true
             case "record": workspace.openComposer(.record)
+            case "attachment-review":
+                workspace.beginTask(.record, mode: "form")
+                workspace.taskDraft.amount = "35"
+                workspace.taskDraft.merchant = String(localized: "wallet.demo.coffee")
+                if let image = CheckLineIconAssets.templateImage(for: "receipt").pngData() {
+                    do { try workspace.addTaskAttachment(image) }
+                    catch { workspace.banner = .failed }
+                }
+                workspace.showComposer = true
             case "create-budget": workspace.openComposer(.budget)
-            case "create-wish", "budget-detail", "records", "calendar", "wish-detail", "redemption", "agent-mascot", "import-review", "management-review", "retrospective-record", "settlement-fx": showsPreviewDetail = true
+            case "create-wish", "budget-detail", "records", "calendar", "wish-detail", "redemption", "agent-mascot", "import-review", "management-review", "retrospective-record", "settlement-fx", "history-review": showsPreviewDetail = true
             default: break
             }
             if DesignPreviewData.runsMotionTour {
@@ -180,6 +189,8 @@ struct CheckLineShellView: View {
                 if let card = workspace.selectedCard { BudgetDetailSheet(workspace: workspace, budgetID: card.id, initialSection: .overview) }
             case "records", "calendar":
                 if let card = workspace.selectedCard { BudgetDetailSheet(workspace: workspace, budgetID: card.id, initialSection: DesignPreviewData.screen == "records" ? .records : .calendar) }
+            case "history-review":
+                if let card = workspace.selectedCard { BudgetDetailSheet(workspace: workspace, budgetID: card.id, initialSection: .history) }
             case "wish-detail":
                 if let wish = workspace.ledger.wishes.values.first(where: { $0.symbolName == "headphones" }) {
                     NavigationStack { WishDetailView(workspace: workspace, wishID: wish.id) }

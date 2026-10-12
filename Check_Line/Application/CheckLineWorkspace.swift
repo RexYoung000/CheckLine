@@ -11,6 +11,9 @@ final class CheckLineWorkspace {
     let storageLoadFailed: Bool
     var draftStorageFailed = false
     var draftLoadFailed = false
+    var retainedTaskAvailable = false
+    var isReviewingRetainedDraft = false
+    var attachmentImportBlocksSubmission = false
     var budgetDraftStorageFailed = false
     var budgetDraftLoadFailed = false
     var taskDraft = TaskDraft() {
@@ -148,7 +151,9 @@ final class CheckLineWorkspace {
         try commitPresentationChange(RetrospectiveAdjustmentEngine.confirm(ledger: ledger, preview: preview, quote: nil, now: now))
     }
 
-    func createWish(name: String, amountText: String, currencyCode: String? = nil, symbolName: String = "star", now: Date = Date()) throws {
+    @discardableResult
+    func createWish(name: String, amountText: String, currencyCode: String? = nil, symbolName: String = "star", now: Date = Date(), wishID: UUID = UUID()) throws -> UUID {
+        if ledger.wishes[wishID] != nil { return wishID }
         let name = name.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !name.isEmpty else { throw WorkspaceInputError.missingName }
         let currency = (currencyCode ?? ledger.walletSettings.walletCurrencyCode)
@@ -161,11 +166,12 @@ final class CheckLineWorkspace {
             amount = parsed
         }
         var changed = ledger
-        changed.upsert(Wish(id: UUID(), name: name, targetAmount: amount,
+        changed.upsert(Wish(id: wishID, name: name, targetAmount: amount,
                             currencyCode: currency,
                             referenceURL: nil, state: .active, createdAt: now,
                             completedAt: nil, symbolName: WishSymbols.allowed.contains(symbolName) ? symbolName : "star"))
         try commitPresentationChange(changed)
+        return wishID
     }
 
     func budgetAmountDraft(for card: HomeBudgetCardModel) -> String {
@@ -258,6 +264,10 @@ final class CheckLineWorkspace {
         return preview
     }
 
+    func estimateSettlement(_ periodID: UUID, quote: ExchangeQuote? = nil, now: Date = Date()) throws -> SettlementPreview {
+        try SettlementEngine.estimate(ledger: ledger, periodID: periodID, now: now, calendar: calendar, quote: quote)
+    }
+
     func settlePeriod(
         _ periodID: UUID,
         quote: ExchangeQuote?,
@@ -327,6 +337,7 @@ final class CheckLineWorkspace {
 
     var showsStructuredConfirm: Bool {
         lastTurn?.evaluation?.gate == .confirmStructured
+            || (isReviewingRetainedDraft && lastTurn?.evaluation?.gate == .executeDirectly)
     }
 
     var mascotState: CloudMascotState {
@@ -352,7 +363,7 @@ final class CheckLineWorkspace {
     }
 
     var canConfirmProposal: Bool {
-        guard !draftStorageFailed && !draftLoadFailed && taskDraft.committedEntityID == nil else { return false }
+        guard !draftStorageFailed && !draftLoadFailed && !attachmentImportBlocksSubmission && taskDraft.committedEntityID == nil else { return false }
         if captureProposal != nil {
             return MoneyFormat.parseAmount(confirmAmountText) != nil && !confirmCurrencyCode.isEmpty
                 && attributionChoices.contains { $0.id == selectedAttributionID }
@@ -362,9 +373,77 @@ final class CheckLineWorkspace {
 
     func cancelAgentProposal() {
         lastTurn = nil
+        isReviewingRetainedDraft = false
         confirmAmountText = ""
         pendingBudgetText = nil
         agentBanner = nil
+    }
+
+    func leaveTaskReview() {
+        lastTurn = nil
+        isReviewingRetainedDraft = false
+        retainedTaskAvailable = taskDraft.hasInput
+        agentBanner = nil
+        validateRestoredTask()
+    }
+
+    /// Evaluate retained fields without replaying old text or executing a low-risk turn.
+    func reviewRetainedTask(now: Date = Date()) {
+        guard !draftLoadFailed && !draftStorageFailed && !attachmentImportBlocksSubmission else { return }
+        reconcileCommittedTask()
+        guard taskDraft.committedEntityID == nil else { return }
+        if taskDraft.kind == "record", !attributionChoices.contains(where: { $0.id == taskDraft.attributionID }) {
+            banner = .needsPeriod; agentBanner = .needsPeriod
+            return
+        }
+        var candidate = AgentIntentCandidate(intentType: taskDraft.kind == "budget" ? "createBudget" : "capture",
+                                             amount: taskDraft.amount.isEmpty ? nil : taskDraft.amount,
+                                             currencyCode: taskDraft.currency)
+        if taskDraft.kind == "budget" {
+            candidate.name = taskDraft.name.isEmpty ? nil : taskDraft.name
+            if taskDraft.formTouched || LocalRegexFallback.extractBudgetCycle(from: taskDraft.agentRequestText ?? "") != nil {
+                candidate.cycleType = taskDraft.repeating ? "repeating" : "oneShot"
+            }
+        } else {
+            candidate.merchant = taskDraft.merchant.isEmpty ? nil : taskDraft.merchant
+            candidate.note = taskDraft.note.isEmpty ? nil : taskDraft.note
+            candidate.occurredAt = ISO8601DateFormatter().string(from: taskDraft.occurredAt)
+            if taskDraft.attributionID != "unbudgeted" { candidate.periodID = taskDraft.attributionID }
+        }
+        let result = IntentValidator.validate(candidate, ledger: ledger, now: now, sourceType: .agentText)
+        switch result {
+        case .needsClarification(let field, _):
+            taskDraft.pendingAgentField = field
+            lastTurn = AgentTurn(understand: result, evaluation: nil, isOfflineMode: session.isOfflineMode)
+            banner = field == "amount" ? .needsAmount : .needsClarification(field)
+            agentBanner = banner
+        case .intent(let intent):
+            let turn = session.turn(intent: intent, ledger: ledger, now: now)
+            lastTurn = turn
+            switch turn.evaluation?.gate {
+            case .confirmStructured, .executeDirectly:
+                isReviewingRetainedDraft = true
+                retainedTaskAvailable = false
+                taskDraft.pendingAgentField = nil
+                confirmAmountText = taskDraft.amount
+                confirmCurrencyCode = taskDraft.currency
+                selectedAttributionID = taskDraft.attributionID
+                banner = .readyToConfirm; agentBanner = banner
+            default:
+                isReviewingRetainedDraft = false
+                applyTurn(turn, now: now)
+                agentBanner = banner
+            }
+        }
+        panelExpanded = true
+    }
+
+    private func reconcileCommittedTask() {
+        if taskDraft.kind == "record", ledger.expenses[taskDraft.entityID] != nil {
+            taskDraft.committedEntityID = taskDraft.entityID
+        } else if taskDraft.kind == "budget", ledger.budgets[taskDraft.entityID] != nil {
+            taskDraft.committedEntityID = taskDraft.entityID
+        }
     }
 
     func discussBudget(_ id: UUID) {
@@ -377,11 +456,14 @@ final class CheckLineWorkspace {
 
     func submitText(now: Date = Date()) async {
         let text = draftText.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !text.isEmpty, !isWorking, taskDraft.committedEntityID == nil else { return }
+        guard !text.isEmpty, !isWorking, !attachmentImportBlocksSubmission, taskDraft.committedEntityID == nil else { return }
+        isReviewingRetainedDraft = false
+        retainedTaskAvailable = false
         conversation.append(AgentConversationEntry(isUser: true, text: text))
         if conversation.count > 24 { conversation.removeFirst(conversation.count - 24) }
         if ["取消", "算了", "cancel"].contains(text.lowercased()) {
-            discardTask()
+            draftText = ""
+            leaveTaskReview()
             agentBanner = .needsClarification("input")
             rememberAgentReply()
             return
@@ -537,7 +619,7 @@ final class CheckLineWorkspace {
     }
 
     func confirmStructured(now: Date = Date()) {
-        guard showsStructuredConfirm, let turn = lastTurn, case .intent(let intent) = turn.understand else { return }
+        guard canConfirmProposal, showsStructuredConfirm, let turn = lastTurn, case .intent(let intent) = turn.understand else { return }
         defer { agentBanner = banner; rememberAgentReply() }
         if case .capture(var draft) = intent {
             guard let amount = MoneyFormat.parseAmount(confirmAmountText) else {
@@ -547,6 +629,9 @@ final class CheckLineWorkspace {
             guard canConfirmProposal else { return }
             draft.amount = amount
             draft.currencyCode = confirmCurrencyCode
+            draft.occurredAt = taskDraft.occurredAt
+            draft.merchant = taskDraft.merchant.isEmpty ? nil : taskDraft.merchant
+            draft.note = taskDraft.note.isEmpty ? nil : taskDraft.note
             let confirmation: AgentConfirmation
             if let periodID = attributionChoices.first(where: { $0.id == selectedAttributionID })?.periodID {
                 confirmation = .attribution(.confirmed(periodID: periodID))
@@ -671,8 +756,11 @@ final class CheckLineWorkspace {
             taskDraft = fresh
         }
         lastTurn = nil
+        isReviewingRetainedDraft = false
+        retainedTaskAvailable = taskDraft.hasInput
         pendingBudgetText = taskDraft.kind == "budget" && taskDraft.pendingAgentField != nil ? taskDraft.agentRequestText : nil
         validateRestoredTask()
+        reconcileCommittedTask()
     }
 
     func resumeAgentTask() {
@@ -684,6 +772,9 @@ final class CheckLineWorkspace {
         if taskDraft.hasInput {
             composerIntent = ComposerIntent(rawValue: taskDraft.kind) ?? .record
             taskDraft.mode = "agent"
+            retainedTaskAvailable = lastTurn == nil
+            validateRestoredTask()
+            reconcileCommittedTask()
             return
         }
         var scope: TaskDraft?
@@ -695,7 +786,10 @@ final class CheckLineWorkspace {
                 composerIntent = ComposerIntent(rawValue: restored.kind) ?? .record
                 agentBudgetID = restored.contextBudgetID
                 lastTurn = nil
+                isReviewingRetainedDraft = false
+                retainedTaskAvailable = taskDraft.hasInput
                 validateRestoredTask()
+                reconcileCommittedTask()
             } else { beginTask(isEmpty ? .budget : .record, mode: "agent") }
         } catch {
             draftLoadFailed = true; draftStorageFailed = true
@@ -722,20 +816,34 @@ final class CheckLineWorkspace {
             var fresh = TaskDraft(kind: taskDraft.kind, contextBudgetID: taskDraft.contextBudgetID, contextPeriodID: taskDraft.contextPeriodID)
             fresh.currency = taskDraft.currency; fresh.mode = taskDraft.mode
             fresh.attributionID = fresh.contextPeriodID?.uuidString ?? "unbudgeted"
-            taskDraft = fresh; cancelAgentProposal()
+            taskDraft = fresh; retainedTaskAvailable = false; cancelAgentProposal()
         } catch { draftStorageFailed = true }
     }
 
     func retryTaskStorage() {
-        guard !draftLoadFailed else { return }
-        do { try draftStore.save(taskDraft); draftStorageFailed = false }
+        do {
+            if draftLoadFailed {
+                let restored = try draftStore.load(taskDraft.key)
+                draftLoadFailed = false
+                if let restored { taskDraft = restored }
+                retainedTaskAvailable = taskDraft.hasInput
+                validateRestoredTask()
+                reconcileCommittedTask()
+            }
+            try draftStore.save(taskDraft); draftStorageFailed = false
+        }
         catch { draftStorageFailed = true }
     }
 
-    func addTaskAttachment(_ data: Data) throws {
+    func addTaskAttachment(_ data: Data, id: UUID = UUID(), expectedTask: TaskIdentity? = nil) throws {
+        if let expectedTask, expectedTask != taskIdentity { throw WorkspaceInputError.draftUnavailable }
+        guard taskDraft.committedEntityID == nil else { throw WorkspaceInputError.draftUnavailable }
+        if taskDraft.attachments.contains(where: { $0.id == id }) { return }
         guard taskDraft.attachments.count < ExpenseAttachmentStore.maximumPerExpense else { throw ExpenseAttachmentError.limitReached }
-        taskDraft.attachments.append(TaskAttachment(data: try ExpenseAttachmentStore.sanitize(data)))
+        taskDraft.attachments.append(TaskAttachment(id: id, data: try ExpenseAttachmentStore.sanitize(data)))
     }
+
+    var taskIdentity: TaskIdentity { TaskIdentity(key: taskDraft.key, entityID: taskDraft.entityID) }
 
     func completeTaskAttachments(_ id: UUID) throws {
         if taskDraft.kind == "record", ledger.expenses[id] == nil { throw LedgerError.expenseNotFound }
@@ -745,7 +853,11 @@ final class CheckLineWorkspace {
         try draftStore.remove(taskDraft.key)
         var fresh = TaskDraft(kind: taskDraft.kind, contextBudgetID: taskDraft.contextBudgetID, contextPeriodID: taskDraft.contextPeriodID)
         fresh.mode = taskDraft.mode
+        fresh.currency = taskDraft.currency
+        fresh.attributionID = taskDraft.contextPeriodID?.uuidString ?? "unbudgeted"
         taskDraft = fresh
+        retainedTaskAvailable = false
+        isReviewingRetainedDraft = false
     }
 
     func undoLast(now: Date = Date()) {
@@ -831,7 +943,7 @@ final class CheckLineWorkspace {
         keepComposerOpen: Bool = false
     ) {
         do {
-            guard !draftLoadFailed && !draftStorageFailed else { banner = .failed; return }
+            guard !draftLoadFailed && !draftStorageFailed && !attachmentImportBlocksSubmission else { banner = .failed; return }
             var command = intent
             switch command {
             case .capture(var draft):
@@ -871,6 +983,8 @@ final class CheckLineWorkspace {
             if !keepComposerOpen { draftText = "" }
             pendingBudgetText = nil
             lastTurn = nil
+            isReviewingRetainedDraft = false
+            retainedTaskAvailable = false
             confirmAmountText = ""
             if !keepComposerOpen { showComposer = false }
         } catch LedgerError.captureDateOutsidePeriod {

@@ -34,19 +34,11 @@ struct SettingsPlaceholderView: View {
                     .padding(16)
                     .walletSurface()
                     VStack(spacing: 0) {
-                        settingsRow(title: String(localized: "wallet.settings.language"), symbol: "globe", summary: String(localized: "wallet.settings.followsSystem")) {
-                            settingsDetail(title: String(localized: "wallet.settings.language"), body: String(localized: "wallet.settings.languageBody"))
-                        }
-                        Divider().padding(.leading, 54)
+                        inlineSetting("wallet.settings.language", value: String(localized: "wallet.settings.followsSystem"), detail: "wallet.settings.languageBody")
                         if let workspace {
-                            settingsRow(title: String(localized: "wallet.settings.walletCurrency"), symbol: "banknote", summary: workspace.ledger.walletSettings.walletCurrencyCode) {
-                                settingsDetail(title: String(localized: "wallet.settings.walletCurrency"), body: String(localized: "wallet.settings.currencyBody"))
-                            }
-                            Divider().padding(.leading, 54)
+                            inlineSetting("wallet.settings.walletCurrency", value: workspace.ledger.walletSettings.walletCurrencyCode, detail: "ui.settings.currencySummary")
                         }
-                        settingsRow(title: String(localized: "wallet.settings.motionTitle"), symbol: "water.waves", summary: reduceMotion ? String(localized: "wallet.settings.motionOff") : String(localized: "wallet.settings.followsSystem")) {
-                            settingsDetail(title: String(localized: "wallet.settings.motionTitle"), body: String(localized: "wallet.settings.motionBody"))
-                        }
+                        inlineSetting("wallet.settings.motionTitle", value: String(localized: reduceMotion ? "wallet.settings.motionOff" : "wallet.settings.followsSystem"), detail: "wallet.settings.motionBody")
                     }.walletSurface()
                     VStack(spacing: 0) {
                         settingsRow(title: String(localized: "wallet.settings.sourcesTitle"), symbol: "tray.and.arrow.down", summary: String(localized: "wallet.settings.manual")) {
@@ -54,11 +46,11 @@ struct SettingsPlaceholderView: View {
                         }
                         Divider().padding(.leading, 54)
                         settingsRow(title: String(localized: "wallet.settings.privacyTitle"), symbol: "lock.shield") {
-                            settingsDetail(title: String(localized: "wallet.settings.privacyTitle"), body: String(localized: "v1.settings.privacy"))
+                            SettingsInformationView(isPrivacy: true)
                         }
                         Divider().padding(.leading, 54)
                         settingsRow(title: String(localized: "settings.about"), symbol: "info.circle", summary: Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1") {
-                            settingsDetail(title: String(localized: "settings.about"), body: String(localized: "wallet.settings.aboutBody"))
+                            SettingsInformationView(isPrivacy: false)
                         }
                     }
                     .walletSurface()
@@ -98,23 +90,52 @@ struct SettingsPlaceholderView: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
                 }
                 CheckLineIcon(symbol: "chevron.right", size: 20).font(.caption.weight(.semibold)).foregroundStyle(PaperTheme.muted)
-            }.padding(.vertical, 12)
+            }.padding(.vertical, 12).contentShape(Rectangle())
         }.buttonStyle(.plain).padding(.horizontal, 16).frame(minHeight: 56)
     }
 
-    private func settingsDetail(title: String, body: String) -> some View {
+    private func inlineSetting(_ key: String.LocalizationValue, value: String, detail: String.LocalizationValue) -> some View {
+        DisclosureGroup {
+            Text(String(localized: detail)).font(.caption).foregroundStyle(PaperTheme.muted)
+                .fixedSize(horizontal: false, vertical: true).padding(.top, 8)
+        } label: {
+            ViewThatFits(in: .horizontal) {
+                HStack {
+                    Text(String(localized: key)); Spacer(minLength: 12)
+                    Text(value).foregroundStyle(PaperTheme.muted)
+                }
+                VStack(alignment: .leading, spacing: 6) {
+                    Text(String(localized: key)); Text(value).font(.subheadline).foregroundStyle(PaperTheme.muted)
+                }
+            }
+        }.font(.body).tint(PaperTheme.accent).padding(16)
+    }
+}
+
+struct SettingsInformationView: View {
+    let isPrivacy: Bool
+    private var facts: [(String.LocalizationValue, String.LocalizationValue)] {
+        isPrivacy ? [("ui.privacy.ledger", "ui.privacy.ledgerBody"), ("wallet.expense.attachments", "ui.privacy.attachmentsBody"), ("ui.source.voice", "ui.privacy.voiceBody")]
+                  : [("ui.about.purpose", "ui.about.purposeBody"), ("ui.about.local", "ui.about.localBody")]
+    }
+    var body: some View {
         ScrollView {
-            Text(body)
-                .font(.body)
-                .foregroundStyle(PaperTheme.ink)
-                .fixedSize(horizontal: false, vertical: true)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(20)
-                .walletSurface()
-                .padding(20)
-        }
-        .background(PaperTheme.canvas.ignoresSafeArea())
-        .navigationTitle(title)
-        .navigationBarTitleDisplayMode(.inline)
+            VStack(alignment: .leading, spacing: 24) {
+                if !isPrivacy {
+                    Text("CheckLine").font(.largeTitle.weight(.medium))
+                    Text((Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1") + " (" + (Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "1") + ")")
+                        .font(.subheadline).foregroundStyle(PaperTheme.muted)
+                }
+                ForEach(Array(facts.enumerated()), id: \.offset) { _, fact in
+                    VStack(alignment: .leading, spacing: 10) {
+                        Text(String(localized: fact.0)).font(.headline)
+                        Text(String(localized: fact.1)).font(.subheadline).foregroundStyle(PaperTheme.muted)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }.padding(18).frame(maxWidth: .infinity, alignment: .leading).walletSurface()
+                }
+            }.padding(22).frame(maxWidth: 650).frame(maxWidth: .infinity)
+        }.background(PaperTheme.canvas.ignoresSafeArea())
+            .navigationTitle(String(localized: isPrivacy ? "wallet.settings.privacyTitle" : "settings.about"))
+            .navigationBarTitleDisplayMode(.inline).toolbarBackground(.hidden, for: .navigationBar)
     }
 }

@@ -44,7 +44,7 @@ final class PhoneFeedbackEnvironmentUITests: XCTestCase {
         XCTAssertEqual(amount.value as? String, "49.50", "Scrolling and changing currency must retain the entered amount.")
 
         let save = app.buttons["wallet.wishes.create.save"]
-        reveal(save, in: form, app: app)
+        XCTAssertTrue(save.isHittable, "The fixed action must remain reachable at large text sizes.")
         attach(app, "phone-feedback-large-english-dark-wish-ready-to-save")
         save.tap()
         XCTAssertTrue(save.waitForNonExistence(timeout: 5))

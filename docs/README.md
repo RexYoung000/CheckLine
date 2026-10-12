@@ -34,6 +34,7 @@
 | 文件或目录 | 作用 |
 |------------|------|
 | `design/DESIGN.md` | 设计原则、已确认交互契约（3.1，含四 Tab）、本轮 App 手感 Token（3.1.5）和目标视口清单（3.1.6）；2026-08-01 旧样机只作历史参考 |
+| `design/evidence/2026-10-12-existing-experience/README.md` | 现有体验修复：结算预估与待确认返回、草稿／附件可靠性、历史／心愿／余额详情、原生操作及待安装版本 |
 | `design/evidence/2026-10-04-phone-feedback/README.md` | 手机试用反馈：连续对话、语音代码、预算表单、心愿币种与分析空态的实现和验证边界 |
 | `design/2026-10-03-secondary-ui-validation.md` | 次级空态、日期分组、额度与购买／追溯核对减负，以及具名原生验证与截图 |
 | `design/2026-10-02-ui-cleanup-validation.md` | 原生区块布局、Agent 信息减负、语音入口边界及本轮截图／触控验证 |

@@ -65,11 +65,12 @@ final class AmountReviewRefinementUITests: XCTestCase {
     func testWishPurchaseKeepsCurrencyQuoteAndExplicitConfirmation() {
         let app = launch("redemption")
         let amount = app.textFields["wallet.wishes.actual"]
-        let currency = app.textFields["wallet.wishes.purchaseCurrency"]
+        let currency = app.buttons["wallet.wishes.purchaseCurrency"]
         XCTAssertTrue(amount.waitForExistence(timeout: 8))
         XCTAssertEqual(currency.value as? String, "CNY")
         replace(amount, with: "10")
-        replace(currency, with: "USD")
+        currency.tap()
+        app.buttons.matching(NSPredicate(format: "label BEGINSWITH %@", "USD")).firstMatch.tap()
         XCTAssertEqual(currency.value as? String, "USD")
 
         let confirm = app.buttons["wallet.wishes.confirm"]
@@ -93,7 +94,7 @@ final class AmountReviewRefinementUITests: XCTestCase {
         purchased.tap()
         reveal(confirm, in: app)
         XCTAssertTrue(confirm.isEnabled)
-        XCTAssertTrue(app.staticTexts["仅扣减心愿钱包，不再扣普通预算卡。"].exists)
+        XCTAssertTrue(app.descendants(matching: .any)["wallet.exchange.walletChange"].exists)
         attach(app, "wish-usd-purchase-cny-impact")
         confirm.tap()
 

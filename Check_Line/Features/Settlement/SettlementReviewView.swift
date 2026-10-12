@@ -7,6 +7,7 @@ struct WalletExchangeQuoteFields: View {
     @Binding var rateText: String
     @Binding var quotedAt: Date
     var showsProvenance = true
+    @FocusState private var rateFocused: Bool
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -14,10 +15,12 @@ struct WalletExchangeQuoteFields: View {
             Text(String(format: String(localized: "wallet.exchange.rateHint"), sourceCurrencyCode, walletCurrencyCode))
                 .font(.subheadline).foregroundStyle(PaperTheme.muted)
             TextField(String(localized: "wallet.exchange.rate"), text: $rateText)
+                .focused($rateFocused)
                 .keyboardType(AmountKeyboard.type)
                 .textContentType(.none)
                 .padding(16).walletSurface(radius: 18)
                 .accessibilityIdentifier("wallet.exchange.rate")
+                .simultaneousGesture(TapGesture().onEnded { rateFocused = true })
                 .onChange(of: rateText) { _, _ in quotedAt = Date() }
             if showsProvenance {
                 Text(String(localized: "wallet.exchange.userEstimate"))
@@ -60,8 +63,18 @@ struct SettlementReviewView: View {
         guard needsQuote, let rate = MoneyFormat.parseAmount(exchangeRate), rate > 0 else { return nil }
         return .estimated(rate: rate, at: quoteDate, sourceName: "user_provided_estimate")
     }
-    private var preview: SettlementPreview? {
-        try? workspace.previewSettlement(periodID, quote: quote)
+    private var previewResult: Result<SettlementPreview, Error> {
+        Result { try workspace.estimateSettlement(periodID, quote: quote) }
+    }
+    private var preview: SettlementPreview? { try? previewResult.get() }
+    private var previewFailure: String {
+        guard case .failure(let error) = previewResult else { return "" }
+        switch error {
+        case LedgerError.missingExchangeRate: return String(localized: "wallet.exchange.required")
+        case LedgerError.invalidExchangeRate: return String(localized: "wallet.exchange.required")
+        case LedgerError.periodNotReadyToSettle, LedgerError.periodNotFound: return String(localized: "ui.settlement.periodUnavailable")
+        default: return String(localized: "wallet.settlement.previewUnavailable")
+        }
     }
     private var isDue: Bool {
         guard let period, let budget else { return false }
@@ -97,7 +110,7 @@ struct SettlementReviewView: View {
                             if let preview {
                                 walletImpact(preview)
                             } else if !needsQuote || quote != nil {
-                                CheckLineIconLabel(String(localized: "wallet.settlement.previewUnavailable"), symbol: "exclamationmark.circle")
+                                CheckLineIconLabel(previewFailure, symbol: "exclamationmark.circle")
                                     .foregroundStyle(PaperTheme.accent)
                             }
                             if !isDue {
@@ -120,7 +133,7 @@ struct SettlementReviewView: View {
             .scrollDismissesKeyboard(.interactively)
             .background(PaperTheme.canvas.ignoresSafeArea())
             .foregroundStyle(PaperTheme.ink)
-            .navigationTitle(completed ? String(localized: "wallet.settlement.complete") : String(localized: "wallet.settlement.review"))
+            .navigationTitle(completed ? String(localized: "wallet.settlement.complete") : String(localized: isDue ? "wallet.settlement.review" : "ui.settlement.estimate"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbarBackground(.hidden, for: .navigationBar)
             .toolbar {
@@ -148,7 +161,10 @@ struct SettlementReviewView: View {
         .onChange(of: exchangeRate) { _, _ in accepted = false }
         .sheet(isPresented: $showPending) {
             NavigationStack {
-                BudgetDetailContent(workspace: workspace, budgetID: budget?.id ?? UUID(), section: .pending)
+                BudgetDetailContent(workspace: workspace, budgetID: budget?.id ?? UUID(), section: .pending, periodID: periodID)
+                    .navigationDestination(for: BudgetWorkspaceRoute.self) { route in
+                        BudgetWorkspaceDestination(workspace: workspace, route: route)
+                    }
                     .toolbar {
                         ToolbarItem(placement: .topBarTrailing) {
                             Button(String(localized: "action.close")) { showPending = false }
@@ -160,6 +176,9 @@ struct SettlementReviewView: View {
         .sheet(isPresented: $showUnbudgeted) {
             NavigationStack {
                 UnbudgetedRecordsView(workspace: workspace)
+                    .navigationDestination(for: BudgetWorkspaceRoute.self) { route in
+                        BudgetWorkspaceDestination(workspace: workspace, route: route)
+                    }
                     .toolbar {
                         ToolbarItem(placement: .topBarTrailing) {
                             Button(String(localized: "action.close")) { showUnbudgeted = false }
@@ -219,11 +238,11 @@ struct SettlementReviewView: View {
                             showsArrow: !pending.isEmpty
                         )
                     }
-                    .buttonStyle(.plain).disabled(pending.isEmpty)
+                    .buttonStyle(.plain).disabled(pending.isEmpty).accessibilityIdentifier("wallet.settlement.pending")
                     Button { showUnbudgeted = true } label: {
                         dataReviewRow(String(localized: "wallet.settlement.unbudgeted"), value: String(unbudgeted.count), showsArrow: !unbudgeted.isEmpty)
                     }
-                    .buttonStyle(.plain).disabled(unbudgeted.isEmpty)
+                    .buttonStyle(.plain).disabled(unbudgeted.isEmpty).accessibilityIdentifier("wallet.settlement.unbudgeted")
                 }
             }
             if !workspace.ledger.dataSources.isEmpty {
@@ -318,7 +337,7 @@ struct SettlementReviewView: View {
                 .accessibilityIdentifier("wallet.settlement.viewWishes")
                 Button(String(localized: "action.close")) { dismiss() }
                     .frame(minHeight: 44)
-            } else {
+            } else if isDue {
                 Button { accepted.toggle() } label: {
                     HStack(alignment: .top, spacing: 12) {
                         CheckLineIcon(symbol: accepted ? "checkmark.circle.fill" : "circle", size: 24)
@@ -337,6 +356,10 @@ struct SettlementReviewView: View {
                     .buttonStyle(PaperSolidButtonStyle(enabled: accepted && preview != nil && isDue))
                     .disabled(!accepted || preview == nil || !isDue)
                     .accessibilityIdentifier("wallet.settlement.confirm")
+            } else {
+                Text(String(localized: "ui.settlement.currentEstimate"))
+                    .font(.caption).foregroundStyle(PaperTheme.muted)
+                    .accessibilityIdentifier("wallet.settlement.estimateOnly")
             }
         }
         .frame(maxWidth: 600)

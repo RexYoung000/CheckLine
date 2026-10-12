@@ -1,6 +1,8 @@
 import SwiftUI
 
 struct SourceReviewView: View {
+    @Environment(\.scenePhase) private var scenePhase
+    @State private var voiceStatus = VoiceCaptureController.availabilityKey
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 18) {
@@ -15,10 +17,8 @@ struct SourceReviewView: View {
                         }
                     }
                 }
-                PaperCard {
+                DisclosureGroup(String(localized: "ui.source.unavailable")) {
                     VStack(alignment: .leading, spacing: 16) {
-                        Text(String(localized: "ui.source.unavailable"))
-                            .font(.subheadline.weight(.semibold)).foregroundStyle(PaperTheme.muted)
                         ForEach(["applePay", "sms", "email", "statement"], id: \.self) { source in
                             Text(String(localized: String.LocalizationValue("ui.source." + source)))
                                 .font(.body).foregroundStyle(PaperTheme.ink)
@@ -26,21 +26,17 @@ struct SourceReviewView: View {
                                 .accessibilityValue(String(localized: "ui.source.notConnected"))
                         }
                     }
-                }
+                }.font(.subheadline).tint(PaperTheme.accent)
                 HStack(alignment: .top, spacing: 12) {
                     CheckLineIcon(symbol: "mic", size: 20).foregroundStyle(PaperTheme.accent)
                         .accessibilityHidden(true)
                     VStack(alignment: .leading, spacing: 6) {
                         Text(String(localized: "ui.source.voice")).font(.subheadline.weight(.medium))
                         Text(String(localized: "ui.source.voiceDetail")).font(.caption).foregroundStyle(PaperTheme.muted)
+                        Text(LocalizedStringKey(voiceStatus)).font(.caption).foregroundStyle(PaperTheme.muted)
+                            .accessibilityIdentifier("wallet.sources.voiceStatus")
                     }
                 }.frame(maxWidth: .infinity, alignment: .leading)
-                DisclosureGroup(String(localized: "ui.sources.details")) {
-                    Text(String(localized: "ui.sources.boundary"))
-                        .font(.subheadline).foregroundStyle(PaperTheme.muted)
-                        .fixedSize(horizontal: false, vertical: true)
-                        .padding(.top, 8)
-                }
                 #if DEBUG
                 if DesignPreviewData.isEnabled {
                     NavigationLink { ImportReviewPrototype() } label: {
@@ -52,6 +48,8 @@ struct SourceReviewView: View {
                 #endif
             }.padding(22).frame(maxWidth: 760).frame(maxWidth: .infinity)
         }.background(PaperTheme.canvas).navigationTitle(String(localized: "ui.sources.title")).navigationBarTitleDisplayMode(.inline)
+            .onAppear { voiceStatus = VoiceCaptureController.availabilityKey }
+            .onChange(of: scenePhase) { _, phase in if phase == .active { voiceStatus = VoiceCaptureController.availabilityKey } }
     }
 }
 

@@ -35,11 +35,18 @@ struct WishWalletSummaryView: View {
                             Text(String(localized: "wallet.wishes.historyEmpty"))
                                 .font(.subheadline).foregroundStyle(PaperTheme.muted)
                         } else {
-                            VStack(spacing: 4) {
-                                ForEach(entries) { entry in
-                                    entryRow(entry)
+                            VStack(alignment: .leading, spacing: 14) {
+                                let days = Array(Set(entries.map { Calendar.current.startOfDay(for: $0.occurredAt) })).sorted(by: >)
+                                ForEach(days, id: \.self) { day in
+                                    Text(day, format: .dateTime.year().month().day()).font(.caption.weight(.medium)).foregroundStyle(PaperTheme.muted)
+                                    VStack(spacing: 4) {
+                                        ForEach(entries.filter { Calendar.current.isDate($0.occurredAt, inSameDayAs: day) }) { entry in
+                                            NavigationLink { WalletEntryDetailView(workspace: workspace, entryID: entry.id) }
+                                            label: { entryRow(entry) }.buttonStyle(.plain)
+                                        }
+                                    }.padding(4).walletSurface()
                                 }
-                            }.padding(4).walletSurface()
+                            }
                         }
                     }
                     DisclosureGroup(String(localized: "ui.wish.balanceAbout"), isExpanded: $rulesExpanded) {
@@ -111,15 +118,17 @@ struct WishWalletSummaryView: View {
         return layout {
             VStack(alignment: .leading, spacing: 5) {
                 Text(entryTitle(entry)).font(.subheadline.weight(.medium))
-                Text(entry.occurredAt, format: .dateTime.year().month().day().hour().minute())
+                Text(entry.occurredAt, format: .dateTime.hour().minute())
                     .font(.caption).foregroundStyle(PaperTheme.muted)
             }
             if !typeSize.isAccessibilitySize { Spacer(minLength: 8) }
             Text(MoneyFormat.string(entry.walletSignedAmount, currencyCode: currencyCode))
                 .font(.subheadline.weight(.semibold)).monospacedDigit()
                 .fixedSize(horizontal: false, vertical: true)
+            if !typeSize.isAccessibilitySize { CheckLineIcon(symbol: "chevron.right", size: 14).foregroundStyle(PaperTheme.muted) }
         }
         .padding(14).frame(maxWidth: .infinity, alignment: .leading)
+        .contentShape(Rectangle())
         .accessibilityElement(children: .combine)
     }
 

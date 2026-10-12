@@ -62,11 +62,11 @@ enum DesignPreviewData {
             try LedgerStore.replaceAll(ledger, in: context)
             return
         }
-        if screen == "retrospective-record" {
+        if ["retrospective-record", "history-review"].contains(screen) {
             let previousStart = calendar.date(byAdding: .month, value: -1, to: start) ?? start
             let previousEnd = calendar.date(byAdding: .day, value: -1, to: start) ?? start
             let card = try ledger.insertBudgetCard(name: String(localized: "wallet.demo.daily"), amount: 1_000,
-                                                   currencyCode: "CNY", cycleType: .oneShot, recurrence: nil,
+                                                   currencyCode: "CNY", cycleType: screen == "history-review" ? .repeating : .oneShot, recurrence: screen == "history-review" ? .monthly : nil,
                                                    startDate: previousStart, endDate: previousEnd, now: previousStart)
             try record(ledger: &ledger, amount: 250, currencyCode: "CNY", occurredAt: previousStart, now: previousStart,
                        decision: .confirmed(periodID: card.1.id), merchant: String(localized: "wallet.demo.train"))

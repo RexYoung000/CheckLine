@@ -387,7 +387,7 @@ private struct HomeSummaryOverlay: View {
                     }
                 }
                 .frame(maxWidth: 560)
-                .frame(height: min(geometry.size.height - 64, 620))
+                .frame(height: max(0, min(geometry.size.height - 64, 620)))
                 .walletSurface()
                 .matchedGeometryEffect(id: section.rawValue, in: namespace, isSource: true)
                 .padding(18)

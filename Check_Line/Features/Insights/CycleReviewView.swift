@@ -31,13 +31,15 @@ struct CycleReviewView: View {
                                 VStack(alignment: .leading, spacing: 16) {
                                     HStack(alignment: .top, spacing: 16) {
                                         VStack(alignment: .leading, spacing: 8) {
-                                            Text(String(localized: "wallet.used.title")).font(.subheadline).foregroundStyle(PaperTheme.muted)
+                                            Text(String(localized: "ui.analysis.periodUsed")).font(.subheadline).foregroundStyle(PaperTheme.muted)
                                             Text(MoneyFormat.string(BudgetPresentation.used(card), currencyCode: card.currencyCode))
                                                 .font(.largeTitle.weight(.medium)).monospacedDigit().lineLimit(1).minimumScaleFactor(0.5)
                                         }
                                         Spacer(minLength: 0)
                                         CheckLineIcon(symbol: "arrow.up.right", size: 20).foregroundStyle(PaperTheme.muted)
                                     }
+                                    Text(String(localized: "ui.analysis.recentTrend")).font(.caption).foregroundStyle(PaperTheme.muted)
+                                        .accessibilityIdentifier("wallet.analysis.trendRange")
                                     BudgetDailyChart(card: card, ledger: workspace.ledger, height: 104)
                                     if BudgetPresentation.pendingCount(card, in: workspace.ledger) > 0 {
                                         CheckLineIconLabel(String(format: String(localized: "wallet.pending.count"), BudgetPresentation.pendingCount(card, in: workspace.ledger)) + " · " + MoneyFormat.string(card.snapshot.pendingAmount, currencyCode: card.currencyCode), symbol: "clock", size: 16)

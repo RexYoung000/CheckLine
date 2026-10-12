@@ -5,6 +5,9 @@ nonisolated struct TaskDraft: Codable, Equatable, Sendable {
     var kind: String = "record"
     var contextBudgetID: UUID?
     var contextPeriodID: UUID?
+    var contextWishID: UUID? = nil
+    var exchangeRateText: String? = nil
+    var exchangeQuotedAt: Date? = nil
     var entityID = UUID()
     var newPeriodID = UUID()
     var committedEntityID: UUID?
@@ -26,7 +29,10 @@ nonisolated struct TaskDraft: Codable, Equatable, Sendable {
     var fieldsTouched = false
     var attachments: [TaskAttachment] = []
 
-    var key: String { [kind, contextBudgetID?.uuidString ?? "global", contextPeriodID?.uuidString ?? "global"].joined(separator: "_") }
+    var key: String {
+        if kind == "wishRedemption" { return kind + "_" + (contextWishID?.uuidString ?? "global") }
+        return [kind, contextBudgetID?.uuidString ?? "global", contextPeriodID?.uuidString ?? "global"].joined(separator: "_")
+    }
     var hasInput: Bool { fieldsTouched || !text.isEmpty || agentRequestText?.isEmpty == false || !name.isEmpty || !amount.isEmpty || !merchant.isEmpty || !note.isEmpty || !attachments.isEmpty || committedEntityID != nil }
 
     /// Only explicit parser fields replace user input; defaults never replace a chosen date.

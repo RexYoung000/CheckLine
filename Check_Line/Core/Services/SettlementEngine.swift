@@ -31,6 +31,22 @@ nonisolated enum SettlementEngine {
             throw LedgerError.periodNotReadyToSettle
         }
 
+        return try estimate(ledger: ledger, periodID: periodID, now: now, calendar: calendar, quote: quote)
+    }
+
+    /// Current-record estimate only. Commit continues to require the strict preview gate.
+    static func estimate(
+        ledger: Ledger,
+        periodID: UUID,
+        now: Date,
+        calendar: Calendar,
+        quote: ExchangeQuote?
+    ) throws -> SettlementPreview {
+        let period = try ledger.requirePeriod(periodID)
+        guard period.state == .active || period.state == .pendingSettlement else {
+            throw LedgerError.periodNotReadyToSettle
+        }
+
         let snapshot = BudgetEngine.periodSnapshot(period: period, expenses: Array(ledger.expenses.values))
         let pendingItems = ledger.expenses(inPeriod: periodID).filter { $0.attributionState == .pending }
         let unbudgeted = ledger.expenses.values.filter {

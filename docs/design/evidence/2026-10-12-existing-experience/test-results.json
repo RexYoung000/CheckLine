@@ -1,0 +1,489 @@
+{
+  "unique_ui_tests": 19,
+  "latest_ui_test_environment_pairs": 21,
+  "all_latest_ui_pairs_passed": true,
+  "runs": [
+    {
+      "path": "/tmp/checkline-repair-oct12-domain-final.xcresult",
+      "result": "Passed",
+      "passed": 181,
+      "failed": 0,
+      "skipped": 0,
+      "devices": [
+        {
+          "name": "CheckLine Card Loop QA",
+          "os": "26.5"
+        }
+      ],
+      "runtimeWarnings": []
+    },
+    {
+      "path": "/tmp/checkline-repair-oct12-task-delivery.xcresult",
+      "result": "Passed",
+      "passed": 23,
+      "failed": 0,
+      "skipped": 0,
+      "devices": [
+        {
+          "name": "CheckLine Card Loop QA",
+          "os": "26.5"
+        }
+      ],
+      "runtimeWarnings": []
+    },
+    {
+      "path": "/tmp/checkline-repair-oct12-ui.xcresult",
+      "result": "Failed",
+      "passed": 4,
+      "failed": 6,
+      "skipped": 0,
+      "devices": [
+        {
+          "name": "CheckLine Draft Restore QA",
+          "os": "27.0"
+        }
+      ],
+      "runtimeWarnings": [
+        {
+          "issueType": "Runtime Warning",
+          "message": "Invalid frame dimension (negative or non-finite)."
+        },
+        {
+          "issueType": "Runtime Warning",
+          "message": "Invalid frame dimension (negative or non-finite)."
+        },
+        {
+          "issueType": "Runtime Warning",
+          "message": "Invalid frame dimension (negative or non-finite)."
+        }
+      ],
+      "tests": [
+        {
+          "name": "AgentConversationUITests/testCancellingFirstVoiceExplanationPreservesUnsentInput",
+          "result": "passed"
+        },
+        {
+          "name": "AgentConversationUITests/testMissingAmountKeepsConversationAndInputThroughSaveAndUndo",
+          "result": "passed"
+        },
+        {
+          "name": "AmountReviewRefinementUITests/testCompletedWishUsesStaticSectionAndKeepsDetailAndCreation",
+          "result": "failed"
+        },
+        {
+          "name": "AmountReviewRefinementUITests/testSettlementQuoteProvenanceRemainsVisibleWithoutDuplication",
+          "result": "passed"
+        },
+        {
+          "name": "AmountReviewRefinementUITests/testWishPurchaseKeepsCurrencyQuoteAndExplicitConfirmation",
+          "result": "failed"
+        },
+        {
+          "name": "CurrentExperienceRepairUITests/testEstimateOpensPendingDetailAndRefreshesThroughBackNavigation",
+          "result": "failed"
+        },
+        {
+          "name": "CurrentExperienceRepairUITests/testInlineReviewKeepsInputAndCanEditAllFieldsInSameTask",
+          "result": "failed"
+        },
+        {
+          "name": "CurrentExperienceRepairUITests/testWalletChangeHasReadOnlyDetailAndAnalysisNamesItsRange",
+          "result": "failed"
+        },
+        {
+          "name": "CurrentExperienceRepairUITests/testWishCreationAndRedemptionRestoreInputWithoutRestoringPurchaseConsent",
+          "result": "failed"
+        },
+        {
+          "name": "TaskWorkspaceUITests/testWorkspaceRecordsPendingDetailAndBackRestore",
+          "result": "passed"
+        }
+      ]
+    },
+    {
+      "path": "/tmp/checkline-repair-oct12-ui-retest.xcresult",
+      "result": "Failed",
+      "passed": 4,
+      "failed": 2,
+      "skipped": 0,
+      "devices": [
+        {
+          "name": "CheckLine Draft Restore QA",
+          "os": "27.0"
+        }
+      ],
+      "runtimeWarnings": [
+        {
+          "issueType": "Runtime Warning",
+          "message": "Invalid frame dimension (negative or non-finite)."
+        },
+        {
+          "issueType": "Runtime Warning",
+          "message": "Invalid frame dimension (negative or non-finite)."
+        },
+        {
+          "issueType": "Runtime Warning",
+          "message": "Invalid frame dimension (negative or non-finite)."
+        },
+        {
+          "issueType": "Runtime Warning",
+          "message": "Invalid frame dimension (negative or non-finite)."
+        }
+      ],
+      "tests": [
+        {
+          "name": "AmountReviewRefinementUITests/testCompletedWishUsesStaticSectionAndKeepsDetailAndCreation",
+          "result": "passed"
+        },
+        {
+          "name": "AmountReviewRefinementUITests/testWishPurchaseKeepsCurrencyQuoteAndExplicitConfirmation",
+          "result": "passed"
+        },
+        {
+          "name": "CurrentExperienceRepairUITests/testEstimateOpensPendingDetailAndRefreshesThroughBackNavigation",
+          "result": "passed"
+        },
+        {
+          "name": "CurrentExperienceRepairUITests/testInlineReviewKeepsInputAndCanEditAllFieldsInSameTask",
+          "result": "failed"
+        },
+        {
+          "name": "CurrentExperienceRepairUITests/testWalletChangeHasReadOnlyDetailAndAnalysisNamesItsRange",
+          "result": "failed"
+        },
+        {
+          "name": "CurrentExperienceRepairUITests/testWishCreationAndRedemptionRestoreInputWithoutRestoringPurchaseConsent",
+          "result": "passed"
+        }
+      ]
+    },
+    {
+      "path": "/tmp/checkline-repair-oct12-ui-final.xcresult",
+      "result": "Failed",
+      "passed": 6,
+      "failed": 1,
+      "skipped": 0,
+      "devices": [
+        {
+          "name": "CheckLine Draft Restore QA",
+          "os": "27.0"
+        }
+      ],
+      "runtimeWarnings": [
+        {
+          "issueType": "Runtime Warning",
+          "message": "Invalid frame dimension (negative or non-finite)."
+        },
+        {
+          "issueType": "Runtime Warning",
+          "message": "Invalid frame dimension (negative or non-finite)."
+        },
+        {
+          "issueType": "Runtime Warning",
+          "message": "Invalid frame dimension (negative or non-finite)."
+        }
+      ],
+      "tests": [
+        {
+          "name": "CurrentExperienceRepairUITests/testHistoryShowsSelectedPeriodResultAndReturnsToDirectory",
+          "result": "failed"
+        },
+        {
+          "name": "CurrentExperienceRepairUITests/testInlineReviewKeepsInputAndCanEditAllFieldsInSameTask",
+          "result": "passed"
+        },
+        {
+          "name": "CurrentExperienceRepairUITests/testVoiceUnavailableOrDeniedKeepsTypedInputAndManualFallback",
+          "result": "passed"
+        },
+        {
+          "name": "CurrentExperienceRepairUITests/testWalletChangeHasReadOnlyDetailAndAnalysisNamesItsRange",
+          "result": "passed"
+        },
+        {
+          "name": "GroupedRecordsAccessibilityUITests/testVoiceOverReadsFullDateAndPendingStateBeforeOpeningRecord",
+          "result": "passed"
+        },
+        {
+          "name": "TaskEnvironmentUITests/testSystemReduceMotionIsReflectedInAppAndTaskStillWorks",
+          "result": "passed"
+        },
+        {
+          "name": "TaskEnvironmentUITests/testVoiceOverCanReadAndSaveManualRecord",
+          "result": "passed"
+        }
+      ]
+    },
+    {
+      "path": "/tmp/checkline-repair-oct12-history-final.xcresult",
+      "result": "Passed",
+      "passed": 2,
+      "failed": 0,
+      "skipped": 0,
+      "devices": [
+        {
+          "name": "CheckLine Draft Restore QA",
+          "os": "27.0"
+        }
+      ],
+      "runtimeWarnings": [
+        {
+          "issueType": "Runtime Warning",
+          "message": "Invalid frame dimension (negative or non-finite)."
+        }
+      ],
+      "tests": [
+        {
+          "name": "CurrentExperienceRepairUITests/testHistoryShowsSelectedPeriodResultAndReturnsToDirectory",
+          "result": "passed"
+        },
+        {
+          "name": "CurrentExperienceRepairUITests/testInlineReviewKeepsInputAndCanEditAllFieldsInSameTask",
+          "result": "passed"
+        }
+      ]
+    },
+    {
+      "path": "/tmp/checkline-repair-oct12-small.xcresult",
+      "result": "Passed",
+      "passed": 2,
+      "failed": 0,
+      "skipped": 0,
+      "devices": [
+        {
+          "name": "CheckLine UI Small",
+          "os": "26.5"
+        }
+      ],
+      "runtimeWarnings": [
+        {
+          "issueType": "Runtime Warning",
+          "message": "Invalid frame dimension (negative or non-finite)."
+        },
+        {
+          "issueType": "Runtime Warning",
+          "message": "Invalid frame dimension (negative or non-finite)."
+        }
+      ],
+      "tests": [
+        {
+          "name": "PhoneFeedbackEnvironmentUITests/testLargeEnglishDarkWishReachesCurrencyAndSavesUSDWithoutChangingWallet",
+          "result": "passed"
+        },
+        {
+          "name": "TaskEnvironmentUITests/testEnglishTaskKeepsItsFieldsAndSaveReachableWithKeyboard",
+          "result": "passed"
+        }
+      ]
+    },
+    {
+      "path": "/tmp/checkline-repair-oct12-ipad.xcresult",
+      "result": "Passed",
+      "passed": 2,
+      "failed": 0,
+      "skipped": 0,
+      "devices": [
+        {
+          "name": "iPad mini (A17 Pro)",
+          "os": "26.5"
+        }
+      ],
+      "runtimeWarnings": [
+        {
+          "issueType": "Runtime Warning",
+          "message": "Invalid frame dimension (negative or non-finite)."
+        },
+        {
+          "issueType": "Runtime Warning",
+          "message": "Invalid frame dimension (negative or non-finite)."
+        }
+      ],
+      "tests": [
+        {
+          "name": "CurrentExperienceRepairUITests/testWishCreationAndRedemptionRestoreInputWithoutRestoringPurchaseConsent",
+          "result": "passed"
+        },
+        {
+          "name": "TaskEnvironmentUITests/testEnglishTaskKeepsItsFieldsAndSaveReachableWithKeyboard",
+          "result": "passed"
+        }
+      ]
+    },
+    {
+      "path": "/tmp/checkline-repair-oct12-detail-final.xcresult",
+      "result": "Failed",
+      "passed": 0,
+      "failed": 2,
+      "skipped": 0,
+      "devices": [
+        {
+          "name": "CheckLine Draft Restore QA",
+          "os": "27.0"
+        }
+      ],
+      "runtimeWarnings": [],
+      "tests": [
+        {
+          "name": "CurrentExperienceRepairUITests/testAttachmentOpensZoomsAndReturnsToRetainedInput",
+          "result": "failed"
+        },
+        {
+          "name": "CurrentExperienceRepairUITests/testSettingsInlineFactsAndSourceExpansionReturnToSettings",
+          "result": "failed"
+        }
+      ]
+    },
+    {
+      "path": "/tmp/checkline-repair-oct12-detail-retest.xcresult",
+      "result": "Passed",
+      "passed": 2,
+      "failed": 0,
+      "skipped": 0,
+      "devices": [
+        {
+          "name": "CheckLine Draft Restore QA",
+          "os": "27.0"
+        }
+      ],
+      "runtimeWarnings": [],
+      "tests": [
+        {
+          "name": "CurrentExperienceRepairUITests/testAttachmentOpensZoomsAndReturnsToRetainedInput",
+          "result": "passed"
+        },
+        {
+          "name": "CurrentExperienceRepairUITests/testSettingsInlineFactsAndSourceExpansionReturnToSettings",
+          "result": "passed"
+        }
+      ]
+    }
+  ],
+  "latest_ui_results": [
+    {
+      "device": "3CB2FE0C-0CBD-4108-B7B9-6BCD71DA63EF",
+      "name": "AgentConversationUITests/testCancellingFirstVoiceExplanationPreservesUnsentInput",
+      "result": "passed",
+      "bundle": "/tmp/checkline-repair-oct12-ui.xcresult"
+    },
+    {
+      "device": "3CB2FE0C-0CBD-4108-B7B9-6BCD71DA63EF",
+      "name": "AgentConversationUITests/testMissingAmountKeepsConversationAndInputThroughSaveAndUndo",
+      "result": "passed",
+      "bundle": "/tmp/checkline-repair-oct12-ui.xcresult"
+    },
+    {
+      "device": "3CB2FE0C-0CBD-4108-B7B9-6BCD71DA63EF",
+      "name": "AmountReviewRefinementUITests/testCompletedWishUsesStaticSectionAndKeepsDetailAndCreation",
+      "result": "passed",
+      "bundle": "/tmp/checkline-repair-oct12-ui-retest.xcresult"
+    },
+    {
+      "device": "3CB2FE0C-0CBD-4108-B7B9-6BCD71DA63EF",
+      "name": "AmountReviewRefinementUITests/testSettlementQuoteProvenanceRemainsVisibleWithoutDuplication",
+      "result": "passed",
+      "bundle": "/tmp/checkline-repair-oct12-ui.xcresult"
+    },
+    {
+      "device": "3CB2FE0C-0CBD-4108-B7B9-6BCD71DA63EF",
+      "name": "AmountReviewRefinementUITests/testWishPurchaseKeepsCurrencyQuoteAndExplicitConfirmation",
+      "result": "passed",
+      "bundle": "/tmp/checkline-repair-oct12-ui-retest.xcresult"
+    },
+    {
+      "device": "3CB2FE0C-0CBD-4108-B7B9-6BCD71DA63EF",
+      "name": "CurrentExperienceRepairUITests/testEstimateOpensPendingDetailAndRefreshesThroughBackNavigation",
+      "result": "passed",
+      "bundle": "/tmp/checkline-repair-oct12-ui-retest.xcresult"
+    },
+    {
+      "device": "3CB2FE0C-0CBD-4108-B7B9-6BCD71DA63EF",
+      "name": "CurrentExperienceRepairUITests/testInlineReviewKeepsInputAndCanEditAllFieldsInSameTask",
+      "result": "passed",
+      "bundle": "/tmp/checkline-repair-oct12-history-final.xcresult"
+    },
+    {
+      "device": "3CB2FE0C-0CBD-4108-B7B9-6BCD71DA63EF",
+      "name": "CurrentExperienceRepairUITests/testWalletChangeHasReadOnlyDetailAndAnalysisNamesItsRange",
+      "result": "passed",
+      "bundle": "/tmp/checkline-repair-oct12-ui-final.xcresult"
+    },
+    {
+      "device": "3CB2FE0C-0CBD-4108-B7B9-6BCD71DA63EF",
+      "name": "CurrentExperienceRepairUITests/testWishCreationAndRedemptionRestoreInputWithoutRestoringPurchaseConsent",
+      "result": "passed",
+      "bundle": "/tmp/checkline-repair-oct12-ui-retest.xcresult"
+    },
+    {
+      "device": "3CB2FE0C-0CBD-4108-B7B9-6BCD71DA63EF",
+      "name": "TaskWorkspaceUITests/testWorkspaceRecordsPendingDetailAndBackRestore",
+      "result": "passed",
+      "bundle": "/tmp/checkline-repair-oct12-ui.xcresult"
+    },
+    {
+      "device": "3CB2FE0C-0CBD-4108-B7B9-6BCD71DA63EF",
+      "name": "CurrentExperienceRepairUITests/testHistoryShowsSelectedPeriodResultAndReturnsToDirectory",
+      "result": "passed",
+      "bundle": "/tmp/checkline-repair-oct12-history-final.xcresult"
+    },
+    {
+      "device": "3CB2FE0C-0CBD-4108-B7B9-6BCD71DA63EF",
+      "name": "CurrentExperienceRepairUITests/testVoiceUnavailableOrDeniedKeepsTypedInputAndManualFallback",
+      "result": "passed",
+      "bundle": "/tmp/checkline-repair-oct12-ui-final.xcresult"
+    },
+    {
+      "device": "3CB2FE0C-0CBD-4108-B7B9-6BCD71DA63EF",
+      "name": "GroupedRecordsAccessibilityUITests/testVoiceOverReadsFullDateAndPendingStateBeforeOpeningRecord",
+      "result": "passed",
+      "bundle": "/tmp/checkline-repair-oct12-ui-final.xcresult"
+    },
+    {
+      "device": "3CB2FE0C-0CBD-4108-B7B9-6BCD71DA63EF",
+      "name": "TaskEnvironmentUITests/testSystemReduceMotionIsReflectedInAppAndTaskStillWorks",
+      "result": "passed",
+      "bundle": "/tmp/checkline-repair-oct12-ui-final.xcresult"
+    },
+    {
+      "device": "3CB2FE0C-0CBD-4108-B7B9-6BCD71DA63EF",
+      "name": "TaskEnvironmentUITests/testVoiceOverCanReadAndSaveManualRecord",
+      "result": "passed",
+      "bundle": "/tmp/checkline-repair-oct12-ui-final.xcresult"
+    },
+    {
+      "device": "8E4FF520-0EB8-4A70-AF2B-3A293B010942",
+      "name": "PhoneFeedbackEnvironmentUITests/testLargeEnglishDarkWishReachesCurrencyAndSavesUSDWithoutChangingWallet",
+      "result": "passed",
+      "bundle": "/tmp/checkline-repair-oct12-small.xcresult"
+    },
+    {
+      "device": "8E4FF520-0EB8-4A70-AF2B-3A293B010942",
+      "name": "TaskEnvironmentUITests/testEnglishTaskKeepsItsFieldsAndSaveReachableWithKeyboard",
+      "result": "passed",
+      "bundle": "/tmp/checkline-repair-oct12-small.xcresult"
+    },
+    {
+      "device": "E80011AE-ADA0-42AB-9E2B-3C9DAB20C77A",
+      "name": "CurrentExperienceRepairUITests/testWishCreationAndRedemptionRestoreInputWithoutRestoringPurchaseConsent",
+      "result": "passed",
+      "bundle": "/tmp/checkline-repair-oct12-ipad.xcresult"
+    },
+    {
+      "device": "E80011AE-ADA0-42AB-9E2B-3C9DAB20C77A",
+      "name": "TaskEnvironmentUITests/testEnglishTaskKeepsItsFieldsAndSaveReachableWithKeyboard",
+      "result": "passed",
+      "bundle": "/tmp/checkline-repair-oct12-ipad.xcresult"
+    },
+    {
+      "device": "3CB2FE0C-0CBD-4108-B7B9-6BCD71DA63EF",
+      "name": "CurrentExperienceRepairUITests/testAttachmentOpensZoomsAndReturnsToRetainedInput",
+      "result": "passed",
+      "bundle": "/tmp/checkline-repair-oct12-detail-retest.xcresult"
+    },
+    {
+      "device": "3CB2FE0C-0CBD-4108-B7B9-6BCD71DA63EF",
+      "name": "CurrentExperienceRepairUITests/testSettingsInlineFactsAndSourceExpansionReturnToSettings",
+      "result": "passed",
+      "bundle": "/tmp/checkline-repair-oct12-detail-retest.xcresult"
+    }
+  ]
+}

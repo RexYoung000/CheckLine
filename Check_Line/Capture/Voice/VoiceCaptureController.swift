@@ -24,6 +24,23 @@ final class VoiceCaptureController {
     @ObservationIgnored private var onTextChange: (@MainActor (String) -> Void)?
 
     var phase: VoiceCapturePhase { session.phase }
+
+    /// Read-only capability check; it never requests permission or activates audio.
+    static var availabilityKey: String {
+        guard let recognizer = SFSpeechRecognizer(locale: .current), recognizer.supportsOnDeviceRecognition else {
+            return VoiceCaptureIssue.onDeviceUnavailable.localizationKey
+        }
+        if AVAudioApplication.shared.recordPermission == .denied { return VoiceCaptureIssue.microphoneDenied.localizationKey }
+        switch SFSpeechRecognizer.authorizationStatus() {
+        case .denied: return VoiceCaptureIssue.speechDenied.localizationKey
+        case .restricted: return VoiceCaptureIssue.speechRestricted.localizationKey
+        default: break
+        }
+        if AVAudioApplication.shared.recordPermission == .undetermined || SFSpeechRecognizer.authorizationStatus() == .notDetermined {
+            return "ui.voice.notAuthorized"
+        }
+        return recognizer.isAvailable ? "ui.voice.available" : VoiceCaptureIssue.recognitionUnavailable.localizationKey
+    }
     var isActive: Bool { session.isActive }
     var isListening: Bool { phase == .listening }
     var draftText: String { session.draftText }

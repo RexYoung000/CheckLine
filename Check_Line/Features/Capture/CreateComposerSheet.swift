@@ -63,7 +63,8 @@ struct CreateComposerSheet: View {
     @Environment(\.dynamicTypeSize) private var typeSize
     @Environment(\.walletReduceMotion) private var reduceMotion
     @Environment(\.shellChrome) private var chrome
-    @State private var isImportingImages = false
+    @State private var attachmentImport = TaskAttachmentImportController()
+    @State private var imageSelection: AttachmentImageSelection?
     @State private var attachmentError: String?
     @State private var showingCurrencyPicker = false
     @State private var showingCardPicker = false
@@ -84,12 +85,31 @@ struct CreateComposerSheet: View {
                     ScrollViewReader { proxy in
                         ScrollView {
                             VStack(alignment: .leading, spacing: 16) {
-                                if workspace.conversation.isEmpty {
+                                if workspace.conversation.isEmpty && !workspace.retainedTaskAvailable {
                                     agentGreeting
-                                } else {
-                                    ForEach(workspace.conversation) { entry in
-                                        conversationBubble(entry)
-                                    }
+                                }
+                                ForEach(workspace.conversation) { entry in
+                                    conversationBubble(entry)
+                                }
+                                if workspace.retainedTaskAvailable && workspace.taskDraft.committedEntityID == nil {
+                                    retainedTaskSummary
+                                }
+                                if workspace.isWorking {
+                                    HStack(spacing: 12) {
+                                        CloudMascotView(state: .thinking).frame(width: 42, height: 42).accessibilityHidden(true)
+                                        Text(String(localized: "ui.agent.working")).font(.subheadline).foregroundStyle(PaperTheme.muted)
+                                    }.accessibilityIdentifier("wallet.agent.working")
+                                }
+                                if attachmentImport.blocksSubmission {
+                                    VStack(alignment: .leading, spacing: 10) {
+                                        if attachmentImport.isReading {
+                                            ProgressView(String(format: String(localized: "ui.attachment.reading"), attachmentImport.addedCount, attachmentImport.items.count))
+                                        } else {
+                                            Text(String(format: String(localized: "ui.attachment.readFailed"), attachmentImport.failedCount))
+                                            Button(String(localized: "ui.attachment.retry")) { attachmentImport.retry(workspace: workspace) }
+                                            Button(String(localized: "ui.attachment.removeFailed")) { attachmentImport.removeFailures(workspace: workspace) }
+                                        }
+                                    }.font(.subheadline).foregroundStyle(PaperTheme.muted).padding(16).walletSurface()
                                 }
                                 AgentTaskPanel(workspace: workspace, voiceCapture: voiceCapture, embedded: true, part: .content) {
                                     workspace.composerIntent = .budget
@@ -112,8 +132,12 @@ struct CreateComposerSheet: View {
         }
         .safeAreaInset(edge: .bottom, spacing: 0) {
             if workspace.taskDraft.committedEntityID != nil {
-                PaperSubmitBar(title: String(localized: "ui.task.finishAttachments"), enabled: !workspace.draftStorageFailed, action: finishCommittedTask)
+                VStack(spacing: 8) {
+                Text(String(localized: workspace.taskDraft.kind == "budget" ? "ui.task.savedBudget" : workspace.taskDraft.attachments.isEmpty ? "ui.task.savedRecord" : "ui.task.savedAttachmentsPending")).font(.caption).foregroundStyle(PaperTheme.muted)
+                    .padding(.horizontal, 22).background(PaperTheme.canvas)
+                PaperSubmitBar(title: String(localized: workspace.taskDraft.attachments.isEmpty ? "ui.task.finishSaved" : "ui.task.finishAttachments"), enabled: !workspace.draftStorageFailed, action: finishCommittedTask)
                     .accessibilityIdentifier("wallet.task.resume").padding(.top, 12).background(PaperTheme.canvas)
+                }.background(PaperTheme.canvas)
             } else if mode == .form {
                 PaperSubmitBar(
                     title: workspace.composerIntent == .budget ? String(localized: "v1.budget.create") : String(localized: "wallet.record.save"),
@@ -144,8 +168,8 @@ struct CreateComposerSheet: View {
             if workspace.showAgent {
                 workspace.resumeAgentTask()
             }
-            extrasExpanded = !note.isEmpty || !workspace.taskSourceText.isEmpty || !workspace.taskDraft.attachments.isEmpty
-            detent = mode == .form || typeSize.isAccessibilitySize || !workspace.conversation.isEmpty || workspace.showsStructuredConfirm ? .large : .height(360)
+            extrasExpanded = !note.isEmpty || !workspace.taskDraft.attachments.isEmpty
+            detent = mode == .form || typeSize.isAccessibilitySize || !workspace.conversation.isEmpty || workspace.showsStructuredConfirm || workspace.retainedTaskAvailable ? .large : .height(360)
         }
         .onChange(of: workspace.panelExpanded) { _, expanded in if expanded { detent = .large } }
         .onChange(of: workspace.showsStructuredConfirm) { _, confirming in if confirming { detent = .large } }
@@ -160,16 +184,28 @@ struct CreateComposerSheet: View {
         .onChange(of: workspace.showComposer) { _, presented in
             if presented == false && !workspace.showAgent { dismiss() }
         }
-        .onDisappear { voiceCapture.stopForInterruption() }
+        .onDisappear { voiceCapture.stopForInterruption(); attachmentImport.cancel(workspace: workspace) }
         .onChange(of: scenePhase) { _, phase in
-            if phase == .background { voiceCapture.stopForInterruption() }
+            if phase == .background { voiceCapture.stopForInterruption(); attachmentImport.cancel(workspace: workspace) }
         }
-        .onChange(of: workspace.taskDraft.entityID) { _, _ in voiceCapture.stopForInterruption() }
+        .onChange(of: workspace.taskDraft.entityID) { _, _ in
+            voiceCapture.stopForInterruption(); attachmentImport.cancel(workspace: workspace)
+        }
         .onChange(of: mode) { _, mode in
             voiceCapture.stopForInterruption()
             if mode == .form { workspace.banner = nil; detent = .large }
         }
-        .onChange(of: pickerItems) { _, items in Task { await importImages(items) } }
+        .onChange(of: pickerItems) { _, items in
+            guard !items.isEmpty else { return }
+            attachmentImport.start(items.map { item in
+                TaskAttachmentImportItem(id: UUID()) {
+                    guard let data = try await item.loadTransferable(type: Data.self) else { throw ExpenseAttachmentError.unreadableImage }
+                    return data
+                }
+            }, workspace: workspace)
+            pickerItems = []
+        }
+        .fullScreenCover(item: $imageSelection) { AttachmentImagePreview(selection: $0) }
         .confirmationDialog(
             String(localized: "v1.composer.choose.currency"),
             isPresented: $showingCurrencyPicker,
@@ -240,9 +276,7 @@ struct CreateComposerSheet: View {
             }
             if workspace.draftStorageFailed {
                 Text(String(localized: "ui.draft.failed")).font(.caption).foregroundStyle(.red)
-                if !workspace.draftLoadFailed {
-                    Button(String(localized: "ui.draft.retry")) { workspace.retryTaskStorage() }.frame(minHeight: 44)
-                }
+                Button(String(localized: "ui.draft.retry")) { workspace.retryTaskStorage() }.frame(minHeight: 44)
             }
         }.padding(.horizontal, 16).padding(.top, 12)
     }
@@ -251,7 +285,8 @@ struct CreateComposerSheet: View {
         HStack(alignment: .top, spacing: 10) {
             if entry.isUser { Spacer(minLength: 32) }
             if !entry.isUser {
-                CloudMascotView(state: .idle).frame(width: 36, height: 36).accessibilityHidden(true)
+                CloudMascotView(state: entry.id == workspace.conversation.last?.id ? workspace.mascotState : .idle)
+                    .frame(width: 36, height: 36).accessibilityHidden(true)
             }
             Text(entry.text)
                 .font(.body).foregroundStyle(PaperTheme.ink)
@@ -284,6 +319,25 @@ struct CreateComposerSheet: View {
                 .padding(14).background(PaperTheme.card, in: RoundedRectangle(cornerRadius: 22))
                 .accessibilityIdentifier("wallet.agent.prompt")
         }
+    }
+
+    private var retainedTaskSummary: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text(String(localized: "ui.task.retained.title")).font(.headline)
+            Text([workspace.taskDraft.kind == "budget" ? name : merchant, amount.isEmpty ? nil : amount + " " + currency]
+                .compactMap { $0 }.filter { !$0.isEmpty }.joined(separator: " · "))
+                .font(.title3.weight(.medium)).fixedSize(horizontal: false, vertical: true)
+            if workspace.taskDraft.kind == "record" {
+                Text(currentAttributionTitle).font(.caption).foregroundStyle(PaperTheme.muted)
+            }
+            if let message = workspace.agentBanner {
+                Text(message.localizedText).font(.subheadline).foregroundStyle(PaperTheme.muted)
+            }
+            Button(String(localized: "ui.task.retained.continue")) { workspace.reviewRetainedTask() }
+                .buttonStyle(PaperSolidButtonStyle(enabled: !workspace.attachmentImportBlocksSubmission))
+                .disabled(workspace.attachmentImportBlocksSubmission)
+                .accessibilityIdentifier("wallet.task.continue")
+        }.padding(18).walletSurface().accessibilityElement(children: .contain).accessibilityIdentifier("wallet.task.retained")
     }
 
     private var agentPrompt: String {
@@ -389,11 +443,7 @@ struct CreateComposerSheet: View {
     }
 
     private var currencyButton: some View {
-        Button { showingCurrencyPicker = true } label: {
-            HStack(spacing: 4) { Text(currency); CheckLineIcon(symbol: "chevron.down", size: 14) }
-                .font(.subheadline.weight(.medium)).frame(minHeight: 44)
-        }.accessibilityLabel(String(localized: "v1.budget.currency"))
-            .accessibilityValue(currency)
+        CurrencyMenuButton(currency: field(\.currency), preferred: workspace.ledger.walletSettings.walletCurrencyCode)
     }
 
     private func selectionRow(_ key: String.LocalizationValue, value: String, action: @escaping () -> Void) -> some View {
@@ -471,7 +521,9 @@ struct CreateComposerSheet: View {
             ForEach(workspace.taskDraft.attachments) { attachment in
                 HStack(spacing: 12) {
                     if let image = UIImage(data: attachment.data) {
-                        Image(uiImage: image).resizable().scaledToFit().frame(width: 64, height: 64).accessibilityHidden(true)
+                        Button { imageSelection = AttachmentImageSelection(id: attachment.id, image: image) } label: {
+                            Image(uiImage: image).resizable().scaledToFit().frame(width: 64, height: 64)
+                        }.buttonStyle(.plain).accessibilityLabel(String(localized: "ui.attachment.view"))
                     }
                     Text(String(localized: "wallet.expense.attachments")).font(.caption)
                     Spacer()
@@ -480,7 +532,19 @@ struct CreateComposerSheet: View {
                     }.accessibilityLabel(String(localized: "wallet.expense.deleteAttachment"))
                 }
             }
-            if totalCount < ExpenseAttachmentStore.maximumPerExpense {
+            if attachmentImport.isReading {
+                ProgressView(String(format: String(localized: "ui.attachment.reading"), attachmentImport.addedCount, attachmentImport.items.count))
+                    .font(.caption).accessibilityIdentifier("wallet.attachment.reading")
+            }
+            if attachmentImport.failedCount > 0 {
+                Text(String(format: String(localized: "ui.attachment.readFailed"), attachmentImport.failedCount))
+                    .font(.caption).foregroundStyle(PaperTheme.accent)
+                HStack {
+                    Button(String(localized: "ui.attachment.retry")) { attachmentImport.retry(workspace: workspace) }
+                    Button(String(localized: "ui.attachment.removeFailed")) { attachmentImport.removeFailures(workspace: workspace) }
+                }.font(.subheadline).disabled(attachmentImport.isReading).frame(minHeight: 44)
+            }
+            if totalCount < ExpenseAttachmentStore.maximumPerExpense && !attachmentImport.blocksSubmission {
                 PhotosPicker(selection: $pickerItems, maxSelectionCount: ExpenseAttachmentStore.maximumPerExpense - totalCount, matching: .images) {
                     CheckLineIconLabel(String(localized: "wallet.expense.addAttachment"), symbol: "photo.badge.plus")
                 }
@@ -499,26 +563,14 @@ struct CreateComposerSheet: View {
         catch { attachmentError = String(localized: "wallet.expense.retrySave") }
     }
 
-    private func importImages(_ items: [PhotosPickerItem]) async {
-        isImportingImages = true
-        for item in items {
-            do {
-                guard let data = try await item.loadTransferable(type: Data.self) else { throw ExpenseAttachmentError.unreadableImage }
-                addAttachmentData(data)
-            } catch { attachmentError = String(localized: "wallet.expense.retrySave") }
-        }
-        pickerItems = []
-        isImportingImages = false
-    }
-
     private var canSubmit: Bool {
-        guard !workspace.draftStorageFailed && !workspace.draftLoadFailed else { return false }
+        guard !workspace.draftStorageFailed && !workspace.draftLoadFailed && !workspace.attachmentImportBlocksSubmission else { return false }
         return switch workspace.composerIntent {
         case .budget:
             name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty == false
                 && MoneyFormat.parseAmount(amount) != nil
         case .record:
-            MoneyFormat.parseAmount(amount) != nil && note.count <= 10_000 && !isImportingImages
+            MoneyFormat.parseAmount(amount) != nil && note.count <= 10_000
                 && workspace.attributionChoices.contains { $0.id == attributionID }
         }
     }
@@ -545,6 +597,11 @@ struct CreateComposerSheet: View {
         if mode == .form {
             workspace.taskDraft.formTouched = true
             if workspace.composerIntent == .record { workspace.taskDraft.explicitAttribution = true }
+            let wasReviewing = workspace.showsStructuredConfirm
+            if wasReviewing {
+                workspace.leaveTaskReview()
+                workspace.reviewRetainedTask()
+            }
             if workspace.draftText.isEmpty {
                 workspace.draftText = workspace.composerIntent == .budget
                     ? String(format: String(localized: "v1.agent.budgetBridge"), name, amount, currency, String(localized: repeating ? "wallet.cycle.monthly" : "v1.cycle.oneShot"))
@@ -563,7 +620,7 @@ struct CreateComposerSheet: View {
                 workspace.absorbUnsentAgentInputForManual()
             }
             mode = .form
-            extrasExpanded = !note.isEmpty || !workspace.taskSourceText.isEmpty || !workspace.taskDraft.attachments.isEmpty
+            extrasExpanded = !note.isEmpty || !workspace.taskDraft.attachments.isEmpty
         }
         withAnimation(reduceMotion ? nil : PaperTheme.Motion.panel) { detent = .large }
     }
@@ -591,8 +648,9 @@ struct CreateComposerSheet: View {
 
     private func finishCommittedTask(_ id: UUID) {
         do {
+            let wasBudget = workspace.taskDraft.kind == "budget"
             try workspace.completeTaskAttachments(id)
-            workspace.banner = .recorded
+            workspace.banner = wasBudget ? .createdBudget : .recorded
             workspace.showComposer = false; workspace.showAgent = false
             dismiss(); PaperHaptics.light()
         } catch {
