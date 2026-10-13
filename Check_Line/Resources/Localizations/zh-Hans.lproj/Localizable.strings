@@ -735,6 +735,8 @@
 "ui.task.savedAttachmentsPending" = "记录已保存，附件尚未完成。";
 "ui.attachment.view" = "查看图片";
 "ui.attachment.zoom" = "缩放";
+"ui.create.nameRequired" = "还需要填写预算名称";
+"ui.create.amountRequired" = "额度需填写大于 0 的数字";
 "ui.attachment.reading" = "正在添加 %1$d/%2$d";
 "ui.attachment.readFailed" = "%d 张图片未能添加";
 "ui.attachment.retry" = "重试失败项";

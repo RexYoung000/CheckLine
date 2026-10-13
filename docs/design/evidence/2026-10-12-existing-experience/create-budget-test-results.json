@@ -1,0 +1,58 @@
+[
+  {
+    "path": "/tmp/checkline-create-oct13-baseline-ui.xcresult",
+    "result": "Passed",
+    "passed": 1,
+    "failed": 0,
+    "runtimeWarnings": [
+      {
+        "issueType": "Runtime Warning",
+        "message": "Invalid frame dimension (negative or non-finite)."
+      }
+    ]
+  },
+  {
+    "path": "/tmp/checkline-create-oct13-ui-final.xcresult",
+    "result": "Failed",
+    "passed": 3,
+    "failed": 1,
+    "runtimeWarnings": [
+      {
+        "issueType": "Runtime Warning",
+        "message": "Invalid frame dimension (negative or non-finite)."
+      },
+      {
+        "issueType": "Runtime Warning",
+        "message": "Invalid frame dimension (negative or non-finite)."
+      },
+      {
+        "issueType": "Runtime Warning",
+        "message": "Invalid frame dimension (negative or non-finite)."
+      }
+    ]
+  },
+  {
+    "path": "/tmp/checkline-create-oct13-ui-retest.xcresult",
+    "result": "Passed",
+    "passed": 1,
+    "failed": 0,
+    "runtimeWarnings": [
+      {
+        "issueType": "Runtime Warning",
+        "message": "Invalid frame dimension (negative or non-finite)."
+      }
+    ]
+  },
+  {
+    "path": "/tmp/checkline-create-oct13-small.xcresult",
+    "result": "Passed",
+    "passed": 1,
+    "failed": 0,
+    "runtimeWarnings": [
+      {
+        "issueType": "Runtime Warning",
+        "message": "Invalid frame dimension (negative or non-finite)."
+      }
+    ]
+  }
+]

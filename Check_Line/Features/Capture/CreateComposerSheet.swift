@@ -139,11 +139,18 @@ struct CreateComposerSheet: View {
                     .accessibilityIdentifier("wallet.task.resume").padding(.top, 12).background(PaperTheme.canvas)
                 }.background(PaperTheme.canvas)
             } else if mode == .form {
+                VStack(spacing: 8) {
+                if let hint = budgetValidationHint {
+                    Text(hint).font(.caption).foregroundStyle(PaperTheme.muted)
+                        .accessibilityIdentifier("wallet.composer.validation")
+                        .padding(.horizontal, 22)
+                }
                 PaperSubmitBar(
                     title: workspace.composerIntent == .budget ? String(localized: "v1.budget.create") : String(localized: "wallet.record.save"),
                     enabled: canSubmit,
                     action: submitForm
                 ).accessibilityIdentifier("wallet.composer.save").padding(.top, 12).background(PaperTheme.canvas)
+                }.background(PaperTheme.canvas)
             } else {
                 AgentTaskPanel(workspace: workspace, voiceCapture: voiceCapture, embedded: true, part: .footer)
                     .padding(.horizontal, 22).padding(.bottom, 8).background(PaperTheme.canvas)
@@ -372,10 +379,13 @@ struct CreateComposerSheet: View {
         ScrollView(showsIndicators: false) {
             VStack(spacing: 24) {
                 if workspace.composerIntent == .budget {
-                    PaperHeroField(
-                        placeholder: String(localized: "v1.composer.name.placeholder"),
-                        text: field(\.name)
-                    ).focused($formFocused)
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text(String(localized: "v1.budget.name")).font(.subheadline).foregroundStyle(PaperTheme.muted)
+                        TextField("", text: field(\.name), prompt: Text(String(localized: "v1.composer.name.placeholder")))
+                            .font(.title3).frame(minHeight: 44).focused($formFocused)
+                            .accessibilityLabel(String(localized: "v1.composer.name.placeholder"))
+                            .accessibilityIdentifier("wallet.composer.name")
+                    }.padding(18).walletSurface()
                     VStack(alignment: .leading, spacing: 16) {
                         HStack(spacing: 12) {
                             Text(String(localized: "v1.budget.amount")).foregroundStyle(PaperTheme.muted)
@@ -561,6 +571,16 @@ struct CreateComposerSheet: View {
     private func addAttachmentData(_ data: Data) {
         do { try workspace.addTaskAttachment(data); attachmentError = nil }
         catch { attachmentError = String(localized: "wallet.expense.retrySave") }
+    }
+
+    private var budgetValidationHint: String? {
+        guard workspace.composerIntent == .budget, !workspace.draftStorageFailed, !workspace.draftLoadFailed,
+              !workspace.attachmentImportBlocksSubmission else { return nil }
+        let hasName = !name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+        let hasAmountText = !amount.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+        if !hasName && hasAmountText { return String(localized: "ui.create.nameRequired") }
+        if (hasName || hasAmountText) && MoneyFormat.parseAmount(amount) == nil { return String(localized: "ui.create.amountRequired") }
+        return nil
     }
 
     private var canSubmit: Bool {

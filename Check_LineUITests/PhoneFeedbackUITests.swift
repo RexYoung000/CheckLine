@@ -7,6 +7,42 @@ final class PhoneFeedbackUITests: XCTestCase {
         if #available(iOS 27.0, *) { try XCUIDevice.shared.voiceOverService.disable() }
     }
 
+    func testBudgetExplainsMissingNameAndInvalidLimitBeforeSaving() {
+        let app = launch("budget-empty")
+        XCTAssertTrue(app.buttons["wallet.empty.card"].waitForExistence(timeout: 10))
+        app.buttons["wallet.empty.card"].tap()
+        let amount = app.textFields["额度"]
+        XCTAssertTrue(amount.waitForExistence(timeout: 5))
+        amount.tap(); amount.typeText("500")
+        dismissKeyboard(app)
+        let save = app.buttons["wallet.composer.save"]
+        XCTAssertFalse(save.isEnabled)
+        XCTAssertTrue(app.staticTexts["还需要填写预算名称"].exists)
+        attach(app, "budget-limit-needs-name")
+
+        let name = app.textFields["wallet.composer.name"]
+        name.tap(); name.typeText("Named budget")
+        dismissKeyboard(app)
+        XCTAssertTrue(save.isEnabled)
+        XCTAssertFalse(app.staticTexts["wallet.composer.validation"].exists)
+
+        amount.coordinate(withNormalizedOffset: CGVector(dx: 0.98, dy: 0.5)).tap()
+        amount.typeText(String(repeating: XCUIKeyboardKey.delete.rawValue, count: 6) + "0")
+        XCTAssertEqual(amount.value as? String, "0")
+        dismissKeyboard(app)
+        XCTAssertFalse(save.isEnabled)
+        XCTAssertTrue(app.staticTexts["额度需填写大于 0 的数字"].exists)
+        amount.coordinate(withNormalizedOffset: CGVector(dx: 0.98, dy: 0.5)).tap()
+        amount.typeText(XCUIKeyboardKey.delete.rawValue + "500")
+        XCTAssertEqual(amount.value as? String, "500")
+        dismissKeyboard(app)
+        XCTAssertTrue(save.isEnabled)
+        attach(app, "budget-named-and-ready")
+        save.tap()
+        XCTAssertTrue(name.waitForNonExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["Named budget"].firstMatch.waitForExistence(timeout: 5))
+    }
+
     func testBudgetCycleAndCancelledDiscardKeepInputBeforeSaving() {
         let app = launch("budget-empty")
         let create = app.buttons["wallet.empty.card"]
