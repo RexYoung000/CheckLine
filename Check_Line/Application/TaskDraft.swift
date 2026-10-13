@@ -20,6 +20,7 @@ nonisolated struct TaskDraft: Codable, Equatable, Sendable {
     var amount = ""
     var currency = "CNY"
     var repeating = true
+    var monthlySchedule: MonthlySchedule? = nil
     var merchant = ""
     var note = ""
     var occurredAt = Date()
@@ -33,7 +34,7 @@ nonisolated struct TaskDraft: Codable, Equatable, Sendable {
         if kind == "wishRedemption" { return kind + "_" + (contextWishID?.uuidString ?? "global") }
         return [kind, contextBudgetID?.uuidString ?? "global", contextPeriodID?.uuidString ?? "global"].joined(separator: "_")
     }
-    var hasInput: Bool { fieldsTouched || !text.isEmpty || agentRequestText?.isEmpty == false || !name.isEmpty || !amount.isEmpty || !merchant.isEmpty || !note.isEmpty || !attachments.isEmpty || committedEntityID != nil }
+    var hasInput: Bool { fieldsTouched || monthlySchedule != nil || !text.isEmpty || agentRequestText?.isEmpty == false || !name.isEmpty || !amount.isEmpty || !merchant.isEmpty || !note.isEmpty || !attachments.isEmpty || committedEntityID != nil }
 
     /// Only explicit parser fields replace user input; defaults never replace a chosen date.
     mutating func apply(_ candidate: AgentIntentCandidate) {
@@ -43,6 +44,7 @@ nonisolated struct TaskDraft: Codable, Equatable, Sendable {
         if let value = candidate.merchant { merchant = value }
         if let value = candidate.note { note = value }
         if let value = candidate.cycleType { repeating = value == "repeating" }
+        if let value = candidate.monthlySchedule { monthlySchedule = value }
         if let value = candidate.periodID { attributionID = value; explicitAttribution = true }
         if let value = candidate.occurredAt, let date = ISO8601DateFormatter().date(from: value) { occurredAt = date }
     }

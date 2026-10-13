@@ -393,6 +393,13 @@ nonisolated struct AgentActionCoordinator {
             return try performCapture(draft, ledger: ledger, now: now, confirmation: confirmation)
         case .createBudget(let draft):
             var ledger = ledger
+            if let schedule = draft.recurrence?.monthlySchedule {
+                let expected = try schedule.period(inMonthContaining: draft.startDate, calendar: calendar)
+                guard calendar.startOfDay(for: draft.startDate) == expected.startDate,
+                      draft.endDate.map({ calendar.startOfDay(for: $0) }) == expected.endDate else {
+                    throw LedgerError.repeatingBudgetNeedsRecurrence
+                }
+            }
             let created = try ledger.insertBudgetCard(
                 name: draft.name,
                 amount: draft.amount,
@@ -550,7 +557,7 @@ nonisolated struct AgentActionCoordinator {
                   let period = ledger.periods.values.first(where: {
                       $0.budgetID == budgetID && $0.state == .pendingSettlement
                   }),
-                  CycleEngine.shouldQueue(expenseOccurredAt: draft.occurredAt, period: period, calendar: calendar) {
+                  CycleEngine.shouldQueue(expenseOccurredAt: draft.occurredAt, period: period, calendar: calendar, budget: ledger.budgets[budgetID]) {
             decision = .queued(budgetID: budgetID)
         } else {
             decision = AttributionEngine.suggestPeriod(expense: expense, ledger: ledger, calendar: calendar)
@@ -566,7 +573,7 @@ nonisolated struct AgentActionCoordinator {
             guard calendar.startOfDay(for: expense.occurredAt) >= calendar.startOfDay(for: original.startDate) else { throw LedgerError.captureDateOutsidePeriod }
             if let end = CycleEngine.exclusiveEnd(of: period, calendar: calendar), expense.occurredAt >= end {
                 if ledger.budgets[period.budgetID]?.cycleType == .repeating,
-                   CycleEngine.shouldQueue(expenseOccurredAt: expense.occurredAt, period: period, calendar: calendar) {
+                   CycleEngine.shouldQueue(expenseOccurredAt: expense.occurredAt, period: period, calendar: calendar, budget: ledger.budgets[period.budgetID]) {
                     decision = .queued(budgetID: period.budgetID)
                 } else { throw LedgerError.captureDateOutsidePeriod }
             }
@@ -586,7 +593,8 @@ nonisolated struct AgentActionCoordinator {
             ledger: ledger,
             expenseID: expense.id,
             decision: decision,
-            now: now
+            now: now,
+            calendar: calendar
         )
         return AgentExecution(ledger: ledger, undo: nil, query: nil, savedEntityID: expense.id)
     }

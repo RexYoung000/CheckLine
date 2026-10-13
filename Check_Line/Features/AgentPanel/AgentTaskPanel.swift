@@ -224,9 +224,10 @@ struct AgentTaskPanel: View {
                         .font(.subheadline).foregroundStyle(PaperTheme.muted)
                 } else if let draft = workspace.budgetProposal {
                     Text(draft.name).font(.headline)
-                    Text(String(localized: draft.cycleType == .repeating ? "wallet.cycle.monthly" : "v1.cycle.oneShot"))
+                    Text(draft.recurrence?.monthlySchedule.map { BudgetPresentation.monthlyRule($0) }
+                         ?? String(localized: draft.cycleType == .repeating ? "wallet.cycle.monthly" : "v1.cycle.oneShot"))
                         .font(.subheadline).foregroundStyle(PaperTheme.muted)
-                    Text(draft.startDate, format: .dateTime.year().month().day())
+                    Text(BudgetPresentation.periodDates(start: draft.startDate, end: draft.endDate))
                         .font(.caption).foregroundStyle(PaperTheme.muted)
                 }
             }.foregroundStyle(PaperTheme.ink).frame(maxWidth: .infinity, alignment: .leading)
@@ -235,7 +236,8 @@ struct AgentTaskPanel: View {
             .accessibilityLabel(String(localized: "ui.task.editFields"))
             .accessibilityValue([workspace.taskDraft.amount + " " + workspace.taskDraft.currency,
                                  workspace.captureProposal == nil ? workspace.taskDraft.name : workspace.taskDraft.merchant,
-                                 workspace.taskDraft.occurredAt.formatted(date: .abbreviated, time: .omitted),
+                                 workspace.budgetProposal.map { BudgetPresentation.periodDates(start: $0.startDate, end: $0.endDate) }
+                                     ?? workspace.taskDraft.occurredAt.formatted(date: .abbreviated, time: .omitted),
                                  workspace.attributionChoices.first(where: { $0.id == workspace.selectedAttributionID })?.title ?? ""]
                 .filter { !$0.isEmpty }.joined(separator: ", "))
             .accessibilityIdentifier("wallet.agent.editFields")

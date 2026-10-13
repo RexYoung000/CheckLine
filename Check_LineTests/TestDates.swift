@@ -44,7 +44,8 @@ extension Ledger {
             ledger: self,
             expenseID: expense.id,
             decision: decision,
-            now: now
+            now: now,
+            calendar: TestDates.calendar
         )
         expense = try requireExpense(expense.id)
         return expense

@@ -17,6 +17,7 @@ nonisolated struct AgentIntentCandidate: Equatable, Sendable, Codable {
     var cycleType: String? = nil
     var startDate: String? = nil
     var endDate: String? = nil
+    var monthlySchedule: MonthlySchedule? = nil
     var newAmount: String? = nil
     var expenseID: String? = nil
     var wishID: String? = nil

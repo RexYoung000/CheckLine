@@ -401,6 +401,7 @@ final class CheckLineWorkspace {
                                              currencyCode: taskDraft.currency)
         if taskDraft.kind == "budget" {
             candidate.name = taskDraft.name.isEmpty ? nil : taskDraft.name
+            candidate.monthlySchedule = taskDraft.repeating ? taskDraft.monthlySchedule : nil
             if taskDraft.formTouched || LocalRegexFallback.extractBudgetCycle(from: taskDraft.agentRequestText ?? "") != nil {
                 candidate.cycleType = taskDraft.repeating ? "repeating" : "oneShot"
             }
@@ -410,7 +411,7 @@ final class CheckLineWorkspace {
             candidate.occurredAt = ISO8601DateFormatter().string(from: taskDraft.occurredAt)
             if taskDraft.attributionID != "unbudgeted" { candidate.periodID = taskDraft.attributionID }
         }
-        let result = IntentValidator.validate(candidate, ledger: ledger, now: now, sourceType: .agentText)
+        let result = IntentValidator.validate(candidate, ledger: ledger, now: now, sourceType: .agentText, calendar: calendar)
         switch result {
         case .needsClarification(let field, _):
             taskDraft.pendingAgentField = field
@@ -498,6 +499,7 @@ final class CheckLineWorkspace {
 
         var candidate = LocalRegexFallback.candidate(from: text)
         let hasActiveTask = taskDraft.agentRequestText != nil || taskDraft.pendingAgentField != nil
+            || (taskDraft.kind == "budget" && taskDraft.formTouched && taskDraft.hasInput)
         let explicitStart = LocalRegexFallback.isBudgetCreationRequest(text) || LocalRegexFallback.isExplicitRecordRequest(text)
         if hasActiveTask && !explicitStart {
             if LocalRegexFallback.isAmountReply(text) {
@@ -545,6 +547,7 @@ final class CheckLineWorkspace {
             merged.currencyCode = taskDraft.currency
             if kind == .budget {
                 merged.name = taskDraft.name.isEmpty ? nil : taskDraft.name
+                merged.monthlySchedule = taskDraft.repeating ? taskDraft.monthlySchedule : nil
                 merged.cycleType = candidate.cycleType
                     ?? ((taskDraft.formTouched || LocalRegexFallback.extractBudgetCycle(from: taskDraft.agentRequestText ?? "") != nil)
                         ? (taskDraft.repeating ? "repeating" : "oneShot") : nil)
@@ -556,7 +559,7 @@ final class CheckLineWorkspace {
                     merged.periodID = taskDraft.attributionID
                 }
             }
-            let result = IntentValidator.validate(merged, ledger: ledger, now: now, sourceType: .agentText)
+            let result = IntentValidator.validate(merged, ledger: ledger, now: now, sourceType: .agentText, calendar: calendar)
             if case .intent(let intent) = result {
                 turn = session.turn(intent: intent, ledger: ledger, now: now)
                 taskDraft.pendingAgentField = nil
@@ -653,6 +656,7 @@ final class CheckLineWorkspace {
         amountText: String,
         currencyCode: String,
         cycleType: CycleType,
+        monthlySchedule: MonthlySchedule? = nil,
         now: Date = Date(),
         budgetID: UUID? = nil,
         periodID: UUID? = nil
@@ -667,13 +671,22 @@ final class CheckLineWorkspace {
             banner = .needsAmount
             return
         }
-        let bounds = monthBounds(now: now)
+        let schedule = monthlySchedule ?? taskDraft.monthlySchedule
+        let bounds: (start: Date, end: Date)
+        if cycleType == .repeating, let schedule {
+            guard let plan = try? schedule.period(containingOrFollowing: now, calendar: calendar), let end = plan.endDate else {
+                banner = .needsPeriod
+                return
+            }
+            bounds = (plan.startDate, end)
+            taskDraft.monthlySchedule = schedule
+        } else { bounds = monthBounds(now: now) }
         let draft = CreateBudgetDraft(
             name: trimmedName,
             amount: amount,
             currencyCode: currencyCode,
             cycleType: cycleType,
-            recurrence: cycleType == .repeating ? .monthly : nil,
+            recurrence: cycleType == .repeating ? schedule?.recurrence ?? .monthly : nil,
             startDate: bounds.start,
             endDate: cycleType == .repeating ? bounds.end : nil,
             budgetID: budgetID, periodID: periodID
@@ -684,6 +697,10 @@ final class CheckLineWorkspace {
             now: now,
             recordedBanner: .createdBudget
         )
+    }
+
+    func monthlyBudgetPlan(for schedule: MonthlySchedule, now: Date = Date()) -> NextPeriodPlan? {
+        try? schedule.period(containingOrFollowing: now, calendar: calendar)
     }
 
     @discardableResult func recordExpense(

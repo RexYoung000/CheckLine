@@ -120,7 +120,7 @@ final class AmountReviewRefinementUITests: XCTestCase {
         let newLimit = app.descendants(matching: .any)["wallet.budget.edit.newMonthlyAmount"]
         reveal(newLimit, in: app)
         XCTAssertTrue(newLimit.waitForExistence(timeout: 5))
-        XCTAssertTrue(newLimit.label.contains("This and future months"), newLimit.label)
+        XCTAssertTrue(newLimit.label.contains("This period and future periods"), newLimit.label)
         XCTAssertTrue(newLimit.label.contains("1,600.25"), newLimit.label)
         XCTAssertEqual(app.descendants(matching: .any).matching(identifier: "wallet.budget.edit.newMonthlyAmount").count, 1)
         XCTAssertTrue(app.descendants(matching: .any)["wallet.budget.edit.oldAmount"].exists)

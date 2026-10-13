@@ -19,6 +19,10 @@ nonisolated enum CycleEngine {
         return now >= exclusiveEnd
     }
 
+    static func contains(_ date: Date, in period: BudgetPeriod, calendar: Calendar) -> Bool {
+        NextPeriodPlan(startDate: period.startDate, endDate: period.endDate).contains(date, calendar: calendar)
+    }
+
     static func markDueIfNeeded(
         ledger: Ledger,
         periodID: UUID,
@@ -76,6 +80,9 @@ nonisolated enum CycleEngine {
         case .monthly:
             let nextStart = calendar.date(byAdding: .month, value: 1, to: startDate)
             endDate = nextStart.flatMap { calendar.date(byAdding: .day, value: -1, to: $0) }
+        case .monthlyCycle, .monthlyWindow:
+            guard let schedule = recurrence.monthlySchedule else { throw LedgerError.repeatingBudgetNeedsRecurrence }
+            return try schedule.next(after: settledPeriod, calendar: calendar)
         case .everyNDays(let days):
             endDate = calendar.date(byAdding: .day, value: days - 1, to: calendar.startOfDay(for: startDate))
         }
@@ -112,6 +119,17 @@ nonisolated enum CycleEngine {
 
         for queued in ledger.queuedExpenses(forBudget: budget.id) {
             var expense = queued
+            if let schedule = budget.recurrence?.monthlySchedule,
+               !contains(expense.occurredAt, in: period, calendar: calendar) {
+                if expense.occurredAt >= period.startDate && schedule.contains(expense.occurredAt, calendar: calendar) { continue }
+                expense.queuedForBudgetID = nil
+                expense.budgetPeriodID = nil
+                expense.attributionState = .unbudgeted
+                expense.attributionConfidence = nil
+                expense.updatedAt = now
+                ledger.upsert(expense)
+                continue
+            }
             expense.queuedForBudgetID = nil
             expense.budgetPeriodID = period.id
             expense.updatedAt = now
@@ -137,12 +155,17 @@ nonisolated enum CycleEngine {
     static func shouldQueue(
         expenseOccurredAt: Date,
         period: BudgetPeriod,
-        calendar: Calendar
+        calendar: Calendar,
+        budget: Budget? = nil
     ) -> Bool {
         guard period.state == .pendingSettlement,
               let exclusiveEnd = exclusiveEnd(of: period, calendar: calendar) else {
             return false
         }
-        return expenseOccurredAt >= exclusiveEnd
+        guard expenseOccurredAt >= exclusiveEnd else { return false }
+        if let schedule = budget?.recurrence?.monthlySchedule {
+            return schedule.contains(expenseOccurredAt, calendar: calendar)
+        }
+        return true
     }
 }

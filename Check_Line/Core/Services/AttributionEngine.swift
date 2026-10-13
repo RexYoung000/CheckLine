@@ -27,13 +27,13 @@ nonisolated enum AttributionEngine {
                     return .confirmed(periodID: period.id)
                 }
                 if let period = pendingPeriod(budgetID: budgetID, ledger: ledger),
-                   CycleEngine.shouldQueue(expenseOccurredAt: expense.occurredAt, period: period, calendar: calendar) {
+                   CycleEngine.shouldQueue(expenseOccurredAt: expense.occurredAt, period: period, calendar: calendar, budget: ledger.budgets[budgetID]) {
                     return .queued(budgetID: budgetID)
                 }
             }
         }
 
-        let activePeriods = ledger.periods.values.filter { $0.state == .active }
+        let activePeriods = ledger.periods.values.filter { $0.state == .active && CycleEngine.contains(expense.occurredAt, in: $0, calendar: calendar) }
         if activePeriods.count == 1, let period = activePeriods.first {
             return .pending(periodID: period.id, confidence: DecimalMath.parse("0.4"))
         }
@@ -45,7 +45,8 @@ nonisolated enum AttributionEngine {
         ledger: Ledger,
         expenseID: UUID,
         decision: AttributionDecision,
-        now: Date
+        now: Date,
+        calendar: Calendar = .current
     ) throws -> Ledger {
         var ledger = ledger
         var expense = try ledger.requireExpense(expenseID)
@@ -62,14 +63,14 @@ nonisolated enum AttributionEngine {
         switch decision {
         case .confirmed(let periodID):
             let period = try ledger.requirePeriod(periodID)
-            try validateBindable(period: period, expense: expense)
+            try validateBindable(period: period, expense: expense, ledger: ledger, calendar: calendar)
             expense.budgetPeriodID = periodID
             expense.queuedForBudgetID = nil
             expense.attributionState = .confirmed
             expense.attributionConfidence = 1
         case .pending(let periodID, let confidence):
             let period = try ledger.requirePeriod(periodID)
-            try validateBindable(period: period, expense: expense)
+            try validateBindable(period: period, expense: expense, ledger: ledger, calendar: calendar)
             expense.budgetPeriodID = periodID
             expense.queuedForBudgetID = nil
             expense.attributionState = .pending
@@ -80,7 +81,13 @@ nonisolated enum AttributionEngine {
             expense.attributionState = .unbudgeted
             expense.attributionConfidence = nil
         case .queued(let budgetID):
-            _ = try ledger.requireBudget(budgetID)
+            let budget = try ledger.requireBudget(budgetID)
+            if budget.recurrence?.monthlySchedule != nil {
+                guard let period = pendingPeriod(budgetID: budgetID, ledger: ledger),
+                      CycleEngine.shouldQueue(expenseOccurredAt: expense.occurredAt, period: period, calendar: calendar, budget: budget) else {
+                    throw LedgerError.captureDateOutsidePeriod
+                }
+            }
             if expense.budgetPeriodID != nil {
                 throw LedgerError.queuedAndBoundAreExclusive
             }
@@ -121,7 +128,7 @@ nonisolated enum AttributionEngine {
         return try apply(ledger: movable, expenseID: expenseID, decision: decision, now: now)
     }
 
-    private static func validateBindable(period: BudgetPeriod, expense: Expense) throws {
+    private static func validateBindable(period: BudgetPeriod, expense: Expense, ledger: Ledger, calendar: Calendar) throws {
         if period.state == .settled {
             throw LedgerError.cannotBindSettledPeriod
         }
@@ -130,6 +137,10 @@ nonisolated enum AttributionEngine {
         }
         if let existing = expense.budgetPeriodID, existing != period.id {
             throw LedgerError.expenseAlreadyHasSettlementPeriod
+        }
+        if ledger.budgets[period.budgetID]?.recurrence?.monthlySchedule != nil,
+           !CycleEngine.contains(expense.occurredAt, in: period, calendar: calendar) {
+            throw LedgerError.captureDateOutsidePeriod
         }
     }
 

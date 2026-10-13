@@ -17,7 +17,7 @@ nonisolated struct BudgetAmountEditPreview: Equatable, Sendable {
 nonisolated enum BudgetAmountEditEngine {
     static func isEditable(budgetID: UUID, periodID: UUID, ledger: Ledger) -> Bool {
         guard let budget = ledger.budgets[budgetID],
-              budget.cycleType == .repeating, budget.recurrence == .monthly,
+              budget.cycleType == .repeating, budget.recurrence?.isMonthly == true,
               budget.state != .archived,
               let period = ledger.periods[periodID], period.budgetID == budgetID,
               period.state != .settled, period.currencyCode == budget.defaultCurrencyCode else { return false }

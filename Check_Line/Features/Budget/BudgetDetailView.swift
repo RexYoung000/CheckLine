@@ -247,9 +247,13 @@ struct BudgetDetailContent: View {
             VStack(alignment: .leading, spacing: 24) {
                 VStack(alignment: .leading, spacing: 10) {
                     Text(card.name).font(.title.weight(.medium))
-                    Text(card.currencyCode + " · " + String(localized: card.cycleType == .repeating ? "wallet.cycle.monthly" : "v1.cycle.oneShot"))
+                    Text(card.currencyCode + " · " + (workspace.ledger.budgets[card.id]?.recurrence?.monthlySchedule.map { BudgetPresentation.monthlyRule($0) }
+                         ?? String(localized: card.cycleType == .repeating ? "wallet.cycle.monthly" : "v1.cycle.oneShot")))
                         .font(.subheadline).foregroundStyle(PaperTheme.muted)
                     periodDates(card)
+                    if BudgetPresentation.isUpcoming(card) {
+                        Text(String(localized: "ui.schedule.notStarted")).font(.subheadline).foregroundStyle(PaperTheme.muted)
+                    }
                 }.padding(20).walletSurface()
                 VStack(alignment: .leading, spacing: 12) {
                     Text(String(localized: "wallet.budget.limit")).font(.subheadline).foregroundStyle(PaperTheme.muted)

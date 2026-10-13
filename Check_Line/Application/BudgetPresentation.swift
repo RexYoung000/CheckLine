@@ -2,6 +2,24 @@ import Foundation
 
 /// Display-only projections. Settlement keeps its existing confirmed-only rules.
 nonisolated enum BudgetPresentation {
+    static func monthlyRule(_ schedule: MonthlySchedule) -> String {
+        if schedule.kind == .cycle {
+            return String(format: String(localized: "ui.schedule.cycleRule"), schedule.startDay)
+        }
+        return String(format: String(localized: schedule.endDay < schedule.startDay ? "ui.schedule.crossRule" : "ui.schedule.windowRule"),
+                      schedule.startDay, schedule.endDay)
+    }
+
+    static func periodDates(start: Date, end: Date?) -> String {
+        let first = start.formatted(.dateTime.year().month().day())
+        guard let end else { return first + " · " + String(localized: "wallet.noDeadline") }
+        return String(format: String(localized: "ui.schedule.dateRange"), first, end.formatted(.dateTime.year().month().day()))
+    }
+
+    static func isUpcoming(_ card: HomeBudgetCardModel, now: Date = Date(), calendar: Calendar = .current) -> Bool {
+        card.periodState == .active && now < calendar.startOfDay(for: card.periodStart)
+    }
+
     static func used(_ card: HomeBudgetCardModel) -> Decimal {
         card.snapshot.confirmedSpent + card.snapshot.pendingAmount
     }

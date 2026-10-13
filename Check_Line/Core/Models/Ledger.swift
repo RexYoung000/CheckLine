@@ -140,6 +140,9 @@ extension Ledger {
         periodID: UUID = UUID(),
         sortIndex: Int? = nil
     ) throws -> (Budget, BudgetPeriod) {
+        if let schedule = recurrence?.monthlySchedule, !schedule.isValid {
+            throw LedgerError.repeatingBudgetNeedsRecurrence
+        }
         if walletEntries.isEmpty && budgets.isEmpty && walletSettings.userConfirmedCurrency == false {
             walletSettings.walletCurrencyCode = currencyCode
             walletSettings.setAt = now

@@ -68,7 +68,7 @@ final class PhoneFeedbackUITests: XCTestCase {
         XCTAssertTrue(cycle.buttons["一次性"].isSelected)
         XCTAssertTrue(app.staticTexts.matching(NSPredicate(format: "label CONTAINS %@", "完成后主动结算")).firstMatch.exists)
         cycle.buttons["每月循环"].tap()
-        XCTAssertTrue(app.staticTexts.matching(NSPredicate(format: "label CONTAINS %@", "月底结束，按月循环")).firstMatch.exists)
+        XCTAssertTrue(app.staticTexts["每月 1 日起，至下月同日前"].exists)
         cycle.buttons["一次性"].tap()
         attach(app, "phone-feedback-budget-form-and-native-cycle")
 

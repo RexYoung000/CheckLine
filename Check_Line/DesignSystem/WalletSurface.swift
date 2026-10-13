@@ -283,7 +283,7 @@ struct LiquidBudgetCard: View {
             reflection
             VStack(alignment: .leading, spacing: 10) {
                 Text(card.name).font(.title2.weight(.semibold)).lineLimit(2).padding(.trailing, 44)
-                Text((card.cycleType == .repeating ? String(localized: "v1.cycle.repeating") : String(localized: "v1.cycle.oneShot")) + " · " + card.currencyCode)
+                Text((BudgetPresentation.isUpcoming(card) ? String(localized: "ui.schedule.notStarted") : card.cycleType == .repeating ? String(localized: "v1.cycle.repeating") : String(localized: "v1.cycle.oneShot")) + " · " + card.currencyCode)
                     .font(.caption).foregroundStyle(PaperTheme.muted)
                 Spacer(minLength: 8)
                 HStack {

@@ -275,6 +275,10 @@ struct CheckLineHomeView: View {
                         if card.periodState == .pendingSettlement {
                             Text(String(localized: "budget.settling.section"))
                                 .font(.subheadline.weight(.medium))
+                        } else if BudgetPresentation.isUpcoming(card) {
+                            Text(max(0, Calendar.current.dateComponents([.day], from: Calendar.current.startOfDay(for: Date()), to: card.periodStart).day ?? 0), format: .number)
+                                .font(.title.weight(.medium)).monospacedDigit()
+                            Text(String(localized: "ui.schedule.daysUntilStart")).font(.caption2)
                         } else if let end = card.periodEnd {
                             Text(max(0, Calendar.current.dateComponents([.day], from: Calendar.current.startOfDay(for: Date()), to: end).day ?? 0), format: .number)
                                 .font(.title.weight(.medium)).monospacedDigit()

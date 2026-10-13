@@ -172,6 +172,12 @@ BudgetEngine / Home Projection
 | `createdAt` | Date | 创建时间 |
 | `updatedAt` | Date | 最后修改时间 |
 
+2026-10-13 新建月度规则扩展既有 `recurrenceRule` 字符串，不新增 SwiftData 字段：`monthlyCycle:<startDay>` 表示连续完整月周期；`monthlyWindow:<startDay>:<endDay>` 表示按月重复且结束日包含在内的区间，结束日较小时跨月，同日为一天。原 `monthly`、`weekly` 和 `everyNDays` 保持原行为，旧卡和历史不迁改。开始／结束日范围为 1～31，解析和执行均校验。
+
+`MonthlySchedule` 是 Core 的只读日期规则，使用传入 Calendar 算实际范围，临时截到短月月底且保留原日。指定区间结束不得越过下月开始前一天，防止短月造成两期重叠。首期选择包含当前日期的范围；间隔内创建则选择下一段。`TaskDraft.monthlySchedule` 与结构化候选均为可选，旧版本 1／2 草稿保持可读。Agent 核对和表单提交使用同一规则，不以原始文字覆盖用户修正。
+
+新规则的归属和队列按实际日期校验：间隔不得绑定或进入该卡队列，显式选择失配时保留输入并要求调整归属；开启新一期仅移动该期范围的队列记录，更远未来继续排队。防御性发现区间外队列记录时保留交易并标为未纳入。`BudgetAmountEditEngine` 使用月度规则族判定，额度仍按每期计算。余额、金额算法、结算确认门禁及旧周期不变。
+
 ### 6.2 `BudgetPeriod`
 
 | 字段 | 类型 | 说明 |

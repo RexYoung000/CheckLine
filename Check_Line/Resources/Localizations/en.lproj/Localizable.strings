@@ -499,7 +499,7 @@
 
 // Monthly budget amount editing
 "wallet.budget.edit.title" = "Adjust monthly limit";
-"wallet.budget.edit.amount" = "Monthly budget amount";
+"wallet.budget.edit.amount" = "Limit per period";
 "wallet.budget.edit.inputHint" = "Enter an amount greater than 0, with up to two decimal places.";
 "wallet.budget.edit.scope" = "After confirmation, the month shown above and all future months use the new amount. Settled months, expenses and the wish wallet stay unchanged.";
 "wallet.budget.edit.preview" = "Preview changes";
@@ -589,7 +589,7 @@
 "ui.impact.walletTitle" = "Wallet after correction";
 "ui.wish.viewActive" = "View active wishes";
 "ui.wish.walletImpact" = "Wallet impact";
-"ui.budget.edit.newMonthlyAmount" = "This and future months";
+"ui.budget.edit.newMonthlyAmount" = "This period and future periods";
 "ui.record.historicalMoveBoundary" = "Moving a record from a settled period requires a complete retrospective review. This entry is not available yet.";
 "ui.agent.conversation" = "This conversation";
 "ui.agent.you" = "You";
@@ -737,6 +737,22 @@
 "ui.attachment.zoom" = "Zoom";
 "ui.create.nameRequired" = "Enter a budget name to continue.";
 "ui.create.amountRequired" = "Enter a budget limit greater than 0.";
+"ui.schedule.kind" = "Monthly schedule";
+"ui.schedule.cycle" = "Full cycle";
+"ui.schedule.window" = "Date range";
+"ui.schedule.start" = "Start day";
+"ui.schedule.end" = "End day";
+"ui.schedule.nextEnd" = "End day (next month)";
+"ui.schedule.day" = "Day %d";
+"ui.schedule.cycleRule" = "From day %d until the same day next month";
+"ui.schedule.windowRule" = "Days %1$d–%2$d each month";
+"ui.schedule.crossRule" = "Day %1$d to day %2$d of the next month";
+"ui.schedule.dateRange" = "%1$@ – %2$@";
+"ui.schedule.gapHint" = "Spending outside this range stays outside this card.";
+"ui.schedule.shortMonth" = "Short months adjust to month end; boundary days are counted once.";
+"ui.schedule.notStarted" = "Not started yet";
+"ui.schedule.daysUntilStart" = "days until start";
+"ui.schedule.invalid" = "Choose valid monthly dates.";
 "ui.attachment.reading" = "Adding %1$d/%2$d";
 "ui.attachment.readFailed" = "Could not add %d images";
 "ui.attachment.retry" = "Retry failed images";

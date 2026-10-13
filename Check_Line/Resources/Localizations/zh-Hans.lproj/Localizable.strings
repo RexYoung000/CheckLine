@@ -499,7 +499,7 @@
 
 // Monthly budget amount editing
 "wallet.budget.edit.title" = "调整月度额度";
-"wallet.budget.edit.amount" = "每月预算额度";
+"wallet.budget.edit.amount" = "每期预算额度";
 "wallet.budget.edit.inputHint" = "输入大于 0 的金额，最多两位小数。";
 "wallet.budget.edit.scope" = "确认后，上方所示月份立即使用新额度，以后每个月也沿用新额度。已结算月份、消费记录和心愿钱包不变。";
 "wallet.budget.edit.preview" = "预览变化";
@@ -589,7 +589,7 @@
 "ui.impact.walletTitle" = "修正后的钱包";
 "ui.wish.viewActive" = "查看想实现";
 "ui.wish.walletImpact" = "钱包变化";
-"ui.budget.edit.newMonthlyAmount" = "本月及以后每月";
+"ui.budget.edit.newMonthlyAmount" = "本期及以后每期";
 "ui.record.historicalMoveBoundary" = "已结算周期的改归属需要完整追溯核对，当前入口尚未开放。";
 "ui.agent.conversation" = "本次对话";
 "ui.agent.you" = "你";
@@ -737,6 +737,22 @@
 "ui.attachment.zoom" = "缩放";
 "ui.create.nameRequired" = "还需要填写预算名称";
 "ui.create.amountRequired" = "额度需填写大于 0 的数字";
+"ui.schedule.kind" = "月度规则";
+"ui.schedule.cycle" = "完整周期";
+"ui.schedule.window" = "指定区间";
+"ui.schedule.start" = "开始日";
+"ui.schedule.end" = "结束日";
+"ui.schedule.nextEnd" = "结束日（次月）";
+"ui.schedule.day" = "%d 日";
+"ui.schedule.cycleRule" = "每月 %d 日起，至下月同日前";
+"ui.schedule.windowRule" = "每月 %1$d～%2$d 日";
+"ui.schedule.crossRule" = "每月 %1$d 日～次月 %2$d 日";
+"ui.schedule.dateRange" = "%1$@ – %2$@";
+"ui.schedule.gapHint" = "区间外消费不计入这张卡";
+"ui.schedule.shortMonth" = "短月按月底调整，临界日只计入新一期";
+"ui.schedule.notStarted" = "尚未开始";
+"ui.schedule.daysUntilStart" = "天后开始";
+"ui.schedule.invalid" = "请选择有效的月度日期";
 "ui.attachment.reading" = "正在添加 %1$d/%2$d";
 "ui.attachment.readFailed" = "%d 张图片未能添加";
 "ui.attachment.retry" = "重试失败项";

@@ -15,7 +15,8 @@ nonisolated enum IntentValidator {
         _ candidate: AgentIntentCandidate,
         ledger: Ledger,
         now: Date,
-        sourceType: SourceType
+        sourceType: SourceType,
+        calendar: Calendar = .current
     ) -> AgentUnderstandResult {
         let type = candidate.intentType.trimmingCharacters(in: .whitespacesAndNewlines)
         if type == "needsClarification" {
@@ -35,7 +36,7 @@ nonisolated enum IntentValidator {
         case "queryBudgetStatus":
             return validateQuery(candidate, ledger: ledger)
         case "createBudget":
-            return validateCreateBudget(candidate, ledger: ledger, now: now)
+            return validateCreateBudget(candidate, ledger: ledger, now: now, calendar: calendar)
         case "adjustPeriodAmount":
             return validateAdjust(candidate, ledger: ledger)
         case "deleteExpense":
@@ -137,7 +138,8 @@ nonisolated enum IntentValidator {
     private static func validateCreateBudget(
         _ candidate: AgentIntentCandidate,
         ledger: Ledger,
-        now: Date
+        now: Date,
+        calendar: Calendar
     ) -> AgentUnderstandResult {
         guard let name = nonempty(candidate.name) else {
             return .needsClarification(field: "name", options: [])
@@ -149,7 +151,15 @@ nonisolated enum IntentValidator {
         guard let cycle = parseCycle(candidate.cycleType) else {
             return .needsClarification(field: "cycleType", options: [CycleType.repeating.rawValue, CycleType.oneShot.rawValue])
         }
-        let calendar = Calendar.current
+        if cycle == .repeating, let schedule = candidate.monthlySchedule {
+            guard schedule.isValid,
+                  let plan = try? schedule.period(containingOrFollowing: now, calendar: calendar) else {
+                return .needsClarification(field: "monthlySchedule", options: [])
+            }
+            return .intent(.createBudget(CreateBudgetDraft(name: name, amount: amount, currencyCode: currency,
+                                                          cycleType: cycle, recurrence: schedule.recurrence,
+                                                          startDate: plan.startDate, endDate: plan.endDate)))
+        }
         let start: Date
         if let explicit = parseDate(candidate.startDate) {
             start = explicit

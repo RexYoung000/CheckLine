@@ -1,0 +1,423 @@
+{
+  "scope": "Monthly schedule slice, grouped UI runs; not the entire UI suite",
+  "unique_ui_cases": 11,
+  "case_device_combinations": 12,
+  "latest_verified_paths": [
+    {
+      "test": "BudgetAmountEditUITests/testBudgetAmountPreviewCancelAndConfirmedOverrun()",
+      "device": "iPhone 18 Pro",
+      "os": "27.0",
+      "result": "Passed",
+      "source": "/tmp/checkline-monthly-oct13-native-delivery.xcresult"
+    },
+    {
+      "test": "BudgetAmountEditUITests/testBudgetListEntryAndRecordSuccessRemainUsable()",
+      "device": "iPhone 18 Pro",
+      "os": "27.0",
+      "result": "Passed",
+      "source": "/tmp/checkline-monthly-oct13-native-delivery.xcresult"
+    },
+    {
+      "test": "BudgetAmountEditUITests/testInvalidPrecisionPendingOnlyAndReduceMotion()",
+      "device": "iPhone 18 Pro",
+      "os": "27.0",
+      "result": "Passed",
+      "source": "/tmp/checkline-monthly-oct13-native-delivery.xcresult"
+    },
+    {
+      "test": "MonthlyScheduleUITests/testChosenFullCycleDaySurvivesClosingAndCanSave()",
+      "device": "iPhone 18 Pro",
+      "os": "27.0",
+      "result": "Passed",
+      "source": "/tmp/checkline-monthly-oct13-native-delivery.xcresult"
+    },
+    {
+      "test": "MonthlyScheduleUITests/testCrossMonthWindowShowsNextMonthAndUpcomingState()",
+      "device": "iPhone 18 Pro",
+      "os": "27.0",
+      "result": "Passed",
+      "source": "/tmp/checkline-monthly-oct13-native-delivery.xcresult"
+    },
+    {
+      "test": "MonthlyScheduleUITests/testMonthlyWindowSurvivesModesAndCanBeCreated()",
+      "device": "iPhone 18 Pro",
+      "os": "27.0",
+      "result": "Passed",
+      "source": "/tmp/checkline-monthly-oct13-native-delivery.xcresult"
+    },
+    {
+      "test": "TaskWorkspaceUITests/testSharedTaskSwitchRetainsFieldsAndClosesToSamePage()",
+      "device": "iPhone 18 Pro",
+      "os": "27.0",
+      "result": "Passed",
+      "source": "/tmp/checkline-monthly-oct13-native-delivery.xcresult"
+    },
+    {
+      "test": "PhoneFeedbackUITests/testBudgetCycleAndCancelledDiscardKeepInputBeforeSaving()",
+      "device": "iPhone 18 Pro",
+      "os": "27.0",
+      "result": "Passed",
+      "source": "/tmp/checkline-monthly-oct13-create-baseline-delivery.xcresult"
+    },
+    {
+      "test": "PhoneFeedbackUITests/testBudgetExplainsMissingNameAndInvalidLimitBeforeSaving()",
+      "device": "iPhone 18 Pro",
+      "os": "27.0",
+      "result": "Passed",
+      "source": "/tmp/checkline-monthly-oct13-create-baseline-delivery.xcresult"
+    },
+    {
+      "test": "MonthlyScheduleUITests/testMonthlyDraftSurvivesAppRelaunchWithoutCreatingBudget()",
+      "device": "CheckLine Draft Restore QA",
+      "os": "27.0",
+      "result": "Passed",
+      "source": "/tmp/checkline-monthly-oct13-restart.xcresult"
+    },
+    {
+      "test": "MonthlyScheduleUITests/testEnglishDarkLargeTextCanChooseRangeAndSave()",
+      "device": "iPad mini (A17 Pro)",
+      "os": "26.5",
+      "result": "Passed",
+      "source": "/tmp/checkline-monthly-oct13-ipad-delivery.xcresult"
+    },
+    {
+      "test": "MonthlyScheduleUITests/testEnglishDarkLargeTextCanChooseRangeAndSave()",
+      "device": "CheckLine UI Small",
+      "os": "26.5",
+      "result": "Passed",
+      "source": "/tmp/checkline-monthly-oct13-small-scroll-delivery.xcresult"
+    }
+  ],
+  "passing_runs": [
+    {
+      "source": "/tmp/checkline-monthly-oct13-native-delivery.xcresult",
+      "summary": {
+        "devicesAndConfigurations": [
+          {
+            "device": {
+              "architecture": "arm64",
+              "deviceId": "4F40866F-E156-4594-8ECE-E3C1D680E691",
+              "deviceName": "iPhone 18 Pro",
+              "modelName": "iPhone 18 Pro",
+              "osBuildNumber": "24A434",
+              "osVersion": "27.0",
+              "platform": "iOS Simulator"
+            },
+            "expectedFailures": 0,
+            "failedTests": 0,
+            "passedTests": 7,
+            "skippedTests": 0,
+            "testPlanConfiguration": {
+              "configurationId": "1",
+              "configurationName": "Test Scheme Action"
+            }
+          }
+        ],
+        "environmentDescription": "CheckLine UI · Built with macOS 27.0.1",
+        "expectedFailures": 0,
+        "failedTests": 0,
+        "finishTime": 1791868353.424,
+        "passedTests": 7,
+        "result": "Passed",
+        "runtimeWarnings": [
+          {
+            "issueType": "Runtime Warning",
+            "message": "Invalid frame dimension (negative or non-finite)."
+          },
+          {
+            "issueType": "Runtime Warning",
+            "message": "Invalid frame dimension (negative or non-finite)."
+          },
+          {
+            "issueType": "Runtime Warning",
+            "message": "Invalid frame dimension (negative or non-finite)."
+          },
+          {
+            "issueType": "Runtime Warning",
+            "message": "Invalid frame dimension (negative or non-finite)."
+          },
+          {
+            "issueType": "Runtime Warning",
+            "message": "Invalid frame dimension (negative or non-finite)."
+          }
+        ],
+        "skippedTests": 0,
+        "startTime": 1791868107.092,
+        "statistics": [],
+        "testFailures": [],
+        "title": "Test - CheckLine UI",
+        "topInsights": [],
+        "totalTestCount": 7
+      },
+      "cases": [
+        {
+          "test": "BudgetAmountEditUITests/testBudgetAmountPreviewCancelAndConfirmedOverrun()",
+          "result": "Passed",
+          "duration_seconds": 35.67309606075287
+        },
+        {
+          "test": "BudgetAmountEditUITests/testBudgetListEntryAndRecordSuccessRemainUsable()",
+          "result": "Passed",
+          "duration_seconds": 21.760299921035767
+        },
+        {
+          "test": "BudgetAmountEditUITests/testInvalidPrecisionPendingOnlyAndReduceMotion()",
+          "result": "Passed",
+          "duration_seconds": 25.407734990119934
+        },
+        {
+          "test": "MonthlyScheduleUITests/testChosenFullCycleDaySurvivesClosingAndCanSave()",
+          "result": "Passed",
+          "duration_seconds": 40.985657930374146
+        },
+        {
+          "test": "MonthlyScheduleUITests/testCrossMonthWindowShowsNextMonthAndUpcomingState()",
+          "result": "Passed",
+          "duration_seconds": 44.072330951690674
+        },
+        {
+          "test": "MonthlyScheduleUITests/testMonthlyWindowSurvivesModesAndCanBeCreated()",
+          "result": "Passed",
+          "duration_seconds": 52.61578702926636
+        },
+        {
+          "test": "TaskWorkspaceUITests/testSharedTaskSwitchRetainsFieldsAndClosesToSamePage()",
+          "result": "Passed",
+          "duration_seconds": 20.3798348903656
+        }
+      ]
+    },
+    {
+      "source": "/tmp/checkline-monthly-oct13-create-baseline-delivery.xcresult",
+      "summary": {
+        "devicesAndConfigurations": [
+          {
+            "device": {
+              "architecture": "arm64",
+              "deviceId": "4F40866F-E156-4594-8ECE-E3C1D680E691",
+              "deviceName": "iPhone 18 Pro",
+              "modelName": "iPhone 18 Pro",
+              "osBuildNumber": "24A434",
+              "osVersion": "27.0",
+              "platform": "iOS Simulator"
+            },
+            "expectedFailures": 0,
+            "failedTests": 0,
+            "passedTests": 2,
+            "skippedTests": 0,
+            "testPlanConfiguration": {
+              "configurationId": "1",
+              "configurationName": "Test Scheme Action"
+            }
+          }
+        ],
+        "environmentDescription": "CheckLine UI · Built with macOS 27.0.1",
+        "expectedFailures": 0,
+        "failedTests": 0,
+        "finishTime": 1791868615.62,
+        "passedTests": 2,
+        "result": "Passed",
+        "runtimeWarnings": [
+          {
+            "issueType": "Runtime Warning",
+            "message": "Invalid frame dimension (negative or non-finite)."
+          },
+          {
+            "issueType": "Runtime Warning",
+            "message": "Invalid frame dimension (negative or non-finite)."
+          }
+        ],
+        "skippedTests": 0,
+        "startTime": 1791868521.382,
+        "statistics": [],
+        "testFailures": [],
+        "title": "Test - CheckLine UI",
+        "topInsights": [],
+        "totalTestCount": 2
+      },
+      "cases": [
+        {
+          "test": "PhoneFeedbackUITests/testBudgetCycleAndCancelledDiscardKeepInputBeforeSaving()",
+          "result": "Passed",
+          "duration_seconds": 34.29757905006409
+        },
+        {
+          "test": "PhoneFeedbackUITests/testBudgetExplainsMissingNameAndInvalidLimitBeforeSaving()",
+          "result": "Passed",
+          "duration_seconds": 29.58210003376007
+        }
+      ]
+    },
+    {
+      "source": "/tmp/checkline-monthly-oct13-restart.xcresult",
+      "summary": {
+        "devicesAndConfigurations": [
+          {
+            "device": {
+              "architecture": "arm64",
+              "deviceId": "3CB2FE0C-0CBD-4108-B7B9-6BCD71DA63EF",
+              "deviceName": "CheckLine Draft Restore QA",
+              "modelName": "iPhone 18 Pro",
+              "osBuildNumber": "24A434",
+              "osVersion": "27.0",
+              "platform": "iOS Simulator"
+            },
+            "expectedFailures": 0,
+            "failedTests": 0,
+            "passedTests": 1,
+            "skippedTests": 0,
+            "testPlanConfiguration": {
+              "configurationId": "1",
+              "configurationName": "Test Scheme Action"
+            }
+          }
+        ],
+        "environmentDescription": "CheckLine UI · Built with macOS 27.0.1",
+        "expectedFailures": 0,
+        "failedTests": 0,
+        "finishTime": 1791866200.756,
+        "passedTests": 1,
+        "result": "Passed",
+        "runtimeWarnings": [
+          {
+            "issueType": "Runtime Warning",
+            "message": "Invalid frame dimension (negative or non-finite)."
+          }
+        ],
+        "skippedTests": 0,
+        "startTime": 1791865456.065,
+        "statistics": [],
+        "testFailures": [],
+        "title": "Test - CheckLine UI",
+        "topInsights": [],
+        "totalTestCount": 1
+      },
+      "cases": [
+        {
+          "test": "MonthlyScheduleUITests/testMonthlyDraftSurvivesAppRelaunchWithoutCreatingBudget()",
+          "result": "Passed",
+          "duration_seconds": 73.40689206123352
+        }
+      ]
+    },
+    {
+      "source": "/tmp/checkline-monthly-oct13-ipad-delivery.xcresult",
+      "summary": {
+        "devicesAndConfigurations": [
+          {
+            "device": {
+              "architecture": "arm64",
+              "deviceId": "E80011AE-ADA0-42AB-9E2B-3C9DAB20C77A",
+              "deviceName": "iPad mini (A17 Pro)",
+              "modelName": "iPad mini (A17 Pro)",
+              "osBuildNumber": "23F77",
+              "osVersion": "26.5",
+              "platform": "iOS Simulator"
+            },
+            "expectedFailures": 0,
+            "failedTests": 0,
+            "passedTests": 1,
+            "skippedTests": 0,
+            "testPlanConfiguration": {
+              "configurationId": "1",
+              "configurationName": "Test Scheme Action"
+            }
+          }
+        ],
+        "environmentDescription": "CheckLine UI · Built with macOS 27.0.1",
+        "expectedFailures": 0,
+        "failedTests": 0,
+        "finishTime": 1791868488.11,
+        "passedTests": 1,
+        "result": "Passed",
+        "runtimeWarnings": [
+          {
+            "issueType": "Runtime Warning",
+            "message": "Invalid frame dimension (negative or non-finite)."
+          }
+        ],
+        "skippedTests": 0,
+        "startTime": 1791868434.551,
+        "statistics": [],
+        "testFailures": [],
+        "title": "Test - CheckLine UI",
+        "topInsights": [],
+        "totalTestCount": 1
+      },
+      "cases": [
+        {
+          "test": "MonthlyScheduleUITests/testEnglishDarkLargeTextCanChooseRangeAndSave()",
+          "result": "Passed",
+          "duration_seconds": 46.81493699550629
+        }
+      ]
+    },
+    {
+      "source": "/tmp/checkline-monthly-oct13-small-scroll-delivery.xcresult",
+      "summary": {
+        "devicesAndConfigurations": [
+          {
+            "device": {
+              "architecture": "arm64",
+              "deviceId": "8E4FF520-0EB8-4A70-AF2B-3A293B010942",
+              "deviceName": "CheckLine UI Small",
+              "modelName": "iPhone SE (3rd generation)",
+              "osBuildNumber": "23F77",
+              "osVersion": "26.5",
+              "platform": "iOS Simulator"
+            },
+            "expectedFailures": 0,
+            "failedTests": 0,
+            "passedTests": 1,
+            "skippedTests": 0,
+            "testPlanConfiguration": {
+              "configurationId": "1",
+              "configurationName": "Test Scheme Action"
+            }
+          }
+        ],
+        "environmentDescription": "CheckLine UI · Built with macOS 27.0.1",
+        "expectedFailures": 0,
+        "failedTests": 0,
+        "finishTime": 1791868593.302,
+        "passedTests": 1,
+        "result": "Passed",
+        "runtimeWarnings": [
+          {
+            "issueType": "Runtime Warning",
+            "message": "Invalid frame dimension (negative or non-finite)."
+          }
+        ],
+        "skippedTests": 0,
+        "startTime": 1791868519.002,
+        "statistics": [],
+        "testFailures": [],
+        "title": "Test - CheckLine UI",
+        "topInsights": [],
+        "totalTestCount": 1
+      },
+      "cases": [
+        {
+          "test": "MonthlyScheduleUITests/testEnglishDarkLargeTextCanChooseRangeAndSave()",
+          "result": "Passed",
+          "duration_seconds": 50.02400100231171
+        }
+      ]
+    }
+  ],
+  "repaired_failures": [
+    "Visible day labels were missing in initial native menus.",
+    "Switching authored budget fields to Agent reparsed generated text and shortened an English budget name; direct review now preserves the authored fields.",
+    "Menu choices outside the viewport needed menu scrolling.",
+    "Largest text automation initially tapped behind the validation footer or flung past the input; scoped slow touch scrolling now passes on both devices."
+  ],
+  "infrastructure_notes": [
+    "Some earlier results collection was interrupted after cases completed; only valid completed bundles contribute to this final total.",
+    "A multi-destination launch did not execute cases and is excluded."
+  ],
+  "remaining_limitations": [
+    "An existing Invalid frame dimension warning remains in input paths.",
+    "No full app VoiceOver, all orientations, minimum iOS 17 runtime or physical speech revalidation in this slice.",
+    "In-place phone installation and normal launch are verified; user data was not read or compared."
+  ]
+}

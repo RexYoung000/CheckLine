@@ -86,7 +86,19 @@ nonisolated enum MatchingRuleState: String, Equatable, Sendable {
 nonisolated enum RecurrenceRule: Equatable, Sendable {
     case weekly
     case monthly
+    case monthlyCycle(Int)
+    case monthlyWindow(startDay: Int, endDay: Int)
     case everyNDays(Int)
+
+    var monthlySchedule: MonthlySchedule? {
+        switch self {
+        case .monthlyCycle(let day): MonthlySchedule(startDay: day)
+        case .monthlyWindow(let start, let end): MonthlySchedule(kind: .window, startDay: start, endDay: end)
+        default: nil
+        }
+    }
+
+    var isMonthly: Bool { self == .monthly || monthlySchedule?.isValid == true }
 
     var stored: String {
         switch self {
@@ -94,6 +106,10 @@ nonisolated enum RecurrenceRule: Equatable, Sendable {
             return "weekly"
         case .monthly:
             return "monthly"
+        case .monthlyCycle(let day):
+            return "monthlyCycle:\(day)"
+        case .monthlyWindow(let start, let end):
+            return "monthlyWindow:\(start):\(end)"
         case .everyNDays(let days):
             return "everyNDays:\(days)"
         }
@@ -103,6 +119,14 @@ nonisolated enum RecurrenceRule: Equatable, Sendable {
         guard let raw else { return nil }
         if raw == "weekly" { return .weekly }
         if raw == "monthly" { return .monthly }
+        let parts = raw.split(separator: ":", omittingEmptySubsequences: false)
+        if parts.first == "monthlyCycle", parts.count == 2, let day = Int(parts[1]), (1...31).contains(day) {
+            return .monthlyCycle(day)
+        }
+        if parts.first == "monthlyWindow", parts.count == 3,
+           let start = Int(parts[1]), let end = Int(parts[2]), (1...31).contains(start), (1...31).contains(end) {
+            return .monthlyWindow(startDay: start, endDay: end)
+        }
         if raw.hasPrefix("everyNDays:") {
             let value = raw.dropFirst("everyNDays:".count)
             guard let days = Int(value), days > 0 else { return nil }

@@ -39,6 +39,10 @@ struct CreateComposerSheet: View {
         get { workspace.taskDraft.repeating }
         nonmutating set { workspace.taskDraft.repeating = newValue; workspace.taskDraft.fieldsTouched = true }
     }
+    private var monthlySchedule: MonthlySchedule {
+        get { workspace.taskDraft.monthlySchedule ?? MonthlySchedule() }
+        nonmutating set { workspace.taskDraft.monthlySchedule = newValue; workspace.taskDraft.fieldsTouched = true }
+    }
     private var merchant: String {
         get { workspace.taskDraft.merchant }
         nonmutating set { workspace.taskDraft.merchant = newValue; workspace.taskDraft.fieldsTouched = true }
@@ -59,7 +63,8 @@ struct CreateComposerSheet: View {
     @State private var extrasExpanded = false
     @State private var discardRequested = false
     @State private var detent: PresentationDetent = .large
-    @FocusState private var formFocused: Bool
+    private enum FormField: Hashable { case name, amount, merchant, note, source }
+    @FocusState private var focusedFormField: FormField?
     @Environment(\.dynamicTypeSize) private var typeSize
     @Environment(\.walletReduceMotion) private var reduceMotion
     @Environment(\.shellChrome) private var chrome
@@ -161,9 +166,9 @@ struct CreateComposerSheet: View {
         .tint(PaperTheme.accent)
         .toolbar {
             ToolbarItemGroup(placement: .keyboard) {
-                if formFocused {
+                if focusedFormField != nil {
                     Spacer()
-                    Button(String(localized: "ui.keyboard.done")) { formFocused = false }
+                    Button(String(localized: "ui.keyboard.done")) { focusedFormField = nil }
                         .accessibilityIdentifier("wallet.keyboard.done")
                 }
             }
@@ -316,6 +321,63 @@ struct CreateComposerSheet: View {
         .accessibilityIdentifier("wallet.composer.cycle")
     }
 
+    private func scheduleField<Value>(_ keyPath: WritableKeyPath<MonthlySchedule, Value>) -> Binding<Value> {
+        Binding(get: { monthlySchedule[keyPath: keyPath] }, set: { value in
+            var schedule = monthlySchedule
+            schedule[keyPath: keyPath] = value
+            monthlySchedule = schedule
+        })
+    }
+
+    private var monthlySettings: some View {
+        VStack(alignment: .leading, spacing: 14) {
+            let kind = Picker(String(localized: "ui.schedule.kind"), selection: scheduleField(\.kind)) {
+                Text(String(localized: "ui.schedule.cycle")).tag(MonthlySchedule.Kind.cycle)
+                Text(String(localized: "ui.schedule.window")).tag(MonthlySchedule.Kind.window)
+            }.accessibilityIdentifier("wallet.composer.monthlyKind")
+            if typeSize.isAccessibilitySize { kind.pickerStyle(.menu) }
+            else { kind.pickerStyle(.segmented) }
+            monthlyDayPicker("ui.schedule.start", selection: scheduleField(\.startDay), id: "wallet.composer.monthlyStart")
+            if monthlySchedule.kind == .window {
+                monthlyDayPicker(monthlySchedule.endDay < monthlySchedule.startDay ? "ui.schedule.nextEnd" : "ui.schedule.end",
+                                 selection: scheduleField(\.endDay), id: "wallet.composer.monthlyEnd")
+            }
+            VStack(alignment: .leading, spacing: 6) {
+                Text(BudgetPresentation.monthlyRule(monthlySchedule)).font(.subheadline)
+                if let plan = workspace.monthlyBudgetPlan(for: monthlySchedule) {
+                    Text(BudgetPresentation.periodDates(start: plan.startDate, end: plan.endDate))
+                        .font(.caption).foregroundStyle(PaperTheme.muted)
+                        .accessibilityIdentifier("wallet.composer.periodDates")
+                    if plan.startDate > Date() {
+                        Text(String(localized: "ui.schedule.notStarted")).font(.caption).foregroundStyle(PaperTheme.muted)
+                    }
+                }
+                if monthlySchedule.kind == .window {
+                    Text(String(localized: "ui.schedule.gapHint")).font(.caption).foregroundStyle(PaperTheme.muted)
+                }
+                if monthlySchedule.startDay > 28 || (monthlySchedule.kind == .window && monthlySchedule.endDay > 28) {
+                    Text(String(localized: "ui.schedule.shortMonth")).font(.caption).foregroundStyle(PaperTheme.muted)
+                }
+            }.fixedSize(horizontal: false, vertical: true)
+        }.foregroundStyle(PaperTheme.ink)
+    }
+
+    private func monthlyDayPicker(_ title: String.LocalizationValue, selection: Binding<Int>, id: String) -> some View {
+        let layout = typeSize.isAccessibilitySize ? AnyLayout(VStackLayout(alignment: .leading, spacing: 6)) : AnyLayout(HStackLayout(spacing: 12))
+        return layout {
+            Text(String(localized: title)).foregroundStyle(PaperTheme.muted)
+            if !typeSize.isAccessibilitySize { Spacer(minLength: 8) }
+            Picker(String(localized: title), selection: selection) {
+                ForEach(1...31, id: \.self) { day in
+                    Text(String(format: String(localized: "ui.schedule.day"), day)).tag(day)
+                }
+            }.pickerStyle(.menu).labelsHidden().frame(minHeight: 44)
+                .accessibilityIdentifier(id)
+                .accessibilityLabel(String(localized: title))
+                .accessibilityValue(String(format: String(localized: "ui.schedule.day"), selection.wrappedValue))
+        }.font(.body)
+    }
+
     private var agentGreeting: some View {
         let layout = typeSize.isAccessibilitySize ? AnyLayout(VStackLayout(alignment: .leading, spacing: 12)) : AnyLayout(HStackLayout(alignment: .center, spacing: 12))
         return layout {
@@ -382,19 +444,23 @@ struct CreateComposerSheet: View {
                     VStack(alignment: .leading, spacing: 8) {
                         Text(String(localized: "v1.budget.name")).font(.subheadline).foregroundStyle(PaperTheme.muted)
                         TextField("", text: field(\.name), prompt: Text(String(localized: "v1.composer.name.placeholder")))
-                            .font(.title3).frame(minHeight: 44).focused($formFocused)
+                            .font(.title3).frame(minHeight: 44).focused($focusedFormField, equals: .name)
                             .accessibilityLabel(String(localized: "v1.composer.name.placeholder"))
                             .accessibilityIdentifier("wallet.composer.name")
                     }.padding(18).walletSurface()
                     VStack(alignment: .leading, spacing: 16) {
-                        HStack(spacing: 12) {
+                        let layout = typeSize.isAccessibilitySize ? AnyLayout(VStackLayout(alignment: .leading, spacing: 12)) : AnyLayout(HStackLayout(spacing: 12))
+                        layout {
                             Text(String(localized: "v1.budget.amount")).foregroundStyle(PaperTheme.muted)
-                            TextField("0", text: field(\.amount))
-                                .focused($formFocused)
-                                .accessibilityLabel(String(localized: "v1.budget.amount"))
-                                .keyboardType(AmountKeyboard.type).multilineTextAlignment(.trailing)
-                                .font(.title2.weight(.medium))
-                            currencyButton
+                            HStack(spacing: 12) {
+                                TextField("0", text: field(\.amount))
+                                    .focused($focusedFormField, equals: .amount)
+                                    .accessibilityLabel(String(localized: "v1.budget.amount"))
+                                    .keyboardType(AmountKeyboard.type).multilineTextAlignment(.trailing)
+                                    .font(.title2.weight(.medium)).frame(minHeight: 44)
+                                    .contentShape(Rectangle())
+                                currencyButton
+                            }
                         }
                     }.padding(18).walletSurface()
                     VStack(alignment: .leading, spacing: 14) {
@@ -403,9 +469,12 @@ struct CreateComposerSheet: View {
                         } else {
                             cyclePicker.pickerStyle(.segmented).controlSize(.large)
                         }
-                    let start = Calendar.current.dateInterval(of: .month, for: Date())?.start ?? Date()
-                        Text(String(format: String(localized: repeating ? "ui.create.monthDates" : "ui.create.onceDates"), start.formatted(date: .abbreviated, time: .omitted)))
-                            .font(.caption).foregroundStyle(PaperTheme.muted).fixedSize(horizontal: false, vertical: true)
+                        if repeating { monthlySettings }
+                        else {
+                            let start = Calendar.current.dateInterval(of: .month, for: Date())?.start ?? Date()
+                            Text(String(format: String(localized: "ui.create.onceDates"), start.formatted(date: .abbreviated, time: .omitted)))
+                                .font(.caption).foregroundStyle(PaperTheme.muted).fixedSize(horizontal: false, vertical: true)
+                        }
                     }.padding(18).walletSurface()
                 } else {
                     HStack(alignment: .firstTextBaseline, spacing: 8) {
@@ -413,7 +482,7 @@ struct CreateComposerSheet: View {
                         PaperHeroField(
                             placeholder: String(localized: "v1.composer.amount.placeholder"),
                             text: field(\.amount), keyboard: AmountKeyboard.type
-                        ).focused($formFocused)
+                        ).focused($focusedFormField, equals: .amount)
                     }.padding(.vertical, 16)
                     VStack(spacing: 16) {
                         VStack(spacing: 0) {
@@ -423,7 +492,7 @@ struct CreateComposerSheet: View {
                         }.padding(4).walletSurface()
                         DisclosureGroup(isExpanded: $extrasExpanded) {
                             noteCard
-                            PaperField(title: String(localized: "ui.record.rawText"), text: Binding(get: { workspace.taskSourceText }, set: { workspace.taskSourceText = $0 }), axis: .vertical).focused($formFocused)
+                            PaperField(title: String(localized: "ui.record.rawText"), text: Binding(get: { workspace.taskSourceText }, set: { workspace.taskSourceText = $0 }), axis: .vertical).focused($focusedFormField, equals: .source)
                             attachmentInput
                         } label: {
                             CheckLineIconLabel(note.isEmpty && workspace.taskSourceText.isEmpty && workspace.taskDraft.attachments.isEmpty ? String(localized: "ui.record.extras") : String(format: String(localized: "ui.record.extrasCount"), note.count + workspace.taskSourceText.count, workspace.taskDraft.attachments.count), symbol: "text.badge.plus")
@@ -476,7 +545,7 @@ struct CreateComposerSheet: View {
                 .font(.body)
                 .foregroundStyle(PaperTheme.muted)
             TextField("", text: field(\.merchant), prompt: Text(String(localized: "v1.composer.merchant.placeholder")).foregroundStyle(PaperTheme.muted))
-                .focused($formFocused)
+                .focused($focusedFormField, equals: .merchant)
                 .accessibilityLabel(String(localized: "v1.composer.merchant"))
                 .font(.body)
                 .multilineTextAlignment(.trailing)
@@ -490,7 +559,7 @@ struct CreateComposerSheet: View {
         VStack(alignment: .leading, spacing: 8) {
             ZStack(alignment: .topLeading) {
                 TextEditor(text: field(\.note))
-                    .focused($formFocused)
+                    .focused($focusedFormField, equals: .note)
                     .font(.subheadline)
                     .foregroundStyle(PaperTheme.ink)
                     .scrollContentBackground(.hidden)
@@ -580,6 +649,7 @@ struct CreateComposerSheet: View {
         let hasAmountText = !amount.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
         if !hasName && hasAmountText { return String(localized: "ui.create.nameRequired") }
         if (hasName || hasAmountText) && MoneyFormat.parseAmount(amount) == nil { return String(localized: "ui.create.amountRequired") }
+        if repeating && workspace.monthlyBudgetPlan(for: monthlySchedule) == nil { return String(localized: "ui.schedule.invalid") }
         return nil
     }
 
@@ -589,6 +659,7 @@ struct CreateComposerSheet: View {
         case .budget:
             name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty == false
                 && MoneyFormat.parseAmount(amount) != nil
+                && (!repeating || workspace.monthlyBudgetPlan(for: monthlySchedule) != nil)
         case .record:
             MoneyFormat.parseAmount(amount) != nil && note.count <= 10_000
                 && workspace.attributionChoices.contains { $0.id == attributionID }
@@ -613,19 +684,19 @@ struct CreateComposerSheet: View {
     }
 
     private func switchMode() {
-        formFocused = false
+        focusedFormField = nil
         if mode == .form {
             workspace.taskDraft.formTouched = true
-            if workspace.composerIntent == .record { workspace.taskDraft.explicitAttribution = true }
-            let wasReviewing = workspace.showsStructuredConfirm
-            if wasReviewing {
-                workspace.leaveTaskReview()
+            if workspace.composerIntent == .budget {
+                // The user's fields are the source of truth; a generated sentence must not re-parse them.
                 workspace.reviewRetainedTask()
-            }
-            if workspace.draftText.isEmpty {
-                workspace.draftText = workspace.composerIntent == .budget
-                    ? String(format: String(localized: "v1.agent.budgetBridge"), name, amount, currency, String(localized: repeating ? "wallet.cycle.monthly" : "v1.cycle.oneShot"))
-                    : [merchant, amount].filter { !$0.isEmpty }.joined(separator: " ")
+            } else {
+                workspace.taskDraft.explicitAttribution = true
+                if workspace.showsStructuredConfirm {
+                    workspace.leaveTaskReview()
+                    workspace.reviewRetainedTask()
+                }
+                if workspace.draftText.isEmpty { workspace.draftText = [merchant, amount].filter { !$0.isEmpty }.joined(separator: " ") }
             }
             mode = .agent
         } else {
@@ -650,6 +721,7 @@ struct CreateComposerSheet: View {
         case .budget:
             workspace.createBudget(name: name, amountText: amount, currencyCode: currency,
                                    cycleType: repeating ? .repeating : .oneShot,
+                                   monthlySchedule: repeating ? monthlySchedule : nil,
                                    budgetID: workspace.taskDraft.entityID, periodID: workspace.taskDraft.newPeriodID)
         case .record:
             let id = workspace.taskDraft.committedEntityID ?? workspace.recordExpense(
