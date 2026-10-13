@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="zh-CN">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>小朵 · Workflow 审阅</title>
+<style>
+ :root{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#292536;background:#f5f4f7;line-height:1.55;color-scheme:light}*{box-sizing:border-box}body{margin:0}main{max-width:1120px;margin:auto;padding:44px 28px 60px}.eyebrow{font-size:13px;color:#736584;letter-spacing:.06em}h1{font-size:32px;letter-spacing:-.04em;margin:9px 0 8px}h2{font-size:19px;letter-spacing:-.02em;margin:0 0 20px}p{margin:0;color:#746f7e}.pill{font-size:12px;border:1px solid #ded9e5;border-radius:20px;padding:5px 10px;display:inline-block;margin-top:18px}.flow{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:32px 0 24px}.step,.panel{background:#fff;border:1px solid #e4e0e9;border-radius:20px}.step{padding:20px}.num{font-size:12px;color:#9788aa}.step strong{display:block;font-size:16px;margin-top:8px}.step span{display:block;font-size:13px;color:#847d8d;margin-top:5px}.layout{display:grid;grid-template-columns:230px 1fr;gap:24px;align-items:start}.cases{display:flex;flex-direction:column;gap:5px}button{font:inherit;border:0;text-align:left;border-radius:12px;padding:11px 14px;background:transparent;color:#756b80;cursor:pointer}button[aria-pressed=true]{background:#e9e1f2;color:#58406f;font-weight:600}button:hover{background:#efebf4}button:focus-visible{outline:3px solid #9779b8;outline-offset:2px}.panel{padding:28px}.quote{font-size:24px;line-height:1.4;color:#362d42;margin:18px 0 28px;overflow-wrap:anywhere}.label{font-size:12px;color:#8c8297}.fields{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0 28px}.field{background:#f5f2f8;border-radius:12px;padding:10px 14px;font-size:16px}.field small{display:block;color:#8e7fa0;font-size:11px}.action{padding:20px;background:#f8f6fa;border-radius:15px;color:#5e5369}.action b{display:block;font-size:13px;margin-bottom:8px}.note{margin-top:24px;font-size:12px;color:#918a99}details{margin-top:22px;color:#8d8397;font-size:13px}pre{font-size:12px;white-space:pre-wrap;overflow-wrap:anywhere;background:#f8f7fa;padding:14px;border-radius:12px;color:#72647f}footer{font-size:13px;margin-top:24px;color:#887e92}.status{font-size:12px;color:#7e708d;padding:5px 9px;border:1px solid #e5ddeb;border-radius:10px;display:inline-block}
+ @media(max-width:720px){main{padding:28px 18px}.flow{grid-template-columns:repeat(2,1fr)}.layout{grid-template-columns:1fr}.cases{flex-direction:row;flex-wrap:wrap;gap:4px}button{font-size:13px;padding:8px 10px}.panel{padding:22px}.quote{font-size:21px}}@media(prefers-reduced-motion:no-preference){button{transition:background .12s ease}}
+</style>
+<main>
+ <div class="eyebrow">CHECKLINE / WORKFLOW 01</div>
+ <h1>一句话，进入正确的任务。</h1>
+ <p>小朵整理意思；App 核对、确认并保存。</p>
+ <span class="pill">本地固定样例 · 未调用 DeepSeek · 未连接手机账本</span>
+ <div class="flow" aria-label="流程">
+  <div class="step"><div class="num">01</div><strong>保留输入</strong><span>原文、草稿留在手机</span></div>
+  <div class="step"><div class="num">02</div><strong>提取意图与字段</strong><span>服务器持有模型密钥</span></div>
+  <div class="step"><div class="num">03</div><strong>校验，必要时追问</strong><span>同一任务继续补充</span></div>
+  <div class="step"><div class="num">04</div><strong>本地执行</strong><span>确认门禁、保存与撤销</span></div>
+ </div>
+ <div class="layout">
+  <nav class="cases" aria-label="选择审阅案例" id="cases"></nav>
+  <article class="panel" aria-live="polite">
+   <div class="label">用户输入</div><div class="quote" id="input">正在加载固定案例…</div>
+   <div class="status" id="status"></div>
+   <div class="fields" id="fields"></div>
+   <div class="action"><b>App 下一步</b><span id="action"></span></div>
+   <details><summary>查看接口候选</summary><pre id="json"></pre></details>
+   <p class="note">这里展示的是服务端应如何处理已给定的模型结果。不能用这些样例推断真实模型识别准确率。</p>
+  </article>
+ </div>
+ <footer>下一步：Rex 确认 → 云端安装 API、提供 HTTPS 地址 → App 接入与真实测试。</footer>
+</main>
+<script>
+ const labels={intentType:'意图',amount:'金额',currencyCode:'币种',merchant:'消费描述',budgetName:'预算',name:'名称',clarificationField:'待补信息',monthlySchedule:'月度区间'};
+ const intents={capture:'记一笔',createBudget:'创建预算',needsClarification:'继续核对',outOfScope:'超出范围'};
+ const fieldLabels={amount:'金额',input:'具体意图',action:'实际消费或心愿',occurredAt:'消费日期',budgetName:'选择预算',periodID:'选择周期'};
+ let cases=[];
+ function select(index){
+  const item=cases[index];
+  document.querySelectorAll('#cases button').forEach((button,i)=>button.setAttribute('aria-pressed',String(i===index)));
+  document.getElementById('input').textContent='“'+item.input+'”';
+  document.getElementById('status').textContent=item.status===200?'返回候选 · 等待本地核对':'读取失败 · 保留输入';
+  const fields=document.getElementById('fields');fields.replaceChildren();
+  for(const [key,value] of Object.entries(item.expected??{})){
+   if(value==null||!labels[key])continue;
+   const node=document.createElement('div');node.className='field';
+   const label=document.createElement('small');label.textContent=labels[key];node.append(label);
+   const displayed=key==='intentType'?(intents[value]??value):key==='clarificationField'?(fieldLabels[value]??value):key==='monthlySchedule'?`${value.startDay} 日 — ${value.endDay} 日`:String(value);
+   node.append(document.createTextNode(displayed));fields.append(node);
+  }
+  document.getElementById('action').textContent=item.action;
+  document.getElementById('json').textContent=JSON.stringify(item.expected??{error:{code:item.expectedError}},null,2);
+ }
+ fetch('/review/cases.json').then(r=>{if(!r.ok)throw Error();return r.json()}).then(data=>{
+  cases=data;const nav=document.getElementById('cases');
+  cases.forEach((item,index)=>{const button=document.createElement('button');button.type='button';button.textContent=item.label;button.addEventListener('click',()=>select(index));nav.append(button)});select(0);
+ }).catch(()=>{document.getElementById('input').textContent='固定案例加载失败，请刷新本地审阅页。'});
+</script>
+</html>

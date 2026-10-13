@@ -1,0 +1,13 @@
+{
+  "name": "checkline-agent-api",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "start": "node src/server.mjs",
+    "review": "node scripts/review.mjs",
+    "test": "node --test test/*.test.mjs",
+    "check-contract": "node scripts/check-contract.mjs"
+  }
+}

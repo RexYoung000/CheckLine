@@ -504,6 +504,20 @@ protocol LLMProvider: Sendable {
 - 图片：先 Vision OCR → text，用同一条 prompt。
 - 如果用户显式 opt-in「发给模型帮我看」，才发 base64（V1 不默认开启）。
 
+#### 9.1.3.1 小朵服务端 Workflow（2026-10-13，先本地验证、待 Rex 确认）
+
+Rex 指定 DeepSeek V4.1 Flash、普通思考，并明确分三步：先审阅 Workflow；Rex 再把 API 装到云端并提供 HTTPS 地址；之后才接入 App、进行云端测试。云端部署、地区选择和公开上线手续本轮不执行，App 仍使用 `.disabled`。
+
+- 实现放在 `services/agent-api/`，不进入 App Target；使用 Node.js 原生 HTTP/fetch，无第三方运行时依赖。API 无账本数据库、无会话持久化，只有固定流程：验证请求 → 固定模型解析 → 校验候选 → 返回 App。
+- `POST /v1/agent/interpret` 保持现有 `LLMRequestPayload`（`system`、`userMessage`、`context`）及 `AgentIntentCandidate` 成功响应。客户端 `system` 仅作为兼容字段，服务端使用自己的固定提示词；客户端不能选择模型、上游地址、工具或输出规则。
+- 模型调用固定 `https://api.deepseek.com/chat/completions`，官方模型 ID `deepseek-flash`，`thinking.type=enabled`、`reasoning_effort=high`（官方默认普通档）、`response_format.type=json_object`。JSON 模式只保证 JSON 格式，不保证字段或事实正确，因此服务端执行字段白名单、类型和金额字符串检查；App 继续执行实际归属、周期、币种和确认门禁。
+- 第一版理解既有消费、创建预算、预算查询与本地高影响动作意图；不新增业务动作。高影响动作所需的消费／周期／心愿 ID 不由模型编造，返回选对象的追问；本地既有界面选定对象后再做影响确认。心愿创建、退款和修改历史继续使用已实现的本地入口，不把愿望、预估价格或退款当作新消费。
+- 服务端不生成余额、长对话或可执行指令；缺项返回 `needsClarification` 或含空字段的候选，已提取字段保留在候选中。追问话术、当前任务字段合并、原文与修正字段的优先级、任务切换、请求取消／旧结果失效和成功后清理仍由 App 管理；后续接入必须验证这些行为，不能仅配置 endpoint 就宣称多轮云端接入完成。
+- 日期只接受用户明确的绝对日期；现有协议没有设备当地时间，不能用服务器时间猜“昨天”。相对日期交回本机补充／解析，后续如需要增加参考时间必须先修订隐私字段清单。
+- 开发私有 API 由服务端 `AGENT_API_TOKEN` 鉴权，并有请求大小、速率、并发与上游超时限制；它是人工联调凭据，不得作为所有用户共用的永久凭据编入 App。面向公开用户的设备／用户身份、短期凭据和跨实例配额须在公开服务切片另行完成。
+- DeepSeek 密钥仅由服务端环境／密钥设施提供，不入源码、镜像、包或 App。正文与思考内容不落盘、不写日志；服务器只记录随机请求 ID、HTTP 状态、耗时。上游响应思考内容被丢弃，错误不透传第三方正文。
+- 本轮本地固定样例和 HTTP 测试不调用真实 DeepSeek，不读取用户账本、不使用已提供密钥。演示模式只能绑定回环地址，响应带演示标记，不能替代模型准确率、手机接入或公网测试。部署与操作说明见 [`services/agent-api/README.md`](../../services/agent-api/README.md)。
+
 #### 9.1.4 当前任务中的连续追问（2026-10-04 修订）
 
 - 当前会话显示用户输入与 Agent 回复；缺字段不替换为完整表单，追问后继续接收输入。必要字段齐全后在会话中展示结构化核对，仍经 `ConfirmationGate` 与确定性服务执行。

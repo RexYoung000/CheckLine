@@ -50,6 +50,7 @@
 |------|------|
 | `engineering/ARCHITECTURE.md` | Xcode 工程事实、新 V1 目标模型和领域服务 |
 | `engineering/SETUP.md` | 开发环境、构建和本地化验证 |
+| `../services/agent-api/README.md` | 小朵固定 Workflow、接口契约、本地演示与待审阅部署包；未接通 App／公网 |
 | `engineering/PERMISSIONS.md` | Agent 与可选数据来源的权限/降级要求 |
 | `compliance/PRIVACY.md` | 当前构建事实、设备优先原则和 V1 数据流 |
 
