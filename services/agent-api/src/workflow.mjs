@@ -15,6 +15,10 @@ Extract budgetName only from a clear match in context; ask budgetName when ambig
 a budget just because only one exists. Do not assume currency except an explicit unambiguous symbol/unit.
 Missing required fields: keep known fields and return needsClarification with the missing field.
 For a vague desire to record, ask amount, and do not treat the whole sentence as a merchant.
+Amendments such as 改成38元 or change it to 38 are NOT new completed expenses. This protocol contains
+no active draft or edit target. Preserve explicit fields and ask action to identify what is being changed.
+Never assume the most recent merchant, the only budget, or an unfinished task is the target. The App
+may merge fields only when it has explicitly identified the same unfinished local task.
 Dates: extract absolute user dates only. Device time/timezone is unavailable: relative dates such as
 yesterday must ask occurredAt/startDate/endDate, not use the server clock or invent a year.
 For createBudget: cycleType repeating/oneShot only if specified; default monthly schedule is computed
@@ -26,7 +30,9 @@ Multiple expenses require needsClarification(input); never sum them into a singl
 Example input: 午餐 35 元，记到餐饮预算 (context includes 餐饮).
 Example JSON: {"intentType":"capture","amount":"35","currencyCode":"CNY","merchant":"午餐","budgetName":"餐饮"}
 Example input: 我还没买，耳机预计399元.
-Example JSON: {"intentType":"needsClarification","clarificationField":"action"}`;
+Example JSON: {"intentType":"needsClarification","clarificationField":"action"}
+Example input: 改成38元.
+Example JSON: {"intentType":"needsClarification","amount":"38","currencyCode":"CNY","clarificationField":"action"}`;
 
 function clarify(candidate, field, options = []) {
   return { ...candidate, intentType: "needsClarification", clarificationField: field,
@@ -36,11 +42,16 @@ function clarify(candidate, field, options = []) {
 // Conservative guards supplement the prompt. They do not prove extraction accuracy.
 const notAnExpense = /(?:还(?:没|没有)(?:买|花|消费)|没(?:有)?(?:买|消费|花)|打算|计划|想买|预计|退款|退货|退回|报销|工资|收入)|\b(?:haven['’]?t (?:bought|spent|paid)|didn['’]?t (?:buy|spend|pay)|plan(?:ning)? to|want to buy|refund|reimbursement)\b/i;
 const relativeDate = /(?:昨天|前天|明天|上周|上个月|下周|下个月)|\b(?:yesterday|tomorrow|last week|last month|next week|next month)\b/i;
+const amendment = /(?:改成|改为|改到|修改|更改|更正|纠正|调整|调成|调到|改一下)|\b(?:change|correct|update|revise|amend|edit|adjust|make (?:it|that))\b/i;
 
 export function applyPolicy(candidate, request) {
   const names = [...new Set(request.context.budgetCards.map((card) => card.name))];
   if (candidate.intentType === "capture") {
     if (notAnExpense.test(request.userMessage) || candidate.isMultiItem) return clarify(candidate, "input");
+    if (amendment.test(request.userMessage)) {
+      const edit = relativeDate.test(request.userMessage) ? { ...candidate, occurredAt: null } : candidate;
+      return clarify(edit, "action");
+    }
     if (relativeDate.test(request.userMessage)) return clarify({ ...candidate, occurredAt: null }, "occurredAt");
     if (!candidate.amount || !/[1-9]/.test(candidate.amount)) return clarify(candidate, "amount");
   }

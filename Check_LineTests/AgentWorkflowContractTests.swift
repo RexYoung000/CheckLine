@@ -31,6 +31,24 @@ struct AgentWorkflowContractTests {
         #expect(decoded == 13)
     }
 
+    @Test("修改对象不明确的服务端候选只能继续追问，不能进入消费执行")
+    func amendmentRequiresTarget() throws {
+        let item = try #require(cases().first { $0["id"] as? String == "correction" })
+        let expected = try #require(item["expected"] as? [String: Any])
+        let candidate = try JSONDecoder().decode(AgentIntentCandidate.self,
+                                                from: JSONSerialization.data(withJSONObject: expected))
+        #expect(candidate.amount == "38")
+        #expect(candidate.currencyCode == "CNY")
+        let now = TestDates.day(2026, 10, 14)
+        let ledger = Ledger.blank(walletCurrencyCode: "CNY", now: now)
+        let result = IntentValidator.validate(candidate, ledger: ledger, now: now, sourceType: .agentText)
+        guard case .needsClarification(let field, _) = result else {
+            Issue.record("An unbound amendment must not create a capture intent")
+            return
+        }
+        #expect(field == "action")
+    }
+
     @Test("同一服务端样例经本地校验生成 Decimal 与月度规则，金额仍由本机处理")
     func nativeValidationOfReviewCandidates() throws {
         let now = TestDates.day(2026, 10, 13)

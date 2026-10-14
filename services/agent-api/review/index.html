@@ -34,13 +34,13 @@
 <script>
  const labels={intentType:'意图',amount:'金额',currencyCode:'币种',merchant:'消费描述',budgetName:'预算',name:'名称',clarificationField:'待补信息',monthlySchedule:'月度区间'};
  const intents={capture:'记一笔',createBudget:'创建预算',needsClarification:'继续核对',outOfScope:'超出范围'};
- const fieldLabels={amount:'金额',input:'具体意图',action:'实际消费或心愿',occurredAt:'消费日期',budgetName:'选择预算',periodID:'选择周期'};
+ const fieldLabels={amount:'金额',input:'具体意图',action:'操作与对象',occurredAt:'消费日期',budgetName:'选择预算',periodID:'选择周期'};
  let cases=[];
  function select(index){
   const item=cases[index];
   document.querySelectorAll('#cases button').forEach((button,i)=>button.setAttribute('aria-pressed',String(i===index)));
   document.getElementById('input').textContent='“'+item.input+'”';
-  document.getElementById('status').textContent=item.status===200?'返回候选 · 等待本地核对':'读取失败 · 保留输入';
+  document.getElementById('status').textContent=item.status!==200?'读取失败 · 保留输入':item.expected?.intentType==='needsClarification'?'等待回答 · 尚未执行':'返回候选 · 等待本地核对';
   const fields=document.getElementById('fields');fields.replaceChildren();
   for(const [key,value] of Object.entries(item.expected??{})){
    if(value==null||!labels[key])continue;
