@@ -12,6 +12,11 @@ const object = (properties, required = Object.keys(properties)) => ({
   type: "object", properties, required, additionalProperties: false,
 });
 
+const deviceTimeSchema = object({
+  timestamp: { ...text(40), pattern: "^\\d{4}-\\d{2}-\\d{2}T(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|[+-](?:[01]\\d|2[0-3]):[0-5]\\d)$" },
+  timeZoneIdentifier: { ...text(80), minLength: 1 },
+});
+
 export const candidateSchema = object({
   intentType: { type: "string", enum: INTENTS },
   amount: money,
@@ -53,7 +58,8 @@ export const requestSchema = object({
     }) },
     recentMerchants: list(10, 160),
     tagNames: list(50, 100),
-  }),
+    deviceTime: deviceTimeSchema,
+  }, ["budgetCards", "recentMerchants", "tagNames"]),
 });
 
 // Validate only the schema vocabulary above. This is deliberately not a general JSON Schema engine.
@@ -98,6 +104,16 @@ export class WorkflowError extends Error {
 export function validateRequest(value) {
   if (!matches(requestSchema, value) || !value.userMessage.trim()) {
     throw new WorkflowError("invalid_request", 400);
+  }
+  if (value.context.deviceTime) {
+    const { timestamp, timeZoneIdentifier } = value.context.deviceTime;
+    const [year, month, day] = timestamp.slice(0, 10).split("-").map(Number);
+    const check = new Date(Date.UTC(year, month - 1, day));
+    try {
+      if (!Number.isFinite(Date.parse(timestamp)) || check.getUTCFullYear() !== year
+        || check.getUTCMonth() !== month - 1 || check.getUTCDate() !== day) throw Error();
+      new Intl.DateTimeFormat("en", { timeZone: timeZoneIdentifier });
+    } catch { throw new WorkflowError("invalid_request", 400); }
   }
   return value;
 }

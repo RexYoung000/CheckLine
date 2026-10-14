@@ -1,4 +1,5 @@
 import { candidateSchema, validateCandidate, validateRequest } from "./contract.mjs";
+import { resolveConsumptionDay } from "./device-date.mjs";
 
 export const SYSTEM_PROMPT = `You extract one untrusted intent candidate for CheckLine, a budget and wish tool.
 Return exactly one JSON object following this schema. Never output prose or tools.
@@ -19,8 +20,12 @@ Amendments such as 改成38元 or change it to 38 are NOT new completed expenses
 no active draft or edit target. Preserve explicit fields and ask action to identify what is being changed.
 Never assume the most recent merchant, the only budget, or an unfinished task is the target. The App
 may merge fields only when it has explicitly identified the same unfinished local task.
-Dates: extract absolute user dates only. Device time/timezone is unavailable: relative dates such as
-yesterday must ask occurredAt/startDate/endDate, not use the server clock or invent a year.
+Dates: extract absolute user dates only. The workflow has an optional device reference clock;
+the precise timestamp and time zone are not present in the model context.
+For capture with today/yesterday/day before yesterday, leave occurredAt null and keep capture when
+other information is sufficient; the workflow computes the calendar day in the device time zone.
+Never guess dates or use the server clock. Missing device time, vague dates, multiple days, ranges,
+and future dates require clarification. Budget date ranges still require local startDate/endDate review.
 For createBudget: cycleType repeating/oneShot only if specified; default monthly schedule is computed
 locally. Monthly schedule cycle has startDay and endDay 31; window has the user startDay/endDay.
 Do not convert monthly boundaries to actual dates. For weekly or other unsupported recurrence, ask cycleType.
@@ -52,7 +57,9 @@ export function applyPolicy(candidate, request) {
       const edit = relativeDate.test(request.userMessage) ? { ...candidate, occurredAt: null } : candidate;
       return clarify(edit, "action");
     }
-    if (relativeDate.test(request.userMessage)) return clarify({ ...candidate, occurredAt: null }, "occurredAt");
+    const day = resolveConsumptionDay(request.userMessage, request.context.deviceTime);
+    if (day.kind === "clarify") return clarify({ ...candidate, occurredAt: null }, "occurredAt");
+    if (day.kind === "resolved") candidate = { ...candidate, occurredAt: day.occurredAt };
     if (!candidate.amount || !/[1-9]/.test(candidate.amount)) return clarify(candidate, "amount");
   }
   if (candidate.budgetName) {
@@ -81,9 +88,10 @@ export function applyPolicy(candidate, request) {
 
 export async function interpret(raw, provider, signal) {
   const request = validateRequest(raw);
+  const { deviceTime, ...modelContext } = request.context;
   const output = await provider.complete({
     userMessage: request.userMessage,
-    context: request.context,
+    context: modelContext,
   }, signal);
   return validateCandidate(applyPolicy(validateCandidate(output), request));
 }

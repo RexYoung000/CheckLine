@@ -10,6 +10,27 @@ test("request preserves exact original text and contains no exported ledger valu
   assert.deepEqual(Object.keys(raw.context).sort(), ["budgetCards", "recentMerchants", "tagNames"]);
 });
 
+test("device time adds only a timestamp and time zone; legacy requests remain valid", () => {
+  validateRequest(request());
+  const raw = request();
+  raw.context.deviceTime = { timestamp: "2026-10-14T00:30:00Z", timeZoneIdentifier: "Asia/Shanghai" };
+  assert.equal(validateRequest(raw).context.deviceTime.timeZoneIdentifier, "Asia/Shanghai");
+});
+
+for (const deviceTime of [
+  null, { timestamp: "2026-10-14" },
+  { timestamp: "2026-02-31T00:30:00Z", timeZoneIdentifier: "Asia/Shanghai" },
+  { timestamp: "2026-10-14T25:00:00Z", timeZoneIdentifier: "Asia/Shanghai" },
+  { timestamp: "2026-10-14T00:30:00", timeZoneIdentifier: "Asia/Shanghai" },
+  { timestamp: "2026-10-14T00:30:00Z", timeZoneIdentifier: "made/up" },
+  { timestamp: "2026-10-14T00:30:00Z", timeZoneIdentifier: "Asia/Shanghai", deviceID: "not-allowed" },
+]) {
+  test(`invalid device clock is rejected before model use: ${JSON.stringify(deviceTime)}`, () => {
+    const raw = request(); raw.context.deviceTime = deviceTime;
+    assert.throws(() => validateRequest(raw), { code: "invalid_request", status: 400 });
+  });
+}
+
 for (const mutate of [
   (r) => { r.ledger = {}; }, (r) => { r.context.walletBalance = "100"; },
   (r) => { r.context.budgetCards[0].amount = "1000"; }, (r) => { r.tools = []; },

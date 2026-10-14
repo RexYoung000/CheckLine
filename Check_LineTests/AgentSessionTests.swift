@@ -37,7 +37,7 @@ struct LLMRequestPayloadTests {
 
         let prompt = AgentPrompt.make(
             userMessage: "记一笔咖啡",
-            context: AgentContextBuilder.build(ledger)
+            context: AgentContextBuilder.build(ledger, now: now, timeZone: TimeZone(identifier: "Asia/Shanghai")!)
         )
         let json = prompt.requestPayload.jsonUTF8
         let object = try JSONSerialization.jsonObject(with: Data(json.utf8)) as? [String: Any]
@@ -48,7 +48,10 @@ struct LLMRequestPayloadTests {
         let context = object?["context"] as? [String: Any]
         let contextJSON = String(decoding: try JSONSerialization.data(withJSONObject: context ?? [:]), as: UTF8.self)
         #expect(contextJSON.lowercased().contains("wallet") == false)
-        #expect(Set(context?.keys.map { $0 } ?? []) == ["budgetCards", "recentMerchants", "tagNames"])
+        #expect(Set(context?.keys.map { $0 } ?? []) == ["budgetCards", "recentMerchants", "tagNames", "deviceTime"])
+        let deviceTime = context?["deviceTime"] as? [String: Any]
+        #expect(Set(deviceTime?.keys.map { $0 } ?? []) == ["timestamp", "timeZoneIdentifier"])
+        #expect(deviceTime?["timeZoneIdentifier"] as? String == "Asia/Shanghai")
     }
 }
 
@@ -60,6 +63,10 @@ struct CloudLLMProviderTests {
             #expect(request.value(forHTTPHeaderField: "Content-Type") == "application/json")
             let body = try JSONSerialization.jsonObject(with: request.httpBody ?? Data()) as? [String: Any]
             #expect(Set(body?.keys.map { $0 } ?? []) == ["system", "userMessage", "context"])
+            let context = body?["context"] as? [String: Any]
+            let deviceTime = context?["deviceTime"] as? [String: Any]
+            #expect(deviceTime?["timestamp"] as? String == "2026-10-14T00:30:00Z")
+            #expect(deviceTime?["timeZoneIdentifier"] as? String == "Asia/Shanghai")
             let data = Data(#"{"intentType":"capture","amount":"18","currencyCode":"CNY","merchant":"面馆"}"#.utf8)
             return (data, HTTPURLResponse(
                 url: request.url!,
@@ -73,7 +80,8 @@ struct CloudLLMProviderTests {
             client: client
         )
         let candidate = try await provider.complete(
-            prompt: AgentPrompt.make(userMessage: "面馆 18", context: AgentContext(budgetCards: [], recentMerchants: [], tagNames: []))
+            prompt: AgentPrompt.make(userMessage: "面馆 18", context: AgentContext(budgetCards: [], recentMerchants: [], tagNames: [],
+                deviceTime: AgentDeviceTimeContext(timestamp: "2026-10-14T00:30:00Z", timeZoneIdentifier: "Asia/Shanghai")))
         )
         #expect(candidate.intentType == "capture")
         #expect(candidate.amount == "18")

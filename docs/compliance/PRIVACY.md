@@ -125,6 +125,8 @@ iCloud 是否进入首发尚未确认。启用前必须另行设计迁移、冲�
 | `context.budgetCards[]` | 活跃/待结算预算卡的 `name`、`cycleType`、`currencyCode` |
 | `context.recentMerchants` | 最近 ≤10 条去重商家名 |
 | `context.tagNames` | 已有标签名 |
+| `context.deviceTime.timestamp` | 本次发送时的 ISO 8601 时间戳，用于确定用户说的今天／昨天；不从草稿恢复旧时间。 |
+| `context.deviceTime.timeZoneIdentifier` | 当前系统时区，用于日历日期计算；不获取 GPS、位置权限或设备标识。 |
 
 默认不发送、实现上也不得加入：
 
@@ -135,6 +137,8 @@ iCloud 是否进入首发尚未确认。启用前必须另行设计迁移、冲�
 - 银行卡号、账号、身份信息。
 
 用户自己打在 `userMessage` 里的数字会原样发送；那是当前指令，不是从账本导出的余额。图片「发给模型帮我看」仍是显式 opt-in，V1 默认关闭，不在本 Provider 请求里附带图片。
+
+2026-10-14 Rex 要求取得设备时间，允许清单加入可选 `context.deviceTime`。这两个字段仅交 CheckLine API 的日期程序，转发上游模型前从消息中剥离；不写入任务草稿、账本字段或服务日志。旧客户端缺少该对象仍可用，日期不明确时追问。当前 App 云端仍关闭，本轮只在本地与模拟请求中验证，不代表真实上传已启用。
 
 ### 5.3 AI 禁止行为
 

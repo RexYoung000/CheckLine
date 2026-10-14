@@ -6,11 +6,29 @@ nonisolated struct AgentBudgetCardContext: Equatable, Sendable, Codable {
     var currencyCode: String
 }
 
-/// Read-only projection sent to a model. Contains names only — never amounts or wallet figures.
+nonisolated struct AgentDeviceTimeContext: Equatable, Sendable, Codable {
+    var timestamp: String
+    var timeZoneIdentifier: String
+
+    static func capture(now: Date, timeZone: TimeZone) -> Self {
+        let identifier = timeZone.identifier
+        let zone: String
+        if identifier.hasPrefix("GMT+") || identifier.hasPrefix("GMT-") {
+            let offset = timeZone.secondsFromGMT(for: now)
+            zone = String(format: "%@%02d:%02d", offset < 0 ? "-" : "+", abs(offset) / 3600, abs(offset) % 3600 / 60)
+        } else {
+            zone = identifier
+        }
+        return Self(timestamp: ISO8601DateFormatter().string(from: now), timeZoneIdentifier: zone)
+    }
+}
+
+/// Minimal request projection — names and this turn's clock, never balances or ledger amounts.
 nonisolated struct AgentContext: Equatable, Sendable, Codable {
     var budgetCards: [AgentBudgetCardContext]
     var recentMerchants: [String]
     var tagNames: [String]
+    var deviceTime: AgentDeviceTimeContext? = nil
 
     var jsonUTF8: String {
         let encoder = JSONEncoder()
@@ -23,11 +41,12 @@ nonisolated struct AgentContext: Equatable, Sendable, Codable {
 nonisolated enum AgentContextBuilder {
     static let merchantLimit = 10
 
-    static func build(_ ledger: Ledger) -> AgentContext {
+    static func build(_ ledger: Ledger, now: Date = Date(), timeZone: TimeZone = .current) -> AgentContext {
         AgentContext(
             budgetCards: activeCards(in: ledger),
             recentMerchants: recentMerchants(in: ledger),
-            tagNames: tagNames(in: ledger)
+            tagNames: tagNames(in: ledger),
+            deviceTime: AgentDeviceTimeContext.capture(now: now, timeZone: timeZone)
         )
     }
 

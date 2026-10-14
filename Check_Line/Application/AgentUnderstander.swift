@@ -40,7 +40,7 @@ nonisolated struct AgentUnderstander: Sendable {
 
         let prompt = AgentPrompt.make(
             userMessage: text,
-            context: AgentContextBuilder.build(ledger)
+            context: AgentContextBuilder.build(ledger, now: now)
         )
         let candidate: AgentIntentCandidate
         do {

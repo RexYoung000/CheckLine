@@ -22,6 +22,7 @@
   <nav class="cases" aria-label="选择审阅案例" id="cases"></nav>
   <article class="panel" aria-live="polite">
    <div class="label">用户输入</div><div class="quote" id="input">正在加载固定案例…</div>
+   <p class="label" id="reference" hidden></p>
    <div class="status" id="status"></div>
    <div class="fields" id="fields"></div>
    <div class="action"><b>App 下一步</b><span id="action"></span></div>
@@ -32,7 +33,7 @@
  <footer>下一步：Rex 确认 → 云端安装 API、提供 HTTPS 地址 → App 接入与真实测试。</footer>
 </main>
 <script>
- const labels={intentType:'意图',amount:'金额',currencyCode:'币种',merchant:'消费描述',budgetName:'预算',name:'名称',clarificationField:'待补信息',monthlySchedule:'月度区间'};
+ const labels={intentType:'意图',amount:'金额',currencyCode:'币种',merchant:'消费描述',budgetName:'预算',name:'名称',clarificationField:'待补信息',monthlySchedule:'月度区间',occurredAt:'消费日期'};
  const intents={capture:'记一笔',createBudget:'创建预算',needsClarification:'继续核对',outOfScope:'超出范围'};
  const fieldLabels={amount:'金额',input:'具体意图',action:'操作与对象',occurredAt:'消费日期',budgetName:'选择预算',periodID:'选择周期'};
  let cases=[];
@@ -40,13 +41,15 @@
   const item=cases[index];
   document.querySelectorAll('#cases button').forEach((button,i)=>button.setAttribute('aria-pressed',String(i===index)));
   document.getElementById('input').textContent='“'+item.input+'”';
+  const clock=item.context?.deviceTime;const reference=document.getElementById('reference');reference.hidden=!clock;
+  reference.textContent=clock?'示例设备时间：'+new Intl.DateTimeFormat('zh-CN',{timeZone:clock.timeZoneIdentifier,dateStyle:'short',timeStyle:'short',hour12:false}).format(new Date(clock.timestamp))+' · '+clock.timeZoneIdentifier:'';
   document.getElementById('status').textContent=item.status!==200?'读取失败 · 保留输入':item.expected?.intentType==='needsClarification'?'等待回答 · 尚未执行':'返回候选 · 等待本地核对';
   const fields=document.getElementById('fields');fields.replaceChildren();
   for(const [key,value] of Object.entries(item.expected??{})){
    if(value==null||!labels[key])continue;
    const node=document.createElement('div');node.className='field';
    const label=document.createElement('small');label.textContent=labels[key];node.append(label);
-   const displayed=key==='intentType'?(intents[value]??value):key==='clarificationField'?(fieldLabels[value]??value):key==='monthlySchedule'?`${value.startDay} 日 — ${value.endDay} 日`:String(value);
+   const displayed=key==='intentType'?(intents[value]??value):key==='clarificationField'?(fieldLabels[value]??value):key==='monthlySchedule'?`${value.startDay} 日 — ${value.endDay} 日`:key==='occurredAt'?new Intl.DateTimeFormat('zh-CN',{timeZone:clock?.timeZoneIdentifier??'UTC',dateStyle:'medium'}).format(new Date(value)):String(value);
    node.append(document.createTextNode(displayed));fields.append(node);
   }
   document.getElementById('action').textContent=item.action;

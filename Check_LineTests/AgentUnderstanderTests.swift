@@ -3,7 +3,7 @@ import Testing
 @testable import CheckLine
 
 struct AgentContextBuilderTests {
-    @Test("上下文只含卡名、周期、货币、商家和标签，不含金额或钱包")
+    @Test("上下文只含卡片描述、商家、标签与设备参考时间，不含账本金额或钱包")
     func omitsAmountsAndWallet() throws {
         let now = TestDates.day(2026, 1, 5)
         var ledger = Ledger.blank(walletCurrencyCode: "CNY", now: now)
@@ -54,7 +54,7 @@ struct AgentContextBuilderTests {
         )
         ledger = wallet.0
 
-        let context = AgentContextBuilder.build(ledger)
+        let context = AgentContextBuilder.build(ledger, now: now, timeZone: TimeZone(identifier: "Asia/Shanghai")!)
         #expect(context.budgetCards.map(\.name) == ["餐饮"])
         #expect(context.budgetCards.first?.cycleType == CycleType.repeating.rawValue)
         #expect(context.budgetCards.first?.currencyCode == "CNY")
@@ -68,7 +68,10 @@ struct AgentContextBuilderTests {
         #expect(json.contains("9999") == false)
         #expect(json.lowercased().contains("wallet") == false)
         let object = try JSONSerialization.jsonObject(with: Data(json.utf8)) as? [String: Any]
-        #expect(Set(object?.keys.map { $0 } ?? []) == ["budgetCards", "recentMerchants", "tagNames"])
+        #expect(Set(object?.keys.map { $0 } ?? []) == ["budgetCards", "recentMerchants", "tagNames", "deviceTime"])
+        let clock = object?["deviceTime"] as? [String: Any]
+        #expect(Set(clock?.keys.map { $0 } ?? []) == ["timestamp", "timeZoneIdentifier"])
+        #expect(clock?["timeZoneIdentifier"] as? String == "Asia/Shanghai")
         #expect(object?["recentMerchants"] as? [String] == ["HiddenCafe"])
         #expect(object?["tagNames"] as? [String] == ["人情"])
         let card = (object?["budgetCards"] as? [[String: Any]])?.first

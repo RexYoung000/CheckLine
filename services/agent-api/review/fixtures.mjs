@@ -1,5 +1,6 @@
 import { readFile } from "node:fs/promises";
 import { WorkflowError } from "../src/contract.mjs";
+import { isDeepStrictEqual } from "node:util";
 
 export const DEFAULT_CONTEXT = {
   budgetCards: [{ name: "餐饮", cycleType: "repeating", currencyCode: "CNY" }],
@@ -14,7 +15,11 @@ export async function makeFixtureProvider() {
   const cases = await loadCases();
   return {
     async complete(input) {
-      const item = cases.find((entry) => entry.input === input.userMessage);
+      const item = cases.find((entry) => {
+        const context = structuredClone(entry.context ?? DEFAULT_CONTEXT);
+        delete context.deviceTime;
+        return entry.input === input.userMessage && isDeepStrictEqual(context, input.context);
+      });
       if (item?.modelError) throw new WorkflowError(item.modelError.code, item.modelError.status, item.modelError.retryable);
       return structuredClone(item?.modelCandidate ?? { intentType: "needsClarification", clarificationField: "input" });
     },
