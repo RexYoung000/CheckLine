@@ -173,7 +173,8 @@ test("standalone HTML embeds actual computed candidates and the shared executabl
   const html = await renderReview();
   assert(!html.includes("<!--REVIEW_"));
   const data = JSON.parse(html.match(/<script type="application\/json" id="review-data">([\s\S]*?)<\/script>/)[1]);
-  assert.equal(data.length, 27);
+  assert.equal(data.length, scenarios.length);
+  assert.equal(new Set(data.map(item => item.id)).size, data.length);
   assert.equal(data.find((item) => item.id === "guessed-budget").candidate.budgetName, null);
   assert(!data.some((item) => Object.hasOwn(item, "expected") || Object.hasOwn(item, "modelCandidate")));
   assert(!/<script[^>]+src=|<link[^>]+href=|\bfetch\(/i.test(html));

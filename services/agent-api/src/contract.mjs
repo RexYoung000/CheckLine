@@ -44,7 +44,12 @@ export const candidateSchema = object({
   actualAmount: money,
   clarificationField: nullable(text(40)),
   clarificationOptions: nullable(list(50, 160)),
+  requestedIntent: nullable({ type: "string", enum: INTENTS.filter((intent) => !["needsClarification", "outOfScope", "recommendPurchase"].includes(intent)) }),
 }, ["intentType"]);
+
+// Server-owned continuation hint is never part of the upstream model schema.
+export const modelCandidateSchema = object(Object.fromEntries(Object.entries(candidateSchema.properties)
+  .filter(([key]) => key !== "requestedIntent")), ["intentType"]);
 
 export const requestSchema = object({
   // Legacy client compatibility only. Never used as the server system prompt.
@@ -118,8 +123,8 @@ export function validateRequest(value) {
   return value;
 }
 
-export function validateCandidate(value) {
-  if (!matches(candidateSchema, value)) throw new WorkflowError("invalid_model_output", 502, true);
+export function validateCandidate(value, fromModel = false) {
+  if (!matches(fromModel ? modelCandidateSchema : candidateSchema, value)) throw new WorkflowError("invalid_model_output", 502, true);
   for (const field of ["occurredAt", "startDate", "endDate"]) {
     if (!value[field]) continue;
     const [year, month, day] = value[field].slice(0, 10).split("-").map(Number);
@@ -129,7 +134,7 @@ export function validateCandidate(value) {
       throw new WorkflowError("invalid_model_output", 502, true);
     }
   }
-  const fields = [...Object.keys(candidateSchema.properties), "input", "action"];
+  const fields = [...Object.keys(modelCandidateSchema.properties), "input", "action"];
   if (value.clarificationField && !fields.includes(value.clarificationField)) {
     throw new WorkflowError("invalid_model_output", 502, true);
   }

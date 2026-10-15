@@ -24,6 +24,8 @@ nonisolated struct AgentIntentCandidate: Equatable, Sendable, Codable {
     var actualAmount: String? = nil
     var clarificationField: String? = nil
     var clarificationOptions: [String]? = nil
+    /// Server-owned hint for a known action that still needs local fields or an object.
+    var requestedIntent: String? = nil
 
     static func clarification(field: String, options: [String] = []) -> AgentIntentCandidate {
         AgentIntentCandidate(

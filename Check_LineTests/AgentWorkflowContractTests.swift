@@ -12,7 +12,8 @@ struct AgentWorkflowContractTests {
     @Test("服务端审阅候选均可被当前 Swift 解码，高影响操作只返回追问")
     func decodesReviewCandidates() throws {
         var decoded = 0
-        for item in try cases() {
+        let fixtures = try cases()
+        for item in fixtures {
             guard let expected = item["expected"] as? [String: Any] else { continue }
             let data = try JSONSerialization.data(withJSONObject: expected)
             let candidate = try JSONDecoder().decode(AgentIntentCandidate.self, from: data)
@@ -28,7 +29,24 @@ struct AgentWorkflowContractTests {
             }
             decoded += 1
         }
-        #expect(decoded == 15)
+        #expect(decoded == fixtures.filter { $0["expected"] != nil }.count)
+    }
+
+    @Test("追问候选保留原动作，旧候选仍可解码且不越过确认")
+    func continuationIsOptionalAndNonExecuting() throws {
+        let legacy = try JSONDecoder().decode(AgentIntentCandidate.self,
+            from: Data(#"{"intentType":"needsClarification","clarificationField":"periodID"}"#.utf8))
+        #expect(legacy.requestedIntent == nil)
+        let candidate = try JSONDecoder().decode(AgentIntentCandidate.self,
+            from: Data(#"{"intentType":"needsClarification","requestedIntent":"settlePeriod","budgetName":"餐饮","clarificationField":"periodID"}"#.utf8))
+        #expect(candidate.requestedIntent == "settlePeriod")
+        let now = TestDates.day(2026, 10, 14)
+        let ledger = Ledger.blank(walletCurrencyCode: "CNY", now: now)
+        guard case .needsClarification(let field, _) = IntentValidator.validate(candidate, ledger: ledger, now: now, sourceType: .agentText) else {
+            Issue.record("Continuation hint cannot execute a settlement")
+            return
+        }
+        #expect(field == "periodID")
     }
 
     @Test("修改对象不明确的服务端候选只能继续追问，不能进入消费执行")
