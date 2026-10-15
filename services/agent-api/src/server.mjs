@@ -1,6 +1,5 @@
 import { createServer } from "node:http";
 import { createHash, randomUUID, timingSafeEqual } from "node:crypto";
-import { readFile } from "node:fs/promises";
 import { pathToFileURL } from "node:url";
 import { VERSION, WorkflowError } from "./contract.mjs";
 import { interpret } from "./workflow.mjs";
@@ -94,11 +93,15 @@ export function makeServer({ config, provider, logger = (event) => console.info(
       if (request.url === "/health" && request.method === "GET") {
         return respond(response, 200, { status: "ready", mode: config.demo ? "demonstration" : "live" }, requestID, config.demo);
       }
-      if (config.demo && request.method === "GET" && ["/review", "/review/cases.json"].includes(request.url)) {
+      if (config.demo && request.method === "GET" && ["/review", "/review/cases.json", "/review/download.html"].includes(request.url)) {
         const isPage = request.url === "/review";
-        const data = await readFile(new URL(isPage ? "../review/index.html" : "../review/cases.json", import.meta.url));
-        response.writeHead(200, { "Content-Type": isPage ? "text/html; charset=utf-8" : "application/json; charset=utf-8",
+        const isHTML = isPage || request.url === "/review/download.html";
+        const { renderReview } = await import("../review/render.mjs");
+        const { makeReviewCases } = await import("../review/scenarios.mjs");
+        const data = isHTML ? await renderReview() : JSON.stringify(await makeReviewCases());
+        response.writeHead(200, { "Content-Type": isHTML ? "text/html; charset=utf-8" : "application/json; charset=utf-8",
           "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff",
+          ...(!isPage && isHTML ? { "Content-Disposition": 'attachment; filename="checkline-workflow-review.html"' } : {}),
           "Content-Security-Policy": "default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src 'self'; base-uri 'none'; frame-ancestors 'none'" });
         response.end(data);
         return;

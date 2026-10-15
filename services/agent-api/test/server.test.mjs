@@ -54,6 +54,8 @@ test("health is readiness only, live review stays unavailable, logs contain meta
     async ({ url, send, logs }) => {
       assert.equal((await fetch(url + "/health")).status, 200);
       assert.equal((await fetch(url + "/review")).status, 404);
+      assert.equal((await fetch(url + "/review/download.html")).status, 404);
+      assert.equal((await fetch(url + "/review/cases.json")).status, 404);
       const response = await send(requestFor({ input: "PrivateCafe 135.79" }), { headers: { "X-Request-ID": "private-input" } });
       assert.match(response.headers.get("X-Request-ID"), /^[0-9a-f-]{36}$/);
       await response.json();
@@ -61,6 +63,25 @@ test("health is readiness only, live review stays unavailable, logs contain meta
       const serialized = JSON.stringify(logs);
       for (const privateValue of [token, "PrivateCafe", "135.79", "private-input"]) assert(!serialized.includes(privateValue));
     });
+});
+
+test("demo HTML and download are self-contained and never call the configured model", async () => {
+  let calls = 0;
+  await withServer({ config: { demo: true }, provider: { complete: async () => { ++calls; throw Error("should not be called"); } } }, async ({ url }) => {
+    const response = await fetch(url + "/review");
+    assert.equal(response.status, 200);
+    assert.match(response.headers.get("Content-Type"), /^text\/html/);
+    const html = await response.text();
+    assert(html.includes("function planCapture("));
+    assert(!html.includes("<!--REVIEW_"));
+    const download = await fetch(url + "/review/download.html");
+    assert.equal(download.status, 200);
+    assert.match(download.headers.get("Content-Disposition"), /^attachment;/);
+    assert.equal(await download.text(), html);
+    const cases = await (await fetch(url + "/review/cases.json")).json();
+    assert.equal(cases.find((item) => item.id === "guessed-budget").candidate.budgetName, null);
+    assert.equal(calls, 0);
+  });
 });
 
 test("request body ceiling rejects known and chunked oversized bodies", async () => {

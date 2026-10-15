@@ -2,62 +2,45 @@
 <html lang="zh-CN">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>小朵 · Workflow 审阅</title>
+<title>小朵 · Workflow 归属核对</title>
 <style>
- :root{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#292536;background:#f5f4f7;line-height:1.55;color-scheme:light}*{box-sizing:border-box}body{margin:0}main{max-width:1120px;margin:auto;padding:44px 28px 60px}.eyebrow{font-size:13px;color:#736584;letter-spacing:.06em}h1{font-size:32px;letter-spacing:-.04em;margin:9px 0 8px}h2{font-size:19px;letter-spacing:-.02em;margin:0 0 20px}p{margin:0;color:#746f7e}.pill{font-size:12px;border:1px solid #ded9e5;border-radius:20px;padding:5px 10px;display:inline-block;margin-top:18px}.flow{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:32px 0 24px}.step,.panel{background:#fff;border:1px solid #e4e0e9;border-radius:20px}.step{padding:20px}.num{font-size:12px;color:#9788aa}.step strong{display:block;font-size:16px;margin-top:8px}.step span{display:block;font-size:13px;color:#847d8d;margin-top:5px}.layout{display:grid;grid-template-columns:230px 1fr;gap:24px;align-items:start}.cases{display:flex;flex-direction:column;gap:5px}button{font:inherit;border:0;text-align:left;border-radius:12px;padding:11px 14px;background:transparent;color:#756b80;cursor:pointer}button[aria-pressed=true]{background:#e9e1f2;color:#58406f;font-weight:600}button:hover{background:#efebf4}button:focus-visible{outline:3px solid #9779b8;outline-offset:2px}.panel{padding:28px}.quote{font-size:24px;line-height:1.4;color:#362d42;margin:18px 0 28px;overflow-wrap:anywhere}.label{font-size:12px;color:#8c8297}.fields{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0 28px}.field{background:#f5f2f8;border-radius:12px;padding:10px 14px;font-size:16px}.field small{display:block;color:#8e7fa0;font-size:11px}.action{padding:20px;background:#f8f6fa;border-radius:15px;color:#5e5369}.action b{display:block;font-size:13px;margin-bottom:8px}.note{margin-top:24px;font-size:12px;color:#918a99}details{margin-top:22px;color:#8d8397;font-size:13px}pre{font-size:12px;white-space:pre-wrap;overflow-wrap:anywhere;background:#f8f7fa;padding:14px;border-radius:12px;color:#72647f}footer{font-size:13px;margin-top:24px;color:#887e92}.status{font-size:12px;color:#7e708d;padding:5px 9px;border:1px solid #e5ddeb;border-radius:10px;display:inline-block}
- @media(max-width:720px){main{padding:28px 18px}.flow{grid-template-columns:repeat(2,1fr)}.layout{grid-template-columns:1fr}.cases{flex-direction:row;flex-wrap:wrap;gap:4px}button{font-size:13px;padding:8px 10px}.panel{padding:22px}.quote{font-size:21px}}@media(prefers-reduced-motion:no-preference){button{transition:background .12s ease}}
+:root{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Segoe UI",sans-serif;color:#30283d;background:#f5f3f8;line-height:1.55;color-scheme:light;--surface:#fff;--ink:#30283d;--quiet:#746980;--accent:#6d4c91;--soft:#eee7f5;--line:#e6e0ed;--tint:#faf8fc;--warning:#8b5626}*{box-sizing:border-box}body{margin:0}button,input,a{font:inherit}button,a,input{outline-offset:4px}button:focus-visible,a:focus-visible,input:focus-visible,summary:focus-visible{outline:3px solid #a287c1}button{cursor:pointer}button:disabled{cursor:default;opacity:.55}main{max-width:1280px;padding:30px 32px 48px;margin:auto}.topbar{display:flex;align-items:center;justify-content:space-between;gap:18px;font-size:14px}.brand{font-weight:650}.download{color:var(--accent);text-underline-offset:4px}header{margin:36px 0 27px}h1{font-size:clamp(29px,3.3vw,42px);font-weight:620;letter-spacing:-.04em;line-height:1.25;margin:0 0 12px}header p{color:var(--quiet);margin:0;font-size:15px}.boundary{display:flex;align-items:center;gap:8px;margin-top:16px;font-size:12px;color:var(--quiet)}.boundary span{width:7px;height:7px;border:1.5px solid var(--accent);border-radius:50%}.flow{display:flex;flex-wrap:wrap;list-style:none;padding:0;margin:24px 0 0;gap:8px 0;color:var(--quiet);font-size:12px}.flow li:not(:last-child)::after{content:'›';margin:0 14px;color:#a99cb7}.flow li[aria-current=step]{font-weight:650;color:var(--accent)}.layout{display:grid;grid-template-columns:195px minmax(0,1fr) 220px;gap:22px;align-items:start}.cases summary{font-size:12px;color:var(--quiet);padding:9px 8px;cursor:pointer;list-style-position:inside}.cases details+details{margin-top:15px}.case-list{display:flex;flex-direction:column;gap:3px}.case-button{border:0;background:transparent;color:var(--quiet);text-align:left;padding:10px 12px;border-radius:10px;font-size:14px;min-height:44px}.case-button[aria-pressed=true]{background:var(--soft);color:var(--accent);font-weight:600}.case-button:hover{background:var(--soft)}.console{background:var(--surface);border:1px solid var(--line);border-radius:26px;overflow:hidden;min-width:0}.context{padding:17px 24px;border-bottom:1px solid var(--line);font-size:12px;color:var(--quiet);display:flex;justify-content:space-between;gap:12px}.context strong{font-weight:500;color:var(--ink)}.conversation{padding:27px 26px 24px}.by{font-size:12px;color:var(--quiet)}.user-message{margin-left:20px;text-align:right}.user-message blockquote{display:inline-block;text-align:left;margin:7px 0 29px;padding:13px 18px;background:var(--soft);border-radius:17px 17px 4px 17px;font-size:18px;overflow-wrap:anywhere;max-width:100%}.agent-mark{font-size:12px;color:var(--accent);font-weight:600}.agent-mark::before{content:'';display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--accent);margin-right:7px}h2{font-size:21px;font-weight:560;letter-spacing:-.02em;margin:10px 0 15px;line-height:1.6;overflow-wrap:anywhere}.support{font-size:13px;color:var(--quiet);margin:0 0 16px}.choices{display:grid;gap:9px}.choice{display:flex;flex-direction:column;gap:3px;border:1px solid var(--line);border-radius:14px;text-align:left;padding:13px 16px;background:var(--surface);color:var(--ink);min-height:55px}.choice:hover{border-color:var(--accent);background:var(--tint)}.choice strong{font-size:15px;font-weight:550}.choice small{font-size:12px;color:var(--quiet)}.choice.unbudgeted{background:var(--tint)}.receipt{padding:20px;background:var(--tint);border-radius:16px;margin-top:17px}.receipt .amount{font-size:31px;letter-spacing:-.04em;font-weight:550;line-height:1.25;overflow-wrap:anywhere}.receipt .original{font-size:12px;color:var(--quiet);margin-top:5px}.receipt dl{display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px 16px;margin:18px 0 0;font-size:13px}.receipt dt{color:var(--quiet)}.receipt dd{margin:0;text-align:right;overflow-wrap:anywhere}.status{font-size:12px;color:var(--accent);margin-top:15px}.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:19px}.action-button{border:0;border-radius:12px;padding:12px 16px;min-height:44px;background:var(--soft);color:var(--accent);font-size:14px}.action-button.primary{background:var(--accent);color:white}.action-button.quiet{background:transparent;color:var(--quiet)}.footer-note{font-size:11px;color:var(--quiet);margin-top:16px}.tools{border-top:1px solid var(--line);padding:13px 26px;background:var(--tint)}.tools summary{font-size:12px;color:var(--quiet);cursor:pointer}.tools form{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:16px 0}.tools label{font-size:12px;color:var(--quiet);display:flex;flex-direction:column;gap:7px}.tools input{width:100%;min-width:0;min-height:42px;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:8px;padding:8px}.tools button{grid-column:1/-1}.checks{padding:9px 0}.checks h3{font-size:13px;font-weight:600;margin:0 0 19px}.check{display:grid;grid-template-columns:18px 1fr;gap:8px;margin:0 0 20px;font-size:12px}.check .mark{color:var(--accent)}.check .mark.blocked{color:var(--warning)}.check strong{display:block;font-weight:500;color:var(--quiet);margin-bottom:4px}.check p{margin:0;overflow-wrap:anywhere}.explanation{font-size:12px;color:var(--quiet);border-top:1px solid var(--line);padding-top:16px;margin-top:5px}.technical{margin-top:20px;font-size:12px;color:var(--quiet)}.technical summary{cursor:pointer;min-height:30px}.technical pre{font-size:11px;white-space:pre-wrap;overflow-wrap:anywhere;background:var(--soft);border-radius:12px;padding:14px;max-height:400px;overflow:auto}.bottom{font-size:12px;color:var(--quiet);margin-top:26px;text-align:center}.export-hint{display:none}
+.mobile-selector{display:none}.mobile-selector select{width:100%;min-height:46px;min-width:0;padding:11px 13px;border:1px solid var(--line);border-radius:11px;background:var(--surface);color:var(--ink);font-size:14px}@media(max-width:650px){.mobile-selector{display:flex;flex-direction:column;gap:6px;font-size:12px;color:var(--quiet)}#case-groups{display:none}}
+@media(max-width:1050px){.layout{grid-template-columns:175px minmax(0,1fr)}.checks{grid-column:2}.check-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 18px}.explanation{max-width:65ch}}@media(max-width:650px){main{padding:22px 16px 35px}header{margin:29px 0 20px}.layout{grid-template-columns:minmax(0,1fr);gap:18px}.cases{min-width:0}.case-list{flex-direction:row;flex-wrap:wrap;gap:5px}.case-button{font-size:12px;padding:8px 10px;min-height:40px}.cases details+details{margin-top:5px}.console{border-radius:21px}.conversation{padding:23px 20px}.context{padding:14px 20px;flex-wrap:wrap}.checks{grid-column:1;padding:5px 5px 0}h2{font-size:20px}.user-message blockquote{font-size:17px}.tools{padding:13px 20px}.flow li:not(:last-child)::after{margin:0 9px}.download{font-size:12px}.receipt{padding:17px}.receipt .amount{font-size:29px}}@media(prefers-reduced-motion:no-preference){button{transition:background .12s ease,border-color .12s ease}}@media(prefers-color-scheme:dark){:root{background:#211d27;color:#eee7f5;color-scheme:dark;--surface:#2c2634;--ink:#eee7f5;--quiet:#b8acc6;--accent:#c5a8e6;--soft:#40324e;--line:#493e54;--tint:#302837;--warning:#e7bb8e}.action-button.primary{color:#241b2e}}
 </style>
 <main>
- <div class="eyebrow">CHECKLINE / WORKFLOW 01</div>
- <h1>一句话，进入正确的任务。</h1>
- <p>小朵整理意思；App 核对、确认并保存。</p>
- <span class="pill">本地固定样例 · 未调用 DeepSeek · 未连接手机账本</span>
- <div class="flow" aria-label="流程">
-  <div class="step"><div class="num">01</div><strong>保留输入</strong><span>原文、草稿留在手机</span></div>
-  <div class="step"><div class="num">02</div><strong>提取意图与字段</strong><span>服务器持有模型密钥</span></div>
-  <div class="step"><div class="num">03</div><strong>校验，必要时追问</strong><span>同一任务继续补充</span></div>
-  <div class="step"><div class="num">04</div><strong>本地执行</strong><span>确认门禁、保存与撤销</span></div>
- </div>
+ <div class="topbar"><span class="brand">CheckLine · 小朵</span><a class="download" href="/review/download.html" download="checkline-workflow-review.html" id="download">保存独立 HTML</a></div>
+ <header>
+  <h1>这笔，记到哪里？</h1>
+  <p>点选案例，查看小朵如何核对预算卡和所属周期。</p>
+  <div class="boundary"><span aria-hidden="true"></span>固定虚构案例，未调用模型，未连接手机账本。</div>
+  <ol class="flow" aria-label="记录流程"><li>理解输入</li><li id="flow-date">核对日期</li><li id="flow-card">确认预算与周期</li><li id="flow-rate">检查币种</li><li id="flow-save">记录与撤销</li></ol>
+ </header>
  <div class="layout">
-  <nav class="cases" aria-label="选择审阅案例" id="cases"></nav>
-  <article class="panel" aria-live="polite">
-   <div class="label">用户输入</div><div class="quote" id="input">正在加载固定案例…</div>
-   <p class="label" id="reference" hidden></p>
-   <div class="status" id="status"></div>
-   <div class="fields" id="fields"></div>
-   <div class="action"><b>App 下一步</b><span id="action"></span></div>
-   <details><summary>查看接口候选</summary><pre id="json"></pre></details>
-   <p class="note">这里展示的是服务端应如何处理已给定的模型结果。不能用这些样例推断真实模型识别准确率。</p>
-  </article>
+  <nav class="cases" aria-label="选择审阅案例" id="cases"><label class="mobile-selector">查看案例<select id="mobile-cases"></select></label><div id="case-groups"></div></nav>
+  <section class="console" aria-label="对话流程演示">
+   <div class="context"><strong id="scenario">正在准备案例…</strong><span id="entry"></span></div>
+   <div class="conversation" aria-live="polite" aria-atomic="false">
+    <div class="user-message"><span class="by">你</span><br><blockquote id="input"></blockquote></div>
+    <div class="agent-mark">小朵</div>
+    <h2 id="prompt"></h2><p class="support" id="support" hidden></p>
+    <div id="choices" class="choices" aria-label="选择预算归属"></div>
+    <section class="receipt" id="receipt" aria-label="这笔消费的核对摘要" hidden></section>
+    <div class="status" id="status" role="status"></div>
+    <div class="actions" id="actions"></div>
+    <div class="footer-note">操作仅模拟流程，不保存消费。</div>
+   </div>
+   <details class="tools" id="edit"><summary>改一下字段，检查是否重新核对</summary><form id="edit-form"><label>消费日期<input id="edit-date" type="date" required></label><label>原币金额<input id="edit-amount" inputmode="decimal" pattern="[0-9]+(\.[0-9]+)?" required></label><button class="action-button" type="submit">应用到当前示例</button></form></details>
+  </section>
+  <aside class="checks" aria-label="当前核对状态">
+   <h3>当前核对</h3><div id="checks" class="check-list"></div>
+   <p class="explanation" id="explanation"></p>
+   <details class="technical"><summary>查看接口候选与本机门禁</summary><pre id="json"></pre></details>
+   <button class="action-button quiet" id="reset" type="button">重新查看本例</button>
+  </aside>
  </div>
- <footer>下一步：Rex 确认 → 云端安装 API、提供 HTTPS 地址 → App 接入与真实测试。</footer>
+ <div class="bottom">确认流程后，由 Rex 部署 API，再接入 App 并测试真实模型。</div>
 </main>
-<script>
- const labels={intentType:'意图',amount:'金额',currencyCode:'币种',merchant:'消费描述',budgetName:'预算',name:'名称',clarificationField:'待补信息',monthlySchedule:'月度区间',occurredAt:'消费日期'};
- const intents={capture:'记一笔',createBudget:'创建预算',needsClarification:'继续核对',outOfScope:'超出范围'};
- const fieldLabels={amount:'金额',input:'具体意图',action:'操作与对象',occurredAt:'消费日期',budgetName:'选择预算',periodID:'选择周期'};
- let cases=[];
- function select(index){
-  const item=cases[index];
-  document.querySelectorAll('#cases button').forEach((button,i)=>button.setAttribute('aria-pressed',String(i===index)));
-  document.getElementById('input').textContent='“'+item.input+'”';
-  const clock=item.context?.deviceTime;const reference=document.getElementById('reference');reference.hidden=!clock;
-  reference.textContent=clock?'示例设备时间：'+new Intl.DateTimeFormat('zh-CN',{timeZone:clock.timeZoneIdentifier,dateStyle:'short',timeStyle:'short',hour12:false}).format(new Date(clock.timestamp))+' · '+clock.timeZoneIdentifier:'';
-  document.getElementById('status').textContent=item.status!==200?'读取失败 · 保留输入':item.expected?.intentType==='needsClarification'?'等待回答 · 尚未执行':'返回候选 · 等待本地核对';
-  const fields=document.getElementById('fields');fields.replaceChildren();
-  for(const [key,value] of Object.entries(item.expected??{})){
-   if(value==null||!labels[key])continue;
-   const node=document.createElement('div');node.className='field';
-   const label=document.createElement('small');label.textContent=labels[key];node.append(label);
-   const displayed=key==='intentType'?(intents[value]??value):key==='clarificationField'?(fieldLabels[value]??value):key==='monthlySchedule'?`${value.startDay} 日 — ${value.endDay} 日`:key==='occurredAt'?new Intl.DateTimeFormat('zh-CN',{timeZone:clock?.timeZoneIdentifier??'UTC',dateStyle:'medium'}).format(new Date(value)):String(value);
-   node.append(document.createTextNode(displayed));fields.append(node);
-  }
-  document.getElementById('action').textContent=item.action;
-  document.getElementById('json').textContent=JSON.stringify(item.expected??{error:{code:item.expectedError}},null,2);
- }
- fetch('/review/cases.json').then(r=>{if(!r.ok)throw Error();return r.json()}).then(data=>{
-  cases=data;const nav=document.getElementById('cases');
-  cases.forEach((item,index)=>{const button=document.createElement('button');button.type='button';button.textContent=item.label;button.addEventListener('click',()=>select(index));nav.append(button)});select(0);
- }).catch(()=>{document.getElementById('input').textContent='固定案例加载失败，请刷新本地审阅页。'});
-</script>
+<!--REVIEW_DATA-->
+<!--REVIEW_RUNTIME-->
 </html>
