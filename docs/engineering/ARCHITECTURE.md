@@ -509,6 +509,8 @@ protocol LLMProvider: Sendable {
 
 Rex 指定 DeepSeek V4.1 Flash、普通思考，并明确分三步：先审阅 Workflow；Rex 再把 API 装到云端并提供 HTTPS 地址；之后才接入 App、进行云端测试。云端部署、地区选择和公开上线手续本轮不执行，App 仍使用 `.disabled`。
 
+2026-10-16 Rex 已确认采用当前 Workflow 逻辑，第一步流程审阅完成；下一步等待 Rex 部署并提供 HTTPS 地址。该确认不改变真实退款等业务的实施边界，也不自动启用云端。原生候选合并、归属／周期门禁、鉴权、错误分类与取消必须在接入阶段落实并验证。
+
 - 实现放在 `services/agent-api/`，不进入 App Target；使用 Node.js 原生 HTTP/fetch，无第三方运行时依赖。API 无账本数据库、无会话持久化，只有固定流程：验证请求 → 固定模型解析 → 校验候选 → 返回 App。
 - `POST /v1/agent/interpret` 保持现有 `LLMRequestPayload`（`system`、`userMessage`、`context`）及 `AgentIntentCandidate` 成功响应。客户端 `system` 仅作为兼容字段，服务端使用自己的固定提示词；客户端不能选择模型、上游地址、工具或输出规则。
 - 模型调用固定 `https://api.deepseek.com/chat/completions`，官方模型 ID `deepseek-flash`，`thinking.type=enabled`、`reasoning_effort=high`（官方默认普通档）、`response_format.type=json_object`。JSON 模式只保证 JSON 格式，不保证字段或事实正确，因此服务端执行字段白名单、类型和金额字符串检查；App 继续执行实际归属、周期、币种和确认门禁。
