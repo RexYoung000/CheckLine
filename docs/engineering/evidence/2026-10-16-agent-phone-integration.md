@@ -23,9 +23,11 @@ Rex 已授权部署、无域名的 IP HTTPS 和个人 iPhone 接入，并单独�
 | 原生真实云端 UI | 专用新建 Cloud QA 模拟器、普通持久化 App、真实服务器与 DeepSeek：记一笔午餐 → 追问金额 → 35 元 → 选预算 → 摘要确认 → 保存 → 重启 → 昨天咖啡 12 元 → 再次核对预算，通过 |
 | 本地回归 | 现有连续追问／核对／保存／撤销 UI 路径通过；未显式启用真实 UI 测试时，该项准确跳过，不消耗模型服务 |
 | 构建 | 签名 Release 1.0（8）构建及严格签名校验通过；扫描确认私有服务 Token 和传输文件不在 App 包中 |
-| 手机 | 已覆盖安装 iPhone 12，设备查询为 1.0（8），没有卸载、清空、读取或逐条比较用户账本。私有配置文件已传入；最后自动启动因锁屏被系统拒绝，等待解锁完成导入／启动检查 |
+| 手机 | 已覆盖安装 iPhone 12，设备查询为 1.0（8），没有卸载、清空、读取或逐条比较用户账本。首次启动被锁屏阻止；Rex 解锁后启动成功，进程持续运行（PID 3015），一次性配置文件已处理并删除。未代用户选择云端许可或发送真实数据；手机实际模型对话仍待试用 |
 
 最新领域结果：`/tmp/CheckLineCloudBuild/Logs/Test/Test-CheckLine App-2026.10.16_14-48-53-+0800.xcresult`。真实 UI 两次完成同一路径，计作一个不同用例；日志 `/tmp/checkline-cloud-live-ui-final.log`、`/tmp/checkline-cloud-live-ui-opt-in.log`。真实 UI 仅在 `TEST_RUNNER_CHECKLINE_LIVE_AGENT_UI=1` 且专用空白设备已私有配置时运行，普通测试不包含模型调用。
+
+解锁后安装补验：`/tmp/checkline-cloud-phone-unlocked-version.json`、`/tmp/checkline-cloud-phone-unlocked-launch.json` 与进程查询均成功；只检查版本、进程和配置文件是否存在，不读取账本正文。`Library/Application Support/CheckLineAgentProvisioning.json` 已不存在，表明本次导入流程已执行并清理；这不替代真实设备首次许可与模型对话验收。更新交付记录，没有修改 App 或重复计算测试通过数。
 
 首轮测试辅助容器生命周期与编译参数问题已修正后完整复测。首轮真实 UI 使用单独“午餐”，模型未明确动作，原生因此补了“记一笔／创建预算”动作选择与金额门禁；随后使用明确指令跑通，并增加意图不明后继续补字段的原生回归。首发许可弹窗在首轮实际显示并接受；214 项测试另验证未许可前零请求，成功 UI 复测覆盖已同意后的重启连接。不能把首轮失败算作通过。
 
