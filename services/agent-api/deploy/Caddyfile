@@ -1,0 +1,30 @@
+{
+	admin off
+	default_sni 123.207.2.148
+	log default {
+		output stderr
+		format json
+		exclude http.log.error
+	}
+}
+
+123.207.2.148 {
+	tls {
+		issuer acme {
+			dir https://acme-v02.api.letsencrypt.org/directory
+			profile shortlived
+		}
+	}
+	header {
+		-Server
+		Cache-Control "no-store"
+		X-Content-Type-Options "nosniff"
+	}
+	@api path /health /v1/agent/interpret
+	handle @api {
+		reverse_proxy 127.0.0.1:8787
+	}
+	handle {
+		respond 404
+	}
+}

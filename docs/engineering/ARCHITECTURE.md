@@ -14,7 +14,7 @@
 | 当前 UI | iOS 27+ iPhone 使用可见的系统 `TabView` 底栏，四页面 Tab + `.prominent` Agent，系统负责透镜与触摸追踪；Agent 选择由入口绑定转为原会话面板，页面选择保留。iPad 与 iOS 17–26 的 `WalletGlassNavigation` 为自定义兼容回退，不等同系统透镜。空首页使用完整米白背景。验收状态见 ROADMAP |
 | 正式数据层 | 首页与 Agent 经 `CheckLineWorkspace` 读写本地 `LedgerStore`（无 CloudKit） |
 | Test Target | `Check_LineTests` 覆盖领域引擎、理解管线、`AgentSession` 与首页工作区持久化；`Check_LineUITests` / `CheckLine UI` Scheme 在隔离预览账本上点击系统 Tab、Agent 与空首页创建入口 |
-| 网络 / 后端 / AI | `CloudLLMProvider` 已实现且默认关闭；App 入口不启用、启动无网络请求 |
+| 网络 / 后端 / AI | 可选私有 `CloudAgentSettings`，Keychain 限时凭据、首次发送许可、HTTPS API；默认本地，启动无网络请求 |
 | 系统权限 / iCloud | 麦克风与 Speech 仅用户触发后按需申请；端侧转写代码已接入、实际音频识别尚未验证。iCloud 未启用，SwiftData 使用 `cloudKitDatabase: .none` |
 
 `ShellChromeState` 分离用户选择与当前呈现页面：系统栏即时选中与换页，兼容回退按既有卡夹过渡执行。iPad 使用原居中限宽布局，避免系统 prominent 入口分布到屏幕两端；根页进入详情时隐藏底栏。Agent 不写入四页面选择状态，不创建新会话。系统栏模式的操作反馈浮在页面安全区内，兼容模式的反馈仍在自有导航上方，不能遮挡底栏按钮。导航不修改业务数据。磨砂材质与不透明票据在 DesignSystem 共享。
@@ -485,10 +485,9 @@ protocol LLMProvider: Sendable {
 }
 ```
 
-- V1 目标实现是云端 HTTP（`CloudLLMProvider`）。
-- **默认关闭**：`LLMProviderSettings.disabled` 只返回 `UnavailableLLMProvider`，走 `LocalRegexFallback`。
-- App 入口当前不启用该开关，因此启动仍无网络请求。
-- 测试用 `MockLLMProvider` 或注入 `HTTPPerforming`，不打真实地址。
+- `CloudLLMProvider` 通过 HTTPS 请求自有 API，不直接持有模型密钥；拒绝重定向与不安全 URL。
+- **默认本地**：无私有凭据或用户未许可时，使用 `LLMProviderSettings.disabled` 与 `LocalRegexFallback`。有效配置导入 Keychain、用户同意后才走云端；启动无网络请求。
+- 单元测试用 `MockLLMProvider` 或注入 `HTTPPerforming`；独立 `CloudAgentLiveUITests` 必须在专用空白模拟器配置后显式运行，使用真实 API 和合成内容，不在普通回归中自动消耗模型服务。
 - `AgentIntentCandidate` 是模型返回的未校验 JSON（金额字段为字符串）；经 `IntentValidator` 解码和校验后才生成正式 `AgentIntent` 或 `needsClarification`。
 
 #### 9.1.3 AgentPrompt 与上下文构建规则
@@ -497,21 +496,24 @@ protocol LLMProvider: Sendable {
 - **user message** = 用户原文（文字 / 语音转写 / OCR 提取的文字）。
 - **context** = `AgentContextBuilder.build(ledger)` 的 JSON，内容：
   - 活跃预算卡名称、周期、货币
-  - 最近 ≤10 条去重商家名
-  - 已有标签名
+  - 协议兼容最近 ≤10 条去重商家与标签；本次私有 App 发送这两个数组为空，不导出历史
   - `deviceTime.timestamp`：本次发送的 ISO 8601 时间戳；`deviceTime.timeZoneIdentifier`：设备系统时区（不是定位）。每次请求重建，不从任务草稿恢复；仅交 CheckLine API 的程序解析，上游模型消息剥离这两个字段。
   - **不含**：金额、完整交易记录、商家历史明细、钱包余额
 - 语音：先 Speech → text，用同一条 prompt。
 - 图片：先 Vision OCR → text，用同一条 prompt。
 - 如果用户显式 opt-in「发给模型帮我看」，才发 base64（V1 不默认开启）。
 
-#### 9.1.3.1 小朵服务端 Workflow（2026-10-16 已部署私有内部服务）
+#### 9.1.3.1 小朵服务端 Workflow（2026-10-16 私有 HTTPS 与原生接入）
 
 最初约定（2026-10-13）：Rex 指定 DeepSeek V4.1 Flash、普通思考，并明确分三步：先审阅 Workflow；Rex 再把 API 装到云端并提供 HTTPS 地址；之后才接入 App、进行云端测试。初始准备阶段不执行云端部署、地区选择或公开上线手续，App 使用 `.disabled`。后续部署授权与实际结果见下文。
 
 2026-10-16 Rex 已确认采用当前 Workflow 逻辑，第一步流程审阅完成；随后授权 Codex 在已通过腾讯云控制台核实身份的广州服务器部署私有联调 API。使用官方校验和验证的 Node.js 24 LTS、独立无登录账号和 systemd；源码版本独立保存在只读 release 目录，密钥由 root-only 环境文件注入，不进入源码、镜像、交付包或日志。API 只监听 `127.0.0.1:8787`，公网须先配置有效 HTTPS，不能以 HTTP 或自签名证书替代手机接入。保留前一版本和本机 SSH 信任记录备份；真实模型、HTTPS、海外访问与 App 接入分别验证。该授权不改变真实退款等业务的实施边界，也不自动启用 App 云端。原生候选合并、归属／周期门禁、鉴权、错误分类与取消必须在接入阶段落实并验证。
 
 同日已完成内部部署，运行 Node.js 24.22.0，systemd 已启用开机启动并通过进程重启检查。服务器 275 项检查及 3 个真实模型合成请求通过，未启动 Docker、修改 App 或接触账本。Rex 明确先部署内部服务；有效 HTTPS 与外部访问继续等待域名。release 与真实验证边界见 [部署记录](evidence/2026-10-16-agent-api-deployment.md)。
+
+同日后续手机接入授权：Rex 选择无域名先体验，采用公网 IP 的受信任 HTTPS 证书与自动续期反向代理；不改变内部 8787 回环监听，不允许 HTTP、跳过 TLS 校验或安装自签名根证书。Caddy 使用官方固定版本校验，独立账号与持久证书目录，关闭请求访问日志；公开入口仍只供私有联调。手机仅保存该测试服务的限时凭据（服务端核验期限），DeepSeek 密钥仍只在服务器。安装时一次性私有配置文件导入 Keychain 后删除，不写入 App 包、源码、UserDefaults 或普通日志，不作为公开多用户身份方案。
+
+原生请求先检查用户发送许可与 HTTPS 配置，返回完整候选再合入当前任务，而非先变成丢字段的追问。网络错误不伪装为成功或静默提交本地猜测；本地必要字段回答与手动操作不调用模型。异步结果绑定任务标识、字段快照与请求代次；关闭／切模式／换任务取消并使旧结果失效。预算选择使用稳定本机 ID，并按消费日期重新求实际周期；不把模型卡名或首页焦点当作已确认归属，不任取同名卡或周期。预算币不同仍经现有明确换算门禁，缺换算不作零。原生 Core 金额、结算与追溯门禁保持。
 
 - 实现放在 `services/agent-api/`，不进入 App Target；使用 Node.js 原生 HTTP/fetch，无第三方运行时依赖。API 无账本数据库、无会话持久化，只有固定流程：验证请求 → 固定模型解析 → 校验候选 → 返回 App。
 - `POST /v1/agent/interpret` 保持现有 `LLMRequestPayload`（`system`、`userMessage`、`context`）及 `AgentIntentCandidate` 成功响应。客户端 `system` 仅作为兼容字段，服务端使用自己的固定提示词；客户端不能选择模型、上游地址、工具或输出规则。
@@ -537,14 +539,14 @@ protocol LLMProvider: Sendable {
 
 - 当前会话显示用户输入与 Agent 回复；缺字段不替换为完整表单，追问后继续接收输入。必要字段齐全后在会话中展示结构化核对，仍经 `ConfirmationGate` 与确定性服务执行。
 - 本地补充回答只合入当前未完成任务，明确切换任务时不把旧金额或商家带到新任务。泛化意向如「想录一笔」不能保存为商家，未知意图不能直接写消费。
-- 对话历史不持久化、不上传；任务字段继续使用现有本机草稿，关闭／恢复、手动切换和保存失败保留输入。云端协议仍默认关闭，仅一次请求返回结构化候选；真实服务与多轮云端上下文在接入方案确认后另行实施。
+- 对话历史不持久化、不上传；任务字段继续使用现有本机草稿，关闭／恢复、手动切换和保存失败保留输入。2026-10-16 私有云端请求返回完整候选再合并当前任务，纯字段回答在本机继续，不把整个对话交给模型。请求绑定任务、字段快照和代次，切换／编辑／关闭／后台后旧结果无效。
 - `TaskDraft` 增加可选 `agentRequestText` 与 `pendingAgentField`，只保存当前任务已发送原文和待补字段，旧草稿缺少这两项时仍可解码；不保存助手回复。成功、放弃或明确换任务时清理，不跨任务拼接。
 
 #### 9.1.4.1 端侧语音输入（2026-10-04 已接入，实际识别待验证）
 
 - `VoiceCaptureController` 管理麦克风授权、Speech 授权、音频生命周期与端侧转写，不写入账本。先检查语言和 `supportsOnDeviceRecognition`，请求设置 `requiresOnDeviceRecognition = true`；不自动降级到网络识别，不保存音频文件或输出音频／转写日志。
 - 转写进入当前输入草稿，由用户编辑并发送。取消恢复录音前输入，结束保留已转写文字；关闭面板或进入后台停止麦克风。异步旧回调不能覆盖新一轮输入或重新开启采集；原始音频不落盘、不记日志。
-- 权限拒绝、不支持、无结果、音频中断和失败保留文字路径。实际音频识别与真机权限流程尚未运行验证；云端模型仍未配置启用。
+- 权限拒绝、不支持、无结果、音频中断和失败保留文字路径。实际音频识别与真机权限流程尚未运行验证；可选云端只处理用户检查后发送的文字。
 
 #### 9.1.4.2 心愿创建币种（2026-10-04 修正）
 
@@ -555,7 +557,7 @@ protocol LLMProvider: Sendable {
 #### 9.1.5 离线降级
 
 - Agent 入口始终可见。
-- 离线或模型不可用 → `LocalRegexFallback`：
+- 没有配置或用户选择本地 → `LocalRegexFallback`；云端请求失败保留输入、明确错误，由用户重试／切手动，不能静默采用猜测保存：
   - 正则提取：金额、货币符号、商家关键词。
   - 填入 `CaptureDraft(amount, currency, merchant)`。
   - 归属留 `nil` → `ConfirmationGate` 判为 `confirmStructured` → UI 引导用户选预算卡。
@@ -578,7 +580,7 @@ M4 面板只渲染 `AgentTurn`，不直接调引擎：
 - `turn(input:)`：自然语言 / 转写 / OCR → Understander → ConfirmationGate。
 - `turn(intent:)`：追问表单、结算按钮、查询等本地组装的意图，**不再调模型**。
 - `execute`：确认后经协调器写 Core。
-- 默认 `LLMProviderSettings.disabled`。启用云端前必须与 `PRIVACY.md` 5.2 字段表一致。
+- 默认本地；配置与同意由 `CloudAgentSettings` 管理，云端先保留候选再交既有 `AgentSession` 门禁与领域服务。请求字段必须与 `PRIVACY.md` 5.2 一致。
 
 ---
 

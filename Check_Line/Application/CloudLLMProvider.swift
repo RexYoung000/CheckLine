@@ -5,10 +5,17 @@ nonisolated protocol HTTPPerforming: Sendable {
 }
 
 nonisolated struct URLSessionHTTPClient: HTTPPerforming {
-    var session: URLSession = .shared
+    var session: URLSession = URLSession(configuration: .ephemeral, delegate: NoAgentRedirects(), delegateQueue: nil)
 
     func data(for request: URLRequest) async throws -> (Data, URLResponse) {
         try await session.data(for: request)
+    }
+}
+
+private final class NoAgentRedirects: NSObject, URLSessionTaskDelegate, @unchecked Sendable {
+    func urlSession(_ session: URLSession, task: URLSessionTask, willPerformHTTPRedirection response: HTTPURLResponse,
+                    newRequest request: URLRequest, completionHandler: @escaping (URLRequest?) -> Void) {
+        completionHandler(nil)
     }
 }
 
@@ -30,12 +37,16 @@ nonisolated struct CloudLLMProvider: LLMProvider {
     var endpoint: URL
     var client: any HTTPPerforming
     var timeout: TimeInterval = 15
+    var authorizationToken: String? = nil
 
     nonisolated func complete(prompt: AgentPrompt) async throws -> AgentIntentCandidate {
+        guard endpoint.scheme == "https", endpoint.user == nil, endpoint.password == nil else { throw LLMProviderError.unavailable }
+        try Task.checkCancellation()
         var request = URLRequest(url: endpoint)
         request.httpMethod = "POST"
         request.timeoutInterval = timeout
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        if let authorizationToken { request.setValue("Bearer " + authorizationToken, forHTTPHeaderField: "Authorization") }
         let payload = LLMRequestPayload(
             system: prompt.system,
             userMessage: prompt.userMessage,
@@ -47,13 +58,22 @@ nonisolated struct CloudLLMProvider: LLMProvider {
         let response: URLResponse
         do {
             (data, response) = try await client.data(for: request)
+        } catch is CancellationError { throw LLMProviderError.cancelled
+        } catch let error as URLError where error.code == .cancelled { throw LLMProviderError.cancelled
+        } catch let error as URLError where error.code == .timedOut { throw LLMProviderError.timedOut
         } catch {
             throw LLMProviderError.unavailable
         }
 
-        guard let http = response as? HTTPURLResponse, (200 ..< 300).contains(http.statusCode) else {
+        try Task.checkCancellation()
+        guard let http = response as? HTTPURLResponse else { throw LLMProviderError.invalidResponse }
+        if http.statusCode == 401 || http.statusCode == 403 { throw LLMProviderError.unauthorized }
+        if http.statusCode == 429 { throw LLMProviderError.rateLimited }
+        if http.statusCode == 504 { throw LLMProviderError.timedOut }
+        guard (200 ..< 300).contains(http.statusCode) else {
             throw LLMProviderError.unavailable
         }
+        guard data.count <= 65_536 else { throw LLMProviderError.invalidResponse }
         do {
             return try JSONDecoder().decode(AgentIntentCandidate.self, from: data)
         } catch {

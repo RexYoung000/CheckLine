@@ -196,9 +196,9 @@ struct CreateComposerSheet: View {
         .onChange(of: workspace.showComposer) { _, presented in
             if presented == false && !workspace.showAgent { dismiss() }
         }
-        .onDisappear { voiceCapture.stopForInterruption(); attachmentImport.cancel(workspace: workspace) }
+        .onDisappear { workspace.cancelCloudRequest(); voiceCapture.stopForInterruption(); attachmentImport.cancel(workspace: workspace) }
         .onChange(of: scenePhase) { _, phase in
-            if phase == .background { voiceCapture.stopForInterruption(); attachmentImport.cancel(workspace: workspace) }
+            if phase == .background { workspace.cancelCloudRequest(); voiceCapture.stopForInterruption(); attachmentImport.cancel(workspace: workspace) }
         }
         .onChange(of: workspace.taskDraft.entityID) { _, _ in
             voiceCapture.stopForInterruption(); attachmentImport.cancel(workspace: workspace)

@@ -17,10 +17,12 @@ export function loadConfig(env = process.env) {
     maxRequests: 20,
     maxConcurrent: 2,
     timeoutMs: 12_000,
+    tokenExpiresAt: env.AGENT_API_TOKEN_EXPIRES_AT ? Date.parse(env.AGENT_API_TOKEN_EXPIRES_AT) : null,
   };
   if (!Number.isInteger(config.port) || config.port < 1 || config.port > 65535
       || typeof config.token !== "string" || config.token.length < 32
-      || /\s/.test(config.token) || (config.demo && !loopback(config.host))) {
+      || /\s/.test(config.token) || (config.tokenExpiresAt !== null && !Number.isFinite(config.tokenExpiresAt))
+      || (config.demo && !loopback(config.host))) {
     throw new WorkflowError("server_configuration_error", 500);
   }
   if (!config.demo && !env.DEEPSEEK_API_KEY?.trim()) throw new WorkflowError("server_configuration_error", 500);
@@ -109,7 +111,8 @@ export function makeServer({ config, provider, logger = (event) => console.info(
       if (request.url !== "/v1/agent/interpret") throw new WorkflowError("not_found", 404);
       if (request.method !== "POST") throw new WorkflowError("method_not_allowed", 405);
       const auth = request.headers.authorization ?? "";
-      if (!auth.startsWith("Bearer ") || !timingSafeEqual(hash(auth.slice(7)), expected)) {
+      if (!auth.startsWith("Bearer ") || !timingSafeEqual(hash(auth.slice(7)), expected)
+          || (config.tokenExpiresAt != null && clock() >= config.tokenExpiresAt)) {
         throw new WorkflowError("unauthorized", 401);
       }
       const now = clock();

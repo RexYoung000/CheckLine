@@ -33,6 +33,19 @@ struct SettingsPlaceholderView: View {
                     }
                     .padding(16)
                     .walletSurface()
+                    if let workspace, workspace.cloudSettings.isConfigured {
+                        VStack(alignment: .leading, spacing: 10) {
+                            Toggle(String(localized: "cloud.agent.setting"), isOn: Binding(
+                                get: { workspace.cloudSettings.isEnabled },
+                                set: { workspace.cloudSettings.consent = $0; workspace.cancelCloudRequest() }
+                            ))
+                            .tint(PaperTheme.accent)
+                            .disabled(!workspace.cloudSettings.isAvailable && !workspace.cloudSettings.isEnabled)
+                            .accessibilityIdentifier("cloud.agent.enabled")
+                            Text(String(localized: workspace.cloudSettings.isAvailable ? "cloud.agent.settingBody" : "cloud.agent.unauthorized"))
+                                .font(.caption).foregroundStyle(PaperTheme.muted).fixedSize(horizontal: false, vertical: true)
+                        }.padding(16).walletSurface()
+                    }
                     VStack(spacing: 0) {
                         inlineSetting("wallet.settings.language", value: String(localized: "wallet.settings.followsSystem"), detail: "wallet.settings.languageBody")
                         if let workspace {
@@ -115,7 +128,7 @@ struct SettingsPlaceholderView: View {
 struct SettingsInformationView: View {
     let isPrivacy: Bool
     private var facts: [(String.LocalizationValue, String.LocalizationValue)] {
-        isPrivacy ? [("ui.privacy.ledger", "ui.privacy.ledgerBody"), ("wallet.expense.attachments", "ui.privacy.attachmentsBody"), ("ui.source.voice", "ui.privacy.voiceBody")]
+        isPrivacy ? [("ui.privacy.ledger", "ui.privacy.ledgerBody"), ("cloud.agent.setting", "cloud.agent.privacyBody"), ("wallet.expense.attachments", "ui.privacy.attachmentsBody"), ("ui.source.voice", "ui.privacy.voiceBody")]
                   : [("ui.about.purpose", "ui.about.purposeBody"), ("ui.about.local", "ui.about.localBody")]
     }
     var body: some View {

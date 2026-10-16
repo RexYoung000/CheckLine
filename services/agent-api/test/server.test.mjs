@@ -150,3 +150,15 @@ test("demo cannot bind publicly and live mode requires server credentials", () =
   assert.throws(() => loadConfig({ AGENT_API_TOKEN: "short", DEEPSEEK_API_KEY: "synthetic" }), { code: "server_configuration_error" });
   assert.equal(loadConfig({ AGENT_API_TOKEN: token, DEEPSEEK_API_KEY: "synthetic" }).demo, false);
 });
+
+test("private phone credentials expire before any additional model call", async () => {
+  let now = 1000, calls = 0;
+  const provider = { complete: async () => { calls++; return { intentType: "capture", amount: "35", currencyCode: "CNY", merchant: "午餐" }; } };
+  await withServer({ config: { tokenExpiresAt: 2000 }, provider, clock: () => now }, async ({ send }) => {
+    assert.equal((await send()).status, 200);
+    now = 2000;
+    assert.equal((await send()).status, 401);
+    assert.equal(calls, 1);
+  });
+  assert.throws(() => loadConfig({ AGENT_API_TOKEN: token, DEEPSEEK_API_KEY: "synthetic", AGENT_API_TOKEN_EXPIRES_AT: "invalid" }));
+});

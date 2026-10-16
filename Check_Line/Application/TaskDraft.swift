@@ -16,6 +16,14 @@ nonisolated struct TaskDraft: Codable, Equatable, Sendable {
     // Optional so drafts saved before conversational entry remain readable.
     var agentRequestText: String? = nil
     var pendingAgentField: String? = nil
+    var agentUsesCloud: Bool? = nil
+    var agentNeedsDate: Bool? = nil
+    var agentCurrencyExplicit: Bool? = nil
+    var agentEntryExplicitBudget: Bool? = nil
+    var agentBudgetName: String? = nil
+    var agentCycleType: String? = nil
+    var agentBudgetStartDate: String? = nil
+    var agentBudgetEndDate: String? = nil
     var name = ""
     var amount = ""
     var currency = "CNY"
@@ -43,7 +51,9 @@ nonisolated struct TaskDraft: Codable, Equatable, Sendable {
         if let value = candidate.name { name = value }
         if let value = candidate.merchant { merchant = value }
         if let value = candidate.note { note = value }
-        if let value = candidate.cycleType { repeating = value == "repeating" }
+        if let value = candidate.cycleType { repeating = value == "repeating"; agentCycleType = value }
+        if let value = candidate.startDate { agentBudgetStartDate = value }
+        if let value = candidate.endDate { agentBudgetEndDate = value }
         if let value = candidate.monthlySchedule { monthlySchedule = value }
         if let value = candidate.periodID { attributionID = value; explicitAttribution = true }
         if let value = candidate.occurredAt, let date = ISO8601DateFormatter().date(from: value) { occurredAt = date }

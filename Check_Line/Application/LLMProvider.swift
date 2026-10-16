@@ -3,6 +3,10 @@ import Foundation
 nonisolated enum LLMProviderError: Error, Equatable, Sendable {
     case unavailable
     case invalidResponse
+    case unauthorized
+    case rateLimited
+    case timedOut
+    case cancelled
 }
 
 nonisolated protocol LLMProvider: Sendable {

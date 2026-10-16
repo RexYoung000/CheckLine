@@ -48,6 +48,19 @@ struct AgentTaskPanel: View {
             } message: {
                 Text(String(localized: "ui.voice.permission.detail"))
             }
+            .alert(String(localized: "cloud.agent.consentTitle"), isPresented: Binding(
+                get: { workspace.needsCloudConsent && part != .content },
+                set: { workspace.needsCloudConsent = $0 }
+            )) {
+                Button(String(localized: "cloud.agent.continueLocal"), role: .cancel) {
+                    workspace.cloudSettings.consent = false
+                    Task { await workspace.submitText() }
+                }
+                Button(String(localized: "cloud.agent.enableSend")) {
+                    workspace.cloudSettings.consent = true
+                    Task { await workspace.submitText() }
+                }
+            } message: { Text(String(localized: "cloud.agent.consentBody")) }
     }
 
     private var expanded: some View {
@@ -99,6 +112,39 @@ struct AgentTaskPanel: View {
                 .walletSurface(radius: 24)
                 .accessibilityElement(children: .contain)
                 .accessibilityIdentifier("wallet.agent.confirmation")
+            }
+            if workspace.taskDraft.agentUsesCloud == true && workspace.taskDraft.pendingAgentField == "budgetName"
+                || (workspace.cloudPendingAction?.requestedIntent ?? workspace.cloudPendingAction?.intentType) == "queryBudgetStatus" {
+                VStack(alignment: .leading, spacing: 10) {
+                    ForEach(workspace.ledger.budgets.values.filter { $0.state != .archived }.sorted { $0.sortIndex < $1.sortIndex }, id: \.id) { budget in
+                        Button { workspace.chooseCloudBudget(budget.id) } label: {
+                            VStack(alignment: .leading, spacing: 4) {
+                                HStack { Text(budget.name); Spacer(); Text(MoneyFormat.string(budget.defaultAmount, currencyCode: budget.defaultCurrencyCode)).foregroundStyle(PaperTheme.muted) }
+                                if let period = HomeProjector.displayPeriod(for: budget.id, ledger: workspace.ledger) {
+                                    Text(BudgetPresentation.periodDates(start: period.startDate, end: period.endDate)).font(.caption).foregroundStyle(PaperTheme.muted)
+                                }
+                            }.frame(minHeight: 44).contentShape(Rectangle())
+                        }.buttonStyle(.plain).accessibilityIdentifier("cloud.agent.budget." + budget.id.uuidString)
+                    }
+                    if workspace.cloudPendingAction == nil {
+                        Button(String(localized: "cloud.agent.unbudgeted")) { workspace.chooseCloudBudget(nil) }
+                            .frame(minHeight: 44)
+                    }
+                }.padding(16).walletSurface()
+            }
+            if workspace.taskDraft.agentNeedsDate == true {
+                DatePicker(String(localized: "cloud.agent.date"), selection: $workspace.taskDraft.occurredAt, displayedComponents: .date)
+                Button(String(localized: "cloud.agent.continue")) {
+                    workspace.taskDraft.agentNeedsDate = false
+                    workspace.reviewRetainedTask()
+                }.frame(minHeight: 44)
+            }
+            if case .cloudFailure = workspace.agentBanner {
+                Button(String(localized: "cloud.agent.retry")) { Task { await workspace.submitText() } }
+                    .frame(minHeight: 44).accessibilityIdentifier("cloud.agent.retry")
+            }
+            if let action = workspace.cloudPendingAction, (action.requestedIntent ?? action.intentType) != "queryBudgetStatus" {
+                CloudAgentActionsView(workspace: workspace, candidate: action)
             }
             }
 

@@ -553,12 +553,12 @@ nonisolated struct AgentActionCoordinator {
             decision = confirmed
         } else if let periodID = draft.periodID {
             decision = .confirmed(periodID: periodID)
-        } else if let budgetID = draft.budgetID,
-                  let period = ledger.periods.values.first(where: {
-                      $0.budgetID == budgetID && $0.state == .pendingSettlement
-                  }),
-                  CycleEngine.shouldQueue(expenseOccurredAt: draft.occurredAt, period: period, calendar: calendar, budget: ledger.budgets[budgetID]) {
-            decision = .queued(budgetID: budgetID)
+        } else if let budgetID = draft.budgetID {
+            switch CaptureAttributionResolver.resolve(budgetID: budgetID, occurredAt: draft.occurredAt, ledger: ledger, calendar: calendar) {
+            case .period(let id): decision = .confirmed(periodID: id)
+            case .queued(let id): decision = .queued(budgetID: id)
+            case .unavailable: throw LedgerError.captureDateOutsidePeriod
+            }
         } else {
             decision = AttributionEngine.suggestPeriod(expense: expense, ledger: ledger, calendar: calendar)
         }

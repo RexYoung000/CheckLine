@@ -50,8 +50,9 @@
 |------|------|
 | `engineering/ARCHITECTURE.md` | Xcode 工程事实、新 V1 目标模型和领域服务 |
 | `engineering/SETUP.md` | 开发环境、构建和本地化验证 |
-| `../services/agent-api/README.md` | 小朵 Workflow 已确认，腾讯云内部服务已部署；接口、维护与测试边界，待域名／HTTPS 后接入 App |
+| `../services/agent-api/README.md` | 小朵 Workflow、腾讯云 IP HTTPS、私有原生接入与维护边界 |
 | `engineering/evidence/2026-10-16-agent-api-deployment.md` | 腾讯云内部部署版本、服务器检查、真实模型样例与后续接入边界 |
+| `engineering/evidence/2026-10-16-agent-phone-integration.md` | IP HTTPS、限时凭据、原生任务链路、真实模型操作与手机安装记录 |
 | `engineering/PERMISSIONS.md` | Agent 与可选数据来源的权限/降级要求 |
 | `compliance/PRIVACY.md` | 当前构建事实、设备优先原则和 V1 数据流 |
 
@@ -62,7 +63,7 @@
 - 旧样机的多预算重复扣减、旧结算、悬浮文本/语音已被新产品定义取代；分析日历按 2026-09-22 新规则实装，四 Tab 职责以 `DESIGN.md` 3.1.2 为准。
 - 正式 SwiftData Schema V1 与本地 `ModelContainer` 已接入 App（无 CloudKit）。
 - `BudgetEngine`、`LedgerStore` 及 M1 领域服务单测是新 V1 验收入口；`PrototypeDeletionTests` 只证明旧样机行为。
-- 当前构建未启用云端模型、网络来源或 iCloud；语音点击后按需申请麦克风与 Speech 权限，只走设备端转写。语音代码已接入，真实音频识别与真机权限仍待验证；图片识别和被动来源未接入。
+- 当前构建支持私有云端文字理解：安装配置导入 Keychain，首次发送许可、设置可关闭；无配置或未许可时保持本地。完整账本与附件不上传，网络来源和 iCloud 未启用。语音点击后按需申请麦克风与 Speech 权限，只走设备端转写。真实音频识别与真机权限仍待验证；图片识别和被动来源未接入。
 - **M4 清透界面已进入原生实现，体验验收未关闭。** 首页液面卡夹、三层票据、独立预算详情、四 Tab 玻璃导航与右侧小朵、预算／心愿／分析空状态、录入／助手和个人设置已接入；系统／浅色／深色共用语义材质。iOS 27+ iPhone 底栏由系统 `TabView` 绘制，iPad 与 iOS 17–26 采用兼容玻璃栏。领域测试与模拟器 UI 测试的最新结果、真机尚待验收的范围见 ROADMAP；旧样机外观不再作为实现基线。
 
 ## 维护规则

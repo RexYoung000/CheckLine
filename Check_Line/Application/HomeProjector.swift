@@ -138,6 +138,7 @@ nonisolated struct AttributionChoice: Equatable, Identifiable, Sendable {
     var id: String
     var periodID: UUID?
     var title: String
+    var queuedBudgetID: UUID? = nil
 }
 
 nonisolated enum WorkspaceBanner: Equatable, Sendable {
@@ -154,6 +155,8 @@ nonisolated enum WorkspaceBanner: Equatable, Sendable {
     case failed
     case needsConversion
     case needsPeriod
+    case cloudFailure(LLMProviderError)
+    case deleted
 
     var localizedText: String {
         switch self {
@@ -177,6 +180,10 @@ nonisolated enum WorkspaceBanner: Equatable, Sendable {
             String(localized: "v1.banner.needsFullscreen")
         case .needsClarification(let field):
             switch field {
+            case "budgetName", "budgetID", "periodID": String(localized: "cloud.agent.chooseBudget")
+            case "occurredAt": String(localized: "cloud.agent.chooseDate")
+            case "merchant": String(localized: "cloud.agent.merchant")
+            case "action": String(localized: "cloud.agent.chooseAction")
             case "name": String(localized: "v1.agent.clarify.name")
             case "cycleType": String(localized: "v1.agent.clarify.cycle")
             case "currencyCode": String(localized: "v1.agent.clarify.currency")
@@ -189,6 +196,17 @@ nonisolated enum WorkspaceBanner: Equatable, Sendable {
             String(localized: "ui.currency.unconverted")
         case .failed:
             String(localized: "v1.banner.failed")
+        case .deleted:
+            String(localized: "cloud.agent.deleted")
+        case .cloudFailure(let error):
+            switch error {
+            case .unauthorized: String(localized: "cloud.agent.unauthorized")
+            case .rateLimited: String(localized: "cloud.agent.rateLimited")
+            case .timedOut: String(localized: "cloud.agent.timedOut")
+            case .invalidResponse: String(localized: "cloud.agent.invalidResponse")
+            case .cancelled: String(localized: "cloud.agent.cancelled")
+            case .unavailable: String(localized: "cloud.agent.unavailable")
+            }
         }
     }
 }
