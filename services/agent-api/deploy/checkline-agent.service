@@ -1,0 +1,44 @@
+[Unit]
+Description=CheckLine private Agent API
+Wants=network-online.target
+After=network-online.target
+ConditionPathExists=/etc/checkline-agent/agent.env
+StartLimitIntervalSec=60
+StartLimitBurst=5
+
+[Service]
+Type=simple
+User=checkline-agent
+Group=checkline-agent
+WorkingDirectory=/opt/checkline-agent/current
+EnvironmentFile=/etc/checkline-agent/agent.env
+Environment=NODE_ENV=production
+ExecStart=/opt/checkline-agent/node/bin/node src/server.mjs
+Restart=on-failure
+RestartSec=3
+TimeoutStopSec=10
+KillSignal=SIGTERM
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+PrivateDevices=true
+ProtectSystem=strict
+ProtectHome=true
+ProtectHostname=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+RestrictRealtime=true
+RestrictNamespaces=true
+LockPersonality=true
+CapabilityBoundingSet=
+AmbientCapabilities=
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+LimitNOFILE=512
+TasksMax=64
+MemoryMax=256M
+CPUQuota=100%
+
+[Install]
+WantedBy=multi-user.target

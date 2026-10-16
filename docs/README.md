@@ -50,7 +50,8 @@
 |------|------|
 | `engineering/ARCHITECTURE.md` | Xcode 工程事实、新 V1 目标模型和领域服务 |
 | `engineering/SETUP.md` | 开发环境、构建和本地化验证 |
-| `../services/agent-api/README.md` | 小朵 Workflow 逻辑已于 2026-10-16 确认；接口契约、本地演示与部署包，待 Rex 部署后接入 App |
+| `../services/agent-api/README.md` | 小朵 Workflow 已确认，腾讯云内部服务已部署；接口、维护与测试边界，待域名／HTTPS 后接入 App |
+| `engineering/evidence/2026-10-16-agent-api-deployment.md` | 腾讯云内部部署版本、服务器检查、真实模型样例与后续接入边界 |
 | `engineering/PERMISSIONS.md` | Agent 与可选数据来源的权限/降级要求 |
 | `compliance/PRIVACY.md` | 当前构建事实、设备优先原则和 V1 数据流 |
 

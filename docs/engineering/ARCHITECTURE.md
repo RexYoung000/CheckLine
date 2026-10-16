@@ -505,11 +505,13 @@ protocol LLMProvider: Sendable {
 - 图片：先 Vision OCR → text，用同一条 prompt。
 - 如果用户显式 opt-in「发给模型帮我看」，才发 base64（V1 不默认开启）。
 
-#### 9.1.3.1 小朵服务端 Workflow（2026-10-13，先本地验证、待 Rex 确认）
+#### 9.1.3.1 小朵服务端 Workflow（2026-10-16 已部署私有内部服务）
 
-Rex 指定 DeepSeek V4.1 Flash、普通思考，并明确分三步：先审阅 Workflow；Rex 再把 API 装到云端并提供 HTTPS 地址；之后才接入 App、进行云端测试。云端部署、地区选择和公开上线手续本轮不执行，App 仍使用 `.disabled`。
+最初约定（2026-10-13）：Rex 指定 DeepSeek V4.1 Flash、普通思考，并明确分三步：先审阅 Workflow；Rex 再把 API 装到云端并提供 HTTPS 地址；之后才接入 App、进行云端测试。初始准备阶段不执行云端部署、地区选择或公开上线手续，App 使用 `.disabled`。后续部署授权与实际结果见下文。
 
-2026-10-16 Rex 已确认采用当前 Workflow 逻辑，第一步流程审阅完成；下一步等待 Rex 部署并提供 HTTPS 地址。该确认不改变真实退款等业务的实施边界，也不自动启用云端。原生候选合并、归属／周期门禁、鉴权、错误分类与取消必须在接入阶段落实并验证。
+2026-10-16 Rex 已确认采用当前 Workflow 逻辑，第一步流程审阅完成；随后授权 Codex 在已通过腾讯云控制台核实身份的广州服务器部署私有联调 API。使用官方校验和验证的 Node.js 24 LTS、独立无登录账号和 systemd；源码版本独立保存在只读 release 目录，密钥由 root-only 环境文件注入，不进入源码、镜像、交付包或日志。API 只监听 `127.0.0.1:8787`，公网须先配置有效 HTTPS，不能以 HTTP 或自签名证书替代手机接入。保留前一版本和本机 SSH 信任记录备份；真实模型、HTTPS、海外访问与 App 接入分别验证。该授权不改变真实退款等业务的实施边界，也不自动启用 App 云端。原生候选合并、归属／周期门禁、鉴权、错误分类与取消必须在接入阶段落实并验证。
+
+同日已完成内部部署，运行 Node.js 24.22.0，systemd 已启用开机启动并通过进程重启检查。服务器 275 项检查及 3 个真实模型合成请求通过，未启动 Docker、修改 App 或接触账本。Rex 明确先部署内部服务；有效 HTTPS 与外部访问继续等待域名。release 与真实验证边界见 [部署记录](evidence/2026-10-16-agent-api-deployment.md)。
 
 - 实现放在 `services/agent-api/`，不进入 App Target；使用 Node.js 原生 HTTP/fetch，无第三方运行时依赖。API 无账本数据库、无会话持久化，只有固定流程：验证请求 → 固定模型解析 → 校验候选 → 返回 App。
 - `POST /v1/agent/interpret` 保持现有 `LLMRequestPayload`（`system`、`userMessage`、`context`）及 `AgentIntentCandidate` 成功响应。客户端 `system` 仅作为兼容字段，服务端使用自己的固定提示词；客户端不能选择模型、上游地址、工具或输出规则。
