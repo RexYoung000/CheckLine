@@ -9,6 +9,7 @@ struct AgentTaskPanel: View {
     var onCreateBudget: (() -> Void)?
     @FocusState private var inputFocused: Bool
     @State private var showingVoiceNotice = false
+    @State private var showingWishDraft = false
     @Environment(\.dynamicTypeSize) private var typeSize
 
     var body: some View {
@@ -42,6 +43,7 @@ struct AgentTaskPanel: View {
                     inputFocused = false
                 }
             }
+            .sheet(isPresented: $showingWishDraft) { CreateWishSheet(workspace: workspace, draftKind: "agentWishCreate") }
             .alert(String(localized: "ui.voice.permission.title"), isPresented: $showingVoiceNotice) {
                 Button(String(localized: "action.cancel"), role: .cancel) { }
                 Button(String(localized: "ui.voice.permission.start")) { beginVoiceInput() }
@@ -103,6 +105,13 @@ struct AgentTaskPanel: View {
                     .accessibilityLabel(banner.localizedText)
             }
 
+            if let wish = workspace.proposedWishDraft {
+                VStack(alignment: .leading, spacing: 10) {
+                    Text(wish.name.isEmpty ? String(localized: "wallet.wishes.add") : wish.name).font(.headline)
+                    if let amount = MoneyFormat.parseAmount(wish.amount) { Text(MoneyFormat.string(amount, currencyCode: wish.currency)).font(.subheadline).monospacedDigit() }
+                    Button(String(localized: "native.agent.openWish")) { showingWishDraft = true }.buttonStyle(PaperQuietButtonStyle())
+                }.padding(18).walletSurface()
+            }
             if workspace.showsStructuredConfirm {
                 VStack(alignment: .leading, spacing: 18) {
                     structuredFields.disabled(voiceCapture.isActive)
@@ -113,6 +122,7 @@ struct AgentTaskPanel: View {
                 .accessibilityElement(children: .contain)
                 .accessibilityIdentifier("wallet.agent.confirmation")
             }
+            if !workspace.retainedTaskAvailable {
             if workspace.taskDraft.agentUsesCloud == true && workspace.taskDraft.pendingAgentField == "budgetName"
                 || (workspace.cloudPendingAction?.requestedIntent ?? workspace.cloudPendingAction?.intentType) == "queryBudgetStatus" {
                 VStack(alignment: .leading, spacing: 10) {
@@ -145,6 +155,7 @@ struct AgentTaskPanel: View {
             }
             if let action = workspace.cloudPendingAction, (action.requestedIntent ?? action.intentType) != "queryBudgetStatus" {
                 CloudAgentActionsView(workspace: workspace, candidate: action)
+            }
             }
             }
 

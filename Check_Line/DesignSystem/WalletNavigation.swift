@@ -167,7 +167,7 @@ struct WalletGlassNavigation: View {
     @Environment(\.layoutDirection) private var layoutDirection
     @GestureState private var dragLocation: CGPoint?
     @Namespace private var glassNamespace
-    private let tabs: [CheckLineAppTab] = [.home, .budgets, .wishes, .insights]
+    private let tabs: [CheckLineAppTab] = [.budgets, .wishes]
 
     var body: some View {
         HStack(spacing: 12) {
@@ -253,11 +253,12 @@ struct WalletGlassNavigation: View {
     }
 
     private func selectionLabel(_ tab: CheckLineAppTab, selected: Bool) -> some View {
-        CheckLineIcon(symbol: tab.systemImage)
-            .font(.system(size: 23, weight: .medium))
-            .foregroundStyle(selected ? PaperTheme.accent : PaperTheme.ink)
-            .frame(maxWidth: .infinity).frame(height: 50)
-            .contentShape(Capsule())
+        HStack(spacing: 8) {
+            CheckLineIcon(symbol: tab.systemImage).font(.system(size: 22, weight: .medium))
+            Text(tab.title).font(.subheadline).dynamicTypeSize(...DynamicTypeSize.xxxLarge).lineLimit(1).minimumScaleFactor(0.85)
+        }
+        .foregroundStyle(selected ? PaperTheme.accent : PaperTheme.ink)
+        .frame(maxWidth: .infinity).frame(height: 50).contentShape(Capsule())
     }
 
     @ViewBuilder private var selectionGlass: some View {
@@ -343,7 +344,7 @@ enum WalletTabHitTarget {
         let width = size.width - inset * 2
         guard width > 0, point.x >= inset, point.x < size.width - inset,
               point.y >= inset, point.y <= size.height - inset else { return nil }
-        let tabs: [CheckLineAppTab] = [.home, .budgets, .wishes, .insights]
+        let tabs: [CheckLineAppTab] = [.budgets, .wishes]
         let column = min(tabs.count - 1, Int((point.x - inset) / (width / CGFloat(tabs.count))))
         return tabs[rightToLeft ? tabs.count - 1 - column : column]
     }

@@ -4,6 +4,14 @@
 
 ---
 
+## 2026-10-22 原生移植边界
+
+预算／心愿双导航复用现有 `CheckLineWorkspace`／`LedgerStore`，不增加第二套演示账本。预算层级和卡库布局是界面状态；被动来源等后续能力不作为主入口。SwiftUI 与 Canvas 实现卡夹、液体、翻面、随机碎玻璃和连续收币，无 WebView、第三方运行时或新服务。
+
+心愿封面作为本地展示元数据按稳定 wishID 隔离存储，不改账本 Schema；只存重新编码、去除EXIF的限尺寸缩略图和可枚举的封面配置。草稿使用其稳定 entityID，成功创建后同一标识继续读取，失败或返回不丢输入。封面不可用时回退本地符号，不能阻断账本读取或购买。封面根目录使用受保护的应用支持目录且排除备份，隔离演示只用内存。
+
+金额算法保持原样。原生结果快照来自已保存的结算／兑换及 `WalletLedger`，动画使用 Decimal 插值／舍入的完整金额；几何可以 Double，财务金额不能 Double。成功前不播放，失败可重试；成功后重复确认由已保存实体拒绝。动效只读、可取消，进入后台／更换尺寸直接落稳。领域回归与原生界面验证分别记录。
+
 ## 一、当前工程事实
 
 | 项目 | 当前状态 |
@@ -11,13 +19,13 @@
 | 工程 | `Check_Line.xcodeproj` |
 | App Target / 共享 Scheme | `Check_Line` / `CheckLine App`（正常持久化启动及领域测试）、`CheckLine Demo`（隔离示例账本）、`CheckLine UI`（UI 测试） |
 | 平台 | iPhone / iPad，最低 iOS 17.0 |
-| 当前 UI | iOS 27+ iPhone 使用可见的系统 `TabView` 底栏，四页面 Tab + `.prominent` Agent，系统负责透镜与触摸追踪；Agent 选择由入口绑定转为原会话面板，页面选择保留。iPad 与 iOS 17–26 的 `WalletGlassNavigation` 为自定义兼容回退，不等同系统透镜。空首页使用完整米白背景。验收状态见 ROADMAP |
+| 当前 UI | 2026-10-22 双导航：预算（卡夹／记录层／卡库）和心愿；iOS 27+ iPhone 系统 `TabView` + 右侧主动 Agent，iPad 与 iOS 17–26 采用兼容玻璃栏。二级操作为系统抽屉；iPad 与最大辅助字号固定大档，避免键盘收起时移动。验收范围见本轮证据 |
 | 正式数据层 | 首页与 Agent 经 `CheckLineWorkspace` 读写本地 `LedgerStore`（无 CloudKit） |
 | Test Target | `Check_LineTests` 覆盖领域引擎、理解管线、`AgentSession` 与首页工作区持久化；`Check_LineUITests` / `CheckLine UI` Scheme 在隔离预览账本上点击系统 Tab、Agent 与空首页创建入口 |
 | 网络 / 后端 / AI | 可选私有 `CloudAgentSettings`，Keychain 限时凭据、首次发送许可、HTTPS API；默认本地，启动无网络请求 |
 | 系统权限 / iCloud | 麦克风与 Speech 仅用户触发后按需申请；端侧转写代码已接入、实际音频识别尚未验证。iCloud 未启用，SwiftData 使用 `cloudKitDatabase: .none` |
 
-`ShellChromeState` 分离用户选择与当前呈现页面：系统栏即时选中与换页，兼容回退按既有卡夹过渡执行。iPad 使用原居中限宽布局，避免系统 prominent 入口分布到屏幕两端；根页进入详情时隐藏底栏。Agent 不写入四页面选择状态，不创建新会话。系统栏模式的操作反馈浮在页面安全区内，兼容模式的反馈仍在自有导航上方，不能遮挡底栏按钮。导航不修改业务数据。磨砂材质与不透明票据在 DesignSystem 共享。
+`ShellChromeState` 分离用户选择与当前呈现页面：系统栏即时选中与换页，兼容回退保留轻量页面过渡；预算内部的卡夹／记录／卡库阶段独立管理。iPad 使用原居中限宽布局，避免系统 prominent 入口分布到屏幕两端；根页进入详情时隐藏底栏。Agent 不写入四页面选择状态，不创建新会话。系统栏模式的操作反馈浮在页面安全区内，兼容模式的反馈仍在自有导航上方，不能遮挡底栏按钮。导航不修改业务数据。磨砂材质与不透明票据在 DesignSystem 共享。
 
 2026-10-03 图标试装由 `CheckLineIcon` / `CheckLineIconLabel` 统一显示，`CheckLineIconAssets` 将既有符号名映射到 Asset Catalog 的本地模板矢量图。系统 Tab 直接使用同一资源的模板 UIImage，保留系统导航行为。Hugeicons 免费 Stroke Rounded 4.3.5 的选用几何、MIT 许可和校验值保存在仓库，通过 `scripts/design/import-hugeicons.py` 重建；不引入运行时图标库、网络请求或新 SDK。`Wish.symbolName` 与账本 Schema 不变，未知历史符号保留系统回退。功能图标方向与验收边界见 DESIGN 3.1.14。
 

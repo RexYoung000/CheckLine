@@ -5,6 +5,7 @@ struct BudgetRemainingAmountText: View {
     let card: HomeBudgetCardModel
     let change: BudgetRemainingChange?
     let context: RemainingMotionContext
+    var exposesAmount = false
     @Environment(\.walletReduceMotion) private var reduceMotion
     @Environment(\.accessibilityVoiceOverEnabled) private var voiceOver
     @Environment(\.scenePhase) private var scenePhase
@@ -12,15 +13,15 @@ struct BudgetRemainingAmountText: View {
     @State private var countsDown = false
     @State private var display: RemainingAmountDisplayState
 
-    init(card: HomeBudgetCardModel, change: BudgetRemainingChange?, context: RemainingMotionContext) {
-        self.card = card; self.change = change; self.context = context
+    init(card: HomeBudgetCardModel, change: BudgetRemainingChange?, context: RemainingMotionContext, exposesAmount: Bool = false) {
+        self.card = card; self.change = change; self.context = context; self.exposesAmount = exposesAmount
         _display = State(initialValue: RemainingAmountDisplayState(card: card, change: change))
     }
 
     var body: some View {
         Text(MoneyFormat.string(abs(display.displayed), currencyCode: card.currencyCode))
             .contentTransition(.numericText(countsDown: countsDown))
-            .accessibilityHidden(true) // The enclosing card exposes one final, signed currency value.
+            .accessibilityHidden(!exposesAmount) // Legacy cards expose this through their enclosing label.
             .onAppear {
                 if hasAppeared { refresh() } else { reset(); hasAppeared = true }
             }

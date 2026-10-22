@@ -1,0 +1,601 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-22",
+  "app": {
+    "name": "CheckLine",
+    "version": "1.0",
+    "build": "9",
+    "minimum_ios": "17.0"
+  },
+  "delivery_stage": {
+    "implementation": "code_complete",
+    "validation": "named_simulator_environments_verified",
+    "rex_experience_acceptance": "pending",
+    "physical_phone_validation_this_delivery": "not_run",
+    "cloud_end_to_end_this_delivery": "not_run",
+    "production_release": "not_performed"
+  },
+  "approved_reference": {
+    "file": "approved-r34.html",
+    "sha256": "7471c40846d7c8aea0037a5e2a07686c4debb5d73841b6de87d58ff33d2e8eb8",
+    "role": "read_only_visual_and_interaction_reference",
+    "runtime_embedded": false,
+    "original_source_sha256": "4e250fa233f9e212666d42f93ea67f27eac32709bbf459b6a0d45fb2dca7a358",
+    "snapshot_normalization": "Removed trailing whitespace only; no HTML/CSS/JavaScript behavior changed."
+  },
+  "implementation": {
+    "platform": "SwiftUI / native Canvas / PhotosPicker",
+    "webview": false,
+    "new_third_party_runtime": false,
+    "ledger_schema_changed": false,
+    "money_engines_changed": false,
+    "existing_ledger_reset": false,
+    "local_cover_store": "WishCoverStore, per-wish-ID local sidecar; re-encoded thumbnail <=1200px; no upload"
+  },
+  "runs": [
+    {
+      "id": "domain",
+      "scheme": "CheckLine App",
+      "environment": "iPhone 18 Pro / iOS 27.0",
+      "status": "passed",
+      "tests": 222,
+      "suites": 47,
+      "failures": 0,
+      "started_at": "2026-10-22 22:22:02 +0800",
+      "finished_at": "2026-10-22 22:22:07 +0800",
+      "command": "/Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -project Check_Line.xcodeproj -scheme \"CheckLine App\" -destination \"platform=iOS Simulator,id=4F40866F-E156-4594-8ECE-E3C1D680E691\" -derivedDataPath /tmp/checkline-native-r34 -parallel-testing-enabled NO -collect-test-diagnostics never test",
+      "source_log": "/tmp/checkline-native-r34-tests.log",
+      "source_log_sha256": "a83cbbbb86f7095fd74e838ba2e8ac2ca44ce809ecf02cc0c8da6f65cc71bbe2",
+      "xcresult_local_path": "/tmp/checkline-native-r34/Logs/Test/Test-CheckLine App-2026.10.22_22-21-35-+0800.xcresult",
+      "ui_test_results": []
+    },
+    {
+      "id": "native-ui",
+      "scheme": "CheckLine UI",
+      "environment": "iPhone 18 Pro / iOS 27.0",
+      "status": "passed",
+      "tests": 8,
+      "suites": 1,
+      "failures": 0,
+      "started_at": "2026-10-22 22:28:27 +0800",
+      "finished_at": "2026-10-22 22:31:29 +0800",
+      "command": "/Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -project Check_Line.xcodeproj -scheme \"CheckLine UI\" -destination \"platform=iOS Simulator,id=4F40866F-E156-4594-8ECE-E3C1D680E691\" -derivedDataPath /tmp/checkline-native-r34 -parallel-testing-enabled NO -collect-test-diagnostics never \"-only-testing:Check_LineUITests/NativePortUITests\" test",
+      "source_log": "/tmp/checkline-native-r34-final-ui.log",
+      "source_log_sha256": "75ea1f689e8f59739eeb69e4d81b4b68c68f0ac5c68982ed064f20fa6f5cd0af",
+      "xcresult_local_path": "/tmp/checkline-native-r34/Logs/Test/Test-CheckLine UI-2026.10.22_22-28-16-+0800.xcresult",
+      "ui_test_results": [
+        {
+          "name": "testAgentWishDraftRequiresExplicitReviewAndConfirmation",
+          "result": "passed",
+          "duration_seconds": 21.267
+        },
+        {
+          "name": "testCoverUpdatesWithinSameSheetAndUnpricedWishCannotRedeem",
+          "result": "passed",
+          "duration_seconds": 29.223
+        },
+        {
+          "name": "testEnglishDarkLargeTextBalanceAndUnpricedWish",
+          "result": "passed",
+          "duration_seconds": 23.016
+        },
+        {
+          "name": "testHolderDragAndCompactWindowDragReturn",
+          "result": "passed",
+          "duration_seconds": 18.197
+        },
+        {
+          "name": "testSettlementReceivesInCurrentPage",
+          "result": "passed",
+          "duration_seconds": 17.688
+        },
+        {
+          "name": "testTwoTabsAndHolderLayersDoNotSwitchOnBlankTap",
+          "result": "passed",
+          "duration_seconds": 21.762
+        },
+        {
+          "name": "testVoiceOverReachesHolderActionsAndBudgetAmount",
+          "result": "passed",
+          "duration_seconds": 28.231
+        },
+        {
+          "name": "testWishFlipPurchaseResultAndRealizedList",
+          "result": "passed",
+          "duration_seconds": 22.144
+        }
+      ]
+    },
+    {
+      "id": "small-accessibility",
+      "scheme": "CheckLine UI",
+      "environment": "iPhone SE (3rd generation), 375pt / iOS 26.5",
+      "status": "passed",
+      "tests": 1,
+      "suites": 1,
+      "failures": 0,
+      "started_at": "2026-10-22 22:14:56 +0800",
+      "finished_at": "2026-10-22 22:15:25 +0800",
+      "command": "/Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -project Check_Line.xcodeproj -scheme \"CheckLine UI\" -destination \"platform=iOS Simulator,id=8E4FF520-0EB8-4A70-AF2B-3A293B010942\" -derivedDataPath /tmp/checkline-native-r34 -parallel-testing-enabled NO -collect-test-diagnostics never \"-only-testing:Check_LineUITests/NativePortUITests/testEnglishDarkLargeTextBalanceAndUnpricedWish\" test",
+      "source_log": "/tmp/checkline-native-r34-small.log",
+      "source_log_sha256": "24d6b525bc9cf2219620dac94d51191c20896eae6a75d55e0d2a598ab335e1cb",
+      "xcresult_local_path": "/tmp/checkline-native-r34/Logs/Test/Test-CheckLine UI-2026.10.22_22-12-46-+0800.xcresult",
+      "ui_test_results": [
+        {
+          "name": "testEnglishDarkLargeTextBalanceAndUnpricedWish",
+          "result": "passed",
+          "duration_seconds": 29.196
+        }
+      ]
+    },
+    {
+      "id": "ipad-initial",
+      "scheme": "CheckLine UI",
+      "environment": "iPad mini (A17 Pro) / iOS 27.0",
+      "status": "failed_then_repaired",
+      "tests": 2,
+      "suites": 1,
+      "failures": 1,
+      "started_at": "2026-10-22 22:19:47 +0800",
+      "finished_at": "2026-10-22 22:20:40 +0800",
+      "command": "/Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -project Check_Line.xcodeproj -scheme \"CheckLine UI\" -destination \"platform=iOS Simulator,id=76B60484-C917-4A2B-82F9-11439D43A7E0\" -derivedDataPath /tmp/checkline-native-r34 -parallel-testing-enabled NO -collect-test-diagnostics never \"-only-testing:Check_LineUITests/NativePortUITests/testTwoTabsAndHolderLayersDoNotSwitchOnBlankTap\" \"-only-testing:Check_LineUITests/NativePortUITests/testCoverUpdatesWithinSameSheetAndUnpricedWishCannotRedeem\" test",
+      "source_log": "/tmp/checkline-native-r34-ipad.log",
+      "source_log_sha256": "00074036f28f0b761832ebf6efdaaba0fee137c94ea9aa67bdfe20e422f884a6",
+      "xcresult_local_path": "/tmp/checkline-native-r34/Logs/Test/Test-CheckLine UI-2026.10.22_22-17-57-+0800.xcresult",
+      "ui_test_results": [
+        {
+          "name": "testCoverUpdatesWithinSameSheetAndUnpricedWishCannotRedeem",
+          "result": "failed",
+          "duration_seconds": 30.178
+        },
+        {
+          "name": "testTwoTabsAndHolderLayersDoNotSwitchOnBlankTap",
+          "result": "passed",
+          "duration_seconds": 23.284
+        }
+      ]
+    },
+    {
+      "id": "ipad-cover-retest",
+      "scheme": "CheckLine UI",
+      "environment": "iPad mini (A17 Pro) / iOS 27.0",
+      "status": "passed",
+      "tests": 1,
+      "suites": 1,
+      "failures": 0,
+      "started_at": "2026-10-22 22:24:10 +0800",
+      "finished_at": "2026-10-22 22:24:56 +0800",
+      "command": "/Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -project Check_Line.xcodeproj -scheme \"CheckLine UI\" -destination \"platform=iOS Simulator,id=76B60484-C917-4A2B-82F9-11439D43A7E0\" -derivedDataPath /tmp/checkline-native-r34 -parallel-testing-enabled NO -collect-test-diagnostics never \"-only-testing:Check_LineUITests/NativePortUITests/testCoverUpdatesWithinSameSheetAndUnpricedWishCannotRedeem\" test",
+      "source_log": "/tmp/checkline-native-r34-ipad-cover.log",
+      "source_log_sha256": "371fb307e7aaea367b3f008435d289691000da82471b9f2b33a33e2efc8ec629",
+      "xcresult_local_path": "/tmp/checkline-native-r34/Logs/Test/Test-CheckLine UI-2026.10.22_22-22-38-+0800.xcresult",
+      "ui_test_results": [
+        {
+          "name": "testCoverUpdatesWithinSameSheetAndUnpricedWishCannotRedeem",
+          "result": "passed",
+          "duration_seconds": 45.897
+        }
+      ]
+    },
+    {
+      "id": "holder-drag-retest",
+      "scheme": "CheckLine UI",
+      "environment": "iPhone 18 Pro / iOS 27.0",
+      "status": "passed",
+      "tests": 1,
+      "suites": 1,
+      "failures": 0,
+      "started_at": "2026-10-22 22:26:39 +0800",
+      "finished_at": "2026-10-22 22:27:01 +0800",
+      "command": "/Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -project Check_Line.xcodeproj -scheme \"CheckLine UI\" -destination \"platform=iOS Simulator,id=4F40866F-E156-4594-8ECE-E3C1D680E691\" -derivedDataPath /tmp/checkline-native-r34 -parallel-testing-enabled NO -collect-test-diagnostics never \"-only-testing:Check_LineUITests/NativePortUITests/testHolderDragAndCompactWindowDragReturn\" test",
+      "source_log": "/tmp/checkline-native-r34-drag.log",
+      "source_log_sha256": "b95dd2e68b8d8ffe3a2a4f7baac26fce47689f0713ed1e9e2aa6c954b9b83510",
+      "xcresult_local_path": "/tmp/checkline-native-r34/Logs/Test/Test-CheckLine UI-2026.10.22_22-26-09-+0800.xcresult",
+      "ui_test_results": [
+        {
+          "name": "testHolderDragAndCompactWindowDragReturn",
+          "result": "passed",
+          "duration_seconds": 21.824
+        }
+      ]
+    },
+    {
+      "id": "native-ui-polish",
+      "scheme": "CheckLine UI",
+      "environment": "iPhone 18 Pro / iOS 27.0",
+      "status": "failed_then_repaired",
+      "tests": 10,
+      "suites": 1,
+      "failures": 2,
+      "command": "/Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -project Check_Line.xcodeproj -scheme \"CheckLine UI\" -destination \"platform=iOS Simulator,id=4F40866F-E156-4594-8ECE-E3C1D680E691\" -derivedDataPath /tmp/checkline-native-r34 -parallel-testing-enabled NO -collect-test-diagnostics never \"-only-testing:Check_LineUITests/NativePortUITests\" test",
+      "source_log": "/tmp/checkline-native-r34-polish-ui.log",
+      "source_log_sha256": "ee3d17027c88a8818f51fa0ad0599dd7cbc3b8d8b1e421131e62defb5cef5f26",
+      "xcresult_local_path": "/tmp/checkline-native-r34/Logs/Test/Test-CheckLine UI-2026.10.22_22-42-26-+0800.xcresult",
+      "ui_test_results": [
+        {
+          "name": "testAgentWishDraftRequiresExplicitReviewAndConfirmation",
+          "result": "passed",
+          "duration_seconds": 20.489
+        },
+        {
+          "name": "testCoverUpdatesWithinSameSheetAndUnpricedWishCannotRedeem",
+          "result": "passed",
+          "duration_seconds": 26.18
+        },
+        {
+          "name": "testDiscardAgentWishRemovesPendingProposal",
+          "result": "failed",
+          "duration_seconds": 16.906
+        },
+        {
+          "name": "testEnglishDarkLargeTextBalanceAndUnpricedWish",
+          "result": "passed",
+          "duration_seconds": 21.926
+        },
+        {
+          "name": "testExpandedWishPurchaseReturnsToRealizedList",
+          "result": "passed",
+          "duration_seconds": 24.116
+        },
+        {
+          "name": "testHolderDragAndCompactWindowDragReturn",
+          "result": "passed",
+          "duration_seconds": 15.265
+        },
+        {
+          "name": "testSettlementReceivesInCurrentPage",
+          "result": "passed",
+          "duration_seconds": 16.18
+        },
+        {
+          "name": "testTwoTabsAndHolderLayersDoNotSwitchOnBlankTap",
+          "result": "failed",
+          "duration_seconds": 21.54
+        },
+        {
+          "name": "testVoiceOverReachesHolderActionsAndBudgetAmount",
+          "result": "passed",
+          "duration_seconds": 23.492
+        },
+        {
+          "name": "testWishFlipPurchaseResultAndRealizedList",
+          "result": "passed",
+          "duration_seconds": 18.95
+        }
+      ]
+    },
+    {
+      "id": "native-ui-acceptance",
+      "scheme": "CheckLine UI",
+      "environment": "iPhone 18 Pro / iOS 27.0",
+      "status": "passed",
+      "tests": 10,
+      "suites": 1,
+      "failures": 0,
+      "command": "/Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -project Check_Line.xcodeproj -scheme \"CheckLine UI\" -destination \"platform=iOS Simulator,id=4F40866F-E156-4594-8ECE-E3C1D680E691\" -derivedDataPath /tmp/checkline-native-r34 -parallel-testing-enabled NO -collect-test-diagnostics never \"-only-testing:Check_LineUITests/NativePortUITests\" test",
+      "source_log": "/tmp/checkline-native-r34-acceptance-ui.log",
+      "source_log_sha256": "cdf5357d7daa97818d7c8d85c120d642ef45b42e716afb508d10f904da0152f8",
+      "xcresult_local_path": "/tmp/checkline-native-r34/Logs/Test/Test-CheckLine UI-2026.10.22_22-46-45-+0800.xcresult",
+      "ui_test_results": [
+        {
+          "name": "testAgentWishDraftRequiresExplicitReviewAndConfirmation",
+          "result": "passed",
+          "duration_seconds": 18.698
+        },
+        {
+          "name": "testCoverUpdatesWithinSameSheetAndUnpricedWishCannotRedeem",
+          "result": "passed",
+          "duration_seconds": 25.834
+        },
+        {
+          "name": "testDiscardAgentWishRemovesPendingProposal",
+          "result": "passed",
+          "duration_seconds": 21.497
+        },
+        {
+          "name": "testEnglishDarkLargeTextBalanceAndUnpricedWish",
+          "result": "passed",
+          "duration_seconds": 26.234
+        },
+        {
+          "name": "testExpandedWishPurchaseReturnsToRealizedList",
+          "result": "passed",
+          "duration_seconds": 24.595
+        },
+        {
+          "name": "testHolderDragAndCompactWindowDragReturn",
+          "result": "passed",
+          "duration_seconds": 16.817
+        },
+        {
+          "name": "testSettlementReceivesInCurrentPage",
+          "result": "passed",
+          "duration_seconds": 16.513
+        },
+        {
+          "name": "testTwoTabsAndHolderLayersDoNotSwitchOnBlankTap",
+          "result": "passed",
+          "duration_seconds": 21.662
+        },
+        {
+          "name": "testVoiceOverReachesHolderActionsAndBudgetAmount",
+          "result": "passed",
+          "duration_seconds": 24.58
+        },
+        {
+          "name": "testWishFlipPurchaseResultAndRealizedList",
+          "result": "passed",
+          "duration_seconds": 18.689
+        }
+      ]
+    },
+    {
+      "id": "agent-wish-discard-retest",
+      "scheme": "CheckLine UI",
+      "environment": "iPhone 18 Pro / iOS 27.0",
+      "status": "passed",
+      "tests": 1,
+      "suites": 1,
+      "failures": 0,
+      "command": "/Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -project Check_Line.xcodeproj -scheme \"CheckLine UI\" -destination \"platform=iOS Simulator,id=4F40866F-E156-4594-8ECE-E3C1D680E691\" -derivedDataPath /tmp/checkline-native-r34 -parallel-testing-enabled NO -collect-test-diagnostics never \"-only-testing:Check_LineUITests/NativePortUITests/testDiscardAgentWishRemovesPendingProposal\" test",
+      "source_log": "/tmp/checkline-native-r34-discard-final.log",
+      "source_log_sha256": "54ec4ee2e2032824cddf9f59d63effeddb415b75f291786d22e1cb4c92c7d1fb",
+      "xcresult_local_path": "/tmp/checkline-native-r34/Logs/Test/Test-CheckLine UI-2026.10.22_22-50-47-+0800.xcresult",
+      "ui_test_results": [
+        {
+          "name": "testDiscardAgentWishRemovesPendingProposal",
+          "result": "passed",
+          "duration_seconds": 22.598
+        }
+      ]
+    },
+    {
+      "id": "small-price-retest",
+      "scheme": "CheckLine UI",
+      "environment": "iPhone SE (3rd generation), 375pt / iOS 26.5",
+      "status": "passed",
+      "tests": 1,
+      "suites": 1,
+      "failures": 0,
+      "command": "/Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -project Check_Line.xcodeproj -scheme \"CheckLine UI\" -destination \"platform=iOS Simulator,id=8E4FF520-0EB8-4A70-AF2B-3A293B010942\" -derivedDataPath /tmp/checkline-native-r34 -parallel-testing-enabled NO -collect-test-diagnostics never \"-only-testing:Check_LineUITests/NativePortUITests/testEnglishDarkLargeTextBalanceAndUnpricedWish\" test",
+      "source_log": "/tmp/checkline-native-r34-small-final.log",
+      "source_log_sha256": "9d23190730fbbfde2d5a730324a9d3550f64b8b80365bdd6015df658e88ea933",
+      "xcresult_local_path": "/tmp/checkline-native-r34/Logs/Test/Test-CheckLine UI-2026.10.22_22-51-39-+0800.xcresult",
+      "ui_test_results": [
+        {
+          "name": "testEnglishDarkLargeTextBalanceAndUnpricedWish",
+          "result": "passed",
+          "duration_seconds": 31.252
+        }
+      ]
+    },
+    {
+      "id": "small-navigation-acceptance",
+      "scheme": "CheckLine UI",
+      "environment": "iPhone SE (3rd generation), 375pt / iOS 26.5",
+      "status": "passed",
+      "tests": 1,
+      "suites": 1,
+      "failures": 0,
+      "command": "/Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -project Check_Line.xcodeproj -scheme \"CheckLine UI\" -destination \"platform=iOS Simulator,id=8E4FF520-0EB8-4A70-AF2B-3A293B010942\" -derivedDataPath /tmp/checkline-native-r34 -parallel-testing-enabled NO -collect-test-diagnostics never \"-only-testing:Check_LineUITests/NativePortUITests/testEnglishDarkLargeTextBalanceAndUnpricedWish\" test",
+      "source_log": "/tmp/checkline-native-r34-small-navigation-final.log",
+      "source_log_sha256": "2420705c12b7d36b1ce67c5708ce9244fa80f62828038be7d1aec50e7eb39f99",
+      "xcresult_local_path": "/tmp/checkline-native-r34/Logs/Test/Test-CheckLine UI-2026.10.22_22-54-30-+0800.xcresult",
+      "ui_test_results": [
+        {
+          "name": "testEnglishDarkLargeTextBalanceAndUnpricedWish",
+          "result": "passed",
+          "duration_seconds": 31.923
+        }
+      ]
+    },
+    {
+      "id": "domain-delivery",
+      "scheme": "CheckLine App",
+      "environment": "iPhone 18 Pro / iOS 27.0",
+      "status": "passed",
+      "tests": 222,
+      "suites": 47,
+      "failures": 0,
+      "command": "/Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -project Check_Line.xcodeproj -scheme \"CheckLine App\" -destination \"platform=iOS Simulator,id=4F40866F-E156-4594-8ECE-E3C1D680E691\" -derivedDataPath /tmp/checkline-native-r34 -parallel-testing-enabled NO -collect-test-diagnostics never test",
+      "source_log": "/tmp/checkline-native-r34-domain-delivery.log",
+      "source_log_sha256": "292b082684b054b1d4eb016460e6fc51e879abcd42c63edca7c2503ee5dee314",
+      "xcresult_local_path": "/tmp/checkline-native-r34/Logs/Test/Test-CheckLine App-2026.10.22_22-56-06-+0800.xcresult",
+      "evidence_line": "✔ Test run with 222 tests in 47 suites passed after 4.952 seconds."
+    }
+  ],
+  "scope_notes": [
+    "222 is the Swift Testing target total, including legacy PrototypeDeletionTests; legacy passes are not acceptance evidence for the current amount model.",
+    "The acceptance UI run selected only NativePortUITests: 10 tests passed. Historical four-tab UI tests were not fully migrated or run as an entire UI regression.",
+    "UI tests launch -design-preview with isolated sample SwiftData; native save/confirm/result paths are exercised, not a user ledger or live cloud provider.",
+    "The wish purchase UI test begins at the redemption form and verifies explicit purchase confirmation, result and return; its name alone does not prove a flip gesture.",
+    "Small-screen run uses English, dark mode, AccessibilityXXXL and reduced motion. This is one representative path, not all screens at every size.",
+    "VoiceOver automation on iOS 27 verifies budget amount and holder-library action reachability; it is not an all-screen spoken audit.",
+    "iPad initial cover flow failed to find native.cover.open. After stable large-detent adaptation for regular width, the same cover flow passed; the earlier failure remains reported.",
+    "An intermediate 10-test polish run failed two tests: an ambiguous task-menu query and detail opening during holder layer return. Menu targeting, layer-return detail gating and readiness checks were corrected; the acceptance run passed all 10.",
+    "The added expanded-wish UI path actually taps the card to reveal Redeem, confirms purchase, closes the result and verifies the realized tab. Reduced-motion large-text path checks Fill Price is hittable, rather than mere accessibility-tree existence.",
+    "Final 375pt screenshot files use native-se-*.png, 750x1334 pixels, from the small-navigation-acceptance run. Older iPhone 18 Pro screenshots named native-small-dark-large-* were removed, not presented as SE evidence.",
+    "Bottom navigation text is locally capped at xxxLarge with controlled scaling on small devices; other content uses the requested AccessibilityXXXL, and full VoiceOver labels remain available.",
+    "The last change after the 222-test and 10-test runs is a rounded Canvas clip only. Simulator and Release builds and final code-signature checks passed afterward; the test suites were not rerun after that final rendering patch."
+  ],
+  "state_checks": [
+    "holder intent lock, short drag, diagonal drag and bounds",
+    "Decimal whole-amount monotonic reward clock across carry and large amounts",
+    "random fracture coverage and seed variation",
+    "per-wish cover restore/isolation/corrupt fallback",
+    "thumbnail resize and invalid image rejection",
+    "wish price validation without wallet change",
+    "explicit wish phrase produces review draft without ledger write",
+    "spherical wrapping over long positive and negative distances"
+  ],
+  "not_verified": [
+    "this build on a physical iPhone or iPad",
+    "hardware haptics, audio transcription and live PhotosPicker library selection",
+    "live DeepSeek/cloud API/remote service changes",
+    "migration against a copy of the user phone ledger",
+    "all-screen VoiceOver, all localizations, all Dynamic Type sizes, iOS 17 runtime, iPad multitasking and landscape",
+    "full legacy UI suite after navigation redesign",
+    "frame-rate/performance measurements and every animation interruption permutation",
+    "Rex final visual and interaction acceptance"
+  ],
+  "artifacts": {
+    "screenshots": [
+      "native-agent-wish-created.png",
+      "native-drag-records.png",
+      "native-drag-restored.png",
+      "native-expanded-purchase-realized-list.png",
+      "native-library-arc.png",
+      "native-library-sphere.png",
+      "native-records-layer.png",
+      "native-se-dark-large-balance.png",
+      "native-se-dark-large-unpriced-wish.png",
+      "native-settlement-result-current-page.png",
+      "native-settlement-result-settled.png",
+      "native-unpriced-wish-disabled.png",
+      "native-wish-result-settled.png",
+      "native-wish-result.png"
+    ],
+    "videos": [
+      {
+        "file": "native-wish-reveal.mp4",
+        "duration_seconds": 6.5,
+        "width": 720,
+        "height": 1566,
+        "frame_rate": "30/1",
+        "codec": "h264",
+        "sha256": "0f3744e6d3bc693b91e01956efe767cd5849c05ee08077dfa47739ad04cc2b38",
+        "scope": "isolated native redemption confirmation, glass fragments, actual purchase result; does not show return to realized list",
+        "processing": "excerpt, resize and transcode only; no speed change or generated frames",
+        "source": "native simulator recording of isolated sample ledger",
+        "caveat": "recording review preceded the final rounded Canvas-clip patch; not an FPS benchmark"
+      },
+      {
+        "file": "native-settlement-harvest.mp4",
+        "duration_seconds": 4.366667,
+        "width": 720,
+        "height": 1566,
+        "frame_rate": "30/1",
+        "codec": "h264",
+        "sha256": "1969282252bca6bcdeff7a3fe3a9b37739c9ac54ee96a6acd9cecdb7af75e233",
+        "scope": "isolated native budget confirmation, wallet 0 to 750, result received in the original page",
+        "processing": "excerpt, resize and transcode only; no speed change or generated frames",
+        "source": "native simulator recording of isolated sample ledger",
+        "caveat": "recording review preceded the final rounded Canvas-clip patch; not an FPS benchmark"
+      }
+    ],
+    "licenses": [
+      "Hugeicons-MIT.txt",
+      "Phosphor-MIT.txt"
+    ],
+    "text_evidence": [
+      "native-budget-voiceover.txt"
+    ],
+    "screenshot_dimensions": {
+      "native-agent-wish-created.png": [
+        1206,
+        2622
+      ],
+      "native-drag-records.png": [
+        1206,
+        2622
+      ],
+      "native-se-dark-large-balance.png": [
+        750,
+        1334
+      ],
+      "native-unpriced-wish-disabled.png": [
+        1206,
+        2622
+      ],
+      "native-library-sphere.png": [
+        1206,
+        2622
+      ],
+      "native-records-layer.png": [
+        1206,
+        2622
+      ],
+      "native-drag-restored.png": [
+        1206,
+        2622
+      ],
+      "native-wish-result-settled.png": [
+        1206,
+        2622
+      ],
+      "native-settlement-result-current-page.png": [
+        1206,
+        2622
+      ],
+      "native-se-dark-large-unpriced-wish.png": [
+        750,
+        1334
+      ],
+      "native-library-arc.png": [
+        1206,
+        2622
+      ],
+      "native-expanded-purchase-realized-list.png": [
+        1206,
+        2622
+      ],
+      "native-settlement-result-settled.png": [
+        1206,
+        2622
+      ],
+      "native-wish-result.png": [
+        1206,
+        2622
+      ]
+    },
+    "final_result_screenshots": [
+      "native-wish-result-settled.png",
+      "native-settlement-result-settled.png"
+    ]
+  },
+  "device_build": {
+    "configuration": "Release",
+    "platform": "iphoneos",
+    "status": "build_succeeded",
+    "app_local_path": "/tmp/checkline-native-r34-device/Build/Products/Release-iphoneos/CheckLine.app",
+    "app_version": "1.0",
+    "app_build": "9",
+    "code_signature_verification": {
+      "status": "passed",
+      "command": "codesign --verify --deep --strict /tmp/checkline-native-r34-device/Build/Products/Release-iphoneos/CheckLine.app",
+      "exit_code": 0,
+      "source": "main task and evidence agent read-only verification after release-final BUILD SUCCEEDED",
+      "source_log": "/tmp/checkline-native-r34-codesign-final.log",
+      "source_log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "note": "successful codesign verification emitted no output; empty log alone is not evidence of the exit status"
+    },
+    "installed_on_phone": false,
+    "source_log": "/tmp/checkline-native-r34-release-final.log",
+    "source_log_sha256": "73de601530fa98d5b34b08285930a0982fcfcbba6f3135877a001107684fd129",
+    "evidence_line": "** BUILD SUCCEEDED **",
+    "version_verification": {
+      "tool": "/usr/libexec/PlistBuddy",
+      "CFBundleShortVersionString": "1.0",
+      "CFBundleVersion": "9"
+    }
+  },
+  "final_ui_run_id": "native-ui-acceptance",
+  "final_domain_run_id": "domain-delivery",
+  "simulator_build_after_visual_patch": {
+    "status": "build_succeeded",
+    "source_log": "/tmp/checkline-native-r34-motion-edge-build.log",
+    "source_log_sha256": "89b9717b9a000f5958e456ad1d057cab756001c725b45995a816a85667a3ae7e",
+    "evidence_line": "** BUILD SUCCEEDED **"
+  },
+  "post_test_change": {
+    "scope": "one-line rounded Canvas clipping for initial wish glass-shell edge",
+    "after_runs": [
+      "domain-delivery",
+      "native-ui-acceptance",
+      "small-navigation-acceptance",
+      "agent-wish-discard-retest"
+    ],
+    "verification": "simulator build and signed Release build passed; no full unit/UI rerun after this clipping-only patch",
+    "domain_or_ledger_change": false
+  }
+}

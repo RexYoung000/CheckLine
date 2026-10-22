@@ -128,7 +128,7 @@ struct SettingsPlaceholderView: View {
 struct SettingsInformationView: View {
     let isPrivacy: Bool
     private var facts: [(String.LocalizationValue, String.LocalizationValue)] {
-        isPrivacy ? [("ui.privacy.ledger", "ui.privacy.ledgerBody"), ("cloud.agent.setting", "cloud.agent.privacyBody"), ("wallet.expense.attachments", "ui.privacy.attachmentsBody"), ("ui.source.voice", "ui.privacy.voiceBody")]
+        isPrivacy ? [("ui.privacy.ledger", "ui.privacy.ledgerBody"), ("cloud.agent.setting", "cloud.agent.privacyBody"), ("wallet.expense.attachments", "ui.privacy.attachmentsBody"), ("ui.source.voice", "ui.privacy.voiceBody"), ("native.cover.title", "native.cover.privacy")]
                   : [("ui.about.purpose", "ui.about.purposeBody"), ("ui.about.local", "ui.about.localBody")]
     }
     var body: some View {

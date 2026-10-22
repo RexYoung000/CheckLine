@@ -6,6 +6,7 @@ import SwiftData
 @Observable
 final class CheckLineWorkspace {
     var conversation: [AgentConversationEntry] = []
+    var proposedWishDraft: TaskDraft?
     var remainingAmountChange: BudgetRemainingChange?
     var ledger: Ledger
     let storageLoadFailed: Bool
@@ -40,6 +41,7 @@ final class CheckLineWorkspace {
             taskDraft.fieldsTouched = true
         }
     }
+    let wishCovers: WishCoverStore
     let draftStore: TaskDraftStore
     var lastSavedEntityID: UUID?
     var pendingBudgetText: String?
@@ -90,6 +92,7 @@ final class CheckLineWorkspace {
         self.saveLedger = saveLedger ?? { try LedgerStore.replaceAll($0, in: $1) }
         let isolated = DesignPreviewData.isEnabled || context.container.configurations.allSatisfy { $0.isStoredInMemoryOnly }
         self.cloudSettings = cloudSettings ?? ((!isolated && session == nil) ? .loadForDevice() : CloudAgentSettings())
+        self.wishCovers = WishCoverStore(inMemory: isolated)
         self.draftStore = draftStore ?? TaskDraftStore(inMemory: isolated)
         self.attachmentStore = attachmentStore ?? ExpenseAttachmentStore(root: isolated ? FileManager.default.temporaryDirectory.appendingPathComponent("CheckLineDemoAttachments-" + UUID().uuidString) : nil)
         if let loaded = try? LedgerStore.load(from: context, now: now) {
@@ -180,6 +183,14 @@ final class CheckLineWorkspace {
                             completedAt: nil, symbolName: WishSymbols.allowed.contains(symbolName) ? symbolName : "star"))
         try commitPresentationChange(changed)
         return wishID
+    }
+
+    func setWishPrice(_ id: UUID, amount: Decimal, currency: String) throws {
+        guard var wish = ledger.wishes[id], wish.state == .active, amount > 0,
+              Locale.commonISOCurrencyCodes.contains(currency) else { throw LedgerError.zeroOrNegativeAmount }
+        wish.targetAmount = amount; wish.currencyCode = currency
+        var changed = ledger; changed.upsert(wish)
+        try commitPresentationChange(changed)
     }
 
     func budgetAmountDraft(for card: HomeBudgetCardModel) -> String {
@@ -484,6 +495,18 @@ final class CheckLineWorkspace {
     func submitText(now: Date = Date()) async {
         let text = draftText.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !text.isEmpty, !isWorking, !attachmentImportBlocksSubmission, taskDraft.committedEntityID == nil else { return }
+        if let wishDraft = WishPhrase.draft(from: text, currency: ledger.walletSettings.walletCurrencyCode, now: now) {
+            do {
+                try draftStore.save(wishDraft)
+                proposedWishDraft = wishDraft
+                retainedTaskAvailable = false; isReviewingRetainedDraft = false
+                conversation.append(AgentConversationEntry(isUser: true, text: text))
+                conversation.append(AgentConversationEntry(isUser: false, text: String(localized: "native.agent.wishReady")))
+                draftText = ""; lastTurn = nil; agentBanner = nil; cloudPendingAction = nil
+            } catch { agentBanner = .failed }
+            return
+        }
+        proposedWishDraft = nil
         if cloudSettings.isConfigured && cloudSettings.consent == nil { needsCloudConsent = true; return }
         isReviewingRetainedDraft = false
         retainedTaskAvailable = false
@@ -1004,6 +1027,7 @@ final class CheckLineWorkspace {
             retainedTaskAvailable = lastTurn == nil
             validateRestoredTask()
             reconcileCommittedTask()
+            if retainedTaskAvailable { agentBanner=nil; banner=nil; lastTurn=nil }
             return
         }
         var scope: TaskDraft?
@@ -1019,6 +1043,7 @@ final class CheckLineWorkspace {
                 retainedTaskAvailable = taskDraft.hasInput
                 validateRestoredTask()
                 reconcileCommittedTask()
+                if retainedTaskAvailable { agentBanner=nil; banner=nil; lastTurn=nil }
             } else { beginTask(isEmpty ? .budget : .record, mode: "agent") }
         } catch {
             draftLoadFailed = true; draftStorageFailed = true

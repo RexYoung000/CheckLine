@@ -31,7 +31,7 @@ struct BudgetDetailSheet: View {
                 } }
             .environment(\.budgetWorkspacePush, { path.append($0) })
             .navigationDestination(for: BudgetWorkspaceRoute.self) { BudgetWorkspaceDestination(workspace: workspace, route: $0) }
-        }.presentationDetents([.large]).presentationBackground(PaperTheme.canvas)
+        }.modifier(NativeDrawerStyle())
     }
 }
 
@@ -93,7 +93,7 @@ struct BudgetDetailContent: View {
             if !initialFilterApplied { initialFilterApplied = true; pendingOnly = section == .pending }
         }
         .fullScreenCover(item: $editingCard) { BudgetAmountEditorView(workspace: workspace, card: $0) }
-        .fullScreenCover(item: $settlementSelection) { selection in
+        .sheet(item: $settlementSelection) { selection in
             SettlementReviewView(workspace: workspace, periodID: selection.id) {
                 settlementSelection = nil; dismissDetail(); chrome?.selectedTab = .wishes
             }
@@ -117,7 +117,6 @@ struct BudgetDetailContent: View {
                 ? AnyLayout(VStackLayout(alignment: .leading, spacing: 16))
                 : AnyLayout(HStackLayout(alignment: .top, spacing: 20))
             metricsLayout {
-                amountMetric("v1.card.used", BudgetPresentation.used(card), card)
                 amountMetric("wallet.budget.limit", card.snapshot.budgetAmount, card)
             }.padding(18).walletSurface()
             }

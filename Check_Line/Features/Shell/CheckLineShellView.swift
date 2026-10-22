@@ -61,7 +61,7 @@ struct CheckLineShellView: View {
         }
         .task {
             guard DesignPreviewData.isEnabled else { return }
-            if let tab = CheckLineAppTab(rawValue: DesignPreviewData.screen) { chrome.selectedTab = tab; chrome.settleNavigation() }
+            if let tab = CheckLineAppTab(rawValue: DesignPreviewData.screen) { chrome.selectedTab = tab == .home || tab == .insights ? .budgets : tab; chrome.settleNavigation() }
             if DesignPreviewData.screen == "budget-empty" { chrome.selectedTab = .budgets; chrome.settleNavigation() }
             if DesignPreviewData.screen == "wishes-empty" { chrome.selectedTab = .wishes; chrome.settleNavigation() }
             if ["analysis-empty", "analysis-no-records"].contains(DesignPreviewData.screen) { chrome.selectedTab = .insights; chrome.settleNavigation() }
@@ -113,10 +113,8 @@ struct CheckLineShellView: View {
     @ViewBuilder private var rootTabs: some View {
         if #available(iOS 27.0, *), WalletTabTransition.usesSystemBar {
             TabView(selection: systemSelection) {
-                Tab(value: WalletSystemTab.page(.home)) { page(.home) } label: { tabLabel(.home) }
                 Tab(value: WalletSystemTab.page(.budgets)) { page(.budgets) } label: { tabLabel(.budgets) }
                 Tab(value: WalletSystemTab.page(.wishes)) { page(.wishes) } label: { tabLabel(.wishes) }
-                Tab(value: WalletSystemTab.page(.insights)) { page(.insights) } label: { tabLabel(.insights) }
                 Tab(value: WalletSystemTab.agent, role: .prominent) {
                     Color.clear
                 } label: {
@@ -130,7 +128,7 @@ struct CheckLineShellView: View {
             .tabBarMinimizeBehavior(.never)
         } else {
             TabView(selection: WalletTabTransition.usesImmediateContent ? $chrome.selectedTab : $chrome.presentedTab) {
-                ForEach([CheckLineAppTab.home, .budgets, .wishes, .insights]) { tab in
+                ForEach([CheckLineAppTab.budgets, .wishes]) { tab in
                     page(tab)
                         .tabItem { tabLabel(tab) }
                         .tag(tab)
@@ -141,28 +139,27 @@ struct CheckLineShellView: View {
 
     private var systemSelection: Binding<WalletSystemTab> {
         Binding {
-            .page(chrome.selectedTab)
+            .page(chrome.selectedTab == .home || chrome.selectedTab == .insights ? .budgets : chrome.selectedTab)
         } set: { destination in
             switch destination {
-            case .page(let tab): chrome.selectedTab = tab
+            case .page(let tab): chrome.selectedTab = tab == .home || tab == .insights ? .budgets : tab
             case .agent: workspace.showAgent = true
             }
         }
     }
 
     private func tabLabel(_ tab: CheckLineAppTab) -> some View {
-        Image(uiImage: CheckLineIconAssets.templateImage(for: tab.systemImage))
-            .renderingMode(.template)
-            .accessibilityLabel(tab.title)
-            .accessibilityIdentifier("wallet.tab.\(tab.rawValue)")
+        Label { Text(tab.title) } icon: {
+            Image(uiImage: CheckLineIconAssets.templateImage(for: tab.systemImage)).renderingMode(.template)
+        }.accessibilityLabel(tab.title).accessibilityIdentifier("wallet.tab.\(tab.rawValue)")
     }
 
     @ViewBuilder private func page(_ tab: CheckLineAppTab) -> some View {
         Group {
             switch tab {
-            case .home: CheckLineHomeView(workspace: workspace)
-            case .budgets: BudgetListView(workspace: workspace)
-            case .wishes: WishListView(workspace: workspace)
+            case .home: CartridgeBudgetHomeView(workspace: workspace)
+            case .budgets: CartridgeBudgetHomeView(workspace: workspace)
+            case .wishes: NativeWishListView(workspace: workspace)
             case .insights: CycleReviewView(workspace: workspace)
             }
         }

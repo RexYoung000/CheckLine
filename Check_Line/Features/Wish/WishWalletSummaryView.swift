@@ -24,10 +24,10 @@ struct WishWalletSummaryView: View {
                         Text(String(localized: "ui.wish.balanceSummary"))
                             .font(.subheadline).foregroundStyle(PaperTheme.muted)
                     }
+                    .padding(22).modifier(NativeGlassCard())
                     if projection.recoveryGap > 0 {
                         recoverySummary
                     }
-                    balanceChanges
                     VStack(alignment: .leading, spacing: 14) {
                         Text(String(localized: "ui.wish.balanceHistory"))
                             .font(.headline).accessibilityAddTraits(.isHeader)
@@ -67,7 +67,7 @@ struct WishWalletSummaryView: View {
             .toolbar { ToolbarItem(placement: .topBarTrailing) { Button(String(localized: "action.close"), iconSymbol: "xmark") { dismiss() }.labelStyle(.iconOnly) } }
         }
         .presentationBackground(PaperTheme.canvas)
-        .presentationDetents(typeSize.isAccessibilitySize ? [.large] : [.medium, .large])
+        .presentationDetents(typeSize.isAccessibilitySize ? [.large] : [.fraction(0.76), .large])
         .presentationDragIndicator(.visible)
         .presentationCornerRadius(PaperTheme.Radius.sheet)
     }

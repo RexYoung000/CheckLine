@@ -40,6 +40,7 @@ struct SettlementReviewView: View {
     let onShowWishes: () -> Void
     @Environment(\.dismiss) private var dismiss
     @Environment(\.dynamicTypeSize) private var typeSize
+    @State private var outcome: OutcomeReceipt?
     @State private var accepted = false
     @State private var completed = false
     @State private var reviewedLedger: Ledger?
@@ -151,6 +152,8 @@ struct SettlementReviewView: View {
                 }
             }
         }
+        .overlay { if let outcome { OutcomeCelebration(receipt: outcome) { dismiss() } } }
+        .modifier(NativeDrawerStyle())
         .onAppear { reviewedLedger = workspace.ledger }
         .onChange(of: workspace.ledger) { _, updated in
             guard !completed else { return }
@@ -367,9 +370,17 @@ struct SettlementReviewView: View {
 
     private func confirm() {
         guard let reviewedLedger, accepted, preview != nil, isDue else { return }
+        let before = workspace.wallet
+        let savedPeriod = period
+        let savedTitle = budget?.name ?? String(localized: "wallet.settlement.complete")
         do {
             try workspace.settlePeriod(periodID, quote: quote, reviewedLedger: reviewedLedger, acceptedIncompleteData: true)
             completed = true
+            outcome = OutcomeReceipt(kind: .settlement, title: savedTitle, before: before.balance, after: workspace.wallet.balance,
+                currency: walletCurrency, originalAmount: workspace.ledger.settlement(forPeriod: periodID)?.baseSurplus ?? 0,
+                originalCurrency: savedPeriod?.currencyCode ?? walletCurrency,
+                date: workspace.ledger.settlement(forPeriod: periodID)?.settledAt ?? Date(), recoveryBefore: before.recoveryGap,
+                recoveryAfter: workspace.wallet.recoveryGap, periodStart: savedPeriod?.startDate, periodEnd: savedPeriod?.endDate)
             errorText = nil
         } catch LedgerError.staleSettlementPreview {
             accepted = false

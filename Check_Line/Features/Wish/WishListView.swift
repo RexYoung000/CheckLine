@@ -91,15 +91,16 @@ struct WishListView: View {
 struct CreateWishSheet: View {
     @Bindable var workspace: CheckLineWorkspace
     @State private var task: LocalTaskDraftSession
+    @State private var showsCover = false
     @State private var errorText: String?
     @State private var discardRequested = false
     @FocusState private var fieldFocused: Bool
     @Environment(\.dismiss) private var dismiss
     @Environment(\.dynamicTypeSize) private var typeSize
 
-    init(workspace: CheckLineWorkspace) {
+    init(workspace: CheckLineWorkspace, draftKind: String = "wishCreate") {
         self.workspace = workspace
-        _task = State(initialValue: LocalTaskDraftSession(store: workspace.draftStore, kind: "wishCreate", currency: workspace.ledger.walletSettings.walletCurrencyCode))
+        _task = State(initialValue: LocalTaskDraftSession(store: workspace.draftStore, kind: draftKind, currency: workspace.ledger.walletSettings.walletCurrencyCode))
     }
 
     private func field<Value>(_ path: WritableKeyPath<TaskDraft, Value>) -> Binding<Value> {
@@ -117,6 +118,12 @@ struct CreateWishSheet: View {
                             .accessibilityLabel(String(localized: "wallet.wishes.name")).accessibilityIdentifier("wallet.wishes.name")
                             .onChange(of: task.draft.name) { _, value in if value.count > 80 { task.draft.name = String(value.prefix(80)) } }
                     }.padding(18).walletSurface(radius: 18)
+                    Button { showsCover = true } label: {
+                        ZStack(alignment: .topLeading) {
+                            WishCoverArtwork(cover: workspace.wishCovers.cover(for: task.draft.entityID))
+                            Label(String(localized: "native.cover.title"), systemImage: "photo").font(.subheadline).padding(18)
+                        }.frame(height: 145).modifier(NativeGlassCard())
+                    }.buttonStyle(.plain).accessibilityIdentifier("native.cover.open")
                     estimateFields
                     LocalDraftFailureView(task: task)
                     if let errorText {
@@ -145,11 +152,19 @@ struct CreateWishSheet: View {
                         Spacer(); Button(String(localized: "ui.keyboard.done")) { fieldFocused = false }
                     }
                 }
-        }.presentationDetents([.large]).presentationBackground(PaperTheme.canvas).presentationCornerRadius(PaperTheme.Radius.sheet)
+        }.modifier(NativeDrawerStyle())
+            .sheet(isPresented: $showsCover, onDismiss: { if workspace.wishCovers.hasCover(for: task.draft.entityID) { task.draft.fieldsTouched = true } }) { WishCoverPicker(store: workspace.wishCovers, wishID: task.draft.entityID, name: task.draft.name) }
             .alert(String(localized: "ui.draft.discard.title"), isPresented: $discardRequested) {
                 Button(String(localized: "ui.draft.keep"), role: .cancel) { }
                 Button(String(localized: "ui.draft.discard.action"), role: .destructive) {
-                    do { try task.clear(); errorText = nil } catch { errorText = String(localized: "ui.draft.failed") }
+                    let discardedID = task.draft.entityID
+                    let fromAgent = task.draft.kind == "agentWishCreate"
+                    do {
+                        try workspace.wishCovers.remove(discardedID)
+                        try task.clear()
+                        if fromAgent && workspace.proposedWishDraft?.entityID == discardedID { workspace.proposedWishDraft = nil }
+                        errorText = nil
+                    } catch { errorText = String(localized: "ui.draft.failed") }
                 }
             }
             .onAppear {
@@ -178,8 +193,14 @@ struct CreateWishSheet: View {
     private func save() {
         guard canSave else { return }
         do {
-            try workspace.createWish(name: task.draft.name, amountText: task.draft.amount, currencyCode: task.draft.currency, wishID: task.draft.entityID)
+            try workspace.createWish(name: task.draft.name, amountText: task.draft.amount, currencyCode: task.draft.currency, symbolName: workspace.wishCovers.cover(for: task.draft.entityID).symbol, wishID: task.draft.entityID)
+            let fromAgent = task.draft.kind == "agentWishCreate"
+            let savedName = task.draft.name
             try task.clear()
+            if fromAgent {
+                workspace.proposedWishDraft = nil
+                workspace.conversation.append(AgentConversationEntry(isUser: false, text: String(format: String(localized: "native.agent.wishSaved"), savedName)))
+            }
             dismiss()
         } catch WorkspaceInputError.invalidCurrency { errorText = String(localized: "ui.wish.chooseCurrency") }
         catch LedgerError.zeroOrNegativeAmount, WorkspaceInputError.missingName { errorText = String(localized: "wallet.wishes.invalid") }
@@ -209,46 +230,28 @@ struct WishDetailView: View {
     @Bindable var workspace: CheckLineWorkspace
     var wishID: UUID
     @State private var redeem = false
-    @State private var explanationExpanded = false
+    @State private var expanded = false
+    @State private var price = false
     @Environment(\.dismiss) private var dismiss
-    private var wish: Wish? { workspace.ledger.wishes[wishID] }
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 24) {
-                if let wish {
-                    Text(wish.name).font(.title.weight(.medium))
-                    if wish.state == .completed {
-                        CheckLineIconLabel(String(localized: "wallet.wishes.completed"), symbol: "checkmark.circle").foregroundStyle(PaperTheme.accent)
-                        if let redemption = workspace.ledger.redemptions.values.first(where: { $0.wishID == wish.id && $0.state == .completed }) {
-                            WishPurchaseSummary(redemption: redemption, entry: workspace.ledger.walletEntries[redemption.walletEntryID])
-                        }
-                    } else {
-                        if let amount = wish.targetAmount {
-                            VStack(alignment: .leading, spacing: 8) {
-                                Text(String(localized: "wallet.wishes.estimate")).font(.subheadline).foregroundStyle(PaperTheme.muted)
-                                Text(MoneyFormat.string(amount, currencyCode: wish.currencyCode ?? workspace.ledger.walletSettings.walletCurrencyCode))
-                                    .font(.largeTitle.weight(.medium)).monospacedDigit().fixedSize(horizontal: false, vertical: true)
-                            }
-                        }
-                        Button(String(localized: "wallet.wishes.purchased")) { redeem = true }.buttonStyle(PaperSolidButtonStyle())
-                        PaperValueRow(title: String(localized: "v1.wish.balance"), value: MoneyFormat.string(workspace.wallet.balance, currencyCode: workspace.ledger.walletSettings.walletCurrencyCode))
-                        if workspace.wallet.recoveryGap > 0 {
-                            Text(String(localized: "v1.wish.recovery") + " · " + MoneyFormat.string(workspace.wallet.recoveryGap, currencyCode: workspace.ledger.walletSettings.walletCurrencyCode))
-                                .font(.subheadline).foregroundStyle(PaperTheme.accent)
-                        }
-                        DisclosureGroup(String(localized: "ui.wish.purchaseHelp"), isExpanded: $explanationExpanded) {
-                            Text(String(localized: "wallet.wishes.noReservation")).font(.subheadline).foregroundStyle(PaperTheme.muted).padding(.top, 8)
-                        }.font(.subheadline).tint(PaperTheme.accent)
+            VStack(spacing: 24) {
+                if let wish = workspace.ledger.wishes[wishID] {
+                    NativeWishCard(workspace: workspace, wish: wish, onExpand: { expanded = true }, onRedeem: { redeem = true }, onPrice: { price = true })
+                    if wish.state == .completed, let redemption = workspace.ledger.redemptions.values.first(where: { $0.wishID == wishID && $0.state == .completed }) {
+                        WishPurchaseSummary(redemption: redemption, entry: workspace.ledger.walletEntries[redemption.walletEntryID]).padding(20).walletSurface()
                     }
                 } else {
                     ContentUnavailableView(String(localized: "ui.wish.unavailable"), systemImage: "heart")
                     Button(String(localized: "action.back")) { dismiss() }.buttonStyle(PaperQuietButtonStyle())
                 }
-            }.padding(24).frame(maxWidth: 650).frame(maxWidth: .infinity)
+            }.padding(22).frame(maxWidth: 560).frame(maxWidth: .infinity)
         }.background(PaperTheme.canvas.ignoresSafeArea())
             .navigationTitle(String(localized: "wallet.wishes.detail")).navigationBarTitleDisplayMode(.inline)
-            .toolbar(.visible, for: .navigationBar).toolbar(.hidden, for: .tabBar, .bottomBar).toolbarBackground(.hidden, for: .navigationBar)
-            .fullScreenCover(isPresented: $redeem) { WishRedemptionView(workspace: workspace, wishID: wishID) }
+            .toolbar(.visible, for: .navigationBar).toolbar(.hidden, for: .tabBar, .bottomBar)
+            .sheet(isPresented: $redeem) { WishRedemptionView(workspace: workspace, wishID: wishID).modifier(NativeDrawerStyle()) }
+            .sheet(isPresented: $price) { if let wish = workspace.ledger.wishes[wishID] { WishPriceSheet(workspace: workspace, wish: wish) } }
+            .fullScreenCover(isPresented: $expanded) { ExpandedWishView(workspace: workspace, wishID: wishID) }
     }
 }
 
@@ -256,6 +259,9 @@ struct WishRedemptionView: View {
     @Bindable var workspace: CheckLineWorkspace
     let wishID: UUID
     @State private var task: LocalTaskDraftSession
+    @Environment(\.shellChrome) private var chrome
+    @State private var priceSheet = false
+    @State private var outcome: OutcomeReceipt?
     @State private var purchased = false
     @State private var failed = false
     @State private var discardRequested = false
@@ -286,7 +292,7 @@ struct WishRedemptionView: View {
     }
     private var preview: WishRedemptionPreview? { try? previewResult?.get() }
     private var saved: WishRedemption? { workspace.ledger.redemptions.values.first { $0.wishID == wishID && $0.state == .completed } }
-    private var canSubmit: Bool { purchased && preview != nil && task.canSubmit && saved == nil }
+    private var canSubmit: Bool { purchased && preview != nil && task.canSubmit && saved == nil && wish?.targetAmount != nil }
     private func field<Value>(_ path: WritableKeyPath<TaskDraft, Value>) -> Binding<Value> {
         Binding(get: { task.draft[keyPath: path] }, set: { task.draft[keyPath: path] = $0; task.draft.fieldsTouched = true })
     }
@@ -302,6 +308,9 @@ struct WishRedemptionView: View {
                             WishPurchaseSummary(redemption: saved, entry: workspace.ledger.walletEntries[saved.walletEntryID])
                             PaperValueRow(title: String(localized: "ui.wish.currentBalance"), value: MoneyFormat.string(workspace.wallet.balance, currencyCode: walletCurrency))
                         } else if wish.state == .active {
+                            if wish.targetAmount == nil {
+                                Button(String(localized: "native.wish.setPrice")) { priceSheet=true }.buttonStyle(PaperQuietButtonStyle())
+                            }
                             purchaseFields
                             if !amountFocused && !task.draft.amount.isEmpty && parsed == nil {
                                 Text(String(localized: "wallet.wishes.invalid")).font(.caption).foregroundStyle(PaperTheme.accent)
@@ -349,7 +358,16 @@ struct WishRedemptionView: View {
                         }
                     }
                 }
-        }.alert(String(localized: "ui.draft.discard.title"), isPresented: $discardRequested) {
+        }.overlay {
+            if let outcome { OutcomeCelebration(receipt: outcome) {
+                chrome?.wishesShowCompleted = true
+                chrome?.selectedTab = .wishes
+                chrome?.isShowingDetail = false
+                workspace.showAgent = false; workspace.showComposer = false
+                dismiss()
+            }.transition(.opacity) }
+        }.sheet(isPresented: $priceSheet) { if let wish { WishPriceSheet(workspace: workspace,wish: wish) } }
+        .alert(String(localized: "ui.draft.discard.title"), isPresented: $discardRequested) {
             Button(String(localized: "ui.draft.keep"), role: .cancel) { }
             Button(String(localized: "ui.draft.discard.action"), role: .destructive) {
                 do { try task.clear(); purchased = false; failed = false } catch { failed = true }
@@ -400,10 +418,16 @@ struct WishRedemptionView: View {
     }
 
     private func submit() {
-        guard canSubmit, let parsed else { return }
+        guard canSubmit, let parsed, let wish else { return }
+        let before = workspace.wallet.balance
         do {
             try workspace.redeemWish(wishID, actualAmount: parsed, currencyCode: currency, realPurchaseConfirmed: purchased, quote: quote)
-            try task.clear()
+            // Persistence has succeeded. Draft cleanup is independent of that saved purchase.
+            outcome = OutcomeReceipt(kind: .wish, title: wish.name, before: before, after: workspace.wallet.balance,
+                currency: walletCurrency, originalAmount: parsed, originalCurrency: currency,
+                date: saved?.confirmedAt ?? Date(), cover: workspace.wishCovers.cover(for: wishID, fallback: wish.symbolName),
+                progress: (wish.currencyCode ?? walletCurrency) == walletCurrency ? wish.targetAmount.map { CGFloat(NSDecimalNumber(decimal: min(1,before / $0)).doubleValue) } : nil)
+            try? task.clear()
             failed = false
         } catch { failed = true }
     }

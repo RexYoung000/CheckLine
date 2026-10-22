@@ -44,8 +44,9 @@ enum CheckLineAppTab: String, CaseIterable, Identifiable, Hashable {
 @MainActor
 @Observable
 final class ShellChromeState {
-    var selectedTab: CheckLineAppTab = .home
-    var presentedTab: CheckLineAppTab = .home
+    var wishesShowCompleted = false
+    var selectedTab: CheckLineAppTab = .budgets
+    var presentedTab: CheckLineAppTab = .budgets
     var pocketClosure: CGFloat = 0
     var interiorReveal: Double = 1
     var stageOpacity: Double = 1
