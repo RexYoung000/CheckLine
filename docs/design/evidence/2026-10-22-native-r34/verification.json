@@ -11,7 +11,7 @@
     "implementation": "code_complete",
     "validation": "named_simulator_environments_verified",
     "rex_experience_acceptance": "pending",
-    "physical_phone_validation_this_delivery": "not_run",
+    "physical_phone_validation_this_delivery": "installation_version_launch_and_process_verified; full_experience_pending",
     "cloud_end_to_end_this_delivery": "not_run",
     "production_release": "not_performed"
   },
@@ -429,7 +429,7 @@
     "spherical wrapping over long positive and negative distances"
   ],
   "not_verified": [
-    "this build on a physical iPhone or iPad",
+    "full interaction and visual validation on physical iPhone or iPad; installation and launch verified separately",
     "hardware haptics, audio transcription and live PhotosPicker library selection",
     "live DeepSeek/cloud API/remote service changes",
     "migration against a copy of the user phone ledger",
@@ -569,7 +569,7 @@
       "source_log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "note": "successful codesign verification emitted no output; empty log alone is not evidence of the exit status"
     },
-    "installed_on_phone": false,
+    "installed_on_phone": true,
     "source_log": "/tmp/checkline-native-r34-release-final.log",
     "source_log_sha256": "73de601530fa98d5b34b08285930a0982fcfcbba6f3135877a001107684fd129",
     "evidence_line": "** BUILD SUCCEEDED **",
@@ -597,5 +597,60 @@
     ],
     "verification": "simulator build and signed Release build passed; no full unit/UI rerun after this clipping-only patch",
     "domain_or_ledger_change": false
+  },
+  "phone_installation": {
+    "date_local": "2026-10-22",
+    "timezone": "Asia/Shanghai",
+    "authorized_request": "手机记得先安装一下",
+    "source_commit": "473cf4b",
+    "device_model": "iPhone 12",
+    "bundle_identifier": "Rex.Check-Line",
+    "before_version": "1.0",
+    "before_build": "8",
+    "installed_version": "1.0",
+    "installed_build": "9",
+    "install_status": "success",
+    "mode": "same-bundle-ID in-place installation; no uninstall",
+    "normal_launch_status": "success",
+    "launch_arguments": [],
+    "process_check": {
+      "status": "running",
+      "pid": 1835
+    },
+    "ledger_reset_performed": false,
+    "connection_settings_reset_performed": false,
+    "ledger_or_keychain_content_read_or_exported": false,
+    "ledger_or_keychain_contents_compared": false,
+    "cloud_conversation_exercised": false,
+    "brand_color_changes_included": false,
+    "rex_visual_and_haptic_acceptance": "pending",
+    "logs": {
+      "before": {
+        "local_path": "/tmp/checkline-r34-phone-before.json",
+        "sha256": "6a8f9b1950a1da48385dc40a3281579ca69eeea7473ba5ec9ec2e5350f72789a",
+        "outcome": "success"
+      },
+      "install": {
+        "local_path": "/tmp/checkline-r34-phone-install.json",
+        "sha256": "d870dbc12aba01f4a6024373ccca9c0ed9d3847f27369a851c218b92536ad6ed",
+        "outcome": "success"
+      },
+      "after": {
+        "local_path": "/tmp/checkline-r34-phone-after.json",
+        "sha256": "554a5c43e8597907f5d69497153c2c9dccd39154f4de40adba41916e8480316f",
+        "outcome": "success"
+      },
+      "launch": {
+        "local_path": "/tmp/checkline-r34-phone-launch.json",
+        "sha256": "d4de6c0fef8be20a0cea4a48df42258ff1fb57b5081e4d0bc9d4623c1688bd65",
+        "outcome": "success"
+      },
+      "process": {
+        "local_path": "/tmp/checkline-r34-phone-process.json",
+        "sha256": "d11650a4bef89c66111160712761d1467d0528da8d89e3c5c73fe0c7a9062222",
+        "outcome": "success"
+      }
+    },
+    "raw_device_results_committed": false
   }
 }
