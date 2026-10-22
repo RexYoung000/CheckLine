@@ -909,3 +909,28 @@
 "action.save" = "保存";
 "native.holder.moving" = "正在切换视图";
 "native.holder.ready" = "已就绪";
+
+// R34 full native restoration
+"native.card.connected" = "已插入";
+"native.card.detached" = "已拔出";
+"native.card.inserting" = "正在插入";
+"native.card.changing" = "正在换卡";
+"wallet.demo.study" = "学点新东西";
+"native.library.useCard" = "使用这张卡";
+"native.library.noMatch" = "没有匹配的卡片";
+"native.library.dragReturn" = "向下拖动回到卡夹";
+"native.library.focus" = "已聚焦，再点一次使用";
+"native.library.side" = "点按聚焦";
+"native.library.arc" = "弧线画廊";
+"native.library.dome" = "球面卡库";
+
+"native.wish.front" = "正面";
+"native.wish.back" = "背面";
+"native.wish.rows" = "横条";
+"native.wish.cards" = "卡片";
+"native.cover.none" = "无封面";
+"native.cover.reading" = "正在整理图片";
+"native.cover.dragPhoto" = "拖动图片调整位置";
+"native.cover.horizontalFocus" = "图片水平位置";
+"native.cover.verticalFocus" = "图片垂直位置";
+"native.cover.removePhoto" = "移除图片";

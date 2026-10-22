@@ -909,3 +909,28 @@
 "action.save" = "Save";
 "native.holder.moving" = "Changing view";
 "native.holder.ready" = "Ready";
+
+// R34 full native restoration
+"native.card.connected" = "Inserted";
+"native.card.detached" = "Detached";
+"native.card.inserting" = "Inserting";
+"native.card.changing" = "Changing";
+"wallet.demo.study" = "Learn something new";
+"native.library.useCard" = "Use this card";
+"native.library.noMatch" = "No matching cards";
+"native.library.dragReturn" = "Drag down to return to the holder";
+"native.library.focus" = "Focused. Tap again to use";
+"native.library.side" = "Tap to focus";
+"native.library.arc" = "Arc gallery";
+"native.library.dome" = "Spherical library";
+
+"native.wish.front" = "Front";
+"native.wish.back" = "Back";
+"native.wish.rows" = "Rows";
+"native.wish.cards" = "Cards";
+"native.cover.none" = "No cover";
+"native.cover.reading" = "Preparing photo";
+"native.cover.dragPhoto" = "Drag the photo to adjust its position";
+"native.cover.horizontalFocus" = "Horizontal photo position";
+"native.cover.verticalFocus" = "Vertical photo position";
+"native.cover.removePhoto" = "Remove photo";

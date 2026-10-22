@@ -91,6 +91,9 @@ enum DesignPreviewData {
         }
         let daily = try ledger.insertBudgetCard(name: String(localized: "wallet.demo.daily"), amount: 3_000, currencyCode: "CNY", cycleType: .repeating, recurrence: .monthly, startDate: start, endDate: end, now: now, sortIndex: 0)
         let trip = try ledger.insertBudgetCard(name: String(localized: "wallet.demo.trip"), amount: 2_400, currencyCode: "CNY", cycleType: .oneShot, recurrence: nil, startDate: start, endDate: nil, now: now, sortIndex: 1)
+        if screen == "r34-home" {
+            _ = try ledger.insertBudgetCard(name: String(localized: "wallet.demo.study"), amount: 800, currencyCode: "CNY", cycleType: .oneShot, recurrence: nil, startDate: start, endDate: nil, now: now, sortIndex: 2)
+        }
         if screen == "analysis-no-records" {
             try LedgerStore.replaceAll(ledger, in: context)
             return

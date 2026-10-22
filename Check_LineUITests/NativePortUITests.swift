@@ -16,19 +16,19 @@ import XCTest
         let library=app.descendants(matching: .any)["native.budget.library"]
         XCTAssertTrue(library.waitForExistence(timeout: 5),app.debugDescription)
         let holder=app.descendants(matching: .any)["native.holder.surface"].firstMatch
-        holder.coordinate(withNormalizedOffset: CGVector(dx: 0.5,dy: 0.5)).tap()
+        holder.coordinate(withNormalizedOffset: CGVector(dx: 0.025,dy: 0.5)).tap()
         XCTAssertTrue(library.exists,"A blank tap must not dismiss the library.")
         attach(app,"native-library-arc")
         app.buttons["切换排布"].firstMatch.tap()
         attach(app,"native-library-sphere")
-        app.buttons["关闭"].firstMatch.tap()
+        app.buttons["native.library.close"].tap()
         XCTAssertTrue(library.waitForNonExistence(timeout: 5))
-        XCTAssertTrue(XCTWaiter.wait(for: [XCTNSPredicateExpectation(predicate: NSPredicate(format: "value == %@", "已就绪"),object: holder)],timeout: 5) == .completed)
+        XCTAssertTrue(XCTWaiter.wait(for: [XCTNSPredicateExpectation(predicate: NSPredicate(format: "value CONTAINS %@", "已就绪"),object: holder)],timeout: 5) == .completed)
         app.buttons["native.holder.up"].tap()
         let records=app.descendants(matching: .any)["native.budget.records"]
         XCTAssertTrue(records.waitForExistence(timeout: 5),app.debugDescription)
         attach(app,"native-records-layer")
-        holder.coordinate(withNormalizedOffset: CGVector(dx: 0.5,dy: 0.5)).tap()
+        holder.coordinate(withNormalizedOffset: CGVector(dx: 0.025,dy: 0.5)).tap()
         XCTAssertTrue(records.exists,"A blank tap must not dismiss records.")
         app.buttons["native.holder.down"].tap()
         XCTAssertTrue(app.buttons["wallet.home.capture"].waitForExistence(timeout: 5))

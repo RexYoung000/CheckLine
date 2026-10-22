@@ -18,6 +18,10 @@ import UIKit
         #expect(BudgetStage.dashboard.destination(translation: CGSize(width: 0,height: 100),predicted: CGSize(width: 0,height: 140)) == .library)
         #expect(BudgetStage.dashboard.position(translation: CGSize(width: 0,height: -125)) == -0.5)
         #expect(BudgetStage.records.position(translation: CGSize(width: 0,height: -999)) == -1)
+        #expect(BudgetStage.library.destination(translation: CGSize(width: 0,height: -300),predicted: CGSize(width: 0,height: -800)) == .library)
+        #expect(BudgetStage.library.position(translation: CGSize(width: 0,height: -300)) == 1)
+        #expect(BudgetStage.library.position(translation: CGSize(width: 0,height: 125)) == 0.5)
+        #expect(BudgetStage.library.position(translation: CGSize(width: 0,height: 900)) == 0)
     }
 
     @Test("收币整个金额单调且不超真实结果，跨位和大额仍精确")
@@ -32,6 +36,25 @@ import UIKit
             #expect(last==after)
         }
         #expect(RewardTiming.receivedAmount(before: 280,after: 0,elapsed: 0.5)==0)
+    }
+
+    @Test("六波收币先到达再加金额，拍间保持上一笔结果，最终精确落稳")
+    func sixReceivingBeatsDoNotRunAhead() {
+        let plateaus: [Decimal] = [DecimalMath.parse("290.80"), DecimalMath.parse("307.60"), DecimalMath.parse("330.40"), DecimalMath.parse("356.80"), DecimalMath.parse("380.80"), 400]
+        #expect(RewardTiming.arrivalTimes.count == 6)
+        #expect(RewardTiming.receivedAmount(before: 280, after: 400, elapsed: -100) == 280)
+        #expect(RewardTiming.receivedAmount(before: 280, after: 400, elapsed: RewardTiming.arrivalTimes[0] - 0.001) == 280)
+        for index in RewardTiming.arrivalTimes.indices {
+            let arrival = RewardTiming.arrivalTimes[index]
+            let beforeBeat = index == 0 ? Decimal(280) : plateaus[index - 1]
+            let arrivalValue = RewardTiming.receivedAmount(before: 280, after: 400, elapsed: arrival)
+            #expect(arrivalValue == beforeBeat)
+            let duringBeat = RewardTiming.receivedAmount(before: 280, after: 400, elapsed: arrival + 0.08)
+            #expect(duringBeat > beforeBeat && duringBeat < plateaus[index])
+            let endOfBeat = index + 1 < RewardTiming.arrivalTimes.count ? RewardTiming.arrivalTimes[index + 1] - 0.001 : RewardTiming.settlementDuration
+            #expect(RewardTiming.receivedAmount(before: 280, after: 400, elapsed: endOfBeat) == plateaus[index])
+        }
+        #expect(RewardTiming.receivedAmount(before: 280, after: 400, elapsed: 100) == 400)
     }
 
     @Test("碎片覆盖原面且随机种子改变几何，重演不涉及账本")
@@ -52,6 +75,46 @@ import UIKit
         #expect(abs(area-1)<0.0001)
     }
 
+    @Test("玻璃裂缝来自实际碎片共享边，随机冲击后整面没有孔洞或重叠面积")
+    func fractureSceneSharesEveryInteriorEdge() {
+        let scenes = [UInt64(1), 2, 7, 41, 93, 937].map { GlassFracture.makeScene(seed: $0) }
+        #expect(Set(scenes.map { "\($0.impact.x),\($0.impact.y)" }).count == scenes.count)
+        for scene in scenes {
+            var area = 0.0
+            var ownership: [String: Int] = [:]
+            var interior: Set<String> = []
+            for fragment in scene.fragments {
+                var signed = 0.0
+                for index in fragment.points.indices {
+                    let a = fragment.points[index], b = fragment.points[(index + 1) % fragment.points.count]
+                    signed += a.x * b.y - b.x * a.y
+                    guard hypot(a.x - b.x, a.y - b.y) > 0.0000001 else { continue }
+                    let key = fragmentEdgeKey(a, b)
+                    ownership[key, default: 0] += 1
+                    let boundary = abs(a.x - b.x) < 0.0000001 && (a.x < 0.0000001 || a.x > 0.9999999)
+                        || abs(a.y - b.y) < 0.0000001 && (a.y < 0.0000001 || a.y > 0.9999999)
+                    if !boundary { interior.insert(key) }
+                }
+                #expect(abs(signed) > 0)
+                area += abs(signed) / 2
+            }
+            #expect(abs(area - 1) < 0.0001)
+            #expect(interior.allSatisfy { ownership[$0] == 2 })
+            #expect(ownership.filter { !interior.contains($0.key) }.allSatisfy { $0.value == 1 })
+            #expect(!scene.cracks.isEmpty)
+            for crack in scene.cracks {
+                #expect(interior.contains(fragmentEdgeKey(crack.a, crack.b)))
+                #expect(crack.delay >= 0 && crack.delay.isFinite)
+            }
+        }
+    }
+
+    private func fragmentEdgeKey(_ a: CGPoint, _ b: CGPoint) -> String {
+        let first = "\(Int((a.x * 1_000_000).rounded())),\(Int((a.y * 1_000_000).rounded()))"
+        let second = "\(Int((b.x * 1_000_000).rounded())),\(Int((b.y * 1_000_000).rounded()))"
+        return [first, second].sorted().joined(separator: "|")
+    }
+
     @Test("封面跨实例恢复、按心愿隔离、坏文件安全回退")
     func coverPersistence() throws {
         let root=FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
@@ -65,6 +128,23 @@ import UIKit
         #expect(WishCoverStore(root: root).cover(for: second,fallback: "tent").symbol == "tent")
         try restored.remove(first)
         #expect(WishCoverStore(root: root).cover(for: first,fallback: "heart").symbol == "heart")
+    }
+
+    @Test("旧封面没有焦点字段时居中恢复，新焦点往返保存且越界值收敛")
+    func oldCoverDefaultsAndNewFocusRoundTrip() throws {
+        let legacy = Data(#"{"symbol":"camera","layout":"fill","imageData":"AQID"}"#.utf8)
+        let restored = try JSONDecoder().decode(WishCover.self, from: legacy)
+        #expect(restored.symbol == "camera" && restored.layout == .fill)
+        #expect(restored.imageData == Data([1, 2, 3]))
+        #expect(restored.focusX == 0.5 && restored.focusY == 0.5)
+        let positioned = WishCover(symbol: "camera", layout: .fill, imageData: restored.imageData, focusX: 0.17, focusY: 0.82)
+        #expect(try JSONDecoder().decode(WishCover.self, from: JSONEncoder().encode(positioned)) == positioned)
+        let clamped = WishCover(layout: .fill, focusX: -2, focusY: 9)
+        #expect(clamped.focusX == 0 && clamped.focusY == 1)
+        let invalid = WishCover(focusX: .nan, focusY: .infinity)
+        #expect(invalid.focusX == 0.5 && invalid.focusY == 0.5)
+        let none = WishCover(layout: .none)
+        #expect(try JSONDecoder().decode(WishCover.self, from: JSONEncoder().encode(none)).layout == .none)
     }
 
     @Test("图片重编码缩限尺寸，非法内容拒绝而非保存原图")

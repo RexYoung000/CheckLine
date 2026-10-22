@@ -4,10 +4,28 @@ import UIKit
 import ImageIO
 
 nonisolated struct WishCover: Codable, Equatable, Sendable {
-    enum Layout: String, Codable, CaseIterable { case symbol, inset, fill }
+    enum Layout: String, Codable, CaseIterable { case none, symbol, inset, fill }
     var symbol = "headphones"
     var layout: Layout = .symbol
     var imageData: Data?
+    var focusX: Double = 0.5
+    var focusY: Double = 0.5
+
+    init(symbol: String = "headphones", layout: Layout = .symbol, imageData: Data? = nil, focusX: Double = 0.5, focusY: Double = 0.5) {
+        self.symbol = symbol; self.layout = layout; self.imageData = imageData
+        self.focusX = focusX.isFinite ? min(1, max(0, focusX)) : 0.5
+        self.focusY = focusY.isFinite ? min(1, max(0, focusY)) : 0.5
+    }
+
+    private enum CodingKeys: String, CodingKey { case symbol, layout, imageData, focusX, focusY }
+    init(from decoder: Decoder) throws {
+        let data = try decoder.container(keyedBy: CodingKeys.self)
+        self.init(symbol: try data.decodeIfPresent(String.self, forKey: .symbol) ?? "heart",
+                  layout: try data.decodeIfPresent(Layout.self, forKey: .layout) ?? .symbol,
+                  imageData: try data.decodeIfPresent(Data.self, forKey: .imageData),
+                  focusX: try data.decodeIfPresent(Double.self, forKey: .focusX) ?? 0.5,
+                  focusY: try data.decodeIfPresent(Double.self, forKey: .focusY) ?? 0.5)
+    }
 }
 
 @MainActor @Observable

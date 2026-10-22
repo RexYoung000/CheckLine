@@ -40,6 +40,7 @@ struct WalletInteriorSurface: View {
 struct WalletReceiptCard: View {
     var expense: Expense
     var depth: Int
+    var contact: Date? = nil
 
     private var colors: [Color] {
         depth == 0
@@ -51,9 +52,9 @@ struct WalletReceiptCard: View {
         HStack(spacing: 12) {
             CheckLineIcon(symbol: BudgetPresentation.symbol(for: expense), size: 20)
                 .font(.system(size: 19, weight: .regular)).frame(width: 22).accessibilityHidden(true)
-            Text(expense.merchant ?? String(localized: "v1.card.record.untitled")).lineLimit(1)
+            Text(expense.merchant ?? String(localized: "v1.card.record.untitled")).lineLimit(1).modifier(ContactTextEntrance(contact: contact))
             Spacer(minLength: 8)
-            Text(MoneyFormat.string(expense.kind == .refund ? expense.originalAmount : -expense.originalAmount, currencyCode: expense.originalCurrencyCode))
+            ContactAmountText(value: expense.kind == .refund ? expense.originalAmount : -expense.originalAmount,currency: expense.originalCurrencyCode,contact: contact)
                 .monospacedDigit().lineLimit(1).minimumScaleFactor(0.7)
         }
         .font(.subheadline).foregroundStyle(PaperTheme.ink)
@@ -71,6 +72,8 @@ struct WalletReceiptCard: View {
 struct WalletReceiptStack: View {
     var rows: [Expense]
     @Binding var position: Int
+    var contact: Date? = nil
+    var active = true
     var openExpense: (Expense) -> Void
     @Environment(\.walletReduceMotion) private var reduceMotion
     @Environment(\.dynamicTypeSize) private var typeSize
@@ -78,7 +81,7 @@ struct WalletReceiptStack: View {
 
     private var start: Int { max(0, min(position, max(0, rows.count - 1))) }
     private var location: CGFloat {
-        let raw = CGFloat(start) + (reduceMotion ? 0 : drag / 52)
+        let raw = CGFloat(start) + (reduceMotion ? 0 : drag / 92)
         return min(CGFloat(max(0, rows.count - 1)), max(0, raw))
     }
 
@@ -87,7 +90,7 @@ struct WalletReceiptStack: View {
             if typeSize.isAccessibilitySize {
                 VStack(spacing: 10) {
                     ForEach(Array(rows.dropFirst(start).prefix(3))) { expense in
-                        Button { openExpense(expense) } label: { WalletReceiptCard(expense: expense, depth: 0) }
+                        Button { openExpense(expense) } label: { WalletReceiptCard(expense: expense, depth: 0,contact: contact) }
                     }
                 }
             } else {
@@ -95,7 +98,7 @@ struct WalletReceiptStack: View {
                     ForEach(Array(rows.enumerated()), id: \.element.id) { index, expense in
                         let depth = CGFloat(index) - location
                         if depth > -1 && depth < 3 {
-                            Button { openExpense(expense) } label: { WalletReceiptCard(expense: expense, depth: depth < 0.7 ? 0 : 1) }
+                            Button { openExpense(expense) } label: { WalletReceiptCard(expense: expense, depth: depth < 0.7 ? 0 : 1,contact: contact).overlay { ComponentLightSweep(startedAt: contact,radius: 17) } }
                                 .frame(height: 57)
                                 .scaleEffect(1 - max(0, depth) * 0.055)
                                 .offset(y: CGFloat(min(2, rows.count - 1)) * 44 - depth * 44)
@@ -110,6 +113,7 @@ struct WalletReceiptStack: View {
             }
         }
         .buttonStyle(.plain)
+        .allowsHitTesting(active)
         .contentShape(Rectangle())
         .highPriorityGesture(DragGesture(minimumDistance: 8)
             .updating($drag) { value, state, _ in
@@ -117,18 +121,34 @@ struct WalletReceiptStack: View {
                 state = value.translation.height
             }
             .onEnded { value in
-                guard abs(value.translation.height) > 10, abs(value.translation.height) > abs(value.translation.width) else { return }
-                let travel = value.predictedEndTranslation.height / 44
-                let step = max(-rows.count, min(rows.count, Int(travel.rounded())))
-                move(to: start + (step == 0 ? (value.translation.height > 0 ? 1 : -1) : step))
+                guard abs(value.translation.height) > 36, abs(value.translation.height) > abs(value.translation.width)*1.2 else { return }
+                let travel=value.translation.height/92
+                let step=max(-1,min(1,Int(travel.rounded())))
+                move(to: start+(step == 0 ? (value.translation.height>0 ? 1 : -1) : step))
             })
         .accessibilityAction(named: Text("wallet.records.older")) { move(to: start + 1) }
         .accessibilityAction(named: Text("wallet.records.newer")) { move(to: start - 1) }
     }
 
     private func move(to target: Int) {
-        withAnimation(reduceMotion ? nil : .smooth(duration: 0.24)) {
+        withAnimation(reduceMotion ? nil : .smooth(duration: 0.42)) {
             position = max(0, min(rows.count - 1, target))
         }
+    }
+}
+
+/// Shared contact event gives labels and the receipt content one entrance, without delayed tasks.
+struct ContactTextEntrance: ViewModifier {
+    let contact: Date?
+    @State private var revealed = true
+    @Environment(\.walletReduceMotion) private var reduceMotion
+    func body(content: Content) -> some View {
+        content.opacity(revealed ? 1 : 0.12).offset(y: revealed ? 0 : 6)
+            .task(id: contact) {
+                guard !reduceMotion, let contact, Date().timeIntervalSince(contact)<0.56 else { revealed=true;return }
+                var instant=Transaction(animation: nil);instant.disablesAnimations=true
+                withTransaction(instant) { revealed=false }
+                withAnimation(.easeOut(duration: max(0.1,0.56-Date().timeIntervalSince(contact)))) { revealed=true }
+            }
     }
 }

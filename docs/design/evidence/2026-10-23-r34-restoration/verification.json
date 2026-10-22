@@ -1,0 +1,884 @@
+{
+  "schema_version": 1,
+  "date_local": "2026-10-23",
+  "timezone": "Asia/Shanghai",
+  "app": {
+    "name": "CheckLine",
+    "version": "1.0",
+    "build": "10",
+    "minimum_ios": "17.0"
+  },
+  "delivery_stage": {
+    "implementation": "code_complete_for_authorized_r34_restoration",
+    "validation": "domain_228_and_final_ui_19_plus_postfix_2_passed; named_small_and_ipad_checks_passed",
+    "rex_experience_acceptance": "pending",
+    "signed_release": "passed",
+    "phone_installation": "installed_1.0_10; normal_launch_pending_device_unlock",
+    "cloud_end_to_end_this_delivery": "not_run",
+    "production_release": "not_performed"
+  },
+  "approved_reference": {
+    "file": "../2026-10-22-native-r34/approved-r34.html",
+    "role": "read_only_visual_and_interaction_reference",
+    "runtime_embedded": false,
+    "source_modules": "motion-lab-20261017 arc gallery and spherical library",
+    "sha256": "7471c40846d7c8aea0037a5e2a07686c4debb5d73841b6de87d58ff33d2e8eb8"
+  },
+  "implementation": {
+    "platform": "SwiftUI / native Canvas / PhotosPicker",
+    "webview": false,
+    "new_third_party_runtime": false,
+    "ledger_schema_changed": false,
+    "money_engines_changed": false,
+    "brand_color_changes_included": false,
+    "cover_storage": "Local per-wish-ID sidecar, re-encoded thumbnail <=1200px, no upload; legacy JSON defaults focus to center"
+  },
+  "runs": [
+    {
+      "id": "domain",
+      "status": "passed",
+      "source_log": "/tmp/checkline-r34-full-domain.log",
+      "source_log_sha256": "6652ae060809446c557ba32b5b70e70aa6374bbb357f3312a3ae34e52e78ef9c",
+      "xcresult_local_path": "/tmp/checkline-r34-full-domain.xcresult",
+      "ui_test_results": [],
+      "observed_failed_tests": 0,
+      "observed_passed_tests": 0,
+      "tests": 228,
+      "suites": 48,
+      "failures": 0,
+      "environment": "iPhone SE (3rd generation) / iOS 26.5 simulator"
+    },
+    {
+      "id": "ui4",
+      "status": "failed",
+      "source_log": "/tmp/checkline-r34-full-ui4.log",
+      "source_log_sha256": "4d9276391fbae4bd1a9266cbb3a3bc692813a80aac94ac2ace16362f17c3fdd4",
+      "xcresult_local_path": "/tmp/checkline-r34-full-ui4.xcresult",
+      "ui_test_results": [
+        {
+          "suite": "NativePortUITests",
+          "name": "testAgentWishDraftRequiresExplicitReviewAndConfirmation",
+          "result": "passed",
+          "duration_seconds": 17.903
+        },
+        {
+          "suite": "NativePortUITests",
+          "name": "testCoverUpdatesWithinSameSheetAndUnpricedWishCannotRedeem",
+          "result": "passed",
+          "duration_seconds": 26.141
+        },
+        {
+          "suite": "NativePortUITests",
+          "name": "testDiscardAgentWishRemovesPendingProposal",
+          "result": "passed",
+          "duration_seconds": 22.283
+        },
+        {
+          "suite": "NativePortUITests",
+          "name": "testEnglishDarkLargeTextBalanceAndUnpricedWish",
+          "result": "passed",
+          "duration_seconds": 27.202
+        },
+        {
+          "suite": "NativePortUITests",
+          "name": "testExpandedWishPurchaseReturnsToRealizedList",
+          "result": "failed",
+          "duration_seconds": 16.602
+        },
+        {
+          "suite": "NativePortUITests",
+          "name": "testHolderDragAndCompactWindowDragReturn",
+          "result": "passed",
+          "duration_seconds": 15.252
+        },
+        {
+          "suite": "NativePortUITests",
+          "name": "testSettlementReceivesInCurrentPage",
+          "result": "passed",
+          "duration_seconds": 15.214
+        },
+        {
+          "suite": "NativePortUITests",
+          "name": "testTwoTabsAndHolderLayersDoNotSwitchOnBlankTap",
+          "result": "passed",
+          "duration_seconds": 21.757
+        },
+        {
+          "suite": "NativePortUITests",
+          "name": "testVoiceOverReachesHolderActionsAndBudgetAmount",
+          "result": "passed",
+          "duration_seconds": 24.465
+        },
+        {
+          "suite": "NativePortUITests",
+          "name": "testWishFlipPurchaseResultAndRealizedList",
+          "result": "passed",
+          "duration_seconds": 18.822
+        },
+        {
+          "suite": "R34HomeInteractionUITests",
+          "name": "testArcSideCardFocusesBeforeSelectingAndReturnSurfaceDoesNotRespondToTap",
+          "result": "failed",
+          "duration_seconds": 14.055
+        },
+        {
+          "suite": "R34HomeInteractionUITests",
+          "name": "testDomeVerticalBrowsingStaysInLibraryAndOnlyBottomDragReturns",
+          "result": "failed",
+          "duration_seconds": 23.288
+        },
+        {
+          "suite": "R34HomeInteractionUITests",
+          "name": "testEjectionDisconnectsSummaryAndTapReinsertsBeforeOpeningDetails",
+          "result": "passed",
+          "duration_seconds": 21.323
+        },
+        {
+          "suite": "R34HomeInteractionUITests",
+          "name": "testHorizontalThrowChangesRealBudgetAndReverseSwipeRestoresIt",
+          "result": "passed",
+          "duration_seconds": 20.095
+        },
+        {
+          "suite": "R34HomeInteractionUITests",
+          "name": "testShortHolderDragReturnsAndRecordsControlsFollowRetreatedHolder",
+          "result": "failed",
+          "duration_seconds": 17.95
+        },
+        {
+          "suite": "R34WishPresentationUITests",
+          "name": "testExpandedWishIsActuallyLargerAndGestureTurnsToRedeemableBack",
+          "result": "failed",
+          "duration_seconds": 17.916
+        },
+        {
+          "suite": "R34WishPresentationUITests",
+          "name": "testWishCardsUseTwoColumnsAndOddLastCardSpansThenSwitchToRows",
+          "result": "passed",
+          "duration_seconds": 12.96
+        }
+      ],
+      "observed_failed_tests": 5,
+      "observed_passed_tests": 12,
+      "environment": "iPhone 18 Pro / iOS 27.0 simulator",
+      "tests": 17,
+      "failures": 5,
+      "followup": "Failures retained; interaction and locator changes retested in UI5/UI6. Not an all-passed run."
+    },
+    {
+      "id": "ui5",
+      "status": "failed",
+      "source_log": "/tmp/checkline-r34-full-ui5.log",
+      "source_log_sha256": "d34e705b1d8a24a32c9595c5dae80cc9693df16b53cc655795e9e035883af84f",
+      "xcresult_local_path": "/tmp/checkline-r34-full-ui5.xcresult",
+      "ui_test_results": [
+        {
+          "suite": "NativeMotionEvidenceUITests",
+          "name": "testSettlementPlaysAllReceivingBeatsInCurrentPageBeforeReturn",
+          "result": "passed",
+          "duration_seconds": 19.867
+        },
+        {
+          "suite": "NativeMotionEvidenceUITests",
+          "name": "testWishPurchasePlaysCompleteRevealBeforeViewingRealized",
+          "result": "passed",
+          "duration_seconds": 20.772
+        },
+        {
+          "suite": "NativePortUITests",
+          "name": "testAgentWishDraftRequiresExplicitReviewAndConfirmation",
+          "result": "passed",
+          "duration_seconds": 18.259
+        },
+        {
+          "suite": "NativePortUITests",
+          "name": "testCoverUpdatesWithinSameSheetAndUnpricedWishCannotRedeem",
+          "result": "passed",
+          "duration_seconds": 26.069
+        },
+        {
+          "suite": "NativePortUITests",
+          "name": "testDiscardAgentWishRemovesPendingProposal",
+          "result": "passed",
+          "duration_seconds": 22.131
+        },
+        {
+          "suite": "NativePortUITests",
+          "name": "testEnglishDarkLargeTextBalanceAndUnpricedWish",
+          "result": "passed",
+          "duration_seconds": 27.057
+        },
+        {
+          "suite": "NativePortUITests",
+          "name": "testExpandedWishPurchaseReturnsToRealizedList",
+          "result": "passed",
+          "duration_seconds": 24.051
+        },
+        {
+          "suite": "NativePortUITests",
+          "name": "testHolderDragAndCompactWindowDragReturn",
+          "result": "passed",
+          "duration_seconds": 15.312
+        },
+        {
+          "suite": "NativePortUITests",
+          "name": "testSettlementReceivesInCurrentPage",
+          "result": "passed",
+          "duration_seconds": 15.0
+        },
+        {
+          "suite": "NativePortUITests",
+          "name": "testTwoTabsAndHolderLayersDoNotSwitchOnBlankTap",
+          "result": "passed",
+          "duration_seconds": 20.652
+        },
+        {
+          "suite": "NativePortUITests",
+          "name": "testVoiceOverReachesHolderActionsAndBudgetAmount",
+          "result": "passed",
+          "duration_seconds": 24.179
+        },
+        {
+          "suite": "NativePortUITests",
+          "name": "testWishFlipPurchaseResultAndRealizedList",
+          "result": "passed",
+          "duration_seconds": 18.518
+        },
+        {
+          "suite": "R34HomeInteractionUITests",
+          "name": "testArcSideCardFocusesBeforeSelectingAndReturnSurfaceDoesNotRespondToTap",
+          "result": "failed",
+          "duration_seconds": 13.693
+        },
+        {
+          "suite": "R34HomeInteractionUITests",
+          "name": "testDomeVerticalBrowsingStaysInLibraryAndOnlyBottomDragReturns",
+          "result": "passed",
+          "duration_seconds": 20.461
+        },
+        {
+          "suite": "R34HomeInteractionUITests",
+          "name": "testEjectionDisconnectsSummaryAndTapReinsertsBeforeOpeningDetails",
+          "result": "passed",
+          "duration_seconds": 21.135
+        },
+        {
+          "suite": "R34HomeInteractionUITests",
+          "name": "testHorizontalThrowChangesRealBudgetAndReverseSwipeRestoresIt",
+          "result": "passed",
+          "duration_seconds": 19.994
+        },
+        {
+          "suite": "R34HomeInteractionUITests",
+          "name": "testShortHolderDragReturnsAndRecordsControlsFollowRetreatedHolder",
+          "result": "passed",
+          "duration_seconds": 23.635
+        },
+        {
+          "suite": "R34WishPresentationUITests",
+          "name": "testExpandedWishIsActuallyLargerAndGestureTurnsToRedeemableBack",
+          "result": "failed",
+          "duration_seconds": 19.285
+        },
+        {
+          "suite": "R34WishPresentationUITests",
+          "name": "testWishCardsUseTwoColumnsAndOddLastCardSpansThenSwitchToRows",
+          "result": "passed",
+          "duration_seconds": 12.936
+        }
+      ],
+      "observed_failed_tests": 2,
+      "observed_passed_tests": 17,
+      "environment": "iPhone 18 Pro / iOS 27.0 simulator",
+      "tests": 19,
+      "failures": 2,
+      "followup": "Two remaining failures: arc exposed-side-card accessibility frame and expanded wish card descendant accessibility."
+    },
+    {
+      "id": "ui6",
+      "status": "failed",
+      "source_log": "/tmp/checkline-r34-full-ui6.log",
+      "source_log_sha256": "7fe002d5dc77653ebf62fa22fa9f7347008b69090b43a2a3da76029a04097a04",
+      "xcresult_local_path": "/tmp/checkline-r34-full-ui6.xcresult",
+      "ui_test_results": [
+        {
+          "suite": "NativeMotionEvidenceUITests",
+          "name": "testSettlementPlaysAllReceivingBeatsInCurrentPageBeforeReturn",
+          "result": "passed",
+          "duration_seconds": 18.693
+        },
+        {
+          "suite": "NativeMotionEvidenceUITests",
+          "name": "testWishPurchasePlaysCompleteRevealBeforeViewingRealized",
+          "result": "passed",
+          "duration_seconds": 20.747
+        },
+        {
+          "suite": "R34HomeInteractionUITests",
+          "name": "testArcSideCardFocusesBeforeSelectingAndReturnSurfaceDoesNotRespondToTap",
+          "result": "failed",
+          "duration_seconds": 14.103
+        },
+        {
+          "suite": "R34HomeInteractionUITests",
+          "name": "testDomeVerticalBrowsingStaysInLibraryAndOnlyBottomDragReturns",
+          "result": "passed",
+          "duration_seconds": 20.312
+        },
+        {
+          "suite": "R34HomeInteractionUITests",
+          "name": "testEjectionDisconnectsSummaryAndTapReinsertsBeforeOpeningDetails",
+          "result": "passed",
+          "duration_seconds": 21.279
+        },
+        {
+          "suite": "R34HomeInteractionUITests",
+          "name": "testHorizontalThrowChangesRealBudgetAndReverseSwipeRestoresIt",
+          "result": "passed",
+          "duration_seconds": 20.087
+        },
+        {
+          "suite": "R34HomeInteractionUITests",
+          "name": "testShortHolderDragReturnsAndRecordsControlsFollowRetreatedHolder",
+          "result": "passed",
+          "duration_seconds": 23.597
+        },
+        {
+          "suite": "R34WishPresentationUITests",
+          "name": "testExpandedWishIsActuallyLargerAndGestureTurnsToRedeemableBack",
+          "result": "passed",
+          "duration_seconds": 20.716
+        },
+        {
+          "suite": "R34WishPresentationUITests",
+          "name": "testWishCardsUseTwoColumnsAndOddLastCardSpansThenSwitchToRows",
+          "result": "passed",
+          "duration_seconds": 13.025
+        }
+      ],
+      "observed_failed_tests": 1,
+      "observed_passed_tests": 8,
+      "environment": "iPhone 18 Pro / iOS 27.0 simulator",
+      "tests": 9,
+      "failures": 1,
+      "followup": "Eight passed; remaining arc accessibility-frame failure retained pending a new run. Full motion and expanded wish presentation both passed in this run."
+    },
+    {
+      "id": "arc-final",
+      "status": "passed",
+      "environment": "iPhone 18 Pro / iOS 27.0 simulator",
+      "source_log": "/tmp/checkline-r34-full-arc-final.log",
+      "source_log_sha256": "4c82a171afcf9f897d1b14f96d3a6ceb228462a6920b92335b028289b037d343",
+      "xcresult_local_path": "/tmp/checkline-r34-full-arc-final.xcresult",
+      "tests": 1,
+      "failures": 0,
+      "ui_test_results": [
+        {
+          "suite": "R34HomeInteractionUITests",
+          "name": "testArcSideCardFocusesBeforeSelectingAndReturnSurfaceDoesNotRespondToTap",
+          "result": "passed",
+          "duration_seconds": 19.679
+        }
+      ]
+    },
+    {
+      "id": "small",
+      "status": "passed",
+      "environment": "iPhone SE (3rd generation), 375pt / iOS 26.5 simulator",
+      "source_log": "/tmp/checkline-r34-full-small.log",
+      "source_log_sha256": "6a28a84c2abd0e32552cf365ccc01f79b0bc176e557fc255e98f941f6e85cb55",
+      "xcresult_local_path": "/tmp/checkline-r34-full-small.xcresult",
+      "tests": 1,
+      "failures": 0,
+      "ui_test_results": [
+        {
+          "suite": "NativePortUITests",
+          "name": "testEnglishDarkLargeTextBalanceAndUnpricedWish",
+          "result": "passed",
+          "duration_seconds": 23.38
+        }
+      ]
+    },
+    {
+      "id": "ipad",
+      "status": "failed",
+      "environment": "iPad simulator",
+      "source_log": "/tmp/checkline-r34-full-ipad.log",
+      "source_log_sha256": "b58f519818510ad0b31c4b2725b2cd42c31a778ffa9e9290339da7665ccbda8a",
+      "xcresult_local_path": "/tmp/checkline-r34-full-ipad.xcresult",
+      "tests": 2,
+      "failures": 1,
+      "ui_test_results": [
+        {
+          "suite": "R34HomeInteractionUITests",
+          "name": "testDomeVerticalBrowsingStaysInLibraryAndOnlyBottomDragReturns",
+          "result": "passed",
+          "duration_seconds": 18.128
+        },
+        {
+          "suite": "R34WishPresentationUITests",
+          "name": "testExpandedWishIsActuallyLargerAndGestureTurnsToRedeemableBack",
+          "result": "failed",
+          "duration_seconds": 9.917
+        }
+      ]
+    },
+    {
+      "id": "ipad-final",
+      "status": "environment_error",
+      "environment": "iPad simulator",
+      "source_log": "/tmp/checkline-r34-full-ipad-final.log",
+      "source_log_sha256": "872e4b6783e3c0462fd66eeda177fef542d08cbfabb913c345094dfe4a2d398c",
+      "xcresult_local_path": "/tmp/checkline-r34-full-ipad-final.xcresult",
+      "tests": 0,
+      "failures": 0,
+      "ui_test_results": [],
+      "product_failure": false,
+      "reason": "Simulator test runner launch denied: SBMainWorkspace Busy / Application failed preflight checks. No test case ran."
+    },
+    {
+      "id": "ui7",
+      "status": "configuration_error",
+      "environment": "not_started",
+      "source_log": "/tmp/checkline-r34-full-ui7.log",
+      "source_log_sha256": "214310a6077b13af70656b3740868afe7a6ca1e99a72ddf539fddfd106933508",
+      "xcresult_local_path": "/tmp/checkline-r34-full-ui7.xcresult",
+      "tests": 0,
+      "failures": 0,
+      "ui_test_results": [],
+      "product_failure": false,
+      "reason": "Selected scheme did not contain the requested UI test target. No UI test case ran."
+    },
+    {
+      "id": "final",
+      "status": "passed",
+      "environment": "iPhone 18 Pro / iOS 27.0 simulator",
+      "source_log": "/tmp/checkline-r34-full-final.log",
+      "source_log_sha256": "524ce7192092e34e20dbcdbe2ec71d5595de44c517b41b7815edb5b567c912e2",
+      "xcresult_local_path": "/tmp/checkline-r34-full-final.xcresult",
+      "tests": 19,
+      "failures": 0,
+      "ui_test_results": [
+        {
+          "suite": "NativeMotionEvidenceUITests",
+          "name": "testSettlementPlaysAllReceivingBeatsInCurrentPageBeforeReturn",
+          "result": "passed",
+          "duration_seconds": 20.381
+        },
+        {
+          "suite": "NativeMotionEvidenceUITests",
+          "name": "testWishPurchasePlaysCompleteRevealBeforeViewingRealized",
+          "result": "passed",
+          "duration_seconds": 23.456
+        },
+        {
+          "suite": "NativePortUITests",
+          "name": "testAgentWishDraftRequiresExplicitReviewAndConfirmation",
+          "result": "passed",
+          "duration_seconds": 18.536
+        },
+        {
+          "suite": "NativePortUITests",
+          "name": "testCoverUpdatesWithinSameSheetAndUnpricedWishCannotRedeem",
+          "result": "passed",
+          "duration_seconds": 25.933
+        },
+        {
+          "suite": "NativePortUITests",
+          "name": "testDiscardAgentWishRemovesPendingProposal",
+          "result": "passed",
+          "duration_seconds": 23.076
+        },
+        {
+          "suite": "NativePortUITests",
+          "name": "testEnglishDarkLargeTextBalanceAndUnpricedWish",
+          "result": "passed",
+          "duration_seconds": 27.087
+        },
+        {
+          "suite": "NativePortUITests",
+          "name": "testExpandedWishPurchaseReturnsToRealizedList",
+          "result": "passed",
+          "duration_seconds": 24.02
+        },
+        {
+          "suite": "NativePortUITests",
+          "name": "testHolderDragAndCompactWindowDragReturn",
+          "result": "passed",
+          "duration_seconds": 15.128
+        },
+        {
+          "suite": "NativePortUITests",
+          "name": "testSettlementReceivesInCurrentPage",
+          "result": "passed",
+          "duration_seconds": 15.278
+        },
+        {
+          "suite": "NativePortUITests",
+          "name": "testTwoTabsAndHolderLayersDoNotSwitchOnBlankTap",
+          "result": "passed",
+          "duration_seconds": 21.445
+        },
+        {
+          "suite": "NativePortUITests",
+          "name": "testVoiceOverReachesHolderActionsAndBudgetAmount",
+          "result": "passed",
+          "duration_seconds": 24.839
+        },
+        {
+          "suite": "NativePortUITests",
+          "name": "testWishFlipPurchaseResultAndRealizedList",
+          "result": "passed",
+          "duration_seconds": 19.119
+        },
+        {
+          "suite": "R34HomeInteractionUITests",
+          "name": "testArcSideCardFocusesBeforeSelectingAndReturnSurfaceDoesNotRespondToTap",
+          "result": "passed",
+          "duration_seconds": 22.396
+        },
+        {
+          "suite": "R34HomeInteractionUITests",
+          "name": "testDomeVerticalBrowsingStaysInLibraryAndOnlyBottomDragReturns",
+          "result": "passed",
+          "duration_seconds": 20.614
+        },
+        {
+          "suite": "R34HomeInteractionUITests",
+          "name": "testEjectionDisconnectsSummaryAndTapReinsertsBeforeOpeningDetails",
+          "result": "passed",
+          "duration_seconds": 23.563
+        },
+        {
+          "suite": "R34HomeInteractionUITests",
+          "name": "testHorizontalThrowChangesRealBudgetAndReverseSwipeRestoresIt",
+          "result": "passed",
+          "duration_seconds": 20.045
+        },
+        {
+          "suite": "R34HomeInteractionUITests",
+          "name": "testShortHolderDragReturnsAndRecordsControlsFollowRetreatedHolder",
+          "result": "passed",
+          "duration_seconds": 23.532
+        },
+        {
+          "suite": "R34WishPresentationUITests",
+          "name": "testExpandedWishIsActuallyLargerAndGestureTurnsToRedeemableBack",
+          "result": "passed",
+          "duration_seconds": 20.531
+        },
+        {
+          "suite": "R34WishPresentationUITests",
+          "name": "testWishCardsUseTwoColumnsAndOddLastCardSpansThenSwitchToRows",
+          "result": "passed",
+          "duration_seconds": 12.992
+        }
+      ]
+    },
+    {
+      "id": "postfix",
+      "status": "passed",
+      "environment": "iPhone 18 Pro / iOS 27.0 simulator",
+      "source_log": "/tmp/checkline-r34-full-postfix.log",
+      "source_log_sha256": "c7a3830674adf6c7821fc493b068baf3705c586daf1cb93e917f0e2f3ce471b0",
+      "xcresult_local_path": "/tmp/checkline-r34-full-postfix.xcresult",
+      "tests": 2,
+      "failures": 0,
+      "ui_test_results": [
+        {
+          "suite": "R34HomeInteractionUITests",
+          "name": "testHorizontalThrowChangesRealBudgetAndReverseSwipeRestoresIt",
+          "result": "passed",
+          "duration_seconds": 19.546
+        },
+        {
+          "suite": "R34WishPresentationUITests",
+          "name": "testExpandedWishIsActuallyLargerAndGestureTurnsToRedeemableBack",
+          "result": "passed",
+          "duration_seconds": 20.626
+        }
+      ]
+    },
+    {
+      "id": "ipad-retry",
+      "status": "passed",
+      "environment": "iPad mini (A17 Pro) / iOS 27.0 simulator",
+      "source_log": "/tmp/checkline-r34-full-ipad-retry.log",
+      "source_log_sha256": "cf805f71fea018c0d55016028b3372d2dd34063155e8522e6bea70579bf61a50",
+      "xcresult_local_path": "/tmp/checkline-r34-full-ipad-retry.xcresult",
+      "tests": 1,
+      "failures": 0,
+      "ui_test_results": [
+        {
+          "suite": "R34WishPresentationUITests",
+          "name": "testExpandedWishIsActuallyLargerAndGestureTurnsToRedeemableBack",
+          "result": "passed",
+          "duration_seconds": 16.566
+        }
+      ]
+    }
+  ],
+  "media": {
+    "status": "curated_native_recordings_and_screenshots_ready",
+    "recordings_use": "isolated_synthetic_ledger; no user ledger reset",
+    "raw_video_committed": false,
+    "decode_note": "The MOV contains long PTS/DTS reordering intervals. Use -fflags +igndts to decode by original PTS; no speed change, content repainting, or mid-operation edits.",
+    "recordings": [
+      {
+        "file": "native-settlement-full.mp4",
+        "source_run": "ui6",
+        "source_video": "/tmp/checkline-r34-full-ui6-raw.mov",
+        "source_pts_trim_seconds": [
+          1.15,
+          5.35
+        ],
+        "test": "NativeMotionEvidenceUITests/testSettlementPlaysAllReceivingBeatsInCurrentPageBeforeReturn",
+        "duration_seconds": 4.366667,
+        "width": 804,
+        "height": 1748,
+        "fps": 30,
+        "speed_multiplier": 1,
+        "encoding": "libx264 / yuv420p / 30fps; trim + PTS origin shift only",
+        "reviewed": "encoded_clip_filmstrip_and_source_timeline_inspected",
+        "sha256": "a8cc7d9fbdc6d61d8076c5df5103717d5f6981b37d11ff4840b2168a7201a6f5"
+      },
+      {
+        "file": "native-wish-full.mp4",
+        "source_run": "ui6",
+        "source_video": "/tmp/checkline-r34-full-ui6-raw.mov",
+        "source_pts_trim_seconds": [
+          22.1,
+          26.35
+        ],
+        "test": "NativeMotionEvidenceUITests/testWishPurchasePlaysCompleteRevealBeforeViewingRealized",
+        "duration_seconds": 4.266667,
+        "width": 804,
+        "height": 1748,
+        "fps": 30,
+        "speed_multiplier": 1,
+        "encoding": "libx264 / yuv420p / 30fps; trim + PTS origin shift only",
+        "reviewed": "encoded_clip_filmstrip_and_source_timeline_inspected",
+        "sha256": "992bd79b5787eeaaf676747860987fc5e6a02b5535409520197b676526489e4c"
+      },
+      {
+        "file": "native-home-insert-eject.mp4",
+        "source_run": "ui6",
+        "source_video": "/tmp/checkline-r34-full-ui6-raw.mov",
+        "source_pts_trim_seconds": [
+          75.8,
+          82.6
+        ],
+        "test": "R34HomeInteractionUITests/testEjectionDisconnectsSummaryAndTapReinsertsBeforeOpeningDetails",
+        "duration_seconds": 6.9,
+        "width": 804,
+        "height": 1748,
+        "fps": 30,
+        "speed_multiplier": 1,
+        "encoding": "libx264 / yuv420p / 30fps; trim + PTS origin shift only",
+        "reviewed": "encoded_clip_filmstrip_and_source_timeline_inspected",
+        "sha256": "d1844271c6637770f44ccee65f8236ad24fe7348375706aeb3123ff163bf69cd"
+      },
+      {
+        "file": "native-home-throw-stack.mp4",
+        "source_run": "ui6",
+        "source_video": "/tmp/checkline-r34-full-ui6-raw.mov",
+        "source_pts_trim_seconds": [
+          96,
+          104.6
+        ],
+        "test": "R34HomeInteractionUITests/testHorizontalThrowChangesRealBudgetAndReverseSwipeRestoresIt",
+        "duration_seconds": 8.6,
+        "width": 804,
+        "height": 1748,
+        "fps": 30,
+        "speed_multiplier": 1,
+        "encoding": "libx264 / yuv420p / 30fps; trim + PTS origin shift only",
+        "reviewed": "encoded_clip_filmstrip_and_source_timeline_inspected",
+        "sha256": "a35b1bd9844281821299c2788ff9a87e019e44279785490a1861aa57603b7492"
+      },
+      {
+        "file": "native-home-records-layer.mp4",
+        "source_run": "ui6",
+        "source_video": "/tmp/checkline-r34-full-ui6-raw.mov",
+        "source_pts_trim_seconds": [
+          117,
+          128.5
+        ],
+        "test": "R34HomeInteractionUITests/testShortHolderDragReturnsAndRecordsControlsFollowRetreatedHolder",
+        "duration_seconds": 11.466667,
+        "width": 804,
+        "height": 1748,
+        "fps": 30,
+        "speed_multiplier": 1,
+        "encoding": "libx264 / yuv420p / 30fps; trim + PTS origin shift only",
+        "reviewed": "encoded_clip_filmstrip_and_source_timeline_inspected",
+        "sha256": "44ba947738fa57b27869fec950bdd0f471c6080cfc9898f67911be6a5b7ccc2f"
+      },
+      {
+        "file": "native-library-dome.mp4",
+        "source_run": "ui6",
+        "source_video": "/tmp/checkline-r34-full-ui6-raw.mov",
+        "source_pts_trim_seconds": [
+          50,
+          63
+        ],
+        "test": "R34HomeInteractionUITests/testDomeVerticalBrowsingStaysInLibraryAndOnlyBottomDragReturns",
+        "duration_seconds": 12.8,
+        "width": 804,
+        "height": 1748,
+        "fps": 30,
+        "speed_multiplier": 1,
+        "encoding": "libx264 / yuv420p / 30fps; trim + PTS origin shift only",
+        "reviewed": "source_timeline_and_multiline_screenshot_inspected",
+        "sha256": "379cc2db3709725358026c828a6bee8787f6d34b31660e798acaa161d568046f"
+      }
+    ],
+    "screenshots": [
+      {
+        "file": "native-settlement-result.png",
+        "source_run": "ui6",
+        "test": "NativeMotionEvidenceUITests/testSettlementPlaysAllReceivingBeatsInCurrentPageBeforeReturn()",
+        "source_attachment": "/tmp/checkline-r34-full-ui6-attachments/D012507E-3A27-4D0E-85A4-5F1AE2054B4C.png",
+        "source_screenshot_unmodified": true,
+        "sha256": "26de423b82af431e0df7bcf22c967980a41e3eb5d8702d2eebfe851ce5f86918"
+      },
+      {
+        "file": "native-wish-result.png",
+        "source_run": "ui6",
+        "test": "NativeMotionEvidenceUITests/testWishPurchasePlaysCompleteRevealBeforeViewingRealized()",
+        "source_attachment": "/tmp/checkline-r34-full-ui6-attachments/F39261CB-F613-48A1-8616-2855198F4192.png",
+        "source_screenshot_unmodified": true,
+        "sha256": "3ef32d7d52a03186d98b41e69b7e2088fcc8edfa5626c949b7f2ee309af30595"
+      },
+      {
+        "file": "native-library-dome.png",
+        "source_run": "ui6",
+        "test": "R34HomeInteractionUITests/testDomeVerticalBrowsingStaysInLibraryAndOnlyBottomDragReturns()",
+        "source_attachment": "/tmp/checkline-r34-full-ui6-attachments/5F5A8CF3-430B-402D-8175-E7C24767E24E.png",
+        "source_screenshot_unmodified": true,
+        "sha256": "4d497aaa9100eddd7f1398a06ee0184e15333fb71d4ff457e2c314c9bd8ae04f"
+      },
+      {
+        "file": "native-home-inserted.png",
+        "source_run": "ui6",
+        "test": "R34HomeInteractionUITests/testEjectionDisconnectsSummaryAndTapReinsertsBeforeOpeningDetails()",
+        "source_attachment": "/tmp/checkline-r34-full-ui6-attachments/49C89381-AB21-4678-8BDD-DAF273C93C03.png",
+        "source_screenshot_unmodified": true,
+        "sha256": "04ae03119dfab7dcb02b1f445358852b56c1d0087bceb9a183c41a504f3ab98c"
+      },
+      {
+        "file": "native-home-ejected.png",
+        "source_run": "ui6",
+        "test": "R34HomeInteractionUITests/testEjectionDisconnectsSummaryAndTapReinsertsBeforeOpeningDetails()",
+        "source_attachment": "/tmp/checkline-r34-full-ui6-attachments/B8463995-1B6E-4AA0-8DAA-8D2B3423C063.png",
+        "source_screenshot_unmodified": true,
+        "sha256": "9845d1098df31bbe4578541f5d6b5ec9560f2b4a18f42a100986909262ba4bd4"
+      },
+      {
+        "file": "native-records-layer.png",
+        "source_run": "ui6",
+        "test": "R34HomeInteractionUITests/testShortHolderDragReturnsAndRecordsControlsFollowRetreatedHolder()",
+        "source_attachment": "/tmp/checkline-r34-full-ui6-attachments/77D21BDE-6BB5-472B-BA08-8425D0233A5B.png",
+        "source_screenshot_unmodified": true,
+        "sha256": "a8e04d90cd91e4425a9145652b75c0a499919d2fee13bcc8c2853d04f8901805"
+      },
+      {
+        "file": "native-wish-expanded-back.png",
+        "source_run": "ui6",
+        "test": "R34WishPresentationUITests/testExpandedWishIsActuallyLargerAndGestureTurnsToRedeemableBack()",
+        "source_attachment": "/tmp/checkline-r34-full-ui6-attachments/D6079EC5-CA4D-4520-9486-5684D831C4A9.png",
+        "source_screenshot_unmodified": true,
+        "sha256": "ee8d66a3673f299510a26a5dd29796740268ad63c0b59360f7c5bce07a1504d6"
+      },
+      {
+        "file": "native-wishes-grid.png",
+        "source_run": "ui6",
+        "test": "R34WishPresentationUITests/testWishCardsUseTwoColumnsAndOddLastCardSpansThenSwitchToRows()",
+        "source_attachment": "/tmp/checkline-r34-full-ui6-attachments/9ECD5EB5-37F3-466E-8891-2EB505D862BF.png",
+        "source_screenshot_unmodified": true,
+        "sha256": "02984cb7dff4f97472f2b783ac0adddda4ea5ea3d065f91ef2e96826a36a5d77"
+      },
+      {
+        "file": "native-library-arc-focused.png",
+        "source_run": "arc-final",
+        "test": "R34HomeInteractionUITests/testArcSideCardFocusesBeforeSelectingAndReturnSurfaceDoesNotRespondToTap",
+        "source_attachment": "/tmp/checkline-r34-full-arc-final-attachments/AF207830-A5C5-49F4-8735-EED62FE4EDEB.png",
+        "source_screenshot_unmodified": true,
+        "sha256": "3119861b8d3b615d9f7b42c8c9ad9d4736b5d7039e150dbfd079ca07cfea96d1",
+        "visual_inspection": "opened_and_checked"
+      },
+      {
+        "file": "ipad-wish-expanded.png",
+        "source_run": "ipad-retry",
+        "test": "R34WishPresentationUITests/testExpandedWishIsActuallyLargerAndGestureTurnsToRedeemableBack",
+        "source_attachment": "/tmp/checkline-r34-full-ipad-attachments/72EF93C5-24A5-4F73-A5B1-326DD71C3BC9.png",
+        "source_screenshot_unmodified": true,
+        "sha256": "74c30c8fc940a6ab914b598e489766715fbbcd90bd1aa08dec03a35f898a2f20",
+        "visual_inspection": "opened_and_checked"
+      }
+    ]
+  },
+  "phone_installation": {
+    "status": "installed_launch_blocked_by_device_lock",
+    "date_local": "2026-10-23",
+    "timezone": "Asia/Shanghai",
+    "bundle_id": "Rex.Check-Line",
+    "version": "1.0",
+    "build": "10",
+    "device_app_version_query": "1.0 (10) confirmed by root after successful install",
+    "mode": "in_place_update",
+    "installation_result": "success",
+    "normal_launch_result": "blocked_by_iOS_Locked",
+    "normal_launch_arguments": [],
+    "launch_is_app_crash_evidence": false,
+    "after_unlock_launch_and_process_check": "pending",
+    "existing_ledger_reset": false,
+    "agent_connection_reset": false,
+    "personal_ledger_or_keychain_contents_read_or_exported": false,
+    "personal_ledger_and_keychain_contents_compared": false,
+    "raw_device_results_committed": false,
+    "local_raw_evidence": [
+      {
+        "local_path": "/tmp/checkline-r34-full-install.json",
+        "sha256": "792025f4cb10788b8cf69d5d8583cd2d928ec68cad8e31a992dfc4212879de85"
+      },
+      {
+        "local_path": "/tmp/checkline-r34-full-install.log",
+        "sha256": "5f2435edad2ed8a8016e6905b92a93618d3135f680fe5543a68dd43bf671701b"
+      },
+      {
+        "local_path": "/tmp/checkline-r34-full-phone-launch.json",
+        "sha256": "cf34c329a12725062ec2c20f50ba148e6c8cfbdc9327a0796739afe8f80d3be2"
+      },
+      {
+        "local_path": "/tmp/checkline-r34-full-phone-launch.log",
+        "sha256": "d488a8a98d6db88edcf48713f7f6c8d450d0863fba8b4e3fceaef7161ab10d74"
+      }
+    ]
+  },
+  "not_verified": [
+    "final Rex visual and haptic acceptance",
+    "full physical-device interaction coverage",
+    "all supported iPad and small-screen combinations for restored UI",
+    "real photo selection/loading cancellation on device",
+    "live cloud Agent end-to-end this delivery",
+    "actual microphone transcription this delivery",
+    "device motion sensor interaction",
+    "personal ledger and Keychain contents compared row-by-row"
+  ],
+  "hashing_policy": "Hashes recorded after completed runs and final curated media. Device raw files remain local; only their paths and hashes are committed. A later unlock/launch attempt requires its own evidence update.",
+  "device_build": {
+    "configuration": "Release",
+    "status": "passed",
+    "bundle_id": "Rex.Check-Line",
+    "version": "1.0",
+    "build": "10",
+    "local_app_path": "/tmp/checkline-r34-full-device/Build/Products/Release-iphoneos/CheckLine.app",
+    "source_log": "/tmp/checkline-r34-full-release-final.log",
+    "source_log_sha256": "c1334b1822fda5e0de61688944aa4d15d471c4dc338aae69128dae56c9f1b0d7",
+    "codesign_verify_exit_code": 0,
+    "codesign_evidence": "Root verified final signed app with codesign; no signing identity or device identifiers committed.",
+    "binary_sha256": "2a31dc77e964ae16b75606e09c39980e6636ae271cac4525b88f5ff0570081e1",
+    "warnings": "Existing actor-isolation and unused-preview warnings remain; no new warning category reported by root."
+  }
+}
