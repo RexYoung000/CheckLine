@@ -82,6 +82,9 @@ enum PaperTheme {
         static let bottomPadding: CGFloat = 6
         static let horizontalPadding: CGFloat = 18
         static let gap: CGFloat = 12
+        /// Scroll content can pass behind the floating dock; its final item
+        /// must still clear the controls and the home-indicator safe area.
+        static let contentBottomClearance: CGFloat = 120
 
         static var plusBottom: CGFloat {
             if #available(iOS 26.0, *) { return 130 }

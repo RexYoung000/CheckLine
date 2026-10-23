@@ -36,6 +36,7 @@
 | 文件或目录 | 作用 |
 |------------|------|
 | `design/DESIGN.md` | 设计原则、已确认交互契约（顶部 2026-10-22 R34 双导航契约；3.1 为历史阶段）、本轮 App 手感 Token（3.1.5）和目标视口清单（3.1.6）；2026-08-01 旧样机只作历史参考 |
+| `design/evidence/2026-10-23-floating-navigation/README.md` | 移除首页底部硬切、保留悬浮系统玻璃；滚动末端与卡库返回避让、前后画面、实际回归及手机状态 |
 | `design/evidence/2026-10-23-native-tab-glass/README.md` | 紧凑纯图标底栏恢复真正UITabBar透镜和按住横拖；原速录屏、iPad宿主修正、具名回归与手机状态 |
 | `design/evidence/2026-10-23-compact-navigation/README.md` | 仅图标、双Tab与小朵居中聚拢；录入返回、小屏大字深色、iPad、原速录屏与手机安装边界 |
 | `design/evidence/2026-10-23-budget-limits/README.md` | 全部预算卡上限编辑、作用范围、预览与历史保护、小屏金额排版及手机安装／待补验边界 |

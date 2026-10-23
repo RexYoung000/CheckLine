@@ -38,6 +38,32 @@ import XCTest
         attach(app, "native-glass-drag-restored-budget")
     }
 
+    func testFloatingNativeDockKeepsLastRecordReachable() {
+        let app = XCUIApplication()
+        app.launchArguments = ["-design-preview", "-design-screen", "r34-home", "-AppleLanguages", "(zh-Hans)", "-AppleLocale", "zh_CN"]
+        app.launch()
+        let up = app.buttons["native.holder.up"]
+        XCTAssertTrue(up.waitForExistence(timeout: 10))
+        attach(app, "floating-dock-home-continuous-background")
+        up.tap()
+        let records = app.descendants(matching: .any)["native.budget.records"].firstMatch
+        XCTAssertTrue(records.waitForExistence(timeout: 5))
+        let dock = app.descendants(matching: .any)["wallet.navigation"].firstMatch
+        let controlsTop = dock.buttons.allElementsBoundByIndex.map(\.frame.minY).min() ?? 0
+        // The oldest synthetic record is 1,000 CNY. Its target must clear the
+        // floating controls, rather than merely exist somewhere in the List.
+        let last = records.buttons.matching(NSPredicate(format: "identifier BEGINSWITH %@ AND label CONTAINS %@", "native.record.", "1,000")).firstMatch
+        for _ in 0..<5 {
+            if last.exists && last.isHittable && last.frame.maxY < controlsTop - 8 { break }
+            records.swipeUp(velocity: .slow)
+        }
+        XCTAssertTrue(last.isHittable)
+        XCTAssertLessThan(last.frame.maxY, controlsTop - 8)
+        attach(app, "floating-dock-last-record-above-controls")
+        last.tap()
+        XCTAssertTrue(app.buttons["expense.delete.open"].waitForExistence(timeout: 5), "The final record must open its actual detail, not a dock control.")
+    }
+
     private func checkCompactDock(englishLarge: Bool) {
         let app = XCUIApplication()
         app.launchArguments = ["-design-preview", "-design-screen", "r34-home", "-AppleLanguages", englishLarge ? "(en)" : "(zh-Hans)",

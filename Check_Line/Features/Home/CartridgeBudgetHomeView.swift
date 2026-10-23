@@ -67,8 +67,8 @@ struct CartridgeBudgetHomeView: View {
                     else { emptyHome }
                 }
             }
+            .ignoresSafeArea(.container, edges: .bottom)
             .safeAreaInset(edge: .top, spacing: 0) { header }
-            .safeAreaInset(edge: .bottom, spacing: 0) { Color.clear.frame(height: WalletTabTransition.usesSystemBar ? 8 : 88) }
             .toolbar(.hidden, for: .navigationBar)
             .toolbar(WalletTabTransition.usesSystemBar ? .visible : .hidden, for: .tabBar)
             .toolbar(.hidden, for: .bottomBar)
@@ -150,7 +150,7 @@ struct CartridgeBudgetHomeView: View {
         let morph = clamp((recordProgress - 0.2) / 0.8)
         let faceHeight = lerp(expandedHeight, compactHeight, morph)
         let faceTop = lerp(62, 12, recordProgress)
-        let libraryHeight = max(260, height - 42)
+        let libraryHeight = max(260, height - (WalletTabTransition.usesSystemBar ? 42 : PaperTheme.Dock.contentBottomClearance))
         let librarySceneHeight = max(0, libraryHeight - 116)
         let libraryFaceHeight = min(min(356, width * 0.82) * 0.75, librarySceneHeight * 0.74)
         let libraryFaceWidth = min(min(356, width * 0.82), libraryFaceHeight * 4 / 3)
@@ -229,7 +229,7 @@ struct CartridgeBudgetHomeView: View {
                     .accessibilityHidden(true).allowsHitTesting(false)
             }
 
-            holderFront(card, width: width, height: max(230, height - stageHeight + 50))
+            holderFront(card, width: width, height: max(230, height - stageHeight + 6))
                 .offset(y: holderTop + holderImpact)
                 .opacity(holderOpacity)
                 .allowsHitTesting(libraryProgress < 0.01)
@@ -415,7 +415,7 @@ struct CartridgeBudgetHomeView: View {
                     WalletReceiptStack(rows: BudgetPresentation.expenses(card, in: workspace.ledger), position: $receiptPosition, contact: contactDate, active: connected) { selectedExpense = $0 }
                     if BudgetPresentation.expenses(card, in: workspace.ledger).isEmpty { Text(String(localized: "wallet.records.empty")).font(.subheadline).foregroundStyle(PaperTheme.muted).padding(14) }
                 } else { Color.clear.frame(height: 105).overlay { Text(String(localized: "native.card.detached")).font(.caption).foregroundStyle(PaperTheme.muted) } }
-            }.padding(.bottom, 25)
+            }.padding(.bottom, WalletTabTransition.usesSystemBar ? 25 : PaperTheme.Dock.contentBottomClearance)
         }.scrollBounceBehavior(.basedOnSize).foregroundStyle(PaperTheme.ink)
     }
 
@@ -492,6 +492,7 @@ struct CartridgeBudgetHomeView: View {
                     }
                 }
             }.listStyle(.plain).scrollContentBackground(.hidden)
+            .contentMargins(.bottom, WalletTabTransition.usesSystemBar ? 24 : PaperTheme.Dock.contentBottomClearance, for: .scrollContent)
             .environment(\.defaultMinListRowHeight, 0)
         }.id(card.id).scrollBounceBehavior(.basedOnSize).frame(width: size.width, height: max(80, size.height - top))
             .offset(y: top).accessibilityElement(children: .contain).accessibilityIdentifier("native.budget.records").accessibilityHidden(stage != .records)
