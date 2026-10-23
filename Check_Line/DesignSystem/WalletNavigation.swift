@@ -168,33 +168,43 @@ struct WalletGlassNavigation: View {
     @GestureState private var dragLocation: CGPoint?
     @Namespace private var glassNamespace
     private let tabs: [CheckLineAppTab] = [.budgets, .wishes]
+    private var nativeGutter: CGFloat { UIDevice.current.userInterfaceIdiom == .pad ? 10 : 20 }
 
     var body: some View {
-        HStack(spacing: 10) {
-            GeometryReader { geometry in
-                let preview = dragLocation.flatMap { WalletTabHitTarget.tab(at: $0, size: geometry.size, rightToLeft: layoutDirection == .rightToLeft) }
-                let selected = preview ?? chrome?.selectedTab ?? .home
-                navigationButtons(selected: selected, slotWidth: geometry.size.width / CGFloat(tabs.count))
-                .padding(5)
-                .background { navigationBackground.allowsHitTesting(false) }
-                .highPriorityGesture(
-                    DragGesture(minimumDistance: 10)
-                        .updating($dragLocation) { value, location, _ in
-                            location = abs(value.translation.width) > abs(value.translation.height) ? value.location : nil
-                        }
-                        .onEnded { value in
-                            guard abs(value.translation.width) > abs(value.translation.height),
-                                  let tab = WalletTabHitTarget.tab(at: value.location, size: geometry.size, rightToLeft: layoutDirection == .rightToLeft) else { return }
-                            select(tab)
-                        }
-                )
-                .accessibilityElement(children: .contain)
+        HStack(alignment: .top, spacing: 10) {
+            if #available(iOS 26.0, *) {
+                NativeBudgetTabBar(selected: chrome?.selectedTab ?? .budgets, onSelect: select)
+                    // UIKit includes outer floating-bar gutters and its bottom
+                    // safe-area space. Keep them in the system control's own
+                    // bounds; only its host participates in the compact row.
+                    .frame(width: 130 + 2 * nativeGutter)
+                    .padding(.horizontal, -nativeGutter)
+            } else {
+                GeometryReader { geometry in
+                    let preview = dragLocation.flatMap { WalletTabHitTarget.tab(at: $0, size: geometry.size, rightToLeft: layoutDirection == .rightToLeft) }
+                    let selected = preview ?? chrome?.selectedTab ?? .home
+                    navigationButtons(selected: selected, slotWidth: geometry.size.width / CGFloat(tabs.count))
+                    .padding(5)
+                    .background { navigationBackground.allowsHitTesting(false) }
+                    .highPriorityGesture(
+                        DragGesture(minimumDistance: 10)
+                            .updating($dragLocation) { value, location, _ in
+                                location = abs(value.translation.width) > abs(value.translation.height) ? value.location : nil
+                            }
+                            .onEnded { value in
+                                guard abs(value.translation.width) > abs(value.translation.height),
+                                      let tab = WalletTabHitTarget.tab(at: value.location, size: geometry.size, rightToLeft: layoutDirection == .rightToLeft) else { return }
+                                select(tab)
+                            }
+                    )
+                    .accessibilityElement(children: .contain)
+                }
+                .frame(width: 130, height: 60)
             }
-            .frame(width: 130, height: 60)
 
             WalletAgentButton(workspace: workspace)
         }
-        .frame(width: 200, height: 60)
+        .frame(width: 200, height: 60, alignment: .top)
         .accessibilityElement(children: .contain)
         .accessibilityIdentifier("wallet.navigation")
     }

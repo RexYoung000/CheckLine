@@ -6,7 +6,9 @@
 
 ## 2026-10-22 原生移植边界
 
-2026-10-23 紧凑图标底栏：按 Rex 当前确认，所有设备使用居中的约200pt自有玻璃导航，系统Tab栏隐藏；TabView只承载预算／心愿两页并保留页面状态。原生glassEffect和既有低版本材质回退复用，选中语义、本地化无障碍名称与独立Agent任务保留。不通过修改UIKit私有视图或系统Tab栏frame实现聚拢。页面切换即时，详情／模态的显隐沿用实际导航与系统遮挡，关闭录入后恢复原栏。
+2026-10-23 紧凑图标底栏初版1.0（15）：按 Rex 要求实现约200pt居中、纯图标与独立Agent，但自有选中层未满足原生切换要求，已由下一条补正取代。TabView继续承载预算／心愿两页并保持状态；详情／模态显隐沿用实际导航与系统遮挡，关闭录入后恢复原栏。
+
+同日原生切换补正1.0（16）：iOS26+使用UIViewRepresentable承载独立系统UITabBar，图标使用无标题的UITabBarItem并保留本地化无障碍名称；系统负责选择、手指追踪与玻璃反馈，SwiftUI只承接页选择。项目不设置自有selectionIndicator或现代系统的选中层。外层宿主容纳原生浮动栏自己的侧留白（当前iPhone20pt、iPad10pt）和系统安全区高度，与独立Agent在顶端对齐；实际胶囊加Agent仍约200pt居中，不把包含系统留白的frame当作可见边界。不遍历私有子视图，不篡改TabView内部栏的frame。iPad仅将该窄控件的horizontalSizeClass覆盖为compact，避免常规尺寸类下41×36pt的紧缩目标，不改变页面尺寸类或设备身份。选中项相同不重复写回UIKit，避免重置系统追踪。iOS17–25使用已有材质回退，不能宣称拥有新系统透镜。
 
 2026-10-23 接触反馈补正：CLICK 和组件边缘光使用各自有限时长的绘制容器，截止时从视图树移除，不能仅暂停 TimelineView 留住最后非零透明度画面。计时任务按接触日期与前台／动效状态隔离，旧任务取消不清除新反馈；不提前清空共用接触日期，以保留独立的喷涌及持续液体。流光以 R34 彩色角向渐变描画实际圆角框体，柔光和清晰光带分层，无独立线路。
 
@@ -37,7 +39,7 @@
 | 工程 | `Check_Line.xcodeproj` |
 | App Target / 共享 Scheme | `Check_Line` / `CheckLine App`（正常持久化启动及领域测试）、`CheckLine Demo`（隔离示例账本）、`CheckLine UI`（UI 测试） |
 | 平台 | iPhone / iPad，最低 iOS 17.0 |
-| 当前 UI | 2026-10-23 双导航：预算（卡夹／记录层／卡库）和心愿；所有设备使用居中紧凑、仅图标的玻璃导航，右侧紧邻主动Agent。TabView承载内容、隐藏系统栏。二级操作为系统抽屉；iPad 与最大辅助字号固定大档，避免键盘收起时移动。验收范围见本轮证据 |
+| 当前 UI | 2026-10-23 双导航：预算（卡夹／记录层／卡库）和心愿；居中紧凑、仅图标，右侧紧邻主动Agent。iOS26+为真正UITabBar及其系统切换透镜，低版本使用已有材质回退。TabView承载内容并隐藏其内部栏，避免重复。二级操作为系统抽屉；iPad 与最大辅助字号固定大档，避免键盘收起时移动。验收范围见本轮证据 |
 | 正式数据层 | 首页与 Agent 经 `CheckLineWorkspace` 读写本地 `LedgerStore`（无 CloudKit） |
 | Test Target | `Check_LineTests` 覆盖领域引擎、理解管线、`AgentSession` 与首页工作区持久化；`Check_LineUITests` / `CheckLine UI` Scheme 在隔离预览账本上点击系统 Tab、Agent 与空首页创建入口 |
 | 网络 / 后端 / AI | 可选私有 `CloudAgentSettings`，Keychain 限时凭据、首次发送许可、HTTPS API；默认本地，启动无网络请求 |

@@ -16,6 +16,28 @@ import XCTest
         checkCompactDock(englishLarge: true)
     }
 
+    func testNativeGlassTouchTrackingSwitchesPages() {
+        let app = XCUIApplication()
+        app.launchArguments = ["-design-preview", "-design-screen", "r34-home", "-AppleLanguages", "(zh-Hans)", "-AppleLocale", "zh_CN"]
+        app.launch()
+        let bar = app.tabBars["wallet.nativeTabBar"]
+        XCTAssertTrue(bar.waitForExistence(timeout: 10))
+        let budget = bar.buttons["wallet.tab.budgets"], wish = bar.buttons["wallet.tab.wishes"]
+        XCTAssertTrue(budget.isSelected)
+        let start = budget.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
+        start.press(forDuration: 0.18, thenDragTo: wish.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)),
+                    withVelocity: .slow, thenHoldForDuration: 0.3)
+        XCTAssertTrue(app.buttons["native.wish.layout"].waitForExistence(timeout: 5), "The system's drag tracking must commit the release target.")
+        XCTAssertTrue(wish.isSelected)
+        attach(app, "native-glass-drag-selected-wish")
+        let reverse = wish.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
+        reverse.press(forDuration: 0.18, thenDragTo: budget.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)),
+                      withVelocity: .slow, thenHoldForDuration: 0.3)
+        XCTAssertTrue(app.buttons["wallet.home.capture"].waitForExistence(timeout: 5))
+        XCTAssertTrue(budget.isSelected)
+        attach(app, "native-glass-drag-restored-budget")
+    }
+
     private func checkCompactDock(englishLarge: Bool) {
         let app = XCUIApplication()
         app.launchArguments = ["-design-preview", "-design-screen", "r34-home", "-AppleLanguages", englishLarge ? "(en)" : "(zh-Hans)",
@@ -30,8 +52,12 @@ import XCTest
         let originalFrame = dock.frame
         XCTAssertEqual(dock.buttons.count, 3)
         XCTAssertEqual(dock.staticTexts.count, 0, "The dock shows icons; names remain accessibility labels only.")
-        // iOS 26 reports a container's child union, excluding the capsule's
-        // five-point leading glass inset. Measure the rendered carriers instead.
+        // The native bar's frame includes system floating gutters. Its first
+        // tab target starts about five points inside the visible glass carrier.
+        let nativeBar = dock.tabBars["wallet.nativeTabBar"].firstMatch
+        XCTAssertTrue(nativeBar.exists, "Modern systems must use the actual UIKit tab bar, not a hand-drawn selection lens.")
+        let diagnostic = XCTAttachment(string: "TabBar \(nativeBar.frame), budget \(budget.frame), wish \(wish.frame), agent \(agent.frame), dock \(dock.frame).")
+        diagnostic.name = "native-tab-carrier-geometry"; diagnostic.lifetime = .keepAlways; add(diagnostic)
         let carrierMidX = (budget.frame.minX - 5 + agent.frame.maxX) / 2
         XCTAssertEqual(carrierMidX, app.frame.midX, accuracy: 2)
         XCTAssertLessThan(dock.frame.width, min(260, app.frame.width * 0.65), "The three controls must form a compact centered group.")
