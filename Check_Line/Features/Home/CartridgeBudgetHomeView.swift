@@ -433,7 +433,7 @@ struct CartridgeBudgetHomeView: View {
                     Text(String(localized: "wallet.last7days")).font(.system(size: 9)).foregroundStyle(PaperTheme.muted)
                 }.contactEntrance(contactDate)
             }.padding(16).frame(maxWidth: .infinity, minHeight: 113, alignment: .leading).walletSurface(radius: 24)
-                .overlay { ComponentLightSweep(startedAt: contactDate) }
+                .overlay { ComponentLightSweep(startedAt: contactDate, origin: .trailing) }
         }.buttonStyle(.plain).disabled(!connected).accessibilityIdentifier("native.home.summary.used")
     }
 
@@ -453,7 +453,7 @@ struct CartridgeBudgetHomeView: View {
                     }
                 }
             }.padding(16).frame(maxWidth: .infinity, minHeight: 113, alignment: .leading).walletSurface(radius: 24)
-                .overlay { ComponentLightSweep(startedAt: contactDate) }
+                .overlay { ComponentLightSweep(startedAt: contactDate, origin: .leading) }
         }.buttonStyle(.plain).disabled(!connected).accessibilityIdentifier("native.home.summary.period")
     }
 
@@ -792,28 +792,18 @@ private struct CartridgeLipHighlight: Shape {
 
 private struct CartridgeContactStamp: View {
     let startedAt: Date
-    @Environment(\.walletReduceMotion) private var reduceMotion
-    @State private var playing = true
     var body: some View {
-        TimelineView(.animation(minimumInterval: 1 / 60, paused: !playing || reduceMotion)) { clock in
-            let t = clock.date.timeIntervalSince(startedAt)
-            if !reduceMotion, t >= 0, t < 0.72 {
-                let stamp = t < 0.054 ? (1.1 - t * 2.13, 0.82 + t * 4.16) : t < 0.166 ? (0.985 + min(1, (t - 0.054) / 0.112) * 0.015, 1.045 - min(1, (t - 0.054) / 0.112) * 0.045) : (1.0, 1.0)
-                ZStack {
-                    CartridgeClickFrame().fill(PaperTheme.card.opacity(0.94))
-                    CartridgeClickFrame().stroke(PaperTheme.accent.opacity(0.74), lineWidth: 1.5)
-                    Path { p in p.move(to: CGPoint(x: 18, y: 12)); p.addLine(to: CGPoint(x: 96, y: 12)) }.stroke(.white.opacity(0.85), lineWidth: 1)
-                    Text(verbatim: "CLICK").font(.system(size: 19, weight: .heavy)).italic().tracking(0.7).padding(.top, 5).foregroundStyle(PaperTheme.accent)
-                    if t < 0.19 { CartridgeImpactTicks().stroke(PaperTheme.accent.opacity((1 - t / 0.19) * 0.85), style: StrokeStyle(lineWidth: 1.7, lineCap: .round)).scaleEffect(0.96 + t * 0.8) }
-                }.rotationEffect(.degrees(-2)).scaleEffect(x: stamp.0, y: stamp.1, anchor: UnitPoint(x: 0.492, y: 0.042))
-                    .opacity(t < 0.562 ? 1 : max(0, (0.72 - t) / 0.158))
-            }
-        }.allowsHitTesting(false).accessibilityHidden(true)
-            .task(id: startedAt) {
-                let remaining = max(0, 0.72 - Date().timeIntervalSince(startedAt))
-                playing = remaining > 0 && !reduceMotion
-                do { try await Task.sleep(for: .seconds(remaining)); try Task.checkCancellation(); playing = false } catch { }
-            }
+        ContactEffectTimeline(startedAt: startedAt, duration: 0.72) { t in
+            let stamp = t < 0.054 ? (1.1 - t * 2.13, 0.82 + t * 4.16) : t < 0.166 ? (0.985 + min(1, (t - 0.054) / 0.112) * 0.015, 1.045 - min(1, (t - 0.054) / 0.112) * 0.045) : (1.0, 1.0)
+            ZStack {
+                CartridgeClickFrame().fill(PaperTheme.card.opacity(0.94))
+                CartridgeClickFrame().stroke(PaperTheme.accent.opacity(0.74), lineWidth: 1.5)
+                Path { p in p.move(to: CGPoint(x: 18, y: 12)); p.addLine(to: CGPoint(x: 96, y: 12)) }.stroke(.white.opacity(0.85), lineWidth: 1)
+                Text(verbatim: "CLICK").font(.system(size: 19, weight: .heavy)).italic().tracking(0.7).padding(.top, 5).foregroundStyle(PaperTheme.accent)
+                if t < 0.19 { CartridgeImpactTicks().stroke(PaperTheme.accent.opacity((1 - t / 0.19) * 0.85), style: StrokeStyle(lineWidth: 1.7, lineCap: .round)).scaleEffect(0.96 + t * 0.8) }
+            }.rotationEffect(.degrees(-2)).scaleEffect(x: stamp.0, y: stamp.1, anchor: UnitPoint(x: 0.492, y: 0.042))
+                .opacity(t < 0.562 ? 1 : max(0, (0.72 - t) / 0.158))
+        }
     }
 }
 private struct CartridgeClickFrame: Shape {

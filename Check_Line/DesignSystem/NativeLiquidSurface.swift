@@ -119,45 +119,6 @@ struct NativeGlassCard: ViewModifier {
     }
 }
 
-struct ComponentLightSweep: View {
-    let startedAt: Date?
-    var radius: CGFloat = 24
-    @State private var playing = false
-    @Environment(\.walletReduceMotion) private var reduceMotion
-    var body: some View {
-        if let startedAt, !reduceMotion {
-            TimelineView(.animation(minimumInterval: 1.0/30,paused: !playing)) { clock in
-                let t = clock.date.timeIntervalSince(startedAt)/0.8
-                if t >= 0 && t < 1 && playing {
-                    Canvas { context, size in
-                        let rect = CGRect(origin: .zero,size: size).insetBy(dx: 1,dy: 1)
-                        let opacity = min(1,t*6,(1-t)*4)*0.65
-                        context.opacity = opacity
-                        let r = min(radius,rect.height/2,rect.width/2)
-                        for right in [false,true] {
-                            let edge = right ? rect.maxX : rect.minX
-                            let inner = right ? edge-r : edge+r
-                            var path = Path()
-                            path.move(to: CGPoint(x: rect.midX,y: rect.minY))
-                            path.addLine(to: CGPoint(x: inner,y: rect.minY))
-                            path.addQuadCurve(to: CGPoint(x: edge,y: rect.minY+r),control: CGPoint(x: edge,y: rect.minY))
-                            path.addLine(to: CGPoint(x: edge,y: rect.maxY-r))
-                            path.addQuadCurve(to: CGPoint(x: inner,y: rect.maxY),control: CGPoint(x: edge,y: rect.maxY))
-                            path.addLine(to: CGPoint(x: rect.midX,y: rect.maxY))
-                            context.stroke(path.trimmedPath(from: max(0,t-0.3),to: min(1,t)), with: .linearGradient(Gradient(colors: [Color(red: 0.55,green: 0.43,blue: 0.8),Color(red: 0.7,green: 0.88,blue: 0.86),.white]),startPoint: CGPoint(x: rect.midX,y: 0),endPoint: CGPoint(x: edge,y: rect.maxY)), lineWidth: 2.2)
-                        }
-                    }.blur(radius: 0.8)
-                }
-            }.allowsHitTesting(false).accessibilityHidden(true)
-                .task(id: startedAt) {
-                    let remaining = max(0,0.8-Date().timeIntervalSince(startedAt))
-                    playing=remaining>0
-                    do { try await Task.sleep(for: .seconds(remaining));try Task.checkCancellation();playing=false } catch { }
-                }
-        }
-    }
-}
-
 struct NativeDrawerStyle: ViewModifier {
     @Environment(\.horizontalSizeClass) private var sizeClass
     @Environment(\.dynamicTypeSize) private var typeSize

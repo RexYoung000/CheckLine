@@ -120,6 +120,48 @@ import UIKit
         attach(app, "phone-detached-liquid-still-alive")
     }
 
+    func testRepeatedInsertionLeavesNoClickOrBorderResidue() throws {
+        let app = launch(), card = element("wallet.home.card", in: app)
+        wait(card, value: "已插入")
+        let frame = card.frame
+        // Below the liquid card, this region contains CLICK during contact but
+        // only the stationary slot/holder once the effect has finished.
+        let region = CGRect(x: frame.midX - 49, y: frame.maxY + 4, width: 98, height: 22)
+        let baseline = try pixels(app.screenshot().image, in: region)
+        attach(app, "contact-idle-before-insertion")
+        for index in 1...2 {
+            card.coordinate(withNormalizedOffset: CGVector(dx: 0.7, dy: 0.24)).press(forDuration: 0.65)
+            wait(card, value: "已拔出")
+            card.coordinate(withNormalizedOffset: CGVector(dx: 0.7, dy: 0.24)).tap()
+            wait(card, value: "已插入")
+            Thread.sleep(forTimeInterval: 0.4)
+            let settled = try pixels(app.screenshot().image, in: region)
+            XCTAssertEqual(settled.count, baseline.count)
+            let difference = zip(settled, baseline).map { abs(Int($0) - Int($1)) }.reduce(0, +)
+            let meanDifference = Double(difference) / Double(max(1, baseline.count))
+            XCTAssertLessThan(meanDifference, 0.4, "The idle slot must match its pre-contact pixels; no translucent CLICK frame may remain.")
+            attach(app, "contact-fully-cleared-after-insertion-\(index)")
+        }
+        app.buttons["native.holder.down"].tap()
+        XCTAssertTrue(element("native.budget.library", in: app).waitForExistence(timeout: 5))
+        app.buttons["native.library.returnButton"].tap()
+        XCTAssertTrue(element("native.budget.library", in: app).waitForNonExistence(timeout: 5))
+        wait(card, value: "已插入")
+        attach(app, "contact-cleared-after-library-return")
+    }
+
+    private func pixels(_ image: UIImage, in region: CGRect) throws -> [UInt8] {
+        let cgImage = try XCTUnwrap(image.cgImage)
+        let crop = try XCTUnwrap(cgImage.cropping(to: CGRect(x: region.minX * image.scale, y: region.minY * image.scale,
+                                                           width: region.width * image.scale, height: region.height * image.scale)))
+        var bytes = [UInt8](repeating: 0, count: crop.width * crop.height * 4)
+        let context = try XCTUnwrap(CGContext(data: &bytes, width: crop.width, height: crop.height, bitsPerComponent: 8,
+            bytesPerRow: crop.width * 4, space: CGColorSpaceCreateDeviceRGB(),
+            bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue | CGBitmapInfo.byteOrder32Big.rawValue))
+        context.draw(crop, in: CGRect(x: 0, y: 0, width: crop.width, height: crop.height))
+        return bytes
+    }
+
     func testRecordsKeepScrollPositionAcrossLayerReturn() {
         let app = launch()
         app.buttons["native.holder.up"].tap()
