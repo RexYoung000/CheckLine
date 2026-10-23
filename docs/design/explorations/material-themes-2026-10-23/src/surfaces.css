@@ -1,7 +1,7 @@
 /* R3 material source: environmental light passes through glass. The dark
    theme retains R3 cyan / graphite; light uses an illuminated mineral backing.
    These roles are shared by every route, drawer, form and saved result. */
-.app[data-material-study] { --r3-seat: 400px; }
+.app[data-material-study] { --r3-seat: 400px; --r3-card-top: 140px; --r3-card-height: 258px; }
 .app[data-material-study][data-theme=light] {
   color-scheme: light;
   --material-canvas: radial-gradient(ellipse at 0% 0%, #b5effc94, transparent 58%), radial-gradient(ellipse at 100% 48%, #63b2c52b, transparent 62%), linear-gradient(165deg, #e7f2f4, #ccdee2 64%, #edf0ee);

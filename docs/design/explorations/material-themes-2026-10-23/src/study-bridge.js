@@ -53,11 +53,29 @@
     const card = page.querySelector('.cartridge-card');
     if (!card || card.offsetHeight < 1) return;
     // offsetTop ignores live gesture transforms, so dragging never moves the light.
-    let bottom = card.offsetTop + card.offsetHeight + 8;
-    for (let parent = card.offsetParent; parent && parent !== app; parent = parent.offsetParent) bottom += parent.offsetTop;
-    const seat = Math.max(300, Math.min(680, Math.round(bottom)));
-    const value = seat + 'px';
-    if (app.style.getPropertyValue('--r3-seat') !== value) app.style.setProperty('--r3-seat', value);
+    let top = card.offsetTop + 8;
+    for (let parent = card.offsetParent; parent && parent !== app; parent = parent.offsetParent) top += parent.offsetTop;
+    const lengths = {'--r3-seat': top + card.offsetHeight, '--r3-card-top': top, '--r3-card-height': card.offsetHeight};
+    for (const [key, length] of Object.entries(lengths)) {
+      const value = Math.round(length) + 'px';
+      if (app.style.getPropertyValue(key) !== value) app.style.setProperty(key, value);
+    }
+    // A single optical surface runs from the curved lip to the holder bottom.
+    // Two translucent rectangles, even with the same color, create a hard seam.
+    const shell = page.querySelector('.console-shell');
+    if (shell) {
+      let shellTop = shell.offsetTop;
+      for (let parent = shell.offsetParent; parent && parent !== app; parent = parent.offsetParent) shellTop += parent.offsetTop;
+      const w = shell.offsetWidth, h = Math.max(shell.offsetHeight + 20, app.clientHeight - shellTop + 22);
+      const height = h + 'px';
+      if (shell.style.getPropertyValue('--r3-pocket-height') !== height) shell.style.setProperty('--r3-pocket-height', height);
+      const shape = `path("M0 0 C${w * .0425} 0 ${w * .075} 29 ${w * .1425} 32 H${w * .8575} C${w * .925} 29 ${w * .9575} 0 ${w} 0 V${h} H0 Z")`;
+      if (shell.style.getPropertyValue('--r3-pocket-shape') !== shape) shell.style.setProperty('--r3-pocket-shape', shape);
+      const svg = shell.querySelector('.console-lip svg'), edge = svg?.querySelector('path');
+      if (svg?.getAttribute('viewBox') !== '0 0 400 34') svg?.setAttribute('viewBox', '0 0 400 34');
+      const d = 'M0 .5 C17 .5 30 29.5 57 32.5 H343 C370 29.5 383 .5 400 .5';
+      if (edge?.getAttribute('d') !== d) edge?.setAttribute('d', d);
+    }
   }
   new ResizeObserver(materialSyncOptics).observe(app);
 

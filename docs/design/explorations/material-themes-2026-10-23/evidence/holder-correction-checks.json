@@ -1,0 +1,88 @@
+{
+  "date": "2026-10-23",
+  "scope": "HTML exploration only; native App unchanged",
+  "baseline": "reference/r3-focus.svg",
+  "visualAcceptance": "Pending Rex; prior R3 restoration claim rejected",
+  "corrections": [
+    "One continuous clipped holder surface with an edge-only lip",
+    "No painted contact-extension rectangle or horizontal slot highlight",
+    "One thin gradient rim on main card; subdued summary edge",
+    "R3 300/352 front-card aspect, short top gap, light anchored to card top and seat",
+    "Three-stop transparent liquid and thin waterline",
+    "Same environment/reflection recipe in detail and WebGL library textures",
+    "Lifted resting pose below header; actual stage measurement for fold travel"
+  ],
+  "browserVerified": [
+    "Actual horizontal drag: 这个月 -> 周末出行 -> connected automatically",
+    "Unplug and click to insert",
+    "Record level open; ArrowRight changes active budget; return to holder",
+    "Normal arc -> dome -> return; theme switch while open",
+    "Detail card in light and dark",
+    "320 width at 1.6 font scale",
+    "Reduced motion retains waterline in both themes",
+    "768 width holder; transparent body reaches screen bottom"
+  ],
+  "optics": {
+    "card": {
+      "aspect": 0.8522478070175439,
+      "height": 291.46875,
+      "top": 83,
+      "width": 342
+    },
+    "phase": "connected",
+    "skin": {
+      "clip": "path(\"M 0 0 C 16.49 0 29.1 29 55.29 32 H 332.71 C 358.9 29 371.51 0 388 0 V 499 H 0 Z\")",
+      "height": "499px",
+      "offset": "-20px",
+      "shadow": "none",
+      "top": 366.46875
+    },
+    "tail": {
+      "background": "rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box",
+      "border": "0px none rgb(240, 248, 250)",
+      "shadow": "none"
+    },
+    "theme": "dark",
+    "tile": {
+      "border": "1px solid rgba(255, 255, 255, 0.12)",
+      "shadow": "rgba(0, 0, 0, 0.25) 0px 6px 10px -12px"
+    },
+    "waterline": true
+  },
+  "staticChecks": {
+    "buildSyntax": true,
+    "generatedScriptCompile": true,
+    "compareScriptCompile": true,
+    "deterministicBuild": true,
+    "sha256": "9bed3034d843d662dcb27e659085544316a786eebff5ddba4432a49607e6a0f6",
+    "embeddedLicensesPreserved": true,
+    "temporaryDiagnosticsRemoved": true,
+    "diffCheck": true
+  },
+  "unverified": [
+    "Native App build/runtime/VoiceOver/device performance",
+    "All business flows not rerun after this optical-only correction",
+    "Final visual acceptance by Rex"
+  ],
+  "knownConsoleIssue": {
+    "standaloneErrors": 0,
+    "comparisonErrors": [
+      "2026-10-23T15:25:32.542Z MutationObserver.observe target TypeError",
+      "2026-10-23T15:35:55.573Z MutationObserver.observe target TypeError"
+    ],
+    "diagnostic": "Temporary early window error capture in parent and both documents caught no matching app error during home/detail/library checks; origin remains unestablished; diagnostic removed"
+  },
+  "evidence": [
+    "holder-before-correction.jpg",
+    "holder-reference-light-dark.jpg",
+    "holder-corrected-home-dark.jpg",
+    "holder-corrected-library-arc.jpg",
+    "holder-corrected-library-dome.jpg",
+    "holder-corrected-detail-light.jpg",
+    "holder-corrected-detail-dark.jpg",
+    "holder-corrected-320-large-dark.jpg",
+    "holder-corrected-reduced-light.jpg",
+    "holder-corrected-reduced-dark.jpg",
+    "holder-corrected-768-light.jpg"
+  ]
+}

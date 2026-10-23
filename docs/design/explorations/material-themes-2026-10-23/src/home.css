@@ -1,15 +1,15 @@
 /* R3 stage lighting is anchored at the seated card, not the viewport bottom.
    src/study-bridge.js measures this one visual length after layout/resize. */
 .app[data-material-study][data-theme=light] {
-  --home-sky: radial-gradient(ellipse 110% calc(var(--r3-seat) * 1.1) at 0% 0%, #f4feffcc 0%, #e4faff26 58%, transparent), linear-gradient(180deg, #afe8f5 0px, #c2e5eb calc(var(--r3-seat) * .34), #a6c6cf var(--r3-seat), #d6e2e4 calc(var(--r3-seat) + 260px));
+  --home-sky: radial-gradient(ellipse 98% calc(var(--r3-seat) + var(--r3-card-height) * .6) at 1% calc(var(--r3-card-top) - var(--r3-card-height) * .082), #f4feffcc 0%, #e4faff26 58%, transparent), linear-gradient(180deg, #afe8f5 0px, #c2e5eb calc(var(--r3-card-top) + var(--r3-card-height) * .205), #a6c6cf var(--r3-seat), #d6e2e4 calc(var(--r3-seat) + 260px));
   --home-heading: #143b48;
   --home-hero-meta: #315968;
   --home-hero-number: #143c4d;
-  --home-hero: radial-gradient(ellipse at 10% 0%, #ffffff59, #ffffff0a 62%, transparent), linear-gradient(150deg, #ffffff70, #ffffff33 22%, #ffffff11 63%, #ffffff06);
+  --home-hero: radial-gradient(ellipse 100% 100% at 10% 0%, #ffffff59, #ffffff0a 62%, transparent), linear-gradient(146deg, #ffffff70, #ffffff33 22%, #ffffff11 63%, #ffffff06);
   --home-hero-rim: #ffffffa6;
   --home-hero-shadow: #173c4b4d;
   --home-floor: linear-gradient(180deg, #ffffff25, #ffffff0f 25%, #4d718019);
-  --home-tile: linear-gradient(150deg, #ffffff38, #ffffff0c);
+  --home-tile: linear-gradient(180deg, #ffffff38, #ffffff0c);
   --home-receipt: linear-gradient(145deg, #effaff59, #bad1d752);
   --home-receipt-back: #83b1bf69;
   --home-floor-ink: #183d48;
@@ -20,19 +20,20 @@
   --home-slot: #274b5e;
   --library-accent: #185e76;
   --reader-water: #80b4c5;
+  --water-top: #d9f8fc33; --water-middle: #8bcada26; --water-bottom: #335c6b45;
   --r3-local-card: linear-gradient(165deg, #b6e5ef 0%, #9dc8d1 65%, #719fad);
   --r3-rim: linear-gradient(140deg, #fffffffa, #ffffff75 28%, #b4dbe626 60%, #ffffff59);
 }
 .app[data-material-study][data-theme=dark] {
-  --home-sky: radial-gradient(ellipse 110% calc(var(--r3-seat) * 1.1) at 0% 0%, #c5f6ffdb 0%, #c5f6ff14 58%, transparent), linear-gradient(180deg, #37b9e8 0px, #37b9e8 calc(var(--r3-seat) * .34), #1f7892 calc(var(--r3-seat) * .72), #102b38 var(--r3-seat), #111719 calc(var(--r3-seat) + 180px));
+  --home-sky: radial-gradient(ellipse 98% calc(var(--r3-seat) + var(--r3-card-height) * .6) at 1% calc(var(--r3-card-top) - var(--r3-card-height) * .082), #c5f6ffdb 0%, #c5f6ff14 58%, transparent), linear-gradient(180deg, #37b9e8 0px, #37b9e8 calc(var(--r3-card-top) + var(--r3-card-height) * .205), #102b38 var(--r3-seat), #111719 calc(var(--r3-seat) + var(--r3-card-height) * .64));
   --home-heading: #102b38;
   --home-hero-meta: #234958;
   --home-hero-number: #f7fcfd;
-  --home-hero: radial-gradient(ellipse at 10% 0%, #ffffff47, #ffffff0e 62%, transparent), linear-gradient(150deg, #ffffff70, #ffffff33 22%, #ffffff11 63%, #ffffff06);
+  --home-hero: radial-gradient(ellipse 100% 100% at 10% 0%, #ffffff47, #ffffff0e 62%, transparent), linear-gradient(146deg, #ffffff70, #ffffff33 22%, #ffffff11 63%, #ffffff06);
   --home-hero-rim: #d5f5ff4a;
   --home-hero-shadow: #04191fcc;
   --home-floor: linear-gradient(180deg, #ffffff26, #ffffff0f 25%, #00000024);
-  --home-tile: linear-gradient(150deg, #ffffff24, #ffffff09);
+  --home-tile: linear-gradient(180deg, #ffffff24, #ffffff09);
   --home-receipt: linear-gradient(145deg, #d3eff52b, #94c4d117);
   --home-receipt-back: #34566485;
   --home-floor-ink: #f2f8fa;
@@ -43,7 +44,8 @@
   --home-slot: #04161f;
   --library-accent: #bdeef7;
   --reader-water: #5096ab;
-  --r3-local-card: linear-gradient(165deg, #37b9e8, #207890 55%, #102b38);
+  --water-top: #c5f6ff33; --water-middle: #37b9e833; --water-bottom: #102b388c;
+  --r3-local-card: radial-gradient(ellipse 112% 168% at -5.7% -8.2%, #c5f6ffdb, #c5f6ff14 58%, transparent), linear-gradient(180deg, #37b9e8, #37b9e8 20.5%, #102b38);
   --r3-rim: linear-gradient(140deg, #fffffff2, #ffffff91 28%, #c5f6ff29 60%, #ffffff4d);
 }
 .app[data-material-study][data-theme] .page:has(.budget-home-head) { background: var(--home-sky); }
@@ -52,6 +54,26 @@
   --contact: var(--home-contact); --slot: var(--home-slot);
 }
 .app[data-material-study][data-theme] .budget-home-head { color: var(--home-heading); }
+.app[data-material-study][data-theme] .budget-home-head { min-height: 62px; padding: 9px 24px; }
+.app[data-material-study][data-theme] .budget-home-head h2 { font-size: calc(23px * var(--font-scale)); }
+/* R3's card aspect and short upper gap also locate the light correctly.
+   Gestures still translate the same card; the expanded geometry alone changes. */
+.app[data-material-study] .cartridge-world {
+  --reader-expanded-card-height: calc(min(410px, 100cqw - 46px) * .85227);
+  --reader-expanded-stage-height: calc(var(--reader-expanded-card-height) + 18px);
+  --card-stage-height: var(--reader-expanded-stage-height);
+}
+@container(max-width:340px) {
+  .app[data-material-study] .cartridge-world { --reader-expanded-card-height: calc((100cqw - 38px) * .85227); }
+}
+.app[data-material-study].large-text .cartridge-world {
+  --reader-expanded-card-height: max(306px, calc(min(410px, 100cqw - 46px) * .85227));
+  --reader-expanded-stage-height: calc(var(--reader-expanded-card-height) + 18px);
+}
+.app[data-material-study] .cartridge-world:not(.library-open) .cartridge-card { top: 12px; }
+.app[data-material-study] .cartridge-card.raised { transform: translateY(-18px); }
+.app[data-material-study] :is(.cartridge-stack-layer,.cartridge-flight) { top: 12px; height: var(--reader-expanded-card-height); }
+.app[data-material-study] .cartridge-world:not(.library-open) .console-shell { padding-top: calc(38px * (1 - var(--reader-reveal)) + 32px * var(--reader-reveal)); }
 .app[data-material-study][data-theme] .budget-home-head .icon-button {
   color: var(--home-heading); background: #ffffff26;
   box-shadow: inset 0 1px 0 #ffffff80, inset 0 -1px 0 #113a4a12;
@@ -59,37 +81,47 @@
 }
 .app[data-material-study][data-theme] :is(.reader-card-face,.restored-detail-card,.restored-budget-item>.liquid-card) {
   background: var(--home-hero);
-  border: 1px solid var(--home-hero-rim);
-  box-shadow: inset 1px 1px 0 #ffffff38, 0 7px 12px -5px var(--home-hero-shadow), 0 19px 22px -20px #00000090;
-  backdrop-filter: blur(10px) saturate(1.12); -webkit-backdrop-filter: blur(10px) saturate(1.12);
+  border: 1px solid transparent;
+  box-shadow: 0 5px 9px -2px #06232d40, 0 13px 12px -11px #00000057;
+  backdrop-filter: blur(2.8px); -webkit-backdrop-filter: blur(2.8px);
 }
 .app[data-material-study][data-theme] .reader-card-face :is(.card-name,.card-more) { color: var(--home-heading); }
 .app[data-material-study][data-theme] .reader-card-face .card-period { color: var(--home-hero-meta); }
 .app[data-material-study][data-theme] .reader-card-face .card-value { color: var(--home-hero-number); }
 .app[data-material-study][data-theme] .reader-card-face .card-add {
-  color: var(--home-hero-number); background: #ffffff21; border-color: #ffffff69;
-  box-shadow: inset 0 1px #ffffff30; backdrop-filter: blur(5px);
+  color: var(--home-hero-number); background: #ffffff29; border-color: #ffffff61;
+  box-shadow: none; backdrop-filter: none;
 }
 .app[data-material-study][data-theme] .cartridge-stack-layer .liquid-card {
-  background: linear-gradient(145deg, #e4f8ff33, #bddfec0a);
-  border-color: #ffffff3b; box-shadow: inset 0 1px #ffffff30; filter: blur(.45px); opacity: .62;
+  background: linear-gradient(180deg, #ffffff70, #ffffff0a 28%, #ffffff03);
+  border-color: #ffffff1a; box-shadow: none; filter: blur(.8px); opacity: .8;
 }
 .app[data-material-study][data-theme] .contact-extension {
-  background: linear-gradient(180deg, transparent, var(--home-contact));
-  border-color: #d6f3ff50;
-  box-shadow: inset 0 1px #e8f9ff24, 0 7px 12px -9px var(--home-hero-shadow);
+  background: none; border: 0; box-shadow: none;
+  backdrop-filter: none; -webkit-backdrop-filter: none;
 }
 .app[data-material-study][data-theme] .console-shell::before {
-  background: var(--home-floor); box-shadow: inset 0 1px #ffffff47;
-  backdrop-filter: blur(14px) saturate(1.04); -webkit-backdrop-filter: blur(14px) saturate(1.04);
+  inset: -20px 0 auto; height: var(--r3-pocket-height, calc(100% + 20px));
+  background: var(--home-floor); box-shadow: none;
+  border-radius: 0; clip-path: var(--r3-pocket-shape);
+  backdrop-filter: none; -webkit-backdrop-filter: none;
 }
 .app[data-material-study][data-theme] .cartridge-world.library-open .console-shell::before { background: var(--home-floor); }
-.app[data-material-study][data-theme] .console-water svg { fill: var(--reader-water); opacity: .08; }
-.app[data-material-study][data-theme] .slot-recess { box-shadow: inset 0 2px 3px #051f3047, 0 1px #ffffff73; }
+/* The lip draws only the upper grazing edge. Its fill lives in the same
+   clipped surface as the complete holder, so there is no opacity seam. */
+.app[data-material-study][data-theme] .console-lip { top: -20px; height: 34px; filter: none; }
+.app[data-material-study][data-theme] .console-lip svg { height: 34px; fill: none; overflow: visible; }
+.app[data-material-study][data-theme] .console-lip path { fill: none; stroke: #ffffff47; stroke-width: 1; vector-effect: non-scaling-stroke; }
+.app[data-material-study][data-theme] .console-water { visibility: hidden; }
+.app[data-material-study][data-theme] .slot-recess {
+  height: 16px; top: calc(var(--reader-expanded-stage-height) - 2px);
+  background: radial-gradient(ellipse closest-side, #0000006e, transparent);
+  border: 0; box-shadow: none; filter: blur(4px);
+}
 .app[data-material-study][data-theme] .reader-tiles .home-tile {
   background: var(--home-tile); color: var(--home-floor-ink);
-  border-color: var(--tile-border); box-shadow: inset 1px 1px #ffffff26, inset -1px -1px #0000000a, 0 8px 12px -11px #00000059;
-  backdrop-filter: blur(16px) saturate(1.05); -webkit-backdrop-filter: blur(16px) saturate(1.05);
+  border-color: #ffffff1f; box-shadow: 0 6px 10px -12px #00000040;
+  backdrop-filter: none; -webkit-backdrop-filter: none;
 }
 .app[data-material-study][data-theme] .reader-tiles :is(.tile-label,.tile-bottom,.days-remaining>span) { color: var(--home-floor-muted); }
 .app[data-material-study][data-theme] .reader-tiles .mini-bars i { background: var(--home-floor-muted); }
@@ -212,7 +244,7 @@ body.material-embedded .app { width: 100%!important; height: 100dvh; min-height:
 
 /* A continuous grazing rim, with the strongest light only at top / left. */
 .app[data-material-study][data-theme] :is(.reader-card-face,.restored-detail-card)::after {
-  content: ''; position: absolute; inset: 0; border-radius: inherit; padding: 1.2px;
+  content: ''; position: absolute; inset: 0; border-radius: inherit; padding: 1px;
   background: var(--r3-rim); pointer-events: none; z-index: 3;
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor; mask-composite: exclude;
@@ -223,7 +255,7 @@ body.material-embedded .app { width: 100%!important; height: 100dvh; min-height:
 .app[data-material-study][data-theme] .restored-detail-card :is(.card-name,.card-more) { color: var(--home-heading); }
 .app[data-material-study][data-theme] .restored-detail-card .card-period { color: var(--home-hero-meta); }
 .app[data-material-study][data-theme] .restored-detail-card .card-value { color: var(--home-hero-number); }
-.app[data-material-study][data-theme] .cartridge-stack-layer .card-name { opacity: .6; }
+.app[data-material-study][data-theme] .cartridge-stack-layer :is(.card-top,.card-bottom,.water) { opacity: .12; }
 /* Keep focus controls clear when the library has a bright optical backdrop. */
 .app[data-material-study][data-theme] .budget-library-picker>header button { color: var(--home-heading); }
 
@@ -235,3 +267,12 @@ body.material-embedded .app { width: 100%!important; height: 100dvh; min-height:
 /* The self-contained study does not ship the older exploration's web pages. */
 .review-sidebar>a, .outcome-review-controls>a { display: none; }
 #cart-replay, #cart-unplugged, #cart-library-preview { background: #d4e7ed99; color: #315967; box-shadow: inset 0 1px #ffffff80; }
+
+/* One soft rim follows the R3 front card; no second inset outline. */
+.app[data-material-study][data-theme] .cartridge-card .reader-card-face { border-radius: 31px; }
+.app[data-material-study][data-theme] .reader-card-face .r3-waterline,
+.app[data-material-study][data-theme] .restored-detail-card .r3-waterline {
+  fill: none; stroke: #c5f6ff52; stroke-width: 1.1; vector-effect: non-scaling-stroke;
+}
+.app[data-material-study][data-theme] .reader-level-controls>button::before,
+.app[data-material-study][data-theme] .reader-level-controls>button::after { content: none; }
