@@ -89,6 +89,19 @@ enum DesignPreviewData {
             try LedgerStore.replaceAll(ledger, in: context)
             return
         }
+        if ["limit-one-shot", "limit-weekly", "limit-custom"].contains(screen) {
+            let oneShot = screen == "limit-one-shot"
+            let first = calendar.startOfDay(for: now)
+            let end = oneShot ? nil : calendar.date(byAdding: .day, value: screen == "limit-weekly" ? 6 : 9, to: first)
+            let rule: RecurrenceRule? = oneShot ? nil : screen == "limit-weekly" ? .weekly : .everyNDays(10)
+            let card = try ledger.insertBudgetCard(name: String(localized: oneShot ? "wallet.demo.trip" : "wallet.demo.daily"),
+                amount: 100, currencyCode: "CNY", cycleType: oneShot ? .oneShot : .repeating, recurrence: rule,
+                startDate: first, endDate: end, now: now)
+            try record(ledger: &ledger, amount: 35, currencyCode: "CNY", occurredAt: now, now: now,
+                       decision: .confirmed(periodID: card.1.id), merchant: String(localized: "wallet.demo.lunch"))
+            try LedgerStore.replaceAll(ledger, in: context)
+            return
+        }
         let daily = try ledger.insertBudgetCard(name: String(localized: "wallet.demo.daily"), amount: 3_000, currencyCode: "CNY", cycleType: .repeating, recurrence: .monthly, startDate: start, endDate: end, now: now, sortIndex: 0)
         let trip = try ledger.insertBudgetCard(name: String(localized: "wallet.demo.trip"), amount: 2_400, currencyCode: "CNY", cycleType: .oneShot, recurrence: nil, startDate: start, endDate: nil, now: now, sortIndex: 1)
         if screen == "r34-home" {

@@ -81,13 +81,13 @@ struct BudgetAmountEditEngineTests {
         #expect(throws: LedgerError.invalidBudgetAmount) { try BudgetAmountEditEngine.preview(ledger: ledger, budgetID: budgetID, periodID: periodID, newAmount: amount) }
     }
 
-    @Test("没有变化不提交；一次性和非每月卡不扩展编辑范围")
+    @Test("没有变化不提交；草稿或归档卡不能改上限")
     func unchangedAndScope() throws {
         var (ledger, budgetID, periodID) = try makeLedger()
         #expect(throws: LedgerError.unchangedBudgetAmount) { try BudgetAmountEditEngine.preview(ledger: ledger, budgetID: budgetID, periodID: periodID, newAmount: 1000) }
-        ledger.budgets[budgetID]?.recurrence = .weekly
+        ledger.budgets[budgetID]?.state = .draft
         #expect(!BudgetAmountEditEngine.isEditable(budgetID: budgetID, periodID: periodID, ledger: ledger))
-        ledger.budgets[budgetID]?.cycleType = .oneShot
+        ledger.budgets[budgetID]?.state = .archived
         #expect(!BudgetAmountEditEngine.isEditable(budgetID: budgetID, periodID: periodID, ledger: ledger))
     }
 

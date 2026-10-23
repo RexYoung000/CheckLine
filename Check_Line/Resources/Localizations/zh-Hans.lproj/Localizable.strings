@@ -499,18 +499,18 @@
 "wallet.periodLast7days" = "周期末 7 天";
 "wallet.empty.manual" = "手动填写";
 
-// Monthly budget amount editing
-"wallet.budget.edit.title" = "调整月度额度";
-"wallet.budget.edit.amount" = "每期预算额度";
+// Budget limit editing
+"wallet.budget.edit.title" = "调整预算上限";
+"wallet.budget.edit.amount" = "预算上限";
 "wallet.budget.edit.inputHint" = "输入大于 0 的金额，最多两位小数。";
-"wallet.budget.edit.scope" = "确认后，上方所示月份立即使用新额度，以后每个月也沿用新额度。已结算月份、消费记录和心愿钱包不变。";
+"wallet.budget.edit.scope" = "确认后，上方所示周期及以后每期使用新上限。已结算历史、消费记录和心愿余额不变。";
 "wallet.budget.edit.preview" = "预览变化";
 "wallet.budget.edit.save" = "确认保存";
 "wallet.budget.edit.back" = "返回修改金额";
-"wallet.budget.edit.oldAmount" = "本月原额度";
-"wallet.budget.edit.newAmount" = "本月新额度";
-"wallet.budget.edit.oldDefault" = "原每月默认额度";
-"wallet.budget.edit.newDefault" = "以后每月额度";
+"wallet.budget.edit.oldAmount" = "本期原上限";
+"wallet.budget.edit.newAmount" = "本次新上限";
+"wallet.budget.edit.oldDefault" = "原后续每期上限";
+"wallet.budget.edit.newDefault" = "以后每期上限";
 "wallet.budget.edit.remainingBefore" = "原剩余（含待确认）";
 "wallet.budget.edit.remainingAfter" = "新剩余（含待确认）";
 "wallet.budget.edit.certain" = "确定超支（仅已确认）";
@@ -518,7 +518,7 @@
 "wallet.budget.edit.pendingHint" = "待确认金额只影响暂计剩余和可能超支，不代表已确定支出。";
 "wallet.budget.edit.invalid" = "请输入大于 0、最多两位小数的有效金额。";
 "wallet.budget.edit.unchanged" = "额度没有变化，请修改金额后再预览。";
-"wallet.budget.edit.unavailable" = "这张卡的当前月份已变化或已结算。请关闭后重新打开当前预算卡。";
+"wallet.budget.edit.unavailable" = "这张卡的当前周期已变化或已结算。请关闭后重新打开当前预算卡。";
 "wallet.budget.edit.stale" = "预算或消费已变化，请重新预览。输入的金额已保留。";
 "wallet.budget.edit.failed" = "保存失败，没有更改预算。金额已保留，可以重试。";
 "wallet.provisionalOverrun" = "暂计越线";
@@ -591,7 +591,7 @@
 "ui.impact.walletTitle" = "修正后的钱包";
 "ui.wish.viewActive" = "查看想实现";
 "ui.wish.walletImpact" = "钱包变化";
-"ui.budget.edit.newMonthlyAmount" = "本期及以后每期";
+"ui.budget.edit.newRecurringAmount" = "本期及以后每期";
 "ui.record.historicalMoveBoundary" = "已结算周期的改归属需要完整追溯核对，当前入口尚未开放。";
 "ui.agent.conversation" = "本次对话";
 "ui.agent.you" = "你";
@@ -760,7 +760,6 @@
 "ui.attachment.retry" = "重试失败项";
 "ui.attachment.removeFailed" = "移除失败项";
 "ui.manage.settledReadOnly" = "已结算周期的额度保持不变。";
-"ui.manage.monthlyOnly" = "当前仅支持调整每月循环预算的额度。";
 "ui.records.pendingEmpty" = "已全部确认";
 "ui.records.unbudgetedEmpty" = "没有未纳入预算的记录";
 "ui.record.unavailable" = "这笔记录已不可用";
@@ -942,3 +941,4 @@
 "settlement.early.resumes" = "%@ 开始下一期";
 "settlement.early.nextLimit" = "下期额度";
 "settlement.early.futureRecords" = "本期还有未来日期的记录，请先调整这些记录，再提前结算。";
+"wallet.budget.edit.oneShotScope" = "确认后，仅本次预算使用新上限。消费记录和心愿余额不变。";

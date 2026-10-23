@@ -106,23 +106,25 @@ final class AmountReviewRefinementUITests: XCTestCase {
     }
 
     func testMonthlyAmountPairsStayCompleteAtLargeEnglishText() {
-        let app = launch("home", english: true, accessibilityText: true)
-        let more = app.buttons["wallet.home.card.more"]
-        XCTAssertTrue(more.waitForExistence(timeout: 8))
-        reveal(more, in: app)
-        more.tap()
-        app.buttons["Adjust monthly limit"].tap()
+        let app = launch("r34-home", english: true, accessibilityText: true)
+        let card = app.descendants(matching: .any)["wallet.home.card"].firstMatch
+        XCTAssertTrue(card.waitForExistence(timeout: 8))
+        card.coordinate(withNormalizedOffset: CGVector(dx: 0.7, dy: 0.3)).tap()
+        let edit = app.buttons["wallet.budget.limit.edit"]
+        XCTAssertTrue(edit.waitForExistence(timeout: 5))
+        reveal(edit, in: app)
+        edit.tap()
         let amount = app.textFields["wallet.budget.edit.amount"]
         XCTAssertTrue(amount.waitForExistence(timeout: 5))
         replace(amount, with: "1600.25")
         app.buttons["wallet.budget.edit.preview"].tap()
 
-        let newLimit = app.descendants(matching: .any)["wallet.budget.edit.newMonthlyAmount"]
+        let newLimit = app.descendants(matching: .any)["wallet.budget.edit.newRecurringAmount"]
         reveal(newLimit, in: app)
         XCTAssertTrue(newLimit.waitForExistence(timeout: 5))
         XCTAssertTrue(newLimit.label.contains("This period and future periods"), newLimit.label)
         XCTAssertTrue(newLimit.label.contains("1,600.25"), newLimit.label)
-        XCTAssertEqual(app.descendants(matching: .any).matching(identifier: "wallet.budget.edit.newMonthlyAmount").count, 1)
+        XCTAssertEqual(app.descendants(matching: .any).matching(identifier: "wallet.budget.edit.newRecurringAmount").count, 1)
         XCTAssertTrue(app.descendants(matching: .any)["wallet.budget.edit.oldAmount"].exists)
         XCTAssertTrue(app.descendants(matching: .any)["wallet.budget.edit.remainingBefore"].exists)
         XCTAssertTrue(app.descendants(matching: .any)["wallet.budget.edit.remainingAfter"].exists)

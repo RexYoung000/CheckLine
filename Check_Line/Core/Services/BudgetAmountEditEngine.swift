@@ -7,6 +7,7 @@ nonisolated struct BudgetAmountEditPreview: Equatable, Sendable {
     let previousAmount: Decimal
     let newAmount: Decimal
     let currencyCode: String
+    let cycleType: CycleType
     let periodStart: Date
     let periodEnd: Date?
     let snapshotBefore: PeriodBudgetSnapshot
@@ -17,8 +18,7 @@ nonisolated struct BudgetAmountEditPreview: Equatable, Sendable {
 nonisolated enum BudgetAmountEditEngine {
     static func isEditable(budgetID: UUID, periodID: UUID, ledger: Ledger) -> Bool {
         guard let budget = ledger.budgets[budgetID],
-              budget.cycleType == .repeating, budget.recurrence?.isMonthly == true,
-              budget.state != .archived,
+              budget.state == .active || budget.state == .pendingSettlement,
               let period = ledger.periods[periodID], period.budgetID == budgetID,
               period.state != .settled, period.currencyCode == budget.defaultCurrencyCode else { return false }
         let periods = ledger.periods(forBudget: budgetID)
@@ -38,7 +38,7 @@ nonisolated enum BudgetAmountEditEngine {
         return BudgetAmountEditPreview(
             budgetID: budgetID, periodID: periodID,
             previousDefaultAmount: budget.defaultAmount, previousAmount: period.budgetAmount,
-            newAmount: newAmount, currencyCode: period.currencyCode,
+            newAmount: newAmount, currencyCode: period.currencyCode, cycleType: budget.cycleType,
             periodStart: period.startDate, periodEnd: period.endDate,
             snapshotBefore: BudgetEngine.periodSnapshot(period: period, expenses: expenses),
             snapshotAfter: BudgetEngine.periodSnapshot(period: after, expenses: expenses),

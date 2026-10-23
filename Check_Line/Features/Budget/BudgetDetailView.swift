@@ -28,6 +28,7 @@ struct BudgetDetailSheet: View {
             HomeBudgetDetailView(workspace: workspace, budgetID: budgetID, initialSection: initialSection)
                 .toolbar { ToolbarItem(placement: .topBarTrailing) {
                     Button(String(localized: "action.close"), iconSymbol: "xmark") { dismiss() }.labelStyle(.iconOnly)
+                        .accessibilityIdentifier("wallet.budget.detail.close")
                 } }
             .environment(\.budgetWorkspacePush, { path.append($0) })
             .navigationDestination(for: BudgetWorkspaceRoute.self) { BudgetWorkspaceDestination(workspace: workspace, route: $0) }
@@ -122,6 +123,14 @@ struct BudgetDetailContent: View {
                 : AnyLayout(HStackLayout(alignment: .top, spacing: 20))
             metricsLayout {
                 amountMetric("wallet.budget.limit", card.snapshot.budgetAmount, card)
+                if BudgetAmountEditEngine.isEditable(budgetID: budgetID, periodID: card.periodID, ledger: workspace.ledger) {
+                    Button { editingCard = card } label: {
+                        CheckLineIcon(symbol: "pencil", size: 17).frame(width: 44, height: 44)
+                            .paperGlass(.circle, interactive: true)
+                    }.buttonStyle(.plain)
+                        .accessibilityLabel(String(localized: "wallet.budget.edit.title"))
+                        .accessibilityIdentifier("wallet.budget.limit.edit")
+                }
             }.padding(18).walletSurface()
             }
 
@@ -187,8 +196,9 @@ struct BudgetDetailContent: View {
         VStack(alignment: .leading, spacing: 8) {
             Text(key).font(.caption).foregroundStyle(PaperTheme.muted)
             Text(MoneyFormat.string(amount, currencyCode: card.currencyCode)).font(.title3.weight(.medium)).monospacedDigit()
-                .fixedSize(horizontal: false, vertical: true)
+                .lineLimit(1).minimumScaleFactor(0.4)
         }.frame(maxWidth: .infinity, alignment: .leading).accessibilityElement(children: .combine)
+            .accessibilityIdentifier("wallet.budget.limit.amount")
     }
 
     @ViewBuilder private func recordAction(_ card: HomeBudgetCardModel, primary: Bool) -> some View {
@@ -258,7 +268,7 @@ struct BudgetDetailContent: View {
                 VStack(alignment: .leading, spacing: 10) {
                     Text(card.name).font(.title.weight(.medium))
                     Text(card.currencyCode + " · " + (workspace.ledger.budgets[card.id]?.recurrence?.monthlySchedule.map { BudgetPresentation.monthlyRule($0) }
-                         ?? String(localized: card.cycleType == .repeating ? "wallet.cycle.monthly" : "v1.cycle.oneShot")))
+                         ?? String(localized: card.cycleType == .oneShot ? "v1.cycle.oneShot" : workspace.ledger.budgets[card.id]?.recurrence?.isMonthly == true ? "wallet.cycle.monthly" : "v1.cycle.repeating")))
                         .font(.subheadline).foregroundStyle(PaperTheme.muted)
                     periodDates(card)
                     if BudgetPresentation.isUpcoming(card) {
@@ -271,7 +281,7 @@ struct BudgetDetailContent: View {
                 if BudgetAmountEditEngine.isEditable(budgetID: budgetID, periodID: card.periodID, ledger: workspace.ledger) {
                     Button(String(localized: "wallet.budget.edit.title")) { editingCard = card }.buttonStyle(PaperSolidButtonStyle())
                 } else {
-                    Text(String(localized: card.periodState == .settled ? "ui.manage.settledReadOnly" : "ui.manage.monthlyOnly"))
+                    Text(String(localized: card.periodState == .settled ? "ui.manage.settledReadOnly" : "wallet.budget.edit.unavailable"))
                         .font(.caption).foregroundStyle(PaperTheme.muted)
                 }
                 }.padding(20).walletSurface()

@@ -499,18 +499,18 @@
 "wallet.periodLast7days" = "Last 7 days of period";
 "wallet.empty.manual" = "Enter manually";
 
-// Monthly budget amount editing
-"wallet.budget.edit.title" = "Adjust monthly limit";
-"wallet.budget.edit.amount" = "Limit per period";
+// Budget limit editing
+"wallet.budget.edit.title" = "Adjust budget limit";
+"wallet.budget.edit.amount" = "Budget limit";
 "wallet.budget.edit.inputHint" = "Enter an amount greater than 0, with up to two decimal places.";
-"wallet.budget.edit.scope" = "After confirmation, the month shown above and all future months use the new amount. Settled months, expenses and the wish wallet stay unchanged.";
+"wallet.budget.edit.scope" = "After confirmation, the period shown above and all future periods use the new limit. Settled history, expenses and the wish balance stay unchanged.";
 "wallet.budget.edit.preview" = "Preview changes";
 "wallet.budget.edit.save" = "Confirm and save";
 "wallet.budget.edit.back" = "Back to amount";
-"wallet.budget.edit.oldAmount" = "Previous amount for this month";
-"wallet.budget.edit.newAmount" = "New amount for this month";
-"wallet.budget.edit.oldDefault" = "Previous monthly default";
-"wallet.budget.edit.newDefault" = "Amount for future months";
+"wallet.budget.edit.oldAmount" = "Previous limit for this period";
+"wallet.budget.edit.newAmount" = "New limit for this budget";
+"wallet.budget.edit.oldDefault" = "Previous limit for future periods";
+"wallet.budget.edit.newDefault" = "Limit for future periods";
 "wallet.budget.edit.remainingBefore" = "Previous remaining (including pending)";
 "wallet.budget.edit.remainingAfter" = "New remaining (including pending)";
 "wallet.budget.edit.certain" = "Confirmed overrun";
@@ -518,7 +518,7 @@
 "wallet.budget.edit.pendingHint" = "Pending amounts affect provisional remaining and possible overrun; they are not confirmed spending.";
 "wallet.budget.edit.invalid" = "Enter a valid amount greater than 0 with up to two decimal places.";
 "wallet.budget.edit.unchanged" = "The amount is unchanged. Change it before previewing.";
-"wallet.budget.edit.unavailable" = "This card’s month has changed or settled. Close and reopen the current budget card.";
+"wallet.budget.edit.unavailable" = "This card’s current period has changed or settled. Close and reopen the current budget card.";
 "wallet.budget.edit.stale" = "The budget or expenses changed. Preview again. Your entered amount has been kept.";
 "wallet.budget.edit.failed" = "Saving failed. The budget is unchanged and your amount has been kept. Try again.";
 "wallet.provisionalOverrun" = "Provisional overrun";
@@ -591,7 +591,7 @@
 "ui.impact.walletTitle" = "Wallet after correction";
 "ui.wish.viewActive" = "View active wishes";
 "ui.wish.walletImpact" = "Wallet impact";
-"ui.budget.edit.newMonthlyAmount" = "This period and future periods";
+"ui.budget.edit.newRecurringAmount" = "This period and future periods";
 "ui.record.historicalMoveBoundary" = "Moving a record from a settled period requires a complete retrospective review. This entry is not available yet.";
 "ui.agent.conversation" = "This conversation";
 "ui.agent.you" = "You";
@@ -760,7 +760,6 @@
 "ui.attachment.retry" = "Retry failed images";
 "ui.attachment.removeFailed" = "Remove failed images";
 "ui.manage.settledReadOnly" = "The limit for a settled period stays unchanged.";
-"ui.manage.monthlyOnly" = "Limit changes are available for monthly budgets.";
 "ui.records.pendingEmpty" = "All confirmed";
 "ui.records.unbudgetedEmpty" = "No records outside a budget";
 "ui.record.unavailable" = "This record is unavailable";
@@ -942,3 +941,4 @@
 "settlement.early.resumes" = "Next period starts %@";
 "settlement.early.nextLimit" = "Next period limit";
 "settlement.early.futureRecords" = "This period includes future-dated records. Review them before settling early.";
+"wallet.budget.edit.oneShotScope" = "After confirmation, only this one-time budget uses the new limit. Expenses and the wish balance stay unchanged.";

@@ -27,10 +27,13 @@ struct BudgetAmountEditorView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 22) {
                     Text(card.name).font(.title2.weight(.semibold))
-                    Text(card.periodStart, format: .dateTime.year().month())
+                    Text(periodDates)
                         .font(.subheadline).foregroundStyle(PaperTheme.muted)
-                    Text(String(localized: "wallet.budget.edit.scope"))
+                        .fixedSize(horizontal: false, vertical: true)
+                        .accessibilityIdentifier("wallet.budget.edit.periodDates")
+                    Text(String(localized: card.cycleType == .oneShot ? "wallet.budget.edit.oneShotScope" : "wallet.budget.edit.scope"))
                         .font(.subheadline).foregroundStyle(PaperTheme.muted)
+                        .accessibilityIdentifier("wallet.budget.edit.scope")
                     if let preview {
                         impact(preview)
                     } else {
@@ -100,6 +103,12 @@ struct BudgetAmountEditorView: View {
         }
     }
 
+    private var periodDates: String {
+        let start = card.periodStart.formatted(date: .abbreviated, time: .omitted)
+        let end = card.periodEnd?.formatted(date: .abbreviated, time: .omitted) ?? String(localized: "wallet.noDeadline")
+        return start + " – " + end
+    }
+
     private var actions: some View {
         VStack(spacing: 10) {
             if let preview {
@@ -124,10 +133,10 @@ struct BudgetAmountEditorView: View {
             Text(String(localized: "wallet.budget.edit.preview")).font(.headline)
             comparison(
                 beforeKey: "wallet.budget.edit.oldAmount", before: preview.previousAmount,
-                afterKey: "ui.budget.edit.newMonthlyAmount", after: preview.newAmount,
+                afterKey: preview.cycleType == .oneShot ? "wallet.budget.edit.newAmount" : "ui.budget.edit.newRecurringAmount", after: preview.newAmount,
                 currencyCode: preview.currencyCode
             )
-            if preview.previousDefaultAmount != preview.previousAmount {
+            if preview.cycleType == .repeating && preview.previousDefaultAmount != preview.previousAmount {
                 row("wallet.budget.edit.oldDefault", preview.previousDefaultAmount, preview)
             }
             Divider()
@@ -162,10 +171,11 @@ struct BudgetAmountEditorView: View {
         VStack(alignment: .leading, spacing: 8) {
             Text(String(localized: String.LocalizationValue(key))).font(.subheadline).foregroundStyle(PaperTheme.muted)
             Text(MoneyFormat.string(amount, currencyCode: currencyCode)).font(.title3.weight(.medium)).monospacedDigit()
+                .lineLimit(1).minimumScaleFactor(0.4)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .accessibilityElement(children: .combine)
-        .accessibilityIdentifier(key == "ui.budget.edit.newMonthlyAmount" ? "wallet.budget.edit.newMonthlyAmount" : key)
+        .accessibilityIdentifier(key == "ui.budget.edit.newRecurringAmount" ? "wallet.budget.edit.newRecurringAmount" : key)
     }
 
     private func row(_ key: String, _ value: Decimal, _ preview: BudgetAmountEditPreview) -> some View {
@@ -174,6 +184,7 @@ struct BudgetAmountEditorView: View {
             Text(String(localized: String.LocalizationValue(key))).font(.subheadline).foregroundStyle(PaperTheme.muted)
             if !typeSize.isAccessibilitySize { Spacer(minLength: 8) }
             Text(MoneyFormat.string(value, currencyCode: preview.currencyCode)).font(.subheadline.weight(.medium)).monospacedDigit()
+                .lineLimit(1).minimumScaleFactor(0.4)
                 .multilineTextAlignment(typeSize.isAccessibilitySize ? .leading : .trailing)
         }.accessibilityElement(children: .combine)
     }
