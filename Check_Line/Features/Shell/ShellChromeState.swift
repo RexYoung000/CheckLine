@@ -2,16 +2,11 @@ import SwiftUI
 import UIKit
 
 enum WalletTabTransition {
-    static var usesSystemBar: Bool {
-        if #available(iOS 27.0, *) { UIDevice.current.userInterfaceIdiom == .phone }
-        else { false }
-    }
+    // The two-page dock is deliberately compact and centered on every device.
+    // TabView still owns page lifetime; the system's full-width bar stays hidden.
+    static var usesSystemBar: Bool { false }
 
-    static var usesImmediateContent: Bool {
-        if usesSystemBar { true }
-        else if #available(iOS 26.0, *) { UIDevice.current.userInterfaceIdiom == .phone }
-        else { false }
-    }
+    static var usesImmediateContent: Bool { true }
 }
 
 enum CheckLineAppTab: String, CaseIterable, Identifiable, Hashable {

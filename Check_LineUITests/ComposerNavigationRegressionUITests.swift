@@ -8,6 +8,59 @@ import XCTest
         #endif
     }
 
+    func testCompactIconDockStaysCenteredAcrossTabsAndAgent() {
+        checkCompactDock(englishLarge: false)
+    }
+
+    func testCompactIconDockWithEnglishLargeTextAndReducedMotion() {
+        checkCompactDock(englishLarge: true)
+    }
+
+    private func checkCompactDock(englishLarge: Bool) {
+        let app = XCUIApplication()
+        app.launchArguments = ["-design-preview", "-design-screen", "r34-home", "-AppleLanguages", englishLarge ? "(en)" : "(zh-Hans)",
+                               "-AppleLocale", englishLarge ? "en_US" : "zh_CN"]
+        if englishLarge {
+            app.launchArguments += ["-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXXXL", "-AppleInterfaceStyle", "Dark", "-design-reduce-motion"]
+        }
+        app.launch()
+        let dock = app.descendants(matching: .any)["wallet.navigation"].firstMatch
+        XCTAssertTrue(dock.waitForExistence(timeout: 10), app.debugDescription)
+        let budget = dock.buttons["wallet.tab.budgets"], wish = dock.buttons["wallet.tab.wishes"], agent = dock.buttons["wallet.agent.avatar"]
+        let originalFrame = dock.frame
+        XCTAssertEqual(dock.buttons.count, 3)
+        XCTAssertEqual(dock.staticTexts.count, 0, "The dock shows icons; names remain accessibility labels only.")
+        // iOS 26 reports a container's child union, excluding the capsule's
+        // five-point leading glass inset. Measure the rendered carriers instead.
+        let carrierMidX = (budget.frame.minX - 5 + agent.frame.maxX) / 2
+        XCTAssertEqual(carrierMidX, app.frame.midX, accuracy: 2)
+        XCTAssertLessThan(dock.frame.width, min(260, app.frame.width * 0.65), "The three controls must form a compact centered group.")
+        for button in [budget, wish, agent] {
+            XCTAssertTrue(button.isHittable)
+            XCTAssertGreaterThanOrEqual(button.frame.width, 44)
+            XCTAssertGreaterThanOrEqual(button.frame.height, 44)
+            XCTAssertFalse(button.label.isEmpty)
+        }
+        XCTAssertTrue(budget.isSelected)
+        attach(app, englishLarge ? "compact-dock-english-large-budget" : "compact-dock-budget")
+        wish.tap()
+        XCTAssertTrue(app.buttons["native.wish.layout"].waitForExistence(timeout: 5))
+        XCTAssertTrue(wish.isSelected); XCTAssertFalse(budget.isSelected)
+        XCTAssertEqual(dock.frame.midX, originalFrame.midX, accuracy: 2)
+        attach(app, englishLarge ? "compact-dock-english-large-wish" : "compact-dock-wish")
+        agent.tap()
+        let close = app.buttons["wallet.agent.close"]
+        XCTAssertTrue(close.waitForExistence(timeout: 5)); close.tap()
+        XCTAssertTrue(close.waitForNonExistence(timeout: 5))
+        XCTAssertTrue(wish.isSelected, "Opening the agent must preserve the current page.")
+        budget.tap()
+        XCTAssertTrue(app.buttons["wallet.home.capture"].waitForExistence(timeout: 5))
+        XCTAssertTrue(budget.isSelected)
+        XCTAssertEqual(dock.frame.midX, originalFrame.midX, accuracy: 2)
+        XCTAssertEqual(dock.staticTexts.count, 0)
+        attach(app, englishLarge ? "compact-dock-english-large-restored" : "compact-dock-restored")
+    }
+
     func testRecordingDismissalRestoresTabsAcrossRepeatedPresentations() {
         let app = XCUIApplication()
         app.launchArguments = ["-design-preview", "-design-screen", "r34-home", "-AppleLanguages", "(zh-Hans)", "-AppleLocale", "zh_CN"]

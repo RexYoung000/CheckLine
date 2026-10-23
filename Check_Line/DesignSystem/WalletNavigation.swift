@@ -170,7 +170,7 @@ struct WalletGlassNavigation: View {
     private let tabs: [CheckLineAppTab] = [.budgets, .wishes]
 
     var body: some View {
-        HStack(spacing: 12) {
+        HStack(spacing: 10) {
             GeometryReader { geometry in
                 let preview = dragLocation.flatMap { WalletTabHitTarget.tab(at: $0, size: geometry.size, rightToLeft: layoutDirection == .rightToLeft) }
                 let selected = preview ?? chrome?.selectedTab ?? .home
@@ -190,10 +190,13 @@ struct WalletGlassNavigation: View {
                 )
                 .accessibilityElement(children: .contain)
             }
-            .frame(height: 60)
+            .frame(width: 130, height: 60)
 
             WalletAgentButton(workspace: workspace)
         }
+        .frame(width: 200, height: 60)
+        .accessibilityElement(children: .contain)
+        .accessibilityIdentifier("wallet.navigation")
     }
 
     @ViewBuilder private var navigationBackground: some View {
@@ -253,10 +256,7 @@ struct WalletGlassNavigation: View {
     }
 
     private func selectionLabel(_ tab: CheckLineAppTab, selected: Bool) -> some View {
-        HStack(spacing: 8) {
-            CheckLineIcon(symbol: tab.systemImage).font(.system(size: 22, weight: .medium))
-            Text(tab.title).font(.subheadline).dynamicTypeSize(...DynamicTypeSize.xxxLarge).lineLimit(1).minimumScaleFactor(0.85)
-        }
+        CheckLineIcon(symbol: tab.systemImage, size: 24)
         .foregroundStyle(selected ? PaperTheme.accent : PaperTheme.ink)
         .frame(maxWidth: .infinity).frame(height: 50).contentShape(Capsule())
     }
@@ -316,17 +316,13 @@ struct WalletAgentButton: View {
     var body: some View {
         Button { workspace.showAgent = true } label: {
             ZStack {
-                Ellipse()
-                    .fill(PaperTheme.accent.opacity(0.22))
-                    .frame(width: floating && !reduceMotion ? 24 : 32, height: 6)
-                    .blur(radius: 3)
-                    .offset(y: 28)
-                WalletAgentAvatar(size: 67)
-                    .shadow(color: PaperTheme.accent.opacity(0.15), radius: 8, y: 5)
-                    .offset(y: floating && !reduceMotion ? -5 : 0)
+                WalletAgentAvatar(size: 46)
+                    .shadow(color: PaperTheme.accent.opacity(0.15), radius: 4, y: 2)
+                    .offset(y: floating && !reduceMotion ? -2 : 0)
             }
-            .frame(width: 68, height: 68)
-            .contentShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
+            .frame(width: 60, height: 60)
+            .paperGlass(.circle, interactive: true)
+            .contentShape(Circle())
         }
         .buttonStyle(PaperCirclePressStyle())
         .accessibilityLabel(String(localized: "wallet.agent.open"))
@@ -352,12 +348,6 @@ enum WalletTabHitTarget {
 
 struct WalletAgentAvatar: View {
     var size: CGFloat = 44
-    @MainActor static let tabImage: UIImage = {
-        let renderer = ImageRenderer(content: CloudMascotDrawing(frame: CloudMascotMotion.sample(.idle, elapsed: 0, reduced: true), compact: true).frame(width: 32, height: 32))
-        renderer.scale = 3
-        return (renderer.uiImage ?? UIImage()).withRenderingMode(.alwaysOriginal)
-    }()
-
     var body: some View {
         CloudMascotView().frame(width: size, height: size).accessibilityHidden(true)
     }
