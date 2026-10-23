@@ -1,0 +1,632 @@
+{
+  "schema_version": 1,
+  "date_local": "2026-10-23",
+  "timezone": "Asia/Shanghai",
+  "build": "1.0 (11)",
+  "baseline_commit": "c0792de",
+  "scope": [
+    "held card input",
+    "library return",
+    "expense deletion",
+    "ambient bubbles",
+    "list reading position"
+  ],
+  "bottom_navigation": "discussion pending, unchanged",
+  "unique_ui_cases_with_passing_run": 26,
+  "passing_ui_cases": [
+    "Check_LineUITests.NativeMotionEvidenceUITests testSettlementPlaysAllReceivingBeatsInCurrentPageBeforeReturn",
+    "Check_LineUITests.NativeMotionEvidenceUITests testWishPurchasePlaysCompleteRevealBeforeViewingRealized",
+    "Check_LineUITests.NativePortUITests testAgentWishDraftRequiresExplicitReviewAndConfirmation",
+    "Check_LineUITests.NativePortUITests testCoverUpdatesWithinSameSheetAndUnpricedWishCannotRedeem",
+    "Check_LineUITests.NativePortUITests testDiscardAgentWishRemovesPendingProposal",
+    "Check_LineUITests.NativePortUITests testEnglishDarkLargeTextBalanceAndUnpricedWish",
+    "Check_LineUITests.NativePortUITests testExpandedWishPurchaseReturnsToRealizedList",
+    "Check_LineUITests.NativePortUITests testHolderDragAndCompactWindowDragReturn",
+    "Check_LineUITests.NativePortUITests testSettlementReceivesInCurrentPage",
+    "Check_LineUITests.NativePortUITests testTwoTabsAndHolderLayersDoNotSwitchOnBlankTap",
+    "Check_LineUITests.NativePortUITests testVoiceOverReachesHolderActionsAndBudgetAmount",
+    "Check_LineUITests.NativePortUITests testWishFlipPurchaseResultAndRealizedList",
+    "Check_LineUITests.PhoneFeedbackRepairUITests testAmbientBubblesContinueBeyondBurstAndWhileDetached",
+    "Check_LineUITests.PhoneFeedbackRepairUITests testArcPullShortCancelArrowAndEdgeDragReturn",
+    "Check_LineUITests.PhoneFeedbackRepairUITests testExpenseDetailDeleteCancelThenConfirmReturnsToRecords",
+    "Check_LineUITests.PhoneFeedbackRepairUITests testLeftSwipeOnlyOpensDeletionReview",
+    "Check_LineUITests.PhoneFeedbackRepairUITests testLongPressThenSlowDownAndUpDragSettlesWithoutRepeatedMotion",
+    "Check_LineUITests.PhoneFeedbackRepairUITests testRecordsKeepScrollPositionAcrossLayerReturn",
+    "Check_LineUITests.PhoneFeedbackRepairUITests testReducedMotionPreservesHoldInsertAndLibraryReturn",
+    "Check_LineUITests.R34HomeInteractionUITests testArcSideCardFocusesBeforeSelectingAndReturnSurfaceDoesNotRespondToTap",
+    "Check_LineUITests.R34HomeInteractionUITests testDomeVerticalBrowsingStaysInLibraryAndOnlyBottomDragReturns",
+    "Check_LineUITests.R34HomeInteractionUITests testEjectionDisconnectsSummaryAndTapReinsertsBeforeOpeningDetails",
+    "Check_LineUITests.R34HomeInteractionUITests testHorizontalThrowChangesRealBudgetAndReverseSwipeRestoresIt",
+    "Check_LineUITests.R34HomeInteractionUITests testShortHolderDragReturnsAndRecordsControlsFollowRetreatedHolder",
+    "Check_LineUITests.R34WishPresentationUITests testExpandedWishIsActuallyLargerAndGestureTurnsToRedeemableBack",
+    "Check_LineUITests.R34WishPresentationUITests testWishCardsUseTwoColumnsAndOddLastCardSpansThenSwitchToRows"
+  ],
+  "runs": [
+    {
+      "name": "baseline",
+      "status": "passed",
+      "log": "/tmp/checkline-phone-feedback-baseline.log",
+      "log_sha256": "bfda12139f16aff1952690fd0336ea21ea511e620c2a172b29eb1796a2f5341c",
+      "ui_cases": [
+        {
+          "name": "Check_LineUITests.R34HomeInteractionUITests testEjectionDisconnectsSummaryAndTapReinsertsBeforeOpeningDetails",
+          "status": "passed",
+          "seconds": 22.867
+        }
+      ],
+      "unit_tests": null,
+      "unit_suites": null,
+      "build_error": false
+    },
+    {
+      "name": "domain",
+      "status": "passed",
+      "log": "/tmp/checkline-phone-feedback-domain.log",
+      "log_sha256": "97d7d4f9e8cbe5e596d7382dfba66f46e08fbeeaa193f71e04563bcb24c5de52",
+      "ui_cases": [],
+      "unit_tests": 232,
+      "unit_suites": 49,
+      "build_error": false
+    },
+    {
+      "name": "domain-final",
+      "status": "passed",
+      "log": "/tmp/checkline-phone-feedback-domain-final.log",
+      "log_sha256": "d44451e5275eaa06cbdf1ae2a9ed352f6c5aeb570b2d8585075aaf7998af3a34",
+      "ui_cases": [],
+      "unit_tests": 232,
+      "unit_suites": 49,
+      "build_error": false
+    },
+    {
+      "name": "ui1",
+      "status": "failed",
+      "log": "/tmp/checkline-phone-feedback-ui1.log",
+      "log_sha256": "5105c93759d91531b545a3a3a00efcd2a1097950f7dc845e3836343bedec6c47",
+      "ui_cases": [
+        {
+          "name": "Check_LineUITests.PhoneFeedbackRepairUITests testAmbientBubblesContinueBeyondBurstAndWhileDetached",
+          "status": "failed",
+          "seconds": 36.586
+        },
+        {
+          "name": "Check_LineUITests.PhoneFeedbackRepairUITests testArcPullShortCancelArrowAndEdgeDragReturn",
+          "status": "failed",
+          "seconds": 21.373
+        },
+        {
+          "name": "Check_LineUITests.PhoneFeedbackRepairUITests testExpenseDetailDeleteCancelThenConfirmReturnsToRecords",
+          "status": "passed",
+          "seconds": 26.068
+        },
+        {
+          "name": "Check_LineUITests.PhoneFeedbackRepairUITests testLeftSwipeOnlyOpensDeletionReview",
+          "status": "failed",
+          "seconds": 22.429
+        },
+        {
+          "name": "Check_LineUITests.PhoneFeedbackRepairUITests testLongPressThenSlowDownAndUpDragSettlesWithoutRepeatedMotion",
+          "status": "passed",
+          "seconds": 32.401
+        },
+        {
+          "name": "Check_LineUITests.R34HomeInteractionUITests testArcSideCardFocusesBeforeSelectingAndReturnSurfaceDoesNotRespondToTap",
+          "status": "failed",
+          "seconds": 20.925
+        },
+        {
+          "name": "Check_LineUITests.R34HomeInteractionUITests testDomeVerticalBrowsingStaysInLibraryAndOnlyBottomDragReturns",
+          "status": "passed",
+          "seconds": 20.355
+        },
+        {
+          "name": "Check_LineUITests.R34HomeInteractionUITests testEjectionDisconnectsSummaryAndTapReinsertsBeforeOpeningDetails",
+          "status": "passed",
+          "seconds": 21.28
+        },
+        {
+          "name": "Check_LineUITests.R34HomeInteractionUITests testHorizontalThrowChangesRealBudgetAndReverseSwipeRestoresIt",
+          "status": "passed",
+          "seconds": 20.027
+        },
+        {
+          "name": "Check_LineUITests.R34HomeInteractionUITests testShortHolderDragReturnsAndRecordsControlsFollowRetreatedHolder",
+          "status": "passed",
+          "seconds": 23.954
+        }
+      ],
+      "unit_tests": null,
+      "unit_suites": null,
+      "build_error": false
+    },
+    {
+      "name": "ui2",
+      "status": "passed",
+      "log": "/tmp/checkline-phone-feedback-ui2.log",
+      "log_sha256": "9193270b8113a328a2b96b696a7f2674fef3eb806c841629e25df7d35b32e84b",
+      "ui_cases": [
+        {
+          "name": "Check_LineUITests.PhoneFeedbackRepairUITests testAmbientBubblesContinueBeyondBurstAndWhileDetached",
+          "status": "passed",
+          "seconds": 25.358
+        },
+        {
+          "name": "Check_LineUITests.PhoneFeedbackRepairUITests testArcPullShortCancelArrowAndEdgeDragReturn",
+          "status": "passed",
+          "seconds": 23.409
+        },
+        {
+          "name": "Check_LineUITests.PhoneFeedbackRepairUITests testExpenseDetailDeleteCancelThenConfirmReturnsToRecords",
+          "status": "passed",
+          "seconds": 27.967
+        },
+        {
+          "name": "Check_LineUITests.PhoneFeedbackRepairUITests testLeftSwipeOnlyOpensDeletionReview",
+          "status": "passed",
+          "seconds": 24.557
+        },
+        {
+          "name": "Check_LineUITests.PhoneFeedbackRepairUITests testLongPressThenSlowDownAndUpDragSettlesWithoutRepeatedMotion",
+          "status": "passed",
+          "seconds": 34.265
+        },
+        {
+          "name": "Check_LineUITests.R34HomeInteractionUITests testArcSideCardFocusesBeforeSelectingAndReturnSurfaceDoesNotRespondToTap",
+          "status": "passed",
+          "seconds": 21.103
+        },
+        {
+          "name": "Check_LineUITests.R34HomeInteractionUITests testDomeVerticalBrowsingStaysInLibraryAndOnlyBottomDragReturns",
+          "status": "passed",
+          "seconds": 21.023
+        },
+        {
+          "name": "Check_LineUITests.R34HomeInteractionUITests testEjectionDisconnectsSummaryAndTapReinsertsBeforeOpeningDetails",
+          "status": "passed",
+          "seconds": 22.42
+        },
+        {
+          "name": "Check_LineUITests.R34HomeInteractionUITests testHorizontalThrowChangesRealBudgetAndReverseSwipeRestoresIt",
+          "status": "passed",
+          "seconds": 22.428
+        },
+        {
+          "name": "Check_LineUITests.R34HomeInteractionUITests testShortHolderDragReturnsAndRecordsControlsFollowRetreatedHolder",
+          "status": "passed",
+          "seconds": 24.959
+        }
+      ],
+      "unit_tests": null,
+      "unit_suites": null,
+      "build_error": false
+    },
+    {
+      "name": "final-ui",
+      "status": "failed",
+      "log": "/tmp/checkline-phone-feedback-final-ui.log",
+      "log_sha256": "789bd8482887403ea3464b0b9df60e0f86405fab66d416002f5c7d498a937cbb",
+      "ui_cases": [
+        {
+          "name": "Check_LineUITests.NativeMotionEvidenceUITests testSettlementPlaysAllReceivingBeatsInCurrentPageBeforeReturn",
+          "status": "passed",
+          "seconds": 22.063
+        },
+        {
+          "name": "Check_LineUITests.NativeMotionEvidenceUITests testWishPurchasePlaysCompleteRevealBeforeViewingRealized",
+          "status": "passed",
+          "seconds": 23.039
+        },
+        {
+          "name": "Check_LineUITests.NativePortUITests testAgentWishDraftRequiresExplicitReviewAndConfirmation",
+          "status": "passed",
+          "seconds": 18.244
+        },
+        {
+          "name": "Check_LineUITests.NativePortUITests testCoverUpdatesWithinSameSheetAndUnpricedWishCannotRedeem",
+          "status": "passed",
+          "seconds": 25.207
+        },
+        {
+          "name": "Check_LineUITests.NativePortUITests testDiscardAgentWishRemovesPendingProposal",
+          "status": "passed",
+          "seconds": 24.624
+        },
+        {
+          "name": "Check_LineUITests.NativePortUITests testEnglishDarkLargeTextBalanceAndUnpricedWish",
+          "status": "passed",
+          "seconds": 28.255
+        },
+        {
+          "name": "Check_LineUITests.NativePortUITests testExpandedWishPurchaseReturnsToRealizedList",
+          "status": "passed",
+          "seconds": 23.766
+        },
+        {
+          "name": "Check_LineUITests.NativePortUITests testHolderDragAndCompactWindowDragReturn",
+          "status": "failed",
+          "seconds": 15.966
+        },
+        {
+          "name": "Check_LineUITests.NativePortUITests testSettlementReceivesInCurrentPage",
+          "status": "passed",
+          "seconds": 15.57
+        },
+        {
+          "name": "Check_LineUITests.NativePortUITests testTwoTabsAndHolderLayersDoNotSwitchOnBlankTap",
+          "status": "passed",
+          "seconds": 20.737
+        },
+        {
+          "name": "Check_LineUITests.NativePortUITests testVoiceOverReachesHolderActionsAndBudgetAmount",
+          "status": "passed",
+          "seconds": 24.883
+        },
+        {
+          "name": "Check_LineUITests.NativePortUITests testWishFlipPurchaseResultAndRealizedList",
+          "status": "passed",
+          "seconds": 18.32
+        },
+        {
+          "name": "Check_LineUITests.PhoneFeedbackRepairUITests testRecordsKeepScrollPositionAcrossLayerReturn",
+          "status": "failed",
+          "seconds": 18.901
+        },
+        {
+          "name": "Check_LineUITests.PhoneFeedbackRepairUITests testReducedMotionPreservesHoldInsertAndLibraryReturn",
+          "status": "passed",
+          "seconds": 18.224
+        },
+        {
+          "name": "Check_LineUITests.R34WishPresentationUITests testExpandedWishIsActuallyLargerAndGestureTurnsToRedeemableBack",
+          "status": "passed",
+          "seconds": 20.738
+        },
+        {
+          "name": "Check_LineUITests.R34WishPresentationUITests testWishCardsUseTwoColumnsAndOddLastCardSpansThenSwitchToRows",
+          "status": "passed",
+          "seconds": 13.322
+        }
+      ],
+      "unit_tests": null,
+      "unit_suites": null,
+      "build_error": false
+    },
+    {
+      "name": "small",
+      "status": "passed",
+      "log": "/tmp/checkline-phone-feedback-small.log",
+      "log_sha256": "b862469966fb1930bb8ceb125ad0689adc9563bf1dca222e1f3aa753d86ce1d4",
+      "ui_cases": [
+        {
+          "name": "Check_LineUITests.NativePortUITests testEnglishDarkLargeTextBalanceAndUnpricedWish",
+          "status": "passed",
+          "seconds": 23.809
+        },
+        {
+          "name": "Check_LineUITests.PhoneFeedbackRepairUITests testExpenseDetailDeleteCancelThenConfirmReturnsToRecords",
+          "status": "passed",
+          "seconds": 19.27
+        }
+      ],
+      "unit_tests": null,
+      "unit_suites": null,
+      "build_error": false
+    },
+    {
+      "name": "scroll-small",
+      "status": "failed",
+      "log": "/tmp/checkline-phone-feedback-scroll-small.log",
+      "log_sha256": "98a030b25fe492200bbe876a579e7a0d0aa879e631ad34ba6ec16b6d8d0827fe",
+      "ui_cases": [
+        {
+          "name": "Check_LineUITests.PhoneFeedbackRepairUITests testRecordsKeepScrollPositionAcrossLayerReturn",
+          "status": "failed",
+          "seconds": 17.892
+        }
+      ],
+      "unit_tests": null,
+      "unit_suites": null,
+      "build_error": false
+    },
+    {
+      "name": "scroll-fixed",
+      "status": "failed",
+      "log": "/tmp/checkline-phone-feedback-scroll-fixed.log",
+      "log_sha256": "284c6cd6758fcb54b20e33d3a5934b39cea320a53d3648b5256d7c7c453acf82",
+      "ui_cases": [
+        {
+          "name": "Check_LineUITests.PhoneFeedbackRepairUITests testRecordsKeepScrollPositionAcrossLayerReturn",
+          "status": "failed",
+          "seconds": 13.705
+        }
+      ],
+      "unit_tests": null,
+      "unit_suites": null,
+      "build_error": false
+    },
+    {
+      "name": "scroll-native",
+      "status": "failed",
+      "log": "/tmp/checkline-phone-feedback-scroll-native.log",
+      "log_sha256": "7a01dfef3a5c584c9cdb4c34f886dd7b4d2cdfa55f1f390f67e71f04c80d0722",
+      "ui_cases": [],
+      "unit_tests": null,
+      "unit_suites": null,
+      "build_error": true
+    },
+    {
+      "name": "postfix",
+      "status": "failed",
+      "log": "/tmp/checkline-phone-feedback-postfix.log",
+      "log_sha256": "1e19d744b575e31421205ba4f7265bb750dc2ea511193da1a57e7b2da565c877",
+      "ui_cases": [],
+      "unit_tests": null,
+      "unit_suites": null,
+      "build_error": true
+    },
+    {
+      "name": "scroll-native2",
+      "status": "failed",
+      "log": "/tmp/checkline-phone-feedback-scroll-native2.log",
+      "log_sha256": "14a824ad73be1c1b7d3bbe279948ac021d9660299aa8b6a541c71077f401536e",
+      "ui_cases": [
+        {
+          "name": "Check_LineUITests.PhoneFeedbackRepairUITests testRecordsKeepScrollPositionAcrossLayerReturn",
+          "status": "failed",
+          "seconds": 15.866
+        }
+      ],
+      "unit_tests": null,
+      "unit_suites": null,
+      "build_error": false
+    },
+    {
+      "name": "postfix2",
+      "status": "failed",
+      "log": "/tmp/checkline-phone-feedback-postfix2.log",
+      "log_sha256": "e85935289e3a981851b12f04b880b84c5ca7bbd4afaf4461ff5b0b2e0c5675f8",
+      "ui_cases": [
+        {
+          "name": "Check_LineUITests.NativePortUITests testHolderDragAndCompactWindowDragReturn",
+          "status": "passed",
+          "seconds": 23.207
+        },
+        {
+          "name": "Check_LineUITests.PhoneFeedbackRepairUITests testExpenseDetailDeleteCancelThenConfirmReturnsToRecords",
+          "status": "passed",
+          "seconds": 28.692
+        },
+        {
+          "name": "Check_LineUITests.PhoneFeedbackRepairUITests testLeftSwipeOnlyOpensDeletionReview",
+          "status": "passed",
+          "seconds": 18.922
+        },
+        {
+          "name": "Check_LineUITests.PhoneFeedbackRepairUITests testRecordsKeepScrollPositionAcrossLayerReturn",
+          "status": "failed",
+          "seconds": 19.243
+        }
+      ],
+      "unit_tests": null,
+      "unit_suites": null,
+      "build_error": false
+    },
+    {
+      "name": "scroll-settled",
+      "status": "failed",
+      "log": "/tmp/checkline-phone-feedback-scroll-settled.log",
+      "log_sha256": "e03c29ab51a0bd1ee3d79962baf947694b123e3ff014af4360d29c518960fafb",
+      "ui_cases": [
+        {
+          "name": "Check_LineUITests.PhoneFeedbackRepairUITests testRecordsKeepScrollPositionAcrossLayerReturn",
+          "status": "failed",
+          "seconds": 15.513
+        }
+      ],
+      "unit_tests": null,
+      "unit_suites": null,
+      "build_error": false
+    },
+    {
+      "name": "scroll-phone",
+      "status": "passed",
+      "log": "/tmp/checkline-phone-feedback-scroll-phone.log",
+      "log_sha256": "5f1c6af8a732747ae94189edc799b14d249ca6fe872c7fad6c2ddc37f3d4b5f0",
+      "ui_cases": [
+        {
+          "name": "Check_LineUITests.PhoneFeedbackRepairUITests testRecordsKeepScrollPositionAcrossLayerReturn",
+          "status": "passed",
+          "seconds": 24.576
+        }
+      ],
+      "unit_tests": null,
+      "unit_suites": null,
+      "build_error": false
+    },
+    {
+      "name": "scroll-anchor",
+      "status": "failed",
+      "log": "/tmp/checkline-phone-feedback-scroll-anchor.log",
+      "log_sha256": "63853f6e0eff8589f204892c5402f19e056d5dfe33c0a176acf08a4b72ef1713",
+      "ui_cases": [
+        {
+          "name": "Check_LineUITests.PhoneFeedbackRepairUITests testRecordsKeepScrollPositionAcrossLayerReturn",
+          "status": "failed",
+          "seconds": 17.056
+        }
+      ],
+      "unit_tests": null,
+      "unit_suites": null,
+      "build_error": false
+    },
+    {
+      "name": "anchor-phone",
+      "status": "passed",
+      "log": "/tmp/checkline-phone-feedback-anchor-phone.log",
+      "log_sha256": "1f9e10dc8bd661b7bf1d25512e2b8e8581cc61e98d7479624645a569e0481ce4",
+      "ui_cases": [
+        {
+          "name": "Check_LineUITests.PhoneFeedbackRepairUITests testRecordsKeepScrollPositionAcrossLayerReturn",
+          "status": "passed",
+          "seconds": 24.735
+        }
+      ],
+      "unit_tests": null,
+      "unit_suites": null,
+      "build_error": false
+    },
+    {
+      "name": "reading-final",
+      "status": "passed",
+      "log": "/tmp/checkline-phone-feedback-reading-final.log",
+      "log_sha256": "0a82652c969f1131d25e659eec96bf518020c9767df3e5df395988b65dda5fd9",
+      "ui_cases": [
+        {
+          "name": "Check_LineUITests.PhoneFeedbackRepairUITests testRecordsKeepScrollPositionAcrossLayerReturn",
+          "status": "passed",
+          "seconds": 17.297
+        }
+      ],
+      "unit_tests": null,
+      "unit_suites": null,
+      "build_error": false
+    },
+    {
+      "name": "left-final",
+      "status": "passed",
+      "log": "/tmp/checkline-phone-feedback-left-final.log",
+      "log_sha256": "f7bc2e0ba259c27d8beb64752db19e89d483dc59deba4b3d9ec706f051ecb664",
+      "ui_cases": [
+        {
+          "name": "Check_LineUITests.PhoneFeedbackRepairUITests testLeftSwipeOnlyOpensDeletionReview",
+          "status": "passed",
+          "seconds": 26.207
+        },
+        {
+          "name": "Check_LineUITests.PhoneFeedbackRepairUITests testRecordsKeepScrollPositionAcrossLayerReturn",
+          "status": "passed",
+          "seconds": 20.639
+        }
+      ],
+      "unit_tests": null,
+      "unit_suites": null,
+      "build_error": false
+    }
+  ],
+  "shipping": {
+    "release_build": "passed",
+    "log": "/tmp/checkline-phone-feedback-release-shipping.log",
+    "log_sha256": "010c9832d6384495de76aad4e9d7b6243a6c8b9f9e2c16eaa43f036cd89ec06e",
+    "codesign_verify_exit_code": 0,
+    "installed_version": "1.0 (11)",
+    "launch_arguments": []
+  },
+  "phone": {
+    "install": {
+      "outcome": "success",
+      "raw_local_file": "/tmp/checkline-feedback-install.json",
+      "sha256": "54f732b37e2bf81fa95c3842ebe1838877a0355ce1fa7ddf1f0f7a53686b06dc"
+    },
+    "phone-version": {
+      "outcome": "success",
+      "raw_local_file": "/tmp/checkline-feedback-phone-version.json",
+      "sha256": "0afab258253fb00d755442e5a9367a00d5abdfb55bafc08284c6b13b69dcef54"
+    },
+    "phone-launch": {
+      "outcome": "success",
+      "raw_local_file": "/tmp/checkline-feedback-phone-launch.json",
+      "sha256": "3c84b38a3050a8fc2d08b1638c95c498f4a09d6a684eb41fcf0d053d780e89b3"
+    },
+    "phone-processes": {
+      "outcome": "success",
+      "raw_local_file": "/tmp/checkline-feedback-phone-processes.json",
+      "sha256": "c85dc3d7821050c9e31f9c406e29bdc8be74666765903732744f89e4ae9fe8a3"
+    }
+  },
+  "privacy": {
+    "personal_ledger_or_keychain_contents_read": false,
+    "data_reset": false,
+    "agent_connection_reset": false,
+    "real_cloud_requests_sent": false,
+    "raw_device_metadata_committed": false
+  },
+  "code_files": [
+    {
+      "file": "Check_Line.xcodeproj/project.pbxproj",
+      "sha256": "8c287a0478060ee17995b30c11f67a8783e9a31470476715a8281bf42da3bab5"
+    },
+    {
+      "file": "Check_Line/Application/CheckLineWorkspace.swift",
+      "sha256": "e8c154f25c7eebd416de6827f16db7721f2c68922918837892d2515fb5b2cac8"
+    },
+    {
+      "file": "Check_Line/DesignSystem/NativeLiquidSurface.swift",
+      "sha256": "f5d4656291117dd728a5ec1ac1a36284f1a94e9cd2cca844c808299f0d9e79cf"
+    },
+    {
+      "file": "Check_Line/Features/Budget/BudgetDetailView.swift",
+      "sha256": "b8ded1156cdf0f12640e3b55471c59cd9f68a6e7acd9b0dbd537aed7df0893ae"
+    },
+    {
+      "file": "Check_Line/Features/Home/CartridgeBudgetHomeView.swift",
+      "sha256": "a089bc4c3932431fb79bb93a96e681f99680a73e2496b44a4c8b94d6643a1a5e"
+    },
+    {
+      "file": "Check_Line/Features/Home/CartridgeLibraryView.swift",
+      "sha256": "898d57ed96ed4cd20eb11eb19904545ef3ed041def5a472217b07eb2ac1f6366"
+    },
+    {
+      "file": "Check_Line/Features/Home/RecordListPositionMemory.swift",
+      "sha256": "934375007223eb93e2b9f571d44b26b39da4fc6b11e1e6af3e119723e4c1f036"
+    },
+    {
+      "file": "Check_Line/Features/Transactions/ExpenseDeletionReviewView.swift",
+      "sha256": "389b3498812c4608764301707d86a6d3e9059c4c02466b2b7ded7da758cf5f8c"
+    }
+  ],
+  "media": [
+    {
+      "file": "sim-ambient-bubbles.mp4",
+      "sha256": "3fb3208fd06ddfb0aae87ee5825a8baed5e846c80e9ca7af77a9586a303a2dcb"
+    },
+    {
+      "file": "sim-bubbles-active.png",
+      "sha256": "2203bd6d7a9386976bdf538143b5c883d98accb8b94b5c28738d2b4f74fe6add"
+    },
+    {
+      "file": "sim-bubbles-detached.png",
+      "sha256": "db626d2b121d619cbf74a7fbd0bba84bda6873845805cf87ed209762117655e1"
+    },
+    {
+      "file": "sim-delete-impact.png",
+      "sha256": "5e67d4f9b0abe4419df686f6b43b9db68c78ada6bc1f496dda991d4b5dfa49bb"
+    },
+    {
+      "file": "sim-delete-review.mp4",
+      "sha256": "ec46b725dde4332a79790a21a8af1b609b3c673f3deaf3190bc731c8736797ba"
+    },
+    {
+      "file": "sim-held-card-drag.mp4",
+      "sha256": "b906cb82c2183672f096f0e000ca4844f47837d1faec2e2bce5b884cb6eceb13"
+    },
+    {
+      "file": "sim-left-swipe.png",
+      "sha256": "8cb3d1b79695d2c7ac1617aed82be22583f40b66a4e98fd3ec63c3592d895bd8"
+    },
+    {
+      "file": "sim-library-return.mp4",
+      "sha256": "be27f4c35b78d079177ca5d9c1ad87e8fededdb6a8f3dd70f509b92e48d75338"
+    },
+    {
+      "file": "sim-small-reading-restored.png",
+      "sha256": "f6851ba12bad5781bd943da410f9123dc3ccdcdb2cc3755f524fc6a07c026716"
+    }
+  ],
+  "media_origin": "iPhone 18 Pro iOS 27 simulator, synthetic ledger, normal playback speed",
+  "not_verified": [
+    "physical touch and haptic acceptance",
+    "physical frame performance",
+    "iPad and iOS 17 runtime in this fix",
+    "real cloud and voice"
+  ]
+}

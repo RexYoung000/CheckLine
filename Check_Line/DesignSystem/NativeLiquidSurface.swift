@@ -26,15 +26,8 @@ struct NativeLiquidSurface: View {
                 let sheen = Path(ellipseIn: CGRect(x: -size.width*0.25,y: -size.height*0.55,width: size.width*1.2,height: size.height*1.8))
                 context.fill(sheen,with: .linearGradient(Gradient(colors: [.white.opacity(0.12),.clear]),startPoint: .zero,endPoint: CGPoint(x: size.width,y: size.height*0.6)))
                 guard !reduceMotion && active else { return }
-                var random = VisualRandom(state: ambientSeed)
-                for _ in 0..<16 {
-                    let x=random.next(),phase=random.next(),pace=6.8+random.next()*4.5
-                    let radius=1+random.next()*1.8
-                    let t=(time/pace+phase).truncatingRemainder(dividingBy: 1)
-                    let px=x*size.width+sin(t*6+phase*12)*(3+random.next()*5)
-                    let py=size.height*(1-t)
-                    let fade=min(1,t*8,(1-t)*7)*0.48
-                    bubble(&context,center: CGPoint(x: px,y: py),radius: radius,opacity: fade)
+                for pose in LiquidBubbleField.ambient(size: size, level: level, morph: morph, time: time, seed: ambientSeed) {
+                    bubble(&context,center: pose.center,radius: pose.radius,opacity: pose.opacity)
                 }
                 if let burstAt {
                     let age=clock.date.timeIntervalSince(burstAt)
@@ -74,8 +67,39 @@ struct NativeLiquidSurface: View {
     }
     private func bubble(_ context: inout GraphicsContext,center: CGPoint,radius: Double,opacity: Double) {
         let ring=Path(ellipseIn: CGRect(x: center.x-radius,y: center.y-radius,width: radius*2,height: radius*2))
+        context.stroke(ring,with: .color(PaperTheme.accent.opacity(opacity * 0.2)),lineWidth: 1.4)
         context.fill(ring,with: .radialGradient(Gradient(colors: [.white.opacity(opacity*0.24),.clear]),center: CGPoint(x: center.x-radius*0.4,y: center.y-radius*0.4),startRadius: 0,endRadius: radius*1.5))
         context.stroke(ring,with: .color(.white.opacity(opacity)),lineWidth: 0.7)
+    }
+}
+
+nonisolated struct LiquidBubblePose {
+    var center: CGPoint
+    var radius: Double
+    var opacity: Double
+}
+
+/// The ambient field lives inside the liquid volume at every level and keeps
+/// cycling independently of the short insertion burst.
+nonisolated enum LiquidBubbleField {
+    static func ambient(size: CGSize, level: CGFloat, morph: CGFloat, time: Double, seed: UInt64) -> [LiquidBubblePose] {
+        guard level > 0, size.width > 0, size.height > 0 else { return [] }
+        let level = min(1, level), morph = min(1, max(0, morph))
+        var random = VisualRandom(state: seed)
+        return (0..<22).map { _ in
+            let x = random.next(), phase = random.next(), pace = 6.8 + random.next() * 4.5
+            let radius = 1.4 + random.next() * 1.9
+            let cycle = time / pace + phase
+            let t = cycle - floor(cycle)
+            let drift = sin(t * 6 + phase * 12) * (2 + random.next() * 4)
+            let verticalX = max(radius, min(size.width - radius, x * size.width + drift))
+            let horizontalX = max(radius, min(size.width * level - radius, x * size.width * level + drift))
+            let verticalY = size.height - radius - max(0, size.height * level - radius * 2) * t
+            let horizontalY = size.height - radius - max(0, size.height - radius * 2) * t
+            return LiquidBubblePose(center: CGPoint(x: verticalX + (horizontalX - verticalX) * morph,
+                                                   y: verticalY + (horizontalY - verticalY) * morph),
+                                    radius: radius, opacity: min(1, t * 9, (1 - t) * 8) * 0.68)
+        }
     }
 }
 

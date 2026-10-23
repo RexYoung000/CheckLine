@@ -553,6 +553,8 @@ struct WalletExpenseDetail: View {
     @State private var attachmentToDelete: UUID?
     @State private var errorText: String?
     @State private var retrospectivePreview: RetrospectivePreview?
+    @State private var showsDeletionReview = false
+    @State private var didDeleteExpense = false
     private var expense: Expense? { workspace.ledger.expenses[expenseID] }
 
     var body: some View {
@@ -562,6 +564,11 @@ struct WalletExpenseDetail: View {
         }
         .presentationDetents([.large]).presentationBackground(PaperTheme.canvas).presentationCornerRadius(PaperTheme.Radius.sheet)
         .onAppear { reloadAttachments() }
+        .sheet(isPresented: $showsDeletionReview, onDismiss: {
+            if didDeleteExpense { dismiss() }
+        }) {
+            ExpenseDeletionReviewView(workspace: workspace, expenseID: expenseID) { didDeleteExpense = true }
+        }
         .onChange(of: pickerItems) { _, items in
             guard !items.isEmpty else { return }
             attachmentImport.start(items.map { item in
@@ -636,7 +643,15 @@ struct WalletExpenseDetail: View {
             }
             .background(PaperTheme.canvas.ignoresSafeArea())
             .navigationTitle(String(localized: "wallet.expense.title")).navigationBarTitleDisplayMode(.inline)
-            .toolbar { if standalone { ToolbarItem(placement: .topBarTrailing) { Button(String(localized: "action.close"), iconSymbol: "xmark") { dismiss() }.labelStyle(.iconOnly) } } }
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    if expense != nil {
+                        Button(role: .destructive) { showsDeletionReview = true } label: { Image(systemName: "trash") }
+                            .accessibilityLabel(String(localized: "action.delete")).accessibilityIdentifier("expense.delete.open")
+                    }
+                }
+                if standalone { ToolbarItem(placement: .topBarTrailing) { Button(String(localized: "action.close"), iconSymbol: "xmark") { dismiss() }.labelStyle(.iconOnly) } }
+            }
             .toolbarBackground(.hidden, for: .navigationBar)
     }
 

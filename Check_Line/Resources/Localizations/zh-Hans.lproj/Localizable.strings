@@ -17,6 +17,8 @@
 "action.create" = "创建";
 "action.undo" = "撤销";
 "action.delete" = "删除";
+"expense.delete.impact" = "删除这笔消费及其备注、来源与附件。心愿余额不变。";
+"expense.delete.refresh" = "重新核对";
 
 "budget.remaining.label" = "余额";
 "budget.remaining.short" = "剩余";

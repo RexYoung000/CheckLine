@@ -20,6 +20,7 @@ struct CartridgeLibraryView: View {
     @State private var domePosition = CGPoint.zero
     @State private var domeInitialized = false
     @State private var dragOrigin: CGPoint?
+    @State private var arcDragAxis: LibraryDragAxis?
     @State private var openedID: UUID?
     @State private var lastDragEnd = Date.distantPast
     @State private var inertia: Task<Void, Never>?
@@ -59,11 +60,20 @@ struct CartridgeLibraryView: View {
             }
             .frame(width: proxy.size.width, height: proxy.size.height)
             .foregroundStyle(PaperTheme.ink)
+            .overlay(alignment: .bottom) {
+                if layout == .dome || searching || staticMode {
+                HStack(spacing: 0) {
+                    Color.clear.frame(width: 22).contentShape(Rectangle()).gesture(returnGesture)
+                    Spacer(minLength: 0).allowsHitTesting(false)
+                    Color.clear.frame(width: 22).contentShape(Rectangle()).gesture(returnGesture)
+                }.frame(height: max(0, proxy.size.height - 58)).accessibilityHidden(true)
+                }
+            }
         }
         .accessibilityElement(children: .contain)
         .accessibilityIdentifier("native.budget.library")
         .onAppear { initialSelectedID = workspace.selectedBudgetID }
-        .onDisappear { stopInertia(); onReturnProgress?(0) }
+        .onDisappear { stopInertia() }
         .onChange(of: scenePhase) { _, phase in if phase != .active { stopInertia(); dragOrigin = nil } }
         .onChange(of: reduceMotion) { _, _ in stopInertia() }
         .onChange(of: cards.map(\.id)) { _, _ in
@@ -185,7 +195,7 @@ struct CartridgeLibraryView: View {
             }
             .frame(width: proxy.size.width, height: proxy.size.height)
             .contentShape(Rectangle())
-            .gesture(arcGesture(pitch: pitch))
+            .highPriorityGesture(arcGesture(pitch: pitch))
             .accessibilityElement(children: .contain)
             .accessibilityScrollAction { edge in
                 if edge == .trailing { focusArc(Int(arcPosition.rounded()) + 1) }
@@ -196,13 +206,23 @@ struct CartridgeLibraryView: View {
     }
 
     private func arcGesture(pitch: CGFloat) -> some Gesture {
-        DragGesture(minimumDistance: 7)
+        DragGesture(minimumDistance: 12, coordinateSpace: .global)
             .onChanged { value in
-                guard abs(value.translation.width) > abs(value.translation.height) * 0.8 || dragOrigin != nil else { return }
-                if dragOrigin == nil { stopInertia(); dragOrigin = CGPoint(x: arcPosition, y: 0) }
-                arcPosition = (dragOrigin?.x ?? arcPosition) - value.translation.width / max(1, pitch)
+                if arcDragAxis == nil {
+                    if abs(value.translation.width) > abs(value.translation.height) * 1.15 {
+                        arcDragAxis = .horizontal
+                        stopInertia(); dragOrigin = CGPoint(x: arcPosition, y: 0)
+                    } else if value.translation.height > abs(value.translation.width) * 1.15 {
+                        arcDragAxis = .returnToBudget
+                    } else { return }
+                }
+                if arcDragAxis == .returnToBudget { trackReturn(value.translation) }
+                else { arcPosition = (dragOrigin?.x ?? arcPosition) - value.translation.width / max(1, pitch) }
             }
             .onEnded { value in
+                let axis = arcDragAxis
+                arcDragAxis = nil
+                if axis == .returnToBudget { finishReturn(value.translation); return }
                 guard dragOrigin != nil else { return }
                 dragOrigin = nil
                 lastDragEnd = Date()
@@ -283,7 +303,7 @@ struct CartridgeLibraryView: View {
     }
 
     private var domeGesture: some Gesture {
-        DragGesture(minimumDistance: 7)
+        DragGesture(minimumDistance: 7, coordinateSpace: .global)
             .onChanged { value in
                 guard openedID == nil else { return }
                 if dragOrigin == nil { stopInertia(); dragOrigin = domePosition }
@@ -322,10 +342,14 @@ struct CartridgeLibraryView: View {
     private var returnGrip: some View {
         ZStack {
             Color.clear.contentShape(Rectangle())
-            Image(systemName: "chevron.down").font(.system(size: 19, weight: .medium))
-                .foregroundStyle(PaperTheme.accent.opacity(0.72))
+            Button { close() } label: {
+                Image(systemName: "chevron.down").font(.system(size: 19, weight: .medium))
+                    .foregroundStyle(PaperTheme.accent.opacity(0.72))
+                    .frame(width: 52, height: 52).contentShape(Rectangle())
+            }.buttonStyle(.plain)
                 .offset(y: min(10, returnDistance * 0.13))
-                .allowsHitTesting(false)
+                .accessibilityLabel(String(localized: "native.returnBudget"))
+                .accessibilityIdentifier("native.library.returnButton")
             HStack {
                 Spacer()
                 Text(String(format: String(localized: "native.cardCount"), cards.count))
@@ -333,23 +357,36 @@ struct CartridgeLibraryView: View {
             }.padding(.horizontal, 24).allowsHitTesting(false)
         }
         .contentShape(Rectangle())
-        .gesture(DragGesture(minimumDistance: 9)
-            .onChanged { value in
-                guard value.translation.height > 0, abs(value.translation.height) > abs(value.translation.width) * 1.2 else { return }
-                stopInertia()
-                returnDistance = min(150, value.translation.height)
-                onReturnProgress?(min(1, returnDistance / 150))
-            }
-            .onEnded { value in
-                let committed = value.translation.height > 64 && value.translation.height > abs(value.translation.width) * 1.2
-                withAnimation(reduceMotion ? nil : .spring(response: 0.28, dampingFraction: 0.88)) { returnDistance = 0 }
-                if committed { close() } else { onReturnProgress?(0) }
-            })
-        .accessibilityElement(children: .ignore)
+        .gesture(returnGesture)
+        .accessibilityElement(children: .contain)
         .accessibilityLabel(String(localized: "native.returnBudget"))
         .accessibilityHint(String(localized: "native.library.dragReturn"))
         .accessibilityAction { close() }
         .accessibilityIdentifier("native.library.return")
+    }
+
+    private var returnGesture: some Gesture {
+        DragGesture(minimumDistance: 12, coordinateSpace: .global)
+            .onChanged { value in
+                guard abs(value.translation.height) > abs(value.translation.width) * 1.2 else { return }
+                trackReturn(value.translation)
+            }
+            .onEnded { value in finishReturn(value.translation) }
+    }
+
+    private func trackReturn(_ translation: CGSize) {
+        stopInertia()
+        returnDistance = min(180, max(0, translation.height))
+        onReturnProgress?(returnDistance / 180)
+    }
+
+    private func finishReturn(_ translation: CGSize) {
+        lastDragEnd = Date()
+        let committed = translation.height > 64 && translation.height > abs(translation.width) * 1.2
+        withAnimation(reduceMotion ? nil : .spring(response: 0.28, dampingFraction: 0.88)) {
+            returnDistance = 0
+            if committed { close() } else { onReturnProgress?(0) }
+        }
     }
 
     private func runInertia(_ initialVelocity: CGPoint) {
@@ -367,8 +404,8 @@ struct CartridgeLibraryView: View {
 
     private func stopInertia() { inertia?.cancel(); inertia = nil }
     private var layoutTitle: String { String(localized: layout == .arc ? "native.library.arc" : "native.library.dome") }
-    private func close() { stopInertia(); searchFocused = false; onReturnProgress?(0); onClose() }
-    private func choose(_ card: HomeBudgetCardModel) { stopInertia(); searchFocused = false; onReturnProgress?(0); onChoose(card) }
+    private func close() { stopInertia(); searchFocused = false; onClose() }
+    private func choose(_ card: HomeBudgetCardModel) { stopInertia(); searchFocused = false; onChoose(card) }
     private func wrappedIndex(_ index: Int, count: Int) -> Int { guard count > 0 else { return 0 }; return ((index % count) + count) % count }
     private func cardLabel(_ card: HomeBudgetCardModel) -> String {
         card.name + ", " + MoneyFormat.string(BudgetPresentation.remaining(card), currencyCode: card.currencyCode)
@@ -376,6 +413,7 @@ struct CartridgeLibraryView: View {
 }
 
 private enum LibraryLayout: String { case arc, dome }
+private enum LibraryDragAxis { case horizontal, returnToBudget }
 
 /// Uniform periodic surface, matching the R34 source's pitch and independent X/Y wrap.
 /// Low counts deliberately occupy multiple rows, rather than a single ribbon.

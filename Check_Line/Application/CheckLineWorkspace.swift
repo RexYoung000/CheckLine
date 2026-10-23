@@ -748,10 +748,24 @@ final class CheckLineWorkspace {
     }
 
     func cloudDeletePreview(_ expenseID: UUID, in reviewed: Ledger, now: Date = Date()) -> AgentEvaluation? {
+        expenseDeletionPreview(expenseID, in: reviewed, now: now)
+    }
+
+    func expenseDeletionPreview(_ expenseID: UUID, in reviewed: Ledger, now: Date = Date()) -> AgentEvaluation? {
         guard let expense = reviewed.expenses[expenseID], expense.kind == .purchase, expense.wishRedemptionID == nil,
               !reviewed.expenses.values.contains(where: { $0.reversesExpenseID == expenseID }) else { return nil }
         let turn = session.turn(intent: .deleteExpense(expenseID: expenseID), ledger: reviewed, now: now)
         return turn.evaluation?.refusal == nil ? turn.evaluation : nil
+    }
+
+    /// Manual entry shares the same domain gate without completing another Agent task.
+    func confirmExpenseDeletion(_ expenseID: UUID, reviewed: Ledger, now: Date = Date()) throws {
+        guard ledger == reviewed else { throw WorkspaceInputError.staleExpenseDeletion }
+        guard expenseDeletionPreview(expenseID, in: reviewed, now: now) != nil else { throw WorkspaceInputError.expenseDeletionUnavailable }
+        let result = try session.execute(intent: .deleteExpense(expenseID: expenseID), ledger: ledger, now: now,
+                                         confirmation: .impact(ImpactAcknowledgement()))
+        try commitPresentationChange(result.ledger)
+        banner = .deleted
     }
 
     func resolveCloudOperation(_ kind: ComposerIntent, now: Date = Date()) {
@@ -1270,7 +1284,7 @@ final class CheckLineWorkspace {
     }
 }
 
-nonisolated enum WorkspaceInputError: Error, Equatable { case missingName, draftUnavailable, invalidCurrency }
+nonisolated enum WorkspaceInputError: Error, Equatable { case missingName, draftUnavailable, invalidCurrency, staleExpenseDeletion, expenseDeletionUnavailable }
 
 nonisolated enum WishSymbols {
     static let allowed = ["star", "headphones", "tent", "airplane", "camera", "bicycle", "gift", "book", "gamecontroller", "sofa"]

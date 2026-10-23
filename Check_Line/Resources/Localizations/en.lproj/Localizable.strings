@@ -17,6 +17,8 @@
 "action.create" = "Create";
 "action.undo" = "Undo";
 "action.delete" = "Delete";
+"expense.delete.impact" = "Remove this expense, its note, source evidence and attachments. Wish balance stays the same.";
+"expense.delete.refresh" = "Review again";
 
 "budget.remaining.label" = "Balance";
 "budget.remaining.short" = "Left";

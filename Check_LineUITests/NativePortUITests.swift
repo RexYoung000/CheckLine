@@ -42,7 +42,7 @@ import XCTest
         let records=app.descendants(matching: .any)["native.budget.records"]
         XCTAssertTrue(records.waitForExistence(timeout: 5),app.debugDescription)
         attach(app,"native-drag-records")
-        let window=app.otherElements["wallet.home.card"].firstMatch
+        let window=app.descendants(matching: .any)["wallet.home.card"].firstMatch
         let bar=window.coordinate(withNormalizedOffset: CGVector(dx: 0.5,dy: 0.5))
         bar.press(forDuration: 0.05,thenDragTo: bar.withOffset(CGVector(dx: 0,dy: 170)))
         XCTAssertTrue(app.buttons["wallet.home.capture"].waitForExistence(timeout: 5),app.debugDescription)

@@ -151,7 +151,7 @@ import XCTest
 
         let returnSurface = element("native.library.return", in: app)
         XCTAssertTrue(returnSurface.isHittable)
-        returnSurface.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).tap()
+        returnSurface.coordinate(withNormalizedOffset: CGVector(dx: 0.2, dy: 0.5)).tap()
         XCTAssertTrue(library.exists, "The bottom grip is a drag target; a tap must not change layers.")
 
         focused.tap()
