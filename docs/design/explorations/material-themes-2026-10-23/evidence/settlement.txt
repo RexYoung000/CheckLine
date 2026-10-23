@@ -1,0 +1,227 @@
+- banner:
+  - heading "R3 透光材质，浅暗两种光照" [level=1]
+  - paragraph: 以找回的 R3 为基准；两侧均可操作，页面下拉切换。
+  - text: 查看页面
+  - combobox "对照页面":
+    - option "预算首页"
+    - option "首页全部记录"
+    - option "预算卡库"
+    - option "预算详情"
+    - option "消费详情"
+    - option "消费日历"
+    - option "历史周期"
+    - option "预算信息"
+    - option "心愿清单"
+    - option "心愿卡背面"
+    - option "心愿余额"
+    - option "余额变动详情"
+    - option "记一笔"
+    - option "新建预算"
+    - option "新建心愿"
+    - option "心愿封面"
+    - option "小朵"
+    - option "设置"
+    - option "结算核对" [selected]
+    - option "兑换核对"
+  - link "查看 R3 基准":
+    - /url: reference/r3-focus.png
+  - checkbox "减少动态效果" [checked]
+  - text: 减少动态效果
+- main:
+  - heading "浅色" [level=2]
+  - link "单独查看":
+    - /url: index.html?theme=light&view=settlement&reduce=1
+  - iframe [active] [id="light-frame"]:
+    - main:
+      - generic "CheckLine 交互样稿":
+        - heading "预算" [level=2]
+        - button "创建预算卡"
+        - button "设置"
+        - region
+        - generic: 周末出行
+        - generic: 10月1日—10月31日 · CNY
+        - generic: 还能花
+        - strong: ¥1,200
+        - generic: 学点新东西
+        - generic: 10月1日—10月31日 · CNY
+        - generic: 还能花
+        - strong: ¥800
+        - group "这个月，未插入，点击插入":
+          - button "插入这个月"
+          - generic: 这个月
+          - generic: 10月1日—10月22日 · CNY
+          - button "预算卡操作"
+          - button "给这个月记一笔"
+          - generic: 还能花
+          - strong:
+            - text: ¥
+            - generic "120":
+              - generic: "0"
+              - generic: "1"
+              - generic: "2"
+              - generic: "3"
+              - generic: "4"
+              - generic: "5"
+              - generic: "6"
+              - generic: "7"
+              - generic: "8"
+              - generic: "9"
+              - generic: "0"
+              - generic: "1"
+              - generic: "2"
+              - generic: "3"
+              - generic: "4"
+              - generic: "5"
+              - generic: "6"
+              - generic: "7"
+              - generic: "8"
+              - generic: "9"
+              - generic: "0"
+              - generic: "1"
+              - generic: "2"
+              - generic: "3"
+              - generic: "4"
+              - generic: "5"
+              - generic: "6"
+              - generic: "7"
+              - generic: "8"
+              - generic: "9"
+        - button "查看这个月本期已用" [disabled]:
+          - generic: 已用
+          - strong: —
+          - generic: 周期末 7 天
+        - button "查看这个月的周期" [disabled]:
+          - generic: 10 月
+          - strong: —
+          - generic: 待结算
+        - heading "最近记录 未连接 笔" [level=3]:
+          - generic: 最近记录
+          - generic "未连接": —
+          - generic: 笔
+        - generic: 等待插入
+        - status
+        - group "预算查看层级":
+          - button "向上查看当前预算记录":
+          - button "向下查看卡库":
+        - navigation "主导航":
+          - button "预算"
+          - button "心愿"
+          - button "打开小朵，开始新任务"
+        - dialog "核对结算":
+          - heading "核对结算" [level=2]
+          - button "关闭"
+          - paragraph:
+            - text: 这个月
+            - text: 2026年10月1日—2026年10月22日
+          - heading "这期结余 ¥120" [level=3]
+          - generic: 额度
+          - generic: ¥1,840
+          - generic: 已确认消费
+          - generic: ¥1,720
+          - generic: 心愿余额
+          - generic: ¥280 → ¥400
+          - paragraph: 本期仅覆盖你已记录的消费，请确认没有需要补充的内容。
+          - checkbox "我已核对记录，接受当前数据范围。" [active]
+          - text: 我已核对记录，接受当前数据范围。
+          - button "确认结算" [disabled]
+        - status
+    - text: + + + + + + + + + + + + + +
+  - heading "暗色" [level=2]
+  - link "单独查看":
+    - /url: index.html?theme=dark&view=settlement&reduce=1
+  - iframe [id="dark-frame"]:
+    - main:
+      - generic "CheckLine 交互样稿":
+        - heading "预算" [level=2]
+        - button "创建预算卡"
+        - button "设置"
+        - region
+        - generic: 周末出行
+        - generic: 10月1日—10月31日 · CNY
+        - generic: 还能花
+        - strong: ¥1,200
+        - generic: 学点新东西
+        - generic: 10月1日—10月31日 · CNY
+        - generic: 还能花
+        - strong: ¥800
+        - group "这个月，未插入，点击插入":
+          - button "插入这个月"
+          - generic: 这个月
+          - generic: 10月1日—10月22日 · CNY
+          - button "预算卡操作"
+          - button "给这个月记一笔"
+          - generic: 还能花
+          - strong:
+            - text: ¥
+            - generic "120":
+              - generic: "0"
+              - generic: "1"
+              - generic: "2"
+              - generic: "3"
+              - generic: "4"
+              - generic: "5"
+              - generic: "6"
+              - generic: "7"
+              - generic: "8"
+              - generic: "9"
+              - generic: "0"
+              - generic: "1"
+              - generic: "2"
+              - generic: "3"
+              - generic: "4"
+              - generic: "5"
+              - generic: "6"
+              - generic: "7"
+              - generic: "8"
+              - generic: "9"
+              - generic: "0"
+              - generic: "1"
+              - generic: "2"
+              - generic: "3"
+              - generic: "4"
+              - generic: "5"
+              - generic: "6"
+              - generic: "7"
+              - generic: "8"
+              - generic: "9"
+        - button "查看这个月本期已用" [disabled]:
+          - generic: 已用
+          - strong: —
+          - generic: 周期末 7 天
+        - button "查看这个月的周期" [disabled]:
+          - generic: 10 月
+          - strong: —
+          - generic: 待结算
+        - heading "最近记录 未连接 笔" [level=3]:
+          - generic: 最近记录
+          - generic "未连接": —
+          - generic: 笔
+        - generic: 等待插入
+        - status
+        - group "预算查看层级":
+          - button "向上查看当前预算记录":
+          - button "向下查看卡库":
+        - navigation "主导航":
+          - button "预算"
+          - button "心愿"
+          - button "打开小朵，开始新任务"
+        - dialog "核对结算":
+          - heading "核对结算" [level=2]
+          - button "关闭"
+          - paragraph:
+            - text: 这个月
+            - text: 2026年10月1日—2026年10月22日
+          - heading "这期结余 ¥120" [level=3]
+          - generic: 额度
+          - generic: ¥1,840
+          - generic: 已确认消费
+          - generic: ¥1,720
+          - generic: 心愿余额
+          - generic: ¥280 → ¥400
+          - paragraph: 本期仅覆盖你已记录的消费，请确认没有需要补充的内容。
+          - checkbox "我已核对记录，接受当前数据范围。"
+          - text: 我已核对记录，接受当前数据范围。
+          - button "确认结算" [disabled]
+        - status
+    - text: + + + + + + + + + + + + + +
+- contentinfo: 沿用 R34 交互，玻璃保留透色与受光，前卡清楚、后层柔化。所有操作仅影响本页示例；不连接模型、手机账本或真实购买。浏览器材质与动效不代表原生系统玻璃和真机验证。

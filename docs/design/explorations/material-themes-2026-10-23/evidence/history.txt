@@ -1,0 +1,483 @@
+- banner:
+  - heading "R3 透光材质，浅暗两种光照" [level=1]
+  - paragraph: 以找回的 R3 为基准；两侧均可操作，页面下拉切换。
+  - text: 查看页面
+  - combobox "对照页面":
+    - option "预算首页"
+    - option "首页全部记录"
+    - option "预算卡库"
+    - option "预算详情"
+    - option "消费详情"
+    - option "消费日历"
+    - option "历史周期" [selected]
+    - option "预算信息"
+    - option "心愿清单"
+    - option "心愿卡背面"
+    - option "心愿余额"
+    - option "余额变动详情"
+    - option "记一笔"
+    - option "新建预算"
+    - option "新建心愿"
+    - option "心愿封面"
+    - option "小朵"
+    - option "设置"
+    - option "结算核对"
+    - option "兑换核对"
+  - link "查看 R3 基准":
+    - /url: reference/r3-focus.png
+  - checkbox "减少动态效果" [checked]
+  - text: 减少动态效果
+- main:
+  - heading "浅色" [level=2]
+  - link "单独查看":
+    - /url: index.html?theme=light&view=history&reduce=1
+  - iframe [id="light-frame"]:
+    - main:
+      - generic "CheckLine 交互样稿":
+        - heading [level=2]: 预算
+        - button
+        - button
+        - region
+        - generic: 周末出行
+        - generic: 10月1日—10月31日 · CNY
+        - generic: 还能花
+        - strong: ¥1,200
+        - generic: 学点新东西
+        - generic: 10月1日—10月31日 · CNY
+        - generic: 还能花
+        - strong: ¥800
+        - button
+        - generic: 这个月
+        - generic: 10月1日—10月31日 · CNY
+        - button
+        - button
+        - generic: 还能花
+        - strong:
+          - text: ¥
+          - generic: "0"
+          - generic: "1"
+          - generic: "2"
+          - generic: "3"
+          - generic: "4"
+          - generic: "5"
+          - generic: "6"
+          - generic: "7"
+          - generic: "8"
+          - generic: "9"
+          - generic: ","
+          - generic: "0"
+          - generic: "1"
+          - generic: "2"
+          - generic: "3"
+          - generic: "4"
+          - generic: "5"
+          - generic: "6"
+          - generic: "7"
+          - generic: "8"
+          - generic: "9"
+          - generic: "0"
+          - generic: "1"
+          - generic: "2"
+          - generic: "3"
+          - generic: "4"
+          - generic: "5"
+          - generic: "6"
+          - generic: "7"
+          - generic: "8"
+          - generic: "9"
+          - generic: "0"
+          - generic: "1"
+          - generic: "2"
+          - generic: "3"
+          - generic: "4"
+          - generic: "5"
+          - generic: "6"
+          - generic: "7"
+          - generic: "8"
+          - generic: "9"
+        - button:
+          - generic: 已用
+          - strong:
+            - generic: ¥
+            - generic: "0"
+            - generic: "1"
+            - generic: "2"
+            - generic: "3"
+            - generic: "4"
+            - generic: "5"
+            - generic: "6"
+            - generic: "7"
+            - generic: "8"
+            - generic: "9"
+            - generic: ","
+            - generic: "0"
+            - generic: "1"
+            - generic: "2"
+            - generic: "3"
+            - generic: "4"
+            - generic: "5"
+            - generic: "6"
+            - generic: "7"
+            - generic: "8"
+            - generic: "9"
+            - generic: "0"
+            - generic: "1"
+            - generic: "2"
+            - generic: "3"
+            - generic: "4"
+            - generic: "5"
+            - generic: "6"
+            - generic: "7"
+            - generic: "8"
+            - generic: "9"
+            - generic: "0"
+            - generic: "1"
+            - generic: "2"
+            - generic: "3"
+            - generic: "4"
+            - generic: "5"
+            - generic: "6"
+            - generic: "7"
+            - generic: "8"
+            - generic: "9"
+          - generic: 近 7 天
+        - button:
+          - generic: 10 月
+          - strong:
+            - generic: "0"
+            - generic: "1"
+            - generic: "2"
+            - generic: "3"
+            - generic: "4"
+            - generic: "5"
+            - generic: "6"
+            - generic: "7"
+            - generic: "8"
+            - generic: "9"
+          - generic: 天剩余
+        - heading [level=3]:
+          - generic: 最近记录
+          - generic: "0"
+          - generic: "1"
+          - generic: "2"
+          - generic: "3"
+          - generic: "4"
+          - generic: "5"
+          - generic: "6"
+          - generic: "7"
+          - generic: "8"
+          - generic: "9"
+          - generic: 笔
+        - button
+        - button:
+          - generic: 午餐
+          - generic: −
+          - generic: ¥
+          - generic: "0"
+          - generic: "1"
+          - generic: "2"
+          - generic: "3"
+          - generic: "4"
+          - generic: "5"
+          - generic: "6"
+          - generic: "7"
+          - generic: "8"
+          - generic: "9"
+          - generic: "0"
+          - generic: "1"
+          - generic: "2"
+          - generic: "3"
+          - generic: "4"
+          - generic: "5"
+          - generic: "6"
+          - generic: "7"
+          - generic: "8"
+          - generic: "9"
+        - button:
+          - generic: 咖啡
+          - generic: −
+          - generic: ¥
+          - generic: "0"
+          - generic: "1"
+          - generic: "2"
+          - generic: "3"
+          - generic: "4"
+          - generic: "5"
+          - generic: "6"
+          - generic: "7"
+          - generic: "8"
+          - generic: "9"
+          - generic: "0"
+          - generic: "1"
+          - generic: "2"
+          - generic: "3"
+          - generic: "4"
+          - generic: "5"
+          - generic: "6"
+          - generic: "7"
+          - generic: "8"
+          - generic: "9"
+        - button:
+          - generic: 地铁
+          - generic: −
+          - generic: ¥
+          - generic: "0"
+          - generic: "1"
+          - generic: "2"
+          - generic: "3"
+          - generic: "4"
+          - generic: "5"
+          - generic: "6"
+          - generic: "7"
+          - generic: "8"
+          - generic: "9"
+        - status
+        - button:
+        - button:
+        - navigation:
+          - button
+          - button
+          - button
+        - status
+        - dialog "历史周期":
+          - button "上拉展开页面，下拉返回；点击展开":
+          - button "返回"
+          - heading "历史周期" [level=2]
+          - generic "历史周期内容":
+            - paragraph: 这个月
+            - button "2026年9月1日—2026年9月30日 已结算 结余 ¥500":
+              - strong: 2026年9月1日—2026年9月30日
+              - text: 已结算
+              - generic: 结余 ¥500
+            - button "2026年8月1日—2026年8月31日 已结算 结余 ¥268":
+              - strong: 2026年8月1日—2026年8月31日
+              - text: 已结算
+              - generic: 结余 ¥268
+    - text: + + + + + + + + + + + + + +
+  - heading "暗色" [level=2]
+  - link "单独查看":
+    - /url: index.html?theme=dark&view=history&reduce=1
+  - iframe [active] [id="dark-frame"]:
+    - main:
+      - generic "CheckLine 交互样稿":
+        - heading [level=2]: 预算
+        - button
+        - button
+        - region
+        - generic: 周末出行
+        - generic: 10月1日—10月31日 · CNY
+        - generic: 还能花
+        - strong: ¥1,200
+        - generic: 学点新东西
+        - generic: 10月1日—10月31日 · CNY
+        - generic: 还能花
+        - strong: ¥800
+        - button
+        - generic: 这个月
+        - generic: 10月1日—10月31日 · CNY
+        - button
+        - button
+        - generic: 还能花
+        - strong:
+          - text: ¥
+          - generic: "0"
+          - generic: "1"
+          - generic: "2"
+          - generic: "3"
+          - generic: "4"
+          - generic: "5"
+          - generic: "6"
+          - generic: "7"
+          - generic: "8"
+          - generic: "9"
+          - generic: ","
+          - generic: "0"
+          - generic: "1"
+          - generic: "2"
+          - generic: "3"
+          - generic: "4"
+          - generic: "5"
+          - generic: "6"
+          - generic: "7"
+          - generic: "8"
+          - generic: "9"
+          - generic: "0"
+          - generic: "1"
+          - generic: "2"
+          - generic: "3"
+          - generic: "4"
+          - generic: "5"
+          - generic: "6"
+          - generic: "7"
+          - generic: "8"
+          - generic: "9"
+          - generic: "0"
+          - generic: "1"
+          - generic: "2"
+          - generic: "3"
+          - generic: "4"
+          - generic: "5"
+          - generic: "6"
+          - generic: "7"
+          - generic: "8"
+          - generic: "9"
+        - button:
+          - generic: 已用
+          - strong:
+            - generic: ¥
+            - generic: "0"
+            - generic: "1"
+            - generic: "2"
+            - generic: "3"
+            - generic: "4"
+            - generic: "5"
+            - generic: "6"
+            - generic: "7"
+            - generic: "8"
+            - generic: "9"
+            - generic: ","
+            - generic: "0"
+            - generic: "1"
+            - generic: "2"
+            - generic: "3"
+            - generic: "4"
+            - generic: "5"
+            - generic: "6"
+            - generic: "7"
+            - generic: "8"
+            - generic: "9"
+            - generic: "0"
+            - generic: "1"
+            - generic: "2"
+            - generic: "3"
+            - generic: "4"
+            - generic: "5"
+            - generic: "6"
+            - generic: "7"
+            - generic: "8"
+            - generic: "9"
+            - generic: "0"
+            - generic: "1"
+            - generic: "2"
+            - generic: "3"
+            - generic: "4"
+            - generic: "5"
+            - generic: "6"
+            - generic: "7"
+            - generic: "8"
+            - generic: "9"
+          - generic: 近 7 天
+        - button:
+          - generic: 10 月
+          - strong:
+            - generic: "0"
+            - generic: "1"
+            - generic: "2"
+            - generic: "3"
+            - generic: "4"
+            - generic: "5"
+            - generic: "6"
+            - generic: "7"
+            - generic: "8"
+            - generic: "9"
+          - generic: 天剩余
+        - heading [level=3]:
+          - generic: 最近记录
+          - generic: "0"
+          - generic: "1"
+          - generic: "2"
+          - generic: "3"
+          - generic: "4"
+          - generic: "5"
+          - generic: "6"
+          - generic: "7"
+          - generic: "8"
+          - generic: "9"
+          - generic: 笔
+        - button
+        - button:
+          - generic: 午餐
+          - generic: −
+          - generic: ¥
+          - generic: "0"
+          - generic: "1"
+          - generic: "2"
+          - generic: "3"
+          - generic: "4"
+          - generic: "5"
+          - generic: "6"
+          - generic: "7"
+          - generic: "8"
+          - generic: "9"
+          - generic: "0"
+          - generic: "1"
+          - generic: "2"
+          - generic: "3"
+          - generic: "4"
+          - generic: "5"
+          - generic: "6"
+          - generic: "7"
+          - generic: "8"
+          - generic: "9"
+        - button:
+          - generic: 咖啡
+          - generic: −
+          - generic: ¥
+          - generic: "0"
+          - generic: "1"
+          - generic: "2"
+          - generic: "3"
+          - generic: "4"
+          - generic: "5"
+          - generic: "6"
+          - generic: "7"
+          - generic: "8"
+          - generic: "9"
+          - generic: "0"
+          - generic: "1"
+          - generic: "2"
+          - generic: "3"
+          - generic: "4"
+          - generic: "5"
+          - generic: "6"
+          - generic: "7"
+          - generic: "8"
+          - generic: "9"
+        - button:
+          - generic: 地铁
+          - generic: −
+          - generic: ¥
+          - generic: "0"
+          - generic: "1"
+          - generic: "2"
+          - generic: "3"
+          - generic: "4"
+          - generic: "5"
+          - generic: "6"
+          - generic: "7"
+          - generic: "8"
+          - generic: "9"
+        - status
+        - button:
+        - button:
+        - navigation:
+          - button
+          - button
+          - button
+        - status
+        - dialog "历史周期":
+          - button "上拉展开页面，下拉返回；点击展开" [active]:
+          - button "返回"
+          - heading "历史周期" [level=2]
+          - generic "历史周期内容":
+            - paragraph: 这个月
+            - button "2026年9月1日—2026年9月30日 已结算 结余 ¥500":
+              - strong: 2026年9月1日—2026年9月30日
+              - text: 已结算
+              - generic: 结余 ¥500
+            - button "2026年8月1日—2026年8月31日 已结算 结余 ¥268":
+              - strong: 2026年8月1日—2026年8月31日
+              - text: 已结算
+              - generic: 结余 ¥268
+    - text: + + + + + + + + + + + + + +
+- contentinfo: 沿用 R34 交互，玻璃保留透色与受光，前卡清楚、后层柔化。所有操作仅影响本页示例；不连接模型、手机账本或真实购买。浏览器材质与动效不代表原生系统玻璃和真机验证。

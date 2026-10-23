@@ -1,0 +1,251 @@
+- banner:
+  - heading "R3 透光材质，浅暗两种光照" [level=1]
+  - paragraph: 以找回的 R3 为基准；两侧均可操作，页面下拉切换。
+  - text: 查看页面
+  - combobox "对照页面":
+    - option "预算首页"
+    - option "首页全部记录"
+    - option "预算卡库"
+    - option "预算详情"
+    - option "消费详情"
+    - option "消费日历"
+    - option "历史周期"
+    - option "预算信息"
+    - option "心愿清单"
+    - option "心愿卡背面"
+    - option "心愿余额"
+    - option "余额变动详情"
+    - option "记一笔"
+    - option "新建预算"
+    - option "新建心愿"
+    - option "心愿封面"
+    - option "小朵"
+    - option "设置"
+    - option "结算核对"
+    - option "兑换核对" [selected]
+  - link "查看 R3 基准":
+    - /url: reference/r3-focus.png
+  - checkbox "减少动态效果"
+  - text: 减少动态效果
+- main:
+  - heading "浅色" [level=2]
+  - link "单独查看":
+    - /url: index.html?theme=light&view=redemption
+  - iframe [id="light-frame"]:
+    - main:
+      - generic "CheckLine 交互样稿":
+        - heading "心愿" [level=2]
+        - button "添加心愿"
+        - button "心愿余额 ¥300，查看余额变动":
+          - text: 心愿余额
+          - generic: 结余，留给想要的
+          - strong: ¥300
+          - generic: CNY
+        - tablist "心愿状态":
+          - tab "未实现2"
+          - tab "已实现2" [selected]
+        - group "心愿排布":
+          - button "卡片视图" [pressed]:
+          - button "横条视图":
+        - tabpanel "已实现2":
+          - article:
+            - strong: 降噪耳机
+            - strong: ¥300
+            - button "翻面查看降噪耳机的购买信息"
+            - button "放大降噪耳机":
+            - button
+            - heading [level=3]: 降噪耳机
+            - generic: 已实现
+            - strong: ¥300
+            - generic: 购买日期
+            - strong: 2026年10月23日
+            - generic: 心愿余额扣减
+            - strong: −¥300
+            - button:
+          - article:
+            - strong: 一本想读的书
+            - strong: ¥68
+            - button "翻面查看一本想读的书的购买信息"
+            - button "放大一本想读的书":
+            - button
+            - heading [level=3]: 一本想读的书
+            - generic: 已实现
+            - strong: ¥68
+            - generic: 购买日期
+            - strong: 2026年10月1日
+            - generic: 心愿余额扣减
+            - strong: −¥68
+            - button:
+        - navigation "主导航":
+          - button "预算"
+          - button "心愿"
+          - button "打开小朵，开始新任务"
+        - dialog "心愿已实现":
+          - generic: 心愿实现了
+          - button "关闭完成动画，查看已实现"
+          - heading "如愿了。" [level=2]
+          - paragraph: 这一刻，属于你。
+          - article:
+            - strong: 降噪耳机
+            - strong: ¥300
+            - button "翻面查看降噪耳机的购买信息"
+            - button
+            - heading [level=3]: 降噪耳机
+            - button
+            - generic: 已实现
+            - strong: ¥300
+            - generic: 购买日期
+            - strong: 2026年10月23日
+            - generic: 心愿余额扣减
+            - strong: −¥300
+          - paragraph: 2026年10月23日 · 已实现
+          - generic "心愿余额 ¥300":
+            - generic: 心愿余额
+            - strong:
+              - generic: ¥
+              - generic: "0"
+              - generic: "1"
+              - generic: "2"
+              - generic: "3"
+              - generic: "4"
+              - generic: "5"
+              - generic: "6"
+              - generic: "7"
+              - generic: "8"
+              - generic: "9"
+              - generic: "0"
+              - generic: "1"
+              - generic: "2"
+              - generic: "3"
+              - generic: "4"
+              - generic: "5"
+              - generic: "6"
+              - generic: "7"
+              - generic: "8"
+              - generic: "9"
+              - generic: "0"
+              - generic: "1"
+              - generic: "2"
+              - generic: "3"
+              - generic: "4"
+              - generic: "5"
+              - generic: "6"
+              - generic: "7"
+              - generic: "8"
+              - generic: "9"
+            - generic: 本次 −¥300
+          - button "查看已实现"
+          - status: 已保存购买，实际 ¥300，心愿余额 ¥300。
+        - status
+    - text: + + + + + + + + + + + + + +
+  - heading "暗色" [level=2]
+  - link "单独查看":
+    - /url: index.html?theme=dark&view=redemption
+  - iframe [active] [id="dark-frame"]:
+    - main:
+      - generic "CheckLine 交互样稿":
+        - heading "心愿" [level=2]
+        - button "添加心愿"
+        - button "心愿余额 ¥300，查看余额变动":
+          - text: 心愿余额
+          - generic: 结余，留给想要的
+          - strong: ¥300
+          - generic: CNY
+        - tablist "心愿状态":
+          - tab "未实现2"
+          - tab "已实现2" [selected]
+        - group "心愿排布":
+          - button "卡片视图" [pressed]:
+          - button "横条视图":
+        - tabpanel "已实现2":
+          - article:
+            - strong: 降噪耳机
+            - strong: ¥300
+            - button "翻面查看降噪耳机的购买信息"
+            - button "放大降噪耳机":
+            - button
+            - heading [level=3]: 降噪耳机
+            - generic: 已实现
+            - strong: ¥300
+            - generic: 购买日期
+            - strong: 2026年10月23日
+            - generic: 心愿余额扣减
+            - strong: −¥300
+            - button:
+          - article:
+            - strong: 一本想读的书
+            - strong: ¥68
+            - button "翻面查看一本想读的书的购买信息"
+            - button "放大一本想读的书":
+            - button
+            - heading [level=3]: 一本想读的书
+            - generic: 已实现
+            - strong: ¥68
+            - generic: 购买日期
+            - strong: 2026年10月1日
+            - generic: 心愿余额扣减
+            - strong: −¥68
+            - button:
+        - navigation "主导航":
+          - button "预算"
+          - button "心愿"
+          - button "打开小朵，开始新任务"
+        - dialog "心愿已实现":
+          - generic: 心愿实现了
+          - button "关闭完成动画，查看已实现"
+          - heading "如愿了。" [level=2]
+          - paragraph: 这一刻，属于你。
+          - article:
+            - strong: 降噪耳机
+            - strong: ¥300
+            - button "翻面查看降噪耳机的购买信息"
+            - button
+            - heading [level=3]: 降噪耳机
+            - button
+            - generic: 已实现
+            - strong: ¥300
+            - generic: 购买日期
+            - strong: 2026年10月23日
+            - generic: 心愿余额扣减
+            - strong: −¥300
+          - paragraph: 2026年10月23日 · 已实现
+          - generic "心愿余额 ¥300":
+            - generic: 心愿余额
+            - strong:
+              - generic: ¥
+              - generic: "0"
+              - generic: "1"
+              - generic: "2"
+              - generic: "3"
+              - generic: "4"
+              - generic: "5"
+              - generic: "6"
+              - generic: "7"
+              - generic: "8"
+              - generic: "9"
+              - generic: "0"
+              - generic: "1"
+              - generic: "2"
+              - generic: "3"
+              - generic: "4"
+              - generic: "5"
+              - generic: "6"
+              - generic: "7"
+              - generic: "8"
+              - generic: "9"
+              - generic: "0"
+              - generic: "1"
+              - generic: "2"
+              - generic: "3"
+              - generic: "4"
+              - generic: "5"
+              - generic: "6"
+              - generic: "7"
+              - generic: "8"
+              - generic: "9"
+            - generic: 本次 −¥300
+          - button "查看已实现" [active]
+          - status: 已保存购买，实际 ¥300，心愿余额 ¥300。
+        - status
+    - text: + + + + + + + + + + + + + +
+- contentinfo: 沿用 R34 交互，玻璃保留透色与受光，前卡清楚、后层柔化。所有操作仅影响本页示例；不连接模型、手机账本或真实购买。浏览器材质与动效不代表原生系统玻璃和真机验证。

@@ -1,0 +1,525 @@
+- banner:
+  - heading "R3 透光材质，浅暗两种光照" [level=1]
+  - paragraph: 以找回的 R3 为基准；两侧均可操作，页面下拉切换。
+  - text: 查看页面
+  - combobox "对照页面":
+    - option "预算首页"
+    - option "首页全部记录"
+    - option "预算卡库"
+    - option "预算详情"
+    - option "消费详情"
+    - option "消费日历"
+    - option "历史周期"
+    - option "预算信息"
+    - option "心愿清单"
+    - option "心愿卡背面"
+    - option "心愿余额"
+    - option "余额变动详情"
+    - option "记一笔" [selected]
+    - option "新建预算"
+    - option "新建心愿"
+    - option "心愿封面"
+    - option "小朵"
+    - option "设置"
+    - option "结算核对"
+    - option "兑换核对"
+  - link "查看 R3 基准":
+    - /url: reference/r3-focus.png
+  - checkbox "减少动态效果" [checked]
+  - text: 减少动态效果
+- main:
+  - heading "浅色" [level=2]
+  - link "单独查看":
+    - /url: index.html?theme=light&view=capture&reduce=1
+  - iframe [active] [id="light-frame"]:
+    - main:
+      - generic "CheckLine 交互样稿":
+        - heading "预算" [level=2]
+        - button "创建预算卡"
+        - button "设置"
+        - region
+        - generic: 周末出行
+        - generic: 10月1日—10月31日 · CNY
+        - generic: 还能花
+        - strong: ¥1,200
+        - generic: 学点新东西
+        - generic: 10月1日—10月31日 · CNY
+        - generic: 还能花
+        - strong: ¥800
+        - group "这个月，已插入，单击查看、上拖或长按拔出":
+          - button "查看这个月的详情，长按或上拖可拔出"
+          - generic: 这个月
+          - generic: 10月1日—10月31日 · CNY
+          - button "预算卡操作"
+          - button "给这个月记一笔"
+          - generic: 还能花
+          - strong:
+            - text: ¥
+            - generic "1,280":
+              - generic: "0"
+              - generic: "1"
+              - generic: "2"
+              - generic: "3"
+              - generic: "4"
+              - generic: "5"
+              - generic: "6"
+              - generic: "7"
+              - generic: "8"
+              - generic: "9"
+              - generic: ","
+              - generic: "0"
+              - generic: "1"
+              - generic: "2"
+              - generic: "3"
+              - generic: "4"
+              - generic: "5"
+              - generic: "6"
+              - generic: "7"
+              - generic: "8"
+              - generic: "9"
+              - generic: "0"
+              - generic: "1"
+              - generic: "2"
+              - generic: "3"
+              - generic: "4"
+              - generic: "5"
+              - generic: "6"
+              - generic: "7"
+              - generic: "8"
+              - generic: "9"
+              - generic: "0"
+              - generic: "1"
+              - generic: "2"
+              - generic: "3"
+              - generic: "4"
+              - generic: "5"
+              - generic: "6"
+              - generic: "7"
+              - generic: "8"
+              - generic: "9"
+        - button "查看这个月本期已用":
+          - generic: 已用
+          - strong:
+            - generic "¥1,720":
+              - generic: ¥
+              - generic: "0"
+              - generic: "1"
+              - generic: "2"
+              - generic: "3"
+              - generic: "4"
+              - generic: "5"
+              - generic: "6"
+              - generic: "7"
+              - generic: "8"
+              - generic: "9"
+              - generic: ","
+              - generic: "0"
+              - generic: "1"
+              - generic: "2"
+              - generic: "3"
+              - generic: "4"
+              - generic: "5"
+              - generic: "6"
+              - generic: "7"
+              - generic: "8"
+              - generic: "9"
+              - generic: "0"
+              - generic: "1"
+              - generic: "2"
+              - generic: "3"
+              - generic: "4"
+              - generic: "5"
+              - generic: "6"
+              - generic: "7"
+              - generic: "8"
+              - generic: "9"
+              - generic: "0"
+              - generic: "1"
+              - generic: "2"
+              - generic: "3"
+              - generic: "4"
+              - generic: "5"
+              - generic: "6"
+              - generic: "7"
+              - generic: "8"
+              - generic: "9"
+          - generic: 近 7 天
+        - button "查看这个月的周期":
+          - generic: 10 月
+          - strong:
+            - generic "8":
+              - generic: "0"
+              - generic: "1"
+              - generic: "2"
+              - generic: "3"
+              - generic: "4"
+              - generic: "5"
+              - generic: "6"
+              - generic: "7"
+              - generic: "8"
+              - generic: "9"
+          - generic: 天剩余
+        - heading "最近记录 6 笔" [level=3]:
+          - generic: 最近记录
+          - generic "6":
+            - generic: "0"
+            - generic: "1"
+            - generic: "2"
+            - generic: "3"
+            - generic: "4"
+            - generic: "5"
+            - generic: "6"
+            - generic: "7"
+            - generic: "8"
+            - generic: "9"
+          - generic: 笔
+        - button "查看全部记录"
+        - group "最近票据，下拉看更早记录，上推返回，也可使用上下方向键，首尾停止":
+          - button "午餐，10月23日，¥35":
+            - generic: 午餐
+            - generic "−¥35":
+              - generic: −
+              - generic: ¥
+              - generic: "0"
+              - generic: "1"
+              - generic: "2"
+              - generic: "3"
+              - generic: "4"
+              - generic: "5"
+              - generic: "6"
+              - generic: "7"
+              - generic: "8"
+              - generic: "9"
+              - generic: "0"
+              - generic: "1"
+              - generic: "2"
+              - generic: "3"
+              - generic: "4"
+              - generic: "5"
+              - generic: "6"
+              - generic: "7"
+              - generic: "8"
+              - generic: "9"
+          - button "咖啡，10月22日，¥28":
+            - generic: 咖啡
+            - generic "−¥28":
+              - generic: −
+              - generic: ¥
+              - generic: "0"
+              - generic: "1"
+              - generic: "2"
+              - generic: "3"
+              - generic: "4"
+              - generic: "5"
+              - generic: "6"
+              - generic: "7"
+              - generic: "8"
+              - generic: "9"
+              - generic: "0"
+              - generic: "1"
+              - generic: "2"
+              - generic: "3"
+              - generic: "4"
+              - generic: "5"
+              - generic: "6"
+              - generic: "7"
+              - generic: "8"
+              - generic: "9"
+          - button "地铁，10月21日，¥7":
+            - generic: 地铁
+            - generic "−¥7":
+              - generic: −
+              - generic: ¥
+              - generic: "0"
+              - generic: "1"
+              - generic: "2"
+              - generic: "3"
+              - generic: "4"
+              - generic: "5"
+              - generic: "6"
+              - generic: "7"
+              - generic: "8"
+              - generic: "9"
+        - status
+        - group "预算查看层级":
+          - button "向上查看当前预算记录":
+          - button "向下查看卡库":
+        - navigation "主导航":
+          - button "预算"
+          - button "心愿"
+          - button "打开小朵，开始新任务"
+        - dialog "记一笔":
+          - heading "记一笔" [level=2]
+          - button "小朵帮我填"
+          - button "关闭并保留草稿"
+          - generic: 金额
+          - textbox "金额" [active]:
+            - /placeholder: "0"
+          - combobox "币种":
+            - option "CNY" [selected]
+            - option "USD"
+            - option "JPY"
+          - generic: 商家或用途
+          - textbox "商家或用途":
+            - /placeholder: 例如：午餐
+          - generic: 归属
+          - combobox "预算归属":
+            - option "选择预算"
+            - option "这个月" [selected]
+            - option "周末出行"
+            - option "学点新东西"
+            - option "未纳入预算"
+          - generic: 日期
+          - textbox "消费日期"
+          - generic "备注与附件 +"
+          - button "保存" [disabled]
+        - status
+    - text: + + + + + + + + + + + + + +
+  - heading "暗色" [level=2]
+  - link "单独查看":
+    - /url: index.html?theme=dark&view=capture&reduce=1
+  - iframe [id="dark-frame"]:
+    - main:
+      - generic "CheckLine 交互样稿":
+        - heading "预算" [level=2]
+        - button "创建预算卡"
+        - button "设置"
+        - region
+        - generic: 周末出行
+        - generic: 10月1日—10月31日 · CNY
+        - generic: 还能花
+        - strong: ¥1,200
+        - generic: 学点新东西
+        - generic: 10月1日—10月31日 · CNY
+        - generic: 还能花
+        - strong: ¥800
+        - group "这个月，已插入，单击查看、上拖或长按拔出":
+          - button "查看这个月的详情，长按或上拖可拔出"
+          - generic: 这个月
+          - generic: 10月1日—10月31日 · CNY
+          - button "预算卡操作"
+          - button "给这个月记一笔"
+          - generic: 还能花
+          - strong:
+            - text: ¥
+            - generic "1,280":
+              - generic: "0"
+              - generic: "1"
+              - generic: "2"
+              - generic: "3"
+              - generic: "4"
+              - generic: "5"
+              - generic: "6"
+              - generic: "7"
+              - generic: "8"
+              - generic: "9"
+              - generic: ","
+              - generic: "0"
+              - generic: "1"
+              - generic: "2"
+              - generic: "3"
+              - generic: "4"
+              - generic: "5"
+              - generic: "6"
+              - generic: "7"
+              - generic: "8"
+              - generic: "9"
+              - generic: "0"
+              - generic: "1"
+              - generic: "2"
+              - generic: "3"
+              - generic: "4"
+              - generic: "5"
+              - generic: "6"
+              - generic: "7"
+              - generic: "8"
+              - generic: "9"
+              - generic: "0"
+              - generic: "1"
+              - generic: "2"
+              - generic: "3"
+              - generic: "4"
+              - generic: "5"
+              - generic: "6"
+              - generic: "7"
+              - generic: "8"
+              - generic: "9"
+        - button "查看这个月本期已用":
+          - generic: 已用
+          - strong:
+            - generic "¥1,720":
+              - generic: ¥
+              - generic: "0"
+              - generic: "1"
+              - generic: "2"
+              - generic: "3"
+              - generic: "4"
+              - generic: "5"
+              - generic: "6"
+              - generic: "7"
+              - generic: "8"
+              - generic: "9"
+              - generic: ","
+              - generic: "0"
+              - generic: "1"
+              - generic: "2"
+              - generic: "3"
+              - generic: "4"
+              - generic: "5"
+              - generic: "6"
+              - generic: "7"
+              - generic: "8"
+              - generic: "9"
+              - generic: "0"
+              - generic: "1"
+              - generic: "2"
+              - generic: "3"
+              - generic: "4"
+              - generic: "5"
+              - generic: "6"
+              - generic: "7"
+              - generic: "8"
+              - generic: "9"
+              - generic: "0"
+              - generic: "1"
+              - generic: "2"
+              - generic: "3"
+              - generic: "4"
+              - generic: "5"
+              - generic: "6"
+              - generic: "7"
+              - generic: "8"
+              - generic: "9"
+          - generic: 近 7 天
+        - button "查看这个月的周期":
+          - generic: 10 月
+          - strong:
+            - generic "8":
+              - generic: "0"
+              - generic: "1"
+              - generic: "2"
+              - generic: "3"
+              - generic: "4"
+              - generic: "5"
+              - generic: "6"
+              - generic: "7"
+              - generic: "8"
+              - generic: "9"
+          - generic: 天剩余
+        - heading "最近记录 6 笔" [level=3]:
+          - generic: 最近记录
+          - generic "6":
+            - generic: "0"
+            - generic: "1"
+            - generic: "2"
+            - generic: "3"
+            - generic: "4"
+            - generic: "5"
+            - generic: "6"
+            - generic: "7"
+            - generic: "8"
+            - generic: "9"
+          - generic: 笔
+        - button "查看全部记录"
+        - group "最近票据，下拉看更早记录，上推返回，也可使用上下方向键，首尾停止":
+          - button "午餐，10月23日，¥35":
+            - generic: 午餐
+            - generic "−¥35":
+              - generic: −
+              - generic: ¥
+              - generic: "0"
+              - generic: "1"
+              - generic: "2"
+              - generic: "3"
+              - generic: "4"
+              - generic: "5"
+              - generic: "6"
+              - generic: "7"
+              - generic: "8"
+              - generic: "9"
+              - generic: "0"
+              - generic: "1"
+              - generic: "2"
+              - generic: "3"
+              - generic: "4"
+              - generic: "5"
+              - generic: "6"
+              - generic: "7"
+              - generic: "8"
+              - generic: "9"
+          - button "咖啡，10月22日，¥28":
+            - generic: 咖啡
+            - generic "−¥28":
+              - generic: −
+              - generic: ¥
+              - generic: "0"
+              - generic: "1"
+              - generic: "2"
+              - generic: "3"
+              - generic: "4"
+              - generic: "5"
+              - generic: "6"
+              - generic: "7"
+              - generic: "8"
+              - generic: "9"
+              - generic: "0"
+              - generic: "1"
+              - generic: "2"
+              - generic: "3"
+              - generic: "4"
+              - generic: "5"
+              - generic: "6"
+              - generic: "7"
+              - generic: "8"
+              - generic: "9"
+          - button "地铁，10月21日，¥7":
+            - generic: 地铁
+            - generic "−¥7":
+              - generic: −
+              - generic: ¥
+              - generic: "0"
+              - generic: "1"
+              - generic: "2"
+              - generic: "3"
+              - generic: "4"
+              - generic: "5"
+              - generic: "6"
+              - generic: "7"
+              - generic: "8"
+              - generic: "9"
+        - status
+        - group "预算查看层级":
+          - button "向上查看当前预算记录":
+          - button "向下查看卡库":
+        - navigation "主导航":
+          - button "预算"
+          - button "心愿"
+          - button "打开小朵，开始新任务"
+        - dialog "记一笔":
+          - heading "记一笔" [level=2]
+          - button "小朵帮我填"
+          - button "关闭并保留草稿"
+          - generic: 金额
+          - textbox "金额":
+            - /placeholder: "0"
+          - combobox "币种":
+            - option "CNY" [selected]
+            - option "USD"
+            - option "JPY"
+          - generic: 商家或用途
+          - textbox "商家或用途":
+            - /placeholder: 例如：午餐
+          - generic: 归属
+          - combobox "预算归属":
+            - option "选择预算"
+            - option "这个月" [selected]
+            - option "周末出行"
+            - option "学点新东西"
+            - option "未纳入预算"
+          - generic: 日期
+          - textbox "消费日期"
+          - generic "备注与附件 +"
+          - button "保存" [disabled]
+        - status
+    - text: + + + + + + + + + + + + + +
+- contentinfo: 沿用 R34 交互，玻璃保留透色与受光，前卡清楚、后层柔化。所有操作仅影响本页示例；不连接模型、手机账本或真实购买。浏览器材质与动效不代表原生系统玻璃和真机验证。

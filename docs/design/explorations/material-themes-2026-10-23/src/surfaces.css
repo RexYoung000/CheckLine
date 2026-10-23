@@ -1,0 +1,341 @@
+/* R3 material source: environmental light passes through glass. The dark
+   theme retains R3 cyan / graphite; light uses an illuminated mineral backing.
+   These roles are shared by every route, drawer, form and saved result. */
+.app[data-material-study] { --r3-seat: 400px; }
+.app[data-material-study][data-theme=light] {
+  color-scheme: light;
+  --material-canvas: radial-gradient(ellipse at 0% 0%, #b5effc94, transparent 58%), radial-gradient(ellipse at 100% 48%, #63b2c52b, transparent 62%), linear-gradient(165deg, #e7f2f4, #ccdee2 64%, #edf0ee);
+  --canvas: #dfeaec;
+  --ink: #163640;
+  --muted: #3f626c;
+  --faint: #4c6972;
+  --accent: #0a647b;
+  --accent-soft: #258fa329;
+  --surface: #e1eff0e0;
+  --field: #5d93a31a;
+  --glass: #ffffff36;
+  --pocket: #82b2bf50;
+  --pocket-bottom: #6b9aa52e;
+  --hairline: #28596721;
+  --card-top: #ccebf1;
+  --water-top: #bcf2f936;
+  --water-bottom: #2362783d;
+  --tile-border: #ffffff91;
+  --tile: #ffffff28;
+  --tile-shadow: #183e4829;
+  --popup: #d8e9ede8;
+  --popup-line: #ffffffa8;
+  --receipt: #d6e9ee69;
+  --receipt-back: #6c9cae36;
+  --material-panel: radial-gradient(ellipse at 0% 0%, #ffffff73, transparent 57%), linear-gradient(155deg, #d6eef3d1, #aecfd8ad 63%, #dce9eade);
+  --material-full-panel: radial-gradient(ellipse at 0% 0%, #c5f6ff99, transparent 58%), linear-gradient(160deg, #e9f3f3, #c3dbe1 68%, #dfe9e9);
+  --material-block: radial-gradient(ellipse at 3% 0%, #ffffff59, transparent 63%), linear-gradient(150deg, #ffffff2e, #e8f8fb0f 61%, #477a8e17);
+  --material-field: linear-gradient(150deg, #ffffff19, #436b7b12);
+  --material-control: linear-gradient(150deg, #ffffff52, #ecf9fc12 70%, #497b9021);
+  --material-selected: linear-gradient(150deg, #ffffff73, #c0e4ed45);
+  --material-edge: #ffffffa6;
+  --material-edge-low: #315c6b24;
+  --material-shadow: #173b4930;
+  --material-shadow-deep: #0d303f45;
+  --material-overlay: #12354324;
+  --material-context-overlay: #183c4a1a;
+  --material-focus-overlay: radial-gradient(ellipse at 8% 0%, #408d9ed9, #1e3e49ed 62%, #152b33f5);
+  --material-floating-ink: #f3fbfc;
+  --material-floating-muted: #d7e8ed;
+  --material-primary: linear-gradient(150deg, #227d94, #115268);
+  --material-primary-ink: #f4fdff;
+  --material-liquid-top: #c2eff35c;
+  --material-liquid-bottom: #3c879a75;
+  --material-danger: #94394c;
+  --material-warning: #7e561a;
+  --material-success: #176758;
+  --material-gold-ink: #73591e;
+  --material-gold-soft: #bea36540;
+  --wish-paper: radial-gradient(ellipse at 4% 0%, #ffffff6b, #ffffff0a 65%, transparent), linear-gradient(150deg, #def4f742, #8fbfcc35 70%, #4c7c8d26);
+  --wish-rim: #ffffffab;
+  --wish-ink: #2b6b80;
+  --wish-drop: #183f4d38;
+}
+.app[data-material-study][data-theme=dark] {
+  color-scheme: dark;
+  --material-canvas: radial-gradient(ellipse at 0% 0%, #61cde16b, transparent 53%), radial-gradient(ellipse at 100% 36%, #238fb32b, transparent 58%), linear-gradient(170deg, #174754, #142d34 46%, #111719 92%);
+  --canvas: #152b32;
+  --ink: #f0f8fa;
+  --muted: #c3d9df;
+  --faint: #a3c0ca;
+  --accent: #b4ecf6;
+  --accent-soft: #75d2e624;
+  --surface: #172e36e8;
+  --field: #a2d8e51a;
+  --glass: #ffffff17;
+  --pocket: #6eacbf26;
+  --pocket-bottom: #112a3333;
+  --hairline: #c8eaf21f;
+  --card-top: #54bdd8;
+  --water-top: #c5f6ff2e;
+  --water-bottom: #102b386e;
+  --tile-border: #ffffff33;
+  --tile: #ffffff19;
+  --tile-shadow: #020a0f75;
+  --popup: #17333eea;
+  --popup-line: #daf4ff50;
+  --receipt: #badce524;
+  --receipt-back: #3255644d;
+  --material-panel: radial-gradient(ellipse at 0% 0%, #9de3f333, transparent 58%), linear-gradient(160deg, #1d4a58d1, #142d35db 55%, #111e24ed);
+  --material-full-panel: radial-gradient(ellipse at 0% 0%, #6ec8dd4d, transparent 52%), linear-gradient(165deg, #204b59, #142c34 50%, #111719);
+  --material-block: radial-gradient(ellipse at 2% 0%, #ffffff14, transparent 62%), linear-gradient(150deg, #ffffff24, #ffffff09 70%, #0000000c);
+  --material-field: linear-gradient(145deg, #bfefff13, #071a231c);
+  --material-control: linear-gradient(150deg, #ffffff2b, #ffffff0a 75%, #00000012);
+  --material-selected: linear-gradient(150deg, #e5faff38, #6eafc128);
+  --material-edge: #d7f5ff52;
+  --material-edge-low: #c6e9f514;
+  --material-shadow: #000c146e;
+  --material-shadow-deep: #00080ca6;
+  --material-overlay: #020b1040;
+  --material-context-overlay: #020e1826;
+  --material-focus-overlay: radial-gradient(ellipse at 5% 0%, #30788be3, #102a33f0 62%, #0d151af7);
+  --material-floating-ink: #f4fbfc;
+  --material-floating-muted: #d3e7ed;
+  --material-primary: linear-gradient(150deg, #cdf3f8, #7bc2d1);
+  --material-primary-ink: #10333e;
+  --material-liquid-top: #b0edfa40;
+  --material-liquid-bottom: #143c4c9e;
+  --material-danger: #ffb0c1;
+  --material-warning: #ead095;
+  --material-success: #b4e9d9;
+  --material-gold-ink: #ffedbf;
+  --material-gold-soft: #e0c89250;
+  --wish-paper: radial-gradient(ellipse at 4% 0%, #b9f2ff30, #ffffff03 65%, transparent), linear-gradient(150deg, #ffffff20, #84c9df0e 62%, #020d1526);
+  --wish-rim: #def8ff57;
+  --wish-ink: #b9e9f5;
+  --wish-drop: #010a108c;
+}
+
+.app[data-material-study][data-theme] {
+  background: var(--material-canvas);
+  color: var(--ink);
+  border-color: var(--material-edge);
+  accent-color: var(--accent);
+}
+
+/* A quiet background remains visible through all of the secondary surfaces. */
+.app[data-material-study][data-theme] .page:has(.wish-home) { background: transparent; }
+.app[data-material-study][data-theme] :is(.sheet, .reader-drawer) {
+  background: var(--material-panel);
+  color: var(--ink);
+  border-color: var(--material-edge);
+  box-shadow: inset 1px 1px 0 var(--material-edge), inset -1px -1px 0 var(--material-edge-low), 0 -10px 30px -15px var(--material-shadow-deep);
+  -webkit-backdrop-filter: blur(20px) saturate(1.16);
+  backdrop-filter: blur(20px) saturate(1.16);
+}
+.app[data-material-study][data-theme] .sheet.full { background: var(--material-full-panel); }
+.app[data-material-study][data-theme] .sheet-head { background: transparent; }
+.app[data-material-study][data-theme] :is(.sheet-footer, .agent-composer) {
+  background: linear-gradient(180deg, transparent, var(--surface) 36%);
+  -webkit-backdrop-filter: blur(18px);
+  backdrop-filter: blur(18px);
+}
+.app[data-material-study][data-theme] .detail-head {
+  background: var(--glass);
+  -webkit-backdrop-filter: blur(18px);
+  backdrop-filter: blur(18px);
+}
+.app[data-material-study][data-theme] .reader-drawer .reader-drawer-title-row { background: transparent; }
+.app[data-material-study][data-theme] :is(.detail-actions, .wish-detail-actions) {
+  background: linear-gradient(180deg, transparent, var(--surface) 40%);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+}
+.app[data-material-study][data-theme] .overlay-shade { background: var(--material-overlay); }
+.app[data-material-study][data-theme] :is(.overlay-shade.contextual, .reader-drawer-shade) { background: var(--material-context-overlay); }
+.app[data-material-study][data-theme] .overlay-shade.contextual:has(.card-popover) { background: var(--material-context-overlay); }
+.app[data-material-study][data-theme] .overlay-shade.contextual.closing { background: transparent; }
+.app[data-material-study][data-theme] :is(.summary-popup, .card-popover, .toast) {
+  background: var(--material-panel);
+  color: var(--ink);
+  border-color: var(--material-edge);
+  box-shadow: inset 0 1px 0 var(--material-edge), 0 20px 45px -20px var(--material-shadow-deep);
+  -webkit-backdrop-filter: blur(24px) saturate(1.12);
+  backdrop-filter: blur(24px) saturate(1.12);
+}
+
+/* Shared inset blocks, form surfaces and task cards; typography keeps its hierarchy. */
+.app[data-material-study][data-theme] :is(.detail-tool, .mini-budget, .amount-block:not(.no-bg), .agent-card, .resume-chip, .choice, .input-wrap, .popup-calendar, .restore-item) {
+  background: var(--material-block);
+  border-color: var(--material-edge-low);
+  box-shadow: inset 1px 1px 0 var(--material-edge), inset -1px -1px 0 var(--material-edge-low), 0 7px 16px -13px var(--material-shadow);
+}
+.app[data-material-study][data-theme] :is(.field input, .field textarea, .date-pair input, .date-pair select, .currency-select, .wish-compose-name>input, .wish-name-field input, .wish-date-field input) {
+  color: var(--ink);
+  background: var(--material-field);
+  border-color: var(--material-edge-low);
+  box-shadow: inset 0 1px 0 var(--material-edge-low), inset 0 -1px 0 var(--material-edge);
+}
+.app[data-material-study][data-theme] :is(input, textarea)::placeholder { color: var(--faint); opacity: 1; }
+.app[data-material-study][data-theme] :is(.form-line input, .form-line select, .money-input input, .input-wrap textarea) { color: var(--ink); }
+.app[data-material-study][data-theme] .money-input { border-radius: 18px; background: var(--material-field); }
+.app[data-material-study][data-theme] .money-input input { background: transparent; }
+.app[data-material-study][data-theme] .money-input :is(input, select):focus-visible { outline: none; box-shadow: none; }
+.app[data-material-study][data-theme] .money-input:focus-within { outline: 2px solid var(--accent); outline-offset: 3px; }
+.app[data-material-study][data-theme] :is(.wish-money-control, .wish-amount-field) {
+  background: var(--material-field);
+  border-color: var(--material-edge);
+  color: var(--ink);
+  box-shadow: inset 0 1px 0 var(--material-edge-low), inset 0 -1px 0 var(--material-edge);
+}
+.app[data-material-study][data-theme] :is(.wish-money-control>input, .wish-amount-field input) { color: var(--ink); background: transparent; }
+.app[data-material-study][data-theme] :is(.wish-currency-control, .wish-amount-field select) { background: var(--material-control); color: var(--muted); }
+.app[data-material-study][data-theme] option { background: var(--canvas); color: var(--ink); }
+.app[data-material-study][data-theme] :is(.upload-button, .wish-upload-button) { border-color: var(--material-edge); background: var(--accent-soft); color: var(--accent); }
+
+/* Actions are glass volumes; destructive and pending meaning stays independent. */
+.app[data-material-study][data-theme] :is(.primary, .composer-actions .send, .outcome-wish .wish-result-footer>.primary, .outcome-settlement-sheet[data-tone=transfer] .sheet-footer>.primary) {
+  background: var(--material-primary);
+  color: var(--material-primary-ink);
+  box-shadow: inset 0 1px 0 var(--material-edge), inset 0 -1px 0 #052d421f, 0 5px 12px -10px var(--material-shadow-deep);
+}
+.app[data-material-study][data-theme] :is(.secondary, .composer-actions .icon-button:not(.send), .sheet-head .icon-button, .detail-head .icon-button, .popup-head .icon-button, .popover-head .icon-button, .wish-page-head .icon-button) {
+  color: var(--accent);
+  background: var(--material-control);
+  box-shadow: inset 0 1px 0 var(--material-edge), inset 0 0 0 1px var(--material-edge-low);
+}
+.app[data-material-study][data-theme] :is(.segment, .wish-phase-tabs, .wish-view-options, .wish-cover-segments) {
+  background: var(--material-field);
+  box-shadow: inset 0 1px 0 var(--material-edge-low), inset 0 -1px 0 var(--material-edge);
+}
+.app[data-material-study][data-theme] :is(.segment button.selected, .wish-phase-tabs button[aria-selected=true], .wish-view-options button[aria-pressed=true], .wish-cover-segments button[aria-pressed=true]) {
+  background: var(--material-selected);
+  color: var(--ink);
+  box-shadow: inset 0 1px 0 var(--material-edge), 0 3px 8px -6px var(--material-shadow-deep);
+}
+.app[data-material-study][data-theme] :is(.pending-strip, .status-mark, .message.user, .completion-mark, .wish-draft-chip, .wish-wallet-recovery, .wish-linked-purchase) {
+  background: var(--accent-soft);
+  box-shadow: inset 0 1px 0 var(--material-edge-low);
+}
+.app[data-material-study][data-theme] .message.user { color: var(--ink); }
+.app[data-material-study][data-theme] :is(.danger, .action-row.danger, .validation-message) { color: var(--material-danger); }
+.app[data-material-study][data-theme] :is(.calendar-grid button.selected, .popup-month-grid>span.today) { background: var(--accent); color: var(--material-primary-ink); }
+.app[data-material-study][data-theme] .chart .bar { background: color-mix(in srgb, var(--accent) 58%, transparent); }
+.app[data-material-study][data-theme] .chart .bar.selected { background: var(--accent); }
+.app[data-material-study][data-theme] .restored-detail-card :is(.card-value, .card-add) { color: var(--ink); }
+.app[data-material-study][data-theme] :is(.record-row, .info-row, .history-row, .form-line, .wish-row) { border-color: var(--hairline); }
+.app[data-material-study][data-theme] :is(button, a, summary, input, select, textarea):focus-visible { outline-color: var(--accent); }
+.app[data-material-study][data-theme] .input-wrap:focus-within { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+/* Wish images and preset artwork keep their source colors. Only their glass changes. */
+.app[data-material-study][data-theme] .wish-home { --wish-glass: var(--glass); --wish-edge: var(--material-edge); --wish-shadow: var(--material-shadow); }
+.app[data-material-study][data-theme] :is(.wish-face, .wish-card-v28 .wish-face-back, .wish-compose-preview, .wish-cover-preview, .wish-wallet-hero, .wish-library .wish-balance-bar, .wish-entry-hero, .wish-detail-card, .wish-complete-card, .wish-impact-card, .wish-collection-row, .wish-memento-row, .wish-tile, .wish-tile:nth-child(2n), .wish-empty, .wish-purchased-card) {
+  background: var(--wish-paper);
+  border-color: var(--wish-rim);
+  box-shadow: inset 1px 1px 0 var(--wish-rim), inset -1px -1px 0 var(--material-edge-low), 0 14px 22px -16px var(--wish-drop);
+  color: var(--ink);
+}
+.app[data-material-study][data-theme] :is(.wish-face, .wish-compose-preview, .wish-cover-preview, .wish-library .wish-balance-bar, .wish-collection-row, .wish-tile) {
+  -webkit-backdrop-filter: blur(12px) saturate(1.08);
+  backdrop-filter: blur(12px) saturate(1.08);
+}
+.app[data-material-study][data-theme] .wish-face::after {
+  background: radial-gradient(ellipse at var(--wish-glare-x) var(--wish-glare-y), var(--material-edge), transparent 65%);
+  box-shadow: inset 1px 1px var(--material-edge), inset -1px -1px var(--material-edge-low);
+  opacity: .32;
+}
+.app[data-material-study][data-theme] :is(.wish-fact-block, .wish-ledger-row.wish-ledger-v29, .wish-ledger-empty, .wish-balance-rules>div, .wish-achieved-item) {
+  background: var(--material-block);
+  box-shadow: inset 0 1px 0 var(--material-edge), inset 0 0 0 1px var(--material-edge-low);
+}
+.app[data-material-study][data-theme] :is(.wish-ledger-symbol, .wish-cover-edit-label, .wish-corner-label) { background: var(--material-control); }
+.app[data-material-study][data-theme] .wish-ledger-symbol.credit { color: var(--material-success); }
+.app[data-material-study][data-theme] .wish-ledger-symbol.debit { color: var(--ink); }
+.app[data-material-study][data-theme] .wish-card-liquid { --water-top: var(--material-liquid-top); --water-bottom: var(--material-liquid-bottom); }
+.app[data-material-study][data-theme] .wish-liquid-unknown { background: linear-gradient(140deg, #ffffff08, var(--accent-soft)); }
+.app[data-material-study][data-theme] .preset-backing {
+  background: var(--material-control);
+  box-shadow: inset 1px 1px var(--material-edge), inset -1px -1px var(--material-edge-low), 0 7px 16px -13px var(--material-shadow-deep);
+}
+.app[data-material-study][data-theme] .no-cover { background: radial-gradient(ellipse at 70% 70%, var(--accent-soft), transparent 65%); }
+.app[data-material-study][data-theme] .wish-preset-grid button { background: var(--material-field); color: var(--muted); }
+.app[data-material-study][data-theme] .wish-preset-grid button[aria-pressed=true] { background: var(--material-selected); border-color: var(--accent); color: var(--ink); box-shadow: inset 0 1px 0 var(--material-edge); }
+.app[data-material-study][data-theme] .wish-redeem-button.has-purchase-draft { box-shadow: 0 0 13px -7px var(--accent), inset 0 1px var(--material-edge); }
+.app[data-material-study][data-theme] .wish-redeem-button.has-purchase-draft::before { background: conic-gradient(from var(--wish-button-angle), #ffffff10 0%, #ffffff25 21%, #e6fbff 33%, #8fcadf 46%, #ffffff10 57%, #ffffff25 73%, #eafaff 85%, #ffffff10 100%); }
+.app[data-material-study][data-theme] .wish-redeem-button:disabled { color: var(--muted); background: var(--material-field); box-shadow: inset 0 1px var(--material-edge-low); }
+.app[data-material-study][data-theme] .cover-photo-fill { color: #fff; }
+.app[data-material-study][data-theme] .cover-photo-fill .wish-front-title>strong { background: #102e3a2b; }
+.app[data-material-study][data-theme] .wish-card-v28 .wish-face-front:has(.cover-photo-fill) .wish-expand-button { color: #fff; background: #102e3a38; }
+.app[data-material-study][data-theme] :is(.cover-photo-fill .wish-front-value small, .cover-photo-fill .wish-money small) { color: #ffffffe0; }
+.app[data-material-study][data-theme] .cover-photo-fill .wish-corner-label { color: #fff; background: #102e3a80; }
+
+/* A focus veil stays dark enough for a personal photo in either theme. */
+.app[data-material-study][data-theme] .overlay-shade:has(:is(.wish-focus-shell, .wish-full-view, .outcome-wish)) { background: var(--material-focus-overlay); }
+.app[data-material-study][data-theme] :is(.wish-full-view, .outcome-wish.wish-full-view) { color: var(--material-floating-ink); }
+.app[data-material-study][data-theme] :is(.wish-full-view .wish-focus-toolbar>span, .outcome-wish .wish-focus-toolbar>span, .outcome-reveal-heading p, .outcome-memory-note, .outcome-wish .outcome-skip, .wish-full-view .wish-result-footer>div, .wish-full-view .wish-result-footer strong) { color: var(--material-floating-muted); }
+.app[data-material-study][data-theme] :is(.wish-full-view .wish-focus-toolbar .icon-button, .outcome-wish .wish-focus-toolbar .icon-button) { color: #f0fbff; background: #bcf0ff1f; box-shadow: inset 0 1px #d3f6ff40; }
+.app[data-material-study][data-theme] .wish-realized-card .wish-face-front { box-shadow: inset 0 0 0 1px var(--wish-rim), 0 0 35px -13px #9ad8e678; }
+
+/* Saved result surfaces share the new material; amount and animation clocks are untouched. */
+.app[data-material-study][data-theme] .outcome-root { --outcome-shadow: var(--material-shadow); }
+.app[data-material-study][data-theme] .outcome-paper { background: var(--wish-paper); box-shadow: inset 0 1px var(--material-edge), inset 0 0 0 1px var(--wish-rim); }
+.app[data-material-study][data-theme] .outcome-before { background: var(--wish-paper); color: var(--ink); }
+.app[data-material-study][data-theme] .outcome-wish-card .wish-face-front { background: transparent; box-shadow: none; }
+.app[data-material-study][data-theme] .outcome-aurora { background: radial-gradient(ellipse, #a6e3ee30 0%, #43869e1c 34%, transparent 68%); }
+.app[data-material-study][data-theme] .outcome-card-light { box-shadow: 0 0 27px -7px #b4edff80, inset 0 0 0 1.5px #effcffb0; }
+.app[data-material-study][data-theme] .outcome-memory-mark { background: var(--material-control); color: var(--accent); box-shadow: inset 0 1px var(--material-edge); }
+.app[data-material-study][data-theme] .outcome-settlement-sheet[data-tone=transfer] {
+  --ink: inherit;
+  --muted: inherit;
+  --faint: inherit;
+  --surface: inherit;
+  --accent: inherit;
+  --wish-rim: var(--material-edge);
+  background: var(--material-panel);
+  color: var(--ink);
+}
+.app[data-material-study][data-theme] :is(.outcome-source, .outcome-wallet, .outcome-wish .outcome-wallet, .outcome-settlement-sheet[data-tone=transfer] .outcome-source, .outcome-settlement-sheet[data-tone=transfer] .outcome-wallet, .outcome-root[data-tone=zero] .outcome-source, .outcome-root[data-tone=over] .outcome-source) {
+  background: var(--material-block);
+  color: var(--ink);
+  box-shadow: inset 0 1px var(--material-edge), inset 0 0 0 1px var(--material-edge-low), 0 15px 28px -24px var(--material-shadow-deep);
+}
+.app[data-material-study][data-theme] .outcome-settlement-sheet[data-tone=transfer] :is(.outcome-wallet-number, .outcome-result-note) { color: var(--ink); }
+.app[data-material-study][data-theme] .outcome-settlement-sheet[data-tone=transfer] .outcome-source>strong { color: var(--material-gold-ink); text-shadow: none; }
+.app[data-material-study][data-theme] .outcome-settlement-sheet[data-tone=transfer] .outcome-wallet>small { color: var(--muted); }
+.app[data-material-study][data-theme] .outcome-settlement-sheet[data-tone=transfer] .sheet-head .icon-button { background: var(--material-control); color: var(--accent); box-shadow: inset 0 1px var(--material-edge); }
+.app[data-material-study][data-theme] :is(.outcome-wallet-ripple, .outcome-settlement-sheet .outcome-wallet-ripple) { background: linear-gradient(180deg, var(--material-liquid-top), transparent); }
+.app[data-material-study][data-theme] .outcome-settlement-sheet[data-tone=transfer] .outcome-wallet-ripple { background: linear-gradient(180deg, var(--material-gold-soft), #82bcd21a); }
+/* Gold rim and the procedural gold/silver coins intentionally retain their meaning. */
+
+@supports not (backdrop-filter: blur(1px)) {
+  .app[data-material-study][data-theme] :is(.sheet, .reader-drawer, .summary-popup, .card-popover, .toast) { background: var(--canvas); }
+}
+
+/* The same grazing light belongs to content blocks, not a white coat over them. */
+.app[data-material-study][data-theme] :is(.restored-budget-limit, .restored-destinations>button, .wish-balance-bar, .wish-wallet-hero, .wish-entry-hero) {
+  background: var(--material-block);
+  border-color: var(--material-edge-low);
+  box-shadow: inset 1px 1px var(--material-edge), inset -1px -1px var(--material-edge-low), 0 10px 20px -16px var(--material-shadow-deep);
+  backdrop-filter: blur(12px) saturate(1.12); -webkit-backdrop-filter: blur(12px) saturate(1.12);
+}
+.app[data-material-study][data-theme] .wish-home { background: transparent; }
+.app[data-material-study][data-theme] .wish-preset-grid button { box-shadow: inset 1px 1px var(--material-edge-low), inset -1px -1px var(--material-edge-low); }
+.app[data-material-study][data-theme] .wish-preset-grid button[aria-pressed=true] { box-shadow: inset 1px 1px var(--material-edge), 0 4px 10px -8px var(--material-shadow-deep); }
+.app[data-material-study][data-theme] .wish-full-view .wish-face { color: var(--material-floating-ink); }
+
+/* A full-card focus is a dark optical environment in either appearance. */
+.app[data-material-study][data-theme] .wish-full-view {
+  --ink: var(--material-floating-ink); --muted: var(--material-floating-muted);
+  --faint: var(--material-floating-muted); --accent: #d4f3fa;
+  --material-liquid-top: #a5e7f52b; --material-liquid-bottom: #18455b7a;
+  --wish-paper: radial-gradient(ellipse at 0% 0%, #d1faff38, transparent 65%), linear-gradient(150deg, #74b4c02b, #102a3833);
+  --material-block: radial-gradient(ellipse at 0% 0%, #ffffff14, transparent 62%), linear-gradient(150deg, #ffffff24, #ffffff09);
+}
+.app[data-material-study][data-theme] .wish-full-view .wish-face {
+  background: radial-gradient(ellipse at 0% 0%, #d1faff38, transparent 65%), linear-gradient(150deg, #74b4c02b, #102a3833);
+}
+
+/* Large text gets a complete second line for values, rather than a flex item
+   with a zero basis beside the full-width label. The task body still scrolls. */
+.app[data-material-study].large-text .form-line {
+  display: grid; grid-template-columns: minmax(0, 1fr); align-items: start;
+  gap: 3px; padding: 12px 0 6px;
+}
+.app[data-material-study].large-text .form-line :is(input,select) {
+  width: 100%; max-width: 100%; min-width: 0; text-align: left; text-align-last: left;
+}

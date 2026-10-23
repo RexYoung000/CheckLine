@@ -1,0 +1,237 @@
+/* R3 stage lighting is anchored at the seated card, not the viewport bottom.
+   src/study-bridge.js measures this one visual length after layout/resize. */
+.app[data-material-study][data-theme=light] {
+  --home-sky: radial-gradient(ellipse 110% calc(var(--r3-seat) * 1.1) at 0% 0%, #f4feffcc 0%, #e4faff26 58%, transparent), linear-gradient(180deg, #afe8f5 0px, #c2e5eb calc(var(--r3-seat) * .34), #a6c6cf var(--r3-seat), #d6e2e4 calc(var(--r3-seat) + 260px));
+  --home-heading: #143b48;
+  --home-hero-meta: #315968;
+  --home-hero-number: #143c4d;
+  --home-hero: radial-gradient(ellipse at 10% 0%, #ffffff59, #ffffff0a 62%, transparent), linear-gradient(150deg, #ffffff70, #ffffff33 22%, #ffffff11 63%, #ffffff06);
+  --home-hero-rim: #ffffffa6;
+  --home-hero-shadow: #173c4b4d;
+  --home-floor: linear-gradient(180deg, #ffffff25, #ffffff0f 25%, #4d718019);
+  --home-tile: linear-gradient(150deg, #ffffff38, #ffffff0c);
+  --home-receipt: linear-gradient(145deg, #effaff59, #bad1d752);
+  --home-receipt-back: #83b1bf69;
+  --home-floor-ink: #183d48;
+  --home-floor-muted: #3c606c;
+  --home-reader-surface: #e5f4f026;
+  --home-reader-front: #7598a51a;
+  --home-contact: #7babba45;
+  --home-slot: #274b5e;
+  --library-accent: #185e76;
+  --reader-water: #80b4c5;
+  --r3-local-card: linear-gradient(165deg, #b6e5ef 0%, #9dc8d1 65%, #719fad);
+  --r3-rim: linear-gradient(140deg, #fffffffa, #ffffff75 28%, #b4dbe626 60%, #ffffff59);
+}
+.app[data-material-study][data-theme=dark] {
+  --home-sky: radial-gradient(ellipse 110% calc(var(--r3-seat) * 1.1) at 0% 0%, #c5f6ffdb 0%, #c5f6ff14 58%, transparent), linear-gradient(180deg, #37b9e8 0px, #37b9e8 calc(var(--r3-seat) * .34), #1f7892 calc(var(--r3-seat) * .72), #102b38 var(--r3-seat), #111719 calc(var(--r3-seat) + 180px));
+  --home-heading: #102b38;
+  --home-hero-meta: #234958;
+  --home-hero-number: #f7fcfd;
+  --home-hero: radial-gradient(ellipse at 10% 0%, #ffffff47, #ffffff0e 62%, transparent), linear-gradient(150deg, #ffffff70, #ffffff33 22%, #ffffff11 63%, #ffffff06);
+  --home-hero-rim: #d5f5ff4a;
+  --home-hero-shadow: #04191fcc;
+  --home-floor: linear-gradient(180deg, #ffffff26, #ffffff0f 25%, #00000024);
+  --home-tile: linear-gradient(150deg, #ffffff24, #ffffff09);
+  --home-receipt: linear-gradient(145deg, #d3eff52b, #94c4d117);
+  --home-receipt-back: #34566485;
+  --home-floor-ink: #f2f8fa;
+  --home-floor-muted: #c8dce2;
+  --home-reader-surface: #d2eef326;
+  --home-reader-front: #071b2324;
+  --home-contact: #73bbce33;
+  --home-slot: #04161f;
+  --library-accent: #bdeef7;
+  --reader-water: #5096ab;
+  --r3-local-card: linear-gradient(165deg, #37b9e8, #207890 55%, #102b38);
+  --r3-rim: linear-gradient(140deg, #fffffff2, #ffffff91 28%, #c5f6ff29 60%, #ffffff4d);
+}
+.app[data-material-study][data-theme] .page:has(.budget-home-head) { background: var(--home-sky); }
+.app[data-material-study][data-theme] .cartridge-world {
+  --reader-surface: var(--home-reader-surface); --reader-front: var(--home-reader-front);
+  --contact: var(--home-contact); --slot: var(--home-slot);
+}
+.app[data-material-study][data-theme] .budget-home-head { color: var(--home-heading); }
+.app[data-material-study][data-theme] .budget-home-head .icon-button {
+  color: var(--home-heading); background: #ffffff26;
+  box-shadow: inset 0 1px 0 #ffffff80, inset 0 -1px 0 #113a4a12;
+  backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+}
+.app[data-material-study][data-theme] :is(.reader-card-face,.restored-detail-card,.restored-budget-item>.liquid-card) {
+  background: var(--home-hero);
+  border: 1px solid var(--home-hero-rim);
+  box-shadow: inset 1px 1px 0 #ffffff38, 0 7px 12px -5px var(--home-hero-shadow), 0 19px 22px -20px #00000090;
+  backdrop-filter: blur(10px) saturate(1.12); -webkit-backdrop-filter: blur(10px) saturate(1.12);
+}
+.app[data-material-study][data-theme] .reader-card-face :is(.card-name,.card-more) { color: var(--home-heading); }
+.app[data-material-study][data-theme] .reader-card-face .card-period { color: var(--home-hero-meta); }
+.app[data-material-study][data-theme] .reader-card-face .card-value { color: var(--home-hero-number); }
+.app[data-material-study][data-theme] .reader-card-face .card-add {
+  color: var(--home-hero-number); background: #ffffff21; border-color: #ffffff69;
+  box-shadow: inset 0 1px #ffffff30; backdrop-filter: blur(5px);
+}
+.app[data-material-study][data-theme] .cartridge-stack-layer .liquid-card {
+  background: linear-gradient(145deg, #e4f8ff33, #bddfec0a);
+  border-color: #ffffff3b; box-shadow: inset 0 1px #ffffff30; filter: blur(.45px); opacity: .62;
+}
+.app[data-material-study][data-theme] .contact-extension {
+  background: linear-gradient(180deg, transparent, var(--home-contact));
+  border-color: #d6f3ff50;
+  box-shadow: inset 0 1px #e8f9ff24, 0 7px 12px -9px var(--home-hero-shadow);
+}
+.app[data-material-study][data-theme] .console-shell::before {
+  background: var(--home-floor); box-shadow: inset 0 1px #ffffff47;
+  backdrop-filter: blur(14px) saturate(1.04); -webkit-backdrop-filter: blur(14px) saturate(1.04);
+}
+.app[data-material-study][data-theme] .cartridge-world.library-open .console-shell::before { background: var(--home-floor); }
+.app[data-material-study][data-theme] .console-water svg { fill: var(--reader-water); opacity: .08; }
+.app[data-material-study][data-theme] .slot-recess { box-shadow: inset 0 2px 3px #051f3047, 0 1px #ffffff73; }
+.app[data-material-study][data-theme] .reader-tiles .home-tile {
+  background: var(--home-tile); color: var(--home-floor-ink);
+  border-color: var(--tile-border); box-shadow: inset 1px 1px #ffffff26, inset -1px -1px #0000000a, 0 8px 12px -11px #00000059;
+  backdrop-filter: blur(16px) saturate(1.05); -webkit-backdrop-filter: blur(16px) saturate(1.05);
+}
+.app[data-material-study][data-theme] .reader-tiles :is(.tile-label,.tile-bottom,.days-remaining>span) { color: var(--home-floor-muted); }
+.app[data-material-study][data-theme] .reader-tiles .mini-bars i { background: var(--home-floor-muted); }
+.app[data-material-study][data-theme] .reader-tiles .mini-calendar i { background: var(--home-floor-muted); }
+.app[data-material-study][data-theme] .reader-tiles .mini-calendar i.today { background: transparent; box-shadow: inset 0 0 0 1.2px var(--home-floor-ink); }
+.app[data-material-study][data-theme] .reader-receipts { color: var(--home-floor-ink); }
+.app[data-material-study][data-theme] .reader-receipts :is(.record-count,.section-heading button) { color: var(--home-floor-muted); }
+.app[data-material-study][data-theme] .cl-receipt-card {
+  color: var(--home-floor-ink); background: var(--home-receipt); border-color: var(--material-edge);
+  box-shadow: inset 0 1px #ffffff26, 0 8px 16px -13px #052b3d40;
+  backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+}
+.app[data-material-study][data-theme] .cl-receipt-card.receipt-back-depth { background: var(--home-receipt-back); }
+.app[data-material-study][data-theme] .reader-all-records { color: var(--ink); }
+.app[data-material-study][data-theme] .page.reader-records-open:has(.budget-home-head) { background: var(--material-canvas); }
+.app[data-material-study][data-theme] .page.reader-records-open .budget-home-head { color: var(--ink); }
+.app[data-material-study][data-theme] .page.reader-records-open .budget-home-head .icon-button { color: var(--accent); background: var(--material-control); }
+.app[data-material-study][data-theme] .reader-day-group>.record-row {
+  background: var(--material-block); border-color: var(--material-edge-low); box-shadow: inset 0 1px var(--material-edge);
+}
+.app[data-material-study][data-theme] .is-reader-compact .reader-card-face {
+  background: var(--material-block); box-shadow: inset 0 1px var(--material-edge), 0 9px 24px -17px var(--material-shadow-deep);
+}
+.app[data-material-study][data-theme] .is-reader-compact .reader-card-face :is(.card-name,.card-value) { color: var(--ink); }
+.app[data-material-study][data-theme] .is-reader-compact .reader-horizontal-water { opacity: .65; }
+.app[data-material-study][data-theme] .reader-level-controls button { color: var(--home-floor-muted); background: transparent; box-shadow: none; }
+.app[data-material-study][data-theme] .reader-level-controls[data-mode=records] button { color: var(--accent); }
+.app[data-material-study][data-theme] .reader-charge-rim { opacity: .8; }
+.app[data-material-study][data-theme] .contact-comic {
+  color: var(--accent); --contact-frame-fill: var(--popup); --contact-frame-stroke: var(--accent); --contact-frame-glint: var(--material-edge);
+  filter: drop-shadow(0 3px 4px var(--material-shadow));
+}
+.app[data-material-study][data-theme] .charge-edge {
+  background: conic-gradient(from var(--rim-angle), transparent 0deg, #98bfe8 12deg, #89d8e5 26deg, #e8d8ed 39deg, #bbd4ec 50deg, transparent 62deg);
+  filter: drop-shadow(0 0 1.5px #8cc9df50);
+}
+
+/* Keep the compact icon navigation floating over the content. */
+.app[data-material-study][data-theme] .dock { left: 50%; right: auto; width: 200px; max-width: 200px; transform: translateX(-50%); gap: 10px; }
+.app[data-material-study][data-theme] .dock-tabs {
+  min-width: 130px; width: 130px; flex: none; height: 60px; padding: 5px;
+  background: var(--material-block); border: 1px solid var(--material-edge);
+  box-shadow: inset 0 1px var(--material-edge), 0 14px 26px -17px var(--material-shadow-deep);
+  backdrop-filter: blur(26px) saturate(1.15); -webkit-backdrop-filter: blur(26px) saturate(1.15);
+}
+.app[data-material-study][data-theme] .dock-tabs button { min-width: 0; gap: 0; padding: 0; color: var(--muted); }
+.app[data-material-study][data-theme] .dock-tabs button>span:not(.icon) { display: none; }
+.app[data-material-study][data-theme] .dock-tabs button.selected { background: var(--material-selected); color: var(--accent); box-shadow: inset 0 1px var(--material-edge); }
+.app[data-material-study][data-theme] .dock .agent-launch { width: 60px; height: 60px; flex: none; background: transparent; box-shadow: none; }
+
+/* Library controls; the SVG card textures are themed in their existing renderer. */
+.app[data-material-study][data-theme] .budget-library-picker { --picker-surface: var(--surface); --accent: var(--library-accent); --scene: transparent; color: var(--ink); }
+.app[data-material-study][data-theme] .budget-library-picker>header { color: var(--home-heading); }
+.app[data-material-study][data-theme] :is(.budget-library-picker>header button,.picker-confirm button) { background: var(--material-control); color: var(--ink); border-color: var(--material-edge); }
+.app[data-material-study][data-theme] .budget-library-picker>header button { color: var(--home-heading); }
+.app[data-material-study][data-theme] .picker-list input { color: var(--ink); background: var(--material-field); border-color: var(--material-edge); }
+.app[data-material-study][data-theme] .picker-list button { color: var(--ink); background: var(--material-block); border-color: var(--material-edge); }
+.app[data-material-study][data-theme] .picker-list button span { color: var(--muted); }
+.app[data-material-study][data-theme] .loop-dome-viewer { background: var(--material-focus-overlay); }
+.app[data-material-study][data-theme] .loop-dome:not(:has(.loop-dome-viewer)) { mask-image: linear-gradient(transparent, #000 10%, #000 90%, transparent); -webkit-mask-image: linear-gradient(transparent, #000 10%, #000 90%, transparent); }
+.app[data-material-study][data-theme] .loop-dome-fade { background: none; }
+
+/* The review chrome is separate from the product UI. */
+body { background: #edf0ee; color: #223b43; }
+.review-header { height: 76px; padding: 0 30px; gap: 20px; border-color: #1d465310; }
+.wordmark { color: #173743; }
+.brand-dot { background: #2588a4; }
+.review-label { color: #5f777e; font-size: 13px; margin-left: 20px; }
+.prototype-badge { color: #60777e; }
+.material-toolbar { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.material-theme-group { display: inline-flex; gap: 3px; padding: 4px; border: 1px solid #fff9; border-radius: 22px; background: #d8e4e57a; }
+.material-theme-group button { min-width: 61px; min-height: 34px; padding: 6px 14px; border-radius: 18px; color: #4a6873; font-size: 13px; }
+.material-theme-group button[aria-pressed=true] { background: #ffffffb8; color: #173e4d; box-shadow: 0 3px 7px -5px #1237475b, inset 0 1px #fff; }
+.material-compare { color: #215f76; font-size: 13px; text-decoration-thickness: 1px; text-underline-offset: 4px; }
+.review-layout { max-width: 1540px; grid-template-columns: 210px minmax(390px,1fr) 260px; gap: 34px; padding-top: 25px; }
+.review-nav button { color: #54717c; }
+.review-nav button.selected { color: #164d60; background: #ccdee37d; }
+.review-nav button span { color: #80989f; }
+.eyebrow,.boundary-note { color: #6f878f; }
+.review-controls { color: #58717d; }
+.review-controls button,.review-controls select,.scenario-control select { color: #285b6c; }
+.review-controls button { background: #d4e2e6; }
+.outcome-review-controls { background: #d2e1e553; }
+.outcome-review-controls button { background: #ffffff73; color: #305d6e; }
+.outcome-review-controls small,.outcome-review-controls p { color: #63808b; }
+.review-sidebar>a,.review-sidebar>button { color: #53727f; }
+.review-sidebar>a { background: #d3e1e670; }
+.review-notes { color: #5c7681; }
+.review-notes h1 { color: #223e48; }
+.note-path { border-color: #8db6c5; }
+.preview-caption,.preview-footnote { color: #6c838a; }
+.decision-notes { display: none; }
+.material-page-control { padding: 0 12px; margin: 0 0 22px; }
+.material-page-control label { display: block; font-size: 12px; margin-bottom: 8px; color: #607c86; }
+.material-page-control select { width: 100%; padding: 10px 10px; border-radius: 12px; border: 1px solid #ffffffb8; background: #f3f8f6a8; color: #194c60; font-size: 13px; }
+.material-review-notes { font-size: 12px; line-height: 1.8; color: #607c86; }
+.material-review-notes strong { color: #254d5c; font-weight: 600; }
+.review-controls label:first-child { display: none; }
+.app[data-material-study] { border-radius: 36px; }
+body.material-embedded { margin: 0; padding: 0; background: transparent; overflow: hidden; }
+body.material-embedded :is(.review-header,.review-sidebar,.review-notes,.preview-caption,.preview-footnote) { display: none; }
+body.material-embedded .review-layout { display: block; padding: 0; margin: 0; }
+body.material-embedded .preview-area { display: block; width: 100%; }
+body.material-embedded .app { width: 100%!important; height: 100dvh; min-height: 0; max-height: none; max-width: none; zoom: 1!important; border-radius: 0; border: 0; box-shadow: none; }
+@media(max-width:1100px) { .review-layout { grid-template-columns: 200px minmax(320px,1fr); gap: 22px; padding-left: 24px; padding-right: 24px; } .review-notes { grid-column: 1/-1; } }
+@media(max-width:650px) {
+  .review-header { height: 112px; padding: 14px 18px; align-items: flex-start; gap: 10px; flex-wrap: wrap; }
+  .review-label { display: block; margin: 5px 0 0; font-size: 10px; }
+  .material-toolbar { margin-left: auto; gap: 8px; }
+  .material-theme-group button { min-width: 51px; padding: 6px 10px; }
+  .review-layout { padding: 0; display: flex; gap: 0; }
+  .review-sidebar { display: block; width: 100%; background: #e5eeeb; }
+  .material-page-control { display: flex; align-items: center; padding: 0 15px; margin: 8px 0; gap: 10px; }
+  .material-page-control label { margin: 0; white-space: nowrap; }
+  .material-page-control select { min-height: 38px; }
+  .review-sidebar>.review-nav,.review-sidebar>.scenario-control,.review-sidebar>.outcome-review-controls,.review-sidebar>#cart-replay,.review-sidebar>#cart-unplugged,.review-sidebar>#cart-library-preview,.review-sidebar>.sound-control,.review-sidebar>a { display:none; }
+  .app[data-material-study] { height: calc(100svh - 168px); min-height: 500px; border-radius: 0; }
+  .preview-footnote { display: none; }
+}
+
+/* A continuous grazing rim, with the strongest light only at top / left. */
+.app[data-material-study][data-theme] :is(.reader-card-face,.restored-detail-card)::after {
+  content: ''; position: absolute; inset: 0; border-radius: inherit; padding: 1.2px;
+  background: var(--r3-rim); pointer-events: none; z-index: 3;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor; mask-composite: exclude;
+}
+.app[data-material-study][data-theme] :is(.liquid-card.restored-detail-card,.restored-budget-item>.liquid-card) {
+  background: var(--home-hero), var(--r3-local-card);
+}
+.app[data-material-study][data-theme] .restored-detail-card :is(.card-name,.card-more) { color: var(--home-heading); }
+.app[data-material-study][data-theme] .restored-detail-card .card-period { color: var(--home-hero-meta); }
+.app[data-material-study][data-theme] .restored-detail-card .card-value { color: var(--home-hero-number); }
+.app[data-material-study][data-theme] .cartridge-stack-layer .card-name { opacity: .6; }
+/* Keep focus controls clear when the library has a bright optical backdrop. */
+.app[data-material-study][data-theme] .budget-library-picker>header button { color: var(--home-heading); }
+
+.app[data-material-study][data-theme] .picker-list input { color: var(--home-heading); background: #ffffff1f; }
+.app[data-material-study][data-theme] .picker-list input::placeholder { color: var(--home-hero-meta); }
+.app[data-material-study][data-theme] .picker-list button { background: var(--home-hero), var(--r3-local-card); color: var(--home-hero-number); }
+.app[data-material-study][data-theme] .picker-list button span { color: var(--home-heading); }
+
+/* The self-contained study does not ship the older exploration's web pages. */
+.review-sidebar>a, .outcome-review-controls>a { display: none; }
+#cart-replay, #cart-unplugged, #cart-library-preview { background: #d4e7ed99; color: #315967; box-shadow: inset 0 1px #ffffff80; }

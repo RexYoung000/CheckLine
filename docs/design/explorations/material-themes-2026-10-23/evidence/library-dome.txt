@@ -1,0 +1,83 @@
+- banner:
+  - heading "R3 透光材质，浅暗两种光照" [level=1]
+  - paragraph: 以找回的 R3 为基准；两侧均可操作，页面下拉切换。
+  - text: 查看页面
+  - combobox "对照页面":
+    - option "预算首页"
+    - option "首页全部记录"
+    - option "预算卡库" [selected]
+    - option "预算详情"
+    - option "消费详情"
+    - option "消费日历"
+    - option "历史周期"
+    - option "预算信息"
+    - option "心愿清单"
+    - option "心愿卡背面"
+    - option "心愿余额"
+    - option "余额变动详情"
+    - option "记一笔"
+    - option "新建预算"
+    - option "新建心愿"
+    - option "心愿封面"
+    - option "小朵"
+    - option "设置"
+    - option "结算核对"
+    - option "兑换核对"
+  - link "查看 R3 基准":
+    - /url: reference/r3-focus.png
+  - checkbox "减少动态效果"
+  - text: 减少动态效果
+- main:
+  - heading "浅色" [level=2]
+  - link "单独查看":
+    - /url: index.html?theme=light&view=library
+  - iframe [id="light-frame"]:
+    - main:
+      - generic "CheckLine 交互样稿":
+        - heading "预算" [level=2]
+        - button "创建预算卡"
+        - button "设置"
+        - region "选择预算卡":
+          - generic: 预算卡
+          - button "切换到弧线画廊":
+          - button "查找预算卡": ⌕
+          - button "返回卡夹":
+          - group "球面卡库，可连续左右或上下拖动":
+            - button "这个月，¥1,280"
+            - button "周末出行，¥1,200"
+            - button "学点新东西，¥800"
+          - generic: 3 张
+        - generic: CLICK
+        - navigation "主导航":
+          - button "预算"
+          - button "心愿"
+          - button "打开小朵，开始新任务"
+        - status
+    - text: + + + + + + + + + + + + + +
+  - heading "暗色" [level=2]
+  - link "单独查看":
+    - /url: index.html?theme=dark&view=library
+  - iframe [active] [id="dark-frame"]:
+    - main:
+      - generic "CheckLine 交互样稿":
+        - heading "预算" [level=2]
+        - button "创建预算卡"
+        - button "设置"
+        - region "选择预算卡":
+          - generic: 预算卡
+          - button "切换到弧线画廊" [active]:
+          - button "查找预算卡": ⌕
+          - button "返回卡夹":
+          - group "球面卡库，可连续左右或上下拖动":
+            - button "这个月，¥1,280"
+            - button "周末出行，¥1,200"
+            - button "学点新东西，¥800"
+          - generic: 3 张
+        - generic: CLICK
+        - navigation "主导航":
+          - button "预算"
+          - button "心愿"
+          - button "打开小朵，开始新任务"
+        - status
+    - text: + + + + + + + + + + + + + +
+- contentinfo: 沿用 R34 交互，玻璃保留透色与受光，前卡清楚、后层柔化。所有操作仅影响本页示例；不连接模型、手机账本或真实购买。浏览器材质与动效不代表原生系统玻璃和真机验证。

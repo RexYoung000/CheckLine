@@ -1,0 +1,157 @@
+- banner:
+  - heading "R3 透光材质，浅暗两种光照" [level=1]
+  - paragraph: 以找回的 R3 为基准；两侧均可操作，页面下拉切换。
+  - text: 查看页面
+  - combobox "对照页面":
+    - option "预算首页"
+    - option "首页全部记录"
+    - option "预算卡库"
+    - option "预算详情"
+    - option "消费详情"
+    - option "消费日历"
+    - option "历史周期"
+    - option "预算信息"
+    - option "心愿清单"
+    - option "心愿卡背面"
+    - option "心愿余额"
+    - option "余额变动详情"
+    - option "记一笔"
+    - option "新建预算"
+    - option "新建心愿"
+    - option "心愿封面"
+    - option "小朵"
+    - option "设置"
+    - option "结算核对"
+    - option "兑换核对" [selected]
+  - link "查看 R3 基准":
+    - /url: reference/r3-focus.png
+  - checkbox "减少动态效果" [checked]
+  - text: 减少动态效果
+- main:
+  - heading "浅色" [level=2]
+  - link "单独查看":
+    - /url: index.html?theme=light&view=redemption&reduce=1
+  - iframe [active] [id="light-frame"]:
+    - main:
+      - generic "CheckLine 交互样稿":
+        - heading "心愿" [level=2]
+        - button "添加心愿"
+        - button "心愿余额 ¥600，查看余额变动":
+          - text: 心愿余额
+          - generic: 结余，留给想要的
+          - strong: ¥600
+          - generic: CNY
+        - tablist "心愿状态":
+          - tab "未实现3" [selected]
+          - tab "已实现1"
+        - group "心愿排布":
+          - button "卡片视图" [pressed]:
+          - button "横条视图":
+        - tabpanel "未实现3":
+          - article:
+            - strong: 降噪耳机
+            - strong: ¥1,200
+            - button "翻面查看降噪耳机的进度"
+            - button "放大降噪耳机":
+          - article:
+            - strong: 周末看展
+            - strong: ¥320
+            - button "翻面查看周末看展的进度"
+            - button "放大周末看展":
+          - article:
+            - strong: 去看海
+            - button "翻面查看去看海的进度"
+            - button "放大去看海":
+        - navigation "主导航":
+          - button "预算"
+          - button "心愿"
+          - button "打开小朵，开始新任务"
+        - dialog "核对心愿购买":
+          - heading "核对购买" [level=2]
+          - button "关闭并保留购买输入"
+          - paragraph: 降噪耳机
+          - generic: 实际购买金额
+          - textbox "实际购买金额" [active]:
+            - /placeholder: "0"
+          - combobox "实际购买币种":
+            - option "CNY · 人民币" [selected]
+            - option "USD · 美元"
+            - option "JPY · 日元"
+          - generic: 购买日期
+          - textbox "购买日期"
+          - generic: 当前心愿余额
+          - strong: ¥600
+          - generic: ↓
+          - generic: 兑现后
+          - strong: ¥300
+          - paragraph: 仅扣心愿余额
+          - checkbox "这笔购买已经发生"
+          - generic: 这笔购买已经发生
+          - button "确认兑现" [disabled]
+          - button "继续看看"
+        - status
+    - text: + + + + + + + + + + + + + +
+  - heading "暗色" [level=2]
+  - link "单独查看":
+    - /url: index.html?theme=dark&view=redemption&reduce=1
+  - iframe [id="dark-frame"]:
+    - main:
+      - generic "CheckLine 交互样稿":
+        - heading "心愿" [level=2]
+        - button "添加心愿"
+        - button "心愿余额 ¥600，查看余额变动":
+          - text: 心愿余额
+          - generic: 结余，留给想要的
+          - strong: ¥600
+          - generic: CNY
+        - tablist "心愿状态":
+          - tab "未实现3" [selected]
+          - tab "已实现1"
+        - group "心愿排布":
+          - button "卡片视图" [pressed]:
+          - button "横条视图":
+        - tabpanel "未实现3":
+          - article:
+            - strong: 降噪耳机
+            - strong: ¥1,200
+            - button "翻面查看降噪耳机的进度"
+            - button "放大降噪耳机":
+          - article:
+            - strong: 周末看展
+            - strong: ¥320
+            - button "翻面查看周末看展的进度"
+            - button "放大周末看展":
+          - article:
+            - strong: 去看海
+            - button "翻面查看去看海的进度"
+            - button "放大去看海":
+        - navigation "主导航":
+          - button "预算"
+          - button "心愿"
+          - button "打开小朵，开始新任务"
+        - dialog "核对心愿购买":
+          - heading "核对购买" [level=2]
+          - button "关闭并保留购买输入"
+          - paragraph: 降噪耳机
+          - generic: 实际购买金额
+          - textbox "实际购买金额":
+            - /placeholder: "0"
+          - combobox "实际购买币种":
+            - option "CNY · 人民币" [selected]
+            - option "USD · 美元"
+            - option "JPY · 日元"
+          - generic: 购买日期
+          - textbox "购买日期"
+          - generic: 当前心愿余额
+          - strong: ¥600
+          - generic: ↓
+          - generic: 兑现后
+          - strong: ¥300
+          - paragraph: 仅扣心愿余额
+          - checkbox "这笔购买已经发生"
+          - generic: 这笔购买已经发生
+          - button "确认兑现" [disabled]
+          - button "继续看看"
+        - status
+    - text: + + + + + + + + + + + + + +
+- contentinfo: 沿用 R34 交互，玻璃保留透色与受光，前卡清楚、后层柔化。所有操作仅影响本页示例；不连接模型、手机账本或真实购买。浏览器材质与动效不代表原生系统玻璃和真机验证。

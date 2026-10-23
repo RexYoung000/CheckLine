@@ -1,0 +1,677 @@
+{
+  "scope": "HTML material prototype; native app unchanged",
+  "previewSize": [
+    390,
+    844
+  ],
+  "pageStates": [
+    {
+      "view": "home",
+      "states": [
+        {
+          "headings": [
+            "预算"
+          ],
+          "reduced": true,
+          "seat": "398px",
+          "size": [
+            388,
+            842
+          ],
+          "theme": "light"
+        },
+        {
+          "headings": [
+            "预算"
+          ],
+          "reduced": true,
+          "seat": "398px",
+          "size": [
+            388,
+            842
+          ],
+          "theme": "dark"
+        }
+      ]
+    },
+    {
+      "view": "detail",
+      "states": [
+        {
+          "headings": [
+            "预算",
+            "这个月"
+          ],
+          "reduced": true,
+          "seat": "398px",
+          "size": [
+            388,
+            842
+          ],
+          "theme": "light"
+        },
+        {
+          "headings": [
+            "预算",
+            "这个月"
+          ],
+          "reduced": true,
+          "seat": "398px",
+          "size": [
+            388,
+            842
+          ],
+          "theme": "dark"
+        }
+      ]
+    },
+    {
+      "view": "wish",
+      "states": [
+        {
+          "headings": [
+            "心愿"
+          ],
+          "reduced": true,
+          "seat": "398px",
+          "size": [
+            388,
+            842
+          ],
+          "theme": "light"
+        },
+        {
+          "headings": [
+            "心愿"
+          ],
+          "reduced": true,
+          "seat": "398px",
+          "size": [
+            388,
+            842
+          ],
+          "theme": "dark"
+        }
+      ]
+    },
+    {
+      "view": "capture",
+      "states": [
+        {
+          "headings": [
+            "预算",
+            "记一笔"
+          ],
+          "reduced": true,
+          "seat": "398px",
+          "size": [
+            388,
+            842
+          ],
+          "theme": "light"
+        },
+        {
+          "headings": [
+            "预算",
+            "记一笔"
+          ],
+          "reduced": true,
+          "seat": "398px",
+          "size": [
+            388,
+            842
+          ],
+          "theme": "dark"
+        }
+      ]
+    },
+    {
+      "view": "wallet",
+      "states": [
+        {
+          "headings": [
+            "心愿",
+            "心愿余额"
+          ],
+          "reduced": true,
+          "seat": "398px",
+          "size": [
+            388,
+            842
+          ],
+          "theme": "light"
+        },
+        {
+          "headings": [
+            "心愿",
+            "心愿余额"
+          ],
+          "reduced": true,
+          "seat": "398px",
+          "size": [
+            388,
+            842
+          ],
+          "theme": "dark"
+        }
+      ]
+    },
+    {
+      "view": "records",
+      "states": [
+        {
+          "headings": [
+            "预算"
+          ],
+          "reduced": true,
+          "seat": "300px",
+          "size": [
+            388,
+            842
+          ],
+          "theme": "light"
+        },
+        {
+          "headings": [
+            "预算"
+          ],
+          "reduced": true,
+          "seat": "300px",
+          "size": [
+            388,
+            842
+          ],
+          "theme": "dark"
+        }
+      ]
+    },
+    {
+      "view": "record",
+      "states": [
+        {
+          "headings": [
+            "预算",
+            "消费详情"
+          ],
+          "reduced": true,
+          "seat": "398px",
+          "size": [
+            388,
+            842
+          ],
+          "theme": "light"
+        },
+        {
+          "headings": [
+            "预算",
+            "消费详情"
+          ],
+          "reduced": true,
+          "seat": "398px",
+          "size": [
+            388,
+            842
+          ],
+          "theme": "dark"
+        }
+      ]
+    },
+    {
+      "view": "trend",
+      "states": [
+        {
+          "headings": [
+            "预算",
+            "趋势与日历"
+          ],
+          "reduced": true,
+          "seat": "398px",
+          "size": [
+            388,
+            842
+          ],
+          "theme": "light"
+        },
+        {
+          "headings": [
+            "预算",
+            "趋势与日历"
+          ],
+          "reduced": true,
+          "seat": "398px",
+          "size": [
+            388,
+            842
+          ],
+          "theme": "dark"
+        }
+      ]
+    },
+    {
+      "view": "library",
+      "states": [
+        {
+          "headings": [
+            "预算"
+          ],
+          "reduced": true,
+          "seat": "398px",
+          "size": [
+            388,
+            842
+          ],
+          "theme": "light"
+        },
+        {
+          "headings": [
+            "预算"
+          ],
+          "reduced": true,
+          "seat": "398px",
+          "size": [
+            388,
+            842
+          ],
+          "theme": "dark"
+        }
+      ]
+    },
+    {
+      "view": "history",
+      "states": [
+        {
+          "headings": [
+            "预算",
+            "历史周期"
+          ],
+          "reduced": true,
+          "seat": "398px",
+          "size": [
+            388,
+            842
+          ],
+          "theme": "light"
+        },
+        {
+          "headings": [
+            "预算",
+            "历史周期"
+          ],
+          "reduced": true,
+          "seat": "398px",
+          "size": [
+            388,
+            842
+          ],
+          "theme": "dark"
+        }
+      ]
+    },
+    {
+      "view": "info",
+      "states": [
+        {
+          "headings": [
+            "预算",
+            "预算信息"
+          ],
+          "reduced": true,
+          "seat": "398px",
+          "size": [
+            388,
+            842
+          ],
+          "theme": "light"
+        },
+        {
+          "headings": [
+            "预算",
+            "预算信息"
+          ],
+          "reduced": true,
+          "seat": "398px",
+          "size": [
+            388,
+            842
+          ],
+          "theme": "dark"
+        }
+      ]
+    },
+    {
+      "view": "new-budget",
+      "states": [
+        {
+          "headings": [
+            "预算",
+            "创建预算卡"
+          ],
+          "reduced": true,
+          "seat": "398px",
+          "size": [
+            388,
+            842
+          ],
+          "theme": "light"
+        },
+        {
+          "headings": [
+            "预算",
+            "创建预算卡"
+          ],
+          "reduced": true,
+          "seat": "398px",
+          "size": [
+            388,
+            842
+          ],
+          "theme": "dark"
+        }
+      ]
+    },
+    {
+      "view": "new-wish",
+      "states": [
+        {
+          "headings": [
+            "心愿",
+            "添加心愿"
+          ],
+          "reduced": true,
+          "seat": "398px",
+          "size": [
+            388,
+            842
+          ],
+          "theme": "light"
+        },
+        {
+          "headings": [
+            "心愿",
+            "添加心愿"
+          ],
+          "reduced": true,
+          "seat": "398px",
+          "size": [
+            388,
+            842
+          ],
+          "theme": "dark"
+        }
+      ]
+    },
+    {
+      "view": "wish-cover",
+      "states": [
+        {
+          "headings": [
+            "心愿",
+            "心愿封面"
+          ],
+          "reduced": true,
+          "seat": "398px",
+          "size": [
+            388,
+            842
+          ],
+          "theme": "light"
+        },
+        {
+          "headings": [
+            "心愿",
+            "心愿封面"
+          ],
+          "reduced": true,
+          "seat": "398px",
+          "size": [
+            388,
+            842
+          ],
+          "theme": "dark"
+        }
+      ]
+    },
+    {
+      "view": "wish-back",
+      "states": [
+        {
+          "headings": [
+            "心愿"
+          ],
+          "reduced": true,
+          "seat": "398px",
+          "size": [
+            388,
+            842
+          ],
+          "theme": "light"
+        },
+        {
+          "headings": [
+            "心愿"
+          ],
+          "reduced": true,
+          "seat": "398px",
+          "size": [
+            388,
+            842
+          ],
+          "theme": "dark"
+        }
+      ]
+    },
+    {
+      "view": "agent",
+      "states": [
+        {
+          "headings": [
+            "预算"
+          ],
+          "reduced": true,
+          "seat": "398px",
+          "size": [
+            388,
+            842
+          ],
+          "theme": "light"
+        },
+        {
+          "headings": [
+            "预算"
+          ],
+          "reduced": true,
+          "seat": "398px",
+          "size": [
+            388,
+            842
+          ],
+          "theme": "dark"
+        }
+      ]
+    },
+    {
+      "view": "settings",
+      "states": [
+        {
+          "headings": [
+            "预算",
+            "设置"
+          ],
+          "reduced": true,
+          "seat": "398px",
+          "size": [
+            388,
+            842
+          ],
+          "theme": "light"
+        },
+        {
+          "headings": [
+            "预算",
+            "设置"
+          ],
+          "reduced": true,
+          "seat": "398px",
+          "size": [
+            388,
+            842
+          ],
+          "theme": "dark"
+        }
+      ]
+    },
+    {
+      "view": "settlement",
+      "states": [
+        {
+          "headings": [
+            "预算",
+            "核对结算"
+          ],
+          "reduced": true,
+          "seat": "398px",
+          "size": [
+            388,
+            842
+          ],
+          "theme": "light"
+        },
+        {
+          "headings": [
+            "预算",
+            "核对结算"
+          ],
+          "reduced": true,
+          "seat": "398px",
+          "size": [
+            388,
+            842
+          ],
+          "theme": "dark"
+        }
+      ]
+    },
+    {
+      "view": "redemption",
+      "states": [
+        {
+          "headings": [
+            "心愿",
+            "核对购买"
+          ],
+          "reduced": true,
+          "seat": "398px",
+          "size": [
+            388,
+            842
+          ],
+          "theme": "light"
+        },
+        {
+          "headings": [
+            "心愿",
+            "核对购买"
+          ],
+          "reduced": true,
+          "seat": "398px",
+          "size": [
+            388,
+            842
+          ],
+          "theme": "dark"
+        }
+      ]
+    },
+    {
+      "view": "wallet-entry",
+      "states": [
+        {
+          "headings": [
+            "心愿",
+            "变动详情"
+          ],
+          "reduced": true,
+          "seat": "398px",
+          "size": [
+            388,
+            842
+          ],
+          "theme": "light"
+        },
+        {
+          "headings": [
+            "心愿",
+            "变动详情"
+          ],
+          "reduced": true,
+          "seat": "398px",
+          "size": [
+            388,
+            842
+          ],
+          "theme": "dark"
+        }
+      ]
+    }
+  ],
+  "additionalChecks": [
+    {
+      "name": "theme-switch-input",
+      "observed": "35 and synthetic merchant preserved across dark/light/dark"
+    },
+    {
+      "name": "failed-save-theme-retry",
+      "observed": {
+        "amount": "35",
+        "error": "暂时没保存成功，输入还在，可以重试。",
+        "theme": "light"
+      },
+      "retry": "Saved and returned to budget; undo appeared but expired before attempted click"
+    },
+    {
+      "name": "wish-face-theme",
+      "before": "back",
+      "after": "back",
+      "preserved": true
+    },
+    {
+      "name": "library",
+      "observed": "Both themes: arc to dome, explicit return to card holder; reduced-motion list inspected"
+    },
+    {
+      "name": "settlement",
+      "observed": "Confirmed synthetic 120 transfer; final wallet accessible label 400, both appearances; normal and reduced paths"
+    },
+    {
+      "name": "redemption",
+      "observed": "Confirmed synthetic actual 300; final wallet accessible label 300; normal reveal switch and reduced results"
+    },
+    {
+      "name": "sizes",
+      "observed": "320 preview with 1.6 text and 768 wish layout; large form values corrected and retested"
+    }
+  ],
+  "limits": [
+    "No native build or device run",
+    "No system VoiceOver or native keyboard run",
+    "No native frame-time measurement",
+    "Prototype Chinese coverage; full English localization not verified"
+  ],
+  "consoleObservation": {
+    "earlierMessages": [
+      {
+        "time": "2026-10-23T14:25:03.817Z",
+        "message": "MutationObserver.observe target is not a Node"
+      },
+      {
+        "time": "2026-10-23T14:27:09.101Z",
+        "message": "MutationObserver.observe target is not a Node"
+      },
+      {
+        "time": "2026-10-23T14:44:01.404Z",
+        "message": "MutationObserver.observe target is not a Node"
+      }
+    ],
+    "followUp": "After final reload and repeated home / wish-back / library / detail switches, no new error appeared; temporary page error diagnostics reported no stack. Source not established; no speculative changes to original observers."
+  }
+}
