@@ -26,9 +26,21 @@
 
 ## 手机记录
 
-真机测试包已构建。手机在编译期间锁屏，Xcode停在启动前等待；已取消该等待任务，避免稍后自动打开隔离预览。拟补验的系统横拖、居中切页／小朵、录入保存、重复插卡收尾和持续气泡五条真机UI没有实际运行，不能计为通过。
+初次手机在编译期间锁屏，Xcode停在启动前等待；当时已取消等待任务，恢复Release并查询确认版本16，正常无参数启动被Locked拒绝。下面为Rex随后明确解锁授权后的实际补验，覆盖此前的待启动状态。
 
-随后已原位覆盖安装签名Release 1.0（16），设备元数据确认`version=1.0`、`bundleVersion=16`。正常无演示参数启动被系统以Locked拒绝；手机启动、原生透镜手感、系统减少动态效果及最终视觉仍待解锁后补验。没有卸载、清账、读取个人账本／Keychain或重置配置，也没有真实模型请求。构建保留原有领域并发隔离／未使用变量及AppIntents元数据警告，本轮UI桥接无新增编译警告。
+2026-10-23 17:16–17:18，iPhone 12隔离合成账本UI整组5/5通过，0失败、0跳过，执行约101秒；使用预编译1.0（16）测试包，未重新编译等待手机。
+
+| 真机具名用例 | 实际支持的结果 |
+|---|---|
+| `testCompactIconDockStaysCenteredAcrossTabsAndAgent` | 纯图标、三个按钮、系统TabBar存在、载体居中、切页／小朵返回；预算和心愿热区各64×54pt |
+| `testNativeGlassTouchTrackingSwitchesPages` | 实际按住横拖到心愿并反向拖回，页面与选中状态一致；不以端点截图代替完整玻璃运动观感验收 |
+| `testSavingRecordAndClosingAgentPreservesNavigation` | 保存一笔合成消费，关闭小朵并切页后底栏保留，已检查实际结束截图 |
+| `testRepeatedInsertionLeavesNoClickOrBorderResidue` | 两次拔出／插入后，卡底98×22pt的CLICK区域与初始待机像素差小于0.4／255；卡库往返通过，结束截图未见残留。该像素断言不覆盖摘要与票据整圈边缘 |
+| `testAmbientBubblesContinueBeyondBurstAndWhileDetached` | 喷涌结束后相隔约3秒的卡面像素继续变化，已检查两张截图中均有气泡且位置不同；拔出后的截图仍有液体与气泡。没有采集拔出状态连续视频，不能单凭整卡差异独立证明气泡持续运动 |
+
+测试完成后立即原位恢复同一签名Release 1.0（16），设备元数据确认`version=1.0`、`bundleVersion=16`；正常启动成功，启动参数为空，随后进程查询确认正式App运行。没有卸载、清账、读取个人账本／Keychain或重置配置，也没有真实模型请求。测试截图只来自隔离合成账本，正式启动后没有截取个人账本画面。
+
+保存录入时有一条`Invalid frame dimension (negative or non-finite)`运行时警告；同一路径在之前1.0（15）及本轮模拟器也有记录，现有断言和结束画面未失败，不能称为无运行时警告。有限只读复核未确认调用点：录入字段未见负尺寸，背景首页有减法宽度候选；尚无证据将其归因于本轮原生Tab桥接，保留为待定位项，没有推测性改动。构建保留原有领域并发隔离／未使用变量及AppIntents元数据警告。系统减少动态效果、完整VoiceOver、真机帧耗时和最终手感／视觉仍待验收。
 
 ## 画面与验收路径
 
@@ -36,6 +48,8 @@
 - [底栏局部](navigation-preview.png)、[小屏英文大字深色](small-english-large-dark.png)
 - [预算页](sim-budget.png)、[心愿页](sim-wish.png)
 - [iPad预算页](ipad-budget.png)、[iPad心愿页](ipad-wish.png)
+- 真机隔离画面：[预算](phone-budget.png)、[心愿](phone-wish.png)、[保存并关闭小朵](phone-saved-agent-return.png)、[两次插入后清除](phone-contact-cleared.png)
+- 真机液体：[喷涌结束后](phone-ambient-first.png)、[约3秒后](phone-ambient-second.png)、[拔出后](phone-detached-liquid.png)
 
 录像来自主模拟器真实触控测试，仅裁切时段与压制尺寸，没有加快或减慢播放；画面全部为`-design-preview`隔离合成账本，不包含个人数据。录像采集后只收正iPad专有宿主留白，iPhone布局和系统控件行为一致。
 
