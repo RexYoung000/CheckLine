@@ -268,7 +268,10 @@ struct CreateComposerSheet: View {
     private var header: some View {
         VStack(spacing: 8) {
             HStack {
-                Button { dismiss() } label: { CheckLineIcon(symbol: "xmark", size: 17).frame(width: 44, height: 44) }
+                Button {
+                    workspace.closeTaskPanel()
+                    dismiss()
+                } label: { CheckLineIcon(symbol: "xmark", size: 17).frame(width: 44, height: 44) }
                     .accessibilityLabel(String(localized: "action.close"))
                     .accessibilityIdentifier(mode == .agent ? "wallet.agent.close" : "wallet.composer.close")
                 Spacer()
@@ -455,6 +458,7 @@ struct CreateComposerSheet: View {
                             HStack(spacing: 12) {
                                 TextField("0", text: field(\.amount))
                                     .focused($focusedFormField, equals: .amount)
+                                    .accessibilityIdentifier("wallet.composer.amount")
                                     .accessibilityLabel(String(localized: "v1.budget.amount"))
                                     .keyboardType(AmountKeyboard.type).multilineTextAlignment(.trailing)
                                     .font(.title2.weight(.medium)).frame(minHeight: 44)
@@ -483,6 +487,7 @@ struct CreateComposerSheet: View {
                             placeholder: String(localized: "v1.composer.amount.placeholder"),
                             text: field(\.amount), keyboard: AmountKeyboard.type
                         ).focused($focusedFormField, equals: .amount)
+                            .accessibilityIdentifier("wallet.composer.amount")
                     }.padding(.vertical, 16)
                     VStack(spacing: 16) {
                         VStack(spacing: 0) {

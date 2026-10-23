@@ -25,10 +25,13 @@ struct NativeLiquidSurface: View {
                 // A broad reflection belongs inside the liquid, without another horizontal edge.
                 let sheen = Path(ellipseIn: CGRect(x: -size.width*0.25,y: -size.height*0.55,width: size.width*1.2,height: size.height*1.8))
                 context.fill(sheen,with: .linearGradient(Gradient(colors: [.white.opacity(0.12),.clear]),startPoint: .zero,endPoint: CGPoint(x: size.width,y: size.height*0.6)))
-                guard !reduceMotion && active else { return }
-                for pose in LiquidBubbleField.ambient(size: size, level: level, morph: morph, time: time, seed: ambientSeed) {
-                    bubble(&context,center: pose.center,radius: pose.radius,opacity: pose.opacity)
+                // Keep a recognisable liquid material even when its timeline is
+                // paused or Reduce Motion is enabled. Only positions stop moving.
+                let ambientTime = reduceMotion || !active ? 0 : time
+                for pose in LiquidBubbleField.ambient(size: size, level: level, morph: morph, time: ambientTime, seed: ambientSeed) {
+                    bubble(&context,center: pose.center,radius: pose.radius,opacity: pose.opacity * (active ? 1 : 0.5))
                 }
+                guard !reduceMotion && active else { return }
                 if let burstAt {
                     let age=clock.date.timeIntervalSince(burstAt)
                     if age>=0 && age<5.2 {
@@ -54,7 +57,7 @@ struct NativeLiquidSurface: View {
         let vertical=size.height*(1-level),horizontal=size.width*level
         for i in 0...90 {
             let u=CGFloat(i)/90
-            let wave=CGFloat(sin(Double(u)*7+time*0.9)+sin(Double(u)*11-time*0.63)*0.28)*(reduceMotion ? 0 : 3.5)
+            let wave=CGFloat(sin(Double(u)*7+time*0.9)+sin(Double(u)*11-time*0.63)*0.28)*3.5
             let a=CGPoint(x: u*size.width,y: vertical+wave)
             let b=CGPoint(x: horizontal+wave,y: u*size.height)
             let point=CGPoint(x: a.x+(b.x-a.x)*morph,y: a.y+(b.y-a.y)*morph)

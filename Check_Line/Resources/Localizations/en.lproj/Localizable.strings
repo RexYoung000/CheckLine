@@ -936,3 +936,9 @@
 "native.cover.horizontalFocus" = "Horizontal photo position";
 "native.cover.verticalFocus" = "Vertical photo position";
 "native.cover.removePhoto" = "Remove photo";
+"settlement.early.title" = "Settle early";
+"settlement.early.confirm" = "Confirm early settlement";
+"settlement.early.schedule" = "This period ends on %@. The next starts on %@. Spending in between stays outside this card; assign it elsewhere or leave it unbudgeted.";
+"settlement.early.resumes" = "Next period starts %@";
+"settlement.early.nextLimit" = "Next period limit";
+"settlement.early.futureRecords" = "This period includes future-dated records. Review them before settling early.";

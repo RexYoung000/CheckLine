@@ -138,7 +138,7 @@ nonisolated enum AttributionEngine {
         if let existing = expense.budgetPeriodID, existing != period.id {
             throw LedgerError.expenseAlreadyHasSettlementPeriod
         }
-        if ledger.budgets[period.budgetID]?.recurrence?.monthlySchedule != nil,
+        if ledger.budgets[period.budgetID]?.cycleType == .repeating,
            !CycleEngine.contains(expense.occurredAt, in: period, calendar: calendar) {
             throw LedgerError.captureDateOutsidePeriod
         }

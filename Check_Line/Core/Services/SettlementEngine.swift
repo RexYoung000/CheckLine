@@ -19,19 +19,36 @@ nonisolated struct SettlementPreview: Equatable, Sendable {
 }
 
 nonisolated enum SettlementEngine {
+    static func canEndEarly(ledger: Ledger, periodID: UUID, now: Date, calendar: Calendar) -> Bool {
+        guard let period = ledger.periods[periodID], period.state == .active,
+              ledger.budgets[period.budgetID]?.cycleType == .repeating,
+              let end = CycleEngine.exclusiveEnd(of: period, calendar: calendar) else { return false }
+        return now >= calendar.startOfDay(for: period.startDate)
+            && now < end
+    }
+
     static func preview(
         ledger: Ledger,
         periodID: UUID,
         now: Date,
         calendar: Calendar,
-        quote: ExchangeQuote?
+        quote: ExchangeQuote?,
+        endingEarly: Bool = false
     ) throws -> SettlementPreview {
         let period = try ledger.requirePeriod(periodID)
-        guard period.state == .pendingSettlement else {
+        let early = endingEarly && canEndEarly(ledger: ledger, periodID: periodID, now: now, calendar: calendar)
+        guard period.state == .pendingSettlement || early else {
             throw LedgerError.periodNotReadyToSettle
         }
-
-        return try estimate(ledger: ledger, periodID: periodID, now: now, calendar: calendar, quote: quote)
+        var reviewed = ledger
+        if early {
+            guard let end = calendar.date(byAdding: .day, value: 1, to: calendar.startOfDay(for: now)),
+                  !ledger.expenses(inPeriod: periodID).contains(where: { $0.occurredAt >= end }) else {
+                throw LedgerError.futureRecordsBlockEarlySettlement
+            }
+            reviewed.periods[periodID]?.endDate = calendar.startOfDay(for: now)
+        }
+        return try estimate(ledger: reviewed, periodID: periodID, now: now, calendar: calendar, quote: quote)
     }
 
     /// Current-record estimate only. Commit continues to require the strict preview gate.
@@ -102,6 +119,7 @@ nonisolated enum SettlementEngine {
         calendar: Calendar,
         quote: ExchangeQuote?,
         acceptedIncompleteData: Bool,
+        endingEarly: Bool = false,
         settlementID: UUID = UUID(),
         walletEntryID: UUID = UUID(),
         nextPeriodID: UUID = UUID()
@@ -111,7 +129,8 @@ nonisolated enum SettlementEngine {
             periodID: periodID,
             now: now,
             calendar: calendar,
-            quote: quote
+            quote: quote,
+            endingEarly: endingEarly
         )
 
         if (preview.hasBlockingPending || preview.hasCoverageGap) && acceptedIncompleteData == false {
@@ -121,6 +140,7 @@ nonisolated enum SettlementEngine {
         var ledger = ledger
         var period = try ledger.requirePeriod(periodID)
         var budget = try ledger.requireBudget(period.budgetID)
+        let early = endingEarly && canEndEarly(ledger: ledger, periodID: periodID, now: now, calendar: calendar)
 
         var walletEntryIDWritten: UUID?
         if preview.baseSurplus != 0 {
@@ -158,6 +178,8 @@ nonisolated enum SettlementEngine {
         ledger.upsert(period)
 
         if budget.cycleType == .repeating {
+            // Plan from the original end before cutting the historical period.
+            // Weekly and legacy monthly rules must not shift to tomorrow.
             ledger = try CycleEngine.openNextPeriod(
                 ledger: ledger,
                 settledPeriodID: periodID,
@@ -169,6 +191,11 @@ nonisolated enum SettlementEngine {
             budget.state = .archived
             budget.updatedAt = now
             ledger.upsert(budget)
+        }
+
+        if early {
+            period.endDate = calendar.startOfDay(for: now)
+            ledger.upsert(period)
         }
 
         return ledger

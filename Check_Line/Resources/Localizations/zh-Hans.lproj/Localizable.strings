@@ -936,3 +936,9 @@
 "native.cover.horizontalFocus" = "图片水平位置";
 "native.cover.verticalFocus" = "图片垂直位置";
 "native.cover.removePhoto" = "移除图片";
+"settlement.early.title" = "提前结算";
+"settlement.early.confirm" = "确认提前结算";
+"settlement.early.schedule" = "本期于 %@ 结束，下一期从 %@ 恢复。间隔内的消费不计入这张卡，可归其他预算或暂不纳入。";
+"settlement.early.resumes" = "%@ 开始下一期";
+"settlement.early.nextLimit" = "下期额度";
+"settlement.early.futureRecords" = "本期还有未来日期的记录，请先调整这些记录，再提前结算。";

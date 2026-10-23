@@ -1,9 +1,12 @@
 import XCTest
+import UIKit
 
 @MainActor final class PhoneFeedbackRepairUITests: XCTestCase {
     override func setUpWithError() throws {
         continueAfterFailure = false
+        #if targetEnvironment(simulator)
         if #available(iOS 27.0, *) { try XCUIDevice.shared.voiceOverService.disable() }
+        #endif
     }
 
     func testLongPressThenSlowDownAndUpDragSettlesWithoutRepeatedMotion() {
@@ -104,8 +107,13 @@ import XCTest
         let app = launch(), card = element("wallet.home.card", in: app)
         Thread.sleep(forTimeInterval: 6)
         attach(app, "phone-ambient-after-burst-duration")
+        let firstLiquidFrame = card.screenshot().pngRepresentation
         Thread.sleep(forTimeInterval: 3)
         attach(app, "phone-ambient-still-running")
+        if !UIAccessibility.isReduceMotionEnabled {
+            XCTAssertNotEqual(firstLiquidFrame, card.screenshot().pngRepresentation,
+                              "The actual card pixels must continue changing after the insertion burst ends.")
+        }
         card.coordinate(withNormalizedOffset: CGVector(dx: 0.7, dy: 0.3)).press(forDuration: 0.65)
         wait(card, value: "已拔出")
         Thread.sleep(forTimeInterval: 3)

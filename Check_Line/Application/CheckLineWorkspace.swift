@@ -287,22 +287,33 @@ final class CheckLineWorkspace {
         try SettlementEngine.estimate(ledger: ledger, periodID: periodID, now: now, calendar: calendar, quote: quote)
     }
 
+    func previewEarlySettlement(_ periodID: UUID, quote: ExchangeQuote? = nil, now: Date = Date()) throws -> SettlementPreview {
+        let prepared = try CycleEngine.markDueIfNeeded(ledger: ledger, periodID: periodID, now: now, calendar: calendar)
+        return try SettlementEngine.preview(ledger: prepared, periodID: periodID, now: now, calendar: calendar, quote: quote, endingEarly: true)
+    }
+
     func settlePeriod(
         _ periodID: UUID,
         quote: ExchangeQuote?,
         reviewedLedger: Ledger,
         acceptedIncompleteData: Bool,
+        endingEarly: Bool = false,
         now: Date = Date()
     ) throws {
         guard ledger == reviewedLedger else { throw LedgerError.staleSettlementPreview }
-        _ = try previewSettlement(periodID, quote: quote, now: now)
-        let result = try session.execute(
-            intent: .settlePeriod(periodID: periodID, quote: quote),
-            ledger: ledger,
-            now: now,
-            confirmation: .impact(ImpactAcknowledgement(acceptedIncompleteData: acceptedIncompleteData, quote: quote))
-        )
-        try commitPresentationChange(result.ledger)
+        if endingEarly {
+            let prepared = try CycleEngine.markDueIfNeeded(ledger: ledger, periodID: periodID, now: now, calendar: calendar)
+            let result = try SettlementEngine.commit(ledger: prepared, periodID: periodID, now: now, calendar: calendar,
+                                                     quote: quote, acceptedIncompleteData: acceptedIncompleteData, endingEarly: true)
+            try commitPresentationChange(result)
+        } else {
+            _ = try previewSettlement(periodID, quote: quote, now: now)
+            let result = try session.execute(
+                intent: .settlePeriod(periodID: periodID, quote: quote), ledger: ledger, now: now,
+                confirmation: .impact(ImpactAcknowledgement(acceptedIncompleteData: acceptedIncompleteData, quote: quote))
+            )
+            try commitPresentationChange(result.ledger)
+        }
         if selectedBudgetID != nil && !cards.contains(where: { $0.id == selectedBudgetID }) {
             selectedBudgetID = cards.first?.id
         }
@@ -1000,6 +1011,14 @@ final class CheckLineWorkspace {
         beginTask(intent, mode: "form", budgetID: budgetID)
         showComposer = true
         collapsePanel()
+    }
+
+    /// Closing is separate from discarding; navigation flags must not wait for
+    /// a later presentation binding callback, and the user's draft stays intact.
+    func closeTaskPanel() {
+        showComposer = false
+        showAgent = false
+        cancelCloudRequest()
     }
 
     func beginTask(_ intent: ComposerIntent, mode: String, now: Date = Date(), budgetID: UUID? = nil) {

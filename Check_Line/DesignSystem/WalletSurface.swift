@@ -121,7 +121,7 @@ struct WalletRootPage<Content: View>: View {
             .toolbar(.hidden, for: .navigationBar)
             .modifier(WalletHeaderBar(title: lightHeader ? nil : title, workspace: workspace, light: lightHeader, onAdd: onAdd))
             .overlay(alignment: .bottom) {
-                if WalletTabTransition.usesSystemBar && chrome?.isShowingDetail != true {
+                if WalletTabTransition.usesSystemBar && path.isEmpty {
                     WalletActionFeedback(workspace: workspace)
                         .frame(maxWidth: 560)
                         .padding(.horizontal, 18)
@@ -129,13 +129,10 @@ struct WalletRootPage<Content: View>: View {
                 }
             }
             .opacity(chrome?.stageOpacity ?? 1)
-            .toolbar(WalletTabTransition.usesSystemBar && chrome?.isShowingDetail != true ? .visible : .hidden, for: .tabBar)
+            .toolbar(WalletTabTransition.usesSystemBar && path.isEmpty ? .visible : .hidden, for: .tabBar)
             .toolbar(.hidden, for: .bottomBar)
             .onAppear {
-                if chrome?.selectedTab == tab { chrome?.isShowingDetail = false }
-            }
-            .onDisappear {
-                if chrome?.selectedTab == tab { chrome?.isShowingDetail = true }
+                if chrome?.selectedTab == tab { chrome?.isShowingDetail = !path.isEmpty }
             }
             .onChange(of: chrome?.presentedTab) { _, tab in
                 if lightHeader && tab == .home { reader.scrollTo("wallet-page-top", anchor: .top) }
@@ -151,6 +148,9 @@ struct WalletRootPage<Content: View>: View {
             .onChange(of: path.count) { _, count in
                 if chrome?.selectedTab == tab { chrome?.isShowingDetail = count > 0 }
                 if count == 0 && detailPresented.wrappedValue { detailPresented.wrappedValue = false }
+            }
+            .onChange(of: chrome?.selectedTab) { _, selected in
+                if selected == tab { chrome?.isShowingDetail = !path.isEmpty }
             }
             .onChange(of: chrome?.workspaceRequest?.id) { _, _ in openRequestedWorkspace() }
             .onAppear { openRequestedWorkspace() }
@@ -245,6 +245,7 @@ struct LiquidBudgetCard: View {
     var showsRemainingRatio = true
     var bottomInset: CGFloat = 22
     var flows = false
+    var referenceDate = Date()
     var reflectionPoint: CGPoint?
     var remainingChange: BudgetRemainingChange?
     var remainingMotionContext = RemainingMotionContext()
@@ -252,7 +253,6 @@ struct LiquidBudgetCard: View {
     @Environment(\.scenePhase) private var scenePhase
     @Environment(\.dynamicTypeSize) private var typeSize
     @State private var visible = false
-    @State private var motionClock = LiquidMotionClock()
     @State private var hoverPoint: CGPoint?
     private var animates: Bool { flows && !reduceMotion && visible && scenePhase == .active }
     private var activeReflection: CGPoint? { reduceMotion ? nil : reflectionPoint ?? hoverPoint }
@@ -261,24 +261,7 @@ struct LiquidBudgetCard: View {
         ZStack {
             LinearGradient(colors: [Color.paper(light: 0xFBFAF8, dark: 0x302B35), Color.paper(light: 0xF4EFF5, dark: 0x28232D)], startPoint: .topLeading, endPoint: .bottomTrailing)
             RadialGradient(colors: [PaperTheme.accent.opacity(0.07), .clear], center: .topLeading, startRadius: 0, endRadius: 260)
-            TimelineView(.animation(minimumInterval: 1.0/30, paused: !animates)) { _ in
-                let elapsed = motionClock.elapsedTime(at: ProcessInfo.processInfo.systemUptime)
-                let phase = motionClock.phase(at: ProcessInfo.processInfo.systemUptime)
-                let level = CGFloat(BudgetPresentation.fill(card))
-                ZStack {
-                    LiquidWave(level: level, phase: phase, amplitude: reduceMotion ? 0 : 3.5)
-                        .fill(LinearGradient(stops: [
-                            .init(color: PaperTheme.waterTop.opacity(0.88), location: 0),
-                            .init(color: PaperTheme.waterBottom.opacity(0.96), location: 1)
-                        ], startPoint: .topLeading, endPoint: .bottomTrailing))
-                    if level > 0 {
-                        BudgetBubbleField(level: level, phase: phase, elapsed: elapsed)
-                            .mask { LiquidWave(level: level, phase: phase, amplitude: reduceMotion ? 0 : 3.5) }
-                        LiquidWave(level: level, phase: phase, amplitude: reduceMotion ? 0 : 3.5, surfaceOnly: true)
-                            .stroke(.white.opacity(0.23), lineWidth: 0.7)
-                    }
-                }.animation(reduceMotion ? nil : .easeOut(duration: 0.65), value: level)
-            }
+            NativeLiquidSurface(progress: CGFloat(BudgetPresentation.fill(card)), active: animates)
             .accessibilityHidden(true)
             reflection
             VStack(alignment: .leading, spacing: 10) {
@@ -289,7 +272,7 @@ struct LiquidBudgetCard: View {
                 HStack {
                     Spacer(minLength: 0)
                     VStack(alignment: .trailing, spacing: 5) {
-                        Text(BudgetPresentation.remaining(card) >= 0 ? String(localized: "v1.card.remaining") : (card.snapshot.certainOverrunAmount > 0 ? String(localized: card.snapshot.possibleOverrunAmount > 0 ? "wallet.provisionalOverrun" : "wallet.overrun") : String(localized: "wallet.possibleOverrun")))
+                        Text(BudgetPresentation.isUpcoming(card, now: referenceDate) ? String(localized: "settlement.early.nextLimit") : BudgetPresentation.remaining(card) >= 0 ? String(localized: "v1.card.remaining") : (card.snapshot.certainOverrunAmount > 0 ? String(localized: card.snapshot.possibleOverrunAmount > 0 ? "wallet.provisionalOverrun" : "wallet.overrun") : String(localized: "wallet.possibleOverrun")))
                             .font(.caption)
                         BudgetRemainingAmountText(card: card, change: remainingChange, context: remainingMotionContext)
                             .font(.system(.largeTitle).weight(.medium)).monospacedDigit()
@@ -321,14 +304,10 @@ struct LiquidBudgetCard: View {
         .onAppear { visible = true }
         .onDisappear {
             visible = false
-            motionClock.setRunning(false, at: ProcessInfo.processInfo.systemUptime)
-        }
-        .onChange(of: animates, initial: true) { _, running in
-            motionClock.setRunning(running, at: ProcessInfo.processInfo.systemUptime)
         }
         .accessibilityElement(children: .combine)
         .accessibilityLabel(card.name)
-        .accessibilityValue(String(localized: "v1.card.remaining") + " " + MoneyFormat.string(BudgetPresentation.remaining(card), currencyCode: card.currencyCode))
+        .accessibilityValue(String(localized: BudgetPresentation.isUpcoming(card, now: referenceDate) ? "settlement.early.nextLimit" : "v1.card.remaining") + " " + MoneyFormat.string(BudgetPresentation.remaining(card), currencyCode: card.currencyCode))
     }
 
     private var reflection: some View {

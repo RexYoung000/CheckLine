@@ -66,6 +66,8 @@ struct BudgetDetailContent: View {
     @State private var initialFilterApplied = false
     @State private var historyExpanded = false
     @State private var coverageExpanded = false
+    @State private var availabilityDate = Date()
+    @Environment(\.scenePhase) private var scenePhase
     private var card: HomeBudgetCardModel? { HomeProjector.card(budgetID: budgetID, periodID: periodID, in: workspace.ledger) }
     var body: some View {
         ScrollView {
@@ -88,13 +90,15 @@ struct BudgetDetailContent: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar(.visible, for: .navigationBar).toolbar(.hidden, for: .tabBar, .bottomBar)
         .toolbarBackground(.hidden, for: .navigationBar)
-        .onAppear { chrome?.isShowingDetail = true }
+        .onAppear { availabilityDate = Date() }
+        .onReceive(NotificationCenter.default.publisher(for: UIApplication.significantTimeChangeNotification)) { _ in availabilityDate = Date() }
+        .onChange(of: scenePhase) { _, value in if value == .active { availabilityDate = Date() } }
         .task {
             if !initialFilterApplied { initialFilterApplied = true; pendingOnly = section == .pending }
         }
         .fullScreenCover(item: $editingCard) { BudgetAmountEditorView(workspace: workspace, card: $0) }
         .sheet(item: $settlementSelection) { selection in
-            SettlementReviewView(workspace: workspace, periodID: selection.id) {
+            SettlementReviewView(workspace: workspace, periodID: selection.id, endingEarly: selection.endingEarly) {
                 settlementSelection = nil; dismissDetail(); chrome?.selectedTab = .wishes
             }
         }
@@ -112,7 +116,7 @@ struct BudgetDetailContent: View {
             if card.periodState == .settled, let settlement = workspace.ledger.settlement(forPeriod: card.periodID) {
                 historicalSummary(card, settlement: settlement)
             } else {
-            LiquidBudgetCard(card: card, showsRemainingRatio: false)
+            LiquidBudgetCard(card: card, showsRemainingRatio: false, flows: true, referenceDate: availabilityDate)
             let metricsLayout = typeSize.isAccessibilitySize
                 ? AnyLayout(VStackLayout(alignment: .leading, spacing: 16))
                 : AnyLayout(HStackLayout(alignment: .top, spacing: 20))
@@ -188,16 +192,23 @@ struct BudgetDetailContent: View {
     }
 
     @ViewBuilder private func recordAction(_ card: HomeBudgetCardModel, primary: Bool) -> some View {
-        let button = Button { workspace.openComposer(.record, budgetID: card.id) } label: {
+        let button = Button {
+            if let chrome {
+                chrome.recordAfterDetailDismissal = card.id
+                dismissDetail()
+            } else { workspace.openComposer(.record, budgetID: card.id) }
+        } label: {
             CheckLineIconLabel(String(localized: "capture.title"), symbol: "plus").frame(maxWidth: .infinity)
-        }
+        }.accessibilityIdentifier("wallet.budget.record")
+            .disabled(BudgetPresentation.isUpcoming(card, now: availabilityDate))
         if primary { button.buttonStyle(PaperSolidButtonStyle()) }
         else { button.buttonStyle(PaperQuietButtonStyle()) }
     }
 
     @ViewBuilder private func settlementAction(_ card: HomeBudgetCardModel, primary: Bool) -> some View {
-        let button = Button { settlementSelection = SettlementSelection(id: card.periodID) } label: {
-            CheckLineIconLabel(String(localized: settlementReady(card) ? "wallet.settlement.review" : "wallet.settlement.preview"), symbol: "checkmark.seal").frame(maxWidth: .infinity)
+        let early = SettlementEngine.canEndEarly(ledger: workspace.ledger, periodID: card.periodID, now: availabilityDate, calendar: .current)
+        let button = Button { settlementSelection = SettlementSelection(id: card.periodID, endingEarly: early) } label: {
+            CheckLineIconLabel(String(localized: early ? "settlement.early.title" : settlementReady(card) ? "wallet.settlement.review" : "wallet.settlement.preview"), symbol: "checkmark.seal").frame(maxWidth: .infinity)
         }.accessibilityIdentifier("wallet.budget.settlement")
         if primary { button.buttonStyle(PaperSolidButtonStyle()) }
         else { button.buttonStyle(PaperQuietButtonStyle()) }
@@ -417,7 +428,7 @@ private struct BudgetDetailMetadataRow: View {
 }
 
 private struct ExpenseSelection: Identifiable { let id: UUID }
-private struct SettlementSelection: Identifiable { let id: UUID }
+private struct SettlementSelection: Identifiable { let id: UUID; var endingEarly = false }
 
 struct BudgetDailyChart: View {
     var card: HomeBudgetCardModel

@@ -17,6 +17,23 @@ import UIKit
         return try #require(workspace.ledger.expenses.keys.first)
     }
 
+    @Test("关闭录入明确恢复导航状态，并保留当前字段、对话和账本")
+    func closeTaskPanelKeepsInputAndLedger() throws {
+        let workspace = try workspace()
+        _ = try seed(workspace)
+        workspace.openComposer(.record)
+        workspace.taskDraft.amount = "18"
+        workspace.taskDraft.merchant = "Sample"
+        workspace.showAgent = true
+        let draft = workspace.taskDraft, ledger = workspace.ledger, conversation = workspace.conversation
+        workspace.closeTaskPanel()
+        #expect(!workspace.showComposer && !workspace.showAgent)
+        #expect(workspace.taskDraft == draft && workspace.ledger == ledger)
+        #expect(workspace.conversation.map(\.id) == conversation.map(\.id))
+        workspace.openComposer(.record)
+        #expect(workspace.showComposer && workspace.taskDraft.amount == "18")
+    }
+
     @Test("手动删除核对只读，确认后更新预算并清附件，保留另一个Agent草稿")
     func manualDeleteIsIsolatedAndPersistent() throws {
         let container = try CheckLinePersistence.makeContainer(inMemory: true)

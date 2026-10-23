@@ -7,6 +7,9 @@ struct CartridgeLibraryView: View {
     var onChoose: (HomeBudgetCardModel) -> Void
     var onClose: () -> Void
     var onReturnProgress: ((CGFloat) -> Void)? = nil
+    var presentationProgress: CGFloat = 1
+    var transportsFocusedCard = false
+    var onArcPresentation: ((Bool, HomeBudgetCardModel?) -> Void)? = nil
 
     @Environment(\.walletReduceMotion) private var reduceMotion
     @Environment(\.accessibilityVoiceOverEnabled) private var voiceOver
@@ -28,6 +31,7 @@ struct CartridgeLibraryView: View {
     @FocusState private var searchFocused: Bool
 
     private var staticMode: Bool { reduceMotion || voiceOver || typeSize.isAccessibilitySize }
+    private var returnTravel: CGFloat { reduceMotion ? 0 : (1 - min(1, max(0, presentationProgress))) * 140 }
     private var cards: [HomeBudgetCardModel] {
         let source = workspace.cards
         guard let initialSelectedID, let current = source.first(where: { $0.id == initialSelectedID }) else { return source }
@@ -42,10 +46,10 @@ struct CartridgeLibraryView: View {
         GeometryReader { proxy in
             let footerHeight: CGFloat = 64
             VStack(spacing: 0) {
-                header
-                if searching { searchField }
+                header.opacity(Double(presentationProgress))
+                if searching { searchField.opacity(Double(presentationProgress)) }
                 Group {
-                    if searching || staticMode { accessibleGrid }
+                    if searching || staticMode { accessibleGrid.opacity(Double(presentationProgress)) }
                     else if layout == .arc { arcScene }
                     else { domeScene }
                 }
@@ -72,7 +76,10 @@ struct CartridgeLibraryView: View {
         }
         .accessibilityElement(children: .contain)
         .accessibilityIdentifier("native.budget.library")
-        .onAppear { initialSelectedID = workspace.selectedBudgetID }
+        .onAppear { initialSelectedID = workspace.selectedBudgetID; publishArcPresentation() }
+        .onChange(of: Int(arcPosition.rounded())) { _, _ in publishArcPresentation() }
+        .onChange(of: layout) { _, _ in publishArcPresentation() }
+        .onChange(of: searching) { _, _ in publishArcPresentation() }
         .onDisappear { stopInertia() }
         .onChange(of: scenePhase) { _, phase in if phase != .active { stopInertia(); dragOrigin = nil } }
         .onChange(of: reduceMotion) { _, _ in stopInertia() }
@@ -173,6 +180,14 @@ struct CartridgeLibraryView: View {
                     } label: {
                         CartridgeLibraryCard(card: card, expenses: BudgetPresentation.expenses(card, in: workspace.ledger), compact: false)
                             .frame(width: cardWidth, height: height)
+                            // Move only the artwork. The enclosing scene and its
+                            // gesture owner stay still while the finger is down.
+                            .mask {
+                                Rectangle().opacity(centered && transportsFocusedCard ? 0 : 1)
+                                    .transaction { $0.animation = nil }
+                            }
+                            .offset(y: returnTravel)
+                            .opacity(Double(presentationProgress))
                             .contentShape(RoundedRectangle(cornerRadius: 26))
                     }
                         .buttonStyle(.plain)
@@ -247,11 +262,12 @@ struct CartridgeLibraryView: View {
                     let place = metrics.position(index: index, offset: domePosition)
                     CartridgeLibraryCard(card: card, expenses: BudgetPresentation.expenses(card, in: workspace.ledger), compact: true)
                         .frame(width: metrics.cardWidth, height: metrics.cardHeight)
+                        .offset(y: returnTravel)
                         .rotation3DEffect(.degrees(place.angleY), axis: (x: 0, y: 1, z: 0), perspective: 0.4)
                         .rotation3DEffect(.degrees(place.angleX), axis: (x: 1, y: 0, z: 0), perspective: 0.4)
                         .scaleEffect(place.scale)
                         .offset(x: place.x, y: place.y)
-                        .opacity(place.opacity)
+                        .opacity(place.opacity * Double(presentationProgress))
                         .zIndex(place.depth)
                         .allowsHitTesting(place.opacity > 0.2 && openedID == nil)
                         .onTapGesture {
@@ -345,6 +361,7 @@ struct CartridgeLibraryView: View {
             Button { close() } label: {
                 Image(systemName: "chevron.down").font(.system(size: 19, weight: .medium))
                     .foregroundStyle(PaperTheme.accent.opacity(0.72))
+                    .opacity(Double(presentationProgress))
                     .frame(width: 52, height: 52).contentShape(Rectangle())
             }.buttonStyle(.plain)
                 .offset(y: min(10, returnDistance * 0.13))
@@ -354,6 +371,7 @@ struct CartridgeLibraryView: View {
                 Spacer()
                 Text(String(format: String(localized: "native.cardCount"), cards.count))
                     .font(.caption).foregroundStyle(PaperTheme.muted.opacity(0.7))
+                    .opacity(Double(presentationProgress))
             }.padding(.horizontal, 24).allowsHitTesting(false)
         }
         .contentShape(Rectangle())
@@ -403,6 +421,10 @@ struct CartridgeLibraryView: View {
     }
 
     private func stopInertia() { inertia?.cancel(); inertia = nil }
+    private func publishArcPresentation() {
+        let card = cards.isEmpty ? nil : cards[wrappedIndex(Int(arcPosition.rounded()), count: cards.count)]
+        onArcPresentation?(layout == .arc && !searching && !staticMode, card)
+    }
     private var layoutTitle: String { String(localized: layout == .arc ? "native.library.arc" : "native.library.dome") }
     private func close() { stopInertia(); searchFocused = false; onClose() }
     private func choose(_ card: HomeBudgetCardModel) { stopInertia(); searchFocused = false; onChoose(card) }
@@ -470,7 +492,7 @@ struct LibraryDomePosition {
 }
 
 /// Glass card content is shared by both layouts; monetary values remain Decimal.
-private struct CartridgeLibraryCard: View {
+struct CartridgeLibraryCard: View {
     var card: HomeBudgetCardModel
     var expenses: [Expense]
     var compact: Bool

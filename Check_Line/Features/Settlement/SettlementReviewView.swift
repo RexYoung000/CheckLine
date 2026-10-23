@@ -37,6 +37,7 @@ struct WalletExchangeQuoteFields: View {
 struct SettlementReviewView: View {
     @Bindable var workspace: CheckLineWorkspace
     let periodID: UUID
+    var endingEarly = false
     let onShowWishes: () -> Void
     @Environment(\.dismiss) private var dismiss
     @Environment(\.dynamicTypeSize) private var typeSize
@@ -65,7 +66,10 @@ struct SettlementReviewView: View {
         return .estimated(rate: rate, at: quoteDate, sourceName: "user_provided_estimate")
     }
     private var previewResult: Result<SettlementPreview, Error> {
-        Result { try workspace.estimateSettlement(periodID, quote: quote) }
+        Result {
+            if endingEarly { try workspace.previewEarlySettlement(periodID, quote: quote) }
+            else { try workspace.estimateSettlement(periodID, quote: quote) }
+        }
     }
     private var preview: SettlementPreview? { try? previewResult.get() }
     private var previewFailure: String {
@@ -73,6 +77,7 @@ struct SettlementReviewView: View {
         switch error {
         case LedgerError.missingExchangeRate: return String(localized: "wallet.exchange.required")
         case LedgerError.invalidExchangeRate: return String(localized: "wallet.exchange.required")
+        case LedgerError.futureRecordsBlockEarlySettlement: return String(localized: "settlement.early.futureRecords")
         case LedgerError.periodNotReadyToSettle, LedgerError.periodNotFound: return String(localized: "ui.settlement.periodUnavailable")
         default: return String(localized: "wallet.settlement.previewUnavailable")
         }
@@ -83,6 +88,16 @@ struct SettlementReviewView: View {
         if period.state == .pendingSettlement { return true }
         return CycleEngine.isDue(period, now: Date(), calendar: .current)
     }
+    private var canFinalize: Bool {
+        isDue || (endingEarly && SettlementEngine.canEndEarly(ledger: workspace.ledger, periodID: periodID, now: Date(), calendar: .current))
+    }
+    private var nextStart: Date? {
+        guard let period, let budget, budget.cycleType == .repeating else { return nil }
+        if completed {
+            return workspace.ledger.periods(forBudget: budget.id).first(where: { $0.sequence == period.sequence + 1 })?.startDate
+        }
+        return try? CycleEngine.nextPeriodPlan(budget: budget, settledPeriod: period, calendar: .current).startDate
+    }
 
     var body: some View {
         NavigationStack {
@@ -90,6 +105,14 @@ struct SettlementReviewView: View {
                 VStack(alignment: .leading, spacing: 22) {
                     if let period, let budget, let snapshot = periodSnapshot {
                         header(budget: budget, period: period)
+                        if endingEarly && !completed, let nextStart {
+                            Text(String(format: String(localized: "settlement.early.schedule"),
+                                        Date().formatted(date: .abbreviated, time: .omitted),
+                                        nextStart.formatted(date: .abbreviated, time: .omitted)))
+                                .font(.subheadline).foregroundStyle(PaperTheme.muted)
+                                .fixedSize(horizontal: false, vertical: true)
+                                .accessibilityIdentifier("settlement.early.schedule")
+                        }
                         if completed {
                             settlementResult(period: period)
                         } else {
@@ -114,7 +137,7 @@ struct SettlementReviewView: View {
                                 CheckLineIconLabel(previewFailure, symbol: "exclamationmark.circle")
                                     .foregroundStyle(PaperTheme.accent)
                             }
-                            if !isDue {
+                            if !canFinalize {
                                 Text(String(localized: "wallet.settlement.repeatingNotDue"))
                                     .font(.subheadline).foregroundStyle(PaperTheme.muted)
                             }
@@ -134,7 +157,7 @@ struct SettlementReviewView: View {
             .scrollDismissesKeyboard(.interactively)
             .background(PaperTheme.canvas.ignoresSafeArea())
             .foregroundStyle(PaperTheme.ink)
-            .navigationTitle(completed ? String(localized: "wallet.settlement.complete") : String(localized: isDue ? "wallet.settlement.review" : "ui.settlement.estimate"))
+            .navigationTitle(completed ? String(localized: "wallet.settlement.complete") : String(localized: endingEarly ? "settlement.early.title" : isDue ? "wallet.settlement.review" : "ui.settlement.estimate"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbarBackground(.hidden, for: .navigationBar)
             .toolbar {
@@ -198,7 +221,9 @@ struct SettlementReviewView: View {
             HStack(spacing: 6) {
                 Text(period.startDate, format: .dateTime.year().month().day())
                 Text("–")
-                if let end = period.endDate {
+                if endingEarly && !completed {
+                    Text(Date(), format: .dateTime.year().month().day())
+                } else if let end = period.endDate {
                     Text(end, format: .dateTime.year().month().day())
                 } else {
                     Text(String(localized: "wallet.noDeadline"))
@@ -312,8 +337,13 @@ struct SettlementReviewView: View {
                 Divider()
                 impactRow(String(localized: "wallet.settlement.walletAfter"), MoneyFormat.string(workspace.wallet.balance, currencyCode: walletCurrency))
                 impactRow(String(localized: "wallet.settlement.recoveryAfter"), MoneyFormat.string(workspace.wallet.recoveryGap, currencyCode: walletCurrency))
-                Text(String(localized: budget?.cycleType == .repeating ? "wallet.settlement.nextPeriod" : "wallet.settlement.archived"))
-                    .font(.subheadline).foregroundStyle(PaperTheme.muted)
+                if let nextStart, nextStart > Date() {
+                    Text(String(format: String(localized: "settlement.early.resumes"), nextStart.formatted(date: .abbreviated, time: .omitted)))
+                        .font(.subheadline).foregroundStyle(PaperTheme.muted)
+                } else {
+                    Text(String(localized: budget?.cycleType == .repeating ? "wallet.settlement.nextPeriod" : "wallet.settlement.archived"))
+                        .font(.subheadline).foregroundStyle(PaperTheme.muted)
+                }
             }
         }
     }
@@ -340,7 +370,7 @@ struct SettlementReviewView: View {
                 .accessibilityIdentifier("wallet.settlement.viewWishes")
                 Button(String(localized: "action.close")) { dismiss() }
                     .frame(minHeight: 44)
-            } else if isDue {
+            } else if canFinalize {
                 Button { accepted.toggle() } label: {
                     HStack(alignment: .top, spacing: 12) {
                         CheckLineIcon(symbol: accepted ? "checkmark.circle.fill" : "circle", size: 24)
@@ -355,9 +385,9 @@ struct SettlementReviewView: View {
                     .buttonStyle(.plain)
                     .accessibilityAddTraits(accepted ? .isSelected : [])
                     .accessibilityIdentifier("wallet.settlement.acceptData")
-                Button(String(localized: "wallet.settlement.confirm")) { confirm() }
-                    .buttonStyle(PaperSolidButtonStyle(enabled: accepted && preview != nil && isDue))
-                    .disabled(!accepted || preview == nil || !isDue)
+                Button(String(localized: endingEarly ? "settlement.early.confirm" : "wallet.settlement.confirm")) { confirm() }
+                    .buttonStyle(PaperSolidButtonStyle(enabled: accepted && preview != nil && canFinalize))
+                    .disabled(!accepted || preview == nil || !canFinalize)
                     .accessibilityIdentifier("wallet.settlement.confirm")
             } else {
                 Text(String(localized: "ui.settlement.currentEstimate"))
@@ -369,18 +399,19 @@ struct SettlementReviewView: View {
     }
 
     private func confirm() {
-        guard let reviewedLedger, accepted, preview != nil, isDue else { return }
+        guard let reviewedLedger, accepted, preview != nil, canFinalize else { return }
         let before = workspace.wallet
         let savedPeriod = period
         let savedTitle = budget?.name ?? String(localized: "wallet.settlement.complete")
         do {
-            try workspace.settlePeriod(periodID, quote: quote, reviewedLedger: reviewedLedger, acceptedIncompleteData: true)
+            try workspace.settlePeriod(periodID, quote: quote, reviewedLedger: reviewedLedger, acceptedIncompleteData: true, endingEarly: endingEarly)
             completed = true
             outcome = OutcomeReceipt(kind: .settlement, title: savedTitle, before: before.balance, after: workspace.wallet.balance,
                 currency: walletCurrency, originalAmount: workspace.ledger.settlement(forPeriod: periodID)?.baseSurplus ?? 0,
                 originalCurrency: savedPeriod?.currencyCode ?? walletCurrency,
                 date: workspace.ledger.settlement(forPeriod: periodID)?.settledAt ?? Date(), recoveryBefore: before.recoveryGap,
-                recoveryAfter: workspace.wallet.recoveryGap, periodStart: savedPeriod?.startDate, periodEnd: savedPeriod?.endDate)
+                recoveryAfter: workspace.wallet.recoveryGap, periodStart: savedPeriod?.startDate,
+                periodEnd: workspace.ledger.periods[periodID]?.endDate)
             errorText = nil
         } catch LedgerError.staleSettlementPreview {
             accepted = false

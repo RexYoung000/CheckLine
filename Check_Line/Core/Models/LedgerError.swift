@@ -14,6 +14,7 @@ nonisolated enum LedgerError: Error, Equatable, Sendable {
     case periodNotSettled
     case periodAlreadySettled
     case periodNotReadyToSettle
+    case futureRecordsBlockEarlySettlement
     case incompleteSettlementNotAccepted
     case expenseAlreadyHasSettlementPeriod
     case cannotBindSettledPeriod

@@ -58,8 +58,16 @@ final class ShellChromeState {
     var workspaceRequest: WalletWorkspaceRequest?
     var isShowingDetail = false
     var isCreateMenuPresented = false
+    var recordAfterDetailDismissal: UUID?
 
     var isHidden: Bool { isShowingDetail }
+
+    func detailDidDismiss(workspace: CheckLineWorkspace) {
+        isShowingDetail = false
+        guard let budgetID = recordAfterDetailDismissal else { return }
+        recordAfterDetailDismissal = nil
+        workspace.openComposer(.record, budgetID: budgetID)
+    }
 
     func closeOverlays() {
         isCreateMenuPresented = false

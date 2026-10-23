@@ -36,6 +36,7 @@
 | 文件或目录 | 作用 |
 |------------|------|
 | `design/DESIGN.md` | 设计原则、已确认交互契约（顶部 2026-10-22 R34 双导航契约；3.1 为历史阶段）、本轮 App 手感 Token（3.1.5）和目标视口清单（3.1.6）；2026-08-01 旧样机只作历史参考 |
+| `design/evidence/2026-10-23-navigation-early-settlement/README.md` | 录入退出／保存后导航、持续液体、卡库跟手回程与保留日程的提前结算；实际验证及安装边界 |
 | `design/evidence/2026-10-13-monthly-schedule/README.md` | 月度自选日期：完整周期／指定区间、草稿和队列、原生操作、截图及手机安装 |
 | `design/evidence/2026-10-12-existing-experience/README.md` | 现有体验修复：结算预估与待确认返回、草稿／附件可靠性、历史／心愿／余额详情、原生操作与手机安装补记 |
 | `design/evidence/2026-10-04-phone-feedback/README.md` | 手机试用反馈：连续对话、语音代码、预算表单、心愿币种与分析空态的实现和验证边界 |

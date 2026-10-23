@@ -13,7 +13,8 @@ struct CheckLineShellView: View {
 
     var body: some View {
         rootTabs
-        .accessibilityHidden(workspace.showComposer || workspace.showAgent)
+        // Native sheets own modal accessibility. Hiding the entire TabView
+        // from task flags can also hide navigation after a presentation changes.
         .tint(PaperTheme.accent)
         .preferredColorScheme((CheckLineAppearance(rawValue: appearance) ?? .system).colorScheme)
         .overlay(alignment: .bottom) {
@@ -49,7 +50,7 @@ struct CheckLineShellView: View {
                 chrome.isAttentionPresented = false
             }
         }
-        .sheet(isPresented: $showsPreviewDetail) { previewDetail }
+        .sheet(isPresented: $showsPreviewDetail, onDismiss: { chrome.detailDidDismiss(workspace: workspace) }) { previewDetail }
         .background(PaperTheme.canvas.ignoresSafeArea())
         .task(id: WalletNavigationRequest(tab: chrome.selectedTab, reduceMotion: reduceMotion, active: scenePhase == .active)) {
             if WalletTabTransition.usesImmediateContent { chrome.settleNavigation() }
