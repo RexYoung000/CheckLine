@@ -26,6 +26,7 @@ const body=svg('<rect x="40" y="76" width="352" height="300" style="fill:var(--i
 const edge=svg(scene.slice(edgeStart,edgeEnd));
 const normalize=s=>s.replaceAll('light-','HMID-').replaceAll('var(--','var(--hm-');
 let helper=fs.readFileSync(path.join(dir,'src/budget-home.js'),'utf8').replace('__HOME_BODY__',JSON.stringify(normalize(body))).replace('__HOME_EDGE__',JSON.stringify(normalize(edge)));
+helper+='\n'+fs.readFileSync(path.join(dir,'src/budget-home-liquid.js'),'utf8');
 once('function cartridgeFace(c){',helper+'\nfunction cartridgeFace(c){');
 once('const t=totals(c),ready=readerConnected();let face=readerLiquidFace(c);','const t=totals(c),ready=readerConnected();let face=hmMaterializeFace(readerLiquidFace(c),c);');
 const bubbles=match(html,/function readerBubbleMarkup\(\)\{[\s\S]*?\n\}/);

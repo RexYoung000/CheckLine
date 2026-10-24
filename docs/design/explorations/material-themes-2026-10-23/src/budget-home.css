@@ -31,8 +31,11 @@
 .app[data-home-material][data-theme] .cartridge-world:not(.library-open) .cartridge-stack-layer .liquid-card{background:color-mix(in srgb,var(--hm-rear-tint) 55%,transparent);border:1px solid #e6f8ff66;box-shadow:inset 0 1px #ffffff35;filter:none;backdrop-filter:none}
 .app[data-home-material][data-theme] .cartridge-world:not(.library-open) .cartridge-stack-layer :is(.card-top,.card-bottom,.water){opacity:.15}
 .app[data-home-material][data-theme] .cartridge-world:not(.library-open) .hm-water{background:transparent}
-.app[data-home-material][data-theme] .hm-water .r3-waterline{stroke:#fff;stroke-opacity:.86;stroke-width:1.35;vector-effect:non-scaling-stroke}
+.app[data-home-material][data-theme] .hm-water .r3-waterline{stroke:#fff;stroke-opacity:.68;stroke-width:1.2;vector-effect:non-scaling-stroke}
 .hm-water-back{fill:none;stroke:#e2faff;stroke-opacity:.22;stroke-width:.85;vector-effect:non-scaling-stroke}
+.app[data-home-material][data-theme] .hm-water .hm-fluid-svg{width:100%;left:0;animation:none!important;transform:none!important}
+.hm-water-surface{fill:#edfbff;fill-opacity:.085;stroke:none}
+.hm-water-glint{fill:none;stroke-width:1.55;vector-effect:non-scaling-stroke}
 .app[data-home-material][data-theme] .card-bubble-field>i{border:0;background:none;box-shadow:none;overflow:visible}
 .hm-bubble-svg{width:100%;height:100%;display:block;overflow:visible;opacity:var(--hm-bubble-strength)}
 .hm-far .hm-bubble-svg{opacity:var(--hm-bubble-far-strength);--hm-bubble-glint-width:1.4;--hm-bubble-counter-width:.9}

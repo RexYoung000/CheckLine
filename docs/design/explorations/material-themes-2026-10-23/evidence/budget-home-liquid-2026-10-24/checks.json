@@ -1,0 +1,94 @@
+{
+  "geometry": {
+    "ratios": [
+      0,
+      0.001,
+      0.01,
+      0.06,
+      0.12,
+      0.4266666666666667,
+      0.9,
+      0.99,
+      0.999,
+      1
+    ],
+    "timeRange": "0..10000 seconds",
+    "meanY": 14,
+    "maxMeanError": 0.001249999999993534,
+    "maxFrameStepAt60Hz": 0.0600000000000005,
+    "frontBackNeverCross": true,
+    "emptyFullFlat": true,
+    "sampleTimesSeconds": [
+      0,
+      1,
+      7.399,
+      7.4,
+      7.401,
+      10,
+      25,
+      10000
+    ],
+    "continuityFrameSweepSeconds": 25
+  },
+  "runtime": {
+    "viewports": [
+      "390x844 light",
+      "390x844 dark",
+      "320x844 dark reduced",
+      "1120 paired"
+    ],
+    "idlePathChanges": true,
+    "tiledTranslation": "none",
+    "modalState": "covered",
+    "modalPathFrozen": true,
+    "closeModalResumes": true,
+    "dragSwitch": "month -> learning -> month; connected after each",
+    "fullCard": {
+      "name": "学点新东西",
+      "ratio": 1,
+      "state": "full"
+    },
+    "insertEject": {
+      "remainingBeforeAfter": "1,280",
+      "usedAfter": "¥1,720",
+      "stablePhase": "connected",
+      "captureFrames": 40,
+      "captureDurationMs": 2720
+    },
+    "recordsState": "records",
+    "recordsPathFrozen": true,
+    "libraryState": "library",
+    "libraryReturn": "flowing",
+    "themeSwitch": "light -> dark, retained 1,280 and ice blue",
+    "reduced": {
+      "state": "reduced",
+      "pathStable": true,
+      "visibleStaticBubbles": 16,
+      "visibleAmbientBubbles": 0,
+      "horizontalOverflow": false,
+      "normalRestored": true
+    },
+    "console": {
+      "freshPairErrors": [],
+      "freshStandaloneErrors": [],
+      "oldPairTabHistoricalErrorTimesUTC": [
+        "2026-10-24T04:45:29.835Z",
+        "2026-10-24T05:25:04.318Z"
+      ],
+      "historicalErrorsPredateHomeCommit": "71b85b1 at 2026-10-24T05:28:44Z"
+    },
+    "unverified": [
+      "Background visibility pause independently simulated",
+      "Back-forward cache resume independently exercised",
+      "Device frame performance",
+      "Final visual acceptance by Rex"
+    ]
+  },
+  "source": {
+    "onlyHomeInjectionsDiffer": true,
+    "acceptedCardPairUnchanged": true,
+    "nativeUnchanged": true,
+    "reproducibleBuild": true,
+    "sha256": "8a63cbcced4258ca68c3bc8820f6ba9d27ae39a8f47a7fd0b16f5bcd5885cb6d"
+  }
+}

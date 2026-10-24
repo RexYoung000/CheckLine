@@ -9,8 +9,7 @@ function hmMaterializeFace(face,c){
   // The backdrop is actual DOM rear cards, blurred through the front face.
   // Do not bake the pair's illustrative rear cards into the moving cartridge.
   face='<div class="hm-card-body">'+hmOptics('body',id+'-body')+'</div><div class="hm-card-edge">'+hmOptics('edge',id+'-edge')+'</div>'+face;
-  face=face.replace('class="water continuous-water"','class="water continuous-water hm-water"');
-  face=face.replace('<path class="r3-waterline"', '<path class="hm-water-back" transform="translate(0 -3)" d="M0 14 C58 8 105 18 170 14 S280 8 340 14 S380 18 400 14 C458 8 505 18 570 14 S680 8 740 14 S780 18 800 14"/><path class="r3-waterline"');
+  face=face.replace(/<div class="water continuous-water"[\s\S]*?<\/div>/,hmLiquidWaterMarkup(c,id+'-water'));
   return face;
 }
 function hmBubbleSvg(){
