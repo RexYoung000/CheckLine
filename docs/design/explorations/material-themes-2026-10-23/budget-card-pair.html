@@ -20,18 +20,16 @@ h1 { margin: 0; font-size: clamp(23px, 3.4vw, 30px); line-height: 1.3; font-weig
 .light {
   color-scheme: light;
   --ground: #f9fbfd; --panel-edge: #dde5eb; --panel-ink: #183443; --panel-secondary: #5e7381;
-  --body-top: #63c9ef; --body-mid: #37b9e8; --body-base: #125c85;
-  --body-top-alpha: .65; --body-mid-alpha: .78; --body-base-alpha: .94;
-  --rear-top: #a4e2f7; --rear-base: #69b9d9; --rear-alpha: .52; --far-alpha: .42;
-  --reflection: #ffffff; --reflection-top: .66; --reflection-mid: .12;
-  --face-top: .26; --face-mid: .08; --face-low: .015;
-  --water-top: #c5f1ff; --water-mid: #09527c; --water-base: #073953;
-  --water-top-alpha: .20; --water-mid-alpha: .54; --water-base-alpha: .62;
-  --rim-top: .98; --rim-mid: .52; --rim-bottom: .30; --rim-deep: .10;
-  --ink: #12384b; --meta-ink: #27526a; --amount-ink: #ffffff; --water-label: #f3fbff;
-  --contact: #16465c; --shadow-alpha: .20; --contact-alpha: .25;
+  --ice: #37b9e8; --ice-alpha: .28;
+  --rear-tint: #70c8e7; --rear-alpha: .42; --far-alpha: .25;
+  --reflection: #ffffff; --reflection-top: .68; --reflection-mid: .055;
+  --water-top: #37b9e8; --water-mid: #37b9e8; --water-base: #37b9e8;
+  --water-top-alpha: .10; --water-mid-alpha: .15; --water-base-alpha: .20;
+  --rim-top: .98; --rim-mid: .62; --rim-bottom: .72; --rim-deep: .14;
+  --ink: #12384b; --meta-ink: #27526a; --amount-ink: #103d52; --water-label: #27526a;
+  --contact: #183c50; --shadow-alpha: .14; --contact-alpha: .18;
   --pocket-top: #f7fcff; --pocket-base: #dcebf2; --pocket-alpha: .56; --pocket-rim: #ffffff;
-  --button-fill: .12; --bubble-alpha: .35;
+  --button-fill: .20; --bubble-alpha: .22;
 }
 .dark {
   color-scheme: dark;
@@ -98,27 +96,10 @@ footer a { color: #426a82; text-decoration-thickness: 1px; text-underline-offset
       <title id="light-title">浅色冰蓝预算主卡</title>
       <desc id="light-desc">两层后卡透入玻璃，局部白色反光与冰蓝液体叠加。下缘由一片连续卡夹承托。</desc>
       <defs>
-        <linearGradient id="light-body" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" style="stop-color:var(--body-top);stop-opacity:var(--body-top-alpha)"/>
-          <stop offset=".45" style="stop-color:var(--body-mid);stop-opacity:var(--body-mid-alpha)"/>
-          <stop offset="1" style="stop-color:var(--body-base);stop-opacity:var(--body-base-alpha)"/>
-        </linearGradient>
-        <linearGradient id="light-rear" x1="0" y1="0" x2=".35" y2="1">
-          <stop style="stop-color:var(--rear-top)"/><stop offset="1" style="stop-color:var(--rear-base)"/>
-        </linearGradient>
-        <linearGradient id="light-glass" x1="0" y1="0" x2=".58" y2="1">
-          <stop stop-color="#fff" style="stop-opacity:var(--face-top)"/>
-          <stop offset=".35" stop-color="#fff" style="stop-opacity:var(--face-mid)"/>
-          <stop offset="1" stop-color="#fff" style="stop-opacity:var(--face-low)"/>
-        </linearGradient>
-        <radialGradient id="light-reflection" class="moving-light" cx=".02" cy=".015" r=".94">
+        <radialGradient id="light-reflection" class="moving-light" cx=".02" cy=".015" r=".52">
           <stop style="stop-color:var(--reflection);stop-opacity:var(--reflection-top)"/>
-          <stop offset=".58" style="stop-color:var(--reflection);stop-opacity:var(--reflection-mid)"/>
+          <stop offset=".46" style="stop-color:var(--reflection);stop-opacity:var(--reflection-mid)"/>
           <stop offset="1" style="stop-color:var(--reflection);stop-opacity:0"/>
-        </radialGradient>
-        <radialGradient id="light-bloom" cx=".06" cy="0" r=".8">
-          <stop stop-color="#d1f4ff" stop-opacity=".18"/>
-          <stop offset="1" stop-color="#d1f4ff" stop-opacity="0"/>
         </radialGradient>
         <linearGradient id="light-liquid" x1="0" y1="0" x2="0" y2="1">
           <stop style="stop-color:var(--water-top);stop-opacity:var(--water-top-alpha)"/>
@@ -128,7 +109,7 @@ footer a { color: #426a82; text-decoration-thickness: 1px; text-underline-offset
         <linearGradient id="light-rim" x1="0" y1="0" x2=".8" y2="1">
           <stop stop-color="#fff" style="stop-opacity:var(--rim-top)"/>
           <stop offset=".28" stop-color="#fff" style="stop-opacity:var(--rim-mid)"/>
-          <stop offset=".62" stop-color="#c5f1ff" style="stop-opacity:var(--rim-deep)"/>
+          <stop offset=".62" stop-color="#4295b5" style="stop-opacity:var(--rim-deep)"/>
           <stop offset="1" stop-color="#fff" style="stop-opacity:var(--rim-bottom)"/>
         </linearGradient>
         <linearGradient id="light-pocket" x1="0" y1="0" x2="0" y2="1">
@@ -136,8 +117,8 @@ footer a { color: #426a82; text-decoration-thickness: 1px; text-underline-offset
           <stop offset="1" style="stop-color:var(--pocket-base);stop-opacity:0"/>
         </linearGradient>
         <filter id="light-shadow" filterUnits="userSpaceOnUse" x="4" y="52" width="424" height="362">
-          <feGaussianBlur in="SourceAlpha" stdDeviation="10" result="blur"/>
-          <feOffset in="blur" dy="13" result="cast"/>
+          <feGaussianBlur in="SourceAlpha" stdDeviation="8" result="blur"/>
+          <feOffset in="blur" dy="8" result="cast"/>
           <feComposite in="cast" in2="SourceAlpha" operator="out" result="outside"/>
           <feFlood style="flood-color:var(--contact);flood-opacity:var(--shadow-alpha)" result="shade"/>
           <feComposite in="shade" in2="outside" operator="in"/>
@@ -149,22 +130,21 @@ footer a { color: #426a82; text-decoration-thickness: 1px; text-underline-offset
       </defs>
       <!-- Rear planes remain physical silhouettes under the translucent front, not extra front rims. -->
       <g clip-path="url(#light-rear-top)">
-        <rect x="79" y="38" width="274" height="278" rx="29" fill="url(#light-rear)" style="opacity:var(--far-alpha)"/>
+        <rect x="79" y="38" width="274" height="278" rx="29" style="fill:var(--rear-tint);opacity:var(--far-alpha)"/>
         <rect x="79.5" y="38.5" width="273" height="277" rx="28.5" fill="none" stroke="#e0f6ff" stroke-opacity=".28"/>
-        <rect x="62" y="54" width="308" height="288" rx="30" fill="url(#light-rear)" style="opacity:var(--rear-alpha)"/>
+        <rect x="62" y="54" width="308" height="288" rx="30" style="fill:var(--rear-tint);opacity:var(--rear-alpha)"/>
         <rect x="62.5" y="54.5" width="307" height="287" rx="29.5" fill="none" stroke="#e6f8ff" stroke-opacity=".38"/>
       </g>
       <rect x="40" y="76" width="352" height="300" rx="32" fill="#000" filter="url(#light-shadow)"/>
       <g clip-path="url(#light-card)">
         <!-- This rear tint stays visible through the front's alpha and softens at the boundary. -->
-        <rect x="62" y="54" width="308" height="288" rx="30" fill="url(#light-rear)" fill-opacity=".18" filter="url(#light-soft)"/>
-        <rect x="40" y="76" width="352" height="300" fill="url(#light-body)"/>
-        <rect x="40" y="76" width="352" height="300" fill="url(#light-glass)"/>
+        <rect x="62" y="54" width="308" height="288" rx="30" style="fill:var(--rear-tint)" fill-opacity=".14" filter="url(#light-soft)"/>
+        <!-- One ice tint transmits the rear; only the local reflection changes its brightness. -->
+        <rect x="40" y="76" width="352" height="300" style="fill:var(--ice);fill-opacity:var(--ice-alpha)"/>
         <rect x="40" y="76" width="352" height="300" fill="url(#light-reflection)"/>
-        <ellipse cx="397" cy="121" rx="150" ry="246" fill="url(#light-bloom)"/>
         <path d="M40 233C94 220 133 240 190 231S294 220 345 231S382 231 392 227V381H40Z" fill="url(#light-liquid)"/>
-        <path d="M40 234C94 221 133 241 190 232S294 221 345 232S382 232 392 228" fill="none" stroke="#d3f4ff" stroke-opacity=".36" stroke-width="1.05"/>
-        <g fill="#fff" fill-opacity=".015" stroke="#e5f8ff" style="stroke-opacity:var(--bubble-alpha)" stroke-width=".75">
+        <path d="M40 234C94 221 133 241 190 232S294 221 345 232S382 232 392 228" fill="none" stroke="#ffffff" stroke-opacity=".65" stroke-width="1.05"/>
+        <g fill="#fff" fill-opacity=".025" stroke="#347f9e" style="stroke-opacity:var(--bubble-alpha)" stroke-width=".75">
           <circle cx="65" cy="324" r="2"/><circle cx="87" cy="283" r="2.9"/>
           <circle cx="102" cy="355" r="1.7"/><circle cx="127" cy="306" r="2.1"/>
           <circle cx="149" cy="260" r="1.4"/><circle cx="163" cy="349" r="3.4"/>
@@ -186,14 +166,14 @@ footer a { color: #426a82; text-decoration-thickness: 1px; text-underline-offset
       <text x="367" y="288" class="card-label" text-anchor="end">还能花</text>
       <text x="367" y="338" class="card-amount" text-anchor="end">¥1,280</text>
       <circle cx="84" cy="315" r="24" fill="#fff" style="fill-opacity:var(--button-fill)" stroke="#e5f8ff" stroke-opacity=".53" stroke-width="1"/>
-      <path d="M74 315h20M84 305v20" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/>
+      <path d="M74 315h20M84 305v20" fill="none" stroke="#27526a" stroke-width="1.6" stroke-linecap="round"/>
       <!-- One continuous foreground lip; no full-width rectangular seam. -->
       <ellipse cx="216" cy="382" rx="148" ry="3.3" style="fill:var(--contact);opacity:var(--contact-alpha)" filter="url(#light-contact)"/>
       <path d="M14 344C32 344 46 377 77 380H355C386 377 400 344 418 344V416H14Z" fill="url(#light-pocket)"/>
       <path d="M14 345C32 345 46 378 77 381H355C386 378 400 345 418 345" fill="none" style="stroke:var(--pocket-rim)" stroke-opacity=".28" stroke-width="1"/>
     </svg>
   </figure>
-  <p class="mode-note">白色承托 · 柔和透光 · 清晰的层间阴影</p>
+  <p class="mode-note">冰蓝透光 · 局部反射 · 轻薄液面</p>
 </section>
 <section class="mode dark" aria-labelledby="dark-heading">
   <header class="mode-heading"><h2 id="dark-heading">暗色</h2><span>DARK</span></header>

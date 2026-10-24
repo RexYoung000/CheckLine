@@ -1,0 +1,148 @@
+{
+  "date": "2026-10-24",
+  "scope": "Light budget main card HTML/SVG only; visual acceptance pending.",
+  "observations": [
+    {
+      "scenario": "1120-default",
+      "observed": {
+        "amountFill": "rgb(16, 61, 82)",
+        "iceOpacity": ".28",
+        "iceTint": "#37b9e8",
+        "reflectionRadius": ".52",
+        "scrollWidth": 1120,
+        "width": 1120
+      }
+    },
+    {
+      "scenario": "right-light",
+      "observed": {
+        "reflectionCentres": [
+          "0.98",
+          "0.98"
+        ],
+        "value": "98"
+      }
+    },
+    {
+      "scenario": "reset-left-light",
+      "observed": {
+        "centres": [
+          "0.02",
+          "0.02"
+        ],
+        "value": "2"
+      }
+    },
+    {
+      "scenario": "320-stacked",
+      "observed": {
+        "columns": "288px",
+        "scrollWidth": 320,
+        "width": 320
+      }
+    },
+    {
+      "scenario": "console-errors",
+      "observed": []
+    }
+  ],
+  "sourceChecks": {
+    "darkSectionUnchanged": true,
+    "darkCssUnchanged": true,
+    "svgReferencesResolved": true
+  },
+  "darkRenderMeanAbsoluteRgbDifference": [
+    0.0002538518492402073,
+    0.00020801748757183654,
+    0.00021859464795684518
+  ],
+  "sampledTextContrast": {
+    "method": "Approximate read-only sample beside glyphs in 1120x850 JPEG, not comprehensive accessibility validation.",
+    "results": [
+      {
+        "screenshot": "pair-default.jpg",
+        "role": "title",
+        "samplePoint": [
+          220,
+          293
+        ],
+        "background": [
+          198,
+          227,
+          243
+        ],
+        "contrast": 9.26
+      },
+      {
+        "screenshot": "pair-default.jpg",
+        "role": "label",
+        "samplePoint": [
+          421,
+          481
+        ],
+        "background": [
+          180,
+          221,
+          243
+        ],
+        "contrast": 5.83
+      },
+      {
+        "screenshot": "pair-default.jpg",
+        "role": "amount",
+        "samplePoint": [
+          306,
+          521
+        ],
+        "background": [
+          178,
+          219,
+          241
+        ],
+        "contrast": 7.89
+      },
+      {
+        "screenshot": "pair-right-light.jpg",
+        "role": "title",
+        "samplePoint": [
+          220,
+          293
+        ],
+        "background": [
+          195,
+          226,
+          244
+        ],
+        "contrast": 9.16
+      },
+      {
+        "screenshot": "pair-right-light.jpg",
+        "role": "label",
+        "samplePoint": [
+          421,
+          481
+        ],
+        "background": [
+          180,
+          221,
+          243
+        ],
+        "contrast": 5.83
+      },
+      {
+        "screenshot": "pair-right-light.jpg",
+        "role": "amount",
+        "samplePoint": [
+          306,
+          521
+        ],
+        "background": [
+          178,
+          219,
+          241
+        ],
+        "contrast": 7.89
+      }
+    ]
+  }
+}

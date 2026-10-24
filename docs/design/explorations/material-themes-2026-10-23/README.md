@@ -27,7 +27,11 @@
 
 Appetite UI 只借鉴白／黑背景上保持同一品牌色主卡的角色；透光、液体、受光与层叠来自项目 R3。没有引入第三方图片、字体、代码或依赖。页面底部「移动光源」同步改变两侧局部反光，「还原左上光」回到默认；这是材质观察控件，不是产品交互。
 
-浏览器已检查 1120 宽度并排、768 宽度并排、320 宽度纵排，无横向溢出；光源滑块键盘移至右侧、点击还原后，两侧同步；该独立页错误日志为空。截图相邻背景采样帮助修正了「还能花」白色小字的对比，采样值只作近似校核，不等于完整无障碍审计。见 [默认浅暗对照](evidence/budget-card-pair-2026-10-24/light-dark-default.jpg)、[右侧受光](evidence/budget-card-pair-2026-10-24/light-dark-right-light.jpg)、[窄屏](evidence/budget-card-pair-2026-10-24/320-stacked.jpg) 和 [核对记录](evidence/budget-card-pair-2026-10-24/checks.json)。原生、真机、辅助技术和最终视觉均未在本轮验收。
+首版浏览器检查覆盖 1120 宽度并排、768 宽度并排、320 宽度纵排，无横向溢出；光源滑块键盘移至右侧、点击还原后，两侧同步；该独立页错误日志为空。截图相邻背景采样曾帮助修正「还能花」白色小字的对比，采样值只作近似校核，不等于完整无障碍审计。首版证据见 [浅暗对照](evidence/budget-card-pair-2026-10-24/light-dark-default.jpg)、[右侧受光](evidence/budget-card-pair-2026-10-24/light-dark-right-light.jpg)、[窄屏](evidence/budget-card-pair-2026-10-24/320-stacked.jpg) 和 [核对记录](evidence/budget-card-pair-2026-10-24/checks.json)。原生、真机、辅助技术和最终视觉均未在本轮验收。
+
+Rex 随后要求只调整浅色版的冰蓝透光、高光反射，去除多余渐变。浅色卡体改为 `#37B9E8` 的单一透明层，取消整面纵向底色渐变、整面白色渐层及右侧叠加泛光；液体改为同一冰蓝色的低浓度吸光层。高光收在左上与一条渐弱边缘，后卡保留柔化透影，接触投影缩短减轻。金额、说明和加号改用深蓝以适配浅透色面，暗色 SVG／配色与原生均不修改。当前为修订后的浅色提案，仍待 Rex 验收。
+
+浅色修订已在浏览器复核 1120 并排、320 纵排、右侧受光与还原，均无横向溢出或错误日志；源文件核对确认暗色段落／配色未变。截图相邻背景近似采样中，浅色说明约 5.83:1、金额约 7.89:1；不代表完整无障碍验收。当前证据见 [浅色修订图](evidence/budget-card-light-refinement-2026-10-24/light-refined.jpg)、[浅暗同屏](evidence/budget-card-light-refinement-2026-10-24/pair-default.jpg) 和 [修订核对记录](evidence/budget-card-light-refinement-2026-10-24/checks.json)，不覆盖首版证据。
 
 下方全页规则与验证记录用于追溯前几轮工作；当前提案仅限上述预算主卡，不表示重新铺全页。
 
