@@ -1,0 +1,18 @@
+{
+  "baseline": "edddecd",
+  "generatedChangesOnlyMaterialStyle": true,
+  "scriptCount": 1,
+  "scriptsIdentical": true,
+  "reproducibleBuild": true,
+  "nativeChanges": [],
+  "sha256": "15da5d4db832c96983fb2ae780f1a1cd77339e4d5df9f2707aa0f25925622290",
+  "protectedSources": {
+    "budget-card-pair.html": true,
+    "src/budget-home.css": true,
+    "src/budget-home.js": true,
+    "src/budget-home-liquid.js": true,
+    "src/budget-detail.css": true,
+    "src/budget-detail.js": true,
+    "src/dark-library-palette.js": true
+  }
+}

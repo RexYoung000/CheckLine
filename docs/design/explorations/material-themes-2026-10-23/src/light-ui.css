@@ -24,9 +24,6 @@
 .app[data-home-material][data-theme=light] .dm-subpage :is(.record-row,.history-row,.amount-block:not(.no-bg),.calendar-grid){box-shadow:inset 0 1px var(--lui-highlight),0 3px 12px -10px #17171b24}
 .app[data-home-material][data-theme=light] .dm-subpage :is(select,.tertiary,.secondary){background:var(--lui-control);box-shadow:inset 0 1px var(--lui-highlight)}
 .app[data-home-material][data-theme=light] .dm-subpage .chart .bar{background:#b4b4bb;box-shadow:inset 0 1px #ffffff80;border-color:#1111180a}
-.app[data-home-material][data-theme=light] .dm-subpage .chart .bar.selected{background:var(--lui-primary);box-shadow:none}
-.app[data-home-material][data-theme=light] .dm-subpage .calendar-grid>button.has-record{background:var(--lui-selected)}
-.app[data-home-material][data-theme=light] .dm-subpage .calendar-grid>button.selected{background:var(--lui-primary);color:var(--lui-primary-ink);box-shadow:none}
 .app[data-home-material][data-theme=light] .reader-drawer:has(:is(.dm-detail-card,.dm-subpage,.wish-wallet-page,.wish-entry-page)) .detail-head .icon-button{box-shadow:inset 0 1px var(--lui-highlight)}
 .app[data-home-material][data-theme=light] .reader-drawer:has(.dm-detail-card) :is(.restored-budget-limit,.restored-destinations>button){box-shadow:inset 0 1px var(--lui-highlight),0 3px 12px -10px #17171b24}
 .app[data-home-material][data-theme=light] .wish-library :is(.wish-balance-bar,.wish-phase-tabs,.wish-view-options){box-shadow:inset 0 1px var(--lui-highlight)}
@@ -36,4 +33,3 @@
 .app[data-home-material][data-theme=light] .cartridge-world:not(.library-open) .console-shell::before{background:linear-gradient(180deg,#ffffff99,#e9e9ec20 220px,transparent 520px)}
 .app[data-home-material][data-theme=light] .cartridge-world:not(.library-open) .console-lip path{stroke:#fff;stroke-opacity:.38}
 .app[data-home-material][data-theme=light] .cartridge-world:not(.library-open) :is(.home-tile,.cl-receipt-card){box-shadow:inset 0 1px var(--lui-highlight),0 3px 12px -10px #17171b24}
-.app[data-home-material][data-theme=light] :is(.dm-subpage,.wish-home,.reader-drawer-header,.dock) :is(button,select):focus-visible{outline-color:var(--lui-text)}

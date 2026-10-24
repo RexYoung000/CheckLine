@@ -8,9 +8,11 @@
 .app[data-home-material][data-theme]:has(.wish-home){--material-focus-overlay:var(--wm-focus)}
 .app[data-home-material][data-theme] .wish-page-head .icon-button{background:var(--hm-nav);color:var(--hm-accent);border:1px solid var(--hm-panel-edge);box-shadow:inset 0 1px #ffffff40}
 .app[data-home-material][data-theme] .wish-library .wish-balance-bar{background:var(--hm-tile);border:1px solid var(--hm-panel-edge);box-shadow:inset 0 1px #ffffff50,0 7px 15px -15px var(--wm-drop);color:var(--hm-panel-ink)}
+/* Amounts stay primary even when their wrapper uses secondary label color. */
+.app[data-home-material][data-theme] :is(.wish-library .wish-balance-number>strong,.outcome-wish .outcome-wallet .outcome-wallet-number){color:var(--hm-panel-ink)}
 .app[data-home-material][data-theme] .wish-library :is(.wish-phase-tabs,.wish-view-options){background:var(--hm-nav);border:1px solid var(--hm-panel-edge);box-shadow:inset 0 1px #ffffff30}
 .app[data-home-material][data-theme] .wish-library :is(.wish-phase-tabs button,.wish-view-options button){background:transparent;color:var(--hm-muted);box-shadow:none}
-.app[data-home-material][data-theme] .wish-library :is(.wish-phase-tabs button[aria-selected=true],.wish-view-options button[aria-pressed=true]){background:var(--hm-nav-selected);color:var(--hm-accent);box-shadow:inset 0 1px #ffffff50}
+.app[data-home-material][data-theme] .wish-library :is(.wish-phase-tabs button[aria-selected=true],.wish-view-options button[aria-pressed=true]){box-shadow:inset 0 1px #ffffff50}
 .app[data-home-material][data-theme] :is(.wish-face,.wish-card-v28 .wish-face-back,.wish-compose-preview,.wish-cover-preview,.wish-collection-row){--ink:var(--wm-ink);--muted:var(--wm-meta);--accent:#176a91;--icon-accent:#176a91;background:radial-gradient(ellipse at 9% 0,var(--wm-reflection),transparent 57%),var(--wm-card);color:var(--wm-ink);border:0;box-shadow:inset 1px 1.5px 0 var(--wm-edge),inset -1px -1px 0 var(--wm-low-edge),inset 0 -4px 7px -6px #103d5299,0 9px 17px -14px var(--wm-drop);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
 .app[data-home-material][data-theme] .wish-face::after{background:radial-gradient(ellipse at var(--wish-glare-x) 0,#ffffff55,transparent 43%);box-shadow:none;opacity:.4;pointer-events:none}
 .app[data-home-material][data-theme] .wish-face::before{content:'';position:absolute;inset:0;z-index:3;padding:1.2px;border-radius:inherit;background:linear-gradient(135deg,#ffffffe8,#ffffff24 43%,#dcf6ff61 72%,#91ddf780);mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);mask-composite:exclude;-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;pointer-events:none}
@@ -38,7 +40,7 @@
 .app[data-home-material][data-theme] :is(.wish-ledger-row.wish-ledger-v29,.wish-fact-block,.wish-ledger-empty){background:var(--hm-receipt);color:var(--hm-panel-ink);box-shadow:inset 0 1px #ffffff30,inset 0 0 0 1px var(--hm-panel-edge)}
 .app[data-home-material][data-theme] .wish-ledger-symbol.credit{color:var(--hm-accent)}
 .app[data-home-material][data-theme]:has(.wish-home) .dock{--material-block:var(--hm-nav);--material-edge:var(--hm-panel-edge);--material-selected:var(--hm-nav-selected)}
-.app[data-home-material][data-theme]:has(.wish-home) .dock-tabs button.selected{color:var(--hm-accent);background:var(--hm-nav-selected)}
+.app[data-home-material][data-theme]:has(.wish-home) .dock-tabs button.selected{color:var(--hm-accent)}
 /* A personal full-bleed photo keeps the existing contrast veil and white type. */
 .app[data-home-material][data-theme] .cover-photo-fill :is(.wish-front-title>strong,.wish-front-value,.wish-money){color:#fff}
 .app[data-home-material][data-theme] .cover-photo-fill .wish-money small{color:#ffffffe0}

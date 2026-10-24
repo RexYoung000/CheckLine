@@ -16,12 +16,11 @@
 .app[data-home-material][data-theme] .dm-subpage :is(select,.tertiary,.secondary){background:var(--hm-nav);border:1px solid var(--hm-panel-edge);color:var(--hm-accent);border-radius:14px;min-height:44px;padding:10px 13px;box-shadow:inset 0 1px #ffffff26}
 .app[data-home-material][data-theme] .dm-subpage .chart{border-bottom:1px solid var(--hm-panel-edge);background:transparent}
 .app[data-home-material][data-theme] .dm-subpage .chart .bar{background:color-mix(in srgb,var(--hm-ice) 45%,transparent);box-shadow:inset 0 1px #ffffff80;border:1px solid color-mix(in srgb,var(--hm-ice) 24%,transparent);border-radius:7px 7px 2px 2px;min-width:0}
-.app[data-home-material][data-theme] .dm-subpage .chart .bar.selected{background:var(--dm-primary);box-shadow:inset 0 1px #ffffff80,0 0 0 2px var(--dm-sheet)}
-.app[data-home-material][data-theme] .dm-subpage .calendar-grid{border-radius:24px;padding:12px 7px;gap:3px}
+.app[data-home-material][data-theme] .dm-subpage .calendar-grid{border-radius:24px;padding:12px 7px;gap:3px;grid-template-columns:repeat(7,minmax(0,1fr))}
 .app[data-home-material][data-theme] .dm-subpage .calendar-grid>span{color:var(--hm-muted)}
-.app[data-home-material][data-theme] .dm-subpage .calendar-grid>button{color:var(--hm-panel-ink);min-height:38px;border-radius:13px;background:transparent;box-shadow:none}
-.app[data-home-material][data-theme] .dm-subpage .calendar-grid>button.has-record{background:color-mix(in srgb,var(--hm-ice) 19%,transparent)}
-.app[data-home-material][data-theme] .dm-subpage .calendar-grid>button.selected{color:var(--dm-primary-ink);background:var(--dm-primary);box-shadow:inset 0 1px #ffffff40}
+.app[data-home-material][data-theme] .dm-subpage .calendar-grid>button{color:var(--hm-panel-ink);min-width:0;min-height:38px;border-radius:13px;background:transparent;box-shadow:none}
+/* Consumption is the existing dot; only the current date gets a selected fill. */
+.app[data-home-material][data-theme] .dm-subpage .calendar-grid>button.has-record:not(.selected){background:transparent}
 .app[data-home-material][data-theme] .dm-subpage .history-row{border-radius:22px;padding:20px 17px;margin:0 0 12px;min-height:100px;gap:12px;text-align:left}
 .app[data-home-material][data-theme] .dm-subpage .history-row>span{min-width:0}
 .app[data-home-material][data-theme] .dm-subpage .history-row strong{font-weight:550;line-height:1.6}
@@ -35,5 +34,4 @@
 .app[data-home-material][data-theme] .dm-subpage .form-more{border-color:var(--hm-panel-edge);color:var(--hm-muted)}
 .app[data-home-material][data-theme] .dm-subpage .detail-actions{background:var(--dm-sheet)}
 .app[data-home-material][data-theme] .dm-subpage .primary{background:var(--dm-primary);color:var(--dm-primary-ink)}
-.app[data-home-material][data-theme] .dm-subpage :is(button,select):focus-visible{outline:2px solid var(--hm-accent);outline-offset:3px}
 @container(max-width:340px){.dm-subpage .filter-row{flex-wrap:wrap;gap:10px}.dm-subpage .history-row{flex-wrap:wrap}.dm-subpage .history-row .result{margin-left:auto}}

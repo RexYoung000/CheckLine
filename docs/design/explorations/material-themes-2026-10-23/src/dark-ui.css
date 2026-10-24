@@ -37,9 +37,6 @@
 .app[data-home-material][data-theme=dark] .dm-subpage :is(.record-row,.history-row,.amount-block:not(.no-bg),.calendar-grid){box-shadow:inset 0 1px var(--dui-highlight),0 6px 14px -13px #0009}
 .app[data-home-material][data-theme=dark] .dm-subpage :is(select,.tertiary,.secondary){box-shadow:inset 0 1px var(--dui-highlight)}
 .app[data-home-material][data-theme=dark] .dm-subpage .chart .bar{background:#74747c;box-shadow:inset 0 1px #ffffff24;border-color:#ffffff0a}
-.app[data-home-material][data-theme=dark] .dm-subpage .chart .bar.selected{background:var(--dui-text);box-shadow:none}
-.app[data-home-material][data-theme=dark] .dm-subpage .calendar-grid>button.has-record{background:var(--dui-selected)}
-.app[data-home-material][data-theme=dark] .dm-subpage .calendar-grid>button.selected{background:var(--dui-primary);color:var(--dui-primary-ink);box-shadow:none}
 .app[data-home-material][data-theme=dark] .reader-drawer:has(:is(.dm-detail-card,.dm-subpage,.wish-wallet-page,.wish-entry-page)) .detail-head .icon-button{box-shadow:inset 0 1px var(--dui-highlight)}
 .app[data-home-material][data-theme=dark] .reader-drawer:has(.dm-detail-card) :is(.restored-budget-limit,.restored-destinations>button){box-shadow:inset 0 1px var(--dui-highlight),0 6px 14px -13px #0009}
 .app[data-home-material][data-theme=dark] .wish-library :is(.wish-balance-bar,.wish-phase-tabs,.wish-view-options){box-shadow:inset 0 1px var(--dui-highlight)}
@@ -49,4 +46,3 @@
 .app[data-home-material][data-theme=dark] .cartridge-world:not(.library-open) .console-shell::before{background:linear-gradient(180deg,#ffffff10,#ffffff03 220px,transparent 520px)}
 .app[data-home-material][data-theme=dark] .cartridge-world:not(.library-open) .console-lip path{stroke:#fff;stroke-opacity:.14}
 .app[data-home-material][data-theme=dark] .cartridge-world:not(.library-open) :is(.home-tile,.cl-receipt-card){box-shadow:inset 0 1px var(--dui-highlight),0 6px 14px -13px #0009}
-.app[data-home-material][data-theme=dark] :is(.dm-subpage,.wish-home,.reader-drawer-header,.dock) :is(button,select):focus-visible{outline-color:var(--dui-text)}

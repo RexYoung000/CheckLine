@@ -1,0 +1,1982 @@
+{
+  "routeCount": 21,
+  "routeSamples": [
+    {
+      "view": "wish",
+      "balance": {
+        "background": "rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box",
+        "color": "rgb(28, 28, 31)",
+        "height": 34,
+        "outline": "rgb(28, 28, 31) none 3px",
+        "shadow": "none",
+        "text": "¥600",
+        "width": 70.390625
+      },
+      "currency": {
+        "background": "rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box",
+        "color": "rgb(110, 110, 118)",
+        "height": 10.5,
+        "outline": "rgb(110, 110, 118) none 3px",
+        "shadow": "none",
+        "text": "CNY",
+        "width": 19.5234375
+      },
+      "face": {
+        "background": "radial-gradient(at 9% 0px, rgba(255, 255, 255, 0.72), rgba(0, 0, 0, 0) 57%) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 0.215686 0.72549 0.909804 / 0.28) none repeat scroll 0% 0% / auto padding-box border-box",
+        "color": "rgb(18, 56, 75)",
+        "height": 198,
+        "outline": "rgb(18, 56, 75) none 3px",
+        "shadow": "rgba(255, 255, 255, 0.85) 1px 1.5px 0px 0px inset, rgba(108, 171, 194, 0.267) -1px -1px 0px 0px inset, rgba(16, 61, 82, 0.6) 0px -4px 7px -6px inset, rgba(22, 64, 90, 0.14) 0px 9px 17px -14px",
+        "text": "降噪耳机¥1,200",
+        "width": 165
+      },
+      "icon": {
+        "background": "rgb(50, 127, 157) none repeat scroll 0% 0% / auto padding-box border-box",
+        "color": "rgb(50, 127, 157)",
+        "height": 23,
+        "outline": "rgb(50, 127, 157) none 3px",
+        "shadow": "none",
+        "text": "",
+        "width": 23
+      },
+      "lens": {
+        "background": "rgba(0, 0, 0, 0) linear-gradient(145deg, rgba(255, 255, 255, 0.325), rgba(255, 255, 255, 0.05) 52%, rgba(255, 255, 255, 0.15)) repeat scroll 0% 0% / auto padding-box border-box",
+        "color": "rgb(28, 28, 31)",
+        "height": 54,
+        "outline": "rgb(28, 28, 31) none 3px",
+        "shadow": "rgb(255, 255, 255) 0px 1px 1px 0px inset, rgba(24, 24, 31, 0.08) 0px -1px 1px 0px inset, rgba(255, 255, 255, 0.7) 1px 0px 1px 0px inset",
+        "text": "心愿",
+        "width": 62.6640625
+      },
+      "selected": {
+        "background": "rgb(226, 243, 250) none repeat scroll 0% 0% / auto padding-box border-box",
+        "color": "rgb(23, 84, 109)",
+        "height": 38,
+        "outline": "rgb(23, 84, 109) none 3px",
+        "shadow": "rgba(255, 255, 255, 0.5) 0px 1px 0px 0px inset",
+        "text": "未实现3",
+        "width": 119.5
+      },
+      "theme": "light"
+    },
+    {
+      "view": "wish",
+      "balance": {
+        "background": "rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box",
+        "color": "rgb(243, 243, 245)",
+        "height": 34,
+        "outline": "rgb(243, 243, 245) none 3px",
+        "shadow": "none",
+        "text": "¥600",
+        "width": 70.390625
+      },
+      "currency": {
+        "background": "rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box",
+        "color": "rgb(170, 170, 176)",
+        "height": 10.5,
+        "outline": "rgb(170, 170, 176) none 3px",
+        "shadow": "none",
+        "text": "CNY",
+        "width": 19.5234375
+      },
+      "face": {
+        "background": "radial-gradient(83% 73% at 9% 0%, rgba(244, 252, 255, 0.6), rgba(244, 252, 255, 0.19) 33%, rgba(0, 0, 0, 0) 78%) repeat scroll 0% 0% / auto padding-box border-box, radial-gradient(56% 32% at 95% 100%, rgba(197, 246, 255, 0.22), rgba(0, 0, 0, 0) 75%) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 0.560784 0.847059 0.94902 / 0.92) none repeat scroll 0% 0% / auto padding-box border-box",
+        "color": "rgb(18, 56, 75)",
+        "height": 198,
+        "outline": "rgb(18, 56, 75) none 3px",
+        "shadow": "rgba(244, 252, 255, 0.8) 1px 1.5px 0px 0px inset, rgba(191, 233, 248, 0.42) -1px -1px 0px 0px inset, rgba(225, 247, 255, 0.8) 6px 7px 10px -8px inset, rgba(16, 61, 82, 0.65) -6px -7px 9px -7px inset, rgba(0, 0, 0, 0.44) 0px 9px 17px -14px",
+        "text": "降噪耳机¥1,200",
+        "width": 165
+      },
+      "icon": {
+        "background": "rgb(167, 224, 245) none repeat scroll 0% 0% / auto padding-box border-box",
+        "color": "rgb(167, 224, 245)",
+        "height": 23,
+        "outline": "rgb(167, 224, 245) none 3px",
+        "shadow": "none",
+        "text": "",
+        "width": 23
+      },
+      "lens": {
+        "background": "rgba(0, 0, 0, 0) linear-gradient(145deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.024) 52%, rgba(255, 255, 255, 0.07)) repeat scroll 0% 0% / auto padding-box border-box",
+        "color": "rgb(243, 243, 245)",
+        "height": 54,
+        "outline": "rgb(243, 243, 245) none 3px",
+        "shadow": "rgba(255, 255, 255, 0.32) 0px 1px 1px 0px inset, rgba(255, 255, 255, 0.07) 0px -1px 1px 0px inset, rgba(255, 255, 255, 0.14) 1px 0px 1px 0px inset, rgba(0, 0, 0, 0.333) 0px 2px 5px 0px",
+        "text": "心愿",
+        "width": 62.6640625
+      },
+      "selected": {
+        "background": "rgb(167, 224, 245) none repeat scroll 0% 0% / auto padding-box border-box",
+        "color": "rgb(18, 56, 75)",
+        "height": 38,
+        "outline": "rgb(18, 56, 75) none 3px",
+        "shadow": "rgba(255, 255, 255, 0.08) 0px 1px 0px 0px inset",
+        "text": "未实现3",
+        "width": 119.5
+      },
+      "theme": "dark"
+    },
+    {
+      "view": "trend",
+      "headings": [
+        "预算",
+        "最近记录0123456789笔",
+        "10月25日",
+        "10月24日",
+        "10月23日",
+        "10月22日",
+        "10月1日",
+        "趋势与日历",
+        "近 14 天",
+        "2026 年 10 月"
+      ],
+      "primary": [],
+      "scrollWidth": 388,
+      "selected": [
+        {
+          "bg": "rgb(226, 243, 250)",
+          "classes": "has-record selected",
+          "color": "rgb(23, 84, 109)",
+          "disabled": false,
+          "outline": "rgb(23, 84, 109) none 3px",
+          "tag": "BUTTON",
+          "text": "25"
+        }
+      ],
+      "theme": "light",
+      "width": 388
+    },
+    {
+      "view": "trend",
+      "headings": [
+        "预算",
+        "最近记录0123456789笔",
+        "10月25日",
+        "10月24日",
+        "10月23日",
+        "10月22日",
+        "10月1日",
+        "趋势与日历",
+        "近 14 天",
+        "2026 年 10 月"
+      ],
+      "primary": [],
+      "scrollWidth": 388,
+      "selected": [
+        {
+          "bg": "rgb(167, 224, 245)",
+          "classes": "has-record selected",
+          "color": "rgb(18, 56, 75)",
+          "disabled": false,
+          "outline": "rgb(18, 56, 75) none 3px",
+          "tag": "BUTTON",
+          "text": "25"
+        }
+      ],
+      "theme": "dark",
+      "width": 388
+    },
+    {
+      "view": "agent",
+      "headings": [
+        "预算",
+        "最近记录0123456789笔",
+        "10月25日",
+        "10月24日",
+        "10月23日",
+        "10月22日",
+        "10月1日"
+      ],
+      "primary": [],
+      "scrollWidth": 388,
+      "selected": [],
+      "theme": "light",
+      "width": 388
+    },
+    {
+      "view": "agent",
+      "headings": [
+        "预算",
+        "最近记录0123456789笔",
+        "10月25日",
+        "10月24日",
+        "10月23日",
+        "10月22日",
+        "10月1日"
+      ],
+      "primary": [],
+      "scrollWidth": 388,
+      "selected": [],
+      "theme": "dark",
+      "width": 388
+    },
+    {
+      "view": "new-budget",
+      "headings": [
+        "预算",
+        "最近记录0123456789笔",
+        "10月25日",
+        "10月24日",
+        "10月23日",
+        "10月22日",
+        "10月1日",
+        "创建预算卡"
+      ],
+      "primary": [
+        {
+          "bg": "rgb(36, 36, 38)",
+          "classes": "primary",
+          "color": "rgb(255, 255, 255)",
+          "disabled": true,
+          "outline": "rgb(255, 255, 255) none 3px",
+          "tag": "BUTTON",
+          "text": "创建预算卡"
+        }
+      ],
+      "scrollWidth": 388,
+      "selected": [
+        {
+          "bg": "rgb(226, 243, 250)",
+          "classes": "selected",
+          "color": "rgb(23, 84, 109)",
+          "disabled": false,
+          "outline": "rgb(23, 84, 109) none 3px",
+          "tag": "BUTTON",
+          "text": "每月循环"
+        },
+        {
+          "bg": "rgb(226, 243, 250)",
+          "classes": "selected",
+          "color": "rgb(23, 84, 109)",
+          "disabled": false,
+          "outline": "rgb(23, 84, 109) none 3px",
+          "tag": "BUTTON",
+          "text": "完整周期"
+        }
+      ],
+      "theme": "light",
+      "width": 388
+    },
+    {
+      "view": "new-budget",
+      "headings": [
+        "预算",
+        "最近记录0123456789笔",
+        "10月25日",
+        "10月24日",
+        "10月23日",
+        "10月22日",
+        "10月1日",
+        "创建预算卡"
+      ],
+      "primary": [
+        {
+          "bg": "rgb(242, 242, 244)",
+          "classes": "primary",
+          "color": "rgb(23, 23, 25)",
+          "disabled": true,
+          "outline": "rgb(23, 23, 25) none 3px",
+          "tag": "BUTTON",
+          "text": "创建预算卡"
+        }
+      ],
+      "scrollWidth": 388,
+      "selected": [
+        {
+          "bg": "rgb(167, 224, 245)",
+          "classes": "selected",
+          "color": "rgb(18, 56, 75)",
+          "disabled": false,
+          "outline": "rgb(18, 56, 75) none 3px",
+          "tag": "BUTTON",
+          "text": "每月循环"
+        },
+        {
+          "bg": "rgb(167, 224, 245)",
+          "classes": "selected",
+          "color": "rgb(18, 56, 75)",
+          "disabled": false,
+          "outline": "rgb(18, 56, 75) none 3px",
+          "tag": "BUTTON",
+          "text": "完整周期"
+        }
+      ],
+      "theme": "dark",
+      "width": 388
+    },
+    {
+      "view": "home",
+      "headings": [
+        "预算",
+        "最近记录0123456789笔",
+        "10月25日",
+        "10月24日",
+        "10月23日",
+        "10月22日",
+        "10月1日"
+      ],
+      "primary": [],
+      "scrollWidth": 388,
+      "selected": [],
+      "theme": "light",
+      "width": 388
+    },
+    {
+      "view": "home",
+      "headings": [
+        "预算",
+        "最近记录0123456789笔",
+        "10月25日",
+        "10月24日",
+        "10月23日",
+        "10月22日",
+        "10月1日"
+      ],
+      "primary": [],
+      "scrollWidth": 388,
+      "selected": [],
+      "theme": "dark",
+      "width": 388
+    },
+    {
+      "view": "records",
+      "headings": [
+        "预算",
+        "最近记录0123456789笔",
+        "10月25日",
+        "10月24日",
+        "10月23日",
+        "10月22日",
+        "10月1日"
+      ],
+      "primary": [],
+      "scrollWidth": 388,
+      "selected": [],
+      "theme": "light",
+      "width": 388
+    },
+    {
+      "view": "records",
+      "headings": [
+        "预算",
+        "最近记录0123456789笔",
+        "10月25日",
+        "10月24日",
+        "10月23日",
+        "10月22日",
+        "10月1日"
+      ],
+      "primary": [],
+      "scrollWidth": 388,
+      "selected": [],
+      "theme": "dark",
+      "width": 388
+    },
+    {
+      "view": "detail",
+      "headings": [
+        "预算",
+        "最近记录0123456789笔",
+        "10月25日",
+        "10月24日",
+        "10月23日",
+        "10月22日",
+        "10月1日",
+        "这个月"
+      ],
+      "primary": [
+        {
+          "bg": "rgb(36, 36, 38)",
+          "classes": "primary",
+          "color": "rgb(255, 255, 255)",
+          "disabled": false,
+          "outline": "rgb(255, 255, 255) none 3px",
+          "tag": "BUTTON",
+          "text": "+ 记一笔"
+        }
+      ],
+      "scrollWidth": 388,
+      "selected": [],
+      "theme": "light",
+      "width": 388
+    },
+    {
+      "view": "detail",
+      "headings": [
+        "预算",
+        "最近记录0123456789笔",
+        "10月25日",
+        "10月24日",
+        "10月23日",
+        "10月22日",
+        "10月1日",
+        "这个月"
+      ],
+      "primary": [
+        {
+          "bg": "rgb(242, 242, 244)",
+          "classes": "primary",
+          "color": "rgb(23, 23, 25)",
+          "disabled": false,
+          "outline": "rgb(23, 23, 25) none 3px",
+          "tag": "BUTTON",
+          "text": "+ 记一笔"
+        }
+      ],
+      "scrollWidth": 388,
+      "selected": [],
+      "theme": "dark",
+      "width": 388
+    },
+    {
+      "view": "library",
+      "headings": [
+        "预算",
+        "最近记录0123456789笔",
+        "10月25日",
+        "10月24日",
+        "10月23日",
+        "10月22日",
+        "10月1日"
+      ],
+      "primary": [],
+      "scrollWidth": 388,
+      "selected": [],
+      "theme": "light",
+      "width": 388
+    },
+    {
+      "view": "library",
+      "headings": [
+        "预算",
+        "最近记录0123456789笔",
+        "10月25日",
+        "10月24日",
+        "10月23日",
+        "10月22日",
+        "10月1日"
+      ],
+      "primary": [],
+      "scrollWidth": 388,
+      "selected": [],
+      "theme": "dark",
+      "width": 388
+    },
+    {
+      "view": "budget-records",
+      "headings": [
+        "预算",
+        "最近记录0123456789笔",
+        "10月25日",
+        "10月24日",
+        "10月23日",
+        "10月22日",
+        "10月1日",
+        "消费记录",
+        "本期记录"
+      ],
+      "primary": [],
+      "scrollWidth": 388,
+      "selected": [],
+      "theme": "light",
+      "width": 388
+    },
+    {
+      "view": "budget-records",
+      "headings": [
+        "预算",
+        "最近记录0123456789笔",
+        "10月25日",
+        "10月24日",
+        "10月23日",
+        "10月22日",
+        "10月1日",
+        "消费记录",
+        "本期记录"
+      ],
+      "primary": [],
+      "scrollWidth": 388,
+      "selected": [],
+      "theme": "dark",
+      "width": 388
+    },
+    {
+      "view": "record",
+      "headings": [
+        "预算",
+        "最近记录0123456789笔",
+        "10月25日",
+        "10月24日",
+        "10月23日",
+        "10月22日",
+        "10月1日",
+        "消费详情"
+      ],
+      "primary": [],
+      "scrollWidth": 388,
+      "selected": [],
+      "theme": "light",
+      "width": 388
+    },
+    {
+      "view": "record",
+      "headings": [
+        "预算",
+        "最近记录0123456789笔",
+        "10月25日",
+        "10月24日",
+        "10月23日",
+        "10月22日",
+        "10月1日",
+        "消费详情"
+      ],
+      "primary": [],
+      "scrollWidth": 388,
+      "selected": [],
+      "theme": "dark",
+      "width": 388
+    },
+    {
+      "view": "history",
+      "headings": [
+        "预算",
+        "最近记录0123456789笔",
+        "10月25日",
+        "10月24日",
+        "10月23日",
+        "10月22日",
+        "10月1日",
+        "历史周期"
+      ],
+      "primary": [],
+      "scrollWidth": 388,
+      "selected": [],
+      "theme": "light",
+      "width": 388
+    },
+    {
+      "view": "history",
+      "headings": [
+        "预算",
+        "最近记录0123456789笔",
+        "10月25日",
+        "10月24日",
+        "10月23日",
+        "10月22日",
+        "10月1日",
+        "历史周期"
+      ],
+      "primary": [],
+      "scrollWidth": 388,
+      "selected": [],
+      "theme": "dark",
+      "width": 388
+    },
+    {
+      "view": "info",
+      "headings": [
+        "预算",
+        "最近记录0123456789笔",
+        "10月25日",
+        "10月24日",
+        "10月23日",
+        "10月22日",
+        "10月1日",
+        "预算信息",
+        "这个月"
+      ],
+      "primary": [],
+      "scrollWidth": 388,
+      "selected": [],
+      "theme": "light",
+      "width": 388
+    },
+    {
+      "view": "info",
+      "headings": [
+        "预算",
+        "最近记录0123456789笔",
+        "10月25日",
+        "10月24日",
+        "10月23日",
+        "10月22日",
+        "10月1日",
+        "预算信息",
+        "这个月"
+      ],
+      "primary": [],
+      "scrollWidth": 388,
+      "selected": [],
+      "theme": "dark",
+      "width": 388
+    },
+    {
+      "view": "wish-back",
+      "headings": [
+        "心愿",
+        "降噪耳机",
+        "周末看展",
+        "去看海",
+        "降噪耳机"
+      ],
+      "primary": [
+        {
+          "bg": "rgb(231, 231, 234)",
+          "classes": "primary wish-redeem-button",
+          "color": "rgb(133, 133, 140)",
+          "disabled": true,
+          "outline": "rgb(133, 133, 140) none 3px",
+          "tag": "BUTTON",
+          "text": "兑换"
+        },
+        {
+          "bg": "rgb(36, 36, 38)",
+          "classes": "primary wish-redeem-button is-redeemable",
+          "color": "rgb(255, 255, 255)",
+          "disabled": false,
+          "outline": "rgb(255, 255, 255) none 3px",
+          "tag": "BUTTON",
+          "text": "兑换"
+        },
+        {
+          "bg": "rgb(231, 231, 234)",
+          "classes": "primary wish-redeem-button",
+          "color": "rgb(133, 133, 140)",
+          "disabled": true,
+          "outline": "rgb(133, 133, 140) none 3px",
+          "tag": "BUTTON",
+          "text": "兑换"
+        },
+        {
+          "bg": "rgb(231, 231, 234)",
+          "classes": "primary wish-redeem-button",
+          "color": "rgb(133, 133, 140)",
+          "disabled": true,
+          "outline": "rgb(133, 133, 140) none 3px",
+          "tag": "BUTTON",
+          "text": "兑换"
+        }
+      ],
+      "scrollWidth": 388,
+      "selected": [
+        {
+          "bg": "rgb(226, 243, 250)",
+          "classes": "",
+          "color": "rgb(23, 84, 109)",
+          "disabled": false,
+          "outline": "rgb(23, 84, 109) none 3px",
+          "tag": "BUTTON",
+          "text": "未实现3"
+        },
+        {
+          "bg": "rgb(226, 243, 250)",
+          "classes": "",
+          "color": "rgb(23, 84, 109)",
+          "disabled": false,
+          "outline": "rgb(23, 84, 109) none 3px",
+          "tag": "BUTTON",
+          "text": ""
+        },
+        {
+          "bg": "rgba(0, 0, 0, 0)",
+          "classes": "wish-face-tap",
+          "color": "rgb(18, 56, 75)",
+          "disabled": false,
+          "outline": "rgb(18, 56, 75) none 3px",
+          "tag": "BUTTON",
+          "text": ""
+        }
+      ],
+      "theme": "light",
+      "width": 388
+    },
+    {
+      "view": "wish-back",
+      "headings": [
+        "心愿",
+        "降噪耳机",
+        "周末看展",
+        "去看海",
+        "降噪耳机"
+      ],
+      "primary": [
+        {
+          "bg": "rgb(43, 43, 46)",
+          "classes": "primary wish-redeem-button",
+          "color": "rgb(153, 153, 160)",
+          "disabled": true,
+          "outline": "rgb(153, 153, 160) none 3px",
+          "tag": "BUTTON",
+          "text": "兑换"
+        },
+        {
+          "bg": "rgb(242, 242, 244)",
+          "classes": "primary wish-redeem-button is-redeemable",
+          "color": "rgb(23, 23, 25)",
+          "disabled": false,
+          "outline": "rgb(23, 23, 25) none 3px",
+          "tag": "BUTTON",
+          "text": "兑换"
+        },
+        {
+          "bg": "rgb(43, 43, 46)",
+          "classes": "primary wish-redeem-button",
+          "color": "rgb(153, 153, 160)",
+          "disabled": true,
+          "outline": "rgb(153, 153, 160) none 3px",
+          "tag": "BUTTON",
+          "text": "兑换"
+        },
+        {
+          "bg": "rgb(43, 43, 46)",
+          "classes": "primary wish-redeem-button",
+          "color": "rgb(153, 153, 160)",
+          "disabled": true,
+          "outline": "rgb(153, 153, 160) none 3px",
+          "tag": "BUTTON",
+          "text": "兑换"
+        }
+      ],
+      "scrollWidth": 388,
+      "selected": [
+        {
+          "bg": "rgb(167, 224, 245)",
+          "classes": "",
+          "color": "rgb(18, 56, 75)",
+          "disabled": false,
+          "outline": "rgb(18, 56, 75) none 3px",
+          "tag": "BUTTON",
+          "text": "未实现3"
+        },
+        {
+          "bg": "rgb(167, 224, 245)",
+          "classes": "",
+          "color": "rgb(18, 56, 75)",
+          "disabled": false,
+          "outline": "rgb(18, 56, 75) none 3px",
+          "tag": "BUTTON",
+          "text": ""
+        }
+      ],
+      "theme": "dark",
+      "width": 388
+    },
+    {
+      "view": "wallet",
+      "headings": [
+        "心愿",
+        "降噪耳机",
+        "周末看展",
+        "去看海",
+        "心愿余额",
+        "余额变动"
+      ],
+      "primary": [
+        {
+          "bg": "rgb(231, 231, 234)",
+          "classes": "primary wish-redeem-button",
+          "color": "rgb(133, 133, 140)",
+          "disabled": true,
+          "outline": "rgb(133, 133, 140) none 3px",
+          "tag": "BUTTON",
+          "text": "兑换"
+        },
+        {
+          "bg": "rgb(36, 36, 38)",
+          "classes": "primary wish-redeem-button is-redeemable",
+          "color": "rgb(255, 255, 255)",
+          "disabled": false,
+          "outline": "rgb(255, 255, 255) none 3px",
+          "tag": "BUTTON",
+          "text": "兑换"
+        },
+        {
+          "bg": "rgb(231, 231, 234)",
+          "classes": "primary wish-redeem-button",
+          "color": "rgb(133, 133, 140)",
+          "disabled": true,
+          "outline": "rgb(133, 133, 140) none 3px",
+          "tag": "BUTTON",
+          "text": "兑换"
+        }
+      ],
+      "scrollWidth": 388,
+      "selected": [
+        {
+          "bg": "rgb(226, 243, 250)",
+          "classes": "",
+          "color": "rgb(23, 84, 109)",
+          "disabled": false,
+          "outline": "rgb(23, 84, 109) none 3px",
+          "tag": "BUTTON",
+          "text": "未实现3"
+        },
+        {
+          "bg": "rgb(226, 243, 250)",
+          "classes": "",
+          "color": "rgb(23, 84, 109)",
+          "disabled": false,
+          "outline": "rgb(23, 84, 109) none 3px",
+          "tag": "BUTTON",
+          "text": ""
+        }
+      ],
+      "theme": "light",
+      "width": 388
+    },
+    {
+      "view": "wallet",
+      "headings": [
+        "心愿",
+        "降噪耳机",
+        "周末看展",
+        "去看海",
+        "心愿余额",
+        "余额变动"
+      ],
+      "primary": [
+        {
+          "bg": "rgb(43, 43, 46)",
+          "classes": "primary wish-redeem-button",
+          "color": "rgb(153, 153, 160)",
+          "disabled": true,
+          "outline": "rgb(153, 153, 160) none 3px",
+          "tag": "BUTTON",
+          "text": "兑换"
+        },
+        {
+          "bg": "rgb(242, 242, 244)",
+          "classes": "primary wish-redeem-button is-redeemable",
+          "color": "rgb(23, 23, 25)",
+          "disabled": false,
+          "outline": "rgb(23, 23, 25) none 3px",
+          "tag": "BUTTON",
+          "text": "兑换"
+        },
+        {
+          "bg": "rgb(43, 43, 46)",
+          "classes": "primary wish-redeem-button",
+          "color": "rgb(153, 153, 160)",
+          "disabled": true,
+          "outline": "rgb(153, 153, 160) none 3px",
+          "tag": "BUTTON",
+          "text": "兑换"
+        }
+      ],
+      "scrollWidth": 388,
+      "selected": [
+        {
+          "bg": "rgb(167, 224, 245)",
+          "classes": "",
+          "color": "rgb(18, 56, 75)",
+          "disabled": false,
+          "outline": "rgb(18, 56, 75) none 3px",
+          "tag": "BUTTON",
+          "text": "未实现3"
+        },
+        {
+          "bg": "rgb(167, 224, 245)",
+          "classes": "",
+          "color": "rgb(18, 56, 75)",
+          "disabled": false,
+          "outline": "rgb(18, 56, 75) none 3px",
+          "tag": "BUTTON",
+          "text": ""
+        }
+      ],
+      "theme": "dark",
+      "width": 388
+    },
+    {
+      "view": "wallet-entry",
+      "headings": [
+        "心愿",
+        "降噪耳机",
+        "周末看展",
+        "去看海",
+        "变动详情"
+      ],
+      "primary": [
+        {
+          "bg": "rgb(231, 231, 234)",
+          "classes": "primary wish-redeem-button",
+          "color": "rgb(133, 133, 140)",
+          "disabled": true,
+          "outline": "rgb(133, 133, 140) none 3px",
+          "tag": "BUTTON",
+          "text": "兑换"
+        },
+        {
+          "bg": "rgb(36, 36, 38)",
+          "classes": "primary wish-redeem-button is-redeemable",
+          "color": "rgb(255, 255, 255)",
+          "disabled": false,
+          "outline": "rgb(255, 255, 255) none 3px",
+          "tag": "BUTTON",
+          "text": "兑换"
+        },
+        {
+          "bg": "rgb(231, 231, 234)",
+          "classes": "primary wish-redeem-button",
+          "color": "rgb(133, 133, 140)",
+          "disabled": true,
+          "outline": "rgb(133, 133, 140) none 3px",
+          "tag": "BUTTON",
+          "text": "兑换"
+        }
+      ],
+      "scrollWidth": 388,
+      "selected": [
+        {
+          "bg": "rgb(226, 243, 250)",
+          "classes": "",
+          "color": "rgb(23, 84, 109)",
+          "disabled": false,
+          "outline": "rgb(23, 84, 109) none 3px",
+          "tag": "BUTTON",
+          "text": "未实现3"
+        },
+        {
+          "bg": "rgb(226, 243, 250)",
+          "classes": "",
+          "color": "rgb(23, 84, 109)",
+          "disabled": false,
+          "outline": "rgb(23, 84, 109) none 3px",
+          "tag": "BUTTON",
+          "text": ""
+        }
+      ],
+      "theme": "light",
+      "width": 388
+    },
+    {
+      "view": "wallet-entry",
+      "headings": [
+        "心愿",
+        "降噪耳机",
+        "周末看展",
+        "去看海",
+        "变动详情"
+      ],
+      "primary": [
+        {
+          "bg": "rgb(43, 43, 46)",
+          "classes": "primary wish-redeem-button",
+          "color": "rgb(153, 153, 160)",
+          "disabled": true,
+          "outline": "rgb(153, 153, 160) none 3px",
+          "tag": "BUTTON",
+          "text": "兑换"
+        },
+        {
+          "bg": "rgb(242, 242, 244)",
+          "classes": "primary wish-redeem-button is-redeemable",
+          "color": "rgb(23, 23, 25)",
+          "disabled": false,
+          "outline": "rgb(23, 23, 25) none 3px",
+          "tag": "BUTTON",
+          "text": "兑换"
+        },
+        {
+          "bg": "rgb(43, 43, 46)",
+          "classes": "primary wish-redeem-button",
+          "color": "rgb(153, 153, 160)",
+          "disabled": true,
+          "outline": "rgb(153, 153, 160) none 3px",
+          "tag": "BUTTON",
+          "text": "兑换"
+        }
+      ],
+      "scrollWidth": 388,
+      "selected": [
+        {
+          "bg": "rgb(167, 224, 245)",
+          "classes": "",
+          "color": "rgb(18, 56, 75)",
+          "disabled": false,
+          "outline": "rgb(18, 56, 75) none 3px",
+          "tag": "BUTTON",
+          "text": "未实现3"
+        },
+        {
+          "bg": "rgb(167, 224, 245)",
+          "classes": "",
+          "color": "rgb(18, 56, 75)",
+          "disabled": false,
+          "outline": "rgb(18, 56, 75) none 3px",
+          "tag": "BUTTON",
+          "text": ""
+        }
+      ],
+      "theme": "dark",
+      "width": 388
+    },
+    {
+      "view": "new-wish",
+      "headings": [
+        "心愿",
+        "降噪耳机",
+        "周末看展",
+        "去看海",
+        "添加心愿"
+      ],
+      "primary": [
+        {
+          "bg": "rgb(231, 231, 234)",
+          "classes": "primary wish-redeem-button",
+          "color": "rgb(133, 133, 140)",
+          "disabled": true,
+          "outline": "rgb(133, 133, 140) none 3px",
+          "tag": "BUTTON",
+          "text": "兑换"
+        },
+        {
+          "bg": "rgb(36, 36, 38)",
+          "classes": "primary wish-redeem-button is-redeemable",
+          "color": "rgb(255, 255, 255)",
+          "disabled": false,
+          "outline": "rgb(255, 255, 255) none 3px",
+          "tag": "BUTTON",
+          "text": "兑换"
+        },
+        {
+          "bg": "rgb(231, 231, 234)",
+          "classes": "primary wish-redeem-button",
+          "color": "rgb(133, 133, 140)",
+          "disabled": true,
+          "outline": "rgb(133, 133, 140) none 3px",
+          "tag": "BUTTON",
+          "text": "兑换"
+        },
+        {
+          "bg": "rgb(36, 36, 38)",
+          "classes": "primary",
+          "color": "rgb(255, 255, 255)",
+          "disabled": true,
+          "outline": "rgb(255, 255, 255) none 3px",
+          "tag": "BUTTON",
+          "text": "添加心愿"
+        }
+      ],
+      "scrollWidth": 388,
+      "selected": [
+        {
+          "bg": "rgb(226, 243, 250)",
+          "classes": "",
+          "color": "rgb(23, 84, 109)",
+          "disabled": false,
+          "outline": "rgb(23, 84, 109) none 3px",
+          "tag": "BUTTON",
+          "text": "未实现3"
+        },
+        {
+          "bg": "rgb(226, 243, 250)",
+          "classes": "",
+          "color": "rgb(23, 84, 109)",
+          "disabled": false,
+          "outline": "rgb(23, 84, 109) none 3px",
+          "tag": "BUTTON",
+          "text": ""
+        }
+      ],
+      "theme": "light",
+      "width": 388
+    },
+    {
+      "view": "new-wish",
+      "headings": [
+        "心愿",
+        "降噪耳机",
+        "周末看展",
+        "去看海",
+        "添加心愿"
+      ],
+      "primary": [
+        {
+          "bg": "rgb(43, 43, 46)",
+          "classes": "primary wish-redeem-button",
+          "color": "rgb(153, 153, 160)",
+          "disabled": true,
+          "outline": "rgb(153, 153, 160) none 3px",
+          "tag": "BUTTON",
+          "text": "兑换"
+        },
+        {
+          "bg": "rgb(242, 242, 244)",
+          "classes": "primary wish-redeem-button is-redeemable",
+          "color": "rgb(23, 23, 25)",
+          "disabled": false,
+          "outline": "rgb(23, 23, 25) none 3px",
+          "tag": "BUTTON",
+          "text": "兑换"
+        },
+        {
+          "bg": "rgb(43, 43, 46)",
+          "classes": "primary wish-redeem-button",
+          "color": "rgb(153, 153, 160)",
+          "disabled": true,
+          "outline": "rgb(153, 153, 160) none 3px",
+          "tag": "BUTTON",
+          "text": "兑换"
+        },
+        {
+          "bg": "rgb(242, 242, 244)",
+          "classes": "primary",
+          "color": "rgb(23, 23, 25)",
+          "disabled": true,
+          "outline": "rgb(23, 23, 25) none 3px",
+          "tag": "BUTTON",
+          "text": "添加心愿"
+        }
+      ],
+      "scrollWidth": 388,
+      "selected": [
+        {
+          "bg": "rgb(167, 224, 245)",
+          "classes": "",
+          "color": "rgb(18, 56, 75)",
+          "disabled": false,
+          "outline": "rgb(18, 56, 75) none 3px",
+          "tag": "BUTTON",
+          "text": "未实现3"
+        },
+        {
+          "bg": "rgb(167, 224, 245)",
+          "classes": "",
+          "color": "rgb(18, 56, 75)",
+          "disabled": false,
+          "outline": "rgb(18, 56, 75) none 3px",
+          "tag": "BUTTON",
+          "text": ""
+        }
+      ],
+      "theme": "dark",
+      "width": 388
+    },
+    {
+      "view": "capture",
+      "headings": [
+        "预算",
+        "最近记录0123456789笔",
+        "10月25日",
+        "10月24日",
+        "10月23日",
+        "10月22日",
+        "10月1日",
+        "记一笔"
+      ],
+      "primary": [
+        {
+          "bg": "rgb(36, 36, 38)",
+          "classes": "primary",
+          "color": "rgb(255, 255, 255)",
+          "disabled": true,
+          "outline": "rgb(255, 255, 255) none 3px",
+          "tag": "BUTTON",
+          "text": "保存"
+        }
+      ],
+      "scrollWidth": 388,
+      "selected": [],
+      "theme": "light",
+      "width": 388
+    },
+    {
+      "view": "capture",
+      "headings": [
+        "预算",
+        "最近记录0123456789笔",
+        "10月25日",
+        "10月24日",
+        "10月23日",
+        "10月22日",
+        "10月1日",
+        "记一笔"
+      ],
+      "primary": [
+        {
+          "bg": "rgb(242, 242, 244)",
+          "classes": "primary",
+          "color": "rgb(23, 23, 25)",
+          "disabled": true,
+          "outline": "rgb(23, 23, 25) none 3px",
+          "tag": "BUTTON",
+          "text": "保存"
+        }
+      ],
+      "scrollWidth": 388,
+      "selected": [],
+      "theme": "dark",
+      "width": 388
+    },
+    {
+      "view": "wish-cover",
+      "headings": [
+        "心愿",
+        "降噪耳机",
+        "周末看展",
+        "去看海",
+        "心愿封面"
+      ],
+      "primary": [
+        {
+          "bg": "rgb(231, 231, 234)",
+          "classes": "primary wish-redeem-button",
+          "color": "rgb(133, 133, 140)",
+          "disabled": true,
+          "outline": "rgb(133, 133, 140) none 3px",
+          "tag": "BUTTON",
+          "text": "兑换"
+        },
+        {
+          "bg": "rgb(36, 36, 38)",
+          "classes": "primary wish-redeem-button is-redeemable",
+          "color": "rgb(255, 255, 255)",
+          "disabled": false,
+          "outline": "rgb(255, 255, 255) none 3px",
+          "tag": "BUTTON",
+          "text": "兑换"
+        },
+        {
+          "bg": "rgb(231, 231, 234)",
+          "classes": "primary wish-redeem-button",
+          "color": "rgb(133, 133, 140)",
+          "disabled": true,
+          "outline": "rgb(133, 133, 140) none 3px",
+          "tag": "BUTTON",
+          "text": "兑换"
+        },
+        {
+          "bg": "rgb(36, 36, 38)",
+          "classes": "primary",
+          "color": "rgb(255, 255, 255)",
+          "disabled": false,
+          "outline": "rgb(255, 255, 255) none 3px",
+          "tag": "BUTTON",
+          "text": "使用封面"
+        }
+      ],
+      "scrollWidth": 388,
+      "selected": [
+        {
+          "bg": "rgb(226, 243, 250)",
+          "classes": "",
+          "color": "rgb(23, 84, 109)",
+          "disabled": false,
+          "outline": "rgb(23, 84, 109) none 3px",
+          "tag": "BUTTON",
+          "text": "未实现3"
+        },
+        {
+          "bg": "rgb(226, 243, 250)",
+          "classes": "",
+          "color": "rgb(23, 84, 109)",
+          "disabled": false,
+          "outline": "rgb(23, 84, 109) none 3px",
+          "tag": "BUTTON",
+          "text": ""
+        },
+        {
+          "bg": "rgba(226, 243, 250, 0.816)",
+          "classes": "",
+          "color": "rgb(39, 89, 111)",
+          "disabled": false,
+          "outline": "rgb(39, 89, 111) none 3px",
+          "tag": "BUTTON",
+          "text": "预设图标"
+        },
+        {
+          "bg": "rgb(226, 243, 250)",
+          "classes": "",
+          "color": "rgb(23, 84, 109)",
+          "disabled": false,
+          "outline": "rgb(23, 84, 109) none 3px",
+          "tag": "BUTTON",
+          "text": "无封面"
+        }
+      ],
+      "theme": "light",
+      "width": 388
+    },
+    {
+      "view": "wish-cover",
+      "headings": [
+        "心愿",
+        "降噪耳机",
+        "周末看展",
+        "去看海",
+        "心愿封面"
+      ],
+      "primary": [
+        {
+          "bg": "rgb(43, 43, 46)",
+          "classes": "primary wish-redeem-button",
+          "color": "rgb(153, 153, 160)",
+          "disabled": true,
+          "outline": "rgb(153, 153, 160) none 3px",
+          "tag": "BUTTON",
+          "text": "兑换"
+        },
+        {
+          "bg": "rgb(242, 242, 244)",
+          "classes": "primary wish-redeem-button is-redeemable",
+          "color": "rgb(23, 23, 25)",
+          "disabled": false,
+          "outline": "rgb(23, 23, 25) none 3px",
+          "tag": "BUTTON",
+          "text": "兑换"
+        },
+        {
+          "bg": "rgb(43, 43, 46)",
+          "classes": "primary wish-redeem-button",
+          "color": "rgb(153, 153, 160)",
+          "disabled": true,
+          "outline": "rgb(153, 153, 160) none 3px",
+          "tag": "BUTTON",
+          "text": "兑换"
+        },
+        {
+          "bg": "rgb(242, 242, 244)",
+          "classes": "primary",
+          "color": "rgb(23, 23, 25)",
+          "disabled": false,
+          "outline": "rgb(23, 23, 25) none 3px",
+          "tag": "BUTTON",
+          "text": "使用封面"
+        }
+      ],
+      "scrollWidth": 388,
+      "selected": [
+        {
+          "bg": "rgb(167, 224, 245)",
+          "classes": "",
+          "color": "rgb(18, 56, 75)",
+          "disabled": false,
+          "outline": "rgb(18, 56, 75) none 3px",
+          "tag": "BUTTON",
+          "text": "未实现3"
+        },
+        {
+          "bg": "rgb(167, 224, 245)",
+          "classes": "",
+          "color": "rgb(18, 56, 75)",
+          "disabled": false,
+          "outline": "rgb(18, 56, 75) none 3px",
+          "tag": "BUTTON",
+          "text": ""
+        },
+        {
+          "bg": "rgba(167, 224, 245, 0.863)",
+          "classes": "",
+          "color": "rgb(39, 71, 89)",
+          "disabled": false,
+          "outline": "rgb(39, 71, 89) none 3px",
+          "tag": "BUTTON",
+          "text": "预设图标"
+        },
+        {
+          "bg": "rgb(167, 224, 245)",
+          "classes": "",
+          "color": "rgb(18, 56, 75)",
+          "disabled": false,
+          "outline": "rgb(18, 56, 75) none 3px",
+          "tag": "BUTTON",
+          "text": "无封面"
+        }
+      ],
+      "theme": "dark",
+      "width": 388
+    },
+    {
+      "view": "settings",
+      "headings": [
+        "预算",
+        "最近记录0123456789笔",
+        "10月25日",
+        "10月24日",
+        "10月23日",
+        "10月22日",
+        "10月1日",
+        "设置",
+        "外观"
+      ],
+      "primary": [],
+      "scrollWidth": 388,
+      "selected": [
+        {
+          "bg": "rgb(226, 243, 250)",
+          "classes": "selected",
+          "color": "rgb(23, 84, 109)",
+          "disabled": false,
+          "outline": "rgb(23, 84, 109) none 3px",
+          "tag": "BUTTON",
+          "text": "浅色"
+        }
+      ],
+      "theme": "light",
+      "width": 388
+    },
+    {
+      "view": "settings",
+      "headings": [
+        "预算",
+        "最近记录0123456789笔",
+        "10月25日",
+        "10月24日",
+        "10月23日",
+        "10月22日",
+        "10月1日",
+        "设置",
+        "外观"
+      ],
+      "primary": [],
+      "scrollWidth": 388,
+      "selected": [
+        {
+          "bg": "rgb(167, 224, 245)",
+          "classes": "selected",
+          "color": "rgb(18, 56, 75)",
+          "disabled": false,
+          "outline": "rgb(18, 56, 75) none 3px",
+          "tag": "BUTTON",
+          "text": "深色"
+        }
+      ],
+      "theme": "dark",
+      "width": 388
+    },
+    {
+      "view": "settlement",
+      "headings": [
+        "预算",
+        "最近记录—笔",
+        "10月24日",
+        "10月23日",
+        "10月22日",
+        "10月21日",
+        "10月20日",
+        "10月19日",
+        "核对结算",
+        "这期结余 ¥120"
+      ],
+      "primary": [
+        {
+          "bg": "rgb(36, 36, 38)",
+          "classes": "primary",
+          "color": "rgb(255, 255, 255)",
+          "disabled": true,
+          "outline": "rgb(255, 255, 255) none 3px",
+          "tag": "BUTTON",
+          "text": "确认结算"
+        }
+      ],
+      "scrollWidth": 388,
+      "selected": [],
+      "theme": "light",
+      "width": 388
+    },
+    {
+      "view": "settlement",
+      "headings": [
+        "预算",
+        "最近记录—笔",
+        "10月24日",
+        "10月23日",
+        "10月22日",
+        "10月21日",
+        "10月20日",
+        "10月19日",
+        "核对结算",
+        "这期结余 ¥120"
+      ],
+      "primary": [
+        {
+          "bg": "rgb(242, 242, 244)",
+          "classes": "primary",
+          "color": "rgb(23, 23, 25)",
+          "disabled": true,
+          "outline": "rgb(23, 23, 25) none 3px",
+          "tag": "BUTTON",
+          "text": "确认结算"
+        }
+      ],
+      "scrollWidth": 388,
+      "selected": [],
+      "theme": "dark",
+      "width": 388
+    },
+    {
+      "view": "redemption",
+      "headings": [
+        "心愿",
+        "降噪耳机",
+        "周末看展",
+        "去看海",
+        "核对购买"
+      ],
+      "primary": [
+        {
+          "bg": "rgb(36, 36, 38)",
+          "classes": "primary wish-redeem-button is-redeemable",
+          "color": "rgb(255, 255, 255)",
+          "disabled": false,
+          "outline": "rgb(255, 255, 255) none 3px",
+          "tag": "BUTTON",
+          "text": "兑换"
+        },
+        {
+          "bg": "rgb(36, 36, 38)",
+          "classes": "primary wish-redeem-button is-redeemable",
+          "color": "rgb(255, 255, 255)",
+          "disabled": false,
+          "outline": "rgb(255, 255, 255) none 3px",
+          "tag": "BUTTON",
+          "text": "兑换"
+        },
+        {
+          "bg": "rgb(231, 231, 234)",
+          "classes": "primary wish-redeem-button",
+          "color": "rgb(133, 133, 140)",
+          "disabled": true,
+          "outline": "rgb(133, 133, 140) none 3px",
+          "tag": "BUTTON",
+          "text": "兑换"
+        },
+        {
+          "bg": "rgb(36, 36, 38)",
+          "classes": "primary",
+          "color": "rgb(255, 255, 255)",
+          "disabled": true,
+          "outline": "rgb(255, 255, 255) none 3px",
+          "tag": "BUTTON",
+          "text": "确认兑现"
+        }
+      ],
+      "scrollWidth": 388,
+      "selected": [
+        {
+          "bg": "rgb(226, 243, 250)",
+          "classes": "",
+          "color": "rgb(23, 84, 109)",
+          "disabled": false,
+          "outline": "rgb(23, 84, 109) none 3px",
+          "tag": "BUTTON",
+          "text": "未实现3"
+        },
+        {
+          "bg": "rgb(226, 243, 250)",
+          "classes": "",
+          "color": "rgb(23, 84, 109)",
+          "disabled": false,
+          "outline": "rgb(23, 84, 109) none 3px",
+          "tag": "BUTTON",
+          "text": ""
+        }
+      ],
+      "theme": "light",
+      "width": 388
+    },
+    {
+      "view": "redemption",
+      "headings": [
+        "心愿",
+        "降噪耳机",
+        "周末看展",
+        "去看海",
+        "核对购买"
+      ],
+      "primary": [
+        {
+          "bg": "rgb(242, 242, 244)",
+          "classes": "primary wish-redeem-button is-redeemable",
+          "color": "rgb(23, 23, 25)",
+          "disabled": false,
+          "outline": "rgb(23, 23, 25) none 3px",
+          "tag": "BUTTON",
+          "text": "兑换"
+        },
+        {
+          "bg": "rgb(242, 242, 244)",
+          "classes": "primary wish-redeem-button is-redeemable",
+          "color": "rgb(23, 23, 25)",
+          "disabled": false,
+          "outline": "rgb(23, 23, 25) none 3px",
+          "tag": "BUTTON",
+          "text": "兑换"
+        },
+        {
+          "bg": "rgb(43, 43, 46)",
+          "classes": "primary wish-redeem-button",
+          "color": "rgb(153, 153, 160)",
+          "disabled": true,
+          "outline": "rgb(153, 153, 160) none 3px",
+          "tag": "BUTTON",
+          "text": "兑换"
+        },
+        {
+          "bg": "rgb(242, 242, 244)",
+          "classes": "primary",
+          "color": "rgb(23, 23, 25)",
+          "disabled": true,
+          "outline": "rgb(23, 23, 25) none 3px",
+          "tag": "BUTTON",
+          "text": "确认兑现"
+        }
+      ],
+      "scrollWidth": 388,
+      "selected": [
+        {
+          "bg": "rgb(167, 224, 245)",
+          "classes": "",
+          "color": "rgb(18, 56, 75)",
+          "disabled": false,
+          "outline": "rgb(18, 56, 75) none 3px",
+          "tag": "BUTTON",
+          "text": "未实现3"
+        },
+        {
+          "bg": "rgb(167, 224, 245)",
+          "classes": "",
+          "color": "rgb(18, 56, 75)",
+          "disabled": false,
+          "outline": "rgb(18, 56, 75) none 3px",
+          "tag": "BUTTON",
+          "text": ""
+        }
+      ],
+      "theme": "dark",
+      "width": 388
+    },
+    {
+      "view": "redemption-focus",
+      "theme": "light",
+      "currency": [
+        "rgb(110, 110, 118) none 3px"
+      ],
+      "inner": [
+        {
+          "outline": "rgb(28, 28, 31) none 3px",
+          "tag": "INPUT"
+        },
+        {
+          "outline": "rgb(110, 110, 118) none 3px",
+          "tag": "SELECT"
+        }
+      ],
+      "outer": "rgb(78, 145, 173) solid 2px"
+    },
+    {
+      "view": "redemption-focus",
+      "theme": "dark",
+      "currency": [
+        "rgb(170, 170, 176) none 3px"
+      ],
+      "inner": [
+        {
+          "outline": "rgb(243, 243, 245) none 3px",
+          "tag": "INPUT"
+        },
+        {
+          "outline": "rgb(170, 170, 176) none 3px",
+          "tag": "SELECT"
+        }
+      ],
+      "outer": "rgb(191, 233, 248) solid 2px"
+    },
+    {
+      "view": "redemption-result-final",
+      "theme": "light",
+      "color": "rgb(28, 28, 31)",
+      "opacity": "1"
+    },
+    {
+      "view": "redemption-result-final",
+      "theme": "dark",
+      "color": "rgb(243, 243, 245)",
+      "opacity": "1"
+    },
+    {
+      "view": "agent-focus-final",
+      "theme": "light",
+      "inner": "rgb(28, 28, 31) none 3px",
+      "outline": "rgb(78, 145, 173) solid 2px"
+    },
+    {
+      "view": "agent-focus-final",
+      "theme": "dark",
+      "inner": "rgb(243, 243, 245) none 3px",
+      "outline": "rgb(191, 233, 248) solid 2px"
+    }
+  ],
+  "responsive": [
+    {
+      "label": "wish-320-160-light",
+      "fontScale": "1.6",
+      "large": true,
+      "regions": [
+        {
+          "cls": "wish-balance-bar",
+          "scrollWidth": 279,
+          "width": 279
+        },
+        {
+          "cls": "wish-library-toolbar",
+          "scrollWidth": 280,
+          "width": 280
+        },
+        {
+          "cls": "dock",
+          "scrollWidth": 202,
+          "width": 202
+        }
+      ],
+      "scrollWidth": 318,
+      "theme": "light",
+      "width": 318
+    },
+    {
+      "label": "wish-320-160-dark",
+      "fontScale": "1.6",
+      "large": true,
+      "regions": [
+        {
+          "cls": "wish-balance-bar",
+          "scrollWidth": 279,
+          "width": 279
+        },
+        {
+          "cls": "wish-library-toolbar",
+          "scrollWidth": 280,
+          "width": 280
+        },
+        {
+          "cls": "dock",
+          "scrollWidth": 202,
+          "width": 202
+        }
+      ],
+      "scrollWidth": 318,
+      "theme": "dark",
+      "width": 318
+    },
+    {
+      "label": "trend-320-160-dark",
+      "fontScale": "1.6",
+      "large": true,
+      "regions": [
+        {
+          "cls": "dock",
+          "scrollWidth": 202,
+          "width": 202
+        },
+        {
+          "cls": "detail-page dm-subpage dm-calendar",
+          "scrollWidth": 318,
+          "width": 318
+        },
+        {
+          "cls": "calendar-grid",
+          "scrollWidth": 291,
+          "width": 277
+        }
+      ],
+      "scrollWidth": 318,
+      "theme": "dark",
+      "width": 318
+    },
+    {
+      "label": "form-320-160-dark",
+      "fontScale": "1.6",
+      "large": true,
+      "regions": [
+        {
+          "cls": "dock",
+          "scrollWidth": 202,
+          "width": 202
+        },
+        {
+          "cls": "sheet expanded",
+          "scrollWidth": 318,
+          "width": 318
+        },
+        {
+          "cls": "sheet-body",
+          "scrollWidth": 318,
+          "width": 318
+        }
+      ],
+      "scrollWidth": 318,
+      "theme": "dark",
+      "width": 318
+    },
+    {
+      "label": "trend-320-160-light-fixed",
+      "fontScale": "1.6",
+      "large": true,
+      "regions": [
+        {
+          "cls": "dock",
+          "scrollWidth": 202,
+          "width": 202
+        },
+        {
+          "cls": "detail-page dm-subpage dm-calendar",
+          "scrollWidth": 318,
+          "width": 318
+        },
+        {
+          "cls": "calendar-grid",
+          "scrollWidth": 277,
+          "width": 277
+        }
+      ],
+      "scrollWidth": 318,
+      "theme": "light",
+      "width": 318
+    },
+    {
+      "label": "trend-320-160-dark-fixed",
+      "fontScale": "1.6",
+      "large": true,
+      "regions": [
+        {
+          "cls": "dock",
+          "scrollWidth": 202,
+          "width": 202
+        },
+        {
+          "cls": "detail-page dm-subpage dm-calendar",
+          "scrollWidth": 318,
+          "width": 318
+        },
+        {
+          "cls": "calendar-grid",
+          "scrollWidth": 277,
+          "width": 277
+        }
+      ],
+      "scrollWidth": 318,
+      "theme": "dark",
+      "width": 318
+    },
+    {
+      "label": "wish-768-160-dark",
+      "fontScale": "1.6",
+      "large": true,
+      "regions": [
+        {
+          "cls": "wish-balance-bar",
+          "scrollWidth": 584,
+          "width": 584
+        },
+        {
+          "cls": "wish-library-toolbar",
+          "scrollWidth": 586,
+          "width": 586
+        },
+        {
+          "cls": "dock",
+          "scrollWidth": 202,
+          "width": 202
+        }
+      ],
+      "scrollWidth": 766,
+      "theme": "dark",
+      "width": 766
+    },
+    {
+      "label": "wish-768-160-light",
+      "fontScale": "1.6",
+      "large": true,
+      "regions": [
+        {
+          "cls": "wish-balance-bar",
+          "scrollWidth": 584,
+          "width": 584
+        },
+        {
+          "cls": "wish-library-toolbar",
+          "scrollWidth": 586,
+          "width": 586
+        },
+        {
+          "cls": "dock",
+          "scrollWidth": 202,
+          "width": 202
+        }
+      ],
+      "scrollWidth": 766,
+      "theme": "light",
+      "width": 766
+    },
+    {
+      "label": "agent-768-160-light",
+      "fontScale": "1.6",
+      "large": true,
+      "regions": [
+        {
+          "cls": "dock",
+          "scrollWidth": 202,
+          "width": 202
+        },
+        {
+          "cls": "sheet agent-sheet ",
+          "scrollWidth": 570,
+          "width": 570
+        },
+        {
+          "cls": "sheet-body",
+          "scrollWidth": 570,
+          "width": 570
+        }
+      ],
+      "scrollWidth": 766,
+      "theme": "light",
+      "width": 766
+    },
+    {
+      "label": "comparison-wrapper",
+      "wide": 1280,
+      "columns": "390px 390px",
+      "narrow": 440,
+      "narrowColumns": "390px"
+    }
+  ],
+  "interactions": [
+    {
+      "check": "calendar-date-and-bar",
+      "result": "24日 -> 咖啡¥28；23日趋势柱 -> 23日地铁¥7；非选中消费日透明底并保留圆点"
+    },
+    {
+      "check": "filter-and-form",
+      "result": "待确认筛选显示冰蓝并进入空态；一次性分段显示起止日期，未保存"
+    },
+    {
+      "check": "cover-preset",
+      "result": "耳机预设可选择并更新预览，暗色选中底为 #a7e0f5、文字 #12384b，未保存封面"
+    },
+    {
+      "check": "redemption-gate",
+      "result": "初始余额600：耳机1200为50%并置灰；看展320为100%，翻面后启用兑换，保留流动边缘光"
+    },
+    {
+      "check": "reduced-motion",
+      "result": "减少动态效果启用时气泡动画为 none；从卡库选择周末出行后立即接通，余额1200、记录0笔可操作"
+    },
+    {
+      "check": "confirmation-results",
+      "result": "隔离来源的浅暗结算与购买都可确认并进入完成反馈；无改动业务脚本"
+    },
+    {
+      "check": "navigation-and-layout",
+      "result": "预算/心愿往返、未实现/已实现、卡片/横条切换可用；插卡完成后 seated，摘要按钮恢复可用"
+    }
+  ],
+  "knownConsoleError": "Existing MutationObserver.observe non-Node error also recorded before this change",
+  "limitations": [
+    "未运行原生 App 或真机验收",
+    "未运行完整 VoiceOver 或系统减少动态效果偏好；使用现有 HTML 测试控件",
+    "未进行完整动效逐帧录像；业务及动效脚本与 edddecd 相同"
+  ]
+}

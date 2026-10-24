@@ -2,8 +2,8 @@
    physical card optics and motion on their existing tokens. */
 .app[data-home-material][data-theme=light]{
   --ui-selection-surface:#e2f3fa;--ui-selection-ink:#17546d;--ui-selection-edge:#4e91ad;--ui-selection-mark:#327f9d;
-  --ui-tab-lens:linear-gradient(145deg,#ffffffa6,#ffffff1a 52%,#ffffff4d);
-  --ui-tab-lens-shadow:inset 0 1px 1px #fff,inset 0 -1px 1px #18181f14,inset 1px 0 1px #ffffffb3,0 2px 5px #18181f14;
+  --ui-tab-lens:linear-gradient(145deg,#ffffff53,#ffffff0d 52%,#ffffff26);
+  --ui-tab-lens-shadow:inset 0 1px 1px #fff,inset 0 -1px 1px #18181f14,inset 1px 0 1px #ffffffb3;
 }
 .app[data-home-material][data-theme=dark]{
   --ui-selection-surface:var(--di-selection);--ui-selection-ink:var(--di-ink);--ui-selection-edge:var(--di-edge);--ui-selection-mark:var(--di-selection);
@@ -23,7 +23,7 @@
   background:var(--ui-selection-surface);color:var(--ui-selection-ink);box-shadow:inset 0 0 0 1px var(--ui-selection-edge);
 }
 .app[data-home-material][data-theme] .dm-subpage .chart .bar.selected{
-  background:var(--ui-selection-mark);border-color:var(--ui-selection-edge);
+  background:var(--ui-selection-mark);border-color:var(--ui-selection-edge);box-shadow:none;
 }
 .app[data-home-material][data-theme] .dm-records #record-filter:has(option[value=pending]:checked){
   background:var(--ui-selection-surface);color:var(--ui-selection-ink);border-color:var(--ui-selection-edge);
@@ -34,4 +34,11 @@
 .app[data-home-material][data-theme] .wish-preset-grid button[aria-pressed=true]{border-color:var(--ui-selection-edge)}
 .app[data-home-material][data-theme=dark] .wish-preset-grid button[aria-pressed=true]{--icon-accent:var(--di-ink);--ink:var(--di-ink);--muted:var(--di-ink);--faint:var(--di-ink)}
 .app[data-home-material][data-theme] :is(.sheet,.overlay-shade) :is(input[type=checkbox],input[type=radio]):checked{accent-color:var(--ui-selection-mark)}
-.app[data-home-material][data-theme] :is(.dm-subpage,.wish-home,.sheet,.overlay-shade,.reader-drawer-header,.dock) :is(button,select,input,textarea):focus-visible{outline-color:var(--ui-selection-edge)}
+/* Focus belongs to the interface, including library controls and compound
+   fields. Keep a single outer ring when an input lives inside a field group. */
+.app[data-home-material][data-theme] :is(button,a,summary,select,input,textarea):focus-visible{outline-color:var(--ui-selection-edge)}
+.app[data-home-material][data-theme] .dm-subpage :is(button,select):focus-visible{outline-width:2px;outline-offset:3px}
+.app[data-home-material][data-theme] :is(.input-wrap,.money-input,.wish-money-control,.wish-currency-control):focus-within{outline:2px solid var(--ui-selection-edge);outline-offset:3px}
+.app[data-home-material][data-theme] :is(.input-wrap,.money-input,.wish-money-control,.wish-currency-control) :is(input,select,textarea):focus-visible{outline:none;box-shadow:none}
+.app[data-home-material][data-theme] .wish-money-control .wish-currency-control:focus-within{outline:none}
+.app[data-home-material][data-theme] :is(.reader-drawer-handle:focus-visible svg,.console-pull-handle:focus-visible .reader-holder-grip){outline-color:var(--ui-selection-edge)}

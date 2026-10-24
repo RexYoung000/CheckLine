@@ -4620,12 +4620,11 @@ body.material-embedded .app { width: 100%!important; height: 100dvh; min-height:
 .app[data-home-material][data-theme] .dm-subpage :is(select,.tertiary,.secondary){background:var(--hm-nav);border:1px solid var(--hm-panel-edge);color:var(--hm-accent);border-radius:14px;min-height:44px;padding:10px 13px;box-shadow:inset 0 1px #ffffff26}
 .app[data-home-material][data-theme] .dm-subpage .chart{border-bottom:1px solid var(--hm-panel-edge);background:transparent}
 .app[data-home-material][data-theme] .dm-subpage .chart .bar{background:color-mix(in srgb,var(--hm-ice) 45%,transparent);box-shadow:inset 0 1px #ffffff80;border:1px solid color-mix(in srgb,var(--hm-ice) 24%,transparent);border-radius:7px 7px 2px 2px;min-width:0}
-.app[data-home-material][data-theme] .dm-subpage .chart .bar.selected{background:var(--dm-primary);box-shadow:inset 0 1px #ffffff80,0 0 0 2px var(--dm-sheet)}
-.app[data-home-material][data-theme] .dm-subpage .calendar-grid{border-radius:24px;padding:12px 7px;gap:3px}
+.app[data-home-material][data-theme] .dm-subpage .calendar-grid{border-radius:24px;padding:12px 7px;gap:3px;grid-template-columns:repeat(7,minmax(0,1fr))}
 .app[data-home-material][data-theme] .dm-subpage .calendar-grid>span{color:var(--hm-muted)}
-.app[data-home-material][data-theme] .dm-subpage .calendar-grid>button{color:var(--hm-panel-ink);min-height:38px;border-radius:13px;background:transparent;box-shadow:none}
-.app[data-home-material][data-theme] .dm-subpage .calendar-grid>button.has-record{background:color-mix(in srgb,var(--hm-ice) 19%,transparent)}
-.app[data-home-material][data-theme] .dm-subpage .calendar-grid>button.selected{color:var(--dm-primary-ink);background:var(--dm-primary);box-shadow:inset 0 1px #ffffff40}
+.app[data-home-material][data-theme] .dm-subpage .calendar-grid>button{color:var(--hm-panel-ink);min-width:0;min-height:38px;border-radius:13px;background:transparent;box-shadow:none}
+/* Consumption is the existing dot; only the current date gets a selected fill. */
+.app[data-home-material][data-theme] .dm-subpage .calendar-grid>button.has-record:not(.selected){background:transparent}
 .app[data-home-material][data-theme] .dm-subpage .history-row{border-radius:22px;padding:20px 17px;margin:0 0 12px;min-height:100px;gap:12px;text-align:left}
 .app[data-home-material][data-theme] .dm-subpage .history-row>span{min-width:0}
 .app[data-home-material][data-theme] .dm-subpage .history-row strong{font-weight:550;line-height:1.6}
@@ -4639,7 +4638,6 @@ body.material-embedded .app { width: 100%!important; height: 100dvh; min-height:
 .app[data-home-material][data-theme] .dm-subpage .form-more{border-color:var(--hm-panel-edge);color:var(--hm-muted)}
 .app[data-home-material][data-theme] .dm-subpage .detail-actions{background:var(--dm-sheet)}
 .app[data-home-material][data-theme] .dm-subpage .primary{background:var(--dm-primary);color:var(--dm-primary-ink)}
-.app[data-home-material][data-theme] .dm-subpage :is(button,select):focus-visible{outline:2px solid var(--hm-accent);outline-offset:3px}
 @container(max-width:340px){.dm-subpage .filter-row{flex-wrap:wrap;gap:10px}.dm-subpage .history-row{flex-wrap:wrap}.dm-subpage .history-row .result{margin-left:auto}}
 
 /* Same ice and optical roles as the accepted budget card. Reflection is local;
@@ -4652,9 +4650,11 @@ body.material-embedded .app { width: 100%!important; height: 100dvh; min-height:
 .app[data-home-material][data-theme]:has(.wish-home){--material-focus-overlay:var(--wm-focus)}
 .app[data-home-material][data-theme] .wish-page-head .icon-button{background:var(--hm-nav);color:var(--hm-accent);border:1px solid var(--hm-panel-edge);box-shadow:inset 0 1px #ffffff40}
 .app[data-home-material][data-theme] .wish-library .wish-balance-bar{background:var(--hm-tile);border:1px solid var(--hm-panel-edge);box-shadow:inset 0 1px #ffffff50,0 7px 15px -15px var(--wm-drop);color:var(--hm-panel-ink)}
+/* Amounts stay primary even when their wrapper uses secondary label color. */
+.app[data-home-material][data-theme] :is(.wish-library .wish-balance-number>strong,.outcome-wish .outcome-wallet .outcome-wallet-number){color:var(--hm-panel-ink)}
 .app[data-home-material][data-theme] .wish-library :is(.wish-phase-tabs,.wish-view-options){background:var(--hm-nav);border:1px solid var(--hm-panel-edge);box-shadow:inset 0 1px #ffffff30}
 .app[data-home-material][data-theme] .wish-library :is(.wish-phase-tabs button,.wish-view-options button){background:transparent;color:var(--hm-muted);box-shadow:none}
-.app[data-home-material][data-theme] .wish-library :is(.wish-phase-tabs button[aria-selected=true],.wish-view-options button[aria-pressed=true]){background:var(--hm-nav-selected);color:var(--hm-accent);box-shadow:inset 0 1px #ffffff50}
+.app[data-home-material][data-theme] .wish-library :is(.wish-phase-tabs button[aria-selected=true],.wish-view-options button[aria-pressed=true]){box-shadow:inset 0 1px #ffffff50}
 .app[data-home-material][data-theme] :is(.wish-face,.wish-card-v28 .wish-face-back,.wish-compose-preview,.wish-cover-preview,.wish-collection-row){--ink:var(--wm-ink);--muted:var(--wm-meta);--accent:#176a91;--icon-accent:#176a91;background:radial-gradient(ellipse at 9% 0,var(--wm-reflection),transparent 57%),var(--wm-card);color:var(--wm-ink);border:0;box-shadow:inset 1px 1.5px 0 var(--wm-edge),inset -1px -1px 0 var(--wm-low-edge),inset 0 -4px 7px -6px #103d5299,0 9px 17px -14px var(--wm-drop);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
 .app[data-home-material][data-theme] .wish-face::after{background:radial-gradient(ellipse at var(--wish-glare-x) 0,#ffffff55,transparent 43%);box-shadow:none;opacity:.4;pointer-events:none}
 .app[data-home-material][data-theme] .wish-face::before{content:'';position:absolute;inset:0;z-index:3;padding:1.2px;border-radius:inherit;background:linear-gradient(135deg,#ffffffe8,#ffffff24 43%,#dcf6ff61 72%,#91ddf780);mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);mask-composite:exclude;-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;pointer-events:none}
@@ -4682,7 +4682,7 @@ body.material-embedded .app { width: 100%!important; height: 100dvh; min-height:
 .app[data-home-material][data-theme] :is(.wish-ledger-row.wish-ledger-v29,.wish-fact-block,.wish-ledger-empty){background:var(--hm-receipt);color:var(--hm-panel-ink);box-shadow:inset 0 1px #ffffff30,inset 0 0 0 1px var(--hm-panel-edge)}
 .app[data-home-material][data-theme] .wish-ledger-symbol.credit{color:var(--hm-accent)}
 .app[data-home-material][data-theme]:has(.wish-home) .dock{--material-block:var(--hm-nav);--material-edge:var(--hm-panel-edge);--material-selected:var(--hm-nav-selected)}
-.app[data-home-material][data-theme]:has(.wish-home) .dock-tabs button.selected{color:var(--hm-accent);background:var(--hm-nav-selected)}
+.app[data-home-material][data-theme]:has(.wish-home) .dock-tabs button.selected{color:var(--hm-accent)}
 /* A personal full-bleed photo keeps the existing contrast veil and white type. */
 .app[data-home-material][data-theme] .cover-photo-fill :is(.wish-front-title>strong,.wish-front-value,.wish-money){color:#fff}
 .app[data-home-material][data-theme] .cover-photo-fill .wish-money small{color:#ffffffe0}
@@ -4744,9 +4744,6 @@ body.material-embedded .app { width: 100%!important; height: 100dvh; min-height:
 .app[data-home-material][data-theme=dark] .dm-subpage :is(.record-row,.history-row,.amount-block:not(.no-bg),.calendar-grid){box-shadow:inset 0 1px var(--dui-highlight),0 6px 14px -13px #0009}
 .app[data-home-material][data-theme=dark] .dm-subpage :is(select,.tertiary,.secondary){box-shadow:inset 0 1px var(--dui-highlight)}
 .app[data-home-material][data-theme=dark] .dm-subpage .chart .bar{background:#74747c;box-shadow:inset 0 1px #ffffff24;border-color:#ffffff0a}
-.app[data-home-material][data-theme=dark] .dm-subpage .chart .bar.selected{background:var(--dui-text);box-shadow:none}
-.app[data-home-material][data-theme=dark] .dm-subpage .calendar-grid>button.has-record{background:var(--dui-selected)}
-.app[data-home-material][data-theme=dark] .dm-subpage .calendar-grid>button.selected{background:var(--dui-primary);color:var(--dui-primary-ink);box-shadow:none}
 .app[data-home-material][data-theme=dark] .reader-drawer:has(:is(.dm-detail-card,.dm-subpage,.wish-wallet-page,.wish-entry-page)) .detail-head .icon-button{box-shadow:inset 0 1px var(--dui-highlight)}
 .app[data-home-material][data-theme=dark] .reader-drawer:has(.dm-detail-card) :is(.restored-budget-limit,.restored-destinations>button){box-shadow:inset 0 1px var(--dui-highlight),0 6px 14px -13px #0009}
 .app[data-home-material][data-theme=dark] .wish-library :is(.wish-balance-bar,.wish-phase-tabs,.wish-view-options){box-shadow:inset 0 1px var(--dui-highlight)}
@@ -4756,7 +4753,6 @@ body.material-embedded .app { width: 100%!important; height: 100dvh; min-height:
 .app[data-home-material][data-theme=dark] .cartridge-world:not(.library-open) .console-shell::before{background:linear-gradient(180deg,#ffffff10,#ffffff03 220px,transparent 520px)}
 .app[data-home-material][data-theme=dark] .cartridge-world:not(.library-open) .console-lip path{stroke:#fff;stroke-opacity:.14}
 .app[data-home-material][data-theme=dark] .cartridge-world:not(.library-open) :is(.home-tile,.cl-receipt-card){box-shadow:inset 0 1px var(--dui-highlight),0 6px 14px -13px #0009}
-.app[data-home-material][data-theme=dark] :is(.dm-subpage,.wish-home,.reader-drawer-header,.dock) :is(button,select):focus-visible{outline-color:var(--dui-text)}
 
 /* Light UI follows the same neutral roles as dark-ui.css. Card optics and
    artwork keep their accepted ice colors; these rules only paint interface roles. */
@@ -4784,9 +4780,6 @@ body.material-embedded .app { width: 100%!important; height: 100dvh; min-height:
 .app[data-home-material][data-theme=light] .dm-subpage :is(.record-row,.history-row,.amount-block:not(.no-bg),.calendar-grid){box-shadow:inset 0 1px var(--lui-highlight),0 3px 12px -10px #17171b24}
 .app[data-home-material][data-theme=light] .dm-subpage :is(select,.tertiary,.secondary){background:var(--lui-control);box-shadow:inset 0 1px var(--lui-highlight)}
 .app[data-home-material][data-theme=light] .dm-subpage .chart .bar{background:#b4b4bb;box-shadow:inset 0 1px #ffffff80;border-color:#1111180a}
-.app[data-home-material][data-theme=light] .dm-subpage .chart .bar.selected{background:var(--lui-primary);box-shadow:none}
-.app[data-home-material][data-theme=light] .dm-subpage .calendar-grid>button.has-record{background:var(--lui-selected)}
-.app[data-home-material][data-theme=light] .dm-subpage .calendar-grid>button.selected{background:var(--lui-primary);color:var(--lui-primary-ink);box-shadow:none}
 .app[data-home-material][data-theme=light] .reader-drawer:has(:is(.dm-detail-card,.dm-subpage,.wish-wallet-page,.wish-entry-page)) .detail-head .icon-button{box-shadow:inset 0 1px var(--lui-highlight)}
 .app[data-home-material][data-theme=light] .reader-drawer:has(.dm-detail-card) :is(.restored-budget-limit,.restored-destinations>button){box-shadow:inset 0 1px var(--lui-highlight),0 3px 12px -10px #17171b24}
 .app[data-home-material][data-theme=light] .wish-library :is(.wish-balance-bar,.wish-phase-tabs,.wish-view-options){box-shadow:inset 0 1px var(--lui-highlight)}
@@ -4796,14 +4789,13 @@ body.material-embedded .app { width: 100%!important; height: 100dvh; min-height:
 .app[data-home-material][data-theme=light] .cartridge-world:not(.library-open) .console-shell::before{background:linear-gradient(180deg,#ffffff99,#e9e9ec20 220px,transparent 520px)}
 .app[data-home-material][data-theme=light] .cartridge-world:not(.library-open) .console-lip path{stroke:#fff;stroke-opacity:.38}
 .app[data-home-material][data-theme=light] .cartridge-world:not(.library-open) :is(.home-tile,.cl-receipt-card){box-shadow:inset 0 1px var(--lui-highlight),0 3px 12px -10px #17171b24}
-.app[data-home-material][data-theme=light] :is(.dm-subpage,.wish-home,.reader-drawer-header,.dock) :is(button,select):focus-visible{outline-color:var(--lui-text)}
 
 /* Selection is an interface role. Keep primary actions, neutral surfaces,
    physical card optics and motion on their existing tokens. */
 .app[data-home-material][data-theme=light]{
   --ui-selection-surface:#e2f3fa;--ui-selection-ink:#17546d;--ui-selection-edge:#4e91ad;--ui-selection-mark:#327f9d;
-  --ui-tab-lens:linear-gradient(145deg,#ffffffa6,#ffffff1a 52%,#ffffff4d);
-  --ui-tab-lens-shadow:inset 0 1px 1px #fff,inset 0 -1px 1px #18181f14,inset 1px 0 1px #ffffffb3,0 2px 5px #18181f14;
+  --ui-tab-lens:linear-gradient(145deg,#ffffff53,#ffffff0d 52%,#ffffff26);
+  --ui-tab-lens-shadow:inset 0 1px 1px #fff,inset 0 -1px 1px #18181f14,inset 1px 0 1px #ffffffb3;
 }
 .app[data-home-material][data-theme=dark]{
   --ui-selection-surface:var(--di-selection);--ui-selection-ink:var(--di-ink);--ui-selection-edge:var(--di-edge);--ui-selection-mark:var(--di-selection);
@@ -4823,7 +4815,7 @@ body.material-embedded .app { width: 100%!important; height: 100dvh; min-height:
   background:var(--ui-selection-surface);color:var(--ui-selection-ink);box-shadow:inset 0 0 0 1px var(--ui-selection-edge);
 }
 .app[data-home-material][data-theme] .dm-subpage .chart .bar.selected{
-  background:var(--ui-selection-mark);border-color:var(--ui-selection-edge);
+  background:var(--ui-selection-mark);border-color:var(--ui-selection-edge);box-shadow:none;
 }
 .app[data-home-material][data-theme] .dm-records #record-filter:has(option[value=pending]:checked){
   background:var(--ui-selection-surface);color:var(--ui-selection-ink);border-color:var(--ui-selection-edge);
@@ -4834,7 +4826,14 @@ body.material-embedded .app { width: 100%!important; height: 100dvh; min-height:
 .app[data-home-material][data-theme] .wish-preset-grid button[aria-pressed=true]{border-color:var(--ui-selection-edge)}
 .app[data-home-material][data-theme=dark] .wish-preset-grid button[aria-pressed=true]{--icon-accent:var(--di-ink);--ink:var(--di-ink);--muted:var(--di-ink);--faint:var(--di-ink)}
 .app[data-home-material][data-theme] :is(.sheet,.overlay-shade) :is(input[type=checkbox],input[type=radio]):checked{accent-color:var(--ui-selection-mark)}
-.app[data-home-material][data-theme] :is(.dm-subpage,.wish-home,.sheet,.overlay-shade,.reader-drawer-header,.dock) :is(button,select,input,textarea):focus-visible{outline-color:var(--ui-selection-edge)}
+/* Focus belongs to the interface, including library controls and compound
+   fields. Keep a single outer ring when an input lives inside a field group. */
+.app[data-home-material][data-theme] :is(button,a,summary,select,input,textarea):focus-visible{outline-color:var(--ui-selection-edge)}
+.app[data-home-material][data-theme] .dm-subpage :is(button,select):focus-visible{outline-width:2px;outline-offset:3px}
+.app[data-home-material][data-theme] :is(.input-wrap,.money-input,.wish-money-control,.wish-currency-control):focus-within{outline:2px solid var(--ui-selection-edge);outline-offset:3px}
+.app[data-home-material][data-theme] :is(.input-wrap,.money-input,.wish-money-control,.wish-currency-control) :is(input,select,textarea):focus-visible{outline:none;box-shadow:none}
+.app[data-home-material][data-theme] .wish-money-control .wish-currency-control:focus-within{outline:none}
+.app[data-home-material][data-theme] :is(.reader-drawer-handle:focus-visible svg,.console-pull-handle:focus-visible .reader-holder-grip){outline-color:var(--ui-selection-edge)}
 
 </style></head>
 <body>
