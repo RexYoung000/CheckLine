@@ -62,9 +62,9 @@ function dmStartDetail(){
   observer.observe(app,{subtree:true,childList:true,attributes:true,attributeFilter:['class','data-detent']});
   const resize=new ResizeObserver(()=>{
     const height=app.clientHeight,changed=height!==appHeight;appHeight=height;
-    // The existing drawer paints an explicit height. Keep its current detent
-    // fitted to the viewport when reviewing this overview at another size.
-    if(changed&&card?.isConnected&&readerDrawer.active&&!readerDrawer.drag){
+    // Fit the accepted overview and its newly aligned descendants to the
+    // viewport without changing the existing partial/full detent behavior.
+    if(changed&&app.querySelector('.reader-drawer :is(.dm-detail-card,.dm-subpage,.wish-wallet-page,.wish-entry-page)')&&readerDrawer.active&&!readerDrawer.drag){
       readerDrawerStop();readerDrawer.target=readerDrawer.target<12?0:drawerPartial();readerDrawerPaint(readerDrawer.target);
     }
     sync();

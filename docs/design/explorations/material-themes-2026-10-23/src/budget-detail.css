@@ -1,5 +1,5 @@
-/* Only the budget overview receives the accepted ice material. Descendant
-   destinations and wish drawers keep their existing appearance and logic. */
+/* Accepted budget overview. Descendant and wish adaptations live in the
+   budget-pages and wish-material styles; monetary and navigation rules stay put. */
 .app[data-home-material][data-theme=light]{--dm-sheet:#f5f9fcf2;--dm-shade:#07121b14;--dm-primary:#087da7;--dm-primary-ink:#fff}
 .app[data-home-material][data-theme=dark]{--dm-sheet:#101922f5;--dm-shade:#00000038;--dm-primary:#9edff7;--dm-primary-ink:#11364a}
 .app[data-home-material][data-theme] .reader-drawer:has(.dm-detail-card){--accent:var(--hm-accent);--ink:var(--hm-panel-ink);--muted:var(--hm-muted);background:var(--dm-sheet);color:var(--hm-panel-ink);box-shadow:0 -10px 34px -20px var(--hm-contact),inset 0 1px var(--hm-panel-edge);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px)}

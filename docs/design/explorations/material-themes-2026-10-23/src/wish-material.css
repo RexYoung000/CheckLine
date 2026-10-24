@@ -1,0 +1,46 @@
+/* Same ice and optical roles as the accepted budget card. Reflection is local;
+   the canvas is neutral, not a full-page color blend. Personal images are untouched. */
+.app[data-home-material][data-theme]{--wm-card:color-mix(in srgb,var(--hm-ice) calc(var(--hm-ice-alpha)*100%),transparent);--wm-ink:var(--hm-ink);--wm-meta:var(--hm-meta-ink)}
+.app[data-home-material][data-theme=light]{--wm-reflection:#ffffffb8;--wm-edge:#ffffffd9;--wm-low-edge:#6cabc244;--wm-drop:#16405a24;--wm-focus:#f4f8fbe8;--wm-disabled:#dae5eb;--wm-disabled-ink:#637480;--wm-control:#edf8ffad}
+.app[data-home-material][data-theme=dark]{--wm-reflection:#f4fcffb0;--wm-edge:#def8ffb0;--wm-low-edge:#154b6670;--wm-drop:#00000070;--wm-focus:#070d14ed;--wm-disabled:#263947;--wm-disabled-ink:#a6bac7;--wm-control:#d9f3ff42}
+.app[data-home-material][data-theme]:has(.wish-home){background:var(--hm-ground);--ink:var(--hm-panel-ink);--muted:var(--hm-muted);--faint:var(--hm-muted);--accent:var(--hm-accent);--line:var(--hm-panel-edge);--surface:var(--dm-sheet);--glass:var(--hm-nav);--material-panel:var(--dm-sheet);--material-full-panel:var(--dm-sheet);--material-block:var(--hm-tile);--material-field:var(--hm-nav);--material-control:var(--hm-nav);--material-selected:var(--hm-nav-selected);--material-edge:var(--hm-panel-edge);--material-edge-low:var(--hm-panel-edge);--material-primary:var(--dm-primary);--material-primary-ink:var(--dm-primary-ink);--material-overlay:var(--dm-shade);--material-context-overlay:var(--dm-shade);--material-floating-ink:var(--hm-panel-ink);--material-floating-muted:var(--hm-muted);--wish-rim:var(--wm-edge);--wish-drop:var(--wm-drop);--redeem-disabled-surface:var(--wm-disabled);--redeem-disabled-ink:var(--wm-disabled-ink);--icon-accent:var(--hm-accent)}
+.app[data-home-material][data-theme] .page:has(.wish-home){background:var(--hm-ground);color:var(--hm-panel-ink)}
+.app[data-home-material][data-theme]:has(.wish-home){--material-focus-overlay:var(--wm-focus)}
+.app[data-home-material][data-theme] .wish-page-head .icon-button{background:var(--hm-nav);color:var(--hm-accent);border:1px solid var(--hm-panel-edge);box-shadow:inset 0 1px #ffffff40}
+.app[data-home-material][data-theme] .wish-library .wish-balance-bar{background:var(--hm-tile);border:1px solid var(--hm-panel-edge);box-shadow:inset 0 1px #ffffff50,0 7px 15px -15px var(--wm-drop);color:var(--hm-panel-ink)}
+.app[data-home-material][data-theme] .wish-library :is(.wish-phase-tabs,.wish-view-options){background:var(--hm-nav);border:1px solid var(--hm-panel-edge);box-shadow:inset 0 1px #ffffff30}
+.app[data-home-material][data-theme] .wish-library :is(.wish-phase-tabs button,.wish-view-options button){background:transparent;color:var(--hm-muted);box-shadow:none}
+.app[data-home-material][data-theme] .wish-library :is(.wish-phase-tabs button[aria-selected=true],.wish-view-options button[aria-pressed=true]){background:var(--hm-nav-selected);color:var(--hm-accent);box-shadow:inset 0 1px #ffffff50}
+.app[data-home-material][data-theme] :is(.wish-face,.wish-card-v28 .wish-face-back,.wish-compose-preview,.wish-cover-preview,.wish-collection-row){--ink:var(--wm-ink);--muted:var(--wm-meta);--accent:#176a91;--icon-accent:#176a91;background:radial-gradient(ellipse at 9% 0,var(--wm-reflection),transparent 57%),var(--wm-card);color:var(--wm-ink);border:0;box-shadow:inset 1px 1.5px 0 var(--wm-edge),inset -1px -1px 0 var(--wm-low-edge),inset 0 -4px 7px -6px #103d5299,0 9px 17px -14px var(--wm-drop);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.app[data-home-material][data-theme] .wish-face::after{background:radial-gradient(ellipse at var(--wish-glare-x) 0,#ffffff55,transparent 43%);box-shadow:none;opacity:.4;pointer-events:none}
+.app[data-home-material][data-theme] .wish-face::before{content:'';position:absolute;inset:0;z-index:3;padding:1.2px;border-radius:inherit;background:linear-gradient(135deg,#ffffffe8,#ffffff24 43%,#dcf6ff61 72%,#91ddf780);mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);mask-composite:exclude;-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;pointer-events:none}
+.app[data-home-material][data-theme] .wish-face :is(.wish-front-title>strong,.wish-front-value,.wish-front-value .wish-money,.wish-back-topline){color:var(--wm-ink)}
+.app[data-home-material][data-theme] .wish-face :is(.wish-money small,.wish-achieved-facts>div>span){color:var(--wm-meta)}
+.app[data-home-material][data-theme] .preset-backing{background:var(--wm-control);box-shadow:inset 1px 1px #ffffff9c,inset -1px -1px var(--wm-low-edge),0 7px 15px -13px var(--wm-drop)}
+.app[data-home-material][data-theme] :is(.wish-face,.wish-compose-preview,.wish-cover-preview,.wish-collection-row) .preset-art>img{--icon-accent:#176a91;filter:none}
+.app[data-home-material][data-theme=dark] :is(.wish-face,.wish-compose-preview,.wish-cover-preview,.wish-collection-row) .preset-art>img{--icon-accent:var(--wm-meta)}
+.app[data-home-material][data-theme] .wish-card-liquid{--water-top:var(--hm-water-top-color);--water-bottom:var(--hm-water-base-color)}
+.app[data-home-material][data-theme] .wish-liquid-unknown{background:transparent}
+.wm-water-reflection{stroke:#fff;stroke-opacity:.65;stroke-width:1;vector-effect:non-scaling-stroke}
+.app[data-home-material][data-theme] .wish-bubble-volume>i{border:0;box-shadow:none;background:none;width:calc(var(--bubble-size) * 1.25);height:calc(var(--bubble-size) * 1.25)}
+.app[data-home-material][data-theme] .wish-face-back .wish-liquid-readout{color:var(--wm-ink)}
+.app[data-home-material][data-theme=dark] .wish-face-back:has(.wish-card-liquid[data-wm-tone=deep]) .wish-liquid-readout{color:#fff}
+.app[data-home-material][data-theme] .wish-face-back .wish-liquid-actions>.wish-redeem-button{background:var(--dm-primary);color:var(--dm-primary-ink);border-color:var(--wm-edge)}
+.app[data-home-material][data-theme] .wish-face-back .wish-liquid-actions>.wish-redeem-button:disabled{color:var(--wm-disabled-ink);background:var(--wm-disabled);border-color:transparent;box-shadow:inset 0 1px #ffffff26;opacity:1}
+.app[data-home-material][data-theme] :is(.wish-expand-button,.wish-cover-mini){color:var(--wm-meta)}
+.app[data-home-material][data-theme] .wish-card-v28 .wish-face :is(.wish-cover-mini,.wish-expand-button){color:var(--wm-meta)}
+.app[data-home-material][data-theme] .wish-home :is(.wish-empty,.wish-draft-chip,.wish-recovery){background:var(--hm-tile);color:var(--hm-panel-ink);border:1px solid var(--hm-panel-edge);box-shadow:inset 0 1px #ffffff40}
+.app[data-home-material][data-theme] .overlay-shade:has(.wish-full-view){background:var(--wm-focus);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+.app[data-home-material][data-theme] .wish-full-view .wish-focus-toolbar .icon-button{color:var(--hm-panel-ink);background:var(--hm-nav);box-shadow:inset 0 1px var(--hm-panel-edge)}
+.app[data-home-material][data-theme] .reader-drawer:has(:is(.wish-wallet-page,.wish-entry-page)){background:var(--dm-sheet);color:var(--hm-panel-ink);box-shadow:inset 0 1px var(--hm-panel-edge),0 -10px 34px -20px var(--hm-contact)}
+.app[data-home-material][data-theme] .reader-drawer:has(:is(.wish-wallet-page,.wish-entry-page)) .detail-head{background:transparent}
+.app[data-home-material][data-theme] :is(.wish-wallet-v29 .wish-wallet-hero,.wish-entry-v29 .wish-entry-hero){--ink:var(--wm-ink);--muted:var(--wm-meta);background:radial-gradient(ellipse at 9% 0,var(--wm-reflection),transparent 57%),var(--wm-card);color:var(--wm-ink);border:1px solid var(--wm-edge);box-shadow:inset 0 1px #ffffff55,0 7px 15px -15px var(--wm-drop)}
+.app[data-home-material][data-theme] :is(.wish-ledger-row.wish-ledger-v29,.wish-fact-block,.wish-ledger-empty){background:var(--hm-receipt);color:var(--hm-panel-ink);box-shadow:inset 0 1px #ffffff30,inset 0 0 0 1px var(--hm-panel-edge)}
+.app[data-home-material][data-theme] .wish-ledger-symbol.credit{color:var(--hm-accent)}
+.app[data-home-material][data-theme]:has(.wish-home) .dock{--material-block:var(--hm-nav);--material-edge:var(--hm-panel-edge);--material-selected:var(--hm-nav-selected)}
+.app[data-home-material][data-theme]:has(.wish-home) .dock-tabs button.selected{color:var(--hm-accent);background:var(--hm-nav-selected)}
+/* A personal full-bleed photo keeps the existing contrast veil and white type. */
+.app[data-home-material][data-theme] .cover-photo-fill :is(.wish-front-title>strong,.wish-front-value,.wish-money){color:#fff}
+.app[data-home-material][data-theme] .cover-photo-fill .wish-money small{color:#ffffffe0}
+.app[data-home-material][data-theme].reduced .wish-bubble-volume>i{animation:none;top:calc(15% + var(--bubble-x) * .65);opacity:.55}
+@media(prefers-reduced-motion:reduce){.app[data-home-material][data-theme] .wish-bubble-volume>i{animation:none;top:calc(15% + var(--bubble-x) * .65);opacity:.55}}

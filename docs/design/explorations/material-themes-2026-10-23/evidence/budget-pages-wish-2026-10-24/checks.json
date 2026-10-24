@@ -1,0 +1,621 @@
+{
+  "scope": "HTML budget descendants and wish theme only",
+  "baseline": "deae7b0",
+  "pages390": [
+    {
+      "theme": "light",
+      "view": "budget-records",
+      "appOverflow": 0,
+      "background": "rgb(249, 251, 253) none repeat scroll 0% 0% / auto padding-box border-box",
+      "documentOverflow": 0,
+      "drawer": {
+        "bottom": 844,
+        "height": 844,
+        "top": 0,
+        "width": 390
+      },
+      "duplicateIds": [],
+      "redemption": [],
+      "scope": "detail-page dm-subpage dm-records",
+      "title": "消费记录",
+      "viewport": [
+        390,
+        844
+      ]
+    },
+    {
+      "theme": "light",
+      "view": "trend",
+      "appOverflow": 0,
+      "background": "rgb(249, 251, 253) none repeat scroll 0% 0% / auto padding-box border-box",
+      "documentOverflow": 0,
+      "drawer": {
+        "bottom": 844,
+        "height": 844,
+        "top": 0,
+        "width": 390
+      },
+      "duplicateIds": [],
+      "redemption": [],
+      "scope": "detail-page dm-subpage dm-calendar",
+      "title": "趋势与日历",
+      "viewport": [
+        390,
+        844
+      ]
+    },
+    {
+      "theme": "light",
+      "view": "history",
+      "appOverflow": 0,
+      "background": "rgb(249, 251, 253) none repeat scroll 0% 0% / auto padding-box border-box",
+      "documentOverflow": 0,
+      "drawer": {
+        "bottom": 844,
+        "height": 844,
+        "top": 0,
+        "width": 390
+      },
+      "duplicateIds": [],
+      "redemption": [],
+      "scope": "detail-page dm-subpage dm-history",
+      "title": "历史周期",
+      "viewport": [
+        390,
+        844
+      ]
+    },
+    {
+      "theme": "light",
+      "view": "info",
+      "appOverflow": 0,
+      "background": "rgb(249, 251, 253) none repeat scroll 0% 0% / auto padding-box border-box",
+      "documentOverflow": 0,
+      "drawer": {
+        "bottom": 844,
+        "height": 844,
+        "top": 0,
+        "width": 390
+      },
+      "duplicateIds": [],
+      "redemption": [],
+      "scope": "detail-page dm-subpage dm-info",
+      "title": "预算信息",
+      "viewport": [
+        390,
+        844
+      ]
+    },
+    {
+      "theme": "light",
+      "view": "wish",
+      "appOverflow": 0,
+      "background": "rgb(249, 251, 253) none repeat scroll 0% 0% / auto padding-box border-box",
+      "documentOverflow": 0,
+      "drawer": null,
+      "duplicateIds": [],
+      "redemption": [],
+      "scope": "wish-home wish-studio wish-library",
+      "viewport": [
+        390,
+        844
+      ]
+    },
+    {
+      "theme": "light",
+      "view": "wish-back",
+      "appOverflow": 0,
+      "background": "rgb(249, 251, 253) none repeat scroll 0% 0% / auto padding-box border-box",
+      "documentOverflow": 0,
+      "drawer": null,
+      "duplicateIds": [],
+      "redemption": [
+        {
+          "disabled": true,
+          "label": "兑换不可用，当前进度 50%，达到 100% 后可兑换",
+          "status": "incomplete"
+        }
+      ],
+      "scope": "wish-home wish-studio wish-library",
+      "viewport": [
+        390,
+        844
+      ]
+    },
+    {
+      "theme": "light",
+      "view": "wallet",
+      "appOverflow": 0,
+      "background": "rgb(249, 251, 253) none repeat scroll 0% 0% / auto padding-box border-box",
+      "documentOverflow": 0,
+      "drawer": {
+        "bottom": 844,
+        "height": 844,
+        "top": 0,
+        "width": 390
+      },
+      "duplicateIds": [],
+      "redemption": [],
+      "scope": "wish-home wish-studio wish-library",
+      "title": "心愿余额",
+      "viewport": [
+        390,
+        844
+      ]
+    },
+    {
+      "theme": "dark",
+      "view": "budget-records",
+      "appOverflow": 0,
+      "background": "rgb(12, 17, 23) none repeat scroll 0% 0% / auto padding-box border-box",
+      "documentOverflow": 0,
+      "drawer": {
+        "bottom": 844,
+        "height": 844,
+        "top": 0,
+        "width": 390
+      },
+      "duplicateIds": [],
+      "redemption": [],
+      "scope": "detail-page dm-subpage dm-records",
+      "title": "消费记录",
+      "viewport": [
+        390,
+        844
+      ]
+    },
+    {
+      "theme": "dark",
+      "view": "trend",
+      "appOverflow": 0,
+      "background": "rgb(12, 17, 23) none repeat scroll 0% 0% / auto padding-box border-box",
+      "documentOverflow": 0,
+      "drawer": {
+        "bottom": 844,
+        "height": 844,
+        "top": 0,
+        "width": 390
+      },
+      "duplicateIds": [],
+      "redemption": [],
+      "scope": "detail-page dm-subpage dm-calendar",
+      "title": "趋势与日历",
+      "viewport": [
+        390,
+        844
+      ]
+    },
+    {
+      "theme": "dark",
+      "view": "history",
+      "appOverflow": 0,
+      "background": "rgb(12, 17, 23) none repeat scroll 0% 0% / auto padding-box border-box",
+      "documentOverflow": 0,
+      "drawer": {
+        "bottom": 844,
+        "height": 844,
+        "top": 0,
+        "width": 390
+      },
+      "duplicateIds": [],
+      "redemption": [],
+      "scope": "detail-page dm-subpage dm-history",
+      "title": "历史周期",
+      "viewport": [
+        390,
+        844
+      ]
+    },
+    {
+      "theme": "dark",
+      "view": "info",
+      "appOverflow": 0,
+      "background": "rgb(12, 17, 23) none repeat scroll 0% 0% / auto padding-box border-box",
+      "documentOverflow": 0,
+      "drawer": {
+        "bottom": 844,
+        "height": 844,
+        "top": 0,
+        "width": 390
+      },
+      "duplicateIds": [],
+      "redemption": [],
+      "scope": "detail-page dm-subpage dm-info",
+      "title": "预算信息",
+      "viewport": [
+        390,
+        844
+      ]
+    },
+    {
+      "theme": "dark",
+      "view": "wish",
+      "appOverflow": 0,
+      "background": "rgb(12, 17, 23) none repeat scroll 0% 0% / auto padding-box border-box",
+      "documentOverflow": 0,
+      "drawer": null,
+      "duplicateIds": [],
+      "redemption": [],
+      "scope": "wish-home wish-studio wish-library",
+      "viewport": [
+        390,
+        844
+      ]
+    },
+    {
+      "theme": "dark",
+      "view": "wish-back",
+      "appOverflow": 0,
+      "background": "rgb(12, 17, 23) none repeat scroll 0% 0% / auto padding-box border-box",
+      "documentOverflow": 0,
+      "drawer": null,
+      "duplicateIds": [],
+      "redemption": [
+        {
+          "disabled": true,
+          "label": "兑换不可用，当前进度 50%，达到 100% 后可兑换",
+          "status": "incomplete"
+        }
+      ],
+      "scope": "wish-home wish-studio wish-library",
+      "viewport": [
+        390,
+        844
+      ]
+    },
+    {
+      "theme": "dark",
+      "view": "wallet",
+      "appOverflow": 0,
+      "background": "rgb(12, 17, 23) none repeat scroll 0% 0% / auto padding-box border-box",
+      "documentOverflow": 0,
+      "drawer": {
+        "bottom": 844,
+        "height": 844,
+        "top": 0,
+        "width": 390
+      },
+      "duplicateIds": [],
+      "redemption": [],
+      "scope": "wish-home wish-studio wish-library",
+      "title": "心愿余额",
+      "viewport": [
+        390,
+        844
+      ]
+    }
+  ],
+  "responsive": [
+    {
+      "theme": "light",
+      "view": "budget-records",
+      "bodyWidth": 320,
+      "drawerBottom": 740,
+      "overflow": 0,
+      "reduced": true,
+      "size": [
+        320,
+        740
+      ]
+    },
+    {
+      "theme": "light",
+      "view": "trend",
+      "bodyWidth": 320,
+      "drawerBottom": 740,
+      "overflow": 0,
+      "reduced": true,
+      "size": [
+        320,
+        740
+      ]
+    },
+    {
+      "theme": "light",
+      "view": "history",
+      "bodyWidth": 320,
+      "drawerBottom": 740,
+      "overflow": 0,
+      "reduced": true,
+      "size": [
+        320,
+        740
+      ]
+    },
+    {
+      "theme": "light",
+      "view": "info",
+      "bodyWidth": 320,
+      "drawerBottom": 740,
+      "overflow": 0,
+      "reduced": true,
+      "size": [
+        320,
+        740
+      ]
+    },
+    {
+      "theme": "light",
+      "view": "wish",
+      "overflow": 0,
+      "reduced": true,
+      "size": [
+        320,
+        740
+      ]
+    },
+    {
+      "theme": "light",
+      "view": "wish-back",
+      "overflow": 0,
+      "reduced": true,
+      "size": [
+        320,
+        740
+      ]
+    },
+    {
+      "theme": "light",
+      "view": "wallet",
+      "bodyWidth": 320,
+      "drawerBottom": 740,
+      "overflow": 0,
+      "reduced": true,
+      "size": [
+        320,
+        740
+      ]
+    },
+    {
+      "theme": "dark",
+      "view": "budget-records",
+      "bodyWidth": 320,
+      "drawerBottom": 740,
+      "overflow": 0,
+      "reduced": true,
+      "size": [
+        320,
+        740
+      ]
+    },
+    {
+      "theme": "dark",
+      "view": "trend",
+      "bodyWidth": 320,
+      "drawerBottom": 740,
+      "overflow": 0,
+      "reduced": true,
+      "size": [
+        320,
+        740
+      ]
+    },
+    {
+      "theme": "dark",
+      "view": "history",
+      "bodyWidth": 320,
+      "drawerBottom": 740,
+      "overflow": 0,
+      "reduced": true,
+      "size": [
+        320,
+        740
+      ]
+    },
+    {
+      "theme": "dark",
+      "view": "info",
+      "bodyWidth": 320,
+      "drawerBottom": 740,
+      "overflow": 0,
+      "reduced": true,
+      "size": [
+        320,
+        740
+      ]
+    },
+    {
+      "theme": "dark",
+      "view": "wish",
+      "overflow": 0,
+      "reduced": true,
+      "size": [
+        320,
+        740
+      ]
+    },
+    {
+      "theme": "dark",
+      "view": "wish-back",
+      "overflow": 0,
+      "reduced": true,
+      "size": [
+        320,
+        740
+      ]
+    },
+    {
+      "theme": "dark",
+      "view": "wallet",
+      "bodyWidth": 320,
+      "drawerBottom": 740,
+      "overflow": 0,
+      "reduced": true,
+      "size": [
+        320,
+        740
+      ]
+    },
+    {
+      "theme": "light",
+      "view": "trend",
+      "overflow": 0,
+      "size": [
+        768,
+        1024
+      ]
+    },
+    {
+      "theme": "light",
+      "view": "wish",
+      "overflow": 0,
+      "size": [
+        768,
+        1024
+      ]
+    },
+    {
+      "theme": "dark",
+      "view": "trend",
+      "overflow": 0,
+      "size": [
+        768,
+        1024
+      ]
+    },
+    {
+      "theme": "dark",
+      "view": "wish",
+      "overflow": 0,
+      "size": [
+        768,
+        1024
+      ]
+    }
+  ],
+  "drawerResize": {
+    "drawer": {
+      "bottom": 1024,
+      "height": 768,
+      "top": 256
+    },
+    "overflow": 0,
+    "size": [
+      768,
+      1024
+    ]
+  },
+  "flows": {
+    "recordsFilter": {
+      "pendingCount": 0,
+      "pendingMessage": "待确认已清空。",
+      "restoredCount": 6,
+      "singleAmount": "¥35",
+      "returned": true
+    },
+    "limitPreview": {
+      "amount": "3000",
+      "background": "rgba(16, 25, 34, 0.96) none repeat scroll 0% 0% / auto padding-box border-box",
+      "color": "rgb(228, 240, 247)",
+      "primary": "rgb(158, 223, 247) none repeat scroll 0% 0% / auto padding-box border-box"
+    },
+    "limitUnchanged": "¥3,000",
+    "calendarExpense": "超市\n10月21日\n¥180",
+    "calendarEmpty": "这天没有记录。",
+    "history": "这个月\n2026年9月1日—2026年9月30日\n\n本期结余\n¥500\n预算额度\n¥3,000\n本期已用\n¥2,500\n当次转入心愿余额\n+¥500\n查看原结算",
+    "originalSettlement": "",
+    "historyReturn": true,
+    "detailRoundtrips": [
+      {
+        "action": "cart-records",
+        "shown": true,
+        "returned": true
+      },
+      {
+        "action": "trend",
+        "shown": true,
+        "returned": true
+      },
+      {
+        "action": "history",
+        "shown": true,
+        "returned": true
+      },
+      {
+        "action": "info",
+        "shown": true,
+        "returned": true
+      }
+    ],
+    "achievedCount": 1,
+    "wishRowCount": 3,
+    "outsideButton": {
+      "face": "back",
+      "modal": false
+    },
+    "readyButton": {
+      "animation": "wish-button-rim",
+      "disabled": false,
+      "rect": {
+        "bottom": 447,
+        "height": 44,
+        "left": 229,
+        "right": 341,
+        "top": 403,
+        "width": 112
+      },
+      "rim": "rgba(0, 0, 0, 0) conic-gradient(from 9.28125deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.145) 20%, rgb(237, 252, 255) 33%, rgb(131, 213, 235) 46%, rgba(255, 255, 255, 0.08) 57%, rgba(255, 255, 255, 0.145) 73%, rgb(237, 252, 255) 85%, rgba(255, 255, 255, 0.08) 100%) repeat scroll 0% 0% / auto padding-box border-box",
+      "status": "ready"
+    },
+    "purchaseGate": {
+      "confirmed": false,
+      "confirmEnabled": false
+    },
+    "balanceAfterCancel": "¥600",
+    "narrowScroll": {
+      "clearOfDock": true,
+      "dockTop": 661,
+      "lastCardBottom": 606,
+      "size": [
+        320,
+        740
+      ]
+    }
+  },
+  "pairedReduce": {
+    "checked": true,
+    "frames": [
+      "budget-home.html?theme=light&view=wish-back&embed=1&reduce=1",
+      "budget-home.html?theme=dark&view=wish-back&embed=1&reduce=1"
+    ]
+  },
+  "pairInitialInspectionErrors": [
+    {
+      "level": "error",
+      "message": "Uncaught TypeError: Failed to execute 'observe' on 'MutationObserver': parameter 1 is not of type 'Node'.",
+      "timestamp": "2026-10-24T06:51:12.088Z",
+      "origin": "not confirmed; same message was recorded in the previous detail study",
+      "reappearedDuringLaterInspection": true
+    }
+  ],
+  "finalErrors": {
+    "standalone": [],
+    "responsive": [],
+    "pairAfterReload": [
+      {
+        "level": "error",
+        "message": "Uncaught TypeError: Failed to execute 'observe' on 'MutationObserver': parameter 1 is not of type 'Node'.",
+        "timestamp": "2026-10-24T07:04:26.923Z"
+      }
+    ]
+  },
+  "notRevalidated": [
+    "native App and device visual acceptance",
+    "full VoiceOver and system text scaling",
+    "personal photo covers and complete saved reward sequence"
+  ],
+  "diagnosticFollowup": {
+    "navigationViews": [
+      "wish",
+      "wish-back",
+      "budget-records"
+    ],
+    "browserErrors": [],
+    "javascriptErrors": [],
+    "note": "Temporary top/child error listeners removed before delivery; no JavaScript error payload captured in this bounded follow-up."
+  },
+  "finalDeliverable": {
+    "diagnosticAttribute": null,
+    "selectedView": "budget-records"
+  }
+}

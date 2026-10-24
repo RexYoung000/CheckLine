@@ -1,5 +1,5 @@
 // A frozen interaction baseline keeps rejected, uncommitted full-page palettes
-// out of this home-only study. Git is read-only; no existing draft is replaced.
+// out of this scoped material study. Git is read-only; no existing draft is replaced.
 const fs = require('node:fs');
 const path = require('node:path');
 const vm = require('node:vm');
@@ -28,12 +28,16 @@ const normalize=s=>s.replaceAll('light-','HMID-').replaceAll('var(--','var(--hm-
 let helper=fs.readFileSync(path.join(dir,'src/budget-home.js'),'utf8').replace('__HOME_BODY__',JSON.stringify(normalize(body))).replace('__HOME_EDGE__',JSON.stringify(normalize(edge)));
 helper+='\n'+fs.readFileSync(path.join(dir,'src/budget-home-liquid.js'),'utf8');
 helper+='\n'+fs.readFileSync(path.join(dir,'src/budget-detail.js'),'utf8');
+helper+='\n'+fs.readFileSync(path.join(dir,'src/budget-pages.js'),'utf8');
 once('function cartridgeFace(c){',helper+'\nfunction cartridgeFace(c){');
 once('const t=totals(c),ready=readerConnected();let face=readerLiquidFace(c);','const t=totals(c),ready=readerConnected();let face=hmMaterializeFace(readerLiquidFace(c),c);');
 once('<div class="liquid-card restored-detail-card">${libraryCardFace(c)}</div>','${dmDetailCard(c)}');
 const bubbles=match(html,/function readerBubbleMarkup\(\)\{[\s\S]*?\n\}/);
 once(bubbles,'function readerBubbleMarkup(){return hmBubbleField();}');
-const css=fs.readFileSync(path.join(dir,'src/budget-home.css'),'utf8')+'\n'+fs.readFileSync(path.join(dir,'src/budget-detail.css'),'utf8');
+once('const materialQuery = new URL(location.href).searchParams;','smInstallPages();\n  const materialQuery = new URL(location.href).searchParams;');
+once("['detail', '预算工作区'], ['record', '消费详情']", "['detail', '预算工作区'], ['budget-records', '预算消费记录'], ['record', '消费详情']");
+once("} else if (['detail', 'record', 'trend', 'history', 'info'].includes(view)) {", "} else if (view === 'budget-records') {\n        const card = materialNeedBudget();\n        if (card) navigate('detail', {id:card.id, section:'records'});\n      } else if (['detail', 'record', 'trend', 'history', 'info'].includes(view)) {");
+const css=['budget-home','budget-detail','budget-pages','wish-material'].map(name=>fs.readFileSync(path.join(dir,'src/'+name+'.css'),'utf8')).join('\n');
 once('</head>','<style id="budget-home-material">\n'+themeTokens+'\n'+css+'\n</style></head>');
 once('data-material-study="r3-aligned"','data-material-study="r3-aligned" data-home-material="approved-pair"');
 once('data-review-storage="checkline-material-themes-r37-20261024"','data-review-storage="checkline-budget-home-material-20261024"');

@@ -1,0 +1,15 @@
+{
+  "baseline": "deae7b0",
+  "runtimeOnlyExpectedPresentationAdapters": true,
+  "acceptedFilesUnchanged": {
+    "budget-card-pair.html": true,
+    "src/budget-home.js": true,
+    "src/budget-home.css": true,
+    "src/budget-home-liquid.js": true
+  },
+  "nativeDiff": [],
+  "reproducible": true,
+  "generatedSha256": "688c0bf62c6cc5b63f129ebddd48694cdd1eb272fb6a76061857ca25eb5ab70b",
+  "noNewRuntimeDependencies": true,
+  "temporaryDiagnosticsRemoved": true
+}
