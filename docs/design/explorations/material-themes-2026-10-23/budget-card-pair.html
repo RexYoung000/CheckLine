@@ -32,7 +32,7 @@ h1 { margin: 0; font-size: clamp(23px, 3.4vw, 30px); line-height: 1.3; font-weig
   --ink: #12384b; --meta-ink: #27526a; --amount-ink: #103d52; --water-label: #27526a;
   --contact: #183c50; --shadow-alpha: .16; --contact-alpha: .21;
   --pocket-top: #f7fcff; --pocket-base: #dcebf2; --pocket-alpha: .56; --pocket-rim: #ffffff;
-  --button-fill: .20; --bubble-shadow: #277b9f; --bubble-far: #347f9e; --bubble-near: .86;
+  --button-fill: .20; --bubble-shadow: #4694b5; --bubble-near: .86;
 }
 .dark {
   color-scheme: dark;
@@ -178,29 +178,30 @@ footer a { color: #426a82; text-decoration-thickness: 1px; text-underline-offset
         <g clip-path="url(#light-liquid-clip)">
           <ellipse class="liquid-caustic" cx="101.1" cy="246" rx="120" ry="38" fill="url(#light-scatter)"/>
         </g>
-        <g class="far-bubbles" fill="none" style="stroke:var(--bubble-far)" stroke-width=".8" opacity=".32">
-          <circle cx="65" cy="324" r="1.7"/>
-          <circle cx="102" cy="355" r="1.6"/>
-          <circle cx="149" cy="260" r="1.4"/>
-          <circle cx="197" cy="315" r="1.4"/>
-          <circle cx="218" cy="268" r="1.8"/>
-          <circle cx="245" cy="356" r="1.5"/>
-          <circle cx="335" cy="261" r="1.6"/>
-          <circle cx="380" cy="355" r="1.3"/>
-          <circle cx="210" cy="363" r="1.5"/>
-          <circle cx="64" cy="356" r="2.4"/>
+        <!-- Distant bubbles use the same transparent sphere as near bubbles, with weaker and thinner reflection. -->
+        <g class="far-bubbles" opacity=".30">
+          <g transform="translate(69 272)"><circle class="far-bubble-sphere" r="1.35" fill="url(#light-bubble-fill)" stroke="url(#light-bubble-rim)" stroke-width=".36"/><path class="bubble-glint" d="M-0.77 0Q-0.88 -0.81 -0.07 -0.97" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width=".27" stroke-linecap="round"/></g>
+          <g transform="translate(102 355)"><circle class="far-bubble-sphere" r="1.3" fill="url(#light-bubble-fill)" stroke="url(#light-bubble-rim)" stroke-width=".36"/><path class="bubble-glint" d="M-0.74 0Q-0.85 -0.78 -0.07 -0.94" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width=".27" stroke-linecap="round"/></g>
+          <g transform="translate(149 260)"><circle class="far-bubble-sphere" r="1.15" fill="url(#light-bubble-fill)" stroke="url(#light-bubble-rim)" stroke-width=".36"/><path class="bubble-glint" d="M-0.66 0Q-0.75 -0.69 -0.06 -0.83" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width=".27" stroke-linecap="round"/></g>
+          <g transform="translate(197 315)"><circle class="far-bubble-sphere" r="1.15" fill="url(#light-bubble-fill)" stroke="url(#light-bubble-rim)" stroke-width=".36"/><path class="bubble-glint" d="M-0.66 0Q-0.75 -0.69 -0.06 -0.83" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width=".27" stroke-linecap="round"/></g>
+          <g transform="translate(218 268)"><circle class="far-bubble-sphere" r="1.45" fill="url(#light-bubble-fill)" stroke="url(#light-bubble-rim)" stroke-width=".36"/><path class="bubble-glint" d="M-0.83 0Q-0.94 -0.87 -0.07 -1.04" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width=".27" stroke-linecap="round"/></g>
+          <g transform="translate(245 356)"><circle class="far-bubble-sphere" r="1.2" fill="url(#light-bubble-fill)" stroke="url(#light-bubble-rim)" stroke-width=".36"/><path class="bubble-glint" d="M-0.68 0Q-0.78 -0.72 -0.06 -0.86" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width=".27" stroke-linecap="round"/></g>
+          <g transform="translate(335 261)"><circle class="far-bubble-sphere" r="1.3" fill="url(#light-bubble-fill)" stroke="url(#light-bubble-rim)" stroke-width=".36"/><path class="bubble-glint" d="M-0.74 0Q-0.85 -0.78 -0.07 -0.94" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width=".27" stroke-linecap="round"/></g>
+          <g transform="translate(380 355)"><circle class="far-bubble-sphere" r="1.1" fill="url(#light-bubble-fill)" stroke="url(#light-bubble-rim)" stroke-width=".36"/><path class="bubble-glint" d="M-0.63 0Q-0.72 -0.66 -0.06 -0.79" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width=".27" stroke-linecap="round"/></g>
+          <g transform="translate(210 363)"><circle class="far-bubble-sphere" r="1.2" fill="url(#light-bubble-fill)" stroke="url(#light-bubble-rim)" stroke-width=".36"/><path class="bubble-glint" d="M-0.68 0Q-0.78 -0.72 -0.06 -0.86" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width=".27" stroke-linecap="round"/></g>
+          <g transform="translate(64 356)"><circle class="far-bubble-sphere" r="1.9" fill="url(#light-bubble-fill)" stroke="url(#light-bubble-rim)" stroke-width=".36"/><path class="bubble-glint" d="M-1.08 0Q-1.23 -1.14 -0.10 -1.37" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width=".27" stroke-linecap="round"/></g>
         </g>
         <!-- A rear lip and one bright front meniscus enclose a thin, visible liquid surface. -->
         <path d="M40 233C94 216 133 227 190 221S294 216 345 226S382 231 392 227" fill="none" stroke="#e2faff" stroke-opacity=".17" stroke-width=".85"/>
         <path d="M40 233C94 220 133 240 190 231S294 220 345 231S382 231 392 227" transform="translate(0 1.35)" fill="none" stroke="#147294" stroke-opacity=".18" stroke-width="2"/>
         <path d="M40 233C94 220 133 240 190 231S294 220 345 231S382 231 392 227" fill="none" stroke="#fff" stroke-opacity=".86" stroke-width="1.35"/>
         <g class="near-bubbles" style="opacity:var(--bubble-near)">
-          <g transform="translate(87 283)"><circle class="bubble-sphere" r="3.8" fill="url(#light-bubble-fill)" stroke="url(#light-bubble-rim)" stroke-width=".65"/><path class="bubble-glint" d="M-2.17 0Q-2.47 -2.28 -0.19 -2.74" fill="none" stroke="#fff" stroke-opacity=".9" stroke-width=".7" stroke-linecap="round"/></g>
-          <g transform="translate(127 306)"><circle class="bubble-sphere" r="3" fill="url(#light-bubble-fill)" stroke="url(#light-bubble-rim)" stroke-width=".65"/><path class="bubble-glint" d="M-1.71 0Q-1.95 -1.80 -0.15 -2.16" fill="none" stroke="#fff" stroke-opacity=".9" stroke-width=".7" stroke-linecap="round"/></g>
-          <g transform="translate(163 349)"><circle class="bubble-sphere" r="4.2" fill="url(#light-bubble-fill)" stroke="url(#light-bubble-rim)" stroke-width=".65"/><path class="bubble-glint" d="M-2.39 0Q-2.73 -2.52 -0.21 -3.02" fill="none" stroke="#fff" stroke-opacity=".9" stroke-width=".7" stroke-linecap="round"/></g>
-          <g transform="translate(193 287)"><circle class="bubble-sphere" r="2.5" fill="url(#light-bubble-fill)" stroke="url(#light-bubble-rim)" stroke-width=".65"/><path class="bubble-glint" d="M-1.42 0Q-1.63 -1.50 -0.13 -1.80" fill="none" stroke="#fff" stroke-opacity=".9" stroke-width=".7" stroke-linecap="round"/></g>
-          <g transform="translate(299 252)"><circle class="bubble-sphere" r="3.5" fill="url(#light-bubble-fill)" stroke="url(#light-bubble-rim)" stroke-width=".65"/><path class="bubble-glint" d="M-1.99 0Q-2.27 -2.10 -0.18 -2.52" fill="none" stroke="#fff" stroke-opacity=".9" stroke-width=".7" stroke-linecap="round"/></g>
-          <g transform="translate(365 353)"><circle class="bubble-sphere" r="3" fill="url(#light-bubble-fill)" stroke="url(#light-bubble-rim)" stroke-width=".65"/><path class="bubble-glint" d="M-1.71 0Q-1.95 -1.80 -0.15 -2.16" fill="none" stroke="#fff" stroke-opacity=".9" stroke-width=".7" stroke-linecap="round"/></g>
+          <g transform="translate(87 283)"><circle class="bubble-sphere" r="3.8" fill="url(#light-bubble-fill)" stroke="url(#light-bubble-rim)" stroke-width=".6"/><path class="bubble-glint" d="M-2.17 0Q-2.47 -2.28 -0.19 -2.74" fill="none" stroke="#fff" stroke-opacity=".9" stroke-width=".5" stroke-linecap="round"/></g>
+          <g transform="translate(127 306)"><circle class="bubble-sphere" r="3" fill="url(#light-bubble-fill)" stroke="url(#light-bubble-rim)" stroke-width=".6"/><path class="bubble-glint" d="M-1.71 0Q-1.95 -1.80 -0.15 -2.16" fill="none" stroke="#fff" stroke-opacity=".9" stroke-width=".5" stroke-linecap="round"/></g>
+          <g transform="translate(163 349)"><circle class="bubble-sphere" r="4.2" fill="url(#light-bubble-fill)" stroke="url(#light-bubble-rim)" stroke-width=".6"/><path class="bubble-glint" d="M-2.39 0Q-2.73 -2.52 -0.21 -3.02" fill="none" stroke="#fff" stroke-opacity=".9" stroke-width=".5" stroke-linecap="round"/></g>
+          <g transform="translate(193 287)"><circle class="bubble-sphere" r="2.5" fill="url(#light-bubble-fill)" stroke="url(#light-bubble-rim)" stroke-width=".6"/><path class="bubble-glint" d="M-1.42 0Q-1.63 -1.50 -0.13 -1.80" fill="none" stroke="#fff" stroke-opacity=".9" stroke-width=".5" stroke-linecap="round"/></g>
+          <g transform="translate(299 252)"><circle class="bubble-sphere" r="3.5" fill="url(#light-bubble-fill)" stroke="url(#light-bubble-rim)" stroke-width=".6"/><path class="bubble-glint" d="M-1.99 0Q-2.27 -2.10 -0.18 -2.52" fill="none" stroke="#fff" stroke-opacity=".9" stroke-width=".5" stroke-linecap="round"/></g>
+          <g transform="translate(365 353)"><circle class="bubble-sphere" r="3" fill="url(#light-bubble-fill)" stroke="url(#light-bubble-rim)" stroke-width=".6"/><path class="bubble-glint" d="M-1.71 0Q-1.95 -1.80 -0.15 -2.16" fill="none" stroke="#fff" stroke-opacity=".9" stroke-width=".5" stroke-linecap="round"/></g>
         </g>
       </g>
       <rect x="40" y="76" width="352" height="300" rx="32" fill="#000" filter="url(#light-thickness)"/>

@@ -1,0 +1,138 @@
+{
+  "date": "2026-10-24",
+  "scope": "Light budget main-card bubbles only. Final visual acceptance pending.",
+  "observations": [
+    {
+      "scenario": "default",
+      "observed": {
+        "far": [
+          {
+            "fill": "url(#light-bubble-fill)",
+            "radius": "1.35",
+            "stroke": "url(#light-bubble-rim)"
+          },
+          {
+            "fill": "url(#light-bubble-fill)",
+            "radius": "1.3",
+            "stroke": "url(#light-bubble-rim)"
+          },
+          {
+            "fill": "url(#light-bubble-fill)",
+            "radius": "1.15",
+            "stroke": "url(#light-bubble-rim)"
+          },
+          {
+            "fill": "url(#light-bubble-fill)",
+            "radius": "1.15",
+            "stroke": "url(#light-bubble-rim)"
+          },
+          {
+            "fill": "url(#light-bubble-fill)",
+            "radius": "1.45",
+            "stroke": "url(#light-bubble-rim)"
+          },
+          {
+            "fill": "url(#light-bubble-fill)",
+            "radius": "1.2",
+            "stroke": "url(#light-bubble-rim)"
+          },
+          {
+            "fill": "url(#light-bubble-fill)",
+            "radius": "1.3",
+            "stroke": "url(#light-bubble-rim)"
+          },
+          {
+            "fill": "url(#light-bubble-fill)",
+            "radius": "1.1",
+            "stroke": "url(#light-bubble-rim)"
+          },
+          {
+            "fill": "url(#light-bubble-fill)",
+            "radius": "1.2",
+            "stroke": "url(#light-bubble-rim)"
+          },
+          {
+            "fill": "url(#light-bubble-fill)",
+            "radius": "1.9",
+            "stroke": "url(#light-bubble-rim)"
+          }
+        ],
+        "near": [
+          {
+            "fill": "url(#light-bubble-fill)",
+            "stroke": "url(#light-bubble-rim)"
+          },
+          {
+            "fill": "url(#light-bubble-fill)",
+            "stroke": "url(#light-bubble-rim)"
+          },
+          {
+            "fill": "url(#light-bubble-fill)",
+            "stroke": "url(#light-bubble-rim)"
+          },
+          {
+            "fill": "url(#light-bubble-fill)",
+            "stroke": "url(#light-bubble-rim)"
+          },
+          {
+            "fill": "url(#light-bubble-fill)",
+            "stroke": "url(#light-bubble-rim)"
+          },
+          {
+            "fill": "url(#light-bubble-fill)",
+            "stroke": "url(#light-bubble-rim)"
+          }
+        ],
+        "noiseFilters": 0,
+        "scrollWidth": 1120,
+        "width": 1120
+      }
+    },
+    {
+      "scenario": "right-light",
+      "observed": {
+        "farHighlights": [
+          "rotate(88.20)",
+          "rotate(88.20)",
+          "rotate(88.20)",
+          "rotate(88.20)",
+          "rotate(88.20)",
+          "rotate(88.20)",
+          "rotate(88.20)",
+          "rotate(88.20)",
+          "rotate(88.20)",
+          "rotate(88.20)"
+        ],
+        "reflectionCentre": "0.8072",
+        "value": "98"
+      }
+    },
+    {
+      "scenario": "320",
+      "observed": {
+        "lightBubbles": 16,
+        "lightValue": "2",
+        "scrollWidth": 320,
+        "width": 320
+      }
+    },
+    {
+      "scenario": "console-errors",
+      "observed": []
+    }
+  ],
+  "sourceChecks": {
+    "comparedWith": "9fc1e00ccbba7931113407ebe45bb7df7a2c941d",
+    "results": {
+      "dark_svg_unchanged": true,
+      "dark_palette_unchanged": true,
+      "light_source_script_unchanged": true,
+      "other_light_svg_unchanged": true,
+      "no_surface_noise": true,
+      "svg_0_unique_ids": true,
+      "svg_0_references_resolve": true,
+      "svg_1_unique_ids": true,
+      "svg_1_references_resolve": true
+    }
+  }
+}
