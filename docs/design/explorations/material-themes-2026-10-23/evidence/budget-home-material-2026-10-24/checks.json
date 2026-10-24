@@ -1,0 +1,155 @@
+{
+  "date": "2026-10-24",
+  "scope": "Budget home HTML material only; final home visual acceptance pending.",
+  "observations": [
+    {
+      "scenario": "light-home-390",
+      "observed": {
+        "ambientCount": 16,
+        "duplicates": [],
+        "emptyBubbleBorders": true,
+        "ground": "rgb(249, 251, 253)",
+        "ice": "#37b9e8",
+        "scrollWidth": 390,
+        "theme": "light",
+        "width": 390
+      }
+    },
+    {
+      "scenario": "light-records-keyboard-change-card",
+      "observed": {
+        "fold": "records",
+        "records": 0,
+        "title": "周末出行"
+      }
+    },
+    {
+      "scenario": "light-unplug-stable",
+      "observed": {
+        "disabledSummaries": 2,
+        "phase": "unplugged"
+      }
+    },
+    {
+      "scenario": "light-insert-stable",
+      "observed": {
+        "ambient": 16,
+        "phase": "connected"
+      }
+    },
+    {
+      "scenario": "theme-switch-in-place",
+      "observed": {
+        "ground": "rgb(12, 17, 23)",
+        "ice": "#37b9e8",
+        "phase": "connected",
+        "theme": "dark"
+      }
+    },
+    {
+      "scenario": "dark-320-reduced",
+      "observed": {
+        "ambientHidden": true,
+        "reduced": true,
+        "scrollWidth": 320,
+        "stillBubbles": 16,
+        "width": 320
+      }
+    },
+    {
+      "scenario": "light-768",
+      "observed": {
+        "cardWidth": 410,
+        "scrollWidth": 768,
+        "width": 768
+      }
+    },
+    {
+      "scenario": "horizontal-card-gesture",
+      "observed": {
+        "card": "learning",
+        "phase": "connected",
+        "title": "学点新东西"
+      },
+      "beforeCard": "month"
+    },
+    {
+      "scenario": "light-320-normal",
+      "observed": {
+        "phase": "connected",
+        "scrollWidth": 320,
+        "width": 320
+      }
+    },
+    {
+      "scenario": "library-entry-return",
+      "result": "Opened original arc library and returned to home. No library texture or interaction changes; full internal selection not accepted in this task."
+    },
+    {
+      "scenario": "console-errors",
+      "observed": []
+    },
+    {
+      "scenario": "light-records-painted-container",
+      "observed": {
+        "background": "rgba(239, 248, 252, 0.74)",
+        "records": 6,
+        "text": "rgb(24, 52, 67)"
+      }
+    },
+    {
+      "scenario": "dark-records-painted-container",
+      "observed": {
+        "background": "rgba(38, 63, 77, 0.75)",
+        "records": 6,
+        "text": "rgb(228, 240, 247)"
+      }
+    },
+    {
+      "scenario": "front-card-amount-preserved-dark-insertion",
+      "before": "1,280",
+      "unplugged": "1,280",
+      "after": {
+        "phase": "connected",
+        "remaining": "1,280",
+        "summaryAmounts": [
+          {
+            "amount": "¥1,720",
+            "kind": "used"
+          },
+          {
+            "amount": "7",
+            "kind": "days"
+          }
+        ]
+      }
+    },
+    {
+      "scenario": "final-generated-page-console",
+      "observed": []
+    },
+    {
+      "scenario": "paired-preview-console",
+      "observed": [
+        {
+          "level": "error",
+          "message": "Uncaught TypeError: Failed to execute 'observe' on 'MutationObserver': parameter 1 is not of type 'Node'.",
+          "timestamp": "2026-10-24T04:45:29.835Z"
+        },
+        {
+          "level": "error",
+          "message": "Uncaught TypeError: Failed to execute 'observe' on 'MutationObserver': parameter 1 is not of type 'Node'.",
+          "timestamp": "2026-10-24T05:25:04.318Z"
+        }
+      ]
+    }
+  ],
+  "sourceChecks": {
+    "baseline": "f10d619",
+    "unrelated_markup_and_logic_unchanged": true,
+    "accepted_main_card_unchanged": true,
+    "no_native_changes": true,
+    "reproducibleBuild": true,
+    "generatedSha256": "8def8cca4fc46dbb13714d22cd3454a6e13da6d249b14853125a76f832d24993"
+  }
+}
