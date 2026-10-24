@@ -1,0 +1,348 @@
+{
+  "baseline": "89b1c83",
+  "scope": "Dark HTML UI only; same physical ice cards and motion",
+  "cardOpticsUnchanged": true,
+  "cardOpticsBefore": {
+    "tokens": {
+      "--hm-amount-ink": "#ffffff",
+      "--hm-bubble-strength": ".82",
+      "--hm-ice": "#37b9e8",
+      "--hm-ice-alpha": ".78",
+      "--hm-ink": "#0c2b3e",
+      "--hm-meta-ink": "#0d3549",
+      "--hm-reflection": "#f4fcff",
+      "--hm-reflection-mid": ".22",
+      "--hm-reflection-top": ".76",
+      "--hm-water-base-color": "rgb(16 62 88 / .75)",
+      "--hm-water-mid-color": "rgb(11 76 116 / .64)",
+      "--hm-water-top-color": "rgb(134 226 255 / .20)"
+    },
+    "wishFace": {
+      "background": "radial-gradient(at 9% 0px, rgba(244, 252, 255, 0.69), rgba(0, 0, 0, 0) 57%) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 0.215686 0.72549 0.909804 / 0.78) none repeat scroll 0% 0% / auto padding-box border-box",
+      "color": "rgb(12, 43, 62)",
+      "shadow": "rgba(222, 248, 255, 0.69) 1px 1.5px 0px 0px inset, rgba(21, 75, 102, 0.44) -1px -1px 0px 0px inset, rgba(16, 61, 82, 0.6) 0px -4px 7px -6px inset, rgba(0, 0, 0, 0.44) 0px 9px 17px -14px"
+    }
+  },
+  "cardOpticsAfter": {
+    "tokens": {
+      "--hm-amount-ink": "#ffffff",
+      "--hm-bubble-strength": ".82",
+      "--hm-ice": "#37b9e8",
+      "--hm-ice-alpha": ".78",
+      "--hm-ink": "#0c2b3e",
+      "--hm-meta-ink": "#0d3549",
+      "--hm-reflection": "#f4fcff",
+      "--hm-reflection-mid": ".22",
+      "--hm-reflection-top": ".76",
+      "--hm-water-base-color": "rgb(16 62 88 / .75)",
+      "--hm-water-mid-color": "rgb(11 76 116 / .64)",
+      "--hm-water-top-color": "rgb(134 226 255 / .20)"
+    },
+    "wishFace": {
+      "background": "radial-gradient(at 9% 0px, rgba(244, 252, 255, 0.69), rgba(0, 0, 0, 0) 57%) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 0.215686 0.72549 0.909804 / 0.78) none repeat scroll 0% 0% / auto padding-box border-box",
+      "color": "rgb(12, 43, 62)",
+      "shadow": "rgba(222, 248, 255, 0.69) 1px 1.5px 0px 0px inset, rgba(21, 75, 102, 0.44) -1px -1px 0px 0px inset, rgba(16, 61, 82, 0.6) 0px -4px 7px -6px inset, rgba(0, 0, 0, 0.44) 0px 9px 17px -14px"
+    }
+  },
+  "darkPages390": [
+    {
+      "view": "home",
+      "ground": "#0b0b0d",
+      "overflow": 0,
+      "size": [
+        390,
+        844
+      ],
+      "ui": [
+        {
+          "background": "rgba(29, 29, 32, 0.93) none repeat scroll 0% 0% / auto padding-box border-box",
+          "color": "rgb(243, 243, 245)",
+          "selector": ".dock"
+        }
+      ]
+    },
+    {
+      "view": "detail",
+      "ground": "#0b0b0d",
+      "overflow": 0,
+      "size": [
+        390,
+        844
+      ],
+      "ui": [
+        {
+          "background": "rgba(21, 21, 23, 0.97) none repeat scroll 0% 0% / auto padding-box border-box",
+          "color": "rgb(243, 243, 245)",
+          "selector": ".reader-drawer"
+        },
+        {
+          "background": "rgba(29, 29, 32, 0.93) none repeat scroll 0% 0% / auto padding-box border-box",
+          "color": "rgb(243, 243, 245)",
+          "selector": ".dock"
+        }
+      ]
+    },
+    {
+      "view": "budget-records",
+      "ground": "#0b0b0d",
+      "overflow": 0,
+      "size": [
+        390,
+        844
+      ],
+      "ui": [
+        {
+          "background": "rgba(21, 21, 23, 0.97) none repeat scroll 0% 0% / auto padding-box border-box",
+          "color": "rgb(243, 243, 245)",
+          "selector": ".reader-drawer"
+        },
+        {
+          "background": "rgba(28, 28, 31, 0.9) none repeat scroll 0% 0% / auto padding-box border-box",
+          "color": "rgb(243, 243, 245)",
+          "selector": ".dm-subpage .record-row"
+        },
+        {
+          "background": "rgba(29, 29, 32, 0.93) none repeat scroll 0% 0% / auto padding-box border-box",
+          "color": "rgb(243, 243, 245)",
+          "selector": ".dock"
+        }
+      ]
+    },
+    {
+      "view": "trend",
+      "ground": "#0b0b0d",
+      "overflow": 0,
+      "size": [
+        390,
+        844
+      ],
+      "ui": [
+        {
+          "background": "rgba(21, 21, 23, 0.97) none repeat scroll 0% 0% / auto padding-box border-box",
+          "color": "rgb(243, 243, 245)",
+          "selector": ".reader-drawer"
+        },
+        {
+          "background": "rgba(28, 28, 31, 0.9) none repeat scroll 0% 0% / auto padding-box border-box",
+          "color": "rgb(243, 243, 245)",
+          "selector": ".dm-subpage .record-row"
+        },
+        {
+          "background": "rgba(28, 28, 31, 0.9) none repeat scroll 0% 0% / auto padding-box border-box",
+          "color": "rgb(243, 243, 245)",
+          "selector": ".dm-subpage .calendar-grid"
+        },
+        {
+          "background": "rgb(242, 242, 244) none repeat scroll 0% 0% / auto padding-box border-box",
+          "color": "rgb(23, 23, 25)",
+          "selector": ".dm-subpage .calendar-grid>button.selected"
+        },
+        {
+          "background": "rgb(243, 243, 245) none repeat scroll 0% 0% / auto padding-box border-box",
+          "color": "rgb(243, 243, 245)",
+          "selector": ".dm-subpage .chart .bar.selected"
+        },
+        {
+          "background": "rgba(29, 29, 32, 0.93) none repeat scroll 0% 0% / auto padding-box border-box",
+          "color": "rgb(243, 243, 245)",
+          "selector": ".dock"
+        }
+      ]
+    },
+    {
+      "view": "history",
+      "ground": "#0b0b0d",
+      "overflow": 0,
+      "size": [
+        390,
+        844
+      ],
+      "ui": [
+        {
+          "background": "rgba(21, 21, 23, 0.97) none repeat scroll 0% 0% / auto padding-box border-box",
+          "color": "rgb(243, 243, 245)",
+          "selector": ".reader-drawer"
+        },
+        {
+          "background": "rgba(28, 28, 31, 0.9) none repeat scroll 0% 0% / auto padding-box border-box",
+          "color": "rgb(243, 243, 245)",
+          "selector": ".dm-subpage .history-row"
+        },
+        {
+          "background": "rgba(29, 29, 32, 0.93) none repeat scroll 0% 0% / auto padding-box border-box",
+          "color": "rgb(243, 243, 245)",
+          "selector": ".dock"
+        }
+      ]
+    },
+    {
+      "view": "info",
+      "ground": "#0b0b0d",
+      "overflow": 0,
+      "size": [
+        390,
+        844
+      ],
+      "ui": [
+        {
+          "background": "rgba(21, 21, 23, 0.97) none repeat scroll 0% 0% / auto padding-box border-box",
+          "color": "rgb(243, 243, 245)",
+          "selector": ".reader-drawer"
+        },
+        {
+          "background": "rgba(28, 28, 31, 0.9) none repeat scroll 0% 0% / auto padding-box border-box",
+          "color": "rgb(243, 243, 245)",
+          "selector": ".dm-subpage .amount-block"
+        },
+        {
+          "background": "rgba(29, 29, 32, 0.93) none repeat scroll 0% 0% / auto padding-box border-box",
+          "color": "rgb(243, 243, 245)",
+          "selector": ".dock"
+        }
+      ]
+    },
+    {
+      "view": "wallet",
+      "ground": "#0b0b0d",
+      "overflow": 0,
+      "size": [
+        390,
+        844
+      ],
+      "ui": [
+        {
+          "background": "rgba(21, 21, 23, 0.97) none repeat scroll 0% 0% / auto padding-box border-box",
+          "color": "rgb(243, 243, 245)",
+          "selector": ".reader-drawer"
+        },
+        {
+          "background": "rgba(28, 28, 31, 0.9) none repeat scroll 0% 0% / auto padding-box border-box",
+          "color": "rgb(243, 243, 245)",
+          "selector": ".wish-wallet-hero"
+        },
+        {
+          "background": "rgba(29, 29, 32, 0.93) none repeat scroll 0% 0% / auto padding-box border-box",
+          "color": "rgb(243, 243, 245)",
+          "selector": ".dock"
+        }
+      ]
+    }
+  ],
+  "flows": {
+    "filteredEmpty": "待确认已清空。",
+    "recordsRestored": 6,
+    "calendar": "超市\n10月21日\n¥180",
+    "editPanel": {
+      "background": "rgba(21, 21, 23, 0.97) none repeat scroll 0% 0% / auto padding-box border-box",
+      "button": "rgb(242, 242, 244) none repeat scroll 0% 0% / auto padding-box border-box",
+      "buttonInk": "rgb(23, 23, 25)",
+      "foreground": "rgb(243, 243, 245)"
+    },
+    "limitUnchanged": "¥3,000",
+    "incomplete": {
+      "background": "rgb(43, 43, 46) none repeat scroll 0% 0% / auto padding-box border-box",
+      "color": "rgb(153, 153, 160)",
+      "disabled": true,
+      "status": "incomplete"
+    },
+    "ready": {
+      "background": "rgb(242, 242, 244) none repeat scroll 0% 0% / auto padding-box border-box",
+      "color": "rgb(23, 23, 25)",
+      "disabled": false,
+      "height": 44,
+      "rim": "rgba(0, 0, 0, 0) conic-gradient(from 5.6025deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.145) 20%, rgb(237, 252, 255) 33%, rgb(131, 213, 235) 46%, rgba(255, 255, 255, 0.08) 57%, rgba(255, 255, 255, 0.145) 73%, rgb(237, 252, 255) 85%, rgba(255, 255, 255, 0.08) 100%) repeat scroll 0% 0% / auto padding-box border-box",
+      "status": "ready",
+      "width": 112
+    }
+  },
+  "responsive": [
+    {
+      "view": "trend",
+      "overflow": 0,
+      "reduced": true,
+      "size": [
+        320,
+        740
+      ],
+      "spheres": []
+    },
+    {
+      "view": "wish-back",
+      "overflow": 0,
+      "reduced": true,
+      "size": [
+        320,
+        740
+      ],
+      "spheres": [
+        {
+          "animation": "none",
+          "border": "0px"
+        },
+        {
+          "animation": "none",
+          "border": "0px"
+        },
+        {
+          "animation": "none",
+          "border": "0px"
+        },
+        {
+          "animation": "none",
+          "border": "0px"
+        },
+        {
+          "animation": "none",
+          "border": "0px"
+        },
+        {
+          "animation": "none",
+          "border": "0px"
+        },
+        {
+          "animation": "none",
+          "border": "0px"
+        },
+        {
+          "animation": "none",
+          "border": "0px"
+        },
+        {
+          "animation": "none",
+          "border": "0px"
+        },
+        {
+          "animation": "none",
+          "border": "0px"
+        }
+      ]
+    }
+  ],
+  "light": {
+    "balance": "rgba(217, 239, 248, 0.55) none repeat scroll 0% 0% / auto padding-box border-box",
+    "card": "radial-gradient(at 9% 0px, rgba(255, 255, 255, 0.72), rgba(0, 0, 0, 0) 57%) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 0.215686 0.72549 0.909804 / 0.28) none repeat scroll 0% 0% / auto padding-box border-box",
+    "darkRole": "",
+    "ground": "#f9fbfd",
+    "size": [
+      390,
+      844
+    ]
+  },
+  "wrapper": {
+    "wide": [
+      1120,
+      1120
+    ],
+    "narrow": [
+      380,
+      542
+    ],
+    "overflow": 0
+  },
+  "standaloneErrors": [],
+  "limitations": [
+    "Native App untouched; no device acceptance",
+    "No new full VoiceOver or system text scaling acceptance",
+    "Previously recorded intermittent paired-frame error is not claimed fixed"
+  ]
+}

@@ -4673,6 +4673,41 @@ body.material-embedded .app { width: 100%!important; height: 100dvh; min-height:
 .app[data-home-material][data-theme].reduced .wish-bubble-volume>i{animation:none;top:calc(15% + var(--bubble-x) * .65);opacity:.55}
 @media(prefers-reduced-motion:reduce){.app[data-home-material][data-theme] .wish-bubble-volume>i{animation:none;top:calc(15% + var(--bubble-x) * .65);opacity:.55}}
 
+/* Dark UI is neutral. These are interface roles; the accepted optical ice,
+   liquid, card ink, reflection and bubble tokens remain in the material source. */
+.app[data-home-material][data-theme=dark]{
+  --dui-canvas:#0b0b0d;--dui-panel:#151517f7;--dui-surface:#1c1c1fe6;--dui-control:#202023;--dui-selected:#343438;
+  --dui-text:#f3f3f5;--dui-muted:#aaaab0;--dui-line:#ffffff10;--dui-highlight:#ffffff0d;--dui-primary:#f2f2f4;--dui-primary-ink:#171719;
+  --hm-ground:var(--dui-canvas);--hm-panel-ink:var(--dui-text);--hm-panel-secondary:var(--dui-muted);--hm-panel-edge:var(--dui-line);
+  --hm-tile:var(--dui-surface);--hm-receipt:#1d1d20f0;--hm-receipt-back:#161618cc;--hm-muted:var(--dui-muted);
+  --hm-nav:#1d1d20ed;--hm-nav-selected:var(--dui-selected);--hm-accent:var(--dui-text);
+  --dm-sheet:var(--dui-panel);--dm-primary:var(--dui-primary);--dm-primary-ink:var(--dui-primary-ink);
+  --wm-focus:#080809ed;--wm-disabled:#2b2b2e;--wm-disabled-ink:#9999a0;
+}
+/* Reuse the existing components' semantic roles in the pages under review.
+   The library artwork and all physical card color roles are left alone. */
+.app[data-home-material][data-theme=dark]:is(:has(.budget-home-head),:has(.dm-detail-card),:has(.dm-subpage),:has(.wish-home)):not(:has(.library-open)){
+  --ink:var(--dui-text);--muted:var(--dui-muted);--faint:#96969d;--accent:var(--dui-text);--accent-soft:#ffffff10;--line:var(--dui-line);--surface:var(--dui-panel);--glass:var(--hm-nav);
+  --material-panel:var(--dui-panel);--material-full-panel:var(--dui-panel);--material-block:var(--dui-surface);--material-field:var(--dui-control);--material-control:var(--dui-control);--material-selected:var(--dui-selected);
+  --material-edge:var(--dui-line);--material-edge-low:var(--dui-line);--material-primary:var(--dui-primary);--material-primary-ink:var(--dui-primary-ink);--icon-accent:var(--dui-text);
+}
+.app[data-home-material][data-theme=dark] .dm-subpage :is(.record-row,.history-row,.amount-block:not(.no-bg),.calendar-grid){box-shadow:inset 0 1px var(--dui-highlight),0 6px 14px -13px #0009}
+.app[data-home-material][data-theme=dark] .dm-subpage :is(select,.tertiary,.secondary){box-shadow:inset 0 1px var(--dui-highlight)}
+.app[data-home-material][data-theme=dark] .dm-subpage .chart .bar{background:#74747c;box-shadow:inset 0 1px #ffffff24;border-color:#ffffff0a}
+.app[data-home-material][data-theme=dark] .dm-subpage .chart .bar.selected{background:var(--dui-text);box-shadow:none}
+.app[data-home-material][data-theme=dark] .dm-subpage .calendar-grid>button.has-record{background:var(--dui-selected)}
+.app[data-home-material][data-theme=dark] .dm-subpage .calendar-grid>button.selected{background:var(--dui-primary);color:var(--dui-primary-ink);box-shadow:none}
+.app[data-home-material][data-theme=dark] .reader-drawer:has(:is(.dm-detail-card,.dm-subpage,.wish-wallet-page,.wish-entry-page)) .detail-head .icon-button{box-shadow:inset 0 1px var(--dui-highlight)}
+.app[data-home-material][data-theme=dark] .reader-drawer:has(.dm-detail-card) :is(.restored-budget-limit,.restored-destinations>button){box-shadow:inset 0 1px var(--dui-highlight),0 6px 14px -13px #0009}
+.app[data-home-material][data-theme=dark] .wish-library :is(.wish-balance-bar,.wish-phase-tabs,.wish-view-options){box-shadow:inset 0 1px var(--dui-highlight)}
+.app[data-home-material][data-theme=dark] .wish-library :is(.wish-phase-tabs button[aria-selected=true],.wish-view-options button[aria-pressed=true]){box-shadow:inset 0 1px #ffffff14}
+.app[data-home-material][data-theme=dark] :is(.wish-wallet-v29 .wish-wallet-hero,.wish-entry-v29 .wish-entry-hero){--ink:var(--dui-text);--muted:var(--dui-muted);background:var(--dui-surface);color:var(--dui-text);border-color:var(--dui-line);box-shadow:inset 0 1px var(--dui-highlight)}
+.app[data-home-material][data-theme=dark] :is(.wish-ledger-row.wish-ledger-v29,.wish-fact-block,.wish-ledger-empty){box-shadow:inset 0 1px var(--dui-highlight),inset 0 0 0 1px var(--dui-line)}
+.app[data-home-material][data-theme=dark] .cartridge-world:not(.library-open) .console-shell::before{background:linear-gradient(180deg,#ffffff10,#ffffff03 220px,transparent 520px)}
+.app[data-home-material][data-theme=dark] .cartridge-world:not(.library-open) .console-lip path{stroke:#fff;stroke-opacity:.14}
+.app[data-home-material][data-theme=dark] .cartridge-world:not(.library-open) :is(.home-tile,.cl-receipt-card){box-shadow:inset 0 1px var(--dui-highlight),0 6px 14px -13px #0009}
+.app[data-home-material][data-theme=dark] :is(.dm-subpage,.wish-home,.reader-drawer-header,.dock) :is(button,select):focus-visible{outline-color:var(--dui-text)}
+
 </style></head>
 <body>
   <header class="review-header"><div><span class="wordmark">CheckLine<span class="brand-dot"></span></span><span class="review-label">透光材质 · 浅暗主题研究</span></div><div class="material-toolbar"><div class="material-theme-group" role="group" aria-label="样稿主题"><button data-material-theme="light" aria-pressed="true">浅色</button><button data-material-theme="dark" aria-pressed="false">暗色</button></div><a class="material-compare" href="material-compare-20261023.html" target="_blank" rel="noreferrer">并排对照</a><span class="prototype-badge">隔离示例 · App 未改动</span></div></header>

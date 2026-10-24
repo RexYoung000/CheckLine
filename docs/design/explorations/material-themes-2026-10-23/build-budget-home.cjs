@@ -37,7 +37,7 @@ once(bubbles,'function readerBubbleMarkup(){return hmBubbleField();}');
 once('const materialQuery = new URL(location.href).searchParams;','smInstallPages();\n  const materialQuery = new URL(location.href).searchParams;');
 once("['detail', '预算工作区'], ['record', '消费详情']", "['detail', '预算工作区'], ['budget-records', '预算消费记录'], ['record', '消费详情']");
 once("} else if (['detail', 'record', 'trend', 'history', 'info'].includes(view)) {", "} else if (view === 'budget-records') {\n        const card = materialNeedBudget();\n        if (card) navigate('detail', {id:card.id, section:'records'});\n      } else if (['detail', 'record', 'trend', 'history', 'info'].includes(view)) {");
-const css=['budget-home','budget-detail','budget-pages','wish-material'].map(name=>fs.readFileSync(path.join(dir,'src/'+name+'.css'),'utf8')).join('\n');
+const css=['budget-home','budget-detail','budget-pages','wish-material','dark-ui'].map(name=>fs.readFileSync(path.join(dir,'src/'+name+'.css'),'utf8')).join('\n');
 once('</head>','<style id="budget-home-material">\n'+themeTokens+'\n'+css+'\n</style></head>');
 once('data-material-study="r3-aligned"','data-material-study="r3-aligned" data-home-material="approved-pair"');
 once('data-review-storage="checkline-material-themes-r37-20261024"','data-review-storage="checkline-budget-home-material-20261024"');
