@@ -22,7 +22,7 @@ h1 { margin: 0; font-size: clamp(23px, 3.4vw, 30px); line-height: 1.3; font-weig
   --ground: #f9fbfd; --panel-edge: #dde5eb; --panel-ink: #183443; --panel-secondary: #5e7381;
   --ice: #37b9e8; --ice-alpha: .28;
   --rear-tint: #70c8e7; --rear-alpha: .42; --far-alpha: .25;
-  --reflection: #ffffff; --reflection-top: .68; --reflection-mid: .055;
+  --reflection: #ffffff; --reflection-top: .62; --reflection-mid: .14;
   --water-top: #37b9e8; --water-mid: #37b9e8; --water-base: #37b9e8;
   --water-top-alpha: .10; --water-mid-alpha: .15; --water-base-alpha: .20;
   --rim-top: .98; --rim-mid: .62; --rim-bottom: .72; --rim-deep: .14;
@@ -94,11 +94,12 @@ footer a { color: #426a82; text-decoration-thickness: 1px; text-underline-offset
     <!-- R3 geometry: front 352 × 300, radius 32; continuous water, softened rear silhouette, one rim. -->
     <svg viewBox="0 0 432 434" role="img" aria-labelledby="light-title light-desc">
       <title id="light-title">浅色冰蓝预算主卡</title>
-      <desc id="light-desc">两层后卡透入玻璃，局部白色反光与冰蓝液体叠加。下缘由一片连续卡夹承托。</desc>
+      <desc id="light-desc">冰蓝毛玻璃透出柔化的后卡轮廓，局部白色反光与极轻微颗粒表现表面，下缘有连续卡夹承托，文字保持清晰。</desc>
       <defs>
-        <radialGradient id="light-reflection" class="moving-light" cx=".02" cy=".015" r=".52">
+        <radialGradient id="light-reflection" class="moving-light" data-light-inset=".12" cx=".1352" cy=".12" r=".68">
           <stop style="stop-color:var(--reflection);stop-opacity:var(--reflection-top)"/>
           <stop offset=".46" style="stop-color:var(--reflection);stop-opacity:var(--reflection-mid)"/>
+          <stop offset=".76" style="stop-color:var(--reflection);stop-opacity:.015"/>
           <stop offset="1" style="stop-color:var(--reflection);stop-opacity:0"/>
         </radialGradient>
         <linearGradient id="light-liquid" x1="0" y1="0" x2="0" y2="1">
@@ -123,7 +124,24 @@ footer a { color: #426a82; text-decoration-thickness: 1px; text-underline-offset
           <feFlood style="flood-color:var(--contact);flood-opacity:var(--shadow-alpha)" result="shade"/>
           <feComposite in="shade" in2="outside" operator="in"/>
         </filter>
-        <filter id="light-soft" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur stdDeviation="2.8"/></filter>
+        <filter id="light-soft" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur stdDeviation="5.5"/></filter>
+        <filter id="light-frost" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB">
+          <feTurbulence type="fractalNoise" baseFrequency=".74" numOctaves="2" seed="17" stitchTiles="stitch"/>
+          <!-- Neutral white scattering only; no colored noise or blur on foreground content. -->
+          <feColorMatrix type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  .75 0 0 0 -.25"/>
+        </filter>
+        <filter id="light-thickness" filterUnits="userSpaceOnUse" x="36" y="72" width="360" height="308" color-interpolation-filters="sRGB">
+          <feGaussianBlur in="SourceAlpha" stdDeviation="2.4" result="softEdge"/>
+          <feOffset in="softEdge" dx="1.6" dy="2.1" result="insetLight"/>
+          <feComposite in="SourceAlpha" in2="insetLight" operator="out" result="lightEdge"/>
+          <feFlood flood-color="#ffffff" flood-opacity=".65" result="white"/>
+          <feComposite in="white" in2="lightEdge" operator="in" result="lightRim"/>
+          <feOffset in="softEdge" dx="-1.6" dy="-2.1" result="insetShade"/>
+          <feComposite in="SourceAlpha" in2="insetShade" operator="out" result="shadeEdge"/>
+          <feFlood flood-color="#3686a8" flood-opacity=".28" result="blue"/>
+          <feComposite in="blue" in2="shadeEdge" operator="in" result="shadeRim"/>
+          <feMerge><feMergeNode in="shadeRim"/><feMergeNode in="lightRim"/></feMerge>
+        </filter>
         <filter id="light-contact" x="-30%" y="-200%" width="160%" height="500%"><feGaussianBlur stdDeviation="4"/></filter>
         <clipPath id="light-card"><rect x="40" y="76" width="352" height="300" rx="32"/></clipPath>
         <clipPath id="light-rear-top"><rect width="432" height="76"/></clipPath>
@@ -137,12 +155,18 @@ footer a { color: #426a82; text-decoration-thickness: 1px; text-underline-offset
       </g>
       <rect x="40" y="76" width="352" height="300" rx="32" fill="#000" filter="url(#light-shadow)"/>
       <g clip-path="url(#light-card)">
-        <!-- This rear tint stays visible through the front's alpha and softens at the boundary. -->
-        <rect x="62" y="54" width="308" height="288" rx="30" style="fill:var(--rear-tint)" fill-opacity=".14" filter="url(#light-soft)"/>
+        <!-- Frost softens transmitted rear planes, while surface lettering stays in focus. -->
+        <g filter="url(#light-soft)">
+          <rect x="79" y="38" width="274" height="278" rx="29" style="fill:var(--rear-tint)" fill-opacity=".11" stroke="#fff" stroke-opacity=".25" stroke-width="2"/>
+          <rect x="62" y="54" width="308" height="288" rx="30" style="fill:var(--rear-tint)" fill-opacity=".28" stroke="#fff" stroke-opacity=".32" stroke-width="2"/>
+          <path d="M63 258V309Q63 341 95 341M337 341Q369 341 369 309V258" fill="none" stroke="#347f9e" stroke-opacity=".28" stroke-width="4"/>
+        </g>
         <!-- One ice tint transmits the rear; only the local reflection changes its brightness. -->
         <rect x="40" y="76" width="352" height="300" style="fill:var(--ice);fill-opacity:var(--ice-alpha)"/>
         <rect x="40" y="76" width="352" height="300" fill="url(#light-reflection)"/>
         <path d="M40 233C94 220 133 240 190 231S294 220 345 231S382 231 392 227V381H40Z" fill="url(#light-liquid)"/>
+        <!-- Microtexture belongs to the material, below all text, bubbles and the waterline. -->
+        <rect x="40" y="76" width="352" height="300" filter="url(#light-frost)" opacity=".45"/>
         <path d="M40 234C94 221 133 241 190 232S294 221 345 232S382 232 392 228" fill="none" stroke="#ffffff" stroke-opacity=".65" stroke-width="1.05"/>
         <g fill="#fff" fill-opacity=".025" stroke="#347f9e" style="stroke-opacity:var(--bubble-alpha)" stroke-width=".75">
           <circle cx="65" cy="324" r="2"/><circle cx="87" cy="283" r="2.9"/>
@@ -154,7 +178,8 @@ footer a { color: #426a82; text-decoration-thickness: 1px; text-underline-offset
           <circle cx="363" cy="312" r="2"/><circle cx="380" cy="355" r="1.3"/>
         </g>
       </g>
-      <rect x="40.6" y="76.6" width="350.8" height="298.8" rx="31.4" fill="none" stroke="url(#light-rim)" stroke-width="1.2"/>
+      <rect x="40" y="76" width="352" height="300" rx="32" fill="#000" filter="url(#light-thickness)"/>
+      <rect x="40.6" y="76.6" width="350.8" height="298.8" rx="31.4" fill="none" stroke="url(#light-rim)" stroke-width="1"/>
       <path class="key-edge" d="M40.8 113V109Q40.8 76.8 72.8 76.8H316" fill="none" stroke="#fff" stroke-opacity=".56" stroke-width="1.1" stroke-linecap="round"/>
       <text x="62" y="122" class="card-title">这个月</text>
       <text x="62" y="148" class="card-meta">10月1日—10月31日 · CNY</text>
@@ -173,7 +198,7 @@ footer a { color: #426a82; text-decoration-thickness: 1px; text-underline-offset
       <path d="M14 345C32 345 46 378 77 381H355C386 378 400 345 418 345" fill="none" style="stroke:var(--pocket-rim)" stroke-opacity=".28" stroke-width="1"/>
     </svg>
   </figure>
-  <p class="mode-note">冰蓝透光 · 局部反射 · 轻薄液面</p>
+  <p class="mode-note">细腻毛玻璃 · 柔和反光 · 后卡透影</p>
 </section>
 <section class="mode dark" aria-labelledby="dark-heading">
   <header class="mode-heading"><h2 id="dark-heading">暗色</h2><span>DARK</span></header>
@@ -296,7 +321,10 @@ footer a { color: #426a82; text-decoration-thickness: 1px; text-underline-offset
   function applyLight() {
     const x = Number(input.value) / 100;
     input.setAttribute('aria-valuetext', x < .3 ? '左上受光' : x > .7 ? '右上受光' : '上方受光');
-    reflections.forEach(light => light.setAttribute('cx', x.toFixed(2)));
+    reflections.forEach(light => {
+      const inset = Number(light.dataset.lightInset || 0);
+      light.setAttribute('cx', (inset + x * (1 - inset * 2)).toFixed(4));
+    });
     edges.forEach(edge => {
       edge.setAttribute('transform', x > .5 ? 'translate(432 0) scale(-1 1)' : '');
       edge.setAttribute('stroke-opacity', String(.32 + Math.abs(x - .5) * .5));

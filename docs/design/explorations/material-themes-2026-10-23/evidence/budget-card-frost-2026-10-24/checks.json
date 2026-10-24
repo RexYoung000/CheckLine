@@ -1,0 +1,152 @@
+{
+  "date": "2026-10-24",
+  "scope": "Light main-card frosted-glass study; native behavior and final visual acceptance are not claimed.",
+  "observations": [
+    {
+      "scenario": "1120-default",
+      "observed": {
+        "frostLayer": ".45",
+        "ice": "#37b9e8",
+        "opacity": ".28",
+        "rearBlur": "5.5",
+        "scrollWidth": 1120,
+        "textFilters": [
+          "none",
+          "none",
+          "none",
+          "none"
+        ],
+        "width": 1120
+      }
+    },
+    {
+      "scenario": "right-light",
+      "observed": {
+        "darkCx": "0.9800",
+        "lightCx": "0.8648",
+        "value": "98"
+      }
+    },
+    {
+      "scenario": "reset-left-light",
+      "observed": {
+        "darkCx": "0.0200",
+        "lightCx": "0.1352",
+        "value": "2"
+      }
+    },
+    {
+      "scenario": "320-stacked",
+      "observed": {
+        "columns": "288px",
+        "scrollWidth": 320,
+        "width": 320
+      }
+    },
+    {
+      "scenario": "console-errors",
+      "observed": []
+    }
+  ],
+  "source": {
+    "darkSectionUnchanged": true,
+    "darkPaletteUnchanged": true,
+    "uniqueSvgIds": true,
+    "svgReferencesResolve": true,
+    "iceHueAndBaseAlphaUnchanged": true
+  },
+  "textContrast": {
+    "method": "Approximate adjacent-background RGB samples from 1120x850 browser JPEG, not comprehensive accessibility verification.",
+    "samples": [
+      {
+        "screenshot": "pair-default.jpg",
+        "role": "label",
+        "point": [
+          421,
+          481
+        ],
+        "rgb": [
+          170,
+          215,
+          238
+        ],
+        "contrast": 5.46
+      },
+      {
+        "screenshot": "pair-default.jpg",
+        "role": "amount",
+        "point": [
+          306,
+          521
+        ],
+        "rgb": [
+          172,
+          217,
+          240
+        ],
+        "contrast": 7.69
+      },
+      {
+        "screenshot": "pair-default.jpg",
+        "role": "title",
+        "point": [
+          220,
+          293
+        ],
+        "rgb": [
+          210,
+          232,
+          246
+        ],
+        "contrast": 9.81
+      },
+      {
+        "screenshot": "pair-right-light.jpg",
+        "role": "label",
+        "point": [
+          421,
+          481
+        ],
+        "rgb": [
+          170,
+          215,
+          238
+        ],
+        "contrast": 5.46
+      },
+      {
+        "screenshot": "pair-right-light.jpg",
+        "role": "amount",
+        "point": [
+          306,
+          521
+        ],
+        "rgb": [
+          172,
+          217,
+          240
+        ],
+        "contrast": 7.69
+      },
+      {
+        "screenshot": "pair-right-light.jpg",
+        "role": "title",
+        "point": [
+          220,
+          293
+        ],
+        "rgb": [
+          183,
+          219,
+          241
+        ],
+        "contrast": 8.52
+      }
+    ]
+  },
+  "darkRenderMeanAbsoluteRgbDifference": [
+    0.0002538518492402073,
+    0.00020801748757183654,
+    0.00021859464795684518
+  ]
+}
