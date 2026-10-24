@@ -1,21 +1,39 @@
-/* Dark UI is neutral. These are interface roles; the accepted optical ice,
-   liquid, card ink, reflection and bubble tokens remain in the material source. */
+/* One dark ice ramp for transmitted card faces and selected controls.
+   The original brand pigment stays in the accepted material source. Adjust
+   its displayed lightness here, before it meets the black environment. */
 .app[data-home-material][data-theme=dark]{
+  /* Pre-resolved tints of #37b9e8 (56 / 44 / 32% + white), also consumed
+     as SVG presentation attributes by the existing library renderer. */
+  --di-card-tint:#8fd8f2;--di-card-alpha:.92;
+  --di-selection:#a7e0f5;--di-ink:#12384b;--di-edge:#bfe9f8;
+  --hm-body-tint:var(--di-card-tint);--hm-body-alpha:var(--di-card-alpha);--hm-rear-tint:var(--di-card-tint);
+  --wm-card:color-mix(in srgb,var(--di-card-tint) calc(var(--di-card-alpha)*100%),transparent);
+  --wm-ink:var(--di-ink);--wm-meta:#204b62;
   --dui-canvas:#0b0b0d;--dui-panel:#151517f7;--dui-surface:#1c1c1fe6;--dui-control:#202023;--dui-selected:#343438;
   --dui-text:#f3f3f5;--dui-muted:#aaaab0;--dui-line:#ffffff10;--dui-highlight:#ffffff0d;--dui-primary:#f2f2f4;--dui-primary-ink:#171719;
+  --material-canvas:var(--dui-canvas);--canvas:var(--dui-canvas);--home-sky:var(--dui-canvas);--home-heading:var(--dui-text);
+  --home-floor:linear-gradient(180deg,#ffffff10,#ffffff03 220px,transparent 520px);
   --hm-ground:var(--dui-canvas);--hm-panel-ink:var(--dui-text);--hm-panel-secondary:var(--dui-muted);--hm-panel-edge:var(--dui-line);
   --hm-tile:var(--dui-surface);--hm-receipt:#1d1d20f0;--hm-receipt-back:#161618cc;--hm-muted:var(--dui-muted);
   --hm-nav:#1d1d20ed;--hm-nav-selected:var(--dui-selected);--hm-accent:var(--dui-text);
   --dm-sheet:var(--dui-panel);--dm-primary:var(--dui-primary);--dm-primary-ink:var(--dui-primary-ink);
   --wm-focus:#080809ed;--wm-disabled:#2b2b2e;--wm-disabled-ink:#9999a0;
 }
-/* Reuse the existing components' semantic roles in the pages under review.
-   The library artwork and all physical card color roles are left alone. */
-.app[data-home-material][data-theme=dark]:is(:has(.budget-home-head),:has(.dm-detail-card),:has(.dm-subpage),:has(.wish-home)):not(:has(.library-open)){
+/* Reuse the same neutral interface roles in every existing route and panel. */
+.app[data-home-material][data-theme=dark]:is(:has(.budget-home-head),:has(.dm-detail-card),:has(.dm-subpage),:has(.wish-home)){
   --ink:var(--dui-text);--muted:var(--dui-muted);--faint:#96969d;--accent:var(--dui-text);--accent-soft:#ffffff10;--line:var(--dui-line);--surface:var(--dui-panel);--glass:var(--hm-nav);
   --material-panel:var(--dui-panel);--material-full-panel:var(--dui-panel);--material-block:var(--dui-surface);--material-field:var(--dui-control);--material-control:var(--dui-control);--material-selected:var(--dui-selected);
   --material-edge:var(--dui-line);--material-edge-low:var(--dui-line);--material-primary:var(--dui-primary);--material-primary-ink:var(--dui-primary-ink);--icon-accent:var(--dui-text);
 }
+.app[data-home-material][data-theme=dark] .budget-library-picker{--scene:var(--dui-canvas);--accent:var(--di-selection);color:var(--dui-text)}
+.app[data-home-material][data-theme=dark] .budget-library-picker>header button{color:var(--dui-text)}
+.app[data-home-material][data-theme=dark] .picker-confirm button{background:var(--dui-primary);color:var(--dui-primary-ink)}
+.app[data-home-material][data-theme=dark] .picker-confirm button+button{background:var(--dui-control);color:var(--dui-text)}
+.app[data-home-material][data-theme=dark] .picker-list input{color:var(--dui-text);background:var(--dui-control);border-color:var(--dui-line)}
+.app[data-home-material][data-theme=dark] .picker-list input::placeholder{color:var(--dui-muted)}
+.app[data-home-material][data-theme=dark] .picker-list button{background:radial-gradient(ellipse at 9% 0,var(--wm-reflection),transparent 57%),var(--wm-card);color:var(--di-ink)}
+.app[data-home-material][data-theme=dark] .picker-list button span{color:var(--di-ink)}
+.app[data-home-material][data-theme=dark] :is(.reader-card-face,.dm-detail-card) .card-top :is(.card-more,.icon-button){color:var(--hm-ink)}
 .app[data-home-material][data-theme=dark] .dm-subpage :is(.record-row,.history-row,.amount-block:not(.no-bg),.calendar-grid){box-shadow:inset 0 1px var(--dui-highlight),0 6px 14px -13px #0009}
 .app[data-home-material][data-theme=dark] .dm-subpage :is(select,.tertiary,.secondary){box-shadow:inset 0 1px var(--dui-highlight)}
 .app[data-home-material][data-theme=dark] .dm-subpage .chart .bar{background:#74747c;box-shadow:inset 0 1px #ffffff24;border-color:#ffffff0a}

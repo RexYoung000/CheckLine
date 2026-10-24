@@ -4,7 +4,7 @@
   --ui-selection-surface:#e2f3fa;--ui-selection-ink:#17546d;--ui-selection-edge:#4e91ad;--ui-selection-mark:#327f9d;
 }
 .app[data-home-material][data-theme=dark]{
-  --ui-selection-surface:color-mix(in srgb,var(--hm-ice) 35%,var(--hm-ground));--ui-selection-ink:color-mix(in srgb,var(--hm-ice) 92%,#fff);--ui-selection-edge:var(--hm-ice);--ui-selection-mark:var(--hm-ice);
+  --ui-selection-surface:var(--di-selection);--ui-selection-ink:var(--di-ink);--ui-selection-edge:var(--di-edge);--ui-selection-mark:var(--di-selection);
 }
 .app[data-home-material][data-theme] .wish-library :is(.wish-phase-tabs button[aria-selected=true],.wish-view-options button[aria-pressed=true]){
   background:var(--ui-selection-surface);color:var(--ui-selection-ink);
@@ -25,5 +25,6 @@
   background:var(--ui-selection-surface);color:var(--ui-selection-ink);
 }
 .app[data-home-material][data-theme] .wish-preset-grid button[aria-pressed=true]{border-color:var(--ui-selection-edge)}
+.app[data-home-material][data-theme=dark] .wish-preset-grid button[aria-pressed=true]{--icon-accent:var(--di-ink);--ink:var(--di-ink);--muted:var(--di-ink);--faint:var(--di-ink)}
 .app[data-home-material][data-theme] :is(.sheet,.overlay-shade) :is(input[type=checkbox],input[type=radio]):checked{accent-color:var(--ui-selection-mark)}
 .app[data-home-material][data-theme] :is(.dm-subpage,.wish-home,.sheet,.overlay-shade,.reader-drawer-header,.dock) :is(button,select,input,textarea):focus-visible{outline-color:var(--ui-selection-edge)}

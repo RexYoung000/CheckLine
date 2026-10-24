@@ -1,0 +1,21 @@
+{
+  "baseline": "0002fd2",
+  "generatedChangesAreOnlyDarkCSSPaletteAndTwoOpticalColorAdapters": true,
+  "unchanged": {
+    "budget-card-pair.html": true,
+    "src/light-ui.css": true,
+    "src/budget-home.js": true,
+    "src/budget-home-liquid.js": true,
+    "src/budget-detail.js": true,
+    "src/budget-pages.js": true,
+    "src/budget-home-review.js": true,
+    "src/budget-home.css": true,
+    "src/budget-detail.css": true,
+    "src/budget-pages.css": true,
+    "src/wish-material.css": true
+  },
+  "nativeChanges": [],
+  "selectionContrast": 8.64,
+  "sha256": "23a78874778cd6dd472b61998eab9853a5ab118695175aac2dfcb6b9e88a6aa3",
+  "buildReproducible": true
+}

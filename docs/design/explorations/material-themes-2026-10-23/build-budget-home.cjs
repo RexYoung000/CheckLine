@@ -12,6 +12,10 @@ let html = execFileSync('git', ['show', baseline + ':' + baselinePath], {cwd:rep
 const pair = fs.readFileSync(path.join(dir,'budget-card-pair.html'),'utf8');
 function match(text, expression) {const found=text.match(expression);if(!found)throw Error('Missing material source: '+expression);return found[0];}
 function once(before,after) {if(html.split(before).length!==2)throw Error('Expected one baseline boundary: '+before.slice(0,80));html=html.replace(before,after);}
+// The existing library renderer keeps its light branch and all interactions.
+once('function ui(t, dark = false, enlarged = false) {',fs.readFileSync(path.join(dir,'src/dark-library-palette.js'),'utf8')+'\nfunction ui(t, dark = false, enlarged = false) {');
+once("{ink:'#f0fbff',title:'#102b38',top:'#37b9e8',bottom:'#102b38',ambient:'#c5f6ff',ambientOpacity:.86,water1:'#c5f6ff33',waterMid:'#37b9e833',water2:'#102b388c',rim:'#fffffff2'}",'darkIceLibraryPalette(t)');
+once('<rect width="400" height="300" fill="url(#environment)"/>','<rect width="400" height="300" fill="url(#environment)" fill-opacity="${p.opacity || 1}"/>');
 const themeTokens = ['light','dark'].map(theme => {
   const block=match(pair,new RegExp('\\.'+theme+' \\{[\\s\\S]*?\\n\\}'));
   return block.replace('.'+theme, '.app[data-home-material][data-theme='+theme+']').replace(/\s*color-scheme: [^;]+;/,'').replaceAll('--','--hm-');
@@ -22,7 +26,7 @@ const edgeStart=scene.indexOf('<rect x="40" y="76" width="352" height="300" rx="
 const edgeEnd=scene.indexOf('<text x="62"',edgeStart);
 if(edgeStart<0||edgeEnd<0)throw Error('Approved edge geometry missing');
 const svg=(content)=>'<svg class="hm-optics" viewBox="40 76 352 300" preserveAspectRatio="none" aria-hidden="true">'+defs+content+'</svg>';
-const body=svg('<rect x="40" y="76" width="352" height="300" style="fill:var(--ice);fill-opacity:var(--ice-alpha)"/><rect x="40" y="76" width="352" height="300" fill="url(#light-reflection)"/>');
+const body=svg('<rect x="40" y="76" width="352" height="300" style="fill:var(--body-tint,var(--ice));fill-opacity:var(--body-alpha,var(--ice-alpha))"/><rect x="40" y="76" width="352" height="300" fill="url(#light-reflection)"/>');
 const edge=svg(scene.slice(edgeStart,edgeEnd));
 const normalize=s=>s.replaceAll('light-','HMID-').replaceAll('var(--','var(--hm-');
 let helper=fs.readFileSync(path.join(dir,'src/budget-home.js'),'utf8').replace('__HOME_BODY__',JSON.stringify(normalize(body))).replace('__HOME_EDGE__',JSON.stringify(normalize(edge)));
