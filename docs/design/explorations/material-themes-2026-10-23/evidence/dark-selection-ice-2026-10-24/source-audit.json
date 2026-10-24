@@ -1,0 +1,28 @@
+{
+  "baseline": "f0cbb7e",
+  "onlyDarkSelectionTokenValuesChanged": true,
+  "lightSelectionBlockIdentical": true,
+  "generatedOnlyChangesThatSameDarkBlock": true,
+  "existingMaterialRuntimePrimaryAndWrapperFilesIdentical": {
+    "budget-card-pair.html": true,
+    "budget-pages-pair.html": true,
+    "build-budget-home.cjs": true,
+    "src/budget-home.js": true,
+    "src/budget-home-liquid.js": true,
+    "src/budget-detail.js": true,
+    "src/budget-pages.js": true,
+    "src/budget-home-review.js": true,
+    "src/budget-home.css": true,
+    "src/budget-detail.css": true,
+    "src/budget-pages.css": true,
+    "src/wish-material.css": true,
+    "src/dark-ui.css": true,
+    "src/light-ui.css": true
+  },
+  "buildReproducible": true,
+  "generatedSha256": "77b628d1a1f2133e89f6aeceee817e2481ebf4526ad5ef1bd6732039cd8dc1ca",
+  "nativeDiff": [],
+  "selectedTextContrast": 4.666,
+  "selectedSurfaceLuminanceBefore": 0.0386,
+  "selectedSurfaceLuminanceAfter": 0.0558
+}
