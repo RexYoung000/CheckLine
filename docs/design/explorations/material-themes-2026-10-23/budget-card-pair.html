@@ -49,7 +49,7 @@ h1 { margin: 0; font-size: clamp(23px, 3.4vw, 30px); line-height: 1.3; font-weig
   --ink: #0c2b3e; --meta-ink: #0d3549; --amount-ink: #ffffff; --water-label: #ffffff;
   --contact: #000000; --shadow-alpha: .55; --contact-alpha: .70;
   --pocket-top: #536879; --pocket-base: #18212b; --pocket-alpha: .35; --pocket-rim: #d5eeff;
-  --button-fill: .15; --bubble-shadow: #9ae8ff; --bubble-far: #d4f5ff; --bubble-near: .90;
+  --button-fill: .15; --bubble-near: .82;
 }
 .mode-heading { display: flex; justify-content: space-between; align-items: center; padding: 22px 24px 0; gap: 12px; }
 .mode-heading h2 { font-size: 15px; font-weight: 550; margin: 0; }
@@ -369,12 +369,10 @@ footer a { color: #426a82; text-decoration-thickness: 1px; text-underline-offset
           <stop offset=".62" stop-color="#4295b5" style="stop-opacity:var(--rim-deep)"/>
           <stop offset="1" stop-color="#fff" style="stop-opacity:var(--rim-bottom)"/>
         </linearGradient>
-        <radialGradient id="dark-bubble-fill" class="moving-light" data-light-inset=".18" cx=".1928" cy=".2" r=".85">
-          <stop stop-color="#fff" stop-opacity=".34"/><stop offset=".42" stop-color="#fff" stop-opacity=".09"/><stop offset="1" stop-color="#37b9e8" stop-opacity=".035"/>
+        <!-- Transparent centres share the light material, with softer reflections for the dark liquid. -->
+        <radialGradient id="dark-bubble-fill" cx=".5" cy=".5" r=".5">
+          <stop stop-color="#eafaff" stop-opacity="0"/><stop offset=".64" stop-color="#eafaff" stop-opacity=".01"/><stop offset=".82" stop-color="#eafaff" stop-opacity=".08"/><stop offset=".94" stop-color="#eafaff" stop-opacity=".18"/><stop offset="1" stop-color="#eafaff" stop-opacity=".015"/>
         </radialGradient>
-        <linearGradient id="dark-bubble-rim" class="directional-rim" x1=".02" y1="0" x2=".98" y2="1">
-          <stop stop-color="#fff" stop-opacity=".96"/><stop offset=".4" stop-color="#e4faff" stop-opacity=".40"/><stop offset="1" style="stop-color:var(--bubble-shadow);stop-opacity:.48"/>
-        </linearGradient>
         <linearGradient id="dark-pocket" x1="0" y1="0" x2="0" y2="1">
           <stop style="stop-color:var(--pocket-top);stop-opacity:var(--pocket-alpha)"/><stop offset="1" style="stop-color:var(--pocket-base);stop-opacity:0"/>
         </linearGradient>
@@ -421,29 +419,142 @@ footer a { color: #426a82; text-decoration-thickness: 1px; text-underline-offset
         <g clip-path="url(#dark-liquid-clip)">
           <ellipse class="liquid-caustic" cx="101.1" cy="246" rx="120" ry="38" fill="url(#dark-scatter)"/>
         </g>
-        <g class="far-bubbles" fill="none" style="stroke:var(--bubble-far)" stroke-width=".8" opacity=".32">
-          <circle cx="65" cy="324" r="1.7"/>
-          <circle cx="102" cy="355" r="1.6"/>
-          <circle cx="149" cy="260" r="1.4"/>
-          <circle cx="197" cy="315" r="1.4"/>
-          <circle cx="218" cy="268" r="1.8"/>
-          <circle cx="245" cy="356" r="1.5"/>
-          <circle cx="335" cy="261" r="1.6"/>
-          <circle cx="380" cy="355" r="1.3"/>
-          <circle cx="210" cy="363" r="1.5"/>
-          <circle cx="64" cy="356" r="2.4"/>
+        <!-- Reflections are separated as in light mode, with reduced brightness on the darker liquid. -->
+        <g class="far-bubbles" opacity=".48">
+          <g transform="translate(69 272)">
+            <circle class="far-bubble-sphere" r="1.7" fill="url(#dark-bubble-fill)"/>
+            <g class="bubble-glint" fill="none" stroke="#eafaff" stroke-linecap="round">
+              <path d="M-1.54 -0.72A1.7 1.7 0 0 1 0.24 -1.68" stroke-opacity=".92" stroke-width=".42"/>
+              <path d="M1.62 0.53A1.7 1.7 0 0 1 -0.03 1.7" stroke-opacity=".42" stroke-width=".28"/>
+              <ellipse cx="-0.59" cy="-0.78" rx="0.32" ry="0.14" transform="rotate(-42 -0.59 -0.78)" fill="#f5fcff" fill-opacity=".80" stroke="none"/>
+            </g>
+          </g>
+          <g transform="translate(102 355)">
+            <circle class="far-bubble-sphere" r="1.7" fill="url(#dark-bubble-fill)"/>
+            <g class="bubble-glint" fill="none" stroke="#eafaff" stroke-linecap="round">
+              <path d="M-1.54 -0.72A1.7 1.7 0 0 1 0.24 -1.68" stroke-opacity=".92" stroke-width=".42"/>
+              <path d="M1.62 0.53A1.7 1.7 0 0 1 -0.03 1.7" stroke-opacity=".42" stroke-width=".28"/>
+              <ellipse cx="-0.59" cy="-0.78" rx="0.32" ry="0.14" transform="rotate(-42 -0.59 -0.78)" fill="#f5fcff" fill-opacity=".80" stroke="none"/>
+            </g>
+          </g>
+          <g transform="translate(149 260)">
+            <circle class="far-bubble-sphere" r="1.6" fill="url(#dark-bubble-fill)"/>
+            <g class="bubble-glint" fill="none" stroke="#eafaff" stroke-linecap="round">
+              <path d="M-1.45 -0.68A1.6 1.6 0 0 1 0.22 -1.58" stroke-opacity=".92" stroke-width=".42"/>
+              <path d="M1.52 0.49A1.6 1.6 0 0 1 -0.03 1.6" stroke-opacity=".42" stroke-width=".28"/>
+              <ellipse cx="-0.56" cy="-0.74" rx="0.3" ry="0.13" transform="rotate(-42 -0.56 -0.74)" fill="#f5fcff" fill-opacity=".80" stroke="none"/>
+            </g>
+          </g>
+          <g transform="translate(197 315)">
+            <circle class="far-bubble-sphere" r="1.55" fill="url(#dark-bubble-fill)"/>
+            <g class="bubble-glint" fill="none" stroke="#eafaff" stroke-linecap="round">
+              <path d="M-1.4 -0.66A1.55 1.55 0 0 1 0.22 -1.53" stroke-opacity=".92" stroke-width=".42"/>
+              <path d="M1.47 0.48A1.55 1.55 0 0 1 -0.03 1.55" stroke-opacity=".42" stroke-width=".28"/>
+              <ellipse cx="-0.54" cy="-0.71" rx="0.29" ry="0.12" transform="rotate(-42 -0.54 -0.71)" fill="#f5fcff" fill-opacity=".80" stroke="none"/>
+            </g>
+          </g>
+          <g transform="translate(218 268)">
+            <circle class="far-bubble-sphere" r="1.9" fill="url(#dark-bubble-fill)"/>
+            <g class="bubble-glint" fill="none" stroke="#eafaff" stroke-linecap="round">
+              <path d="M-1.72 -0.8A1.9 1.9 0 0 1 0.26 -1.88" stroke-opacity=".92" stroke-width=".42"/>
+              <path d="M1.81 0.59A1.9 1.9 0 0 1 -0.03 1.9" stroke-opacity=".42" stroke-width=".28"/>
+              <ellipse cx="-0.66" cy="-0.87" rx="0.36" ry="0.15" transform="rotate(-42 -0.66 -0.87)" fill="#f5fcff" fill-opacity=".80" stroke="none"/>
+            </g>
+          </g>
+          <g transform="translate(245 356)">
+            <circle class="far-bubble-sphere" r="1.65" fill="url(#dark-bubble-fill)"/>
+            <g class="bubble-glint" fill="none" stroke="#eafaff" stroke-linecap="round">
+              <path d="M-1.49 -0.7A1.65 1.65 0 0 1 0.23 -1.63" stroke-opacity=".92" stroke-width=".42"/>
+              <path d="M1.57 0.51A1.65 1.65 0 0 1 -0.03 1.65" stroke-opacity=".42" stroke-width=".28"/>
+              <ellipse cx="-0.58" cy="-0.76" rx="0.31" ry="0.13" transform="rotate(-42 -0.58 -0.76)" fill="#f5fcff" fill-opacity=".80" stroke="none"/>
+            </g>
+          </g>
+          <g transform="translate(335 261)">
+            <circle class="far-bubble-sphere" r="1.7" fill="url(#dark-bubble-fill)"/>
+            <g class="bubble-glint" fill="none" stroke="#eafaff" stroke-linecap="round">
+              <path d="M-1.54 -0.72A1.7 1.7 0 0 1 0.24 -1.68" stroke-opacity=".92" stroke-width=".42"/>
+              <path d="M1.62 0.53A1.7 1.7 0 0 1 -0.03 1.7" stroke-opacity=".42" stroke-width=".28"/>
+              <ellipse cx="-0.59" cy="-0.78" rx="0.32" ry="0.14" transform="rotate(-42 -0.59 -0.78)" fill="#f5fcff" fill-opacity=".80" stroke="none"/>
+            </g>
+          </g>
+          <g transform="translate(380 355)">
+            <circle class="far-bubble-sphere" r="1.5" fill="url(#dark-bubble-fill)"/>
+            <g class="bubble-glint" fill="none" stroke="#eafaff" stroke-linecap="round">
+              <path d="M-1.36 -0.63A1.5 1.5 0 0 1 0.21 -1.48" stroke-opacity=".92" stroke-width=".42"/>
+              <path d="M1.43 0.46A1.5 1.5 0 0 1 -0.03 1.5" stroke-opacity=".42" stroke-width=".28"/>
+              <ellipse cx="-0.52" cy="-0.69" rx="0.29" ry="0.12" transform="rotate(-42 -0.52 -0.69)" fill="#f5fcff" fill-opacity=".80" stroke="none"/>
+            </g>
+          </g>
+          <g transform="translate(210 363)">
+            <circle class="far-bubble-sphere" r="1.6" fill="url(#dark-bubble-fill)"/>
+            <g class="bubble-glint" fill="none" stroke="#eafaff" stroke-linecap="round">
+              <path d="M-1.45 -0.68A1.6 1.6 0 0 1 0.22 -1.58" stroke-opacity=".92" stroke-width=".42"/>
+              <path d="M1.52 0.49A1.6 1.6 0 0 1 -0.03 1.6" stroke-opacity=".42" stroke-width=".28"/>
+              <ellipse cx="-0.56" cy="-0.74" rx="0.3" ry="0.13" transform="rotate(-42 -0.56 -0.74)" fill="#f5fcff" fill-opacity=".80" stroke="none"/>
+            </g>
+          </g>
+          <g transform="translate(64 356)">
+            <circle class="far-bubble-sphere" r="2.35" fill="url(#dark-bubble-fill)"/>
+            <g class="bubble-glint" fill="none" stroke="#eafaff" stroke-linecap="round">
+              <path d="M-2.13 -0.99A2.35 2.35 0 0 1 0.33 -2.33" stroke-opacity=".92" stroke-width=".42"/>
+              <path d="M2.23 0.73A2.35 2.35 0 0 1 -0.04 2.35" stroke-opacity=".42" stroke-width=".28"/>
+              <ellipse cx="-0.82" cy="-1.08" rx="0.45" ry="0.19" transform="rotate(-42 -0.82 -1.08)" fill="#f5fcff" fill-opacity=".80" stroke="none"/>
+            </g>
+          </g>
         </g>
         <!-- A rear lip and one bright front meniscus enclose a thin, visible liquid surface. -->
         <path d="M40 233C94 216 133 227 190 221S294 216 345 226S382 231 392 227" fill="none" stroke="#e2faff" stroke-opacity=".17" stroke-width=".85"/>
         <path d="M40 233C94 220 133 240 190 231S294 220 345 231S382 231 392 227" transform="translate(0 1.35)" fill="none" stroke="#147294" stroke-opacity=".18" stroke-width="2"/>
         <path d="M40 233C94 220 133 240 190 231S294 220 345 231S382 231 392 227" fill="none" stroke="#fff" stroke-opacity=".86" stroke-width="1.35"/>
         <g class="near-bubbles" style="opacity:var(--bubble-near)">
-          <g transform="translate(87 283)"><circle class="bubble-sphere" r="3.8" fill="url(#dark-bubble-fill)" stroke="url(#dark-bubble-rim)" stroke-width=".65"/><path class="bubble-glint" d="M-2.17 0Q-2.47 -2.28 -0.19 -2.74" fill="none" stroke="#fff" stroke-opacity=".9" stroke-width=".7" stroke-linecap="round"/></g>
-          <g transform="translate(127 306)"><circle class="bubble-sphere" r="3" fill="url(#dark-bubble-fill)" stroke="url(#dark-bubble-rim)" stroke-width=".65"/><path class="bubble-glint" d="M-1.71 0Q-1.95 -1.80 -0.15 -2.16" fill="none" stroke="#fff" stroke-opacity=".9" stroke-width=".7" stroke-linecap="round"/></g>
-          <g transform="translate(163 349)"><circle class="bubble-sphere" r="4.2" fill="url(#dark-bubble-fill)" stroke="url(#dark-bubble-rim)" stroke-width=".65"/><path class="bubble-glint" d="M-2.39 0Q-2.73 -2.52 -0.21 -3.02" fill="none" stroke="#fff" stroke-opacity=".9" stroke-width=".7" stroke-linecap="round"/></g>
-          <g transform="translate(193 287)"><circle class="bubble-sphere" r="2.5" fill="url(#dark-bubble-fill)" stroke="url(#dark-bubble-rim)" stroke-width=".65"/><path class="bubble-glint" d="M-1.42 0Q-1.63 -1.50 -0.13 -1.80" fill="none" stroke="#fff" stroke-opacity=".9" stroke-width=".7" stroke-linecap="round"/></g>
-          <g transform="translate(299 252)"><circle class="bubble-sphere" r="3.5" fill="url(#dark-bubble-fill)" stroke="url(#dark-bubble-rim)" stroke-width=".65"/><path class="bubble-glint" d="M-1.99 0Q-2.27 -2.10 -0.18 -2.52" fill="none" stroke="#fff" stroke-opacity=".9" stroke-width=".7" stroke-linecap="round"/></g>
-          <g transform="translate(365 353)"><circle class="bubble-sphere" r="3" fill="url(#dark-bubble-fill)" stroke="url(#dark-bubble-rim)" stroke-width=".65"/><path class="bubble-glint" d="M-1.71 0Q-1.95 -1.80 -0.15 -2.16" fill="none" stroke="#fff" stroke-opacity=".9" stroke-width=".7" stroke-linecap="round"/></g>
+          <g transform="translate(87 283)">
+            <circle class="bubble-sphere" r="4.8" fill="url(#dark-bubble-fill)"/>
+            <g class="bubble-glint" fill="none" stroke="#eafaff" stroke-linecap="round">
+              <path d="M-4.35 -2.03A4.8 4.8 0 0 1 0.67 -4.75" stroke-opacity=".92" stroke-width=".68"/>
+              <path d="M4.56 1.48A4.8 4.8 0 0 1 -0.08 4.8" stroke-opacity=".42" stroke-width=".36"/>
+              <ellipse cx="-1.68" cy="-2.21" rx="0.91" ry="0.38" transform="rotate(-42 -1.68 -2.21)" fill="#f5fcff" fill-opacity=".80" stroke="none"/>
+            </g>
+          </g>
+          <g transform="translate(127 306)">
+            <circle class="bubble-sphere" r="3.9" fill="url(#dark-bubble-fill)"/>
+            <g class="bubble-glint" fill="none" stroke="#eafaff" stroke-linecap="round">
+              <path d="M-3.53 -1.65A3.9 3.9 0 0 1 0.54 -3.86" stroke-opacity=".92" stroke-width=".68"/>
+              <path d="M3.71 1.21A3.9 3.9 0 0 1 -0.07 3.9" stroke-opacity=".42" stroke-width=".36"/>
+              <ellipse cx="-1.36" cy="-1.79" rx="0.74" ry="0.31" transform="rotate(-42 -1.36 -1.79)" fill="#f5fcff" fill-opacity=".80" stroke="none"/>
+            </g>
+          </g>
+          <g transform="translate(163 349)">
+            <circle class="bubble-sphere" r="5.25" fill="url(#dark-bubble-fill)"/>
+            <g class="bubble-glint" fill="none" stroke="#eafaff" stroke-linecap="round">
+              <path d="M-4.76 -2.22A5.25 5.25 0 0 1 0.73 -5.2" stroke-opacity=".92" stroke-width=".68"/>
+              <path d="M4.99 1.62A5.25 5.25 0 0 1 -0.09 5.24" stroke-opacity=".42" stroke-width=".36"/>
+              <ellipse cx="-1.84" cy="-2.42" rx="1" ry="0.42" transform="rotate(-42 -1.84 -2.42)" fill="#f5fcff" fill-opacity=".80" stroke="none"/>
+            </g>
+          </g>
+          <g transform="translate(193 287)">
+            <circle class="bubble-sphere" r="3.3" fill="url(#dark-bubble-fill)"/>
+            <g class="bubble-glint" fill="none" stroke="#eafaff" stroke-linecap="round">
+              <path d="M-2.99 -1.4A3.3 3.3 0 0 1 0.46 -3.27" stroke-opacity=".92" stroke-width=".68"/>
+              <path d="M3.14 1.02A3.3 3.3 0 0 1 -0.06 3.3" stroke-opacity=".42" stroke-width=".36"/>
+              <ellipse cx="-1.15" cy="-1.52" rx="0.63" ry="0.26" transform="rotate(-42 -1.15 -1.52)" fill="#f5fcff" fill-opacity=".80" stroke="none"/>
+            </g>
+          </g>
+          <g transform="translate(299 252)">
+            <circle class="bubble-sphere" r="4.5" fill="url(#dark-bubble-fill)"/>
+            <g class="bubble-glint" fill="none" stroke="#eafaff" stroke-linecap="round">
+              <path d="M-4.08 -1.9A4.5 4.5 0 0 1 0.63 -4.46" stroke-opacity=".92" stroke-width=".68"/>
+              <path d="M4.28 1.39A4.5 4.5 0 0 1 -0.08 4.5" stroke-opacity=".42" stroke-width=".36"/>
+              <ellipse cx="-1.57" cy="-2.07" rx="0.85" ry="0.36" transform="rotate(-42 -1.57 -2.07)" fill="#f5fcff" fill-opacity=".80" stroke="none"/>
+            </g>
+          </g>
+          <g transform="translate(365 353)">
+            <circle class="bubble-sphere" r="3.9" fill="url(#dark-bubble-fill)"/>
+            <g class="bubble-glint" fill="none" stroke="#eafaff" stroke-linecap="round">
+              <path d="M-3.53 -1.65A3.9 3.9 0 0 1 0.54 -3.86" stroke-opacity=".92" stroke-width=".68"/>
+              <path d="M3.71 1.21A3.9 3.9 0 0 1 -0.07 3.9" stroke-opacity=".42" stroke-width=".36"/>
+              <ellipse cx="-1.36" cy="-1.79" rx="0.74" ry="0.31" transform="rotate(-42 -1.36 -1.79)" fill="#f5fcff" fill-opacity=".80" stroke="none"/>
+            </g>
+          </g>
         </g>
       </g>
       <rect x="40" y="76" width="352" height="300" rx="32" fill="#000" filter="url(#dark-thickness)"/>

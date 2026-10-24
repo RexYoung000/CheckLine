@@ -1,0 +1,125 @@
+{
+  "date": "2026-10-24",
+  "scope": "Dark budget-card bubbles only; light card unchanged. Final visual acceptance pending.",
+  "observations": [
+    {
+      "scenario": "1120-default",
+      "observed": {
+        "darkBubbleFilters": 0,
+        "darkCentreOpacity": "0",
+        "darkFar": 10,
+        "darkGround": "#0c1117",
+        "darkIce": "#37b9e8",
+        "darkNear": [
+          {
+            "radius": "4.8",
+            "stroke": "none"
+          },
+          {
+            "radius": "3.9",
+            "stroke": "none"
+          },
+          {
+            "radius": "5.25",
+            "stroke": "none"
+          },
+          {
+            "radius": "3.3",
+            "stroke": "none"
+          },
+          {
+            "radius": "4.5",
+            "stroke": "none"
+          },
+          {
+            "radius": "3.9",
+            "stroke": "none"
+          }
+        ],
+        "scrollWidth": 1120,
+        "width": 1120
+      }
+    },
+    {
+      "scenario": "right-light",
+      "observed": {
+        "darkHighlights": [
+          "rotate(88.20)",
+          "rotate(88.20)",
+          "rotate(88.20)",
+          "rotate(88.20)",
+          "rotate(88.20)",
+          "rotate(88.20)",
+          "rotate(88.20)",
+          "rotate(88.20)",
+          "rotate(88.20)",
+          "rotate(88.20)",
+          "rotate(88.20)",
+          "rotate(88.20)",
+          "rotate(88.20)",
+          "rotate(88.20)",
+          "rotate(88.20)",
+          "rotate(88.20)"
+        ],
+        "lightHighlights": [
+          "rotate(88.20)",
+          "rotate(88.20)",
+          "rotate(88.20)",
+          "rotate(88.20)",
+          "rotate(88.20)",
+          "rotate(88.20)",
+          "rotate(88.20)",
+          "rotate(88.20)",
+          "rotate(88.20)",
+          "rotate(88.20)",
+          "rotate(88.20)",
+          "rotate(88.20)",
+          "rotate(88.20)",
+          "rotate(88.20)",
+          "rotate(88.20)",
+          "rotate(88.20)"
+        ],
+        "value": "98"
+      }
+    },
+    {
+      "scenario": "reset",
+      "observed": {
+        "darkHighlight": "rotate(1.80)",
+        "lightHighlight": "rotate(1.80)",
+        "value": "2"
+      }
+    },
+    {
+      "scenario": "320-default",
+      "observed": {
+        "darkBubbles": 16,
+        "lightBubbles": 16,
+        "scrollWidth": 320,
+        "width": 320
+      }
+    },
+    {
+      "scenario": "console-errors",
+      "observed": []
+    }
+  ],
+  "sourceChecks": {
+    "comparedWith": "687bdc188fd2abfc99d14661e1fae78447f53260",
+    "results": {
+      "light_section_unchanged": true,
+      "light_palette_unchanged": true,
+      "other_dark_svg_unchanged": true,
+      "other_dark_palette_unchanged": true,
+      "light_source_script_unchanged": true,
+      "dark_bubble_geometry_matches_light": true,
+      "dark_bubbles_outside_plus": true,
+      "dark_bubbles_no_full_stroke": true,
+      "no_surface_noise": true,
+      "svg_0_unique_ids": true,
+      "svg_0_references_resolve": true,
+      "svg_1_unique_ids": true,
+      "svg_1_references_resolve": true
+    }
+  }
+}
