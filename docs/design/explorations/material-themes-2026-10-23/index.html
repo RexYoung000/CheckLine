@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="zh-Hans" data-review-storage="checkline-material-themes-r36-20261023">
+<html lang="zh-Hans" data-review-storage="checkline-material-themes-r37-20261024">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -2552,18 +2552,18 @@ function wishMount(){
  wishStopDetached();for(const card of app.querySelectorAll('.wish-flip-card')){wishMotion(card);if(card.dataset.completion==='true'&&ui.sheet?.type==='completion')wishPlayCompletion(card,ui.sheet);}
 }
 app.addEventListener('pointerdown',e=>{
- flipClickGuard=0;const card=e.target.closest('.wish-flip-card');if(!card||e.button!==0||e.target.closest('button:not(.wish-face-tap):not(.wish-back-flip-zone),input,select,textarea'))return;
+ flipClickGuard=0;const card=e.target.closest('.wish-flip-card');if(!card||e.button!==0||e.target.closest('button:not(.wish-face-tap):not(.wish-back-flip-zone),input,select,textarea,.wish-liquid-actions'))return;
  const m=wishMotion(card);m.serial++;m.task?.cancel();m.task=null;const scale=app.getBoundingClientRect().width/app.clientWidth;flipGrip={card,id:e.pointerId,x:e.clientX,y:e.clientY,scale,base:m.angle,target:m.target,moved:false,vertical:false,hist:[],span:card.clientWidth};
 });
 app.addEventListener('pointermove',e=>{
  const g=flipGrip,card=e.target.closest('.wish-flip-card');if(g&&e.pointerId===g.id){const dx=(e.clientX-g.x)/g.scale,dy=(e.clientY-g.y)/g.scale;if(g.vertical)return;if(!g.moved){if(Math.hypot(dx,dy)<(e.pointerType==='touch'?8:4))return;if(Math.abs(dy)>Math.abs(dx)){g.vertical=true;return;}g.moved=true;g.card.setPointerCapture(e.pointerId);g.card.querySelector('.wish-hover-layer').style.transform='scale(1.03)';}e.preventDefault();const angle=g.base+dx/g.span*180,t=performance.now();g.hist.push({t,angle});while(g.hist.length>2&&t-g.hist[0].t>90)g.hist.shift();wishPaint(g.card,angle);return;}
- if(!card||e.pointerType==='touch'||reducedMotion()||wishMotion(card).task)return;const r=card.getBoundingClientRect(),x=Math.max(0,Math.min(1,(e.clientX-r.x)/r.width)),y=Math.max(0,Math.min(1,(e.clientY-r.y)/r.height));card.querySelector('.wish-hover-layer').style.transform=`scale(1.03) rotateX(${(.5-y)*12}deg) rotateY(${(x-.5)*12}deg)`;card.style.setProperty('--wish-glare-x',x*100+'%');card.style.setProperty('--wish-glare-y',y*100+'%');
+ if(card&&(card.dataset.target==='back'||e.target.closest('.wish-liquid-actions'))){card.querySelector('.wish-hover-layer').style.transform='';return;}if(!card||e.pointerType==='touch'||reducedMotion()||wishMotion(card).task)return;const r=card.getBoundingClientRect(),x=Math.max(0,Math.min(1,(e.clientX-r.x)/r.width)),y=Math.max(0,Math.min(1,(e.clientY-r.y)/r.height));card.querySelector('.wish-hover-layer').style.transform=`scale(1.03) rotateX(${(.5-y)*12}deg) rotateY(${(x-.5)*12}deg)`;card.style.setProperty('--wish-glare-x',x*100+'%');card.style.setProperty('--wish-glare-y',y*100+'%');
 });
 function wishRelease(e,cancel=false){const g=flipGrip;if(!g||e.pointerId!==g.id)return;flipGrip=null;try{g.card.releasePointerCapture(e.pointerId);}catch{}g.card.querySelector('.wish-hover-layer').style.transform='';if(g.vertical){flipClickGuard=performance.now();wishTurnTo(g.card,g.target);return;}if(!g.moved){if(cancel||!e.target?.closest('.wish-face-tap,.wish-back-flip-zone'))wishTurnTo(g.card,g.target);return;}flipClickGuard=performance.now();const a=g.hist[0],b=g.hist.at(-1),here=wishMotion(g.card).angle;let velocity=!cancel&&a&&b&&b.t>a.t&&performance.now()-b.t<60?(b.angle-a.angle)/(b.t-a.t)*1000:0;const snap=a=>Math.round(a/180)*180,target=cancel?g.target:Math.max(snap(here)-180,Math.min(snap(here)+180,snap(here+velocity*.16)));wishTurnTo(g.card,target,velocity,true);}
 app.addEventListener('pointerup',e=>wishRelease(e));app.addEventListener('pointercancel',e=>wishRelease(e,true));app.addEventListener('lostpointercapture',e=>{if(flipGrip?.id===e.pointerId)wishRelease(e,true);});
 app.addEventListener('pointerout',e=>{const c=e.target.closest('.wish-flip-card');if(c&&!c.contains(e.relatedTarget)&&!flipGrip)c.querySelector('.wish-hover-layer').style.transform='';});
 app.addEventListener('click',e=>{const card=e.target.closest('.wish-flip-card'),surface=e.target.closest('.wish-face-tap,.wish-back-flip-zone')||card&&!e.target.closest('button,input,select,textarea,a');if(surface&&flipClickGuard&&e.detail&&performance.now()-flipClickGuard<400){flipClickGuard=0;e.preventDefault();e.stopImmediatePropagation();}},true);
-app.addEventListener('click',e=>{const card=e.target.closest('.wish-flip-card');if(card&&!e.target.closest('button,input,select,textarea,a'))wishFlip(card,true);});
+app.addEventListener('click',e=>{const card=e.target.closest('.wish-flip-card');if(card&&!e.target.closest('button,input,select,textarea,a,.wish-liquid-actions'))wishFlip(card,true);});
 window.addEventListener('blur',()=>{if(flipGrip)wishRelease({pointerId:flipGrip.id},true);if(photoPan)wishPanEnd({pointerId:photoPan.id},true);});
 
 function wishAmountInput(id,value,currency,taskField=false){return `<div class="wish-money-control"><input id="${id}" ${taskField?'data-field="amount"':''} aria-label="${taskField?'预计花费':'实际购买金额'}" inputmode="decimal" placeholder="0" value="${esc(value)}"><span class="wish-currency-control"><select id="${taskField?'task-currency':'redemption-currency'}" ${taskField?'data-field="currency"':''} aria-label="${taskField?'心愿币种':'实际购买币种'}">${wishCurrencies(currency)}</select>${icon('down','small')}</span></div>`;}
@@ -2844,9 +2844,9 @@ const CheckLineRewardScene = (() => {
   if(ms<1030){
    const flash=clamp((ms-700)/200),alpha=ms>900?clamp(1-(ms-900)/130):1;
    for(const edge of f.edges){const p=smooth((ms-320-edge.delay)/430);if(!p)continue;const a={x:g.x+edge.a.x*g.w/100,y:g.y+edge.a.y*g.h/100},b={x:g.x+(edge.a.x+(edge.b.x-edge.a.x)*p)*g.w/100,y:g.y+(edge.a.y+(edge.b.y-edge.a.y)*p)*g.h/100};
-    c.globalAlpha=alpha;c.beginPath();c.moveTo(a.x,a.y);c.lineTo(b.x,b.y);c.lineWidth=1.7;c.strokeStyle='rgba(24,66,84,.62)';c.stroke();c.lineWidth=.52+flash*.55;c.strokeStyle=`rgba(252,245,255,${.58+flash*.4})`;c.stroke();
+    c.globalAlpha=alpha;c.beginPath();c.moveTo(a.x,a.y);c.lineTo(b.x,b.y);c.lineWidth=1.7;c.strokeStyle='rgba(24,66,84,.62)';c.stroke();c.lineWidth=.52+flash*.55;c.strokeStyle=`rgba(240,252,255,${.58+flash*.4})`;c.stroke();
    }
-   c.globalAlpha=.25+pressure*.4;rounded(c,g.x+.6,g.y+.6,g.w-1.2,g.h-1.2,30);c.lineWidth=1.1;c.strokeStyle='#f8f1ff';c.stroke();
+   c.globalAlpha=.25+pressure*.4;rounded(c,g.x+.6,g.y+.6,g.w-1.2,g.h-1.2,30);c.lineWidth=1.1;c.strokeStyle='#f0fcff';c.stroke();
   }
   c.restore();
  }
@@ -2865,20 +2865,20 @@ const CheckLineRewardScene = (() => {
  }
  function coin(c,x,y,r,rotation,tilt,color,alpha){
   c.save();c.translate(x,y);c.rotate(tilt);const face=Math.cos(rotation),sx=.14+Math.abs(face)*.86;c.scale(sx,1);c.globalAlpha=alpha;
-  const gold=color!==1,edge=gold?'#87663a':'#76528f';c.fillStyle=edge;c.beginPath();c.ellipse(2.3,1.4,r,r,0,0,Math.PI*2);c.fill();
-  const g=c.createLinearGradient(-r,-r,r,r);g.addColorStop(0,gold?'#fff5d0':'#f5e8ff');g.addColorStop(.32,gold?'#e8c978':'#c7a6e2');g.addColorStop(.52,gold?'#fff4c8':'#f4eaff');g.addColorStop(.55,gold?'#c4964a':'#9b76b4');g.addColorStop(1,gold?'#e2bc69':'#b593cf');c.fillStyle=g;c.beginPath();c.arc(0,0,r,0,Math.PI*2);c.fill();c.lineWidth=.8;c.strokeStyle=gold?'#fff0b9':'#f3e5ff';c.stroke();
-  c.beginPath();c.arc(0,0,r*.76,0,Math.PI*2);c.strokeStyle=gold?'#a68448':'#9470ab';c.lineWidth=.65;c.stroke();if(Math.abs(face)>.32){c.fillStyle=gold?'#846438':'#76558d';c.font=`600 ${r*1.2}px -apple-system,sans-serif`;c.textAlign='center';c.textBaseline='middle';c.fillText('¥',0,r*.06)}c.restore();
+  const gold=color!==1,edge=gold?'#87663a':'#4c8297';c.fillStyle=edge;c.beginPath();c.ellipse(2.3,1.4,r,r,0,0,Math.PI*2);c.fill();
+  const g=c.createLinearGradient(-r,-r,r,r);g.addColorStop(0,gold?'#fff5d0':'#e7f9ff');g.addColorStop(.32,gold?'#e8c978':'#9ecddc');g.addColorStop(.52,gold?'#fff4c8':'#edfaff');g.addColorStop(.55,gold?'#c4964a':'#5c99af');g.addColorStop(1,gold?'#e2bc69':'#83b6c8');c.fillStyle=g;c.beginPath();c.arc(0,0,r,0,Math.PI*2);c.fill();c.lineWidth=.8;c.strokeStyle=gold?'#fff0b9':'#e9faff';c.stroke();
+  c.beginPath();c.arc(0,0,r*.76,0,Math.PI*2);c.strokeStyle=gold?'#a68448':'#538a9e';c.lineWidth=.65;c.stroke();if(Math.abs(face)>.32){c.fillStyle=gold?'#846438':'#47788d';c.font=`600 ${r*1.2}px -apple-system,sans-serif`;c.textAlign='center';c.textBaseline='middle';c.fillText('¥',0,r*.06)}c.restore();
  }
  function coinStream(s,ms){
   const{ctx:c,sourceBox:a,walletBox:b}=s,start={x:a.x+a.w/2,y:a.y+a.h*.75},end={x:b.x+b.w/2,y:b.y+20};
   for(const q of s.coins){const p=(ms-q.launch)/q.flight;if(p<0||p>1)continue;const u=1-p,x=u*start.x+p*end.x+q.sx*u+q.ex*p+Math.sin(p*Math.PI)*q.bend,y=u*start.y+p*end.y-Math.sin(p*Math.PI)*q.rise,alpha=clamp(p/.06)*clamp((1-p)/.08);
-   if(p>.2){c.save();c.globalAlpha=alpha*.14;c.strokeStyle=q.color===1?'#ccb2e5':'#f5d99b';c.lineWidth=q.r*.65;c.lineCap='round';c.beginPath();c.moveTo(x-q.bend*.14,y-17);c.quadraticCurveTo(x-3,y-7,x,y);c.stroke();c.restore()}
+   if(p>.2){c.save();c.globalAlpha=alpha*.14;c.strokeStyle=q.color===1?'#a4d9e8':'#f5d99b';c.lineWidth=q.r*.65;c.lineCap='round';c.beginPath();c.moveTo(x-q.bend*.14,y-17);c.quadraticCurveTo(x-3,y-7,x,y);c.stroke();c.restore()}
    coin(c,x,y,q.r,q.phase+p*q.spin,(p-.5)*.65+Math.sin(p*5+q.phase)*.22,q.color,alpha);
   }
  }
  function receiving(s,ms){
   const{ctx:c,walletBox:b}=s;
-  for(const beat of pulses){const age=(ms-beat.at)/1000;if(age<0||age>.48)continue;const p=age/.48,alpha=Math.pow(1-p,2),cx=b.x+b.w/2,cy=b.y+18;c.save();c.globalAlpha=alpha*.8;c.strokeStyle=beat.part===1?'#ffe0a0':'#d9c2ed';c.lineWidth=1.6;c.beginPath();c.ellipse(cx,cy+10,20+p*110,6+p*20,0,Math.PI,Math.PI*2);c.stroke();c.restore()}
+  for(const beat of pulses){const age=(ms-beat.at)/1000;if(age<0||age>.48)continue;const p=age/.48,alpha=Math.pow(1-p,2),cx=b.x+b.w/2,cy=b.y+18;c.save();c.globalAlpha=alpha*.8;c.strokeStyle=beat.part===1?'#ffe0a0':'#c0eaf5';c.lineWidth=1.6;c.beginPath();c.ellipse(cx,cy+10,20+p*110,6+p*20,0,Math.PI,Math.PI*2);c.stroke();c.restore()}
   const age=(ms-2050)/1000;if(age>=0){bloom(s,age,1.15);burst(s,age,1);}
   if(ms>760&&ms<2500){const p=smooth((ms-760)/500)*(1-smooth((ms-2100)/400));c.save();c.translate(b.x+b.w/2,b.y+b.h*.4);c.globalAlpha=p*.11;for(let i=0;i<7;i++){c.rotate(.11);const angle=-Math.PI/2+(i-3)*.27,g=c.createLinearGradient(0,0,Math.cos(angle)*260,Math.sin(angle)*260);g.addColorStop(0,'#f9dd9b');g.addColorStop(1,'rgba(249,221,155,0)');c.fillStyle=g;c.beginPath();c.moveTo(0,0);c.lineTo(Math.cos(angle-.05)*310,Math.sin(angle-.05)*310);c.lineTo(Math.cos(angle+.05)*310,Math.sin(angle+.05)*310);c.closePath();c.fill()}c.restore()}
  }
@@ -2901,7 +2901,7 @@ const outcomeHasResult=s=>outcomeIsWish(s)||outcomeIsSettlement(s);
 const outcomeCurrent=run=>outcomeRun===run&&!run.cancelled&&ui.sheet===run.sheet&&run.root.isConnected;
 function outcomeSummary(c,net,impact,beforeWallet,beforeDeficit){return {cardName:c.name,period:rangeLabel(c.start,c.end,true),currency:c.currency,net,delta:impact.wallet-beforeWallet,beforeWallet,wallet:impact.wallet,beforeDeficit,deficit:impact.deficit,recovery:impact.recovery,quoteLabel:c.currency==='CNY'?'':impact.quote.label};}
 function outcomeTone(o){return o.delta>0?'transfer':o.net<0?'over':o.recovery>0?'recovery':'zero';}
-function outcomeRim(){return '<svg class="outcome-rim" viewBox="0 0 320 122" preserveAspectRatio="none" aria-hidden="true"><defs><linearGradient id="outcome-rim-color"><stop stop-color="#a58bbd" stop-opacity=".15"/><stop offset=".45" stop-color="#ad8dc6"/><stop offset=".7" stop-color="#f5efff"/><stop offset="1" stop-color="#b8dcd5" stop-opacity=".1"/></linearGradient></defs><path pathLength="100" d="M160 2H294Q318 2 318 26V96Q318 120 294 120H160"/><path pathLength="100" d="M160 2H26Q2 2 2 26V96Q2 120 26 120H160"/></svg>';}
+function outcomeRim(){return '<svg class="outcome-rim" viewBox="0 0 320 122" preserveAspectRatio="none" aria-hidden="true"><defs><linearGradient id="outcome-rim-color"><stop stop-color="#73a6b6" stop-opacity=".15"/><stop offset=".45" stop-color="#8ec8d9"/><stop offset=".7" stop-color="#effbff"/><stop offset="1" stop-color="#bce7eb" stop-opacity=".1"/></linearGradient></defs><path pathLength="100" d="M160 2H294Q318 2 318 26V96Q318 120 294 120H160"/><path pathLength="100" d="M160 2H26Q2 2 2 26V96Q2 120 26 120H160"/></svg>';}
 function outcomeAmount(n){return readerCounter(n,'outcome',money(n),true);}
 function outcomeWallet(before,after,delta){return `<div class="outcome-wallet" aria-label="心愿余额 ${esc(money(after))}"><span>心愿余额</span><strong class="outcome-wallet-number" aria-hidden="true">${outcomeAmount(before)}</strong><small>${delta>0?'本次 <b class="outcome-credit-number">+'+money(delta)+'</b>':delta<0?'本次 −'+money(-delta):'本次余额未变'}</small><span class="outcome-wallet-ripple" aria-hidden="true"></span>${outcomeRim()}</div>`;}
 function outcomeSkip(){return '<button class="outcome-skip" data-action="outcome-skip">跳过动效</button>';}
@@ -2921,7 +2921,7 @@ function outcomeSettlementMarkup(s){
  const o=s.outcome,tone=outcomeTone(o),positive=tone==='transfer',main=positive?o.delta:o.net<0?-o.net:o.recovery||0,currency=positive||o.recovery?'CNY':o.currency;
  const label=positive?'转入心愿余额':o.net<0?'本期超出':o.recovery?'补回待恢复差额':'本期没有结余转入';
  const facts=o.recovery?`结余 ${money(o.net,o.currency)}，先补差额 ${money(o.recovery)}`:o.net<0?`心愿余额扣除 ${money(-o.delta)}${o.deficit?`，待恢复差额 ${money(o.deficit)}`:''}`:o.delta===0?'心愿余额保持不变。':'';
- return `<section class="sheet full outcome-root outcome-settlement-sheet" data-outcome="settlement" data-tone="${tone}" data-phase="${s.motionDone?'done':'ready'}" role="dialog" aria-modal="true" aria-label="结算结果"><header class="sheet-head"><h2>这期结算好了</h2><div class="outcome-toolbar-actions">${outcomeSkip()}${ib('close','关闭结算结果，回到预算','close-sheet')}</div></header><div class="sheet-body"><div class="outcome-budget-context"><strong>${esc(o.cardName)}</strong><span>${esc(o.period)}</span></div><div class="outcome-transfer-stage"><div class="outcome-source"><span class="outcome-source-liquid" aria-hidden="true"><svg viewBox="0 0 600 180" preserveAspectRatio="none"><defs><linearGradient id="outcome-source-water" x2="0" y2="1"><stop stop-color="#d6c4e9"/><stop offset="1" stop-color="#ae92c5"/></linearGradient></defs><path fill="url(#outcome-source-water)" d="M0 43Q75 24 150 43T300 43T450 43T600 43V180H0Z"/></svg></span><span class="outcome-source-label">${label}</span><strong>${positive?'+':''}${money(main,currency)}</strong>${facts?`<p>${esc(facts)}</p>`:''}</div>${outcomeWallet(s.motionDone?o.wallet:o.beforeWallet,o.wallet,o.delta)}</div><p class="outcome-result-note" role="status">${positive?'这份结余，留给想要的。':o.recovery?`待恢复差额还剩 ${money(o.deficit)}。`:o.net<0?'本期结果已更新。':'本期结算已完成。'}</p>${o.quoteLabel?`<p class="outcome-quote">${esc(o.quoteLabel)}</p>`:''}</div><footer class="sheet-footer">${primary('回到预算','close-sheet')}</footer><canvas class="outcome-fx" aria-hidden="true"></canvas><span class="visually-hidden outcome-announcement" role="status">已保存结算。${esc(label)} ${money(main,currency)}，心愿余额 ${money(o.wallet)}。</span></section>`;
+ return `<section class="sheet full outcome-root outcome-settlement-sheet" data-outcome="settlement" data-tone="${tone}" data-phase="${s.motionDone?'done':'ready'}" role="dialog" aria-modal="true" aria-label="结算结果"><header class="sheet-head"><h2>这期结算好了</h2><div class="outcome-toolbar-actions">${outcomeSkip()}${ib('close','关闭结算结果，回到预算','close-sheet')}</div></header><div class="sheet-body"><div class="outcome-budget-context"><strong>${esc(o.cardName)}</strong><span>${esc(o.period)}</span></div><div class="outcome-transfer-stage"><div class="outcome-source"><span class="outcome-source-liquid" aria-hidden="true"><svg viewBox="0 0 600 180" preserveAspectRatio="none"><defs><linearGradient id="outcome-source-water" x2="0" y2="1"><stop stop-color="var(--material-liquid-top)"/><stop offset="1" stop-color="var(--material-liquid-bottom)"/></linearGradient></defs><path fill="url(#outcome-source-water)" d="M0 43Q75 24 150 43T300 43T450 43T600 43V180H0Z"/></svg></span><span class="outcome-source-label">${label}</span><strong>${positive?'+':''}${money(main,currency)}</strong>${facts?`<p>${esc(facts)}</p>`:''}</div>${outcomeWallet(s.motionDone?o.wallet:o.beforeWallet,o.wallet,o.delta)}</div><p class="outcome-result-note" role="status">${positive?'这份结余，留给想要的。':o.recovery?`待恢复差额还剩 ${money(o.deficit)}。`:o.net<0?'本期结果已更新。':'本期结算已完成。'}</p>${o.quoteLabel?`<p class="outcome-quote">${esc(o.quoteLabel)}</p>`:''}</div><footer class="sheet-footer">${primary('回到预算','close-sheet')}</footer><canvas class="outcome-fx" aria-hidden="true"></canvas><span class="visually-hidden outcome-announcement" role="status">已保存结算。${esc(label)} ${money(main,currency)}，心愿余额 ${money(o.wallet)}。</span></section>`;
 }
 
 settlementSheet=function(s){
@@ -2998,7 +2998,7 @@ function outcomeTransferBeat(run,step,elapsed){
  if(run.transferIndex<0)outcomeReceive(run,o.beforeWallet,o.beforeWallet,true);
  run.transferIndex=step.index;run.countTween={from:previous,to:next,start:elapsed,duration:step.final?240:165};
  run.walletPulse?.cancel();run.walletPulse=outcomeAnimate(run,wallet,[{transform:'scale(1)'},{transform:`translateY(${step.final?-5:-2}px) scale(${step.final?1.055:1.025})`,offset:.28},{transform:'scale(1)'}],{duration:step.final?420:190,easing:'cubic-bezier(.1,.65,.2,1)'});
- if(step.final){outcomeAnimate(run,run.root.querySelector('.outcome-result-note'),[{opacity:0,transform:'translateY(8px)'},{opacity:1,transform:'none'}],{duration:420,easing:'ease-out'});outcomeAnimate(run,wallet,[{boxShadow:'inset 0 0 0 1px #f8df9c20,0 0 0 0 #e8c97800'},{boxShadow:'inset 0 0 0 2px #f8df9caa,0 0 50px 4px #e8c97838',offset:.25},{boxShadow:'inset 0 0 0 1px #f8df9c45,0 0 30px 0 #d9b6f218'}],{duration:630,easing:'ease-out'})}
+ if(step.final){outcomeAnimate(run,run.root.querySelector('.outcome-result-note'),[{opacity:0,transform:'translateY(8px)'},{opacity:1,transform:'none'}],{duration:420,easing:'ease-out'});outcomeAnimate(run,wallet,[{boxShadow:'inset 0 0 0 1px #f8df9c20,0 0 0 0 #e8c97800'},{boxShadow:'inset 0 0 0 2px #f8df9caa,0 0 50px 4px #e8c97838',offset:.25},{boxShadow:'inset 0 0 0 1px #f8df9c45,0 0 30px 0 #ace8f218'}],{duration:630,easing:'ease-out'})}
 }
 function outcomeTransferCount(run,elapsed){
  if(!outcomeCurrent(run)||!run.countTween)return;
@@ -3049,7 +3049,7 @@ const OUTCOME_CASES=[['wish','心愿兑换'],['transfer','结余转入'],['recov
 function outcomeLoadCase(kind){
  if(!OUTCOME_CASES.some(([k])=>k===kind))return;outcomeCancel();outcomeLast=null;if(readerDrawer.active)readerDrawerReleaseHome(false,false);ui.sheet=null;data=fixture();undo=null;panelReturn=null;ui.route='root';ui.stack=[];ui.params={};ui.filter='all';ui.accepted=false;ui.task=null;ui.messages=[];wishFaceMemory.clear();wishCollection.phase='active';wishCollection.scroll={};
  data.reviewScenario='motion-'+kind;data.wallet=kind==='wish'?60000:28000;data.walletEntries=[];data.deficit=kind==='recovery'?7000:kind==='recovery-only'?20000:0;
- if(kind==='wish'){ui.tab='wish';render();startRedemption('w1');ui.sheet.amount='300';renderOverlay();}
+ if(kind==='wish'){data.wishes.find(w=>w.id==='w1').reference=50000;ui.tab='wish';render();startRedemption('w1');ui.sheet.amount='300';renderOverlay();}
  else{const c=data.cards[0],end=shiftDay(today(),-1),start=iso(new Date(localDate(end).getFullYear(),localDate(end).getMonth(),1,12));c.start=start;c.end=end;data.expenses.forEach((e,i)=>{if(e.budgetId===c.id){e.periodStart=start;e.date=i===0?end:shiftDay(end,-Math.min(i,10));}});const used=totals(c).confirmed;c.limit=used+(kind==='over'?-50000:kind==='zero'?0:12000);if(kind==='fx')c.currency='JPY';if(kind==='fail')data.failNextSave=true;ui.tab='budget';render();openSettlement(c.id);}
  $('#scenario').value='motion-'+kind;(kind==='wish'?$('#redemption-amount'):$('#settlement-accept'))?.focus({preventScroll:true});const replay=$('#outcome-replay');if(replay)replay.disabled=true;updateNotes();
 }
@@ -3064,6 +3064,115 @@ $('#reduce-motion').addEventListener('change',()=>{if(outcomeRun)outcomeFinish(o
 window.addEventListener('resize',()=>{if(outcomeRun&&!outcomeRun.sheet.motionDone)outcomeFinish(outcomeRun);});document.addEventListener('visibilitychange',()=>{if(document.hidden&&outcomeRun)outcomeFinish(outcomeRun);});
 for(const selector of ['#viewport-size','#text-size','#preview-fit'])$(selector)?.addEventListener('change',()=>{if(outcomeRun&&!outcomeRun.sheet.motionDone)outcomeFinish(outcomeRun);});
 outcomeSetupReview();
+
+/* R3 review only. Shared entry state, in-place SVG appearance and operable dock.
+   Inject before study-bridge.js; never render or replay when appearance changes. */
+const materialInteractions = (() => {
+  'use strict';
+  const presetSources = new Map(Object.entries(REVIEW_ASSETS)
+    .filter(([key]) => key.startsWith('wish-')).map(([key, url]) => [url, key]));
+  const mascotSource = mascot().match(/src="([^"]+)"/)?.[1];
+  const variants = new Map();
+  const mascotRoles = {
+    '#8976bd': '--model-top', '#4c317b': '--model-shade',
+    '#563496': '--model-mid', '#7860c9': '--model-lower',
+    '#a698ed': '--model-edge', '#f3e8ff': '--model-rim-top',
+    '#c6b3f9': '--model-rim-mid', '#7561b5': '--model-rim-shade',
+    '#e8ddff': '--model-rim-bottom', '#a99dff': '--model-glint'
+  };
+
+  function sourceSVG(url) {
+    const comma = url.indexOf(',');
+    return url.slice(0, comma).includes(';base64') ? atob(url.slice(comma + 1)) : decodeURIComponent(url.slice(comma + 1));
+  }
+  function recolor(url, colors) {
+    const key = url + JSON.stringify(colors);
+    if (!variants.has(key)) {
+      const svg = sourceSVG(url).replace(/#[0-9a-f]{6}\b/gi, color => colors[color.toLowerCase()] || color);
+      variants.set(key, 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg));
+    }
+    return variants.get(key);
+  }
+  function syncArt() {
+    const style = getComputedStyle(app);
+    const modelColors = Object.fromEntries(Object.entries(mascotRoles).map(([color, role]) => [color, style.getPropertyValue(role).trim()]));
+    app.querySelectorAll('img.mascot').forEach(img => {
+      if (!mascotSource) return;
+      const next = recolor(mascotSource, modelColors);
+      if (img.getAttribute('src') !== next) img.setAttribute('src', next);
+      img.dataset.materialArt = 'mascot';
+    });
+    app.querySelectorAll('.preset-art > img, .wish-preset-grid img').forEach(img => {
+      const key = img.dataset.materialPreset || presetSources.get(img.getAttribute('src'));
+      if (!key || !REVIEW_ASSETS[key]) return;
+      img.dataset.materialPreset = key;
+      const ink = getComputedStyle(img).getPropertyValue('--icon-accent').trim();
+      const next = recolor(REVIEW_ASSETS[key], {'#86639f': ink});
+      if (img.getAttribute('src') !== next) img.setAttribute('src', next);
+    });
+  }
+
+  function availability(w) {
+    if (!w || w.achieved) return {state: 'done', label: '兑换，心愿已实现'};
+    if (!wishHasPrice(w)) return {state: 'unpriced', label: '兑换不可用，请先填写心愿金额'};
+    const p = wishProgress(w);
+    if (p.ratio == null) return {state: 'unquoted', label: '兑换不可用，待核对汇率'};
+    if (p.ratio < 1) return {state: 'incomplete', label: `兑换不可用，当前进度 ${p.percent}%，达到 100% 后可兑换`};
+    return {state: 'ready', label: '兑换，核对实际购买'};
+  }
+  function buttonMarkup(w) {
+    const status = availability(w), ready = status.state === 'ready';
+    return `<button class="primary wish-redeem-button${ready ? ' is-redeemable' : ''}" data-action="wish-purchase" data-id="${esc(w.id)}" data-redeem-status="${status.state}" aria-disabled="${!ready}" aria-label="${esc(status.label)}" ${ready ? '' : 'disabled'}>兑换</button>`;
+  }
+  const originalBack = wishFaceBack;
+  wishFaceBack = function materialWishBack(w, ...args) {
+    return originalBack(w, ...args).replace(/<button class="primary wish-redeem-button[^>]*>兑换<\/button>/, buttonMarkup(w));
+  };
+  const originalStart = startRedemption;
+  startRedemption = function materialStartRedemption(id) {
+    if (availability(data.wishes.find(w => w.id === id)).state !== 'ready') return;
+    return originalStart(id);
+  };
+  const originalAction = handleAction;
+  handleAction = function materialAction(action, el) {
+    if (action === 'wish-purchase' && (el?.disabled || el?.closest('.wish-flip-card')?.dataset.turning === 'true')) return;
+    return originalAction(action, el);
+  };
+  function syncButtons() {
+    app.querySelectorAll('.wish-redeem-button').forEach(button => {
+      const status = availability(data.wishes.find(w => w.id === button.dataset.id));
+      const turning = button.closest('.wish-flip-card')?.dataset.turning === 'true';
+      const ready = status.state === 'ready' && !turning;
+      button.disabled = !ready;
+      button.setAttribute('aria-disabled', String(!ready));
+      button.setAttribute('aria-label', turning ? '兑换，等待卡片翻面完成' : status.label);
+      button.dataset.redeemStatus = turning ? 'turning' : status.state;
+      button.classList.toggle('is-redeemable', ready);
+      button.classList.remove('has-purchase-draft');
+    });
+  }
+  function syncDock() {
+    const button = app.querySelector('.dock .agent-launch');
+    if (button) {
+      button.setAttribute('aria-haspopup', 'dialog');
+      button.setAttribute('aria-expanded', String(ui.sheet?.type === 'agent'));
+      button.setAttribute('title', '小朵');
+    }
+  }
+  function sync() { syncArt(); syncButtons(); syncDock(); }
+  const originalNotes = updateNotes;
+  updateNotes = function materialInteractionNotes() { originalNotes(); sync(); };
+
+  // Only asset/card additions and flip completion matter here. Odometer frames
+  // and bubble style updates must not trigger appearance work every frame.
+  new MutationObserver(records => {
+    if (records.some(record => record.type === 'attributes' || [...record.addedNodes].some(node =>
+      node.nodeType === 1 && (node.matches('img,.wish-flip-card,.dock-tabs,.agent-launch') || node.querySelector('img,.wish-flip-card,.dock-tabs,.agent-launch'))))) sync();
+  }).observe(app, {childList: true, subtree: true, attributes: true, attributeFilter: ['data-turning']});
+  sync();
+  return {sync};
+})();
+
 
 /* Independent material-review shell. Inject inside the original DOMContentLoaded
    closure, immediately after outcomeSetupReview(). It changes presentation only. */
@@ -3093,6 +3202,7 @@ outcomeSetupReview();
     window.CheckLineLibrary?.appearance?.(theme === 'dark');
     materialSyncThemeControls();
     materialUpdateShell();
+    materialInteractions.sync();
   };
 
   function materialSyncThemeControls() {
@@ -3181,7 +3291,7 @@ outcomeSetupReview();
     const theme = app.dataset.theme === 'dark' ? '暗色' : '浅色';
     const select = document.getElementById('material-page');
     if (select && materialLabels.has(view)) select.value = view;
-    materialText('.review-label', '10/23 · 浅暗玻璃材质研究');
+    materialText('.review-label', '10/24 · 浅暗材质与交互补正');
     materialText('.review-sidebar > .eyebrow', '浅暗材质 · 全页面核对');
     materialText('.review-notes > .eyebrow', '本轮材质研究');
     materialText('#note-title', '以 R3 为基准，保留透光与层次。');
@@ -4007,6 +4117,94 @@ body.material-embedded .app { width: 100%!important; height: 100dvh; min-height:
 }
 .app[data-material-study][data-theme] .reader-level-controls>button::before,
 .app[data-material-study][data-theme] .reader-level-controls>button::after { content: none; }
+
+/* Theme-specific art: recolor original vector fills, keeping shape and relief. */
+.app[data-material-study][data-theme=light] {
+  --icon-accent: #176e85;
+  --model-top: #8bd5e9; --model-shade: #17657c; --model-mid: #287a97;
+  --model-lower: #51b2d4; --model-edge: #b0ecf7;
+  --model-rim-top: #f0feff; --model-rim-mid: #c1f3fb;
+  --model-rim-shade: #387f9c; --model-rim-bottom: #ddf9ff; --model-glint: #b3edf9;
+  --redeem-disabled-surface: linear-gradient(150deg, #e4e8e98c, #a9b4b54a);
+  --redeem-disabled-ink: #5c7279;
+}
+.app[data-material-study][data-theme=dark] {
+  --icon-accent: #b9eaf6;
+  --model-top: #b7f0ff; --model-shade: #0d4d68; --model-mid: #167c9f;
+  --model-lower: #41bedf; --model-edge: #d1f8ff;
+  --model-rim-top: #f5feff; --model-rim-mid: #a8edff;
+  --model-rim-shade: #226b89; --model-rim-bottom: #d9faff; --model-glint: #cff6ff;
+  --redeem-disabled-surface: linear-gradient(150deg, #c4ccce2b, #66707424);
+  --redeem-disabled-ink: #a9b8bd;
+}
+.app[data-material-study][data-theme] .wish-full-view { --icon-accent: #b9eaf6; }
+.app[data-material-study][data-theme] :is(.preset-art > img, .wish-preset-grid img) {
+  filter: drop-shadow(0 2px 2px var(--wish-drop));
+}
+.app[data-material-study][data-theme] :is(.icon-button, .wish-expand-button, .wish-cover-mini, .wish-view-options button, .wish-layout-switch button) { color: var(--accent); }
+.app[data-material-study][data-theme] .wish-full-view :is(.wish-cover-mini, .wish-expand-button) { color: var(--material-floating-ink); }
+
+/* Three equal slots in one glass surface. Xiaoduo remains an action, with no
+   selected tab state. It shares the capsule rather than floating outside it. */
+.app[data-material-study][data-theme] .dock {
+  width: 204px; max-width: calc(100% - 40px); height: 66px; min-height: 66px;
+  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: center; gap: 2px; padding: 5px;
+  border: 1px solid var(--material-edge); border-radius: 35px;
+  background: var(--material-block);
+  box-shadow: inset 0 1px var(--material-edge), inset 0 -1px var(--material-edge-low), 0 14px 26px -17px var(--material-shadow-deep);
+  -webkit-backdrop-filter: blur(26px) saturate(1.15);
+  backdrop-filter: blur(26px) saturate(1.15);
+}
+.app[data-material-study][data-theme] .dock-tabs { display: contents; }
+.app[data-material-study][data-theme] .dock :is(.dock-tabs > button, .agent-launch) {
+  position: relative; width: 100%; height: 54px; min-width: 0; min-height: 54px;
+  padding: 0; border: 0; border-radius: 28px; margin: 0;
+}
+.app[data-material-study][data-theme] .dock .agent-launch {
+  display: grid; place-items: center; box-shadow: none; background: transparent;
+}
+.app[data-material-study][data-theme] .dock .agent-launch::before {
+  content: ''; position: absolute; left: -2px; top: 17px; width: 1px; height: 20px;
+  background: linear-gradient(transparent, var(--material-edge), transparent); pointer-events: none;
+}
+.app[data-material-study][data-theme] .dock .agent-launch .mascot { width: 51px; height: 51px; }
+.app[data-material-study][data-theme] .dock button:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+
+/* The back's action reserve is separate from the flip surface. No transparent
+   expanded hit boxes, no hover tilt under a purchase button. */
+.app[data-material-study][data-theme] .wish-face-back { --redeem-reserve: 70px; }
+.app[data-material-study][data-theme] .wish-large-card .wish-face-back { --redeem-reserve: 86px; }
+.app[data-material-study][data-theme] .wish-back-flip-zone { bottom: var(--redeem-reserve); }
+.app[data-material-study][data-theme] .wish-liquid-actions {
+  display: flex; justify-content: center; align-items: end; padding-top: 9px;
+  min-height: 53px; width: 100%; position: relative; z-index: 6;
+  pointer-events: auto;
+}
+.app[data-material-study][data-theme] .wish-liquid-actions > .wish-redeem-button {
+  width: min(100%, 112px); min-height: 44px; padding: 10px 12px;
+  position: relative; pointer-events: auto; touch-action: manipulation;
+  border: 1px solid var(--material-edge-low);
+}
+.app[data-material-study][data-theme] .wish-large-card .wish-liquid-actions > .wish-redeem-button { width: min(100%, 200px); min-height: 52px; }
+.app[data-material-study][data-theme].large-text .wish-liquid-actions > .wish-redeem-button { min-height: 51px; }
+.app[data-material-study][data-theme] .wish-redeem-button.is-redeemable {
+  box-shadow: inset 0 1px #ffffff80, 0 0 15px -7px var(--accent);
+}
+.app[data-material-study][data-theme] .wish-redeem-button.is-redeemable::before {
+  content: ''; position: absolute; inset: 0; padding: 1.6px; border-radius: inherit;
+  background: conic-gradient(from var(--wish-button-angle), #ffffff14 0%, #ffffff25 20%, #edfcff 33%, #83d5eb 46%, #ffffff14 57%, #ffffff25 73%, #edfcff 85%, #ffffff14 100%);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); mask-composite: exclude;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor;
+  pointer-events: none; animation: wish-button-rim 3.2s linear infinite;
+}
+.app[data-material-study][data-theme] .wish-face-back .wish-liquid-actions > .wish-redeem-button:disabled {
+  opacity: .85; color: var(--redeem-disabled-ink); background: var(--redeem-disabled-surface);
+  box-shadow: inset 0 1px var(--material-edge-low); cursor: default;
+}
+.app[data-material-study][data-theme] .wish-redeem-button:disabled::before { display: none; }
+.app[data-material-study][data-theme].reduced .wish-redeem-button::before { animation: none; }
+@media (prefers-reduced-motion: reduce) { .app[data-material-study][data-theme] .wish-redeem-button::before { animation: none; } }
 
 </style></head>
 <body>

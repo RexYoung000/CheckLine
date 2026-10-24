@@ -40,8 +40,8 @@ once('var br=new Map;window.CheckLineLibrary={mount(t,l){let e=(0,Oh.createRoot)
  'var br=new Map,materialLibraryProps=new WeakMap;window.CheckLineLibrary={mount(t,l){let e=br.get(t);if(!e){e=(0,Oh.createRoot)(t);br.set(t,e)}materialLibraryProps.set(t,l);e.render((0,w.jsx)(xp,{...l}))},appearance(dark){for(let[t,l]of br){let p=materialLibraryProps.get(t);if(p){let next={...p,dark};materialLibraryProps.set(t,next);l.render((0,w.jsx)(xp,next))}}},unmount(){for(let[t,l]of br)l.unmount(),br.delete(t)}};');
 
 // Isolate this study's browser example data from R34 and the real device.
-html=html.replace(/data-review-storage="[^"]*"/,'data-review-storage="checkline-material-themes-r36-20261023"');
-if(!html.includes('data-review-storage="checkline-material-themes-r36-20261023"'))html=html.replace('<html ','<html data-review-storage="checkline-material-themes-r36-20261023" ');
+html=html.replace(/data-review-storage="[^"]*"/,'data-review-storage="checkline-material-themes-r37-20261024"');
+if(!html.includes('data-review-storage="checkline-material-themes-r37-20261024"'))html=html.replace('<html ','<html data-review-storage="checkline-material-themes-r37-20261024" ');
 html=html.replace(/<title>[^<]*<\/title>/,'<title>CheckLine · 透光玻璃浅暗主题</title>');
 once('id="app" class="app" data-theme="light"','id="app" class="app" data-material-study="r3-aligned" data-theme="light"');
 
@@ -76,10 +76,18 @@ if(headerMatches.length!==1)throw Error('Review header boundary mismatch');
 html=html.replace(headerMatches[0][0],header);
 // The old research links are not shipped with this self-contained study.
 html=html.replace(/<a[^>]*href="(?:review-20261022-r33\.html[^"]*|motion-lab-20261017[^"]*|reward-references-r32\.html[^"]*)"[^>]*>[\s\S]*?<\/a>/g,'');
-const css=fs.readFileSync(path.join(work,'surfaces.css'),'utf8')+'\n'+fs.readFileSync(path.join(work,'home.css'),'utf8');
+// Buttons on the back stay still; retain pointer-driven flips on other surfaces.
+once("button:not(.wish-face-tap):not(.wish-back-flip-zone),input,select,textarea'", "button:not(.wish-face-tap):not(.wish-back-flip-zone),input,select,textarea,.wish-liquid-actions'");
+once("if(!card||e.pointerType==='touch'||reducedMotion()||wishMotion(card).task)return;const r=card.getBoundingClientRect()", "if(card&&(card.dataset.target==='back'||e.target.closest('.wish-liquid-actions'))){card.querySelector('.wish-hover-layer').style.transform='';return;}if(!card||e.pointerType==='touch'||reducedMotion()||wishMotion(card).task)return;const r=card.getBoundingClientRect()");
+once("if(card&&!e.target.closest('button,input,select,textarea,a'))wishFlip(card,true)", "if(card&&!e.target.closest('button,input,select,textarea,a,.wish-liquid-actions'))wishFlip(card,true)");
+// This isolated motion example must enter from 100% too: estimate 500, wallet
+// 600, actual purchase 300. No wallet calculation or purchase rule is changed.
+once("if(kind==='wish'){ui.tab='wish';render();startRedemption('w1');", "if(kind==='wish'){data.wishes.find(w=>w.id==='w1').reference=50000;ui.tab='wish';render();startRedemption('w1');");
+const css=['surfaces.css','home.css','interactions.css'].map(file=>fs.readFileSync(path.join(work,file),'utf8')).join('\n');
 once('</head>','<style id="material-theme-r3">\n'+css+'\n</style></head>');
 const bridge=fs.readFileSync(path.join(work,'study-bridge.js'),'utf8');
-once('outcomeSetupReview();\n\n});\n</script>','outcomeSetupReview();\n\n'+bridge+'\n\n});\n</script>');
+const interactions=fs.readFileSync(path.join(work,'interactions.js'),'utf8');
+once('outcomeSetupReview();\n\n});\n</script>','outcomeSetupReview();\n\n'+interactions+'\n\n'+bridge+'\n\n});\n</script>');
 
 // Color only: retain the existing fracture geometry, impulse and six coin waves.
 const palette={
@@ -95,9 +103,17 @@ const palette={
  'rgba(165,133,198,0)':'rgba(113,179,208,0)',
  '#eee2fc':'#def5fc','#d1e5e0':'#c8e7e4',
  '#f6e7ff':'#e7faff','#c6a5e0':'#9bd4e7','#bfddd7':'#b7e0d8',
- '#bc9dd8':'#95bfd0'
+ '#bc9dd8':'#95bfd0',
+ '#76528f':'#4c8297','#f5e8ff':'#e7f9ff','#c7a6e2':'#9ecddc',
+ '#f4eaff':'#edfaff','#9b76b4':'#5c99af','#b593cf':'#83b6c8',
+ '#f3e5ff':'#e9faff','#9470ab':'#538a9e','#76558d':'#47788d',
+ '#ccb2e5':'#a4d9e8','#d9c2ed':'#c0eaf5','#f8f1ff':'#f0fcff',
+ 'rgba(252,245,255,':'rgba(240,252,255,',
+ '#a58bbd':'#73a6b6','#ad8dc6':'#8ec8d9','#f5efff':'#effbff','#b8dcd5':'#bce7eb',
+ '#d6c4e9':'var(--material-liquid-top)','#ae92c5':'var(--material-liquid-bottom)',
+ '#d9b6f218':'#ace8f218'
 };
-const fxStart=html.indexOf('function glass(s,ms){'),fxEnd=html.indexOf('function outcomeSummary',fxStart);
+const fxStart=html.indexOf('function glass(s,ms){'),fxEnd=html.indexOf('const OUTCOME_CASES=',fxStart);
 if(fxStart<0||fxEnd<0)throw Error('Outcome palette boundary missing');
 let fx=html.slice(fxStart,fxEnd);for(const[a,b]of Object.entries(palette))fx=fx.split(a).join(b);
 html=html.slice(0,fxStart)+fx+html.slice(fxEnd);

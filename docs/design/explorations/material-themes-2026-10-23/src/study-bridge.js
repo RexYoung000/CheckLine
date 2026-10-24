@@ -26,6 +26,7 @@
     window.CheckLineLibrary?.appearance?.(theme === 'dark');
     materialSyncThemeControls();
     materialUpdateShell();
+    materialInteractions.sync();
   };
 
   function materialSyncThemeControls() {
@@ -114,7 +115,7 @@
     const theme = app.dataset.theme === 'dark' ? '暗色' : '浅色';
     const select = document.getElementById('material-page');
     if (select && materialLabels.has(view)) select.value = view;
-    materialText('.review-label', '10/23 · 浅暗玻璃材质研究');
+    materialText('.review-label', '10/24 · 浅暗材质与交互补正');
     materialText('.review-sidebar > .eyebrow', '浅暗材质 · 全页面核对');
     materialText('.review-notes > .eyebrow', '本轮材质研究');
     materialText('#note-title', '以 R3 为基准，保留透光与层次。');

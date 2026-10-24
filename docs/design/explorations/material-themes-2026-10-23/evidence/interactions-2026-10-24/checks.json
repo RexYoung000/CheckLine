@@ -1,0 +1,1117 @@
+{
+  "date": "2026-10-24",
+  "scope": "R3 HTML interaction prototype only; native App unchanged",
+  "environment": "Codex in-app browser; synthetic isolated r37 data",
+  "rule": "Progress below 100% disables redemption entry",
+  "completion": "prototype complete; final visual and touch acceptance pending Rex",
+  "checks": [
+    {
+      "case": "small-card-entry-and-hit-area",
+      "buttons": [
+        {
+          "before": "none",
+          "disabled": true,
+          "flipBottom": "70px",
+          "hover": "",
+          "id": "w1",
+          "label": "兑换不可用，当前进度 50%，达到 100% 后可兑换",
+          "rect": {
+            "h": 44,
+            "w": 112,
+            "x": 469.5,
+            "y": 532
+          },
+          "state": "incomplete"
+        },
+        {
+          "before": "block",
+          "disabled": false,
+          "flipBottom": "70px",
+          "hover": "",
+          "id": "w2",
+          "label": "兑换，核对实际购买",
+          "rect": {
+            "h": 44,
+            "w": 112,
+            "x": 648.5,
+            "y": 532
+          },
+          "state": "ready"
+        },
+        {
+          "before": "none",
+          "disabled": true,
+          "flipBottom": "70px",
+          "hover": "",
+          "id": "w3",
+          "label": "兑换不可用，请先填写心愿金额",
+          "rect": {
+            "h": 44,
+            "w": 112,
+            "x": 463,
+            "y": 702
+          },
+          "state": "unpriced"
+        }
+      ],
+      "observedDisabledClick": {
+        "dialog": false,
+        "face": "back"
+      },
+      "observedOutsideButtonClick": {
+        "dialog": false,
+        "face": "back",
+        "hover": ""
+      },
+      "observedInsideButtonEdgeClick": {
+        "dialog": "核对心愿购买",
+        "wish": "周末看展"
+      },
+      "inputMethod": "CUA real pointer clicks"
+    },
+    {
+      "case": "actual-over-wallet",
+      "error": "心愿余额还差 ¥100，本次输入会保留。",
+      "confirmEnabled": false
+    },
+    {
+      "case": "theme-preserves-purchase-input",
+      "input": "250"
+    },
+    {
+      "case": "close-reopen-preserves-purchase-draft",
+      "input": "250"
+    },
+    {
+      "case": "wish-first-save",
+      "fracture": [
+        {
+          "active": "true",
+          "balance": "心愿余额 ¥300",
+          "fragmentCount": "44",
+          "phase": "fracture",
+          "progress": "0.172"
+        }
+      ],
+      "final": "心愿余额 ¥300",
+      "consoleErrors": []
+    },
+    {
+      "case": "wish-replay-dark",
+      "phases": [
+        {
+          "active": "true",
+          "fragmentCount": "44",
+          "phase": "gather",
+          "progress": "0.099",
+          "wallet": "心愿余额 ¥300"
+        },
+        {
+          "active": "true",
+          "fragmentCount": "44",
+          "phase": "fracture",
+          "progress": "0.164",
+          "wallet": "心愿余额 ¥300"
+        },
+        {
+          "active": "true",
+          "fragmentCount": "44",
+          "phase": "reveal",
+          "progress": "0.284",
+          "wallet": "心愿余额 ¥300"
+        },
+        {
+          "active": "true",
+          "fragmentCount": "44",
+          "phase": "mint",
+          "progress": "0.633",
+          "wallet": "心愿余额 ¥300"
+        },
+        {
+          "active": "true",
+          "fragmentCount": "44",
+          "phase": "settle",
+          "progress": "0.776",
+          "wallet": "心愿余额 ¥300"
+        },
+        {
+          "active": "false",
+          "fragmentCount": "44",
+          "phase": "done",
+          "progress": "1",
+          "wallet": "心愿余额 ¥300"
+        }
+      ]
+    },
+    {
+      "case": "theme-switch-during-wish",
+      "seedBefore": "1hv0zvp-1p595ph-3",
+      "seedAfter": "1hv0zvp-1p595ph-3",
+      "active": "true"
+    },
+    {
+      "case": "wish-skip",
+      "phase": "done",
+      "wallet": "心愿余额 ¥300"
+    },
+    {
+      "case": "wish-replay-ledger-once",
+      "visible": 1
+    },
+    {
+      "case": "settlement-normal-light",
+      "frames": [
+        {
+          "active": "true",
+          "phase": "gather",
+          "progress": "0.132",
+          "wallet": "心愿余额 ¥400"
+        },
+        {
+          "active": "true",
+          "phase": "flow",
+          "progress": "0.155",
+          "wallet": "心愿余额 ¥400"
+        },
+        {
+          "active": "true",
+          "phase": "receive",
+          "progress": "0.365",
+          "wallet": "心愿余额 ¥400"
+        },
+        {
+          "active": "true",
+          "balance": "28100",
+          "credit": "100",
+          "phase": "receive",
+          "progress": "0.374",
+          "wallet": "心愿余额 ¥400"
+        },
+        {
+          "active": "true",
+          "balance": "28200",
+          "credit": "200",
+          "phase": "receive",
+          "progress": "0.380",
+          "wallet": "心愿余额 ¥400"
+        },
+        {
+          "active": "true",
+          "balance": "28300",
+          "credit": "300",
+          "phase": "receive",
+          "progress": "0.386",
+          "wallet": "心愿余额 ¥400"
+        },
+        {
+          "active": "true",
+          "balance": "28400",
+          "credit": "400",
+          "phase": "receive",
+          "progress": "0.389",
+          "wallet": "心愿余额 ¥400"
+        },
+        {
+          "active": "true",
+          "balance": "28500",
+          "credit": "500",
+          "phase": "receive",
+          "progress": "0.392",
+          "wallet": "心愿余额 ¥400"
+        },
+        {
+          "active": "true",
+          "balance": "28600",
+          "credit": "600",
+          "phase": "receive",
+          "progress": "0.398",
+          "wallet": "心愿余额 ¥400"
+        },
+        {
+          "active": "true",
+          "balance": "28700",
+          "credit": "700",
+          "phase": "receive",
+          "progress": "0.401",
+          "wallet": "心愿余额 ¥400"
+        },
+        {
+          "active": "true",
+          "balance": "28800",
+          "credit": "800",
+          "phase": "receive",
+          "progress": "0.407",
+          "wallet": "心愿余额 ¥400"
+        },
+        {
+          "active": "true",
+          "balance": "28900",
+          "credit": "900",
+          "phase": "receive",
+          "progress": "0.410",
+          "wallet": "心愿余额 ¥400"
+        },
+        {
+          "active": "true",
+          "balance": "29000",
+          "credit": "1000",
+          "phase": "receive",
+          "progress": "0.425",
+          "wallet": "心愿余额 ¥400"
+        },
+        {
+          "active": "true",
+          "balance": "29100",
+          "credit": "1100",
+          "phase": "receive",
+          "progress": "0.440",
+          "wallet": "心愿余额 ¥400"
+        },
+        {
+          "active": "true",
+          "balance": "29300",
+          "credit": "1300",
+          "phase": "receive",
+          "progress": "0.449",
+          "wallet": "心愿余额 ¥400"
+        },
+        {
+          "active": "true",
+          "balance": "29400",
+          "credit": "1400",
+          "phase": "receive",
+          "progress": "0.453",
+          "wallet": "心愿余额 ¥400"
+        },
+        {
+          "active": "true",
+          "balance": "29600",
+          "credit": "1600",
+          "phase": "receive",
+          "progress": "0.455",
+          "wallet": "心愿余额 ¥400"
+        },
+        {
+          "active": "true",
+          "balance": "29800",
+          "credit": "1800",
+          "phase": "receive",
+          "progress": "0.461",
+          "wallet": "心愿余额 ¥400"
+        },
+        {
+          "active": "true",
+          "balance": "29900",
+          "credit": "1900",
+          "phase": "receive",
+          "progress": "0.465",
+          "wallet": "心愿余额 ¥400"
+        },
+        {
+          "active": "true",
+          "balance": "30200",
+          "credit": "2200",
+          "phase": "receive",
+          "progress": "0.471",
+          "wallet": "心愿余额 ¥400"
+        },
+        {
+          "active": "true",
+          "balance": "30300",
+          "credit": "2300",
+          "phase": "receive",
+          "progress": "0.473",
+          "wallet": "心愿余额 ¥400"
+        },
+        {
+          "active": "true",
+          "balance": "30500",
+          "credit": "2500",
+          "phase": "receive",
+          "progress": "0.480",
+          "wallet": "心愿余额 ¥400"
+        },
+        {
+          "active": "true",
+          "balance": "30600",
+          "credit": "2600",
+          "phase": "receive",
+          "progress": "0.486",
+          "wallet": "心愿余额 ¥400"
+        },
+        {
+          "active": "true",
+          "balance": "30700",
+          "credit": "2700",
+          "phase": "receive",
+          "progress": "0.492",
+          "wallet": "心愿余额 ¥400"
+        },
+        {
+          "active": "true",
+          "balance": "30900",
+          "credit": "2900",
+          "phase": "receive",
+          "progress": "0.519",
+          "wallet": "心愿余额 ¥400"
+        },
+        {
+          "active": "true",
+          "balance": "31200",
+          "credit": "3200",
+          "phase": "receive",
+          "progress": "0.525",
+          "wallet": "心愿余额 ¥400"
+        },
+        {
+          "active": "true",
+          "balance": "31500",
+          "credit": "3500",
+          "phase": "receive",
+          "progress": "0.531",
+          "wallet": "心愿余额 ¥400"
+        },
+        {
+          "active": "true",
+          "balance": "31800",
+          "credit": "3800",
+          "phase": "receive",
+          "progress": "0.537",
+          "wallet": "心愿余额 ¥400"
+        },
+        {
+          "active": "true",
+          "balance": "32000",
+          "credit": "4000",
+          "phase": "receive",
+          "progress": "0.540",
+          "wallet": "心愿余额 ¥400"
+        },
+        {
+          "active": "true",
+          "balance": "32300",
+          "credit": "4300",
+          "phase": "receive",
+          "progress": "0.546",
+          "wallet": "心愿余额 ¥400"
+        },
+        {
+          "active": "true",
+          "balance": "32600",
+          "credit": "4600",
+          "phase": "receive",
+          "progress": "0.552",
+          "wallet": "心愿余额 ¥400"
+        },
+        {
+          "active": "true",
+          "balance": "32700",
+          "credit": "4700",
+          "phase": "receive",
+          "progress": "0.555",
+          "wallet": "心愿余额 ¥400"
+        },
+        {
+          "active": "true",
+          "balance": "32800",
+          "credit": "4800",
+          "phase": "receive",
+          "progress": "0.559",
+          "wallet": "心愿余额 ¥400"
+        },
+        {
+          "active": "true",
+          "balance": "33000",
+          "credit": "5000",
+          "phase": "receive",
+          "progress": "0.568",
+          "wallet": "心愿余额 ¥400"
+        },
+        {
+          "active": "true",
+          "balance": "33100",
+          "credit": "5100",
+          "phase": "receive",
+          "progress": "0.592",
+          "wallet": "心愿余额 ¥400"
+        },
+        {
+          "active": "true",
+          "balance": "33300",
+          "credit": "5300",
+          "phase": "receive",
+          "progress": "0.598",
+          "wallet": "心愿余额 ¥400"
+        },
+        {
+          "active": "true",
+          "balance": "33400",
+          "credit": "5400",
+          "phase": "receive",
+          "progress": "0.601",
+          "wallet": "心愿余额 ¥400"
+        },
+        {
+          "active": "true",
+          "balance": "33600",
+          "credit": "5600",
+          "phase": "receive",
+          "progress": "0.604",
+          "wallet": "心愿余额 ¥400"
+        },
+        {
+          "active": "true",
+          "balance": "33700",
+          "credit": "5700",
+          "phase": "receive",
+          "progress": "0.607",
+          "wallet": "心愿余额 ¥400"
+        },
+        {
+          "active": "true",
+          "balance": "33900",
+          "credit": "5900",
+          "phase": "receive",
+          "progress": "0.610",
+          "wallet": "心愿余额 ¥400"
+        },
+        {
+          "active": "true",
+          "balance": "34100",
+          "credit": "6100",
+          "phase": "receive",
+          "progress": "0.613",
+          "wallet": "心愿余额 ¥400"
+        },
+        {
+          "active": "true",
+          "balance": "34300",
+          "credit": "6300",
+          "phase": "receive",
+          "progress": "0.616",
+          "wallet": "心愿余额 ¥400"
+        },
+        {
+          "active": "true",
+          "balance": "34500",
+          "credit": "6500",
+          "phase": "receive",
+          "progress": "0.619",
+          "wallet": "心愿余额 ¥400"
+        },
+        {
+          "active": "true",
+          "balance": "34900",
+          "credit": "6900",
+          "phase": "receive",
+          "progress": "0.625",
+          "wallet": "心愿余额 ¥400"
+        },
+        {
+          "active": "true",
+          "balance": "35100",
+          "credit": "7100",
+          "phase": "receive",
+          "progress": "0.628",
+          "wallet": "心愿余额 ¥400"
+        },
+        {
+          "active": "true",
+          "balance": "35300",
+          "credit": "7300",
+          "phase": "receive",
+          "progress": "0.634",
+          "wallet": "心愿余额 ¥400"
+        },
+        {
+          "active": "true",
+          "balance": "35500",
+          "credit": "7500",
+          "phase": "receive",
+          "progress": "0.640",
+          "wallet": "心愿余额 ¥400"
+        },
+        {
+          "active": "true",
+          "balance": "35600",
+          "credit": "7600",
+          "phase": "receive",
+          "progress": "0.646",
+          "wallet": "心愿余额 ¥400"
+        },
+        {
+          "active": "true",
+          "balance": "35800",
+          "credit": "7800",
+          "phase": "receive",
+          "progress": "0.676",
+          "wallet": "心愿余额 ¥400"
+        },
+        {
+          "active": "true",
+          "balance": "35900",
+          "credit": "7900",
+          "phase": "receive",
+          "progress": "0.679",
+          "wallet": "心愿余额 ¥400"
+        },
+        {
+          "active": "true",
+          "balance": "36100",
+          "credit": "8100",
+          "phase": "receive",
+          "progress": "0.683",
+          "wallet": "心愿余额 ¥400"
+        },
+        {
+          "active": "true",
+          "balance": "36300",
+          "credit": "8300",
+          "phase": "receive",
+          "progress": "0.686",
+          "wallet": "心愿余额 ¥400"
+        },
+        {
+          "active": "true",
+          "balance": "36600",
+          "credit": "8600",
+          "phase": "receive",
+          "progress": "0.692",
+          "wallet": "心愿余额 ¥400"
+        },
+        {
+          "active": "true",
+          "balance": "36900",
+          "credit": "8900",
+          "phase": "receive",
+          "progress": "0.698",
+          "wallet": "心愿余额 ¥400"
+        },
+        {
+          "active": "true",
+          "balance": "37100",
+          "credit": "9100",
+          "phase": "receive",
+          "progress": "0.701",
+          "wallet": "心愿余额 ¥400"
+        },
+        {
+          "active": "true",
+          "balance": "37300",
+          "credit": "9300",
+          "phase": "receive",
+          "progress": "0.704",
+          "wallet": "心愿余额 ¥400"
+        },
+        {
+          "active": "true",
+          "balance": "37500",
+          "credit": "9500",
+          "phase": "receive",
+          "progress": "0.707",
+          "wallet": "心愿余额 ¥400"
+        },
+        {
+          "active": "true",
+          "balance": "37600",
+          "credit": "9600",
+          "phase": "receive",
+          "progress": "0.710",
+          "wallet": "心愿余额 ¥400"
+        },
+        {
+          "active": "true",
+          "balance": "37700",
+          "credit": "9700",
+          "phase": "receive",
+          "progress": "0.713",
+          "wallet": "心愿余额 ¥400"
+        },
+        {
+          "active": "true",
+          "balance": "37800",
+          "credit": "9800",
+          "phase": "receive",
+          "progress": "0.716",
+          "wallet": "心愿余额 ¥400"
+        },
+        {
+          "active": "true",
+          "balance": "37900",
+          "credit": "9900",
+          "phase": "receive",
+          "progress": "0.719",
+          "wallet": "心愿余额 ¥400"
+        },
+        {
+          "active": "true",
+          "balance": "38000",
+          "credit": "10000",
+          "phase": "receive",
+          "progress": "0.728",
+          "wallet": "心愿余额 ¥400"
+        },
+        {
+          "active": "true",
+          "balance": "38100",
+          "credit": "10100",
+          "phase": "receive",
+          "progress": "0.759",
+          "wallet": "心愿余额 ¥400"
+        },
+        {
+          "active": "true",
+          "balance": "38200",
+          "credit": "10200",
+          "phase": "receive",
+          "progress": "0.768",
+          "wallet": "心愿余额 ¥400"
+        },
+        {
+          "active": "true",
+          "balance": "38300",
+          "credit": "10300",
+          "phase": "receive",
+          "progress": "0.770",
+          "wallet": "心愿余额 ¥400"
+        },
+        {
+          "active": "true",
+          "balance": "38500",
+          "credit": "10500",
+          "phase": "receive",
+          "progress": "0.777",
+          "wallet": "心愿余额 ¥400"
+        },
+        {
+          "active": "true",
+          "balance": "38800",
+          "credit": "10800",
+          "phase": "receive",
+          "progress": "0.786",
+          "wallet": "心愿余额 ¥400"
+        },
+        {
+          "active": "true",
+          "balance": "39000",
+          "credit": "11000",
+          "phase": "receive",
+          "progress": "0.792",
+          "wallet": "心愿余额 ¥400"
+        },
+        {
+          "active": "true",
+          "balance": "39200",
+          "credit": "11200",
+          "phase": "receive",
+          "progress": "0.798",
+          "wallet": "心愿余额 ¥400"
+        },
+        {
+          "active": "true",
+          "balance": "39400",
+          "credit": "11400",
+          "phase": "receive",
+          "progress": "0.804",
+          "wallet": "心愿余额 ¥400"
+        },
+        {
+          "active": "true",
+          "balance": "39500",
+          "credit": "11500",
+          "phase": "receive",
+          "progress": "0.807",
+          "wallet": "心愿余额 ¥400"
+        },
+        {
+          "active": "true",
+          "balance": "39600",
+          "credit": "11600",
+          "phase": "receive",
+          "progress": "0.810",
+          "wallet": "心愿余额 ¥400"
+        },
+        {
+          "active": "true",
+          "balance": "39900",
+          "credit": "11900",
+          "phase": "receive",
+          "progress": "0.822",
+          "wallet": "心愿余额 ¥400"
+        },
+        {
+          "active": "true",
+          "balance": "40000",
+          "credit": "12000",
+          "phase": "receive",
+          "progress": "0.846",
+          "wallet": "心愿余额 ¥400"
+        },
+        {
+          "active": "false",
+          "balance": "40000",
+          "credit": "12000",
+          "phase": "done",
+          "progress": "1",
+          "wallet": "心愿余额 ¥400"
+        }
+      ]
+    },
+    {
+      "case": "settlement-recovery",
+      "dom": {
+        "phase": "done",
+        "sceneSeed": "1gz6fj5-cixs87-7",
+        "text": "这期结算好了\n这个月\n2026年10月1日—2026年10月23日\n转入心愿余额\n+¥50\n\n结余 ¥120，先补差额 ¥70\n\n心愿余额\n¥\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n本次 +¥50\n\n这份结余，留给想要的。\n\n回到预算\n已保存结算。转入心愿余额 ¥50，心愿余额 ¥330。",
+        "tone": "transfer",
+        "wallet": "心愿余额 ¥330"
+      }
+    },
+    {
+      "case": "settlement-recovery-only",
+      "dom": {
+        "phase": "done",
+        "sceneSeed": null,
+        "text": "这期结算好了\n这个月\n2026年10月1日—2026年10月23日\n补回待恢复差额\n¥120\n\n结余 ¥120，先补差额 ¥120\n\n心愿余额\n¥\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n本次余额未变\n\n待恢复差额还剩 ¥80。\n\n回到预算\n已保存结算。补回待恢复差额 ¥120，心愿余额 ¥280。",
+        "tone": "recovery",
+        "wallet": "心愿余额 ¥280"
+      }
+    },
+    {
+      "case": "settlement-zero",
+      "dom": {
+        "phase": "done",
+        "sceneSeed": null,
+        "text": "这期结算好了\n这个月\n2026年10月1日—2026年10月23日\n本期没有结余转入\n¥0\n\n心愿余额保持不变。\n\n心愿余额\n¥\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n本次余额未变\n\n本期结算已完成。\n\n回到预算\n已保存结算。本期没有结余转入 ¥0，心愿余额 ¥280。",
+        "tone": "zero",
+        "wallet": "心愿余额 ¥280"
+      }
+    },
+    {
+      "case": "settlement-over",
+      "dom": {
+        "phase": "done",
+        "sceneSeed": null,
+        "text": "这期结算好了\n这个月\n2026年10月1日—2026年10月23日\n本期超出\n¥500\n\n心愿余额扣除 ¥280，待恢复差额 ¥220\n\n心愿余额\n¥\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n本次 −¥280\n\n本期结果已更新。\n\n回到预算\n已保存结算。本期超出 ¥500，心愿余额 ¥0。",
+        "tone": "over",
+        "wallet": "心愿余额 ¥0"
+      }
+    },
+    {
+      "case": "settlement-missing-fx",
+      "confirmation": false
+    },
+    {
+      "case": "settlement-save-failure",
+      "resultCount": 0,
+      "error": "结算未保存，核对内容已保留，请重试。"
+    },
+    {
+      "case": "settlement-retry-start",
+      "active": "true",
+      "wallet": "心愿余额 ¥400"
+    },
+    {
+      "case": "settlement-close-during-motion-ledger",
+      "wallet": "400",
+      "rows": 1
+    },
+    {
+      "case": "large-card-ready",
+      "button": {
+        "disabled": false,
+        "hover": "",
+        "rect": {
+          "h": 52,
+          "w": 200
+        }
+      }
+    },
+    {
+      "case": "wish-save-failure",
+      "resultCount": 0,
+      "error": "保存未成功，金额和币种已保留。",
+      "amount": "320"
+    },
+    {
+      "case": "wish-retry-close-during-motion",
+      "ledgerCount": 1,
+      "wallet": "280"
+    },
+    {
+      "case": "reduce-during-wish-motion",
+      "phase": "done",
+      "active": "false",
+      "wallet": "心愿余额 ¥300"
+    },
+    {
+      "case": "wish-reduced-replay",
+      "phase": "done",
+      "active": "false",
+      "scene": null
+    },
+    {
+      "case": "foreign-progress-and-missing-quote",
+      "buttons": [
+        {
+          "animation": "none",
+          "disabled": false,
+          "edge": "block",
+          "id": "wu",
+          "label": "兑换，核对实际购买",
+          "status": "ready"
+        },
+        {
+          "animation": "none",
+          "disabled": true,
+          "edge": "none",
+          "id": "wj",
+          "label": "兑换不可用，待核对汇率",
+          "status": "unquoted"
+        }
+      ]
+    },
+    {
+      "case": "zero-wallet",
+      "allDisabled": true
+    },
+    {
+      "case": "320-large-text",
+      "layout": {
+        "buttons": [
+          {
+            "disabled": true,
+            "h": 51,
+            "id": "w1",
+            "w": 112
+          },
+          {
+            "disabled": false,
+            "h": 51,
+            "id": "w2",
+            "w": 112
+          },
+          {
+            "disabled": true,
+            "h": 51,
+            "id": "w3",
+            "w": 112
+          }
+        ],
+        "dock": [
+          {
+            "h": 54,
+            "w": 62.6640625
+          },
+          {
+            "h": 54,
+            "w": 62.6640625
+          },
+          {
+            "h": 54,
+            "w": 62.671875
+          }
+        ],
+        "overflow": false,
+        "width": 318
+      }
+    },
+    {
+      "case": "keyboard-redemption-entry",
+      "dialog": 1
+    },
+    {
+      "case": "preset-grid-dark",
+      "count": 24,
+      "fills": [
+        "#b9eaf6"
+      ]
+    },
+    {
+      "case": "preset-grid-light",
+      "count": 24,
+      "fills": [
+        "#176e85"
+      ],
+      "selected": "true"
+    },
+    {
+      "case": "grouped-dock-agent",
+      "state": {
+        "buttons": [
+          {
+            "current": "page",
+            "expanded": null,
+            "haspopup": null,
+            "label": "预算",
+            "selected": true
+          },
+          {
+            "current": null,
+            "expanded": null,
+            "haspopup": null,
+            "label": "心愿",
+            "selected": false
+          },
+          {
+            "current": null,
+            "expanded": "true",
+            "haspopup": "dialog",
+            "label": "打开小朵，开始新任务",
+            "selected": false
+          }
+        ],
+        "dialog": "小朵任务面板"
+      }
+    },
+    {
+      "case": "mascot-light-dark-vector-palettes",
+      "dark": [
+        "#b7f0ff",
+        "#0d4d68",
+        "#167c9f",
+        "#41bedf",
+        "#d1f8ff",
+        "#f5feff",
+        "#a8edff",
+        "#226b89",
+        "#d9faff",
+        "#cff6ff",
+        "#fffdf4"
+      ],
+      "light": [
+        "#8bd5e9",
+        "#17657c",
+        "#287a97",
+        "#51b2d4",
+        "#b0ecf7",
+        "#f0feff",
+        "#c1f3fb",
+        "#387f9c",
+        "#ddf9ff",
+        "#b3edf9",
+        "#fffdf4"
+      ]
+    },
+    {
+      "case": "agent-theme-preserves-draft",
+      "input": "午餐 35"
+    },
+    {
+      "case": "settlement-reduced",
+      "phase": "done",
+      "active": "false",
+      "wallet": "心愿余额 ¥400",
+      "scene": null
+    },
+    {
+      "case": "wish-resize-during-motion",
+      "beforeActive": "true",
+      "phase": "done",
+      "active": "false",
+      "wallet": "心愿余额 ¥300"
+    },
+    {
+      "case": "flip-transient-lock",
+      "turning": true,
+      "disabled": true,
+      "status": "turning",
+      "after": {
+        "disabled": false,
+        "status": "ready",
+        "turning": "false"
+      }
+    },
+    {
+      "case": "wish-browser-live-screenshot-frame",
+      "before": "fracture",
+      "after": "fracture",
+      "file": "wish-fracture-live.jpg"
+    },
+    {
+      "case": "wish-reveal-browser-live-screenshot",
+      "before": "reveal",
+      "after": "reveal",
+      "file": "wish-reveal-live.jpg"
+    },
+    {
+      "case": "settlement-browser-live-screenshot-frame",
+      "before": "receive",
+      "after": "receive",
+      "file": "settlement-coins-live.jpg"
+    },
+    {
+      "case": "final-disabled-surface-specificity",
+      "themes": [
+        {
+          "theme": "dark",
+          "buttons": [
+            {
+              "background": "linear-gradient(150deg, rgba(196, 204, 206, 0.17), rgba(102, 112, 116, 0.14))",
+              "disabled": true,
+              "edge": "none",
+              "id": "w1",
+              "ink": "rgb(169, 184, 189)"
+            },
+            {
+              "background": "linear-gradient(150deg, rgb(205, 243, 248), rgb(123, 194, 209))",
+              "disabled": false,
+              "edge": "block",
+              "id": "w2",
+              "ink": "rgb(16, 51, 62)"
+            },
+            {
+              "background": "linear-gradient(150deg, rgba(196, 204, 206, 0.17), rgba(102, 112, 116, 0.14))",
+              "disabled": true,
+              "edge": "none",
+              "id": "w3",
+              "ink": "rgb(169, 184, 189)"
+            }
+          ]
+        },
+        {
+          "theme": "light",
+          "buttons": [
+            {
+              "background": "linear-gradient(150deg, rgba(228, 232, 233, 0.55), rgba(169, 180, 181, 0.29))",
+              "disabled": true,
+              "edge": "none",
+              "id": "w1",
+              "ink": "rgb(92, 114, 121)"
+            },
+            {
+              "background": "linear-gradient(150deg, rgb(34, 125, 148), rgb(17, 82, 104))",
+              "disabled": false,
+              "edge": "block",
+              "id": "w2",
+              "ink": "rgb(244, 253, 255)"
+            },
+            {
+              "background": "linear-gradient(150deg, rgba(228, 232, 233, 0.55), rgba(169, 180, 181, 0.29))",
+              "disabled": true,
+              "edge": "none",
+              "id": "w3",
+              "ink": "rgb(92, 114, 121)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errorsStandalone": [],
+  "limitations": [
+    "No native build or device test",
+    "No system VoiceOver, complete English localization, or device frame timing test",
+    "Live motion screenshots are browser frames; stable screenshot capture waits for animations to finish",
+    "Historical comparison-tab MutationObserver issue is not claimed fixed"
+  ],
+  "comparison": {
+    "screenshot": "light-dark-eligibility.jpg",
+    "errors": [],
+    "observed": [
+      "light: 50% disabled grey, 100% enabled rim",
+      "dark: 50% disabled grey, 100% enabled rim",
+      "one shared glass dock with budget/wish/mascot"
+    ]
+  }
+}

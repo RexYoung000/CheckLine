@@ -1,0 +1,87 @@
+/* Theme-specific art: recolor original vector fills, keeping shape and relief. */
+.app[data-material-study][data-theme=light] {
+  --icon-accent: #176e85;
+  --model-top: #8bd5e9; --model-shade: #17657c; --model-mid: #287a97;
+  --model-lower: #51b2d4; --model-edge: #b0ecf7;
+  --model-rim-top: #f0feff; --model-rim-mid: #c1f3fb;
+  --model-rim-shade: #387f9c; --model-rim-bottom: #ddf9ff; --model-glint: #b3edf9;
+  --redeem-disabled-surface: linear-gradient(150deg, #e4e8e98c, #a9b4b54a);
+  --redeem-disabled-ink: #5c7279;
+}
+.app[data-material-study][data-theme=dark] {
+  --icon-accent: #b9eaf6;
+  --model-top: #b7f0ff; --model-shade: #0d4d68; --model-mid: #167c9f;
+  --model-lower: #41bedf; --model-edge: #d1f8ff;
+  --model-rim-top: #f5feff; --model-rim-mid: #a8edff;
+  --model-rim-shade: #226b89; --model-rim-bottom: #d9faff; --model-glint: #cff6ff;
+  --redeem-disabled-surface: linear-gradient(150deg, #c4ccce2b, #66707424);
+  --redeem-disabled-ink: #a9b8bd;
+}
+.app[data-material-study][data-theme] .wish-full-view { --icon-accent: #b9eaf6; }
+.app[data-material-study][data-theme] :is(.preset-art > img, .wish-preset-grid img) {
+  filter: drop-shadow(0 2px 2px var(--wish-drop));
+}
+.app[data-material-study][data-theme] :is(.icon-button, .wish-expand-button, .wish-cover-mini, .wish-view-options button, .wish-layout-switch button) { color: var(--accent); }
+.app[data-material-study][data-theme] .wish-full-view :is(.wish-cover-mini, .wish-expand-button) { color: var(--material-floating-ink); }
+
+/* Three equal slots in one glass surface. Xiaoduo remains an action, with no
+   selected tab state. It shares the capsule rather than floating outside it. */
+.app[data-material-study][data-theme] .dock {
+  width: 204px; max-width: calc(100% - 40px); height: 66px; min-height: 66px;
+  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: center; gap: 2px; padding: 5px;
+  border: 1px solid var(--material-edge); border-radius: 35px;
+  background: var(--material-block);
+  box-shadow: inset 0 1px var(--material-edge), inset 0 -1px var(--material-edge-low), 0 14px 26px -17px var(--material-shadow-deep);
+  -webkit-backdrop-filter: blur(26px) saturate(1.15);
+  backdrop-filter: blur(26px) saturate(1.15);
+}
+.app[data-material-study][data-theme] .dock-tabs { display: contents; }
+.app[data-material-study][data-theme] .dock :is(.dock-tabs > button, .agent-launch) {
+  position: relative; width: 100%; height: 54px; min-width: 0; min-height: 54px;
+  padding: 0; border: 0; border-radius: 28px; margin: 0;
+}
+.app[data-material-study][data-theme] .dock .agent-launch {
+  display: grid; place-items: center; box-shadow: none; background: transparent;
+}
+.app[data-material-study][data-theme] .dock .agent-launch::before {
+  content: ''; position: absolute; left: -2px; top: 17px; width: 1px; height: 20px;
+  background: linear-gradient(transparent, var(--material-edge), transparent); pointer-events: none;
+}
+.app[data-material-study][data-theme] .dock .agent-launch .mascot { width: 51px; height: 51px; }
+.app[data-material-study][data-theme] .dock button:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+
+/* The back's action reserve is separate from the flip surface. No transparent
+   expanded hit boxes, no hover tilt under a purchase button. */
+.app[data-material-study][data-theme] .wish-face-back { --redeem-reserve: 70px; }
+.app[data-material-study][data-theme] .wish-large-card .wish-face-back { --redeem-reserve: 86px; }
+.app[data-material-study][data-theme] .wish-back-flip-zone { bottom: var(--redeem-reserve); }
+.app[data-material-study][data-theme] .wish-liquid-actions {
+  display: flex; justify-content: center; align-items: end; padding-top: 9px;
+  min-height: 53px; width: 100%; position: relative; z-index: 6;
+  pointer-events: auto;
+}
+.app[data-material-study][data-theme] .wish-liquid-actions > .wish-redeem-button {
+  width: min(100%, 112px); min-height: 44px; padding: 10px 12px;
+  position: relative; pointer-events: auto; touch-action: manipulation;
+  border: 1px solid var(--material-edge-low);
+}
+.app[data-material-study][data-theme] .wish-large-card .wish-liquid-actions > .wish-redeem-button { width: min(100%, 200px); min-height: 52px; }
+.app[data-material-study][data-theme].large-text .wish-liquid-actions > .wish-redeem-button { min-height: 51px; }
+.app[data-material-study][data-theme] .wish-redeem-button.is-redeemable {
+  box-shadow: inset 0 1px #ffffff80, 0 0 15px -7px var(--accent);
+}
+.app[data-material-study][data-theme] .wish-redeem-button.is-redeemable::before {
+  content: ''; position: absolute; inset: 0; padding: 1.6px; border-radius: inherit;
+  background: conic-gradient(from var(--wish-button-angle), #ffffff14 0%, #ffffff25 20%, #edfcff 33%, #83d5eb 46%, #ffffff14 57%, #ffffff25 73%, #edfcff 85%, #ffffff14 100%);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); mask-composite: exclude;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor;
+  pointer-events: none; animation: wish-button-rim 3.2s linear infinite;
+}
+.app[data-material-study][data-theme] .wish-face-back .wish-liquid-actions > .wish-redeem-button:disabled {
+  opacity: .85; color: var(--redeem-disabled-ink); background: var(--redeem-disabled-surface);
+  box-shadow: inset 0 1px var(--material-edge-low); cursor: default;
+}
+.app[data-material-study][data-theme] .wish-redeem-button:disabled::before { display: none; }
+.app[data-material-study][data-theme].reduced .wish-redeem-button::before { animation: none; }
+@media (prefers-reduced-motion: reduce) { .app[data-material-study][data-theme] .wish-redeem-button::before { animation: none; } }
