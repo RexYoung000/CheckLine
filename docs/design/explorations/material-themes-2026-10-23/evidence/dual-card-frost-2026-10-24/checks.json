@@ -1,0 +1,458 @@
+{
+  "date": "2026-10-24",
+  "scope": "Only the isolated light/dark budget main cards. No native App or full-page rollout.",
+  "latestDecision": "Remove both noise layers after Rex found the lower card rough. Keep transmitted rear planes, specular thickness, liquid volume and bubbles.",
+  "observations": [
+    {
+      "scenario": "1120-no-grain",
+      "observed": {
+        "noiseFilters": 0,
+        "scrollWidth": 1120,
+        "themes": [
+          {
+            "background": "rgb(249, 251, 253)",
+            "farBubbles": 10,
+            "geometry": "352x300",
+            "ice": "#37b9e8",
+            "mode": "light",
+            "nearBubbles": 6,
+            "surface": 1
+          },
+          {
+            "background": "rgb(12, 17, 23)",
+            "farBubbles": 10,
+            "geometry": "352x300",
+            "ice": "#37b9e8",
+            "mode": "dark",
+            "nearBubbles": 6,
+            "surface": 1
+          }
+        ],
+        "width": 1120
+      }
+    },
+    {
+      "scenario": "right-light",
+      "observed": {
+        "bubbleGlint": "rotate(88.20)",
+        "caustics": [
+          "330.89",
+          "330.89"
+        ],
+        "faceCentres": [
+          "0.8648",
+          "0.8648"
+        ],
+        "value": "98"
+      }
+    },
+    {
+      "scenario": "pointer-centre",
+      "observed": {
+        "faceCentres": [
+          "0.5000",
+          "0.5000"
+        ],
+        "value": "50"
+      }
+    },
+    {
+      "scenario": "reset-left",
+      "observed": {
+        "faceCentres": [
+          "0.1352",
+          "0.1352"
+        ],
+        "value": "2"
+      }
+    },
+    {
+      "scenario": "320-stacked",
+      "observed": {
+        "columns": "288px",
+        "scrollWidth": 320,
+        "width": 320
+      }
+    },
+    {
+      "scenario": "console-errors",
+      "observed": []
+    }
+  ],
+  "sourceChecks": {
+    "uniqueIds": true,
+    "svgReferencesResolve": true,
+    "noNoiseFilterOrLayer": true,
+    "lightIceTintUnchanged": true,
+    "darkGroundUnchanged": true,
+    "newDependencies": false
+  },
+  "contrast": {
+    "method": "Approximate adjacent-background samples in 1120x850 JPEG, not comprehensive accessibility validation.",
+    "samples": [
+      {
+        "image": "pair-default.jpg",
+        "role": "light label",
+        "sample": [
+          421,
+          481
+        ],
+        "background": [
+          158,
+          209,
+          236
+        ],
+        "contrast": 5.11
+      },
+      {
+        "image": "pair-default.jpg",
+        "role": "dark label",
+        "sample": [
+          943,
+          481
+        ],
+        "background": [
+          54,
+          110,
+          147
+        ],
+        "contrast": 5.51
+      },
+      {
+        "image": "pair-default.jpg",
+        "role": "light amount",
+        "sample": [
+          306,
+          521
+        ],
+        "background": [
+          160,
+          211,
+          238
+        ],
+        "contrast": 7.2
+      },
+      {
+        "image": "pair-default.jpg",
+        "role": "dark amount",
+        "sample": [
+          828,
+          521
+        ],
+        "background": [
+          52,
+          102,
+          135
+        ],
+        "contrast": 6.18
+      },
+      {
+        "image": "pair-default.jpg",
+        "role": "light meta",
+        "sample": [
+          280,
+          327
+        ],
+        "background": [
+          192,
+          223,
+          243
+        ],
+        "contrast": 6.03
+      },
+      {
+        "image": "pair-default.jpg",
+        "role": "dark meta",
+        "sample": [
+          802,
+          327
+        ],
+        "background": [
+          126,
+          191,
+          223
+        ],
+        "contrast": 6.41
+      },
+      {
+        "image": "pair-default.jpg",
+        "role": "light title",
+        "sample": [
+          220,
+          293
+        ],
+        "background": [
+          213,
+          235,
+          248
+        ],
+        "contrast": 10.08
+      },
+      {
+        "image": "pair-default.jpg",
+        "role": "dark title",
+        "sample": [
+          742,
+          293
+        ],
+        "background": [
+          169,
+          211,
+          233
+        ],
+        "contrast": 9.21
+      },
+      {
+        "image": "pair-right-light.jpg",
+        "role": "light label",
+        "sample": [
+          421,
+          481
+        ],
+        "background": [
+          158,
+          209,
+          236
+        ],
+        "contrast": 5.11
+      },
+      {
+        "image": "pair-right-light.jpg",
+        "role": "dark label",
+        "sample": [
+          943,
+          481
+        ],
+        "background": [
+          54,
+          110,
+          147
+        ],
+        "contrast": 5.51
+      },
+      {
+        "image": "pair-right-light.jpg",
+        "role": "light amount",
+        "sample": [
+          306,
+          521
+        ],
+        "background": [
+          160,
+          211,
+          238
+        ],
+        "contrast": 7.2
+      },
+      {
+        "image": "pair-right-light.jpg",
+        "role": "dark amount",
+        "sample": [
+          828,
+          521
+        ],
+        "background": [
+          52,
+          102,
+          135
+        ],
+        "contrast": 6.18
+      },
+      {
+        "image": "pair-right-light.jpg",
+        "role": "light meta",
+        "sample": [
+          280,
+          327
+        ],
+        "background": [
+          185,
+          222,
+          241
+        ],
+        "contrast": 5.91
+      },
+      {
+        "image": "pair-right-light.jpg",
+        "role": "dark meta",
+        "sample": [
+          802,
+          327
+        ],
+        "background": [
+          112,
+          182,
+          218
+        ],
+        "contrast": 5.79
+      },
+      {
+        "image": "pair-right-light.jpg",
+        "role": "light title",
+        "sample": [
+          220,
+          293
+        ],
+        "background": [
+          179,
+          217,
+          240
+        ],
+        "contrast": 8.33
+      },
+      {
+        "image": "pair-right-light.jpg",
+        "role": "dark title",
+        "sample": [
+          742,
+          293
+        ],
+        "background": [
+          97,
+          175,
+          213
+        ],
+        "contrast": 6.01
+      },
+      {
+        "image": "pair-centre-light.jpg",
+        "role": "light label",
+        "sample": [
+          421,
+          481
+        ],
+        "background": [
+          158,
+          209,
+          236
+        ],
+        "contrast": 5.11
+      },
+      {
+        "image": "pair-centre-light.jpg",
+        "role": "dark label",
+        "sample": [
+          943,
+          481
+        ],
+        "background": [
+          54,
+          110,
+          147
+        ],
+        "contrast": 5.51
+      },
+      {
+        "image": "pair-centre-light.jpg",
+        "role": "light amount",
+        "sample": [
+          306,
+          521
+        ],
+        "background": [
+          160,
+          211,
+          238
+        ],
+        "contrast": 7.2
+      },
+      {
+        "image": "pair-centre-light.jpg",
+        "role": "dark amount",
+        "sample": [
+          828,
+          521
+        ],
+        "background": [
+          52,
+          102,
+          135
+        ],
+        "contrast": 6.18
+      },
+      {
+        "image": "pair-centre-light.jpg",
+        "role": "light meta",
+        "sample": [
+          280,
+          327
+        ],
+        "background": [
+          221,
+          238,
+          248
+        ],
+        "contrast": 7.06
+      },
+      {
+        "image": "pair-centre-light.jpg",
+        "role": "dark meta",
+        "sample": [
+          802,
+          327
+        ],
+        "background": [
+          179,
+          217,
+          236
+        ],
+        "contrast": 8.66
+      },
+      {
+        "image": "pair-centre-light.jpg",
+        "role": "light title",
+        "sample": [
+          220,
+          293
+        ],
+        "background": [
+          208,
+          231,
+          245
+        ],
+        "contrast": 9.71
+      },
+      {
+        "image": "pair-centre-light.jpg",
+        "role": "dark title",
+        "sample": [
+          742,
+          293
+        ],
+        "background": [
+          158,
+          206,
+          229
+        ],
+        "contrast": 8.68
+      }
+    ]
+  },
+  "referenceObservation": {
+    "source": "reference/r3-focus.png",
+    "adopted": "Localized white reflection, softened transmitted rear planes, edge thickness, contact depth and liquid absorption. No surface noise.",
+    "groundAdaptation": "Neutral white/near-black grounds with ice-blue faces.",
+    "representativeRgb": {
+      "r3UpperRight": [
+        92,
+        191,
+        226
+      ],
+      "currentDarkUpperRight": [
+        96,
+        174,
+        213
+      ],
+      "r3Liquid": [
+        52,
+        123,
+        150
+      ],
+      "currentDarkLiquid": [
+        53,
+        107,
+        143
+      ]
+    }
+  }
+}
