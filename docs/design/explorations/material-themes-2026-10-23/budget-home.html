@@ -4708,6 +4708,39 @@ body.material-embedded .app { width: 100%!important; height: 100dvh; min-height:
 .app[data-home-material][data-theme=dark] .cartridge-world:not(.library-open) :is(.home-tile,.cl-receipt-card){box-shadow:inset 0 1px var(--dui-highlight),0 6px 14px -13px #0009}
 .app[data-home-material][data-theme=dark] :is(.dm-subpage,.wish-home,.reader-drawer-header,.dock) :is(button,select):focus-visible{outline-color:var(--dui-text)}
 
+/* Light UI follows the same neutral roles as dark-ui.css. Card optics and
+   artwork keep their accepted ice colors; these rules only paint interface roles. */
+.app[data-home-material][data-theme=light]{
+  --lui-canvas:#f8f8f8;--lui-panel:#fbfbfcf7;--lui-surface:#fffffff0;--lui-control:#f0f0f2;--lui-selected:#e4e4e8;
+  --lui-text:#1c1c1f;--lui-muted:#6e6e76;--lui-line:#11111810;--lui-highlight:#ffffffc2;--lui-primary:#242426;--lui-primary-ink:#fff;
+  --hm-ground:var(--lui-canvas);--hm-panel-ink:var(--lui-text);--hm-panel-secondary:var(--lui-muted);--hm-panel-edge:var(--lui-line);
+  --hm-tile:var(--lui-surface);--hm-receipt:#ffffffed;--hm-receipt-back:#ededf0cc;--hm-muted:var(--lui-muted);
+  --hm-nav:#fffffff0;--hm-nav-selected:var(--lui-selected);--hm-accent:var(--lui-text);
+  --dm-sheet:var(--lui-panel);--dm-primary:var(--lui-primary);--dm-primary-ink:var(--lui-primary-ink);
+  --wm-focus:#f7f7f8ed;--wm-disabled:#e7e7ea;--wm-disabled-ink:#85858c;
+}
+.app[data-home-material][data-theme=light]:is(:has(.budget-home-head),:has(.dm-detail-card),:has(.dm-subpage),:has(.wish-home)):not(:has(.library-open)){
+  --ink:var(--lui-text);--muted:var(--lui-muted);--faint:#777780;--accent:var(--lui-text);--accent-soft:#1111180a;--line:var(--lui-line);--surface:var(--lui-panel);--glass:var(--hm-nav);
+  --material-panel:var(--lui-panel);--material-full-panel:var(--lui-panel);--material-block:var(--lui-surface);--material-field:var(--lui-control);--material-control:var(--lui-control);--material-selected:var(--lui-selected);
+  --material-edge:var(--lui-line);--material-edge-low:var(--lui-line);--material-primary:var(--lui-primary);--material-primary-ink:var(--lui-primary-ink);--icon-accent:var(--lui-text);
+}
+.app[data-home-material][data-theme=light] .dm-subpage :is(.record-row,.history-row,.amount-block:not(.no-bg),.calendar-grid){box-shadow:inset 0 1px var(--lui-highlight),0 3px 12px -10px #17171b24}
+.app[data-home-material][data-theme=light] .dm-subpage :is(select,.tertiary,.secondary){background:var(--lui-control);box-shadow:inset 0 1px var(--lui-highlight)}
+.app[data-home-material][data-theme=light] .dm-subpage .chart .bar{background:#b4b4bb;box-shadow:inset 0 1px #ffffff80;border-color:#1111180a}
+.app[data-home-material][data-theme=light] .dm-subpage .chart .bar.selected{background:var(--lui-primary);box-shadow:none}
+.app[data-home-material][data-theme=light] .dm-subpage .calendar-grid>button.has-record{background:var(--lui-selected)}
+.app[data-home-material][data-theme=light] .dm-subpage .calendar-grid>button.selected{background:var(--lui-primary);color:var(--lui-primary-ink);box-shadow:none}
+.app[data-home-material][data-theme=light] .reader-drawer:has(:is(.dm-detail-card,.dm-subpage,.wish-wallet-page,.wish-entry-page)) .detail-head .icon-button{box-shadow:inset 0 1px var(--lui-highlight)}
+.app[data-home-material][data-theme=light] .reader-drawer:has(.dm-detail-card) :is(.restored-budget-limit,.restored-destinations>button){box-shadow:inset 0 1px var(--lui-highlight),0 3px 12px -10px #17171b24}
+.app[data-home-material][data-theme=light] .wish-library :is(.wish-balance-bar,.wish-phase-tabs,.wish-view-options){box-shadow:inset 0 1px var(--lui-highlight)}
+.app[data-home-material][data-theme=light] .wish-library :is(.wish-phase-tabs button[aria-selected=true],.wish-view-options button[aria-pressed=true]){box-shadow:inset 0 1px #ffffff80}
+.app[data-home-material][data-theme=light] :is(.wish-wallet-v29 .wish-wallet-hero,.wish-entry-v29 .wish-entry-hero){--ink:var(--lui-text);--muted:var(--lui-muted);background:var(--lui-surface);color:var(--lui-text);border-color:var(--lui-line);box-shadow:inset 0 1px var(--lui-highlight)}
+.app[data-home-material][data-theme=light] :is(.wish-ledger-row.wish-ledger-v29,.wish-fact-block,.wish-ledger-empty){box-shadow:inset 0 1px var(--lui-highlight),inset 0 0 0 1px var(--lui-line)}
+.app[data-home-material][data-theme=light] .cartridge-world:not(.library-open) .console-shell::before{background:linear-gradient(180deg,#ffffff99,#e9e9ec20 220px,transparent 520px)}
+.app[data-home-material][data-theme=light] .cartridge-world:not(.library-open) .console-lip path{stroke:#fff;stroke-opacity:.38}
+.app[data-home-material][data-theme=light] .cartridge-world:not(.library-open) :is(.home-tile,.cl-receipt-card){box-shadow:inset 0 1px var(--lui-highlight),0 3px 12px -10px #17171b24}
+.app[data-home-material][data-theme=light] :is(.dm-subpage,.wish-home,.reader-drawer-header,.dock) :is(button,select):focus-visible{outline-color:var(--lui-text)}
+
 </style></head>
 <body>
   <header class="review-header"><div><span class="wordmark">CheckLine<span class="brand-dot"></span></span><span class="review-label">透光材质 · 浅暗主题研究</span></div><div class="material-toolbar"><div class="material-theme-group" role="group" aria-label="样稿主题"><button data-material-theme="light" aria-pressed="true">浅色</button><button data-material-theme="dark" aria-pressed="false">暗色</button></div><a class="material-compare" href="material-compare-20261023.html" target="_blank" rel="noreferrer">并排对照</a><span class="prototype-badge">隔离示例 · App 未改动</span></div></header>

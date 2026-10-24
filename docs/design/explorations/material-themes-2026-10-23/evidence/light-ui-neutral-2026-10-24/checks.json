@@ -1,0 +1,328 @@
+{
+  "baseline": "a944f14",
+  "scope": "Light HTML UI only; preserve dark UI and physical ice materials",
+  "cardOpticsUnchanged": true,
+  "cardOpticsBefore": {
+    "face": {
+      "background": "radial-gradient(at 9% 0px, rgba(255, 255, 255, 0.72), rgba(0, 0, 0, 0) 57%) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 0.215686 0.72549 0.909804 / 0.28) none repeat scroll 0% 0% / auto padding-box border-box",
+      "color": "rgb(18, 56, 75)",
+      "shadow": "rgba(255, 255, 255, 0.85) 1px 1.5px 0px 0px inset, rgba(108, 171, 194, 0.267) -1px -1px 0px 0px inset, rgba(16, 61, 82, 0.6) 0px -4px 7px -6px inset, rgba(22, 64, 90, 0.14) 0px 9px 17px -14px"
+    },
+    "tokens": {
+      "--hm-amount-ink": "#103d52",
+      "--hm-bubble-strength": ".94",
+      "--hm-ice": "#37b9e8",
+      "--hm-ice-alpha": ".28",
+      "--hm-ink": "#12384b",
+      "--hm-meta-ink": "#27526a",
+      "--hm-reflection": "#ffffff",
+      "--hm-reflection-mid": ".20",
+      "--hm-reflection-top": ".78",
+      "--hm-water-base-color": "rgb(55 185 232 / .28)",
+      "--hm-water-mid-color": "rgb(55 185 232 / .22)",
+      "--hm-water-top-color": "rgb(55 185 232 / .16)"
+    }
+  },
+  "cardOpticsAfter": {
+    "face": {
+      "background": "radial-gradient(at 9% 0px, rgba(255, 255, 255, 0.72), rgba(0, 0, 0, 0) 57%) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 0.215686 0.72549 0.909804 / 0.28) none repeat scroll 0% 0% / auto padding-box border-box",
+      "color": "rgb(18, 56, 75)",
+      "shadow": "rgba(255, 255, 255, 0.85) 1px 1.5px 0px 0px inset, rgba(108, 171, 194, 0.267) -1px -1px 0px 0px inset, rgba(16, 61, 82, 0.6) 0px -4px 7px -6px inset, rgba(22, 64, 90, 0.14) 0px 9px 17px -14px"
+    },
+    "tokens": {
+      "--hm-amount-ink": "#103d52",
+      "--hm-bubble-strength": ".94",
+      "--hm-ice": "#37b9e8",
+      "--hm-ice-alpha": ".28",
+      "--hm-ink": "#12384b",
+      "--hm-meta-ink": "#27526a",
+      "--hm-reflection": "#ffffff",
+      "--hm-reflection-mid": ".20",
+      "--hm-reflection-top": ".78",
+      "--hm-water-base-color": "rgb(55 185 232 / .28)",
+      "--hm-water-mid-color": "rgb(55 185 232 / .22)",
+      "--hm-water-top-color": "rgb(55 185 232 / .16)"
+    }
+  },
+  "lightPages390": [
+    {
+      "view": "home",
+      "ground": "#f8f8f8",
+      "overflow": 0,
+      "size": [
+        390,
+        844
+      ],
+      "ui": [
+        {
+          "background": "rgba(255, 255, 255, 0.94) none repeat scroll 0% 0% / auto padding-box border-box",
+          "color": "rgb(28, 28, 31)",
+          "selector": ".dock"
+        }
+      ]
+    },
+    {
+      "view": "detail",
+      "ground": "#f8f8f8",
+      "overflow": 0,
+      "size": [
+        390,
+        844
+      ],
+      "ui": [
+        {
+          "background": "rgba(251, 251, 252, 0.97) none repeat scroll 0% 0% / auto padding-box border-box",
+          "color": "rgb(28, 28, 31)",
+          "selector": ".reader-drawer"
+        },
+        {
+          "background": "rgba(255, 255, 255, 0.94) none repeat scroll 0% 0% / auto padding-box border-box",
+          "color": "rgb(28, 28, 31)",
+          "selector": ".dock"
+        }
+      ]
+    },
+    {
+      "view": "budget-records",
+      "ground": "#f8f8f8",
+      "overflow": 0,
+      "size": [
+        390,
+        844
+      ],
+      "ui": [
+        {
+          "background": "rgba(251, 251, 252, 0.97) none repeat scroll 0% 0% / auto padding-box border-box",
+          "color": "rgb(28, 28, 31)",
+          "selector": ".reader-drawer"
+        },
+        {
+          "background": "rgba(255, 255, 255, 0.94) none repeat scroll 0% 0% / auto padding-box border-box",
+          "color": "rgb(28, 28, 31)",
+          "selector": ".dm-subpage .record-row"
+        },
+        {
+          "background": "rgba(255, 255, 255, 0.94) none repeat scroll 0% 0% / auto padding-box border-box",
+          "color": "rgb(28, 28, 31)",
+          "selector": ".dock"
+        }
+      ]
+    },
+    {
+      "view": "trend",
+      "ground": "#f8f8f8",
+      "overflow": 0,
+      "size": [
+        390,
+        844
+      ],
+      "ui": [
+        {
+          "background": "rgba(251, 251, 252, 0.97) none repeat scroll 0% 0% / auto padding-box border-box",
+          "color": "rgb(28, 28, 31)",
+          "selector": ".reader-drawer"
+        },
+        {
+          "background": "rgba(255, 255, 255, 0.94) none repeat scroll 0% 0% / auto padding-box border-box",
+          "color": "rgb(28, 28, 31)",
+          "selector": ".dm-subpage .record-row"
+        },
+        {
+          "background": "rgba(255, 255, 255, 0.94) none repeat scroll 0% 0% / auto padding-box border-box",
+          "color": "rgb(28, 28, 31)",
+          "selector": ".dm-subpage .calendar-grid"
+        },
+        {
+          "background": "rgb(36, 36, 38) none repeat scroll 0% 0% / auto padding-box border-box",
+          "color": "rgb(255, 255, 255)",
+          "selector": ".dm-subpage .calendar-grid>button.selected"
+        },
+        {
+          "background": "rgba(255, 255, 255, 0.94) none repeat scroll 0% 0% / auto padding-box border-box",
+          "color": "rgb(28, 28, 31)",
+          "selector": ".dock"
+        }
+      ]
+    },
+    {
+      "view": "history",
+      "ground": "#f8f8f8",
+      "overflow": 0,
+      "size": [
+        390,
+        844
+      ],
+      "ui": [
+        {
+          "background": "rgba(251, 251, 252, 0.97) none repeat scroll 0% 0% / auto padding-box border-box",
+          "color": "rgb(28, 28, 31)",
+          "selector": ".reader-drawer"
+        },
+        {
+          "background": "rgba(255, 255, 255, 0.94) none repeat scroll 0% 0% / auto padding-box border-box",
+          "color": "rgb(28, 28, 31)",
+          "selector": ".dm-subpage .history-row"
+        },
+        {
+          "background": "rgba(255, 255, 255, 0.94) none repeat scroll 0% 0% / auto padding-box border-box",
+          "color": "rgb(28, 28, 31)",
+          "selector": ".dock"
+        }
+      ]
+    },
+    {
+      "view": "info",
+      "ground": "#f8f8f8",
+      "overflow": 0,
+      "size": [
+        390,
+        844
+      ],
+      "ui": [
+        {
+          "background": "rgba(251, 251, 252, 0.97) none repeat scroll 0% 0% / auto padding-box border-box",
+          "color": "rgb(28, 28, 31)",
+          "selector": ".reader-drawer"
+        },
+        {
+          "background": "rgba(255, 255, 255, 0.94) none repeat scroll 0% 0% / auto padding-box border-box",
+          "color": "rgb(28, 28, 31)",
+          "selector": ".dm-subpage .amount-block"
+        },
+        {
+          "background": "rgba(255, 255, 255, 0.94) none repeat scroll 0% 0% / auto padding-box border-box",
+          "color": "rgb(28, 28, 31)",
+          "selector": ".dock"
+        }
+      ]
+    },
+    {
+      "view": "wallet",
+      "ground": "#f8f8f8",
+      "overflow": 0,
+      "size": [
+        390,
+        844
+      ],
+      "ui": [
+        {
+          "background": "rgba(251, 251, 252, 0.97) none repeat scroll 0% 0% / auto padding-box border-box",
+          "color": "rgb(28, 28, 31)",
+          "selector": ".reader-drawer"
+        },
+        {
+          "background": "rgba(255, 255, 255, 0.94) none repeat scroll 0% 0% / auto padding-box border-box",
+          "color": "rgb(28, 28, 31)",
+          "selector": ".wish-wallet-hero"
+        },
+        {
+          "background": "rgba(255, 255, 255, 0.94) none repeat scroll 0% 0% / auto padding-box border-box",
+          "color": "rgb(28, 28, 31)",
+          "selector": ".dock"
+        }
+      ]
+    }
+  ],
+  "flows": {
+    "filteredEmpty": "待确认已清空。",
+    "recordsRestored": 6,
+    "calendar": "超市\n10月21日\n¥180",
+    "editPanel": {
+      "background": "rgba(251, 251, 252, 0.97) none repeat scroll 0% 0% / auto padding-box border-box",
+      "button": "rgb(36, 36, 38) none repeat scroll 0% 0% / auto padding-box border-box",
+      "buttonInk": "rgb(255, 255, 255)",
+      "foreground": "rgb(28, 28, 31)"
+    },
+    "limitUnchanged": "¥3,000",
+    "incomplete": {
+      "background": "rgb(231, 231, 234) none repeat scroll 0% 0% / auto padding-box border-box",
+      "color": "rgb(133, 133, 140)",
+      "disabled": true,
+      "status": "incomplete"
+    },
+    "ready": {
+      "background": "rgb(36, 36, 38) none repeat scroll 0% 0% / auto padding-box border-box",
+      "color": "rgb(255, 255, 255)",
+      "disabled": false,
+      "height": 44,
+      "rim": "rgba(0, 0, 0, 0) conic-gradient(from 3.7125deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.145) 20%, rgb(237, 252, 255) 33%, rgb(131, 213, 235) 46%, rgba(255, 255, 255, 0.08) 57%, rgba(255, 255, 255, 0.145) 73%, rgb(237, 252, 255) 85%, rgba(255, 255, 255, 0.08) 100%) repeat scroll 0% 0% / auto padding-box border-box",
+      "status": "ready",
+      "width": 112
+    }
+  },
+  "responsive": [
+    {
+      "view": "trend",
+      "overflow": 0,
+      "reduced": true,
+      "size": [
+        320,
+        740
+      ],
+      "spheres": []
+    },
+    {
+      "view": "wish-back",
+      "overflow": 0,
+      "reduced": true,
+      "size": [
+        320,
+        740
+      ],
+      "spheres": [
+        {
+          "animation": "none",
+          "border": "0px"
+        },
+        {
+          "animation": "none",
+          "border": "0px"
+        },
+        {
+          "animation": "none",
+          "border": "0px"
+        },
+        {
+          "animation": "none",
+          "border": "0px"
+        },
+        {
+          "animation": "none",
+          "border": "0px"
+        },
+        {
+          "animation": "none",
+          "border": "0px"
+        },
+        {
+          "animation": "none",
+          "border": "0px"
+        },
+        {
+          "animation": "none",
+          "border": "0px"
+        },
+        {
+          "animation": "none",
+          "border": "0px"
+        },
+        {
+          "animation": "none",
+          "border": "0px"
+        }
+      ]
+    }
+  ],
+  "darkUiRetained": {
+    "card": "radial-gradient(at 9% 0px, rgba(244, 252, 255, 0.69), rgba(0, 0, 0, 0) 57%) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 0.215686 0.72549 0.909804 / 0.78) none repeat scroll 0% 0% / auto padding-box border-box",
+    "ground": "#0b0b0d",
+    "newLightRole": "",
+    "ui": "rgba(28, 28, 31, 0.9) none repeat scroll 0% 0% / auto padding-box border-box"
+  },
+  "standaloneErrors": [],
+  "limitations": [
+    "Native App untouched; no device acceptance",
+    "No new full VoiceOver or system text scaling acceptance",
+    "Previously recorded paired-frame diagnostic is not claimed fixed"
+  ]
+}
