@@ -1814,12 +1814,15 @@ function hmBubbleField(){
 // The optical palette and mean fill placement remain those of the home study.
 function hmLiquidShape(ratio,time,tilt=0,impact=0){
   const edge=Math.max(0,Math.min(1,ratio/.12,(1-ratio)/.12));
-  const amplitude=4.2*edge*(.92+.08*Math.sin(time*.37));
+  const amplitude=5.8*edge*(.92+.08*Math.sin(time*.37));
+  // Keep combined drag/contact displacement below four SVG units. This
+  // preserves a thin free surface even when a fast switch lands mid-sway.
+  const motionScale=4/Math.hypot(4,Math.abs(tilt)+Math.abs(impact));
   const front=[],back=[],tau=Math.PI*2;
   for(let i=0;i<=40;i++){
     const u=i/40,x=u*400;
-    const ripple=amplitude*(.78*Math.sin(tau*u-time*.79)+.22*Math.sin(tau*2*u+time*.47+.8));
-    const y=14+ripple+edge*(tilt*Math.cos(Math.PI*u)+impact*Math.cos(tau*u));
+    const ripple=amplitude*(.78*Math.sin(tau*u-time*.86)+.22*Math.sin(tau*2*u+time*.51+.8));
+    const y=14+ripple+edge*motionScale*(tilt*Math.cos(Math.PI*u)+impact*Math.cos(tau*u));
     front.push([x,y]);
     back.push([x,y-edge*(3.2+.65*Math.sin(tau*u+time*.31))]);
   }
@@ -1842,7 +1845,7 @@ function hmLiquidWaterMarkup(c,id){
 }
 function hmStartLiquid(){
   let svg=null,paths=null,ratio=0,frame=0,last=0,time=0,phase=reader.phase;
-  let tilt=0,tiltVelocity=0,impact=0,impactVelocity=0;
+  let tilt=0,tiltVelocity=0,impact=0,impactVelocity=0,switchDirection=0;
   const clamp=(x,min,max)=>Math.max(min,Math.min(max,x));
   const media=matchMedia('(prefers-reduced-motion:reduce)');
   function paint(staticView=false){
@@ -1866,7 +1869,7 @@ function hmStartLiquid(){
   }
   function stop(reason){
     cancelAnimationFrame(frame);frame=0;last=0;
-    tilt=tiltVelocity=impact=impactVelocity=0;
+    tilt=tiltVelocity=impact=impactVelocity=0;switchDirection=0;
     if(svg)svg.dataset.liquidState=reason;
     if(reason==='reduced')paint(true);
   }
@@ -1875,9 +1878,9 @@ function hmStartLiquid(){
     // Cap time after a blocked main thread; returning from a pause never seeks.
     const dt=last?Math.min(.032,(now-last)/1000):1/60;last=now;
     time+=dt*(reader.phase==='unplugged'?.68:1);
-    const d=reader.drag,target=d?.type==='card'&&d.locked?clamp(-d.dx/24,-4.5,4.5):0;
-    tiltVelocity+=(42*(target-tilt)-9*tiltVelocity)*dt;tilt+=tiltVelocity*dt;
-    impactVelocity+=(-64*impact-6.8*impactVelocity)*dt;impact+=impactVelocity*dt;
+    const d=reader.drag,target=d?.type==='card'&&d.locked?clamp(-d.dx/22,-5.8,5.8):0;
+    tiltVelocity+=(38*(target-tilt)-7.8*tiltVelocity)*dt;tilt+=tiltVelocity*dt;
+    impactVelocity+=(-48*impact-5.6*impactVelocity)*dt;impact+=impactVelocity*dt;
     paint();frame=requestAnimationFrame(tick);
   }
   function sync(){
@@ -1888,7 +1891,19 @@ function hmStartLiquid(){
       ratio=svg?Number(svg.parentElement.dataset.liquidRatio):0;paint(reducedMotion());
     }
     if(phase!==reader.phase){
-      if(reader.phase==='charging'&&!pausedReason())impactVelocity=24;
+      // Transfer horizontal momentum to the promoted card, then give the
+      // seated liquid a smaller directional after-sway at actual contact.
+      if(reader.phase==='changing'){
+        switchDirection=Math.sign(reader.stackDirection)||1;
+        if(!pausedReason())tiltVelocity=-switchDirection*30;
+      }
+      if(reader.phase==='charging'){
+        if(!pausedReason()){
+          impactVelocity=54;
+          if(switchDirection)tiltVelocity=-switchDirection*26;
+        }
+        switchDirection=0;
+      }
       phase=reader.phase;
     }
     const reason=pausedReason();if(reason){stop(reason);return;}

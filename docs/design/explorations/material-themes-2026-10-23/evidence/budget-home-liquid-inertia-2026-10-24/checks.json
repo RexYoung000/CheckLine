@@ -1,0 +1,226 @@
+{
+  "geometry": {
+    "maxMeanError": 0.0013750000000030127,
+    "maxIdleFrameStepAt60Hz": 0.08000000000000007,
+    "smallestRearY": 4.16,
+    "largestFrontY": 20.88,
+    "frontBackNeverCross": true,
+    "emptyFullFlat": true
+  },
+  "insertion": {
+    "unscaledPeak": 4.307324752188864,
+    "impactAtTwoSeconds": 0.007969259643379262,
+    "combinedInertiaLimit": 4
+  },
+  "paletteAndMaterialCssUnchanged": true,
+  "acceptedCardPairUnchanged": true,
+  "runtime": {
+    "viewport": "390x844; 1120 paired",
+    "themes": [
+      "light",
+      "dark"
+    ],
+    "insertEject": "passed; remaining 1,280 and used ¥1,720",
+    "switch": "month -> learning (full surface) -> month",
+    "directionalInertia": {
+      "peakEdgeDifference": 3.23,
+      "samples": [
+        {
+          "ms": 0,
+          "phase": "changing",
+          "edgeDifference": -3.23
+        },
+        {
+          "ms": 108,
+          "phase": "inserting",
+          "edgeDifference": -2.45
+        },
+        {
+          "ms": 209,
+          "phase": "inserting",
+          "edgeDifference": -1.31
+        },
+        {
+          "ms": 311,
+          "phase": "charging",
+          "edgeDifference": -1.98
+        },
+        {
+          "ms": 492,
+          "phase": "charging",
+          "edgeDifference": -2.14
+        },
+        {
+          "ms": 612,
+          "phase": "charging",
+          "edgeDifference": -1.89
+        },
+        {
+          "ms": 712,
+          "phase": "charging",
+          "edgeDifference": -1.26
+        },
+        {
+          "ms": 816,
+          "phase": "charging",
+          "edgeDifference": -0.43
+        },
+        {
+          "ms": 995,
+          "phase": "charging",
+          "edgeDifference": 0.25
+        },
+        {
+          "ms": 1118,
+          "phase": "charging",
+          "edgeDifference": 0.29
+        },
+        {
+          "ms": 1197,
+          "phase": "connected",
+          "edgeDifference": 0.24
+        },
+        {
+          "ms": 1309,
+          "phase": "connected",
+          "edgeDifference": 0.14
+        },
+        {
+          "ms": 1419,
+          "phase": "connected",
+          "edgeDifference": 0.07
+        },
+        {
+          "ms": 1498,
+          "phase": "connected",
+          "edgeDifference": 0.02
+        },
+        {
+          "ms": 1621,
+          "phase": "connected",
+          "edgeDifference": -0.01
+        },
+        {
+          "ms": 1723,
+          "phase": "connected",
+          "edgeDifference": -0.02
+        },
+        {
+          "ms": 1824,
+          "phase": "connected",
+          "edgeDifference": -0.01
+        },
+        {
+          "ms": 1924,
+          "phase": "connected",
+          "edgeDifference": -0.01
+        },
+        {
+          "ms": 2003,
+          "phase": "connected",
+          "edgeDifference": -0.01
+        },
+        {
+          "ms": 2125,
+          "phase": "connected",
+          "edgeDifference": -0.01
+        },
+        {
+          "ms": 2226,
+          "phase": "connected",
+          "edgeDifference": 0.0
+        },
+        {
+          "ms": 2283,
+          "phase": "connected",
+          "edgeDifference": 0.0
+        },
+        {
+          "ms": 2428,
+          "phase": "connected",
+          "edgeDifference": 0.0
+        },
+        {
+          "ms": 2505,
+          "phase": "connected",
+          "edgeDifference": 0.01
+        },
+        {
+          "ms": 2630,
+          "phase": "connected",
+          "edgeDifference": 0.0
+        },
+        {
+          "ms": 2731,
+          "phase": "connected",
+          "edgeDifference": 0.0
+        },
+        {
+          "ms": 2832,
+          "phase": "connected",
+          "edgeDifference": 0.0
+        },
+        {
+          "ms": 2933,
+          "phase": "connected",
+          "edgeDifference": 0.0
+        },
+        {
+          "ms": 3118,
+          "phase": "connected",
+          "edgeDifference": 0.0
+        },
+        {
+          "ms": 3235,
+          "phase": "connected",
+          "edgeDifference": 0.0
+        },
+        {
+          "ms": 3336,
+          "phase": "connected",
+          "edgeDifference": 0.0
+        },
+        {
+          "ms": 3438,
+          "phase": "connected",
+          "edgeDifference": 0.0
+        },
+        {
+          "ms": 3504,
+          "phase": "connected",
+          "edgeDifference": 0.0
+        },
+        {
+          "ms": 3606,
+          "phase": "connected",
+          "edgeDifference": 0.0
+        },
+        {
+          "ms": 3723,
+          "phase": "connected",
+          "edgeDifference": 0.0
+        },
+        {
+          "ms": 3842,
+          "phase": "connected",
+          "edgeDifference": 0.0
+        }
+      ]
+    },
+    "reduced": {
+      "state": "reduced",
+      "pathStable": true,
+      "keyboardEjectInsertPathStable": true,
+      "normalRestored": true
+    },
+    "standaloneErrors": [],
+    "visualAcceptance": "pending Rex"
+  },
+  "source": {
+    "onlyLiquidModuleChanged": true,
+    "materialAndPaletteUnchanged": true,
+    "nativeUnchanged": true,
+    "reproducibleBuild": true,
+    "sha256": "5990ed91b31d2f05c1fc50fc97582bf27c2d014c365be8a0907c5aaac63ca964"
+  }
+}
