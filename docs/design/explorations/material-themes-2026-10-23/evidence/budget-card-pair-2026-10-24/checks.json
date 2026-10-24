@@ -1,0 +1,315 @@
+{
+  "date": "2026-10-24",
+  "artifact": "budget-card-pair.html",
+  "scope": "Independent HTML/SVG visual direction only. Synthetic budget example; no native app, storage, service or financial behavior.",
+  "observations": [
+    {
+      "scenario": "desktop-default",
+      "observed": {
+        "cardGeometry": [
+          {
+            "height": "300",
+            "radius": "32",
+            "width": "352"
+          },
+          {
+            "height": "300",
+            "radius": "32",
+            "width": "352"
+          }
+        ],
+        "nativeFrames": 0,
+        "panelBackgrounds": [
+          "rgb(249, 251, 253)",
+          "rgb(12, 17, 23)"
+        ],
+        "scrollWidth": 1120,
+        "width": 1120
+      }
+    },
+    {
+      "scenario": "keyboard-right-light",
+      "observed": {
+        "centres": [
+          "0.98",
+          "0.98"
+        ],
+        "description": "右上受光",
+        "value": "98"
+      }
+    },
+    {
+      "scenario": "reset-left-light",
+      "observed": {
+        "centres": [
+          "0.02",
+          "0.02"
+        ],
+        "description": "左上受光",
+        "value": "2"
+      }
+    },
+    {
+      "scenario": "320-stacked",
+      "observed": {
+        "button": {
+          "bottom": 1052.6484375,
+          "height": 44,
+          "left": 16,
+          "right": 100,
+          "top": 1008.6484375,
+          "width": 84,
+          "x": 16,
+          "y": 1008.6484375
+        },
+        "grid": "288px",
+        "panels": [
+          {
+            "bottom": 522.0234375,
+            "height": 396.625,
+            "left": 16,
+            "right": 304,
+            "top": 125.3984375,
+            "width": 288,
+            "x": 16,
+            "y": 125.3984375
+          },
+          {
+            "bottom": 936.6484375,
+            "height": 396.625,
+            "left": 16,
+            "right": 304,
+            "top": 540.0234375,
+            "width": 288,
+            "x": 16,
+            "y": 540.0234375
+          }
+        ],
+        "scrollWidth": 320,
+        "width": 320
+      }
+    },
+    {
+      "scenario": "768-pair",
+      "observed": {
+        "grid": "342px 342px",
+        "panels": [
+          {
+            "bottom": 523.59375,
+            "height": 404.65625,
+            "left": 32,
+            "right": 374,
+            "top": 118.9375,
+            "width": 342,
+            "x": 32,
+            "y": 118.9375
+          },
+          {
+            "bottom": 523.59375,
+            "height": 404.65625,
+            "left": 394,
+            "right": 736,
+            "top": 118.9375,
+            "width": 342,
+            "x": 394,
+            "y": 118.9375
+          }
+        ],
+        "scrollWidth": 768,
+        "width": 768
+      }
+    },
+    {
+      "scenario": "console",
+      "observed": []
+    },
+    {
+      "scenario": "final-html-static-check",
+      "observed": {
+        "uniqueIDs": 35,
+        "svgReferencesResolve": true,
+        "embeddedFullPagePrototype": false,
+        "serviceCalls": false
+      }
+    }
+  ],
+  "notVerified": [
+    "Rex visual acceptance",
+    "Native materials or motion",
+    "Device VoiceOver",
+    "Comprehensive accessibility or localization"
+  ],
+  "sampledScreenshotContrast": {
+    "method": "Read-only RGB sampling beside glyphs in 1120x850 browser JPEG; approximate, not a comprehensive WCAG audit. Large amount and small label are separate roles.",
+    "observations": [
+      {
+        "screenshot": "light-dark-default.jpg",
+        "element": "light label",
+        "backgroundSample": [
+          421,
+          481
+        ],
+        "rgb": [
+          60,
+          115,
+          154
+        ],
+        "contrast": 4.88
+      },
+      {
+        "screenshot": "light-dark-default.jpg",
+        "element": "dark label",
+        "backgroundSample": [
+          943,
+          481
+        ],
+        "rgb": [
+          55,
+          110,
+          149
+        ],
+        "contrast": 5.17
+      },
+      {
+        "screenshot": "light-dark-default.jpg",
+        "element": "light amount",
+        "backgroundSample": [
+          306,
+          521
+        ],
+        "rgb": [
+          54,
+          98,
+          133
+        ],
+        "contrast": 6.48
+      },
+      {
+        "screenshot": "light-dark-default.jpg",
+        "element": "dark amount",
+        "backgroundSample": [
+          828,
+          521
+        ],
+        "rgb": [
+          47,
+          91,
+          128
+        ],
+        "contrast": 7.17
+      },
+      {
+        "screenshot": "light-dark-default.jpg",
+        "element": "light title",
+        "backgroundSample": [
+          220,
+          293
+        ],
+        "rgb": [
+          199,
+          231,
+          246
+        ],
+        "contrast": 9.56
+      },
+      {
+        "screenshot": "light-dark-default.jpg",
+        "element": "dark title",
+        "backgroundSample": [
+          742,
+          293
+        ],
+        "rgb": [
+          170,
+          217,
+          237
+        ],
+        "contrast": 9.09
+      },
+      {
+        "screenshot": "light-dark-right-light.jpg",
+        "element": "light label",
+        "backgroundSample": [
+          421,
+          481
+        ],
+        "rgb": [
+          66,
+          118,
+          157
+        ],
+        "contrast": 4.65
+      },
+      {
+        "screenshot": "light-dark-right-light.jpg",
+        "element": "dark label",
+        "backgroundSample": [
+          943,
+          481
+        ],
+        "rgb": [
+          61,
+          115,
+          153
+        ],
+        "contrast": 4.81
+      },
+      {
+        "screenshot": "light-dark-right-light.jpg",
+        "element": "light amount",
+        "backgroundSample": [
+          306,
+          521
+        ],
+        "rgb": [
+          54,
+          98,
+          133
+        ],
+        "contrast": 6.48
+      },
+      {
+        "screenshot": "light-dark-right-light.jpg",
+        "element": "dark amount",
+        "backgroundSample": [
+          828,
+          521
+        ],
+        "rgb": [
+          47,
+          91,
+          128
+        ],
+        "contrast": 7.17
+      },
+      {
+        "screenshot": "light-dark-right-light.jpg",
+        "element": "light title",
+        "backgroundSample": [
+          220,
+          293
+        ],
+        "rgb": [
+          174,
+          219,
+          240
+        ],
+        "contrast": 8.38
+      },
+      {
+        "screenshot": "light-dark-right-light.jpg",
+        "element": "dark title",
+        "backgroundSample": [
+          742,
+          293
+        ],
+        "rgb": [
+          143,
+          203,
+          231
+        ],
+        "contrast": 7.78
+      }
+    ]
+  }
+}
