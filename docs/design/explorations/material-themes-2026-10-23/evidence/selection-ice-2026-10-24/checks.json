@@ -1,0 +1,717 @@
+{
+  "baseline": "d7a8fa7",
+  "scope": "HTML selection colors only; native App unchanged",
+  "initialPassObserved": [
+    "Light and dark wish phase selection follows active/done and changes list from 3 to 1",
+    "Light and dark grid/row selection follows the chosen layout",
+    "Light and dark earphone preset and cover source/mode use selection surface; cancel keeps original cover",
+    "Light and dark wish primary buttons retain neutral colors; 50% remains disabled, 100% remains enabled",
+    "Dark budget tab receives selection color and wish tab returns to neutral",
+    "Light calendar selected 21 October, linked bar and supermarket record for 180"
+  ],
+  "initialPassScreenshots": [
+    "light-wish.png",
+    "dark-wish.png",
+    "light-wish-done-row.png",
+    "light-cover.png",
+    "dark-cover.png",
+    "dark-home.png",
+    "light-calendar.png"
+  ],
+  "resumedPass": [
+    {
+      "label": "dark-calendar-selected",
+      "controls": [
+        {
+          "background": "rgb(25, 59, 76)",
+          "border": "rgb(166, 228, 250)",
+          "color": "rgb(166, 228, 250)",
+          "disabled": false,
+          "label": "预算",
+          "selected": true,
+          "shadow": "rgba(255, 255, 255, 0.063) 0px 1px 0px 0px inset",
+          "text": "预算",
+          "value": ""
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "border": "rgb(170, 170, 176)",
+          "color": "rgb(170, 170, 176)",
+          "disabled": false,
+          "label": "心愿",
+          "selected": false,
+          "shadow": "none",
+          "text": "心愿",
+          "value": ""
+        },
+        {
+          "background": "rgb(141, 220, 245)",
+          "border": "rgb(87, 155, 183)",
+          "color": "rgb(243, 243, 245)",
+          "disabled": false,
+          "label": "10月21日，¥180",
+          "selected": true,
+          "shadow": "none",
+          "text": "",
+          "value": ""
+        },
+        {
+          "background": "rgb(25, 59, 76)",
+          "border": "rgb(166, 228, 250)",
+          "color": "rgb(166, 228, 250)",
+          "disabled": false,
+          "label": "10月21日，有消费",
+          "selected": "true",
+          "shadow": "rgb(87, 155, 183) 0px 0px 0px 1px inset",
+          "text": "21",
+          "value": ""
+        }
+      ],
+      "focus": {
+        "color": "rgb(34, 59, 67)",
+        "label": null,
+        "width": "3px"
+      },
+      "height": 844,
+      "overflow": false,
+      "recordCount": 0,
+      "theme": "dark",
+      "width": 390
+    },
+    {
+      "label": "light-filter-pending",
+      "controls": [
+        {
+          "background": "rgb(226, 243, 250)",
+          "border": "rgb(23, 84, 109)",
+          "color": "rgb(23, 84, 109)",
+          "disabled": false,
+          "label": "预算",
+          "selected": true,
+          "shadow": "rgba(17, 17, 24, 0.063) 0px 1px 0px 0px inset",
+          "text": "预算",
+          "value": ""
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "border": "rgb(110, 110, 118)",
+          "color": "rgb(110, 110, 118)",
+          "disabled": false,
+          "label": "心愿",
+          "selected": false,
+          "shadow": "none",
+          "text": "心愿",
+          "value": ""
+        },
+        {
+          "background": "rgb(226, 243, 250)",
+          "border": "rgb(78, 145, 173)",
+          "color": "rgb(23, 84, 109)",
+          "disabled": false,
+          "label": "筛选消费记录",
+          "selected": false,
+          "shadow": "rgba(255, 255, 255, 0.76) 0px 1px 0px 0px inset",
+          "text": "全部记录待确认",
+          "value": "pending"
+        }
+      ],
+      "empty": "待确认已清空。",
+      "focus": {
+        "color": "rgb(34, 59, 67)",
+        "label": null,
+        "width": "3px"
+      },
+      "height": 844,
+      "overflow": false,
+      "recordCount": 0,
+      "theme": "light",
+      "width": 390
+    },
+    {
+      "label": "light-filter-all",
+      "controls": [
+        {
+          "background": "rgb(226, 243, 250)",
+          "border": "rgb(23, 84, 109)",
+          "color": "rgb(23, 84, 109)",
+          "disabled": false,
+          "label": "预算",
+          "selected": true,
+          "shadow": "rgba(17, 17, 24, 0.063) 0px 1px 0px 0px inset",
+          "text": "预算",
+          "value": ""
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "border": "rgb(110, 110, 118)",
+          "color": "rgb(110, 110, 118)",
+          "disabled": false,
+          "label": "心愿",
+          "selected": false,
+          "shadow": "none",
+          "text": "心愿",
+          "value": ""
+        },
+        {
+          "background": "rgb(240, 240, 242)",
+          "border": "rgba(17, 17, 24, 0.063)",
+          "color": "rgb(28, 28, 31)",
+          "disabled": false,
+          "label": "筛选消费记录",
+          "selected": false,
+          "shadow": "rgba(255, 255, 255, 0.76) 0px 1px 0px 0px inset",
+          "text": "全部记录待确认",
+          "value": "all"
+        }
+      ],
+      "focus": {
+        "color": "rgb(34, 59, 67)",
+        "label": null,
+        "width": "3px"
+      },
+      "height": 844,
+      "overflow": false,
+      "recordCount": 6,
+      "theme": "light",
+      "width": 390
+    },
+    {
+      "label": "dark-filter-pending",
+      "controls": [
+        {
+          "background": "rgb(25, 59, 76)",
+          "border": "rgb(166, 228, 250)",
+          "color": "rgb(166, 228, 250)",
+          "disabled": false,
+          "label": "预算",
+          "selected": true,
+          "shadow": "rgba(255, 255, 255, 0.063) 0px 1px 0px 0px inset",
+          "text": "预算",
+          "value": ""
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "border": "rgb(170, 170, 176)",
+          "color": "rgb(170, 170, 176)",
+          "disabled": false,
+          "label": "心愿",
+          "selected": false,
+          "shadow": "none",
+          "text": "心愿",
+          "value": ""
+        },
+        {
+          "background": "rgb(25, 59, 76)",
+          "border": "rgb(87, 155, 183)",
+          "color": "rgb(166, 228, 250)",
+          "disabled": false,
+          "label": "筛选消费记录",
+          "selected": false,
+          "shadow": "rgba(255, 255, 255, 0.05) 0px 1px 0px 0px inset",
+          "text": "全部记录待确认",
+          "value": "pending"
+        }
+      ],
+      "empty": "待确认已清空。",
+      "focus": {
+        "color": "rgb(34, 59, 67)",
+        "label": null,
+        "width": "3px"
+      },
+      "height": 844,
+      "overflow": false,
+      "recordCount": 0,
+      "theme": "dark",
+      "width": 390
+    },
+    {
+      "label": "dark-filter-all",
+      "controls": [
+        {
+          "background": "rgb(25, 59, 76)",
+          "border": "rgb(166, 228, 250)",
+          "color": "rgb(166, 228, 250)",
+          "disabled": false,
+          "label": "预算",
+          "selected": true,
+          "shadow": "rgba(255, 255, 255, 0.063) 0px 1px 0px 0px inset",
+          "text": "预算",
+          "value": ""
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "border": "rgb(170, 170, 176)",
+          "color": "rgb(170, 170, 176)",
+          "disabled": false,
+          "label": "心愿",
+          "selected": false,
+          "shadow": "none",
+          "text": "心愿",
+          "value": ""
+        },
+        {
+          "background": "rgba(29, 29, 32, 0.93)",
+          "border": "rgba(255, 255, 255, 0.063)",
+          "color": "rgb(243, 243, 245)",
+          "disabled": false,
+          "label": "筛选消费记录",
+          "selected": false,
+          "shadow": "rgba(255, 255, 255, 0.05) 0px 1px 0px 0px inset",
+          "text": "全部记录待确认",
+          "value": "all"
+        }
+      ],
+      "focus": {
+        "color": "rgb(34, 59, 67)",
+        "label": null,
+        "width": "3px"
+      },
+      "height": 844,
+      "overflow": false,
+      "recordCount": 6,
+      "theme": "dark",
+      "width": 390
+    },
+    {
+      "label": "light-home-nav",
+      "controls": [
+        {
+          "background": "rgb(226, 243, 250)",
+          "border": "rgb(23, 84, 109)",
+          "color": "rgb(23, 84, 109)",
+          "disabled": false,
+          "label": "预算",
+          "selected": true,
+          "shadow": "rgba(17, 17, 24, 0.063) 0px 1px 0px 0px inset",
+          "text": "预算",
+          "value": ""
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "border": "rgb(110, 110, 118)",
+          "color": "rgb(110, 110, 118)",
+          "disabled": false,
+          "label": "心愿",
+          "selected": false,
+          "shadow": "none",
+          "text": "心愿",
+          "value": ""
+        }
+      ],
+      "focus": {
+        "color": "rgb(34, 59, 67)",
+        "label": null,
+        "width": "3px"
+      },
+      "height": 844,
+      "overflow": false,
+      "recordCount": 0,
+      "theme": "light",
+      "width": 390
+    },
+    {
+      "label": "light-budget-form",
+      "controls": [
+        {
+          "background": "rgb(226, 243, 250)",
+          "border": "rgb(23, 84, 109)",
+          "color": "rgb(23, 84, 109)",
+          "disabled": false,
+          "label": "预算",
+          "selected": true,
+          "shadow": "rgba(17, 17, 24, 0.063) 0px 1px 0px 0px inset",
+          "text": "预算",
+          "value": ""
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "border": "rgb(110, 110, 118)",
+          "color": "rgb(110, 110, 118)",
+          "disabled": false,
+          "label": "心愿",
+          "selected": false,
+          "shadow": "none",
+          "text": "心愿",
+          "value": ""
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "border": "rgb(110, 110, 118)",
+          "color": "rgb(110, 110, 118)",
+          "disabled": false,
+          "label": null,
+          "selected": false,
+          "shadow": "none",
+          "text": "每月循环",
+          "value": ""
+        },
+        {
+          "background": "rgb(226, 243, 250)",
+          "border": "rgb(23, 84, 109)",
+          "color": "rgb(23, 84, 109)",
+          "disabled": false,
+          "label": null,
+          "selected": true,
+          "shadow": "rgba(17, 17, 24, 0.063) 0px 1px 0px 0px inset, rgba(13, 48, 63, 0.27) 0px 3px 8px -6px",
+          "text": "一次性",
+          "value": ""
+        },
+        {
+          "background": "rgb(36, 36, 38)",
+          "border": "rgb(255, 255, 255)",
+          "color": "rgb(255, 255, 255)",
+          "disabled": true,
+          "label": null,
+          "selected": false,
+          "shadow": "rgba(17, 17, 24, 0.063) 0px 1px 0px 0px inset, rgba(5, 45, 66, 0.12) 0px -1px 0px 0px inset, rgba(13, 48, 63, 0.27) 0px 5px 12px -10px",
+          "text": "创建预算卡",
+          "value": ""
+        }
+      ],
+      "focus": {
+        "color": "rgb(34, 59, 67)",
+        "label": null,
+        "width": "3px"
+      },
+      "height": 844,
+      "overflow": false,
+      "recordCount": 0,
+      "theme": "light",
+      "width": 390
+    },
+    {
+      "label": "预算开始日期",
+      "focusVisible": true,
+      "outlineColor": "rgb(78, 145, 173)",
+      "outlineStyle": "solid",
+      "outlineWidth": "2px",
+      "tag": "INPUT",
+      "text": ""
+    },
+    {
+      "label": "light-wish-320-reduced",
+      "controls": [
+        {
+          "background": "rgb(226, 243, 250)",
+          "border": "rgb(23, 84, 109)",
+          "color": "rgb(23, 84, 109)",
+          "disabled": false,
+          "label": null,
+          "selected": "true",
+          "shadow": "rgba(255, 255, 255, 0.5) 0px 1px 0px 0px inset",
+          "text": "未实现3",
+          "value": ""
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "border": "rgb(110, 110, 118)",
+          "color": "rgb(110, 110, 118)",
+          "disabled": false,
+          "label": null,
+          "selected": "false",
+          "shadow": "none",
+          "text": "已实现1",
+          "value": ""
+        },
+        {
+          "background": "rgb(226, 243, 250)",
+          "border": "rgb(23, 84, 109)",
+          "color": "rgb(23, 84, 109)",
+          "disabled": false,
+          "label": "卡片视图",
+          "selected": "true",
+          "shadow": "rgba(255, 255, 255, 0.5) 0px 1px 0px 0px inset",
+          "text": "",
+          "value": ""
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "border": "rgb(110, 110, 118)",
+          "color": "rgb(110, 110, 118)",
+          "disabled": false,
+          "label": "横条视图",
+          "selected": "false",
+          "shadow": "none",
+          "text": "",
+          "value": ""
+        },
+        {
+          "background": "rgb(231, 231, 234)",
+          "border": "rgba(0, 0, 0, 0)",
+          "color": "rgb(133, 133, 140)",
+          "disabled": true,
+          "label": "兑换不可用，当前进度 50%，达到 100% 后可兑换",
+          "selected": false,
+          "shadow": "rgba(255, 255, 255, 0.15) 0px 1px 0px 0px inset",
+          "text": "兑换",
+          "value": ""
+        },
+        {
+          "background": "rgb(36, 36, 38)",
+          "border": "rgba(255, 255, 255, 0.85)",
+          "color": "rgb(255, 255, 255)",
+          "disabled": false,
+          "label": "兑换，核对实际购买",
+          "selected": false,
+          "shadow": "rgba(17, 17, 24, 0.063) 0px 1px 0px 0px inset, rgba(5, 45, 66, 0.12) 0px -1px 0px 0px inset, rgba(13, 48, 63, 0.27) 0px 5px 12px -10px",
+          "text": "兑换",
+          "value": ""
+        },
+        {
+          "background": "rgb(231, 231, 234)",
+          "border": "rgba(0, 0, 0, 0)",
+          "color": "rgb(133, 133, 140)",
+          "disabled": true,
+          "label": "兑换不可用，请先填写心愿金额",
+          "selected": false,
+          "shadow": "rgba(255, 255, 255, 0.15) 0px 1px 0px 0px inset",
+          "text": "兑换",
+          "value": ""
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "border": "rgb(110, 110, 118)",
+          "color": "rgb(110, 110, 118)",
+          "disabled": false,
+          "label": "预算",
+          "selected": false,
+          "shadow": "none",
+          "text": "预算",
+          "value": ""
+        },
+        {
+          "background": "rgb(226, 243, 250)",
+          "border": "rgb(23, 84, 109)",
+          "color": "rgb(23, 84, 109)",
+          "disabled": false,
+          "label": "心愿",
+          "selected": true,
+          "shadow": "rgba(17, 17, 24, 0.063) 0px 1px 0px 0px inset",
+          "text": "心愿",
+          "value": ""
+        }
+      ],
+      "focus": {
+        "color": "rgb(34, 59, 67)",
+        "label": null,
+        "width": "3px"
+      },
+      "height": 740,
+      "overflow": false,
+      "recordCount": 0,
+      "theme": "light",
+      "width": 320
+    },
+    {
+      "label": "dark-wish-320-reduced",
+      "controls": [
+        {
+          "background": "rgb(25, 59, 76)",
+          "border": "rgb(166, 228, 250)",
+          "color": "rgb(166, 228, 250)",
+          "disabled": false,
+          "label": null,
+          "selected": "true",
+          "shadow": "rgba(255, 255, 255, 0.08) 0px 1px 0px 0px inset",
+          "text": "未实现3",
+          "value": ""
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "border": "rgb(170, 170, 176)",
+          "color": "rgb(170, 170, 176)",
+          "disabled": false,
+          "label": null,
+          "selected": "false",
+          "shadow": "none",
+          "text": "已实现1",
+          "value": ""
+        },
+        {
+          "background": "rgb(25, 59, 76)",
+          "border": "rgb(166, 228, 250)",
+          "color": "rgb(166, 228, 250)",
+          "disabled": false,
+          "label": "卡片视图",
+          "selected": "true",
+          "shadow": "rgba(255, 255, 255, 0.08) 0px 1px 0px 0px inset",
+          "text": "",
+          "value": ""
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "border": "rgb(170, 170, 176)",
+          "color": "rgb(170, 170, 176)",
+          "disabled": false,
+          "label": "横条视图",
+          "selected": "false",
+          "shadow": "none",
+          "text": "",
+          "value": ""
+        },
+        {
+          "background": "rgb(43, 43, 46)",
+          "border": "rgba(0, 0, 0, 0)",
+          "color": "rgb(153, 153, 160)",
+          "disabled": true,
+          "label": "兑换不可用，当前进度 50%，达到 100% 后可兑换",
+          "selected": false,
+          "shadow": "rgba(255, 255, 255, 0.15) 0px 1px 0px 0px inset",
+          "text": "兑换",
+          "value": ""
+        },
+        {
+          "background": "rgb(242, 242, 244)",
+          "border": "rgba(222, 248, 255, 0.69)",
+          "color": "rgb(23, 23, 25)",
+          "disabled": false,
+          "label": "兑换，核对实际购买",
+          "selected": false,
+          "shadow": "rgba(255, 255, 255, 0.063) 0px 1px 0px 0px inset, rgba(5, 45, 66, 0.12) 0px -1px 0px 0px inset, rgba(0, 8, 12, 0.65) 0px 5px 12px -10px",
+          "text": "兑换",
+          "value": ""
+        },
+        {
+          "background": "rgb(43, 43, 46)",
+          "border": "rgba(0, 0, 0, 0)",
+          "color": "rgb(153, 153, 160)",
+          "disabled": true,
+          "label": "兑换不可用，请先填写心愿金额",
+          "selected": false,
+          "shadow": "rgba(255, 255, 255, 0.15) 0px 1px 0px 0px inset",
+          "text": "兑换",
+          "value": ""
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "border": "rgb(170, 170, 176)",
+          "color": "rgb(170, 170, 176)",
+          "disabled": false,
+          "label": "预算",
+          "selected": false,
+          "shadow": "none",
+          "text": "预算",
+          "value": ""
+        },
+        {
+          "background": "rgb(25, 59, 76)",
+          "border": "rgb(166, 228, 250)",
+          "color": "rgb(166, 228, 250)",
+          "disabled": false,
+          "label": "心愿",
+          "selected": true,
+          "shadow": "rgba(255, 255, 255, 0.063) 0px 1px 0px 0px inset",
+          "text": "心愿",
+          "value": ""
+        }
+      ],
+      "focus": {
+        "color": "rgb(34, 59, 67)",
+        "label": null,
+        "width": "3px"
+      },
+      "height": 740,
+      "overflow": false,
+      "recordCount": 0,
+      "theme": "dark",
+      "width": 320
+    }
+  ],
+  "pairedPreview": {
+    "controls": {
+      "light": [
+        {
+          "background": "rgb(226, 243, 250)",
+          "color": "rgb(23, 84, 109)",
+          "label": null,
+          "selected": "true",
+          "text": "未实现3"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(110, 110, 118)",
+          "label": null,
+          "selected": "false",
+          "text": "已实现1"
+        },
+        {
+          "background": "rgb(226, 243, 250)",
+          "color": "rgb(23, 84, 109)",
+          "label": "卡片视图",
+          "selected": "true",
+          "text": ""
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(110, 110, 118)",
+          "label": "横条视图",
+          "selected": "false",
+          "text": ""
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(110, 110, 118)",
+          "label": "预算",
+          "selected": false,
+          "text": "预算"
+        },
+        {
+          "background": "rgb(226, 243, 250)",
+          "color": "rgb(23, 84, 109)",
+          "label": "心愿",
+          "selected": true,
+          "text": "心愿"
+        }
+      ],
+      "dark": [
+        {
+          "background": "rgb(25, 59, 76)",
+          "color": "rgb(166, 228, 250)",
+          "label": null,
+          "selected": "true",
+          "text": "未实现3"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(170, 170, 176)",
+          "label": null,
+          "selected": "false",
+          "text": "已实现1"
+        },
+        {
+          "background": "rgb(25, 59, 76)",
+          "color": "rgb(166, 228, 250)",
+          "label": "卡片视图",
+          "selected": "true",
+          "text": ""
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(170, 170, 176)",
+          "label": "横条视图",
+          "selected": "false",
+          "text": ""
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "color": "rgb(170, 170, 176)",
+          "label": "预算",
+          "selected": false,
+          "text": "预算"
+        },
+        {
+          "background": "rgb(25, 59, 76)",
+          "color": "rgb(166, 228, 250)",
+          "label": "心愿",
+          "selected": true,
+          "text": "心愿"
+        }
+      ]
+    },
+    "errorLogs": []
+  },
+  "limits": [
+    "No native App changes or native run",
+    "No full settlement/redemption replay, device motion performance, system VoiceOver or complete text-size audit in this color-only change"
+  ]
+}
