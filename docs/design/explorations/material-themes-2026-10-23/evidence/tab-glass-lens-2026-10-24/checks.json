@@ -1,0 +1,98 @@
+[
+  {
+    "theme": "light",
+    "view": "wish",
+    "tabs": [
+      {
+        "bg": "rgba(0, 0, 0, 0)",
+        "blur": "none",
+        "current": null,
+        "height": 54,
+        "icon": "rgb(110, 110, 118)",
+        "image": "none",
+        "label": "预算",
+        "shadow": "none",
+        "width": 62.6640625
+      },
+      {
+        "bg": "rgba(0, 0, 0, 0)",
+        "blur": "blur(12px)",
+        "current": "page",
+        "height": 54,
+        "icon": "rgb(50, 127, 157)",
+        "image": "linear-gradient(145deg, rgba(255, 255, 255, 0.65), rgba(255, 255, 255, 0.1) 52%, rgba(255, 255, 255, 0.3))",
+        "label": "心愿",
+        "shadow": "rgb(255, 255, 255) 0px 1px 1px 0px inset, rgba(24, 24, 31, 0.08) 0px -1px 1px 0px inset, rgba(255, 255, 255, 0.7) 1px 0px 1px 0px inset, rgba(24, 24, 31, 0.08) 0px 2px 5px 0px",
+        "width": 62.6640625
+      }
+    ]
+  },
+  {
+    "theme": "dark",
+    "view": "wish",
+    "tabs": [
+      {
+        "bg": "rgba(0, 0, 0, 0)",
+        "blur": "none",
+        "current": null,
+        "height": 54,
+        "icon": "rgb(170, 170, 176)",
+        "image": "none",
+        "label": "预算",
+        "shadow": "none",
+        "width": 62.6640625
+      },
+      {
+        "bg": "rgba(0, 0, 0, 0)",
+        "blur": "blur(12px)",
+        "current": "page",
+        "height": 54,
+        "icon": "rgb(167, 224, 245)",
+        "image": "linear-gradient(145deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.024) 52%, rgba(255, 255, 255, 0.07))",
+        "label": "心愿",
+        "shadow": "rgba(255, 255, 255, 0.32) 0px 1px 1px 0px inset, rgba(255, 255, 255, 0.07) 0px -1px 1px 0px inset, rgba(255, 255, 255, 0.14) 1px 0px 1px 0px inset, rgba(0, 0, 0, 0.333) 0px 2px 5px 0px",
+        "width": 62.6640625
+      }
+    ]
+  },
+  {
+    "theme": "light",
+    "view": "home",
+    "tabs": [
+      {
+        "background": "rgba(0, 0, 0, 0)",
+        "current": "page",
+        "icon": "rgb(50, 127, 157)",
+        "label": "预算",
+        "reflection": "linear-gradient(145deg, rgba(255, 255, 255, 0.65), rgba(255, 255, 255, 0.1) 52%, rgba(255, 255, 255, 0.3))"
+      },
+      {
+        "background": "rgba(0, 0, 0, 0)",
+        "current": null,
+        "icon": "rgb(110, 110, 118)",
+        "label": "心愿",
+        "reflection": "none"
+      }
+    ]
+  },
+  {
+    "theme": "dark",
+    "view": "home",
+    "tabs": [
+      {
+        "background": "rgba(0, 0, 0, 0)",
+        "current": "page",
+        "icon": "rgb(167, 224, 245)",
+        "label": "预算",
+        "reflection": "linear-gradient(145deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.024) 52%, rgba(255, 255, 255, 0.07))"
+      },
+      {
+        "background": "rgba(0, 0, 0, 0)",
+        "current": null,
+        "icon": "rgb(170, 170, 176)",
+        "label": "心愿",
+        "reflection": "none"
+      }
+    ]
+  }
+]
