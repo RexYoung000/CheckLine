@@ -3,3 +3,4 @@
 document.body.classList.add('material-embedded');
 document.querySelectorAll('.material-compare').forEach(a=>a.href='budget-home-pair.html');
 hmStartLiquid();
+dmStartDetail();

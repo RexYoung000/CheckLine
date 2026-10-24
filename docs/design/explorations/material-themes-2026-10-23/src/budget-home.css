@@ -55,7 +55,8 @@
 .app[data-home-material][data-theme] .cartridge-world:not(.library-open) .cl-receipt-card{background:var(--hm-receipt);color:var(--hm-panel-ink);border-color:var(--hm-panel-edge);box-shadow:inset 0 1px #ffffff26,0 7px 15px -15px #0b2d3e66}
 .app[data-home-material][data-theme] .cartridge-world:not(.library-open) .cl-receipt-card.receipt-back-depth{background:var(--hm-receipt-back)}
 .app[data-home-material][data-theme] .cartridge-world:not(.library-open) .reader-level-controls button{color:var(--hm-muted)}
-.app[data-home-material][data-theme] .cartridge-world:not(.library-open) .charge-edge{background:conic-gradient(from var(--rim-angle),transparent 0deg,#b5e7f6 12deg,#d4f5ff 26deg,#ffffff 39deg,#9ddcf2 50deg,transparent 62deg)}
+.app[data-home-material][data-theme] .cartridge-world:not(.library-open) .charge-edge{background:conic-gradient(from var(--rim-angle),transparent 0deg,#99e7f5 10deg,#b9a1ef 23deg,#efb5d4 35deg,#f8faff 43deg,#a1dced 53deg,transparent 65deg);filter:drop-shadow(0 0 1.5px #c8a3e955)}
+.app[data-home-material][data-theme=dark] .cartridge-world:not(.library-open) .charge-edge{background:conic-gradient(from var(--rim-angle),transparent 0deg,#8de4f4 10deg,#bba0f0 23deg,#f2b2d6 35deg,#f6faff 43deg,#9addf0 53deg,transparent 65deg)}
 .app[data-home-material][data-theme] .is-reader-compact .hm-card-body,.app[data-home-material][data-theme] .is-reader-compact .hm-card-edge{opacity:0}
 .app[data-home-material][data-theme] .cartridge-world:not(.library-open).is-reader-compact .reader-card-face{background:var(--hm-nav);border:1px solid var(--hm-panel-edge)}
 .app[data-home-material][data-theme] .cartridge-world:not(.library-open).is-reader-compact .reader-card-face :is(.card-name,.card-value){color:var(--hm-panel-ink)}

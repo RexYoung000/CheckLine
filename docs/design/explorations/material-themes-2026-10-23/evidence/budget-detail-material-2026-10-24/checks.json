@@ -1,0 +1,70 @@
+{
+  "chargeColor": {
+    "capturedFrames": 24,
+    "captureDurationMs": 2310,
+    "peakPinkVioletPixels": 89,
+    "restPinkVioletPixels": 0,
+    "peakFrame": 2,
+    "activeEdgesAfterFinish": 0,
+    "reducedActiveEdges": 0,
+    "remainingAfterInsert": "1,280",
+    "lightPeakPinkVioletPixels": 60,
+    "lightRestPinkVioletPixels": 0
+  },
+  "detailRuntime": {
+    "themes": [
+      "light",
+      "dark"
+    ],
+    "viewports": [
+      "390x844",
+      "320x844",
+      "768x1024"
+    ],
+    "ratio": 0.4266666666666667,
+    "remaining": "¥1,280",
+    "limit": "¥3,000",
+    "ambientBubbles": 16,
+    "duplicateIds": [],
+    "recordsRoundTrip": true,
+    "captureOpenClose": true,
+    "previewSettlementOpenReturn": true,
+    "coveredPathFrozen": true,
+    "closeOverlayResumes": true,
+    "realDrawerDragExpanded": true,
+    "drawerBottomAt1024": 1024,
+    "horizontalOverflow": false,
+    "reduced": {
+      "state": "reduced",
+      "pathFrozen": true,
+      "staticBubbles": 16,
+      "visibleAmbient": 0
+    },
+    "normalPathMoves": true,
+    "standaloneErrors": [],
+    "pairReloadErrors": [],
+    "pairInitialInspectionLog": {
+      "timestampUTC": "2026-10-24T06:29:47.091Z",
+      "message": "MutationObserver.observe target was not a Node",
+      "reproducedOnReload": false,
+      "origin": "not confirmed; recorded during initial browser inspection",
+      "independentPageErrors": []
+    },
+    "pairedPartialAndFullScreenshots": true
+  },
+  "unverified": [
+    "Full VoiceOver and system text scaling",
+    "Background visibility and back-forward cache independently exercised",
+    "Native device behavior",
+    "Final visual acceptance by Rex"
+  ],
+  "source": {
+    "onlyApprovedInjectionsDiffer": true,
+    "wishAndOtherRoutesUnchanged": true,
+    "nativeUnchanged": true,
+    "acceptedMainPairUnchanged": true,
+    "homeLiquidInertiaUnchanged": true,
+    "reproducibleBuild": true,
+    "sha256": "d715dba4769695d637729ee5a478b0c8836c49f67907b84477103eca7e9cf05e"
+  }
+}

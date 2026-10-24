@@ -1,0 +1,27 @@
+/* Only the budget overview receives the accepted ice material. Descendant
+   destinations and wish drawers keep their existing appearance and logic. */
+.app[data-home-material][data-theme=light]{--dm-sheet:#f5f9fcf2;--dm-shade:#07121b14;--dm-primary:#087da7;--dm-primary-ink:#fff}
+.app[data-home-material][data-theme=dark]{--dm-sheet:#101922f5;--dm-shade:#00000038;--dm-primary:#9edff7;--dm-primary-ink:#11364a}
+.app[data-home-material][data-theme] .reader-drawer:has(.dm-detail-card){--accent:var(--hm-accent);--ink:var(--hm-panel-ink);--muted:var(--hm-muted);background:var(--dm-sheet);color:var(--hm-panel-ink);box-shadow:0 -10px 34px -20px var(--hm-contact),inset 0 1px var(--hm-panel-edge);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px)}
+.app[data-home-material][data-theme]:has(.dm-detail-card) .reader-drawer-shade{background:var(--dm-shade)}
+.app[data-home-material][data-theme] .reader-drawer:has(.dm-detail-card) .detail-page{background:transparent;color:var(--hm-panel-ink)}
+.app[data-home-material][data-theme] .reader-drawer:has(.dm-detail-card) .detail-head{background:transparent;color:var(--hm-panel-ink)}
+.app[data-home-material][data-theme] .reader-drawer:has(.dm-detail-card) .detail-head .icon-button{background:var(--hm-nav);border:1px solid var(--hm-panel-edge);color:var(--hm-panel-ink);box-shadow:inset 0 1px #ffffff26}
+.app[data-home-material][data-theme] .reader-drawer:has(.dm-detail-card) .period-label{color:var(--hm-muted)}
+.app[data-home-material][data-theme] .liquid-card.dm-detail-card{--water-top:var(--hm-water-top-color);--water-middle:var(--hm-water-mid-color);--water-bottom:var(--hm-water-base-color);background:transparent;border:0;border-radius:9.09% / 10.67%;box-shadow:0 8px 19px -10px color-mix(in srgb,var(--hm-contact) 25%,transparent),0 2px 4px #092c3e12;backdrop-filter:blur(5.5px);-webkit-backdrop-filter:blur(5.5px);isolation:isolate}
+.app[data-home-material][data-theme] .dm-detail-card::after{content:none}
+.app[data-home-material][data-theme] .dm-detail-card .card-top{color:var(--hm-ink);z-index:4}
+.app[data-home-material][data-theme] .dm-detail-card .card-name{color:var(--hm-ink)}
+.app[data-home-material][data-theme] .dm-detail-card .card-period{color:var(--hm-meta-ink)}
+.app[data-home-material][data-theme] .dm-detail-card .card-bottom{z-index:4}
+.app[data-home-material][data-theme] .dm-detail-card .card-value{color:var(--hm-amount-ink)}
+.app[data-home-material][data-theme] .dm-detail-card .card-value>.label{color:var(--hm-water-label)}
+.app[data-home-material][data-theme] .dm-detail-card .hm-water{background:transparent}
+.app[data-home-material][data-theme] .dm-detail-card:has(.water[data-empty=true]) .card-bubble-field{display:none}
+.app[data-home-material][data-theme] .reader-drawer:has(.dm-detail-card) :is(.restored-budget-limit,.restored-destinations>button){background:var(--hm-tile);color:var(--hm-panel-ink);border:1px solid var(--hm-panel-edge);box-shadow:inset 0 1px #ffffff26,0 8px 14px -14px #0b2d3e55;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+.app[data-home-material][data-theme] .reader-drawer:has(.dm-detail-card) .restored-budget-limit>span{color:var(--hm-muted)}
+.app[data-home-material][data-theme] .reader-drawer:has(.dm-detail-card) .restored-destinations>button>span{color:var(--hm-accent)}
+.app[data-home-material][data-theme] .reader-drawer:has(.dm-detail-card) .restored-destinations>button>span>.icon:last-child{color:var(--hm-muted)}
+.app[data-home-material][data-theme] .reader-drawer:has(.dm-detail-card) .restored-workspace-actions>.primary{background:var(--dm-primary);color:var(--dm-primary-ink);border:1px solid var(--hm-panel-edge);box-shadow:inset 0 1px #ffffff26,0 6px 12px -11px var(--hm-contact)}
+.app[data-home-material][data-theme] .reader-drawer:has(.dm-detail-card) .restored-workspace-actions>.secondary{background:var(--hm-nav);color:var(--hm-panel-ink);border:1px solid var(--hm-panel-edge);box-shadow:inset 0 1px #ffffff26}
+.app[data-home-material][data-theme] .reader-drawer:has(.dm-detail-card) .pending-strip{background:var(--hm-tile);color:var(--hm-panel-ink);border:1px solid var(--hm-panel-edge);box-shadow:none}
