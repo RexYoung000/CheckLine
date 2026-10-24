@@ -42,5 +42,21 @@
 /* A personal full-bleed photo keeps the existing contrast veil and white type. */
 .app[data-home-material][data-theme] .cover-photo-fill :is(.wish-front-title>strong,.wish-front-value,.wish-money){color:#fff}
 .app[data-home-material][data-theme] .cover-photo-fill .wish-money small{color:#ffffffe0}
+/* Dark card lighting: one upper-left source, small edge transmission and a
+   shallow contact between the preset backing and the existing ice body. */
+.app[data-home-material][data-theme=dark] :is(.wish-face:not(.cover-photo-fill),.wish-compose-preview,.wish-cover-preview,.wish-collection-row){
+  background:radial-gradient(ellipse 83% 73% at 9% 0%,#f4fcff99,#f4fcff30 33%,transparent 78%),radial-gradient(ellipse 56% 32% at 95% 100%,#c5f6ff38,transparent 75%),var(--wm-card);
+  box-shadow:inset 1px 1.5px 0 #f4fcffcc,inset -1px -1px 0 #bfe9f86b,inset 6px 7px 10px -8px #e1f7ffcc,inset -6px -7px 9px -7px #103d52a6,0 9px 17px -14px var(--wm-drop);
+}
+.app[data-home-material][data-theme=dark] .wish-face:not(.cover-photo-fill)::before{
+  background:linear-gradient(140deg,#f4fcffe0,#def8ff36 32%,#def8ff0a 58%,#bfe9f866 83%,#f4fcff8c);
+}
+.app[data-home-material][data-theme=dark] .wish-face:not(.cover-photo-fill)::after{
+  background:radial-gradient(ellipse 52% 24% at var(--wish-glare-x) 0%,#ffffff70,transparent 74%),linear-gradient(100deg,#ffffff18,transparent 8%,transparent 94%,#e6f8ff24);
+}
+.app[data-home-material][data-theme=dark] :is(.wish-face,.wish-compose-preview,.wish-cover-preview,.wish-collection-row) .preset-backing{
+  background:radial-gradient(ellipse at 12% 0,#f4fcff61,transparent 62%),#e6f8ff24;
+  box-shadow:inset 1px 1px #f4fcffb3,inset -1px -1px #bfe9f82e,1px 3px 5px -4px #0006;
+}
 .app[data-home-material][data-theme].reduced .wish-bubble-volume>i{animation:none;top:calc(15% + var(--bubble-x) * .65);opacity:.55}
 @media(prefers-reduced-motion:reduce){.app[data-home-material][data-theme] .wish-bubble-volume>i{animation:none;top:calc(15% + var(--bubble-x) * .65);opacity:.55}}

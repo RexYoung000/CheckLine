@@ -1,0 +1,18 @@
+{
+  "generated_change": "only light-ui.css and dark-only wish lighting rules",
+  "scripts": "unchanged",
+  "unchanged_sources": [
+    "src/dark-ui.css",
+    "src/selection-ui.css",
+    "src/budget-home.css",
+    "src/budget-home.js",
+    "src/budget-home-liquid.js",
+    "src/budget-detail.js",
+    "src/budget-pages.js",
+    "src/dark-library-palette.js",
+    "budget-card-pair.html"
+  ],
+  "native_changed": false,
+  "reproducible_build": true,
+  "sha256": "5d3eea742f967fc4ebc4b70d8c9d91a37be3286f768d4bf57dc383d40b1ad4c9"
+}

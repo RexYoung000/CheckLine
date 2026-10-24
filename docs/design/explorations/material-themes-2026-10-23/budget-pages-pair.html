@@ -5,6 +5,6 @@
 const query=new URLSearchParams(location.search),view=document.querySelector('#view'),reduce=document.querySelector('#reduce');
 reduce.checked=query.get('reduce')==='1';
 if([...view.options].some(option=>option.value===query.get('view')))view.value=query.get('view');
-function paint(){for(const theme of ['light','dark']){const params=new URLSearchParams({theme,view:view.value,embed:'1',rev:'tab-glass-lens-1'});if(reduce.checked)params.set('reduce','1');const url='budget-home.html?'+params;document.querySelector('#'+theme+'-frame').src=url;document.querySelector('#'+theme+'-link').href=url;}}
+function paint(){for(const theme of ['light','dark']){const params=new URLSearchParams({theme,view:view.value,embed:'1',rev:'library-wish-lighting-2'});if(reduce.checked)params.set('reduce','1');const url='budget-home.html?'+params;document.querySelector('#'+theme+'-frame').src=url;document.querySelector('#'+theme+'-link').href=url;}}
 view.addEventListener('change',()=>{const url=new URL(location.href);url.searchParams.set('view',view.value);history.replaceState(null,'',url);paint();});reduce.addEventListener('change',paint);document.querySelector('#reset').addEventListener('click',paint);paint();
 </script></body></html>

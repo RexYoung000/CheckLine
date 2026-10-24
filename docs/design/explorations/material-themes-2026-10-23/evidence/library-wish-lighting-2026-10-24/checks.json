@@ -1,0 +1,68 @@
+{
+  "wish": [
+    {
+      "theme": "light",
+      "face": {
+        "background": "radial-gradient(at 9% 0px, rgba(255, 255, 255, 0.72), rgba(0, 0, 0, 0) 57%), none",
+        "blur": "blur(8px)",
+        "color": "rgb(18, 56, 75)",
+        "rect": {
+          "height": 198,
+          "width": 165
+        },
+        "shadow": "rgba(255, 255, 255, 0.85) 1px 1.5px 0px 0px inset, rgba(108, 171, 194, 0.267) -1px -1px 0px 0px inset, rgba(16, 61, 82, 0.6) 0px -4px 7px -6px inset, rgba(22, 64, 90, 0.14) 0px 9px 17px -14px"
+      }
+    },
+    {
+      "theme": "dark",
+      "face": {
+        "background": "radial-gradient(83% 73% at 9% 0%, rgba(244, 252, 255, 0.6), rgba(244, 252, 255, 0.19) 33%, rgba(0, 0, 0, 0) 78%), radial-gradient(56% 32% at 95% 100%, rgba(197, 246, 255, 0.22), rgba(0, 0, 0, 0) 75%), none",
+        "blur": "blur(8px)",
+        "color": "rgb(18, 56, 75)",
+        "rect": {
+          "height": 198,
+          "width": 165
+        },
+        "shadow": "rgba(244, 252, 255, 0.8) 1px 1.5px 0px 0px inset, rgba(191, 233, 248, 0.42) -1px -1px 0px 0px inset, rgba(225, 247, 255, 0.8) 6px 7px 10px -8px inset, rgba(16, 61, 82, 0.65) -6px -7px 9px -7px inset, rgba(0, 0, 0, 0.44) 0px 9px 17px -14px"
+      }
+    }
+  ],
+  "redemption": {
+    "background": "rgb(43, 43, 46)",
+    "disabled": true,
+    "label": "兑换不可用，当前进度 50%，达到 100% 后可兑换"
+  },
+  "library": [
+    {
+      "theme": "light",
+      "style": {
+        "background": "rgb(248, 248, 248) none repeat scroll 0% 0% / auto padding-box border-box",
+        "clientWidth": 388,
+        "scrollWidth": 404
+      }
+    },
+    {
+      "theme": "dark",
+      "style": {
+        "background": "rgb(11, 11, 13) none repeat scroll 0% 0% / auto padding-box border-box",
+        "clientWidth": 388,
+        "scrollWidth": 404
+      }
+    }
+  ],
+  "interactions": {
+    "darkWishExpand": true,
+    "darkWishFlip": true,
+    "darkWishRows": true,
+    "lightLibrarySphere": true,
+    "lightLibraryArc": true,
+    "lightLibraryReturn": true
+  },
+  "logs": [
+    {
+      "level": "error",
+      "message": "Uncaught TypeError: Failed to execute 'observe' on 'MutationObserver': parameter 1 is not of type 'Node'.",
+      "timestamp": "2026-10-24T15:37:24.596Z"
+    }
+  ]
+}
