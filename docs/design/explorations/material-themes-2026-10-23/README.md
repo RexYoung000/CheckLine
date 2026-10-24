@@ -47,6 +47,8 @@ Rex 随后要求只调整浅色版的冰蓝透光、高光反射，去除多余�
 
 浅色气泡补正：远处气泡原先只有整圈深蓝描边，与近处球面反光不一致；现统一使用透明球面及局部受光，远泡更小、更淡，近泡减轻暗边和反光笔画，并移开加号圆面内的一颗远泡。数量仍为 10 远＋6 近，卡面、液体与手动光源逻辑不变。浏览器检查覆盖 1120 并排、320 纵排、右侧受光与还原，无横向溢出或错误日志；源码核对确认暗色 SVG／配色、其他浅色内容与光源脚本均未变，且未重新加入颗粒。见 [浅色修订](evidence/light-bubble-correction-2026-10-24/light-corrected.jpg)、[浅暗同屏](evidence/light-bubble-correction-2026-10-24/pair-default.jpg)、[右侧受光](evidence/light-bubble-correction-2026-10-24/light-right-light.jpg) 和 [核对记录](evidence/light-bubble-correction-2026-10-24/checks.json)；[补正前浅色](evidence/dual-card-frost-2026-10-24/light-detail.jpg) 保留追溯。本轮仅调整浅色气泡，不扩展至全页或原生，最终观感待 Rex 验收。
 
+后续 Rex 指出气泡过淡，且仍有浮雕感。本轮实际查看[水中气泡微距图](https://st2.depositphotos.com/1428517/8070/i/450/depositphotos_80702346-stock-photo-macro-oxygen-bubbles-in-blue.jpg)，采用透明中心、偏轴反射与不均匀的边缘亮度；另阅读 [CSS Animation 的 Bubbles 构成](https://cssanimation.rocks/spheres/#bubbles)，其动态预览受限，仅借鉴透明底层与分离高光的思路。当前浅色气泡删除整圈蓝色明暗描边，中心接近透明，使用两段白色反射弧和小高光，近泡略放大、远泡提高可见度。没有采用参考图片或第三方源码，也不增加自动动画；位置、10 远＋6 近数量、液体和主卡保持。浏览器检查覆盖 1120 并排、320 纵排、右侧受光和还原，未见横向溢出或错误日志；源码确认暗色、浅色其余内容、主调和光源脚本未改。见 [当前浅色](evidence/light-bubbles-refraction-2026-10-24/light-default.jpg)、[调整前](evidence/light-bubbles-refraction-2026-10-24/before-light.jpg)、[浅暗同屏](evidence/light-bubbles-refraction-2026-10-24/pair-default.jpg)、[右侧受光](evidence/light-bubbles-refraction-2026-10-24/light-right-light.jpg)、[窄屏](evidence/light-bubbles-refraction-2026-10-24/320-stacked.jpg) 与 [核对记录](evidence/light-bubbles-refraction-2026-10-24/checks.json)。范围仍限浅色气泡，未改原生，去浮雕观感待 Rex 验收。
+
 下方全页规则与验证记录用于追溯前几轮工作；当前提案仅限上述预算主卡，不表示重新铺全页。
 
 - 页面结构、插拔／层级、弧线与球面卡库、心愿翻面、草稿、失败恢复、确认和奖励顺序继承 [已确认 R34](../../evidence/2026-10-22-native-r34/approved-r34.html)，内嵌资源与许可保留。没有引入新的 Web 运行时或第三方依赖。

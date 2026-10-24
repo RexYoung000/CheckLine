@@ -1,0 +1,114 @@
+{
+  "date": "2026-10-24",
+  "scope": "Light main-card bubble reflections only. Visual acceptance pending.",
+  "observations": [
+    {
+      "scenario": "1120-default",
+      "observed": {
+        "bubbleShadows": 0,
+        "farCount": 10,
+        "farOpacity": ".56",
+        "near": [
+          {
+            "radius": "4.8",
+            "stroke": "none"
+          },
+          {
+            "radius": "3.9",
+            "stroke": "none"
+          },
+          {
+            "radius": "5.25",
+            "stroke": "none"
+          },
+          {
+            "radius": "3.3",
+            "stroke": "none"
+          },
+          {
+            "radius": "4.5",
+            "stroke": "none"
+          },
+          {
+            "radius": "3.9",
+            "stroke": "none"
+          }
+        ],
+        "scrollWidth": 1120,
+        "width": 1120
+      }
+    },
+    {
+      "scenario": "right-light",
+      "observed": {
+        "highlights": [
+          "rotate(88.20)",
+          "rotate(88.20)",
+          "rotate(88.20)",
+          "rotate(88.20)",
+          "rotate(88.20)",
+          "rotate(88.20)",
+          "rotate(88.20)",
+          "rotate(88.20)",
+          "rotate(88.20)",
+          "rotate(88.20)",
+          "rotate(88.20)",
+          "rotate(88.20)",
+          "rotate(88.20)",
+          "rotate(88.20)",
+          "rotate(88.20)",
+          "rotate(88.20)"
+        ],
+        "value": "98"
+      }
+    },
+    {
+      "scenario": "reset",
+      "observed": {
+        "highlight": "rotate(1.80)",
+        "value": "2"
+      }
+    },
+    {
+      "scenario": "320-default",
+      "observed": {
+        "bubbles": 16,
+        "scrollTop": 0,
+        "scrollWidth": 320,
+        "width": 320
+      }
+    },
+    {
+      "scenario": "console-errors",
+      "observed": []
+    }
+  ],
+  "sourceChecks": {
+    "comparedWith": "8b5f2353d6475393307ce4f33954d7906678030c",
+    "results": {
+      "dark_section_unchanged": true,
+      "dark_palette_unchanged": true,
+      "light_source_script_unchanged": true,
+      "other_light_svg_unchanged": true,
+      "other_light_palette_unchanged": true,
+      "no_surface_noise": true,
+      "svg_0_unique_ids": true,
+      "svg_0_references_resolve": true,
+      "svg_1_unique_ids": true,
+      "svg_1_references_resolve": true,
+      "same_16_bubble_centres": true,
+      "bubbles_outside_plus": true,
+      "bubble_circles_have_no_stroke": true
+    }
+  },
+  "referenceReview": [
+    {
+      "source": "https://st2.depositphotos.com/1428517/8070/i/450/depositphotos_80702346-stock-photo-macro-oxygen-bubbles-in-blue.jpg",
+      "observed": "Viewed original preview in browser; transparent centres and uneven bright edge reflections. Reference only; image not copied into prototype."
+    },
+    {
+      "source": "https://cssanimation.rocks/spheres/#bubbles",
+      "observed": "Read original article on transparent base and separate shine. Embedded CodePen preview blocked; no live motion claim or source-code reuse."
+    }
+  ]
+}
