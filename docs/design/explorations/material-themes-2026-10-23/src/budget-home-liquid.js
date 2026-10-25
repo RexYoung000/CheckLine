@@ -1,7 +1,12 @@
 // Home-only free surface. No tiled translation, phase reset or ledger writes.
-// The optical palette and mean fill placement remain those of the home study.
-function hmLiquidShape(ratio,time,tilt=0,impact=0){
-  const edge=Math.max(0,Math.min(1,ratio/.12,(1-ratio)/.12));
+// A sealed upper rim remains visible at high fill. This optical capacity does
+// not change the real balance ratio; detail callers keep the original geometry.
+function hmHomeFullness(ratio){
+  const x=Math.max(0,Math.min(1,(ratio-.88)/.12));
+  return x*x*(3-2*x);
+}
+function hmLiquidShape(ratio,time,tilt=0,impact=0,minimumEdge=0){
+  const edge=Math.max(minimumEdge,Math.max(0,Math.min(1,ratio/.12,(1-ratio)/.12)));
   const amplitude=5.8*edge*(.92+.08*Math.sin(time*.37));
   // Keep combined drag/contact displacement below four SVG units. This
   // preserves a thin free surface even when a fast switch lands mid-sway.
@@ -26,10 +31,13 @@ function hmLiquidShape(ratio,time,tilt=0,impact=0){
   const line=curve(front),rear=curve(back),height=Math.max(24,258*ratio+24);
   return {line,rear,volume:line+'V'+height.toFixed(2)+'H0Z',surface:rear+front.slice().reverse().map(p=>'L'+n(p[0])+' '+n(p[1])).join('')+'Z'};
 }
-function hmLiquidWaterMarkup(c,id){
+function hmLiquidWaterMarkup(c,id,homeOptics=false){
   const ratio=Math.max(0,Math.min(1,totals(c).remaining/c.limit));
-  const shape=hmLiquidShape(ratio,0),height=Math.max(24,258*ratio+24);
-  return `<div class="water continuous-water hm-water" data-empty="${ratio===0}" data-liquid-ratio="${ratio}" style="--water-height:${ratio*100}%"><svg class="hm-fluid-svg" viewBox="0 0 400 ${height}" preserveAspectRatio="none" aria-hidden="true"><defs><linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--water-top)"/><stop offset=".33" stop-color="var(--water-middle)"/><stop offset="1" stop-color="var(--water-bottom)"/></linearGradient><linearGradient id="${id}-glint" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#fff" stop-opacity="0"/><stop offset=".3" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".7"/><stop offset=".7" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient></defs><path class="liquid-volume" d="${shape.volume}" fill="url(#${id})"/><path class="hm-water-surface" d="${shape.surface}"/><path class="hm-water-back" d="${shape.rear}"/><path class="r3-waterline" d="${shape.line}"/><path class="hm-water-glint" d="${shape.line}" stroke="url(#${id}-glint)"/></svg></div>`;
+  const fullness=homeOptics?hmHomeFullness(ratio):0;
+  const shape=hmLiquidShape(ratio,0,0,0,fullness*.48),height=Math.max(24,258*ratio+24);
+  const optics=homeOptics?` data-home-optics style="--water-height:${ratio*100}%;--hm-fullness:${fullness};--hm-water-headspace:${20*fullness}px"`:` style="--water-height:${ratio*100}%"`;
+  const transmission=homeOptics?`<g class="hm-water-full-optics" fill="none" stroke="#d6f6ff" stroke-linecap="round"><path class="hm-water-side-reflection" d="M8 31C5 47 6 64 7 86M393 ${height-95}C395 ${height-58} 394 ${height-28} 379 ${height-13}"/><path class="hm-water-bottom-reflection" d="M67 ${height-7}Q176 ${height-1} 289 ${height-10}"/></g>`:'';
+  return `<div class="water continuous-water hm-water" data-empty="${ratio===0}" data-liquid-ratio="${ratio}"${optics}><svg class="hm-fluid-svg" viewBox="0 0 400 ${height}" preserveAspectRatio="none" aria-hidden="true"><defs><linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--water-top)"/><stop offset=".33" stop-color="var(--water-middle)"/><stop offset="1" stop-color="var(--water-bottom)"/></linearGradient><linearGradient id="${id}-glint" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#fff" stop-opacity="0"/><stop offset=".3" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".7"/><stop offset=".7" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient></defs><path class="liquid-volume" d="${shape.volume}" fill="url(#${id})"/>${transmission}<path class="hm-water-surface" d="${shape.surface}"/><path class="hm-water-back" d="${shape.rear}"/><path class="r3-waterline" d="${shape.line}"/><path class="hm-water-glint" d="${shape.line}" stroke="url(#${id}-glint)"/></svg></div>`;
 }
 function hmStartLiquid(){
   let svg=null,paths=null,ratio=0,frame=0,last=0,time=0,phase=reader.phase;
@@ -38,7 +46,8 @@ function hmStartLiquid(){
   const media=matchMedia('(prefers-reduced-motion:reduce)');
   function paint(staticView=false){
     if(!paths)return;
-    const shape=hmLiquidShape(ratio,staticView?0:time,staticView?0:tilt,staticView?0:impact);
+    const minimumEdge=svg.parentElement.hasAttribute('data-home-optics')?hmHomeFullness(ratio)*.48:0;
+    const shape=hmLiquidShape(ratio,staticView?0:time,staticView?0:tilt,staticView?0:impact,minimumEdge);
     for(const key of ['volume','surface','rear','line'])paths[key].setAttribute('d',shape[key]);
     paths.glint.setAttribute('d',shape.line);
     const light=.44+.15*Math.sin(time*.31);

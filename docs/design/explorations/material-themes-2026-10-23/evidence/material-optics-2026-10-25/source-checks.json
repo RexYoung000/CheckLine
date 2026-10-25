@@ -1,0 +1,50 @@
+{
+  "baseline": "7f7ba35",
+  "detailMarkupIdentical": true,
+  "originalGeometryIdentical": true,
+  "partialHomeGeometryIdentical": true,
+  "fullSurfaceSeparated": true,
+  "otherGeneratedBytesIdentical": true,
+  "motionEquationsIdentical": true,
+  "unchangedSources": [
+    {
+      "file": "src/wish-material.css",
+      "identical": true
+    },
+    {
+      "file": "src/budget-detail.js",
+      "identical": true
+    },
+    {
+      "file": "src/budget-detail.css",
+      "identical": true
+    },
+    {
+      "file": "src/budget-pages.js",
+      "identical": true
+    },
+    {
+      "file": "src/selection-ui.css",
+      "identical": true
+    },
+    {
+      "file": "src/dark-ui.css",
+      "identical": true
+    },
+    {
+      "file": "src/light-ui.css",
+      "identical": true
+    },
+    {
+      "file": "src/dark-library-palette.js",
+      "identical": true
+    },
+    {
+      "file": "budget-card-pair.html",
+      "identical": true
+    }
+  ],
+  "nativeDiff": "",
+  "reproducibleBuild": true,
+  "generatedSha256": "67aa53a21b93066472aa5d9d8c4c93276df4ec8427d86df1cd5c0ef14d008a0f"
+}

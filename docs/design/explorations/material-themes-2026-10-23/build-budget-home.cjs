@@ -45,7 +45,7 @@ helper+='\n'+fs.readFileSync(path.join(dir,'src/budget-home-liquid.js'),'utf8');
 helper+='\n'+fs.readFileSync(path.join(dir,'src/budget-detail.js'),'utf8');
 helper+='\n'+fs.readFileSync(path.join(dir,'src/budget-pages.js'),'utf8');
 once('function cartridgeFace(c){',helper+'\nfunction cartridgeFace(c){');
-once('const t=totals(c),ready=readerConnected();let face=readerLiquidFace(c);','const t=totals(c),ready=readerConnected();let face=hmMaterializeFace(readerLiquidFace(c),c);');
+once('const t=totals(c),ready=readerConnected();let face=readerLiquidFace(c);','const t=totals(c),ready=readerConnected();let face=hmMaterializeFace(readerLiquidFace(c),c,true);');
 once('<div class="liquid-card restored-detail-card">${libraryCardFace(c)}</div>','${dmDetailCard(c)}');
 const bubbles=match(html,/function readerBubbleMarkup\(\)\{[\s\S]*?\n\}/);
 once(bubbles,'function readerBubbleMarkup(){return hmBubbleField();}');
