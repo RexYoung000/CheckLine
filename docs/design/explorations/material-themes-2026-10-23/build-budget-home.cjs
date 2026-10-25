@@ -22,6 +22,17 @@ const themeTokens = ['light','dark'].map(theme => {
 }).join('\n');
 const scene=match(pair,/<section class="mode light"[\s\S]*?<\/section>/);
 const defs=match(scene,/<defs>[\s\S]*?<\/defs>/);
+// The dark wish front borrows the approved budget edge's light/shade separation.
+// SourceAlpha comes from the CSS face's rounded shape, so small, wide and expanded
+// cards keep their existing geometry. Static optics only; no new motion owner.
+const wishThickness=match(defs,/<filter id="light-thickness"[\s\S]*?<\/filter>/)
+  .replace(/<filter[^>]+>/,'<filter id="wish-front-thickness" x="-10%" y="-10%" width="120%" height="120%" color-interpolation-filters="sRGB">')
+  .replace('stdDeviation="3.2"','stdDeviation="2.2"')
+  .replaceAll('dx="1.728" dy="2.6"','dx="1.2" dy="1.6"')
+  .replaceAll('dx="-1.728" dy="-2.6"','dx="-1.2" dy="-1.6"')
+  .replace('style="flood-opacity:var(--edge-white)"','flood-opacity=".84"')
+  .replace('style="flood-opacity:var(--edge-blue)"','flood-opacity=".48"');
+once('<body>','<body>\n<svg width="0" height="0" style="position:absolute;pointer-events:none" aria-hidden="true" focusable="false"><defs>'+wishThickness+'</defs></svg>');
 const edgeStart=scene.indexOf('<rect x="40" y="76" width="352" height="300" rx="32" fill="#000" filter="url(#light-thickness)"/>');
 const edgeEnd=scene.indexOf('<text x="62"',edgeStart);
 if(edgeStart<0||edgeEnd<0)throw Error('Approved edge geometry missing');

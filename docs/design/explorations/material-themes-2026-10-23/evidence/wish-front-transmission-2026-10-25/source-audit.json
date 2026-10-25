@@ -1,0 +1,28 @@
+{
+  "date": "2026-10-25",
+  "baseline": "3cb7ce2",
+  "onlyWishCSSAndStaticBudgetEdgeDefinition": true,
+  "runtimeScriptsByteIdentical": true,
+  "buildReproducible": true,
+  "generatedSHA256": "1607acefa80bfbdd336a114031908d1a9fa6b0b665c039ecb8861cf433a2b488",
+  "buildResult": {
+    "baseline": "f10d619",
+    "source": "budget-card-pair.html",
+    "bytes": 1091978,
+    "output": "budget-home.html"
+  },
+  "changedSinceStart": [
+    "docs/design/DESIGN.md",
+    "docs/design/explorations/material-themes-2026-10-23/README.md",
+    "docs/design/explorations/material-themes-2026-10-23/budget-home.html",
+    "docs/design/explorations/material-themes-2026-10-23/build-budget-home.cjs",
+    "docs/design/explorations/material-themes-2026-10-23/src/wish-material.css"
+  ],
+  "nativeAndPreexistingExperimentsUnchanged": true,
+  "filterSource": "Existing budget-card-pair.html light-thickness geometry with dark edge lighting; CSS face supplies unchanged rounded geometry",
+  "limitations": [
+    "Visual acceptance pending Rex",
+    "No cross-engine or physical-device rendering check",
+    "No full outcome animation rerun"
+  ]
+}

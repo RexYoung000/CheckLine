@@ -1,0 +1,615 @@
+{
+  "date": "2026-10-25",
+  "scope": "Dark unfulfilled wish front only; local isolated sample data",
+  "styleChecks": [
+    {
+      "name": "light-initial",
+      "matched": {
+        ".dock": 1,
+        ".dock-tabs button.selected": 1,
+        ".wish-balance-bar": 1,
+        ".wish-face-back": 3,
+        ".wish-face-back .wish-card-liquid": 2,
+        ".wish-face-back .wish-redeem-button": 3,
+        ".wish-face-front": 3,
+        ".wish-face-front .preset-art>img": 3,
+        ".wish-face-front .preset-backing": 3,
+        ".wish-front-title>strong": 3,
+        ".wish-front-value": 3,
+        ".wish-hover-layer": 3,
+        ".wish-phase-tabs button[aria-selected=\"true\"]": 1,
+        ".wish-turn-rotor": 3,
+        ".wish-turn-shadow": 3
+      },
+      "differences": [
+        {
+          "selector": ".wish-face-back .wish-redeem-button",
+          "index": 1,
+          "group": "before",
+          "property": "background",
+          "before": "rgba(0, 0, 0, 0) conic-gradient(from 115.287deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.145) 20%, rgb(237, 252, 255) 33%, rgb(131, 213, 235) 46%, rgba(255, 255, 255, 0.08) 57%, rgba(255, 255, 255, 0.145) 73%, rgb(237, 252, 255) 85%, rgba(255, 255, 255, 0.08) 100%) repeat scroll 0% 0% / auto padding-box border-box",
+          "after": "rgba(0, 0, 0, 0) conic-gradient(from 36.6091deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.145) 20%, rgb(237, 252, 255) 33%, rgb(131, 213, 235) 46%, rgba(255, 255, 255, 0.08) 57%, rgba(255, 255, 255, 0.145) 73%, rgb(237, 252, 255) 85%, rgba(255, 255, 255, 0.08) 100%) repeat scroll 0% 0% / auto padding-box border-box"
+        }
+      ]
+    },
+    {
+      "name": "dark-initial",
+      "matched": {
+        ".dock": 1,
+        ".dock-tabs button.selected": 1,
+        ".wish-balance-bar": 1,
+        ".wish-face-back": 3,
+        ".wish-face-back .wish-card-liquid": 2,
+        ".wish-face-back .wish-redeem-button": 3,
+        ".wish-face-front": 3,
+        ".wish-face-front .preset-art>img": 3,
+        ".wish-face-front .preset-backing": 3,
+        ".wish-front-title>strong": 3,
+        ".wish-front-value": 3,
+        ".wish-hover-layer": 3,
+        ".wish-phase-tabs button[aria-selected=\"true\"]": 1,
+        ".wish-turn-rotor": 3,
+        ".wish-turn-shadow": 3
+      },
+      "differences": [
+        {
+          "selector": ".wish-face-back .wish-redeem-button",
+          "index": 1,
+          "group": "before",
+          "property": "background",
+          "before": "rgba(0, 0, 0, 0) conic-gradient(from 46.8522deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.145) 20%, rgb(237, 252, 255) 33%, rgb(131, 213, 235) 46%, rgba(255, 255, 255, 0.08) 57%, rgba(255, 255, 255, 0.145) 73%, rgb(237, 252, 255) 85%, rgba(255, 255, 255, 0.08) 100%) repeat scroll 0% 0% / auto padding-box border-box",
+          "after": "rgba(0, 0, 0, 0) conic-gradient(from 31.9516deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.145) 20%, rgb(237, 252, 255) 33%, rgb(131, 213, 235) 46%, rgba(255, 255, 255, 0.08) 57%, rgba(255, 255, 255, 0.145) 73%, rgb(237, 252, 255) 85%, rgba(255, 255, 255, 0.08) 100%) repeat scroll 0% 0% / auto padding-box border-box"
+        },
+        {
+          "selector": ".wish-face-front",
+          "index": 0,
+          "group": "self",
+          "property": "background",
+          "before": "radial-gradient(76% 64% at 0% 0%, rgba(244, 252, 255, 0.5), rgba(0, 0, 0, 0) 76%) repeat scroll 0% 0% / auto padding-box border-box, radial-gradient(46% 5% at 67% 100%, rgba(222, 248, 255, 0.25), rgba(0, 0, 0, 0) 77%) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 0.560784 0.847059 0.94902 / 0.82) none repeat scroll 0% 0% / auto padding-box border-box",
+          "after": "radial-gradient(80% 66% at 13% 4%, rgba(244, 252, 255, 0.72), rgba(244, 252, 255, 0.22) 46%, rgba(244, 252, 255, 0.016) 76%, rgba(0, 0, 0, 0)) repeat scroll 0% 0% / auto padding-box border-box, radial-gradient(68% 9% at 32% 100%, rgba(191, 233, 248, 0.42), rgba(0, 0, 0, 0) 83%) repeat scroll 0% 0% / auto padding-box border-box, rgba(0, 0, 0, 0) radial-gradient(100% 105% at 35% 42%, color(srgb 0.560784 0.847059 0.94902 / 0.86) 25%, color(srgb 0.560784 0.847059 0.94902 / 0.78) 64%, color(srgb 0.560784 0.847059 0.94902 / 0.6)) repeat scroll 0% 0% / auto padding-box border-box"
+        },
+        {
+          "selector": ".wish-face-front",
+          "index": 0,
+          "group": "self",
+          "property": "box-shadow",
+          "before": "rgba(244, 252, 255, 0.74) 0.7px 0.8px 0px 0px inset, rgba(191, 233, 248, 0.32) -0.7px -0.7px 0px 0px inset, rgba(0, 0, 0, 0.314) 0px 7px 15px -15px",
+          "after": "rgba(244, 252, 255, 0.87) 0.8px 1px 0px 0px inset, rgba(191, 233, 248, 0.42) -0.8px -0.8px 0px 0px inset, rgba(0, 0, 0, 0.314) 0px 7px 15px -15px"
+        },
+        {
+          "selector": ".wish-face-front",
+          "index": 0,
+          "group": "before",
+          "property": "background",
+          "before": "rgba(0, 0, 0, 0) linear-gradient(135deg, rgba(255, 255, 255, 0.95) 1%, rgba(255, 255, 255, 0.72) 14%, rgba(255, 255, 255, 0.14) 39%, rgba(191, 233, 248, 0.17) 61%, rgba(230, 248, 255, 0.74) 83%, rgba(255, 255, 255, 0.55)) repeat scroll 0% 0% / auto padding-box border-box",
+          "after": "rgb(0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box"
+        },
+        {
+          "selector": ".wish-face-front",
+          "index": 0,
+          "group": "before",
+          "property": "padding",
+          "before": "0.85px",
+          "after": "0px"
+        },
+        {
+          "selector": ".wish-face-front",
+          "index": 0,
+          "group": "after",
+          "property": "background",
+          "before": "radial-gradient(48% 10% at 30% 0%, rgba(255, 255, 255, 0.74), rgba(0, 0, 0, 0) 80%) repeat scroll 0% 0% / auto padding-box border-box, linear-gradient(118deg, rgba(0, 0, 0, 0) 10%, rgba(255, 255, 255, 0.04) 16%, rgba(255, 255, 255, 0.29) 22%, rgba(255, 255, 255, 0.04) 29%, rgba(0, 0, 0, 0) 35%) repeat scroll 0% 0% / auto padding-box border-box, rgba(0, 0, 0, 0) linear-gradient(99deg, rgba(255, 255, 255, 0.47), rgba(0, 0, 0, 0) 4%, rgba(0, 0, 0, 0) 97%, rgba(230, 248, 255, 0.4)) repeat scroll 0% 0% / auto padding-box border-box",
+          "after": "radial-gradient(48% 10% at 30% 0%, rgba(255, 255, 255, 0.74), rgba(0, 0, 0, 0) 80%) repeat scroll 0% 0% / auto padding-box border-box, rgba(0, 0, 0, 0) radial-gradient(58% 5% at 39% 100%, rgba(223, 248, 255, 0.6), rgba(0, 0, 0, 0) 82%) repeat scroll 0% 0% / auto padding-box border-box"
+        },
+        {
+          "selector": ".wish-face-front",
+          "index": 0,
+          "group": "after",
+          "property": "box-shadow",
+          "before": "rgba(255, 255, 255, 0.07) 0px 0px 0px 1px inset",
+          "after": "none"
+        },
+        {
+          "selector": ".wish-face-front",
+          "index": 1,
+          "group": "self",
+          "property": "background",
+          "before": "radial-gradient(76% 64% at 0% 0%, rgba(244, 252, 255, 0.5), rgba(0, 0, 0, 0) 76%) repeat scroll 0% 0% / auto padding-box border-box, radial-gradient(46% 5% at 67% 100%, rgba(222, 248, 255, 0.25), rgba(0, 0, 0, 0) 77%) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 0.560784 0.847059 0.94902 / 0.82) none repeat scroll 0% 0% / auto padding-box border-box",
+          "after": "radial-gradient(80% 66% at 13% 4%, rgba(244, 252, 255, 0.72), rgba(244, 252, 255, 0.22) 46%, rgba(244, 252, 255, 0.016) 76%, rgba(0, 0, 0, 0)) repeat scroll 0% 0% / auto padding-box border-box, radial-gradient(68% 9% at 32% 100%, rgba(191, 233, 248, 0.42), rgba(0, 0, 0, 0) 83%) repeat scroll 0% 0% / auto padding-box border-box, rgba(0, 0, 0, 0) radial-gradient(100% 105% at 35% 42%, color(srgb 0.560784 0.847059 0.94902 / 0.86) 25%, color(srgb 0.560784 0.847059 0.94902 / 0.78) 64%, color(srgb 0.560784 0.847059 0.94902 / 0.6)) repeat scroll 0% 0% / auto padding-box border-box"
+        },
+        {
+          "selector": ".wish-face-front",
+          "index": 1,
+          "group": "self",
+          "property": "box-shadow",
+          "before": "rgba(244, 252, 255, 0.74) 0.7px 0.8px 0px 0px inset, rgba(191, 233, 248, 0.32) -0.7px -0.7px 0px 0px inset, rgba(0, 0, 0, 0.314) 0px 7px 15px -15px",
+          "after": "rgba(244, 252, 255, 0.87) 0.8px 1px 0px 0px inset, rgba(191, 233, 248, 0.42) -0.8px -0.8px 0px 0px inset, rgba(0, 0, 0, 0.314) 0px 7px 15px -15px"
+        },
+        {
+          "selector": ".wish-face-front",
+          "index": 1,
+          "group": "before",
+          "property": "background",
+          "before": "rgba(0, 0, 0, 0) linear-gradient(135deg, rgba(255, 255, 255, 0.95) 1%, rgba(255, 255, 255, 0.72) 14%, rgba(255, 255, 255, 0.14) 39%, rgba(191, 233, 248, 0.17) 61%, rgba(230, 248, 255, 0.74) 83%, rgba(255, 255, 255, 0.55)) repeat scroll 0% 0% / auto padding-box border-box",
+          "after": "rgb(0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box"
+        },
+        {
+          "selector": ".wish-face-front",
+          "index": 1,
+          "group": "before",
+          "property": "padding",
+          "before": "0.85px",
+          "after": "0px"
+        },
+        {
+          "selector": ".wish-face-front",
+          "index": 1,
+          "group": "after",
+          "property": "background",
+          "before": "radial-gradient(48% 10% at 30% 0%, rgba(255, 255, 255, 0.74), rgba(0, 0, 0, 0) 80%) repeat scroll 0% 0% / auto padding-box border-box, linear-gradient(118deg, rgba(0, 0, 0, 0) 10%, rgba(255, 255, 255, 0.04) 16%, rgba(255, 255, 255, 0.29) 22%, rgba(255, 255, 255, 0.04) 29%, rgba(0, 0, 0, 0) 35%) repeat scroll 0% 0% / auto padding-box border-box, rgba(0, 0, 0, 0) linear-gradient(99deg, rgba(255, 255, 255, 0.47), rgba(0, 0, 0, 0) 4%, rgba(0, 0, 0, 0) 97%, rgba(230, 248, 255, 0.4)) repeat scroll 0% 0% / auto padding-box border-box",
+          "after": "radial-gradient(48% 10% at 30% 0%, rgba(255, 255, 255, 0.74), rgba(0, 0, 0, 0) 80%) repeat scroll 0% 0% / auto padding-box border-box, rgba(0, 0, 0, 0) radial-gradient(58% 5% at 39% 100%, rgba(223, 248, 255, 0.6), rgba(0, 0, 0, 0) 82%) repeat scroll 0% 0% / auto padding-box border-box"
+        },
+        {
+          "selector": ".wish-face-front",
+          "index": 1,
+          "group": "after",
+          "property": "box-shadow",
+          "before": "rgba(255, 255, 255, 0.07) 0px 0px 0px 1px inset",
+          "after": "none"
+        },
+        {
+          "selector": ".wish-face-front",
+          "index": 2,
+          "group": "self",
+          "property": "background",
+          "before": "radial-gradient(76% 64% at 0% 0%, rgba(244, 252, 255, 0.5), rgba(0, 0, 0, 0) 76%) repeat scroll 0% 0% / auto padding-box border-box, radial-gradient(46% 5% at 67% 100%, rgba(222, 248, 255, 0.25), rgba(0, 0, 0, 0) 77%) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 0.560784 0.847059 0.94902 / 0.82) none repeat scroll 0% 0% / auto padding-box border-box",
+          "after": "radial-gradient(80% 66% at 13% 4%, rgba(244, 252, 255, 0.72), rgba(244, 252, 255, 0.22) 46%, rgba(244, 252, 255, 0.016) 76%, rgba(0, 0, 0, 0)) repeat scroll 0% 0% / auto padding-box border-box, radial-gradient(68% 9% at 32% 100%, rgba(191, 233, 248, 0.42), rgba(0, 0, 0, 0) 83%) repeat scroll 0% 0% / auto padding-box border-box, rgba(0, 0, 0, 0) radial-gradient(100% 105% at 35% 42%, color(srgb 0.560784 0.847059 0.94902 / 0.86) 25%, color(srgb 0.560784 0.847059 0.94902 / 0.78) 64%, color(srgb 0.560784 0.847059 0.94902 / 0.6)) repeat scroll 0% 0% / auto padding-box border-box"
+        },
+        {
+          "selector": ".wish-face-front",
+          "index": 2,
+          "group": "self",
+          "property": "box-shadow",
+          "before": "rgba(244, 252, 255, 0.74) 0.7px 0.8px 0px 0px inset, rgba(191, 233, 248, 0.32) -0.7px -0.7px 0px 0px inset, rgba(0, 0, 0, 0.314) 0px 7px 15px -15px",
+          "after": "rgba(244, 252, 255, 0.87) 0.8px 1px 0px 0px inset, rgba(191, 233, 248, 0.42) -0.8px -0.8px 0px 0px inset, rgba(0, 0, 0, 0.314) 0px 7px 15px -15px"
+        },
+        {
+          "selector": ".wish-face-front",
+          "index": 2,
+          "group": "before",
+          "property": "background",
+          "before": "rgba(0, 0, 0, 0) linear-gradient(135deg, rgba(255, 255, 255, 0.95) 1%, rgba(255, 255, 255, 0.72) 14%, rgba(255, 255, 255, 0.14) 39%, rgba(191, 233, 248, 0.17) 61%, rgba(230, 248, 255, 0.74) 83%, rgba(255, 255, 255, 0.55)) repeat scroll 0% 0% / auto padding-box border-box",
+          "after": "rgb(0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box"
+        },
+        {
+          "selector": ".wish-face-front",
+          "index": 2,
+          "group": "before",
+          "property": "padding",
+          "before": "0.85px",
+          "after": "0px"
+        },
+        {
+          "selector": ".wish-face-front",
+          "index": 2,
+          "group": "after",
+          "property": "background",
+          "before": "radial-gradient(48% 10% at 30% 0%, rgba(255, 255, 255, 0.74), rgba(0, 0, 0, 0) 80%) repeat scroll 0% 0% / auto padding-box border-box, linear-gradient(118deg, rgba(0, 0, 0, 0) 10%, rgba(255, 255, 255, 0.04) 16%, rgba(255, 255, 255, 0.29) 22%, rgba(255, 255, 255, 0.04) 29%, rgba(0, 0, 0, 0) 35%) repeat scroll 0% 0% / auto padding-box border-box, rgba(0, 0, 0, 0) linear-gradient(99deg, rgba(255, 255, 255, 0.47), rgba(0, 0, 0, 0) 4%, rgba(0, 0, 0, 0) 97%, rgba(230, 248, 255, 0.4)) repeat scroll 0% 0% / auto padding-box border-box",
+          "after": "radial-gradient(48% 10% at 30% 0%, rgba(255, 255, 255, 0.74), rgba(0, 0, 0, 0) 80%) repeat scroll 0% 0% / auto padding-box border-box, rgba(0, 0, 0, 0) radial-gradient(58% 5% at 39% 100%, rgba(223, 248, 255, 0.6), rgba(0, 0, 0, 0) 82%) repeat scroll 0% 0% / auto padding-box border-box"
+        },
+        {
+          "selector": ".wish-face-front",
+          "index": 2,
+          "group": "after",
+          "property": "box-shadow",
+          "before": "rgba(255, 255, 255, 0.07) 0px 0px 0px 1px inset",
+          "after": "none"
+        },
+        {
+          "selector": ".wish-face-front .preset-backing",
+          "index": 0,
+          "group": "self",
+          "property": "background",
+          "before": "linear-gradient(135deg, rgba(255, 255, 255, 0.16), rgba(0, 0, 0, 0) 68%) repeat scroll 0% 0% / auto padding-box border-box, rgba(230, 248, 255, 0.03) none repeat scroll 0% 0% / auto padding-box border-box",
+          "after": "linear-gradient(135deg, rgba(255, 255, 255, 0.25), rgba(0, 0, 0, 0) 68%) repeat scroll 0% 0% / auto padding-box border-box, rgba(230, 248, 255, 0.024) none repeat scroll 0% 0% / auto padding-box border-box"
+        },
+        {
+          "selector": ".wish-face-front .preset-backing",
+          "index": 0,
+          "group": "self",
+          "property": "box-shadow",
+          "before": "rgba(255, 255, 255, 0.75) 1px 1px 0px 0px inset, rgba(255, 255, 255, 0.19) -1px -1px 0px 0px inset, rgba(8, 44, 62, 0.15) 2px 7px 9px -5px",
+          "after": "rgba(255, 255, 255, 0.75) 1px 1px 0px 0px inset, rgba(255, 255, 255, 0.19) -1px -1px 0px 0px inset, rgba(8, 44, 62, 0.22) 2px 7px 9px -5px"
+        },
+        {
+          "selector": ".wish-face-front .preset-backing",
+          "index": 1,
+          "group": "self",
+          "property": "background",
+          "before": "linear-gradient(135deg, rgba(255, 255, 255, 0.16), rgba(0, 0, 0, 0) 68%) repeat scroll 0% 0% / auto padding-box border-box, rgba(230, 248, 255, 0.03) none repeat scroll 0% 0% / auto padding-box border-box",
+          "after": "linear-gradient(135deg, rgba(255, 255, 255, 0.25), rgba(0, 0, 0, 0) 68%) repeat scroll 0% 0% / auto padding-box border-box, rgba(230, 248, 255, 0.024) none repeat scroll 0% 0% / auto padding-box border-box"
+        },
+        {
+          "selector": ".wish-face-front .preset-backing",
+          "index": 1,
+          "group": "self",
+          "property": "box-shadow",
+          "before": "rgba(255, 255, 255, 0.75) 1px 1px 0px 0px inset, rgba(255, 255, 255, 0.19) -1px -1px 0px 0px inset, rgba(8, 44, 62, 0.15) 2px 7px 9px -5px",
+          "after": "rgba(255, 255, 255, 0.75) 1px 1px 0px 0px inset, rgba(255, 255, 255, 0.19) -1px -1px 0px 0px inset, rgba(8, 44, 62, 0.22) 2px 7px 9px -5px"
+        },
+        {
+          "selector": ".wish-face-front .preset-backing",
+          "index": 2,
+          "group": "self",
+          "property": "background",
+          "before": "linear-gradient(135deg, rgba(255, 255, 255, 0.16), rgba(0, 0, 0, 0) 68%) repeat scroll 0% 0% / auto padding-box border-box, rgba(230, 248, 255, 0.03) none repeat scroll 0% 0% / auto padding-box border-box",
+          "after": "linear-gradient(135deg, rgba(255, 255, 255, 0.25), rgba(0, 0, 0, 0) 68%) repeat scroll 0% 0% / auto padding-box border-box, rgba(230, 248, 255, 0.024) none repeat scroll 0% 0% / auto padding-box border-box"
+        },
+        {
+          "selector": ".wish-face-front .preset-backing",
+          "index": 2,
+          "group": "self",
+          "property": "box-shadow",
+          "before": "rgba(255, 255, 255, 0.75) 1px 1px 0px 0px inset, rgba(255, 255, 255, 0.19) -1px -1px 0px 0px inset, rgba(8, 44, 62, 0.15) 2px 7px 9px -5px",
+          "after": "rgba(255, 255, 255, 0.75) 1px 1px 0px 0px inset, rgba(255, 255, 255, 0.19) -1px -1px 0px 0px inset, rgba(8, 44, 62, 0.22) 2px 7px 9px -5px"
+        }
+      ]
+    },
+    {
+      "name": "dark-done",
+      "matched": {
+        ".dock": 1,
+        ".dock-tabs button.selected": 1,
+        ".wish-balance-bar": 1,
+        ".wish-face-back": 1,
+        ".wish-face-front": 1,
+        ".wish-face-front .preset-art>img": 1,
+        ".wish-face-front .preset-backing": 1,
+        ".wish-front-title>strong": 1,
+        ".wish-front-value": 1,
+        ".wish-hover-layer": 1,
+        ".wish-phase-tabs button[aria-selected=\"true\"]": 1,
+        ".wish-turn-rotor": 1,
+        ".wish-turn-shadow": 1
+      },
+      "differences": []
+    },
+    {
+      "name": "dark-rows",
+      "matched": {
+        ".dock": 1,
+        ".dock-tabs button.selected": 1,
+        ".wish-balance-bar": 1,
+        ".wish-collection-row": 3,
+        ".wish-phase-tabs button[aria-selected=\"true\"]": 1
+      },
+      "differences": []
+    },
+    {
+      "name": "dark-create-preview",
+      "matched": {
+        ".dock": 1,
+        ".dock-tabs button.selected": 1,
+        ".wish-balance-bar": 1,
+        ".wish-compose-preview": 1,
+        ".wish-face-back": 3,
+        ".wish-face-back .wish-card-liquid": 2,
+        ".wish-face-back .wish-redeem-button": 3,
+        ".wish-face-front": 3,
+        ".wish-face-front .preset-art>img": 3,
+        ".wish-face-front .preset-backing": 3,
+        ".wish-front-title>strong": 4,
+        ".wish-front-value": 4,
+        ".wish-hover-layer": 3,
+        ".wish-phase-tabs button[aria-selected=\"true\"]": 1,
+        ".wish-turn-rotor": 3,
+        ".wish-turn-shadow": 3
+      },
+      "differences": [
+        {
+          "selector": ".wish-face-back .wish-redeem-button",
+          "index": 1,
+          "group": "before",
+          "property": "background",
+          "before": "rgba(0, 0, 0, 0) conic-gradient(from 142.492deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.145) 20%, rgb(237, 252, 255) 33%, rgb(131, 213, 235) 46%, rgba(255, 255, 255, 0.08) 57%, rgba(255, 255, 255, 0.145) 73%, rgb(237, 252, 255) 85%, rgba(255, 255, 255, 0.08) 100%) repeat scroll 0% 0% / auto padding-box border-box",
+          "after": "rgba(0, 0, 0, 0) conic-gradient(from 122.726deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.145) 20%, rgb(237, 252, 255) 33%, rgb(131, 213, 235) 46%, rgba(255, 255, 255, 0.08) 57%, rgba(255, 255, 255, 0.145) 73%, rgb(237, 252, 255) 85%, rgba(255, 255, 255, 0.08) 100%) repeat scroll 0% 0% / auto padding-box border-box"
+        },
+        {
+          "selector": ".wish-face-front",
+          "index": 0,
+          "group": "self",
+          "property": "background",
+          "before": "radial-gradient(76% 64% at 0% 0%, rgba(244, 252, 255, 0.5), rgba(0, 0, 0, 0) 76%) repeat scroll 0% 0% / auto padding-box border-box, radial-gradient(46% 5% at 67% 100%, rgba(222, 248, 255, 0.25), rgba(0, 0, 0, 0) 77%) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 0.560784 0.847059 0.94902 / 0.82) none repeat scroll 0% 0% / auto padding-box border-box",
+          "after": "radial-gradient(80% 66% at 13% 4%, rgba(244, 252, 255, 0.72), rgba(244, 252, 255, 0.22) 46%, rgba(244, 252, 255, 0.016) 76%, rgba(0, 0, 0, 0)) repeat scroll 0% 0% / auto padding-box border-box, radial-gradient(68% 9% at 32% 100%, rgba(191, 233, 248, 0.42), rgba(0, 0, 0, 0) 83%) repeat scroll 0% 0% / auto padding-box border-box, rgba(0, 0, 0, 0) radial-gradient(100% 105% at 35% 42%, color(srgb 0.560784 0.847059 0.94902 / 0.86) 25%, color(srgb 0.560784 0.847059 0.94902 / 0.78) 64%, color(srgb 0.560784 0.847059 0.94902 / 0.6)) repeat scroll 0% 0% / auto padding-box border-box"
+        },
+        {
+          "selector": ".wish-face-front",
+          "index": 0,
+          "group": "self",
+          "property": "box-shadow",
+          "before": "rgba(244, 252, 255, 0.74) 0.7px 0.8px 0px 0px inset, rgba(191, 233, 248, 0.32) -0.7px -0.7px 0px 0px inset, rgba(0, 0, 0, 0.314) 0px 7px 15px -15px",
+          "after": "rgba(244, 252, 255, 0.87) 0.8px 1px 0px 0px inset, rgba(191, 233, 248, 0.42) -0.8px -0.8px 0px 0px inset, rgba(0, 0, 0, 0.314) 0px 7px 15px -15px"
+        },
+        {
+          "selector": ".wish-face-front",
+          "index": 0,
+          "group": "before",
+          "property": "background",
+          "before": "rgba(0, 0, 0, 0) linear-gradient(135deg, rgba(255, 255, 255, 0.95) 1%, rgba(255, 255, 255, 0.72) 14%, rgba(255, 255, 255, 0.14) 39%, rgba(191, 233, 248, 0.17) 61%, rgba(230, 248, 255, 0.74) 83%, rgba(255, 255, 255, 0.55)) repeat scroll 0% 0% / auto padding-box border-box",
+          "after": "rgb(0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box"
+        },
+        {
+          "selector": ".wish-face-front",
+          "index": 0,
+          "group": "before",
+          "property": "padding",
+          "before": "0.85px",
+          "after": "0px"
+        },
+        {
+          "selector": ".wish-face-front",
+          "index": 0,
+          "group": "after",
+          "property": "background",
+          "before": "radial-gradient(48% 10% at 30% 0%, rgba(255, 255, 255, 0.74), rgba(0, 0, 0, 0) 80%) repeat scroll 0% 0% / auto padding-box border-box, linear-gradient(118deg, rgba(0, 0, 0, 0) 10%, rgba(255, 255, 255, 0.04) 16%, rgba(255, 255, 255, 0.29) 22%, rgba(255, 255, 255, 0.04) 29%, rgba(0, 0, 0, 0) 35%) repeat scroll 0% 0% / auto padding-box border-box, rgba(0, 0, 0, 0) linear-gradient(99deg, rgba(255, 255, 255, 0.47), rgba(0, 0, 0, 0) 4%, rgba(0, 0, 0, 0) 97%, rgba(230, 248, 255, 0.4)) repeat scroll 0% 0% / auto padding-box border-box",
+          "after": "radial-gradient(48% 10% at 30% 0%, rgba(255, 255, 255, 0.74), rgba(0, 0, 0, 0) 80%) repeat scroll 0% 0% / auto padding-box border-box, rgba(0, 0, 0, 0) radial-gradient(58% 5% at 39% 100%, rgba(223, 248, 255, 0.6), rgba(0, 0, 0, 0) 82%) repeat scroll 0% 0% / auto padding-box border-box"
+        },
+        {
+          "selector": ".wish-face-front",
+          "index": 0,
+          "group": "after",
+          "property": "box-shadow",
+          "before": "rgba(255, 255, 255, 0.07) 0px 0px 0px 1px inset",
+          "after": "none"
+        },
+        {
+          "selector": ".wish-face-front",
+          "index": 1,
+          "group": "self",
+          "property": "background",
+          "before": "radial-gradient(76% 64% at 0% 0%, rgba(244, 252, 255, 0.5), rgba(0, 0, 0, 0) 76%) repeat scroll 0% 0% / auto padding-box border-box, radial-gradient(46% 5% at 67% 100%, rgba(222, 248, 255, 0.25), rgba(0, 0, 0, 0) 77%) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 0.560784 0.847059 0.94902 / 0.82) none repeat scroll 0% 0% / auto padding-box border-box",
+          "after": "radial-gradient(80% 66% at 13% 4%, rgba(244, 252, 255, 0.72), rgba(244, 252, 255, 0.22) 46%, rgba(244, 252, 255, 0.016) 76%, rgba(0, 0, 0, 0)) repeat scroll 0% 0% / auto padding-box border-box, radial-gradient(68% 9% at 32% 100%, rgba(191, 233, 248, 0.42), rgba(0, 0, 0, 0) 83%) repeat scroll 0% 0% / auto padding-box border-box, rgba(0, 0, 0, 0) radial-gradient(100% 105% at 35% 42%, color(srgb 0.560784 0.847059 0.94902 / 0.86) 25%, color(srgb 0.560784 0.847059 0.94902 / 0.78) 64%, color(srgb 0.560784 0.847059 0.94902 / 0.6)) repeat scroll 0% 0% / auto padding-box border-box"
+        },
+        {
+          "selector": ".wish-face-front",
+          "index": 1,
+          "group": "self",
+          "property": "box-shadow",
+          "before": "rgba(244, 252, 255, 0.74) 0.7px 0.8px 0px 0px inset, rgba(191, 233, 248, 0.32) -0.7px -0.7px 0px 0px inset, rgba(0, 0, 0, 0.314) 0px 7px 15px -15px",
+          "after": "rgba(244, 252, 255, 0.87) 0.8px 1px 0px 0px inset, rgba(191, 233, 248, 0.42) -0.8px -0.8px 0px 0px inset, rgba(0, 0, 0, 0.314) 0px 7px 15px -15px"
+        },
+        {
+          "selector": ".wish-face-front",
+          "index": 1,
+          "group": "before",
+          "property": "background",
+          "before": "rgba(0, 0, 0, 0) linear-gradient(135deg, rgba(255, 255, 255, 0.95) 1%, rgba(255, 255, 255, 0.72) 14%, rgba(255, 255, 255, 0.14) 39%, rgba(191, 233, 248, 0.17) 61%, rgba(230, 248, 255, 0.74) 83%, rgba(255, 255, 255, 0.55)) repeat scroll 0% 0% / auto padding-box border-box",
+          "after": "rgb(0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box"
+        },
+        {
+          "selector": ".wish-face-front",
+          "index": 1,
+          "group": "before",
+          "property": "padding",
+          "before": "0.85px",
+          "after": "0px"
+        },
+        {
+          "selector": ".wish-face-front",
+          "index": 1,
+          "group": "after",
+          "property": "background",
+          "before": "radial-gradient(48% 10% at 30% 0%, rgba(255, 255, 255, 0.74), rgba(0, 0, 0, 0) 80%) repeat scroll 0% 0% / auto padding-box border-box, linear-gradient(118deg, rgba(0, 0, 0, 0) 10%, rgba(255, 255, 255, 0.04) 16%, rgba(255, 255, 255, 0.29) 22%, rgba(255, 255, 255, 0.04) 29%, rgba(0, 0, 0, 0) 35%) repeat scroll 0% 0% / auto padding-box border-box, rgba(0, 0, 0, 0) linear-gradient(99deg, rgba(255, 255, 255, 0.47), rgba(0, 0, 0, 0) 4%, rgba(0, 0, 0, 0) 97%, rgba(230, 248, 255, 0.4)) repeat scroll 0% 0% / auto padding-box border-box",
+          "after": "radial-gradient(48% 10% at 30% 0%, rgba(255, 255, 255, 0.74), rgba(0, 0, 0, 0) 80%) repeat scroll 0% 0% / auto padding-box border-box, rgba(0, 0, 0, 0) radial-gradient(58% 5% at 39% 100%, rgba(223, 248, 255, 0.6), rgba(0, 0, 0, 0) 82%) repeat scroll 0% 0% / auto padding-box border-box"
+        },
+        {
+          "selector": ".wish-face-front",
+          "index": 1,
+          "group": "after",
+          "property": "box-shadow",
+          "before": "rgba(255, 255, 255, 0.07) 0px 0px 0px 1px inset",
+          "after": "none"
+        },
+        {
+          "selector": ".wish-face-front",
+          "index": 2,
+          "group": "self",
+          "property": "background",
+          "before": "radial-gradient(76% 64% at 0% 0%, rgba(244, 252, 255, 0.5), rgba(0, 0, 0, 0) 76%) repeat scroll 0% 0% / auto padding-box border-box, radial-gradient(46% 5% at 67% 100%, rgba(222, 248, 255, 0.25), rgba(0, 0, 0, 0) 77%) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 0.560784 0.847059 0.94902 / 0.82) none repeat scroll 0% 0% / auto padding-box border-box",
+          "after": "radial-gradient(80% 66% at 13% 4%, rgba(244, 252, 255, 0.72), rgba(244, 252, 255, 0.22) 46%, rgba(244, 252, 255, 0.016) 76%, rgba(0, 0, 0, 0)) repeat scroll 0% 0% / auto padding-box border-box, radial-gradient(68% 9% at 32% 100%, rgba(191, 233, 248, 0.42), rgba(0, 0, 0, 0) 83%) repeat scroll 0% 0% / auto padding-box border-box, rgba(0, 0, 0, 0) radial-gradient(100% 105% at 35% 42%, color(srgb 0.560784 0.847059 0.94902 / 0.86) 25%, color(srgb 0.560784 0.847059 0.94902 / 0.78) 64%, color(srgb 0.560784 0.847059 0.94902 / 0.6)) repeat scroll 0% 0% / auto padding-box border-box"
+        },
+        {
+          "selector": ".wish-face-front",
+          "index": 2,
+          "group": "self",
+          "property": "box-shadow",
+          "before": "rgba(244, 252, 255, 0.74) 0.7px 0.8px 0px 0px inset, rgba(191, 233, 248, 0.32) -0.7px -0.7px 0px 0px inset, rgba(0, 0, 0, 0.314) 0px 7px 15px -15px",
+          "after": "rgba(244, 252, 255, 0.87) 0.8px 1px 0px 0px inset, rgba(191, 233, 248, 0.42) -0.8px -0.8px 0px 0px inset, rgba(0, 0, 0, 0.314) 0px 7px 15px -15px"
+        },
+        {
+          "selector": ".wish-face-front",
+          "index": 2,
+          "group": "before",
+          "property": "background",
+          "before": "rgba(0, 0, 0, 0) linear-gradient(135deg, rgba(255, 255, 255, 0.95) 1%, rgba(255, 255, 255, 0.72) 14%, rgba(255, 255, 255, 0.14) 39%, rgba(191, 233, 248, 0.17) 61%, rgba(230, 248, 255, 0.74) 83%, rgba(255, 255, 255, 0.55)) repeat scroll 0% 0% / auto padding-box border-box",
+          "after": "rgb(0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box"
+        },
+        {
+          "selector": ".wish-face-front",
+          "index": 2,
+          "group": "before",
+          "property": "padding",
+          "before": "0.85px",
+          "after": "0px"
+        },
+        {
+          "selector": ".wish-face-front",
+          "index": 2,
+          "group": "after",
+          "property": "background",
+          "before": "radial-gradient(48% 10% at 30% 0%, rgba(255, 255, 255, 0.74), rgba(0, 0, 0, 0) 80%) repeat scroll 0% 0% / auto padding-box border-box, linear-gradient(118deg, rgba(0, 0, 0, 0) 10%, rgba(255, 255, 255, 0.04) 16%, rgba(255, 255, 255, 0.29) 22%, rgba(255, 255, 255, 0.04) 29%, rgba(0, 0, 0, 0) 35%) repeat scroll 0% 0% / auto padding-box border-box, rgba(0, 0, 0, 0) linear-gradient(99deg, rgba(255, 255, 255, 0.47), rgba(0, 0, 0, 0) 4%, rgba(0, 0, 0, 0) 97%, rgba(230, 248, 255, 0.4)) repeat scroll 0% 0% / auto padding-box border-box",
+          "after": "radial-gradient(48% 10% at 30% 0%, rgba(255, 255, 255, 0.74), rgba(0, 0, 0, 0) 80%) repeat scroll 0% 0% / auto padding-box border-box, rgba(0, 0, 0, 0) radial-gradient(58% 5% at 39% 100%, rgba(223, 248, 255, 0.6), rgba(0, 0, 0, 0) 82%) repeat scroll 0% 0% / auto padding-box border-box"
+        },
+        {
+          "selector": ".wish-face-front",
+          "index": 2,
+          "group": "after",
+          "property": "box-shadow",
+          "before": "rgba(255, 255, 255, 0.07) 0px 0px 0px 1px inset",
+          "after": "none"
+        },
+        {
+          "selector": ".wish-face-front .preset-backing",
+          "index": 0,
+          "group": "self",
+          "property": "background",
+          "before": "linear-gradient(135deg, rgba(255, 255, 255, 0.16), rgba(0, 0, 0, 0) 68%) repeat scroll 0% 0% / auto padding-box border-box, rgba(230, 248, 255, 0.03) none repeat scroll 0% 0% / auto padding-box border-box",
+          "after": "linear-gradient(135deg, rgba(255, 255, 255, 0.25), rgba(0, 0, 0, 0) 68%) repeat scroll 0% 0% / auto padding-box border-box, rgba(230, 248, 255, 0.024) none repeat scroll 0% 0% / auto padding-box border-box"
+        },
+        {
+          "selector": ".wish-face-front .preset-backing",
+          "index": 0,
+          "group": "self",
+          "property": "box-shadow",
+          "before": "rgba(255, 255, 255, 0.75) 1px 1px 0px 0px inset, rgba(255, 255, 255, 0.19) -1px -1px 0px 0px inset, rgba(8, 44, 62, 0.15) 2px 7px 9px -5px",
+          "after": "rgba(255, 255, 255, 0.75) 1px 1px 0px 0px inset, rgba(255, 255, 255, 0.19) -1px -1px 0px 0px inset, rgba(8, 44, 62, 0.22) 2px 7px 9px -5px"
+        },
+        {
+          "selector": ".wish-face-front .preset-backing",
+          "index": 1,
+          "group": "self",
+          "property": "background",
+          "before": "linear-gradient(135deg, rgba(255, 255, 255, 0.16), rgba(0, 0, 0, 0) 68%) repeat scroll 0% 0% / auto padding-box border-box, rgba(230, 248, 255, 0.03) none repeat scroll 0% 0% / auto padding-box border-box",
+          "after": "linear-gradient(135deg, rgba(255, 255, 255, 0.25), rgba(0, 0, 0, 0) 68%) repeat scroll 0% 0% / auto padding-box border-box, rgba(230, 248, 255, 0.024) none repeat scroll 0% 0% / auto padding-box border-box"
+        },
+        {
+          "selector": ".wish-face-front .preset-backing",
+          "index": 1,
+          "group": "self",
+          "property": "box-shadow",
+          "before": "rgba(255, 255, 255, 0.75) 1px 1px 0px 0px inset, rgba(255, 255, 255, 0.19) -1px -1px 0px 0px inset, rgba(8, 44, 62, 0.15) 2px 7px 9px -5px",
+          "after": "rgba(255, 255, 255, 0.75) 1px 1px 0px 0px inset, rgba(255, 255, 255, 0.19) -1px -1px 0px 0px inset, rgba(8, 44, 62, 0.22) 2px 7px 9px -5px"
+        },
+        {
+          "selector": ".wish-face-front .preset-backing",
+          "index": 2,
+          "group": "self",
+          "property": "background",
+          "before": "linear-gradient(135deg, rgba(255, 255, 255, 0.16), rgba(0, 0, 0, 0) 68%) repeat scroll 0% 0% / auto padding-box border-box, rgba(230, 248, 255, 0.03) none repeat scroll 0% 0% / auto padding-box border-box",
+          "after": "linear-gradient(135deg, rgba(255, 255, 255, 0.25), rgba(0, 0, 0, 0) 68%) repeat scroll 0% 0% / auto padding-box border-box, rgba(230, 248, 255, 0.024) none repeat scroll 0% 0% / auto padding-box border-box"
+        },
+        {
+          "selector": ".wish-face-front .preset-backing",
+          "index": 2,
+          "group": "self",
+          "property": "box-shadow",
+          "before": "rgba(255, 255, 255, 0.75) 1px 1px 0px 0px inset, rgba(255, 255, 255, 0.19) -1px -1px 0px 0px inset, rgba(8, 44, 62, 0.15) 2px 7px 9px -5px",
+          "after": "rgba(255, 255, 255, 0.75) 1px 1px 0px 0px inset, rgba(255, 255, 255, 0.19) -1px -1px 0px 0px inset, rgba(8, 44, 62, 0.22) 2px 7px 9px -5px"
+        }
+      ]
+    }
+  ],
+  "styleNote": "The redeem button before.background has only a different running conic-gradient angle because the pages have independent animation clocks; its colors, stops and animation declaration are unchanged.",
+  "interactions": [
+    {
+      "name": "dark-50-flip",
+      "disabled": true,
+      "face": "back",
+      "turning": "false"
+    },
+    {
+      "name": "dark-expanded-50",
+      "disabled": true,
+      "face": "back",
+      "turning": "false"
+    },
+    {
+      "name": "dark-100-flip",
+      "disabled": false,
+      "face": "back",
+      "turning": "false"
+    },
+    {
+      "name": "purchase-open",
+      "dialogVisible": true
+    },
+    {
+      "name": "purchase-cancel",
+      "balance": "¥600\nCNY"
+    },
+    {
+      "name": "dark-320-160-reduced-keyboard",
+      "appClass": "app large-text reduced",
+      "appScrollWidth": 318,
+      "appWidth": 318,
+      "cards": [
+        {
+          "face": "back",
+          "id": "w1",
+          "scrollWidth": 280,
+          "turning": "false",
+          "width": 280
+        },
+        {
+          "face": "back",
+          "id": "w2",
+          "scrollWidth": 280,
+          "turning": "false",
+          "width": 280
+        },
+        {
+          "face": "front",
+          "id": "w3",
+          "scrollWidth": 280,
+          "turning": "false",
+          "width": 280
+        }
+      ],
+      "focus": "翻回降噪耳机正面",
+      "theme": "dark"
+    },
+    {
+      "name": "dark-768",
+      "appClass": "app reduced",
+      "appScrollWidth": 766,
+      "appWidth": 766,
+      "cards": [
+        {
+          "face": "front",
+          "id": "w1",
+          "scrollWidth": 183,
+          "turning": "false",
+          "width": 183
+        },
+        {
+          "face": "back",
+          "id": "w2",
+          "scrollWidth": 183,
+          "turning": "false",
+          "width": 183
+        },
+        {
+          "face": "front",
+          "id": "w3",
+          "scrollWidth": 183,
+          "turning": "false",
+          "width": 183
+        }
+      ],
+      "focus": "翻面查看降噪耳机的进度",
+      "theme": "dark"
+    },
+    {
+      "name": "budget-material-unchanged",
+      "same": true
+    }
+  ],
+  "consoleErrors": [],
+  "notRetested": [
+    "full settlement and redemption outcome animation",
+    "personal photo upload",
+    "system VoiceOver",
+    "native or physical devices",
+    "other browser engines"
+  ],
+  "visualAcceptance": "Pending Rex review"
+}

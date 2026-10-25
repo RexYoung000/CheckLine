@@ -15,7 +15,7 @@
 .app[data-home-material][data-theme] .wish-library :is(.wish-phase-tabs button[aria-selected=true],.wish-view-options button[aria-pressed=true]){box-shadow:inset 0 1px #ffffff50}
 .app[data-home-material][data-theme] :is(.wish-face,.wish-card-v28 .wish-face-back,.wish-compose-preview,.wish-cover-preview,.wish-collection-row){--ink:var(--wm-ink);--muted:var(--wm-meta);--accent:#176a91;--icon-accent:#176a91;background:var(--wm-face-surface,radial-gradient(ellipse at 9% 0,var(--wm-reflection),transparent 57%),var(--wm-card));color:var(--wm-ink);border:0;box-shadow:var(--wm-face-shadow,inset 1px 1.5px 0 var(--wm-edge),inset -1px -1px 0 var(--wm-low-edge),inset 0 -4px 7px -6px #103d5299,0 9px 17px -14px var(--wm-drop));backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
 .app[data-home-material][data-theme] .wish-face::after{background:var(--wm-face-reflection,radial-gradient(ellipse at var(--wish-glare-x) 0,#ffffff55,transparent 43%));box-shadow:var(--wm-face-inner-edge,none);opacity:var(--wm-face-reflection-opacity,.4);pointer-events:none}
-.app[data-home-material][data-theme] .wish-face::before{content:'';position:absolute;inset:0;z-index:3;padding:var(--wm-face-rim-width,1.2px);border-radius:inherit;background:var(--wm-face-rim,linear-gradient(135deg,#ffffffe8,#ffffff24 43%,#dcf6ff61 72%,#91ddf780));mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);mask-composite:exclude;-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;pointer-events:none}
+.app[data-home-material][data-theme] .wish-face::before{content:'';position:absolute;inset:0;z-index:3;padding:var(--wm-face-rim-width,1.2px);border-radius:inherit;background:var(--wm-face-rim,linear-gradient(135deg,#ffffffe8,#ffffff24 43%,#dcf6ff61 72%,#91ddf780));filter:var(--wm-face-rim-filter,none);mask:var(--wm-face-rim-mask,linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0));mask-composite:exclude;-webkit-mask:var(--wm-face-rim-mask,linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0));-webkit-mask-composite:xor;pointer-events:none}
 .app[data-home-material][data-theme] .wish-face :is(.wish-front-title>strong,.wish-front-value,.wish-front-value .wish-money,.wish-back-topline){color:var(--wm-ink)}
 .app[data-home-material][data-theme] .wish-face :is(.wish-money small,.wish-achieved-facts>div>span){color:var(--wm-meta)}
 .app[data-home-material][data-theme] .preset-backing{background:var(--wm-control);box-shadow:inset 1px 1px #ffffff9c,inset -1px -1px var(--wm-low-edge),0 7px 15px -13px var(--wm-drop)}
@@ -69,19 +69,24 @@
   --wf-cover:#ffffff26;--wf-cover-shadow:#164f6b2b;
 }
 .app[data-home-material][data-theme=dark]{
-  --wf-body:color-mix(in srgb,var(--di-card-tint) 82%,transparent);
-  --wf-reflected:#f4fcff80;--wf-transmitted:#def8ff40;
-  --wf-cover:#e6f8ff08;--wf-cover-shadow:#082c3e26;--wf-cover-reflection:#ffffff29;
-  --wf-rim-width:.85px;--wf-transmission-depth:5%;
-  --wf-shadow:inset .7px .8px 0 #f4fcffbd,inset -.7px -.7px 0 #bfe9f852,0 7px 15px -15px #00000050;
-  --wf-inner-edge:inset 0 0 0 1px #ffffff12;
+  /* As on the budget face, reflected white and transmitted ice are separate.
+     The right-hand falloff lets the black environment read through the body;
+     the lower-left caustic keeps the amount over illuminated glass. */
+  --wf-surface:radial-gradient(ellipse 80% 66% at 13% 4%,#f4fcffb8,#f4fcff38 46%,#f4fcff04 76%,transparent),radial-gradient(ellipse 68% 9% at 32% 100%,#bfe9f86b,transparent 83%),radial-gradient(ellipse 100% 105% at 35% 42%,color-mix(in srgb,var(--di-card-tint) 86%,transparent) 25%,color-mix(in srgb,var(--di-card-tint) 78%,transparent) 64%,color-mix(in srgb,var(--di-card-tint) 60%,transparent));
+  --wf-cover:#e6f8ff06;--wf-cover-shadow:#082c3e38;--wf-cover-reflection:#ffffff40;
+  --wf-rim-width:0px;--wf-rim:#000;--wf-rim-mask:none;--wf-rim-filter:url(#wish-front-thickness);
+  --wf-shadow:inset .8px 1px 0 #f4fcffde,inset -.8px -.8px 0 #bfe9f86b,0 7px 15px -15px #00000050;
+  --wf-reflection:radial-gradient(ellipse 58% 5% at 39% 100%,#dff8ff99,transparent 82%);
+  --wf-inner-edge:none;
 }
 .app[data-home-material][data-theme] .wish-card-v28:not(.wish-is-done):not(.outcome-wish-card) .wish-face-front:not(:has(.cover-photo-fill)){
-  --wm-face-surface:radial-gradient(ellipse 76% 64% at 0% 0%,var(--wf-reflected),transparent 76%),radial-gradient(ellipse 46% var(--wf-transmission-depth,12%) at 67% 100%,var(--wf-transmitted),transparent 77%),var(--wf-body);
+  --wm-face-surface:var(--wf-surface,radial-gradient(ellipse 76% 64% at 0% 0%,var(--wf-reflected),transparent 76%),radial-gradient(ellipse 46% 12% at 67% 100%,var(--wf-transmitted),transparent 77%),var(--wf-body));
   --wm-face-shadow:var(--wf-shadow,inset 1px 1.5px 0 #ffffffd9,inset -1px -1px 0 #bfe9f8a6,inset 5px 4px 6px -4px #ffffffe0,inset -6px -8px 9px -5px var(--wf-depth),0 11px 17px -14px var(--wm-drop));
   --wm-face-rim-width:var(--wf-rim-width,1.6px);
-  --wm-face-rim:linear-gradient(135deg,#fffffff2 1%,#ffffffb8 14%,#ffffff24 39%,#bfe9f82b 61%,#e6f8ffbd 83%,#ffffff8c);
-  --wm-face-reflection:radial-gradient(ellipse 48% 10% at var(--wish-glare-x) 0%,#ffffffbd,transparent 80%),linear-gradient(118deg,transparent 10%,#ffffff0a 16%,#ffffff4a 22%,#ffffff0a 29%,transparent 35%),linear-gradient(99deg,#ffffff78,transparent 4%,transparent 97%,#e6f8ff66);
+  --wm-face-rim:var(--wf-rim,linear-gradient(135deg,#fffffff2 1%,#ffffffb8 14%,#ffffff24 39%,#bfe9f82b 61%,#e6f8ffbd 83%,#ffffff8c));
+  --wm-face-rim-mask:var(--wf-rim-mask,linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0));
+  --wm-face-rim-filter:var(--wf-rim-filter,none);
+  --wm-face-reflection:radial-gradient(ellipse 48% 10% at var(--wish-glare-x) 0%,#ffffffbd,transparent 80%),var(--wf-reflection,linear-gradient(118deg,transparent 10%,#ffffff0a 16%,#ffffff4a 22%,#ffffff0a 29%,transparent 35%),linear-gradient(99deg,#ffffff78,transparent 4%,transparent 97%,#e6f8ff66));
   --wm-face-reflection-opacity:1;
   --wm-face-inner-edge:var(--wf-inner-edge,inset 0 0 0 1px #ffffff40,inset 2px 2px 0 2px #ffffff1f,inset -2px -2px 0 2px #3b8bac20);
 }

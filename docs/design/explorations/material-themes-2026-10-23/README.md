@@ -6,7 +6,7 @@
 
 ## 入口与查看方式
 
-- **2026-10-25 当前定点修订：[暗色心愿正面减重 · 浅暗对照](budget-pages-pair.html?view=wish&study=wish-front-thin-2)**。仅减轻暗色未实现心愿正面的着色、倒角与投影，保留冰蓝和局部反光；浅色及其他状态、页面、动效与原生保持。验证结果见下方同名章节，轻薄观感待 Rex 验收。
+- **2026-10-25 当前定点修订：[暗色心愿正面透光 · 浅暗对照](budget-pages-pair.html?view=wish&study=wish-front-transmission-3)**。对照预算主卡，重新分配透色与局部受光，复用其折射边；只作用于暗色未实现正面。浅色、其他状态／页面、现有动效及原生保持，玻璃观感待 Rex 验收。
 
 - **当前先看：[预算与心愿浅暗对照](budget-pages-pair.html?view=home&study=dark-ice-unified-5)**。下拉覆盖预算首页、记录层、卡库、详情及子页，心愿正反面、钱包和相关表单共 21 个入口，两侧均可操作；预算抽屉可上拉或点顶部箭头全屏，也可单独查看、检查减少动态效果。[直接看心愿](budget-pages-pair.html?view=wish)。
 - **详情概览：[预算详情浅暗对照](budget-detail-pair.html)**。主卡沿用已确认材质，暗色 UI 随本轮中性化；保留返回、记录、录入与结算预览。
@@ -24,6 +24,16 @@
 对照页切换“查看页面”或“减少动态效果”会重新加载两侧的演示入口；检查当前任务原位换主题，请点“单独查看”，使用独立稿的顶部主题按钮。
 
 ## 来源、采用范围与材质规则
+
+### 2026-10-25 暗色心愿正面对照预算透光
+
+上一版的均匀透色加整面斜光仍显得像色块。本轮实际查看独立预算主卡与预算首页，对照其左上反射、边缘折射和内部透色：暗色未实现正面取消斜向白光，冰蓝色源保持；中心着色保留 86%，向边缘逐渐透出黑底，下缘用局部回光承托。封面底片保持透明，边缘和接触光与卡体分层。不是继续把整张卡调淡，也不向正面新增液面或持续扫光。
+
+样式仍在 `src/wish-material.css` 维护；`build-budget-home.cjs` 从已确认的 `budget-card-pair.html` 提取同一折射边滤镜，按小卡尺寸适配，并以静态、不可点击的定义接入。仅暗色未实现正面引用它；现有圆角、尺寸、倾斜与翻面脚本不变。生成稿除该样式与静态滤镜定义外，与 `3cb7ce2` 版本逐字相同。
+
+实际验证：390 浅暗默认与放大对照、暗色小卡／大卡双向翻面落稳、50% 置灰／100% 可进入购买核对、取消后余额仍为 ¥600；320＋160% 字号和减少动态效果下键盘翻面正常，768 布局无横向溢出。计算样式核对中，浅色、暗色已实现卡／横条／创建预览与预算主卡保持；可兑换按钮的瞬时渐变角度随各页独立时钟不同，颜色、停靠点和动画定义相同。独立验证页错误日志为空。未重跑完整结算／兑现结果、照片上传、其他浏览器引擎、VoiceOver 或真机；既有宿主报错和快速连点问题未在此轮处理。
+
+查看 [可操作浅暗对照](budget-pages-pair.html?view=wish&study=wish-front-transmission-3)，重点看默认小卡与放大卡的边缘透色。证据：[修改前](evidence/wish-front-transmission-2026-10-25/before-pair.jpg)、[预算参照](evidence/wish-front-transmission-2026-10-25/budget-reference.jpg)、[当前对照](evidence/wish-front-transmission-2026-10-25/front-pair.jpg)、[放大对照](evidence/wish-front-transmission-2026-10-25/expanded-pair.jpg)、[浏览器检查](evidence/wish-front-transmission-2026-10-25/checks.json)、[源码范围核对](evidence/wish-front-transmission-2026-10-25/source-audit.json)。本轮玻璃材质的观感仍待 Rex 验收。
 
 ### 2026-10-25 暗色心愿正面减重
 
