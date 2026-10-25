@@ -1,0 +1,807 @@
+{
+  "scope": "Only unfinished wish front material; HTML only",
+  "styleComparisons": [
+    {
+      "case": "light realized final",
+      "matched": {
+        ".dock": 1,
+        ".dock-tabs button.selected": 1,
+        ".wish-balance-bar": 1,
+        ".wish-face-back": 1,
+        ".wish-face-front": 1,
+        ".wish-face-front .preset-art>img": 1,
+        ".wish-face-front .preset-backing": 1,
+        ".wish-front-title>strong": 1,
+        ".wish-front-value": 1,
+        ".wish-hover-layer": 1,
+        ".wish-phase-tabs button[aria-selected=\"true\"]": 1,
+        ".wish-turn-rotor": 1,
+        ".wish-turn-shadow": 1
+      },
+      "differences": []
+    },
+    {
+      "case": "light active final",
+      "matched": {
+        ".dock": 1,
+        ".dock-tabs button.selected": 1,
+        ".wish-balance-bar": 1,
+        ".wish-face-back": 3,
+        ".wish-face-back .wish-card-liquid": 2,
+        ".wish-face-back .wish-redeem-button": 3,
+        ".wish-face-front": 3,
+        ".wish-face-front .preset-art>img": 3,
+        ".wish-face-front .preset-backing": 3,
+        ".wish-front-title>strong": 3,
+        ".wish-front-value": 3,
+        ".wish-hover-layer": 3,
+        ".wish-phase-tabs button[aria-selected=\"true\"]": 1,
+        ".wish-turn-rotor": 3,
+        ".wish-turn-shadow": 3
+      },
+      "differences": [
+        {
+          "selector": ".wish-face-front",
+          "index": 0,
+          "group": "self",
+          "property": "background",
+          "before": "radial-gradient(at 9% 0px, rgba(255, 255, 255, 0.72), rgba(0, 0, 0, 0) 57%) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 0.215686 0.72549 0.909804 / 0.28) none repeat scroll 0% 0% / auto padding-box border-box",
+          "after": "radial-gradient(76% 64% at 0% 0%, rgba(255, 255, 255, 0.78), rgba(0, 0, 0, 0) 76%) repeat scroll 0% 0% / auto padding-box border-box, radial-gradient(46% 12% at 67% 100%, rgba(255, 255, 255, 0.6), rgba(0, 0, 0, 0) 77%) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 0.215686 0.72549 0.909804 / 0.25) none repeat scroll 0% 0% / auto padding-box border-box"
+        },
+        {
+          "selector": ".wish-face-front",
+          "index": 0,
+          "group": "self",
+          "property": "box-shadow",
+          "before": "rgba(255, 255, 255, 0.85) 1px 1.5px 0px 0px inset, rgba(108, 171, 194, 0.267) -1px -1px 0px 0px inset, rgba(16, 61, 82, 0.6) 0px -4px 7px -6px inset, rgba(22, 64, 90, 0.14) 0px 9px 17px -14px",
+          "after": "rgba(255, 255, 255, 0.85) 1px 1.5px 0px 0px inset, rgba(191, 233, 248, 0.65) -1px -1px 0px 0px inset, rgba(255, 255, 255, 0.88) 5px 4px 6px -4px inset, rgba(23, 102, 141, 0.21) -6px -8px 9px -5px inset, rgba(22, 64, 90, 0.14) 0px 11px 17px -14px"
+        },
+        {
+          "selector": ".wish-face-front",
+          "index": 0,
+          "group": "before",
+          "property": "background",
+          "before": "rgba(0, 0, 0, 0) linear-gradient(135deg, rgba(255, 255, 255, 0.91), rgba(255, 255, 255, 0.14) 43%, rgba(220, 246, 255, 0.38) 72%, rgba(145, 221, 247, 0.5)) repeat scroll 0% 0% / auto padding-box border-box",
+          "after": "rgba(0, 0, 0, 0) linear-gradient(135deg, rgba(255, 255, 255, 0.95) 1%, rgba(255, 255, 255, 0.72) 14%, rgba(255, 255, 255, 0.14) 39%, rgba(191, 233, 248, 0.17) 61%, rgba(230, 248, 255, 0.74) 83%, rgba(255, 255, 255, 0.55)) repeat scroll 0% 0% / auto padding-box border-box"
+        },
+        {
+          "selector": ".wish-face-front",
+          "index": 0,
+          "group": "before",
+          "property": "padding",
+          "before": "1.2px",
+          "after": "1.6px"
+        },
+        {
+          "selector": ".wish-face-front",
+          "index": 0,
+          "group": "after",
+          "property": "background",
+          "before": "rgba(0, 0, 0, 0) radial-gradient(at 30% 0px, rgba(255, 255, 255, 0.333), rgba(0, 0, 0, 0) 43%) repeat scroll 0% 0% / auto padding-box border-box",
+          "after": "radial-gradient(48% 10% at 30% 0%, rgba(255, 255, 255, 0.74), rgba(0, 0, 0, 0) 80%) repeat scroll 0% 0% / auto padding-box border-box, linear-gradient(118deg, rgba(0, 0, 0, 0) 10%, rgba(255, 255, 255, 0.04) 16%, rgba(255, 255, 255, 0.29) 22%, rgba(255, 255, 255, 0.04) 29%, rgba(0, 0, 0, 0) 35%) repeat scroll 0% 0% / auto padding-box border-box, rgba(0, 0, 0, 0) linear-gradient(99deg, rgba(255, 255, 255, 0.47), rgba(0, 0, 0, 0) 4%, rgba(0, 0, 0, 0) 97%, rgba(230, 248, 255, 0.4)) repeat scroll 0% 0% / auto padding-box border-box"
+        },
+        {
+          "selector": ".wish-face-front",
+          "index": 0,
+          "group": "after",
+          "property": "box-shadow",
+          "before": "none",
+          "after": "rgba(255, 255, 255, 0.25) 0px 0px 0px 1px inset, rgba(255, 255, 255, 0.12) 2px 2px 0px 2px inset, rgba(59, 139, 172, 0.125) -2px -2px 0px 2px inset"
+        },
+        {
+          "selector": ".wish-face-front",
+          "index": 0,
+          "group": "after",
+          "property": "opacity",
+          "before": "0.4",
+          "after": "1"
+        },
+        {
+          "selector": ".wish-face-front",
+          "index": 1,
+          "group": "self",
+          "property": "background",
+          "before": "radial-gradient(at 9% 0px, rgba(255, 255, 255, 0.72), rgba(0, 0, 0, 0) 57%) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 0.215686 0.72549 0.909804 / 0.28) none repeat scroll 0% 0% / auto padding-box border-box",
+          "after": "radial-gradient(76% 64% at 0% 0%, rgba(255, 255, 255, 0.78), rgba(0, 0, 0, 0) 76%) repeat scroll 0% 0% / auto padding-box border-box, radial-gradient(46% 12% at 67% 100%, rgba(255, 255, 255, 0.6), rgba(0, 0, 0, 0) 77%) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 0.215686 0.72549 0.909804 / 0.25) none repeat scroll 0% 0% / auto padding-box border-box"
+        },
+        {
+          "selector": ".wish-face-front",
+          "index": 1,
+          "group": "self",
+          "property": "box-shadow",
+          "before": "rgba(255, 255, 255, 0.85) 1px 1.5px 0px 0px inset, rgba(108, 171, 194, 0.267) -1px -1px 0px 0px inset, rgba(16, 61, 82, 0.6) 0px -4px 7px -6px inset, rgba(22, 64, 90, 0.14) 0px 9px 17px -14px",
+          "after": "rgba(255, 255, 255, 0.85) 1px 1.5px 0px 0px inset, rgba(191, 233, 248, 0.65) -1px -1px 0px 0px inset, rgba(255, 255, 255, 0.88) 5px 4px 6px -4px inset, rgba(23, 102, 141, 0.21) -6px -8px 9px -5px inset, rgba(22, 64, 90, 0.14) 0px 11px 17px -14px"
+        },
+        {
+          "selector": ".wish-face-front",
+          "index": 1,
+          "group": "before",
+          "property": "background",
+          "before": "rgba(0, 0, 0, 0) linear-gradient(135deg, rgba(255, 255, 255, 0.91), rgba(255, 255, 255, 0.14) 43%, rgba(220, 246, 255, 0.38) 72%, rgba(145, 221, 247, 0.5)) repeat scroll 0% 0% / auto padding-box border-box",
+          "after": "rgba(0, 0, 0, 0) linear-gradient(135deg, rgba(255, 255, 255, 0.95) 1%, rgba(255, 255, 255, 0.72) 14%, rgba(255, 255, 255, 0.14) 39%, rgba(191, 233, 248, 0.17) 61%, rgba(230, 248, 255, 0.74) 83%, rgba(255, 255, 255, 0.55)) repeat scroll 0% 0% / auto padding-box border-box"
+        },
+        {
+          "selector": ".wish-face-front",
+          "index": 1,
+          "group": "before",
+          "property": "padding",
+          "before": "1.2px",
+          "after": "1.6px"
+        },
+        {
+          "selector": ".wish-face-front",
+          "index": 1,
+          "group": "after",
+          "property": "background",
+          "before": "rgba(0, 0, 0, 0) radial-gradient(at 30% 0px, rgba(255, 255, 255, 0.333), rgba(0, 0, 0, 0) 43%) repeat scroll 0% 0% / auto padding-box border-box",
+          "after": "radial-gradient(48% 10% at 30% 0%, rgba(255, 255, 255, 0.74), rgba(0, 0, 0, 0) 80%) repeat scroll 0% 0% / auto padding-box border-box, linear-gradient(118deg, rgba(0, 0, 0, 0) 10%, rgba(255, 255, 255, 0.04) 16%, rgba(255, 255, 255, 0.29) 22%, rgba(255, 255, 255, 0.04) 29%, rgba(0, 0, 0, 0) 35%) repeat scroll 0% 0% / auto padding-box border-box, rgba(0, 0, 0, 0) linear-gradient(99deg, rgba(255, 255, 255, 0.47), rgba(0, 0, 0, 0) 4%, rgba(0, 0, 0, 0) 97%, rgba(230, 248, 255, 0.4)) repeat scroll 0% 0% / auto padding-box border-box"
+        },
+        {
+          "selector": ".wish-face-front",
+          "index": 1,
+          "group": "after",
+          "property": "box-shadow",
+          "before": "none",
+          "after": "rgba(255, 255, 255, 0.25) 0px 0px 0px 1px inset, rgba(255, 255, 255, 0.12) 2px 2px 0px 2px inset, rgba(59, 139, 172, 0.125) -2px -2px 0px 2px inset"
+        },
+        {
+          "selector": ".wish-face-front",
+          "index": 1,
+          "group": "after",
+          "property": "opacity",
+          "before": "0.4",
+          "after": "1"
+        },
+        {
+          "selector": ".wish-face-front",
+          "index": 2,
+          "group": "self",
+          "property": "background",
+          "before": "radial-gradient(at 9% 0px, rgba(255, 255, 255, 0.72), rgba(0, 0, 0, 0) 57%) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 0.215686 0.72549 0.909804 / 0.28) none repeat scroll 0% 0% / auto padding-box border-box",
+          "after": "radial-gradient(76% 64% at 0% 0%, rgba(255, 255, 255, 0.78), rgba(0, 0, 0, 0) 76%) repeat scroll 0% 0% / auto padding-box border-box, radial-gradient(46% 12% at 67% 100%, rgba(255, 255, 255, 0.6), rgba(0, 0, 0, 0) 77%) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 0.215686 0.72549 0.909804 / 0.25) none repeat scroll 0% 0% / auto padding-box border-box"
+        },
+        {
+          "selector": ".wish-face-front",
+          "index": 2,
+          "group": "self",
+          "property": "box-shadow",
+          "before": "rgba(255, 255, 255, 0.85) 1px 1.5px 0px 0px inset, rgba(108, 171, 194, 0.267) -1px -1px 0px 0px inset, rgba(16, 61, 82, 0.6) 0px -4px 7px -6px inset, rgba(22, 64, 90, 0.14) 0px 9px 17px -14px",
+          "after": "rgba(255, 255, 255, 0.85) 1px 1.5px 0px 0px inset, rgba(191, 233, 248, 0.65) -1px -1px 0px 0px inset, rgba(255, 255, 255, 0.88) 5px 4px 6px -4px inset, rgba(23, 102, 141, 0.21) -6px -8px 9px -5px inset, rgba(22, 64, 90, 0.14) 0px 11px 17px -14px"
+        },
+        {
+          "selector": ".wish-face-front",
+          "index": 2,
+          "group": "before",
+          "property": "background",
+          "before": "rgba(0, 0, 0, 0) linear-gradient(135deg, rgba(255, 255, 255, 0.91), rgba(255, 255, 255, 0.14) 43%, rgba(220, 246, 255, 0.38) 72%, rgba(145, 221, 247, 0.5)) repeat scroll 0% 0% / auto padding-box border-box",
+          "after": "rgba(0, 0, 0, 0) linear-gradient(135deg, rgba(255, 255, 255, 0.95) 1%, rgba(255, 255, 255, 0.72) 14%, rgba(255, 255, 255, 0.14) 39%, rgba(191, 233, 248, 0.17) 61%, rgba(230, 248, 255, 0.74) 83%, rgba(255, 255, 255, 0.55)) repeat scroll 0% 0% / auto padding-box border-box"
+        },
+        {
+          "selector": ".wish-face-front",
+          "index": 2,
+          "group": "before",
+          "property": "padding",
+          "before": "1.2px",
+          "after": "1.6px"
+        },
+        {
+          "selector": ".wish-face-front",
+          "index": 2,
+          "group": "after",
+          "property": "background",
+          "before": "rgba(0, 0, 0, 0) radial-gradient(at 30% 0px, rgba(255, 255, 255, 0.333), rgba(0, 0, 0, 0) 43%) repeat scroll 0% 0% / auto padding-box border-box",
+          "after": "radial-gradient(48% 10% at 30% 0%, rgba(255, 255, 255, 0.74), rgba(0, 0, 0, 0) 80%) repeat scroll 0% 0% / auto padding-box border-box, linear-gradient(118deg, rgba(0, 0, 0, 0) 10%, rgba(255, 255, 255, 0.04) 16%, rgba(255, 255, 255, 0.29) 22%, rgba(255, 255, 255, 0.04) 29%, rgba(0, 0, 0, 0) 35%) repeat scroll 0% 0% / auto padding-box border-box, rgba(0, 0, 0, 0) linear-gradient(99deg, rgba(255, 255, 255, 0.47), rgba(0, 0, 0, 0) 4%, rgba(0, 0, 0, 0) 97%, rgba(230, 248, 255, 0.4)) repeat scroll 0% 0% / auto padding-box border-box"
+        },
+        {
+          "selector": ".wish-face-front",
+          "index": 2,
+          "group": "after",
+          "property": "box-shadow",
+          "before": "none",
+          "after": "rgba(255, 255, 255, 0.25) 0px 0px 0px 1px inset, rgba(255, 255, 255, 0.12) 2px 2px 0px 2px inset, rgba(59, 139, 172, 0.125) -2px -2px 0px 2px inset"
+        },
+        {
+          "selector": ".wish-face-front",
+          "index": 2,
+          "group": "after",
+          "property": "opacity",
+          "before": "0.4",
+          "after": "1"
+        },
+        {
+          "selector": ".wish-face-front .preset-backing",
+          "index": 0,
+          "group": "self",
+          "property": "background",
+          "before": "rgba(237, 248, 255, 0.68) none repeat scroll 0% 0% / auto padding-box border-box",
+          "after": "linear-gradient(135deg, rgba(255, 255, 255, 0.25), rgba(0, 0, 0, 0) 68%) repeat scroll 0% 0% / auto padding-box border-box, rgba(255, 255, 255, 0.15) none repeat scroll 0% 0% / auto padding-box border-box"
+        },
+        {
+          "selector": ".wish-face-front .preset-backing",
+          "index": 0,
+          "group": "self",
+          "property": "box-shadow",
+          "before": "rgba(255, 255, 255, 0.61) 1px 1px 0px 0px inset, rgba(108, 171, 194, 0.267) -1px -1px 0px 0px inset, rgba(22, 64, 90, 0.14) 0px 7px 15px -13px",
+          "after": "rgba(255, 255, 255, 0.75) 1px 1px 0px 0px inset, rgba(255, 255, 255, 0.19) -1px -1px 0px 0px inset, rgba(22, 79, 107, 0.17) 2px 7px 9px -5px"
+        },
+        {
+          "selector": ".wish-face-front .preset-backing",
+          "index": 1,
+          "group": "self",
+          "property": "background",
+          "before": "rgba(237, 248, 255, 0.68) none repeat scroll 0% 0% / auto padding-box border-box",
+          "after": "linear-gradient(135deg, rgba(255, 255, 255, 0.25), rgba(0, 0, 0, 0) 68%) repeat scroll 0% 0% / auto padding-box border-box, rgba(255, 255, 255, 0.15) none repeat scroll 0% 0% / auto padding-box border-box"
+        },
+        {
+          "selector": ".wish-face-front .preset-backing",
+          "index": 1,
+          "group": "self",
+          "property": "box-shadow",
+          "before": "rgba(255, 255, 255, 0.61) 1px 1px 0px 0px inset, rgba(108, 171, 194, 0.267) -1px -1px 0px 0px inset, rgba(22, 64, 90, 0.14) 0px 7px 15px -13px",
+          "after": "rgba(255, 255, 255, 0.75) 1px 1px 0px 0px inset, rgba(255, 255, 255, 0.19) -1px -1px 0px 0px inset, rgba(22, 79, 107, 0.17) 2px 7px 9px -5px"
+        },
+        {
+          "selector": ".wish-face-front .preset-backing",
+          "index": 2,
+          "group": "self",
+          "property": "background",
+          "before": "rgba(237, 248, 255, 0.68) none repeat scroll 0% 0% / auto padding-box border-box",
+          "after": "linear-gradient(135deg, rgba(255, 255, 255, 0.25), rgba(0, 0, 0, 0) 68%) repeat scroll 0% 0% / auto padding-box border-box, rgba(255, 255, 255, 0.15) none repeat scroll 0% 0% / auto padding-box border-box"
+        },
+        {
+          "selector": ".wish-face-front .preset-backing",
+          "index": 2,
+          "group": "self",
+          "property": "box-shadow",
+          "before": "rgba(255, 255, 255, 0.61) 1px 1px 0px 0px inset, rgba(108, 171, 194, 0.267) -1px -1px 0px 0px inset, rgba(22, 64, 90, 0.14) 0px 7px 15px -13px",
+          "after": "rgba(255, 255, 255, 0.75) 1px 1px 0px 0px inset, rgba(255, 255, 255, 0.19) -1px -1px 0px 0px inset, rgba(22, 79, 107, 0.17) 2px 7px 9px -5px"
+        }
+      ]
+    },
+    {
+      "case": "light rows final",
+      "matched": {
+        ".dock": 1,
+        ".dock-tabs button.selected": 1,
+        ".wish-balance-bar": 1,
+        ".wish-collection-row": 3,
+        ".wish-phase-tabs button[aria-selected=\"true\"]": 1
+      },
+      "differences": []
+    },
+    {
+      "case": "dark rows final",
+      "matched": {
+        ".dock": 1,
+        ".dock-tabs button.selected": 1,
+        ".wish-balance-bar": 1,
+        ".wish-collection-row": 3,
+        ".wish-phase-tabs button[aria-selected=\"true\"]": 1
+      },
+      "differences": []
+    },
+    {
+      "case": "dark active final",
+      "matched": {
+        ".dock": 1,
+        ".dock-tabs button.selected": 1,
+        ".wish-balance-bar": 1,
+        ".wish-face-back": 3,
+        ".wish-face-back .wish-card-liquid": 2,
+        ".wish-face-back .wish-redeem-button": 3,
+        ".wish-face-front": 3,
+        ".wish-face-front .preset-art>img": 3,
+        ".wish-face-front .preset-backing": 3,
+        ".wish-front-title>strong": 3,
+        ".wish-front-value": 3,
+        ".wish-hover-layer": 3,
+        ".wish-phase-tabs button[aria-selected=\"true\"]": 1,
+        ".wish-turn-rotor": 3,
+        ".wish-turn-shadow": 3
+      },
+      "differences": [
+        {
+          "selector": ".wish-face-front",
+          "index": 0,
+          "group": "self",
+          "property": "background",
+          "before": "radial-gradient(83% 73% at 9% 0%, rgba(244, 252, 255, 0.6), rgba(244, 252, 255, 0.19) 33%, rgba(0, 0, 0, 0) 78%) repeat scroll 0% 0% / auto padding-box border-box, radial-gradient(56% 32% at 95% 100%, rgba(197, 246, 255, 0.22), rgba(0, 0, 0, 0) 75%) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 0.560784 0.847059 0.94902 / 0.92) none repeat scroll 0% 0% / auto padding-box border-box",
+          "after": "radial-gradient(76% 64% at 0% 0%, rgba(244, 252, 255, 0.72), rgba(0, 0, 0, 0) 76%) repeat scroll 0% 0% / auto padding-box border-box, radial-gradient(46% 12% at 67% 100%, rgba(222, 248, 255, 0.5), rgba(0, 0, 0, 0) 77%) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 0.560784 0.847059 0.94902 / 0.88) none repeat scroll 0% 0% / auto padding-box border-box"
+        },
+        {
+          "selector": ".wish-face-front",
+          "index": 0,
+          "group": "self",
+          "property": "box-shadow",
+          "before": "rgba(244, 252, 255, 0.8) 1px 1.5px 0px 0px inset, rgba(191, 233, 248, 0.42) -1px -1px 0px 0px inset, rgba(225, 247, 255, 0.8) 6px 7px 10px -8px inset, rgba(16, 61, 82, 0.65) -6px -7px 9px -7px inset, rgba(0, 0, 0, 0.44) 0px 9px 17px -14px",
+          "after": "rgba(255, 255, 255, 0.85) 1px 1.5px 0px 0px inset, rgba(191, 233, 248, 0.65) -1px -1px 0px 0px inset, rgba(255, 255, 255, 0.88) 5px 4px 6px -4px inset, rgba(16, 61, 82, 0.42) -6px -8px 9px -5px inset, rgba(0, 0, 0, 0.44) 0px 11px 17px -14px"
+        },
+        {
+          "selector": ".wish-face-front",
+          "index": 0,
+          "group": "before",
+          "property": "background",
+          "before": "rgba(0, 0, 0, 0) linear-gradient(140deg, rgba(244, 252, 255, 0.88), rgba(222, 248, 255, 0.21) 32%, rgba(222, 248, 255, 0.04) 58%, rgba(191, 233, 248, 0.4) 83%, rgba(244, 252, 255, 0.55)) repeat scroll 0% 0% / auto padding-box border-box",
+          "after": "rgba(0, 0, 0, 0) linear-gradient(135deg, rgba(255, 255, 255, 0.95) 1%, rgba(255, 255, 255, 0.72) 14%, rgba(255, 255, 255, 0.14) 39%, rgba(191, 233, 248, 0.17) 61%, rgba(230, 248, 255, 0.74) 83%, rgba(255, 255, 255, 0.55)) repeat scroll 0% 0% / auto padding-box border-box"
+        },
+        {
+          "selector": ".wish-face-front",
+          "index": 0,
+          "group": "before",
+          "property": "padding",
+          "before": "1.2px",
+          "after": "1.6px"
+        },
+        {
+          "selector": ".wish-face-front",
+          "index": 0,
+          "group": "after",
+          "property": "background",
+          "before": "radial-gradient(52% 24% at 30% 0%, rgba(255, 255, 255, 0.44), rgba(0, 0, 0, 0) 74%) repeat scroll 0% 0% / auto padding-box border-box, rgba(0, 0, 0, 0) linear-gradient(100deg, rgba(255, 255, 255, 0.094), rgba(0, 0, 0, 0) 8%, rgba(0, 0, 0, 0) 94%, rgba(230, 248, 255, 0.14)) repeat scroll 0% 0% / auto padding-box border-box",
+          "after": "radial-gradient(48% 10% at 30% 0%, rgba(255, 255, 255, 0.74), rgba(0, 0, 0, 0) 80%) repeat scroll 0% 0% / auto padding-box border-box, linear-gradient(118deg, rgba(0, 0, 0, 0) 10%, rgba(255, 255, 255, 0.04) 16%, rgba(255, 255, 255, 0.29) 22%, rgba(255, 255, 255, 0.04) 29%, rgba(0, 0, 0, 0) 35%) repeat scroll 0% 0% / auto padding-box border-box, rgba(0, 0, 0, 0) linear-gradient(99deg, rgba(255, 255, 255, 0.47), rgba(0, 0, 0, 0) 4%, rgba(0, 0, 0, 0) 97%, rgba(230, 248, 255, 0.4)) repeat scroll 0% 0% / auto padding-box border-box"
+        },
+        {
+          "selector": ".wish-face-front",
+          "index": 0,
+          "group": "after",
+          "property": "box-shadow",
+          "before": "none",
+          "after": "rgba(255, 255, 255, 0.25) 0px 0px 0px 1px inset, rgba(255, 255, 255, 0.12) 2px 2px 0px 2px inset, rgba(59, 139, 172, 0.125) -2px -2px 0px 2px inset"
+        },
+        {
+          "selector": ".wish-face-front",
+          "index": 0,
+          "group": "after",
+          "property": "opacity",
+          "before": "0.4",
+          "after": "1"
+        },
+        {
+          "selector": ".wish-face-front",
+          "index": 1,
+          "group": "self",
+          "property": "background",
+          "before": "radial-gradient(83% 73% at 9% 0%, rgba(244, 252, 255, 0.6), rgba(244, 252, 255, 0.19) 33%, rgba(0, 0, 0, 0) 78%) repeat scroll 0% 0% / auto padding-box border-box, radial-gradient(56% 32% at 95% 100%, rgba(197, 246, 255, 0.22), rgba(0, 0, 0, 0) 75%) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 0.560784 0.847059 0.94902 / 0.92) none repeat scroll 0% 0% / auto padding-box border-box",
+          "after": "radial-gradient(76% 64% at 0% 0%, rgba(244, 252, 255, 0.72), rgba(0, 0, 0, 0) 76%) repeat scroll 0% 0% / auto padding-box border-box, radial-gradient(46% 12% at 67% 100%, rgba(222, 248, 255, 0.5), rgba(0, 0, 0, 0) 77%) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 0.560784 0.847059 0.94902 / 0.88) none repeat scroll 0% 0% / auto padding-box border-box"
+        },
+        {
+          "selector": ".wish-face-front",
+          "index": 1,
+          "group": "self",
+          "property": "box-shadow",
+          "before": "rgba(244, 252, 255, 0.8) 1px 1.5px 0px 0px inset, rgba(191, 233, 248, 0.42) -1px -1px 0px 0px inset, rgba(225, 247, 255, 0.8) 6px 7px 10px -8px inset, rgba(16, 61, 82, 0.65) -6px -7px 9px -7px inset, rgba(0, 0, 0, 0.44) 0px 9px 17px -14px",
+          "after": "rgba(255, 255, 255, 0.85) 1px 1.5px 0px 0px inset, rgba(191, 233, 248, 0.65) -1px -1px 0px 0px inset, rgba(255, 255, 255, 0.88) 5px 4px 6px -4px inset, rgba(16, 61, 82, 0.42) -6px -8px 9px -5px inset, rgba(0, 0, 0, 0.44) 0px 11px 17px -14px"
+        },
+        {
+          "selector": ".wish-face-front",
+          "index": 1,
+          "group": "before",
+          "property": "background",
+          "before": "rgba(0, 0, 0, 0) linear-gradient(140deg, rgba(244, 252, 255, 0.88), rgba(222, 248, 255, 0.21) 32%, rgba(222, 248, 255, 0.04) 58%, rgba(191, 233, 248, 0.4) 83%, rgba(244, 252, 255, 0.55)) repeat scroll 0% 0% / auto padding-box border-box",
+          "after": "rgba(0, 0, 0, 0) linear-gradient(135deg, rgba(255, 255, 255, 0.95) 1%, rgba(255, 255, 255, 0.72) 14%, rgba(255, 255, 255, 0.14) 39%, rgba(191, 233, 248, 0.17) 61%, rgba(230, 248, 255, 0.74) 83%, rgba(255, 255, 255, 0.55)) repeat scroll 0% 0% / auto padding-box border-box"
+        },
+        {
+          "selector": ".wish-face-front",
+          "index": 1,
+          "group": "before",
+          "property": "padding",
+          "before": "1.2px",
+          "after": "1.6px"
+        },
+        {
+          "selector": ".wish-face-front",
+          "index": 1,
+          "group": "after",
+          "property": "background",
+          "before": "radial-gradient(52% 24% at 30% 0%, rgba(255, 255, 255, 0.44), rgba(0, 0, 0, 0) 74%) repeat scroll 0% 0% / auto padding-box border-box, rgba(0, 0, 0, 0) linear-gradient(100deg, rgba(255, 255, 255, 0.094), rgba(0, 0, 0, 0) 8%, rgba(0, 0, 0, 0) 94%, rgba(230, 248, 255, 0.14)) repeat scroll 0% 0% / auto padding-box border-box",
+          "after": "radial-gradient(48% 10% at 30% 0%, rgba(255, 255, 255, 0.74), rgba(0, 0, 0, 0) 80%) repeat scroll 0% 0% / auto padding-box border-box, linear-gradient(118deg, rgba(0, 0, 0, 0) 10%, rgba(255, 255, 255, 0.04) 16%, rgba(255, 255, 255, 0.29) 22%, rgba(255, 255, 255, 0.04) 29%, rgba(0, 0, 0, 0) 35%) repeat scroll 0% 0% / auto padding-box border-box, rgba(0, 0, 0, 0) linear-gradient(99deg, rgba(255, 255, 255, 0.47), rgba(0, 0, 0, 0) 4%, rgba(0, 0, 0, 0) 97%, rgba(230, 248, 255, 0.4)) repeat scroll 0% 0% / auto padding-box border-box"
+        },
+        {
+          "selector": ".wish-face-front",
+          "index": 1,
+          "group": "after",
+          "property": "box-shadow",
+          "before": "none",
+          "after": "rgba(255, 255, 255, 0.25) 0px 0px 0px 1px inset, rgba(255, 255, 255, 0.12) 2px 2px 0px 2px inset, rgba(59, 139, 172, 0.125) -2px -2px 0px 2px inset"
+        },
+        {
+          "selector": ".wish-face-front",
+          "index": 1,
+          "group": "after",
+          "property": "opacity",
+          "before": "0.4",
+          "after": "1"
+        },
+        {
+          "selector": ".wish-face-front",
+          "index": 2,
+          "group": "self",
+          "property": "background",
+          "before": "radial-gradient(83% 73% at 9% 0%, rgba(244, 252, 255, 0.6), rgba(244, 252, 255, 0.19) 33%, rgba(0, 0, 0, 0) 78%) repeat scroll 0% 0% / auto padding-box border-box, radial-gradient(56% 32% at 95% 100%, rgba(197, 246, 255, 0.22), rgba(0, 0, 0, 0) 75%) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 0.560784 0.847059 0.94902 / 0.92) none repeat scroll 0% 0% / auto padding-box border-box",
+          "after": "radial-gradient(76% 64% at 0% 0%, rgba(244, 252, 255, 0.72), rgba(0, 0, 0, 0) 76%) repeat scroll 0% 0% / auto padding-box border-box, radial-gradient(46% 12% at 67% 100%, rgba(222, 248, 255, 0.5), rgba(0, 0, 0, 0) 77%) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 0.560784 0.847059 0.94902 / 0.88) none repeat scroll 0% 0% / auto padding-box border-box"
+        },
+        {
+          "selector": ".wish-face-front",
+          "index": 2,
+          "group": "self",
+          "property": "box-shadow",
+          "before": "rgba(244, 252, 255, 0.8) 1px 1.5px 0px 0px inset, rgba(191, 233, 248, 0.42) -1px -1px 0px 0px inset, rgba(225, 247, 255, 0.8) 6px 7px 10px -8px inset, rgba(16, 61, 82, 0.65) -6px -7px 9px -7px inset, rgba(0, 0, 0, 0.44) 0px 9px 17px -14px",
+          "after": "rgba(255, 255, 255, 0.85) 1px 1.5px 0px 0px inset, rgba(191, 233, 248, 0.65) -1px -1px 0px 0px inset, rgba(255, 255, 255, 0.88) 5px 4px 6px -4px inset, rgba(16, 61, 82, 0.42) -6px -8px 9px -5px inset, rgba(0, 0, 0, 0.44) 0px 11px 17px -14px"
+        },
+        {
+          "selector": ".wish-face-front",
+          "index": 2,
+          "group": "before",
+          "property": "background",
+          "before": "rgba(0, 0, 0, 0) linear-gradient(140deg, rgba(244, 252, 255, 0.88), rgba(222, 248, 255, 0.21) 32%, rgba(222, 248, 255, 0.04) 58%, rgba(191, 233, 248, 0.4) 83%, rgba(244, 252, 255, 0.55)) repeat scroll 0% 0% / auto padding-box border-box",
+          "after": "rgba(0, 0, 0, 0) linear-gradient(135deg, rgba(255, 255, 255, 0.95) 1%, rgba(255, 255, 255, 0.72) 14%, rgba(255, 255, 255, 0.14) 39%, rgba(191, 233, 248, 0.17) 61%, rgba(230, 248, 255, 0.74) 83%, rgba(255, 255, 255, 0.55)) repeat scroll 0% 0% / auto padding-box border-box"
+        },
+        {
+          "selector": ".wish-face-front",
+          "index": 2,
+          "group": "before",
+          "property": "padding",
+          "before": "1.2px",
+          "after": "1.6px"
+        },
+        {
+          "selector": ".wish-face-front",
+          "index": 2,
+          "group": "after",
+          "property": "background",
+          "before": "radial-gradient(52% 24% at 30% 0%, rgba(255, 255, 255, 0.44), rgba(0, 0, 0, 0) 74%) repeat scroll 0% 0% / auto padding-box border-box, rgba(0, 0, 0, 0) linear-gradient(100deg, rgba(255, 255, 255, 0.094), rgba(0, 0, 0, 0) 8%, rgba(0, 0, 0, 0) 94%, rgba(230, 248, 255, 0.14)) repeat scroll 0% 0% / auto padding-box border-box",
+          "after": "radial-gradient(48% 10% at 30% 0%, rgba(255, 255, 255, 0.74), rgba(0, 0, 0, 0) 80%) repeat scroll 0% 0% / auto padding-box border-box, linear-gradient(118deg, rgba(0, 0, 0, 0) 10%, rgba(255, 255, 255, 0.04) 16%, rgba(255, 255, 255, 0.29) 22%, rgba(255, 255, 255, 0.04) 29%, rgba(0, 0, 0, 0) 35%) repeat scroll 0% 0% / auto padding-box border-box, rgba(0, 0, 0, 0) linear-gradient(99deg, rgba(255, 255, 255, 0.47), rgba(0, 0, 0, 0) 4%, rgba(0, 0, 0, 0) 97%, rgba(230, 248, 255, 0.4)) repeat scroll 0% 0% / auto padding-box border-box"
+        },
+        {
+          "selector": ".wish-face-front",
+          "index": 2,
+          "group": "after",
+          "property": "box-shadow",
+          "before": "none",
+          "after": "rgba(255, 255, 255, 0.25) 0px 0px 0px 1px inset, rgba(255, 255, 255, 0.12) 2px 2px 0px 2px inset, rgba(59, 139, 172, 0.125) -2px -2px 0px 2px inset"
+        },
+        {
+          "selector": ".wish-face-front",
+          "index": 2,
+          "group": "after",
+          "property": "opacity",
+          "before": "0.4",
+          "after": "1"
+        },
+        {
+          "selector": ".wish-face-front .preset-backing",
+          "index": 0,
+          "group": "self",
+          "property": "background",
+          "before": "radial-gradient(at 12% 0px, rgba(244, 252, 255, 0.38), rgba(0, 0, 0, 0) 62%) repeat scroll 0% 0% / auto padding-box border-box, rgba(230, 248, 255, 0.14) none repeat scroll 0% 0% / auto padding-box border-box",
+          "after": "linear-gradient(135deg, rgba(255, 255, 255, 0.25), rgba(0, 0, 0, 0) 68%) repeat scroll 0% 0% / auto padding-box border-box, rgba(230, 248, 255, 0.08) none repeat scroll 0% 0% / auto padding-box border-box"
+        },
+        {
+          "selector": ".wish-face-front .preset-backing",
+          "index": 0,
+          "group": "self",
+          "property": "box-shadow",
+          "before": "rgba(244, 252, 255, 0.7) 1px 1px 0px 0px inset, rgba(191, 233, 248, 0.18) -1px -1px 0px 0px inset, rgba(0, 0, 0, 0.4) 1px 3px 5px -4px",
+          "after": "rgba(255, 255, 255, 0.75) 1px 1px 0px 0px inset, rgba(255, 255, 255, 0.19) -1px -1px 0px 0px inset, rgba(8, 44, 62, 0.4) 2px 7px 9px -5px"
+        },
+        {
+          "selector": ".wish-face-front .preset-backing",
+          "index": 1,
+          "group": "self",
+          "property": "background",
+          "before": "radial-gradient(at 12% 0px, rgba(244, 252, 255, 0.38), rgba(0, 0, 0, 0) 62%) repeat scroll 0% 0% / auto padding-box border-box, rgba(230, 248, 255, 0.14) none repeat scroll 0% 0% / auto padding-box border-box",
+          "after": "linear-gradient(135deg, rgba(255, 255, 255, 0.25), rgba(0, 0, 0, 0) 68%) repeat scroll 0% 0% / auto padding-box border-box, rgba(230, 248, 255, 0.08) none repeat scroll 0% 0% / auto padding-box border-box"
+        },
+        {
+          "selector": ".wish-face-front .preset-backing",
+          "index": 1,
+          "group": "self",
+          "property": "box-shadow",
+          "before": "rgba(244, 252, 255, 0.7) 1px 1px 0px 0px inset, rgba(191, 233, 248, 0.18) -1px -1px 0px 0px inset, rgba(0, 0, 0, 0.4) 1px 3px 5px -4px",
+          "after": "rgba(255, 255, 255, 0.75) 1px 1px 0px 0px inset, rgba(255, 255, 255, 0.19) -1px -1px 0px 0px inset, rgba(8, 44, 62, 0.4) 2px 7px 9px -5px"
+        },
+        {
+          "selector": ".wish-face-front .preset-backing",
+          "index": 2,
+          "group": "self",
+          "property": "background",
+          "before": "radial-gradient(at 12% 0px, rgba(244, 252, 255, 0.38), rgba(0, 0, 0, 0) 62%) repeat scroll 0% 0% / auto padding-box border-box, rgba(230, 248, 255, 0.14) none repeat scroll 0% 0% / auto padding-box border-box",
+          "after": "linear-gradient(135deg, rgba(255, 255, 255, 0.25), rgba(0, 0, 0, 0) 68%) repeat scroll 0% 0% / auto padding-box border-box, rgba(230, 248, 255, 0.08) none repeat scroll 0% 0% / auto padding-box border-box"
+        },
+        {
+          "selector": ".wish-face-front .preset-backing",
+          "index": 2,
+          "group": "self",
+          "property": "box-shadow",
+          "before": "rgba(244, 252, 255, 0.7) 1px 1px 0px 0px inset, rgba(191, 233, 248, 0.18) -1px -1px 0px 0px inset, rgba(0, 0, 0, 0.4) 1px 3px 5px -4px",
+          "after": "rgba(255, 255, 255, 0.75) 1px 1px 0px 0px inset, rgba(255, 255, 255, 0.19) -1px -1px 0px 0px inset, rgba(8, 44, 62, 0.4) 2px 7px 9px -5px"
+        }
+      ]
+    },
+    {
+      "case": "dark realized final",
+      "matched": {
+        ".dock": 1,
+        ".dock-tabs button.selected": 1,
+        ".wish-balance-bar": 1,
+        ".wish-face-back": 1,
+        ".wish-face-front": 1,
+        ".wish-face-front .preset-art>img": 1,
+        ".wish-face-front .preset-backing": 1,
+        ".wish-front-title>strong": 1,
+        ".wish-front-value": 1,
+        ".wish-hover-layer": 1,
+        ".wish-phase-tabs button[aria-selected=\"true\"]": 1,
+        ".wish-turn-rotor": 1,
+        ".wish-turn-shadow": 1
+      },
+      "differences": []
+    },
+    {
+      "case": "dark create preview final",
+      "matched": {
+        ".dock": 1,
+        ".dock-tabs button.selected": 1,
+        ".wish-balance-bar": 1,
+        ".wish-compose-preview": 1,
+        ".wish-face-back": 1,
+        ".wish-face-front": 1,
+        ".wish-face-front .preset-art>img": 1,
+        ".wish-face-front .preset-backing": 1,
+        ".wish-front-title>strong": 2,
+        ".wish-front-value": 2,
+        ".wish-hover-layer": 1,
+        ".wish-phase-tabs button[aria-selected=\"true\"]": 1,
+        ".wish-turn-rotor": 1,
+        ".wish-turn-shadow": 1
+      },
+      "differences": []
+    },
+    {
+      "case": "light create preview final",
+      "matched": {
+        ".dock": 1,
+        ".dock-tabs button.selected": 1,
+        ".wish-balance-bar": 1,
+        ".wish-compose-preview": 1,
+        ".wish-face-back": 1,
+        ".wish-face-front": 1,
+        ".wish-face-front .preset-art>img": 1,
+        ".wish-face-front .preset-backing": 1,
+        ".wish-front-title>strong": 2,
+        ".wish-front-value": 2,
+        ".wish-hover-layer": 1,
+        ".wish-phase-tabs button[aria-selected=\"true\"]": 1,
+        ".wish-turn-rotor": 1,
+        ".wish-turn-shadow": 1
+      },
+      "differences": []
+    }
+  ],
+  "responsive": [
+    {
+      "case": "light 320 / 160%",
+      "result": {
+        "appClass": "app reduced large-text",
+        "appScrollWidth": 318,
+        "appWidth": 318,
+        "cards": [
+          {
+            "face": "front",
+            "id": "w1",
+            "scrollWidth": 280,
+            "turning": "false",
+            "width": 280
+          },
+          {
+            "face": "front",
+            "id": "w2",
+            "scrollWidth": 280,
+            "turning": "false",
+            "width": 280
+          },
+          {
+            "face": "front",
+            "id": "w3",
+            "scrollWidth": 280,
+            "turning": "false",
+            "width": 280
+          }
+        ],
+        "focus": null,
+        "theme": "light"
+      }
+    },
+    {
+      "case": "light reduced keyboard flip",
+      "result": {
+        "appClass": "app reduced large-text",
+        "appScrollWidth": 318,
+        "appWidth": 318,
+        "cards": [
+          {
+            "face": "back",
+            "id": "w1",
+            "scrollWidth": 280,
+            "turning": "false",
+            "width": 280
+          },
+          {
+            "face": "front",
+            "id": "w2",
+            "scrollWidth": 280,
+            "turning": "false",
+            "width": 280
+          },
+          {
+            "face": "front",
+            "id": "w3",
+            "scrollWidth": 280,
+            "turning": "false",
+            "width": 280
+          }
+        ],
+        "focus": "翻回降噪耳机正面",
+        "theme": "light"
+      }
+    },
+    {
+      "case": "dark 320 / 160%",
+      "result": {
+        "appClass": "app reduced large-text",
+        "appScrollWidth": 318,
+        "appWidth": 318,
+        "cards": [
+          {
+            "face": "front",
+            "id": "w1",
+            "scrollWidth": 280,
+            "turning": "false",
+            "width": 280
+          },
+          {
+            "face": "front",
+            "id": "w2",
+            "scrollWidth": 280,
+            "turning": "false",
+            "width": 280
+          },
+          {
+            "face": "front",
+            "id": "w3",
+            "scrollWidth": 280,
+            "turning": "false",
+            "width": 280
+          }
+        ],
+        "focus": null,
+        "theme": "dark"
+      }
+    },
+    {
+      "case": "dark reduced keyboard flip",
+      "result": {
+        "appClass": "app reduced large-text",
+        "appScrollWidth": 318,
+        "appWidth": 318,
+        "cards": [
+          {
+            "face": "back",
+            "id": "w1",
+            "scrollWidth": 280,
+            "turning": "false",
+            "width": 280
+          },
+          {
+            "face": "front",
+            "id": "w2",
+            "scrollWidth": 280,
+            "turning": "false",
+            "width": 280
+          },
+          {
+            "face": "front",
+            "id": "w3",
+            "scrollWidth": 280,
+            "turning": "false",
+            "width": 280
+          }
+        ],
+        "focus": "翻回降噪耳机正面",
+        "theme": "dark"
+      }
+    },
+    {
+      "case": "dark 768",
+      "result": {
+        "appClass": "app reduced",
+        "appScrollWidth": 766,
+        "appWidth": 766,
+        "cards": [
+          {
+            "face": "front",
+            "id": "w1",
+            "scrollWidth": 183,
+            "turning": "false",
+            "width": 183
+          },
+          {
+            "face": "front",
+            "id": "w2",
+            "scrollWidth": 183,
+            "turning": "false",
+            "width": 183
+          },
+          {
+            "face": "front",
+            "id": "w3",
+            "scrollWidth": 183,
+            "turning": "false",
+            "width": 183
+          }
+        ],
+        "focus": "翻面查看降噪耳机的进度",
+        "theme": "dark"
+      }
+    },
+    {
+      "case": "light 768",
+      "result": {
+        "appClass": "app reduced",
+        "appScrollWidth": 766,
+        "appWidth": 766,
+        "cards": [
+          {
+            "face": "front",
+            "id": "w1",
+            "scrollWidth": 183,
+            "turning": "false",
+            "width": 183
+          },
+          {
+            "face": "front",
+            "id": "w2",
+            "scrollWidth": 183,
+            "turning": "false",
+            "width": 183
+          },
+          {
+            "face": "front",
+            "id": "w3",
+            "scrollWidth": 183,
+            "turning": "false",
+            "width": 183
+          }
+        ],
+        "focus": null,
+        "theme": "light"
+      }
+    }
+  ],
+  "interactions": {
+    "normalLightAndDark": [
+      "expand front",
+      "flip to back and return",
+      "50% redemption remains disabled",
+      "100% redemption enabled after turn settles",
+      "open purchase confirmation",
+      "cancel confirmation; balance remains 600",
+      "switch realized and active",
+      "switch card and row layouts"
+    ],
+    "reducedLightAndDark": [
+      "keyboard flip at 320px / 160% font",
+      "front and back settle with data-turning=false"
+    ]
+  },
+  "runtime": {
+    "standaloneBeforeErrors": [],
+    "standaloneAfterErrors": []
+  },
+  "limitations": [
+    "Physical iPhone/iPad rendering and VoiceOver not tested in this HTML pass",
+    "Personal full-bleed photo exclusion checked in source; no image upload workflow retest",
+    "Previously identified rapid-confirm result dismissal and deferred host MutationObserver issue are unchanged"
+  ],
+  "visualAcceptance": "Pending Rex review"
+}

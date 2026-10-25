@@ -1,0 +1,27 @@
+{
+  "baselineCommit": "13263ecfebab6f60a4ec61c0539812b67fdbbde7",
+  "generatedOnlyWishMaterialChanged": true,
+  "allExistingScriptsAndOtherStyleSourcesByteIdentical": true,
+  "wishMaterialIncludedOnce": true,
+  "rebuildReproducible": true,
+  "generatedSHA256": "b371344f35f4f73e734ad1f41ff86b47157652a0b3b7ccb2faf1b957842e1bcf",
+  "modifiedTrackedFilesSinceTurnStart": [
+    "docs/design/DESIGN.md",
+    "docs/design/explorations/material-themes-2026-10-23/README.md",
+    "docs/design/explorations/material-themes-2026-10-23/budget-home.html",
+    "docs/design/explorations/material-themes-2026-10-23/src/wish-material.css"
+  ],
+  "unrelatedTrackedWorkingChangesPreserved": true,
+  "nativeFilesChangedSinceStart": [],
+  "scopeExclusions": [
+    "wish-is-done",
+    "outcome-wish-card",
+    "wish-face-back",
+    "wish-collection-row",
+    "wish-compose-preview",
+    "wish-cover-preview",
+    "front containing cover-photo-fill"
+  ],
+  "runtimeEvidence": "checks.json",
+  "acceptance": "Pending visual review by Rex"
+}
