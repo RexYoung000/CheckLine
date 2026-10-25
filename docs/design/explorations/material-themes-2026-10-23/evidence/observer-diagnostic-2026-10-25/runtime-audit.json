@@ -1,0 +1,234 @@
+{
+  "standaloneControlErrors": [],
+  "staticFramesErrors": [
+    {
+      "level": "error",
+      "message": "Uncaught TypeError: Failed to execute 'observe' on 'MutationObserver': parameter 1 is not of type 'Node'.",
+      "timestamp": "2026-10-25T06:38:57.545Z"
+    },
+    {
+      "level": "error",
+      "message": "Uncaught TypeError: Failed to execute 'observe' on 'MutationObserver': parameter 1 is not of type 'Node'.",
+      "timestamp": "2026-10-25T06:38:57.545Z"
+    }
+  ],
+  "dynamicFramesErrors": [
+    {
+      "level": "error",
+      "message": "Uncaught TypeError: Failed to execute 'observe' on 'MutationObserver': parameter 1 is not of type 'Node'.",
+      "timestamp": "2026-10-25T06:38:57.896Z"
+    },
+    {
+      "level": "error",
+      "message": "Uncaught TypeError: Failed to execute 'observe' on 'MutationObserver': parameter 1 is not of type 'Node'.",
+      "timestamp": "2026-10-25T06:38:57.897Z"
+    }
+  ],
+  "deferredFramesErrors": [
+    {
+      "level": "error",
+      "message": "Uncaught TypeError: Failed to execute 'observe' on 'MutationObserver': parameter 1 is not of type 'Node'.",
+      "timestamp": "2026-10-25T06:39:54.767Z"
+    },
+    {
+      "level": "error",
+      "message": "Uncaught TypeError: Failed to execute 'observe' on 'MutationObserver': parameter 1 is not of type 'Node'.",
+      "timestamp": "2026-10-25T06:39:54.768Z"
+    }
+  ],
+  "durableReproducerErrors": [
+    {
+      "level": "error",
+      "message": "Uncaught TypeError: Failed to execute 'observe' on 'MutationObserver': parameter 1 is not of type 'Node'.",
+      "timestamp": "2026-10-25T06:44:05.916Z"
+    },
+    {
+      "level": "error",
+      "message": "Uncaught TypeError: Failed to execute 'observe' on 'MutationObserver': parameter 1 is not of type 'Node'.",
+      "timestamp": "2026-10-25T06:44:05.916Z"
+    }
+  ],
+  "applicationErrors": [],
+  "applicationObserverBindings": [
+    {
+      "level": "info",
+      "message": "CHECKLINE_OBSERVER_BOUND {\"target\":\"page\",\"node\":true,\"options\":{\"childList\":true}}",
+      "timestamp": "2026-10-25T06:40:53.462Z",
+      "url": "http://127.0.0.1:18874/budget-home.html?theme=dark&view=home&embed=1"
+    },
+    {
+      "level": "info",
+      "message": "CHECKLINE_OBSERVER_BOUND {\"target\":\"app\",\"node\":true,\"options\":{\"childList\":true,\"subtree\":true,\"attributes\":true,\"attributeFilter\":[\"data-turning\"]}}",
+      "timestamp": "2026-10-25T06:40:53.462Z",
+      "url": "http://127.0.0.1:18874/budget-home.html?theme=dark&view=home&embed=1"
+    },
+    {
+      "level": "info",
+      "message": "CHECKLINE_OBSERVER_BOUND {\"target\":\"app\",\"node\":true,\"options\":{\"childList\":true,\"subtree\":true}}",
+      "timestamp": "2026-10-25T06:40:53.464Z",
+      "url": "http://127.0.0.1:18874/budget-home.html?theme=dark&view=home&embed=1"
+    },
+    {
+      "level": "info",
+      "message": "CHECKLINE_OBSERVER_BOUND {\"target\":\"app\",\"node\":true,\"options\":{\"subtree\":true,\"childList\":true,\"attributes\":true,\"attributeFilter\":[\"class\",\"data-phase\",\"data-fold-view\"]}}",
+      "timestamp": "2026-10-25T06:40:53.528Z",
+      "url": "http://127.0.0.1:18874/budget-home.html?theme=dark&view=home&embed=1"
+    },
+    {
+      "level": "info",
+      "message": "CHECKLINE_OBSERVER_BOUND {\"target\":\"app\",\"node\":true,\"options\":{\"subtree\":true,\"childList\":true,\"attributes\":true,\"attributeFilter\":[\"class\",\"data-detent\"]}}",
+      "timestamp": "2026-10-25T06:40:53.528Z",
+      "url": "http://127.0.0.1:18874/budget-home.html?theme=dark&view=home&embed=1"
+    },
+    {
+      "level": "info",
+      "message": "CHECKLINE_OBSERVER_BOUND {\"target\":\"#document\",\"node\":true,\"options\":{\"childList\":true}}",
+      "timestamp": "2026-10-25T06:41:06.755Z",
+      "url": "http://127.0.0.1:18874/budget-home.html?theme=dark&view=home&embed=1"
+    },
+    {
+      "level": "info",
+      "message": "CHECKLINE_OBSERVER_BOUND {\"target\":\"page\",\"node\":true,\"options\":{\"childList\":true}}",
+      "timestamp": "2026-10-25T06:42:37.404Z",
+      "url": "http://127.0.0.1:18874/budget-home.html?theme=light&view=settlement&embed=1"
+    },
+    {
+      "level": "info",
+      "message": "CHECKLINE_OBSERVER_BOUND {\"target\":\"app\",\"node\":true,\"options\":{\"childList\":true,\"subtree\":true,\"attributes\":true,\"attributeFilter\":[\"data-turning\"]}}",
+      "timestamp": "2026-10-25T06:42:37.404Z",
+      "url": "http://127.0.0.1:18874/budget-home.html?theme=light&view=settlement&embed=1"
+    },
+    {
+      "level": "info",
+      "message": "CHECKLINE_OBSERVER_BOUND {\"target\":\"app\",\"node\":true,\"options\":{\"childList\":true,\"subtree\":true}}",
+      "timestamp": "2026-10-25T06:42:37.406Z",
+      "url": "http://127.0.0.1:18874/budget-home.html?theme=light&view=settlement&embed=1"
+    },
+    {
+      "level": "info",
+      "message": "CHECKLINE_OBSERVER_BOUND {\"target\":\"app\",\"node\":true,\"options\":{\"subtree\":true,\"childList\":true,\"attributes\":true,\"attributeFilter\":[\"class\",\"data-phase\",\"data-fold-view\"]}}",
+      "timestamp": "2026-10-25T06:42:37.458Z",
+      "url": "http://127.0.0.1:18874/budget-home.html?theme=light&view=settlement&embed=1"
+    },
+    {
+      "level": "info",
+      "message": "CHECKLINE_OBSERVER_BOUND {\"target\":\"app\",\"node\":true,\"options\":{\"subtree\":true,\"childList\":true,\"attributes\":true,\"attributeFilter\":[\"class\",\"data-detent\"]}}",
+      "timestamp": "2026-10-25T06:42:37.459Z",
+      "url": "http://127.0.0.1:18874/budget-home.html?theme=light&view=settlement&embed=1"
+    },
+    {
+      "level": "info",
+      "message": "CHECKLINE_OBSERVER_BOUND {\"target\":\"#document\",\"node\":true,\"options\":{\"childList\":true}}",
+      "timestamp": "2026-10-25T06:42:42.413Z",
+      "url": "http://127.0.0.1:18874/budget-home.html?theme=light&view=settlement&embed=1"
+    },
+    {
+      "level": "info",
+      "message": "CHECKLINE_OBSERVER_BOUND {\"target\":\"page\",\"node\":true,\"options\":{\"childList\":true}}",
+      "timestamp": "2026-10-25T06:43:22.288Z",
+      "url": "http://127.0.0.1:18874/budget-home.html?theme=light&view=detail&embed=1"
+    },
+    {
+      "level": "info",
+      "message": "CHECKLINE_OBSERVER_BOUND {\"target\":\"app\",\"node\":true,\"options\":{\"childList\":true,\"subtree\":true,\"attributes\":true,\"attributeFilter\":[\"data-turning\"]}}",
+      "timestamp": "2026-10-25T06:43:22.288Z",
+      "url": "http://127.0.0.1:18874/budget-home.html?theme=light&view=detail&embed=1"
+    },
+    {
+      "level": "info",
+      "message": "CHECKLINE_OBSERVER_BOUND {\"target\":\"app\",\"node\":true,\"options\":{\"childList\":true,\"subtree\":true}}",
+      "timestamp": "2026-10-25T06:43:22.292Z",
+      "url": "http://127.0.0.1:18874/budget-home.html?theme=light&view=detail&embed=1"
+    },
+    {
+      "level": "info",
+      "message": "CHECKLINE_OBSERVER_BOUND {\"target\":\"app\",\"node\":true,\"options\":{\"subtree\":true,\"childList\":true,\"attributes\":true,\"attributeFilter\":[\"class\",\"data-phase\",\"data-fold-view\"]}}",
+      "timestamp": "2026-10-25T06:43:22.459Z",
+      "url": "http://127.0.0.1:18874/budget-home.html?theme=light&view=detail&embed=1"
+    },
+    {
+      "level": "info",
+      "message": "CHECKLINE_OBSERVER_BOUND {\"target\":\"app\",\"node\":true,\"options\":{\"subtree\":true,\"childList\":true,\"attributes\":true,\"attributeFilter\":[\"class\",\"data-detent\"]}}",
+      "timestamp": "2026-10-25T06:43:22.468Z",
+      "url": "http://127.0.0.1:18874/budget-home.html?theme=light&view=detail&embed=1"
+    },
+    {
+      "level": "info",
+      "message": "CHECKLINE_OBSERVER_BOUND {\"target\":\"#document\",\"node\":true,\"options\":{\"childList\":true}}",
+      "timestamp": "2026-10-25T06:43:23.239Z",
+      "url": "http://127.0.0.1:18874/budget-home.html?theme=light&view=detail&embed=1"
+    },
+    {
+      "level": "info",
+      "message": "CHECKLINE_OBSERVER_BOUND {\"target\":\"page\",\"node\":true,\"options\":{\"childList\":true}}",
+      "timestamp": "2026-10-25T06:43:41.228Z",
+      "url": "http://127.0.0.1:18874/budget-home.html?theme=light&view=detail&embed=1&reduce=1"
+    },
+    {
+      "level": "info",
+      "message": "CHECKLINE_OBSERVER_BOUND {\"target\":\"app\",\"node\":true,\"options\":{\"childList\":true,\"subtree\":true,\"attributes\":true,\"attributeFilter\":[\"data-turning\"]}}",
+      "timestamp": "2026-10-25T06:43:41.228Z",
+      "url": "http://127.0.0.1:18874/budget-home.html?theme=light&view=detail&embed=1&reduce=1"
+    },
+    {
+      "level": "info",
+      "message": "CHECKLINE_OBSERVER_BOUND {\"target\":\"app\",\"node\":true,\"options\":{\"childList\":true,\"subtree\":true}}",
+      "timestamp": "2026-10-25T06:43:41.231Z",
+      "url": "http://127.0.0.1:18874/budget-home.html?theme=light&view=detail&embed=1&reduce=1"
+    },
+    {
+      "level": "info",
+      "message": "CHECKLINE_OBSERVER_BOUND {\"target\":\"app\",\"node\":true,\"options\":{\"subtree\":true,\"childList\":true,\"attributes\":true,\"attributeFilter\":[\"class\",\"data-phase\",\"data-fold-view\"]}}",
+      "timestamp": "2026-10-25T06:43:41.373Z",
+      "url": "http://127.0.0.1:18874/budget-home.html?theme=light&view=detail&embed=1&reduce=1"
+    },
+    {
+      "level": "info",
+      "message": "CHECKLINE_OBSERVER_BOUND {\"target\":\"app\",\"node\":true,\"options\":{\"subtree\":true,\"childList\":true,\"attributes\":true,\"attributeFilter\":[\"class\",\"data-detent\"]}}",
+      "timestamp": "2026-10-25T06:43:41.375Z",
+      "url": "http://127.0.0.1:18874/budget-home.html?theme=light&view=detail&embed=1&reduce=1"
+    },
+    {
+      "level": "info",
+      "message": "CHECKLINE_OBSERVER_BOUND {\"target\":\"#document\",\"node\":true,\"options\":{\"childList\":true}}",
+      "timestamp": "2026-10-25T06:43:41.973Z",
+      "url": "http://127.0.0.1:18874/budget-home.html?theme=light&view=detail&embed=1&reduce=1"
+    }
+  ],
+  "interactionResults": [
+    {
+      "test": "light-settlement",
+      "result": {
+        "phase": "done",
+        "result": true
+      },
+      "errors": []
+    },
+    {
+      "test": "light-detail-liquid",
+      "pathChanges": true,
+      "state": "flowing"
+    },
+    {
+      "test": "light-detail-reduced-motion",
+      "state": "reduced"
+    }
+  ],
+  "motionSamples": [
+    {
+      "phase": [
+        {
+          "class": "cartridge-world ",
+          "phase": "connected"
+        }
+      ],
+      "liquid": "flowing",
+      "pathPrefix": "M0.00 18.57C3.33 18.64 6.67 18.75 10.00 18.79C13.33 18.84 16.67 18.84 20.00 18.82C23.33 18.80 26.67 "
+    },
+    {
+      "phase": "charging",
+      "liquid": "flowing",
+      "pathPrefix": "M0.00 15.33C3.33 15.00 6.67 14.67 10.00 14.36C13.33 14.05 16.67 13.74 20.00 13.45C23.33 13.17 26.67 "
+    }
+  ]
+}

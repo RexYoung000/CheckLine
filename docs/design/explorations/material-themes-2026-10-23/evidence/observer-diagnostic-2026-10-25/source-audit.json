@@ -1,0 +1,91 @@
+{
+  "baseline": "4cafea5",
+  "checks": [
+    {
+      "path": "budget-home.html",
+      "unchanged": true,
+      "sha256": "15da5d4db832c96983fb2ae780f1a1cd77339e4d5df9f2707aa0f25925622290"
+    },
+    {
+      "path": "budget-pages-pair.html",
+      "unchanged": true,
+      "sha256": "ce14ae04db833079a3c22f444912a0a8f2ca564f77c483badf8cdff4020c8cb9"
+    },
+    {
+      "path": "budget-home-pair.html",
+      "unchanged": true,
+      "sha256": "a371230b440e589dcb16f274b438c849a5c30ab6aeb154d0eee2e01c62cce493"
+    },
+    {
+      "path": "budget-detail-pair.html",
+      "unchanged": true,
+      "sha256": "b0b73dfebd7b3c11f771e9f0283f3d9927c1e494b8e8b24ec521d4d8fbf02007"
+    },
+    {
+      "path": "budget-card-pair.html",
+      "unchanged": true,
+      "sha256": "ece215212a634ee7767effc33232111f9776ddd4f4c5a2f1a57fb28022d60309"
+    },
+    {
+      "path": "src/budget-home.js",
+      "unchanged": true,
+      "sha256": "fbe4eb33ac652d019b25e003a4d1197d2eeb255438718cef2ced40c39c4717e7"
+    },
+    {
+      "path": "src/budget-home-liquid.js",
+      "unchanged": true,
+      "sha256": "ed64601e8d1dd345c87b47ea9efe59ca93de28fb6b9437d556a68d34add01df2"
+    },
+    {
+      "path": "src/budget-detail.js",
+      "unchanged": true,
+      "sha256": "76a115a4cf4cc397b4d598914fa84aeb65cf2bd9e2bca58f40dd9c0507d85d34"
+    },
+    {
+      "path": "src/budget-pages.js",
+      "unchanged": true,
+      "sha256": "a4c5a6dc38e36564470a3223fea48e4852790ba9a9272ff7a5250b7c65b20294"
+    },
+    {
+      "path": "src/interactions.js",
+      "unchanged": true,
+      "sha256": "20b2b30757633cf01e8d84185706dee62a933a94960f660276752404684ce569"
+    },
+    {
+      "path": "src/budget-home.css",
+      "unchanged": true,
+      "sha256": "368a28d82bd821fb56a423330d10e474a0c6f103ed3c5be08485384604ed5ae2"
+    },
+    {
+      "path": "src/budget-detail.css",
+      "unchanged": true,
+      "sha256": "8249970a15e498ef0c41ddfe3a82854b940ab96708cbd4ecf3e12ced332de394"
+    },
+    {
+      "path": "src/budget-pages.css",
+      "unchanged": true,
+      "sha256": "bcb3a0c1abacd50ec88ce03b03ab7b72d135426f3a389844e796c4359f368f68"
+    },
+    {
+      "path": "src/selection-ui.css",
+      "unchanged": true,
+      "sha256": "923a02e91c9d4ca542f040b55f1b5fd3092252f03e574175999469e48f4b713a"
+    },
+    {
+      "path": "src/light-ui.css",
+      "unchanged": true,
+      "sha256": "476f9b7c5b4bf4cc06f6d62551ac69e330842b3b41ad9afa424949e38e92f68d"
+    },
+    {
+      "path": "src/dark-ui.css",
+      "unchanged": true,
+      "sha256": "012d0925f72a556564ca91a78c7cbbdf0201054116d90ab008c442be6f99f40d"
+    },
+    {
+      "path": "src/wish-material.css",
+      "unchanged": true,
+      "sha256": "acc045afed9ed5c0429b2b770b39b66d8a40c22ff6ad4cd5f8f5ac87e6a1ae0c"
+    }
+  ],
+  "nativeDiff": []
+}
