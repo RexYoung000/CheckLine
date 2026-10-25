@@ -1,0 +1,25 @@
+{
+  "baselineCommit": "e6d37773660efbe68cdc5356593d37ba19fd0c38",
+  "generatedHTMLOnlyWishMaterialCSSChanged": true,
+  "scriptsAndMotionParametersUnchanged": true,
+  "materialStyleIncludedOnce": true,
+  "buildReproducible": true,
+  "generatedSHA256": "86a68b09a8472e000928cf4cb897d3098ac31712232ee0214a3466c839ffa1dc",
+  "changedTrackedFilesSinceStart": [
+    "docs/design/DESIGN.md",
+    "docs/design/explorations/material-themes-2026-10-23/README.md",
+    "docs/design/explorations/material-themes-2026-10-23/budget-home.html",
+    "docs/design/explorations/material-themes-2026-10-23/src/wish-material.css"
+  ],
+  "unrelatedWorkingChangesPreserved": true,
+  "nativeChanges": [],
+  "tokens": {
+    "darkBodyOpacityBefore": 0.88,
+    "darkBodyOpacityAfter": 0.82,
+    "darkRimBeforePx": 1.6,
+    "darkRimAfterPx": 0.85,
+    "iceColorSourceUnchanged": "--di-card-tint"
+  },
+  "lightAndExcludedStatesComputedStyleComparison": "checks.json",
+  "visualAcceptance": "Pending Rex review"
+}

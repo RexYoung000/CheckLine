@@ -4711,21 +4711,24 @@ body.material-embedded .app { width: 100%!important; height: 100dvh; min-height:
   --wf-cover:#ffffff26;--wf-cover-shadow:#164f6b2b;
 }
 .app[data-home-material][data-theme=dark]{
-  --wf-body:color-mix(in srgb,var(--di-card-tint) 88%,transparent);
-  --wf-reflected:#f4fcffb8;--wf-transmitted:#def8ff80;--wf-depth:#103d526b;
-  --wf-cover:#e6f8ff14;--wf-cover-shadow:#082c3e66;
+  --wf-body:color-mix(in srgb,var(--di-card-tint) 82%,transparent);
+  --wf-reflected:#f4fcff80;--wf-transmitted:#def8ff40;
+  --wf-cover:#e6f8ff08;--wf-cover-shadow:#082c3e26;--wf-cover-reflection:#ffffff29;
+  --wf-rim-width:.85px;--wf-transmission-depth:5%;
+  --wf-shadow:inset .7px .8px 0 #f4fcffbd,inset -.7px -.7px 0 #bfe9f852,0 7px 15px -15px #00000050;
+  --wf-inner-edge:inset 0 0 0 1px #ffffff12;
 }
 .app[data-home-material][data-theme] .wish-card-v28:not(.wish-is-done):not(.outcome-wish-card) .wish-face-front:not(:has(.cover-photo-fill)){
-  --wm-face-surface:radial-gradient(ellipse 76% 64% at 0% 0%,var(--wf-reflected),transparent 76%),radial-gradient(ellipse 46% 12% at 67% 100%,var(--wf-transmitted),transparent 77%),var(--wf-body);
-  --wm-face-shadow:inset 1px 1.5px 0 #ffffffd9,inset -1px -1px 0 #bfe9f8a6,inset 5px 4px 6px -4px #ffffffe0,inset -6px -8px 9px -5px var(--wf-depth),0 11px 17px -14px var(--wm-drop);
-  --wm-face-rim-width:1.6px;
+  --wm-face-surface:radial-gradient(ellipse 76% 64% at 0% 0%,var(--wf-reflected),transparent 76%),radial-gradient(ellipse 46% var(--wf-transmission-depth,12%) at 67% 100%,var(--wf-transmitted),transparent 77%),var(--wf-body);
+  --wm-face-shadow:var(--wf-shadow,inset 1px 1.5px 0 #ffffffd9,inset -1px -1px 0 #bfe9f8a6,inset 5px 4px 6px -4px #ffffffe0,inset -6px -8px 9px -5px var(--wf-depth),0 11px 17px -14px var(--wm-drop));
+  --wm-face-rim-width:var(--wf-rim-width,1.6px);
   --wm-face-rim:linear-gradient(135deg,#fffffff2 1%,#ffffffb8 14%,#ffffff24 39%,#bfe9f82b 61%,#e6f8ffbd 83%,#ffffff8c);
   --wm-face-reflection:radial-gradient(ellipse 48% 10% at var(--wish-glare-x) 0%,#ffffffbd,transparent 80%),linear-gradient(118deg,transparent 10%,#ffffff0a 16%,#ffffff4a 22%,#ffffff0a 29%,transparent 35%),linear-gradient(99deg,#ffffff78,transparent 4%,transparent 97%,#e6f8ff66);
   --wm-face-reflection-opacity:1;
-  --wm-face-inner-edge:inset 0 0 0 1px #ffffff40,inset 2px 2px 0 2px #ffffff1f,inset -2px -2px 0 2px #3b8bac20;
+  --wm-face-inner-edge:var(--wf-inner-edge,inset 0 0 0 1px #ffffff40,inset 2px 2px 0 2px #ffffff1f,inset -2px -2px 0 2px #3b8bac20);
 }
 .app[data-home-material][data-theme] .wish-card-v28:not(.wish-is-done):not(.outcome-wish-card) .wish-face-front .preset-backing{
-  background:linear-gradient(135deg,#ffffff40,transparent 68%),var(--wf-cover);
+  background:linear-gradient(135deg,var(--wf-cover-reflection,#ffffff40),transparent 68%),var(--wf-cover);
   box-shadow:inset 1px 1px #ffffffbf,inset -1px -1px #ffffff30,2px 7px 9px -5px var(--wf-cover-shadow);
 }
 .app[data-home-material][data-theme].reduced .wish-bubble-volume>i{animation:none;top:calc(15% + var(--bubble-x) * .65);opacity:.55}

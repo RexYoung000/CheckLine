@@ -1,0 +1,322 @@
+{
+  "scope": "Dark unfinished wish front only",
+  "comparisons": [
+    {
+      "name": "light all sampled surfaces unchanged",
+      "matched": {
+        ".dock": 1,
+        ".dock-tabs button.selected": 1,
+        ".wish-balance-bar": 1,
+        ".wish-face-back": 3,
+        ".wish-face-back .wish-card-liquid": 2,
+        ".wish-face-back .wish-redeem-button": 3,
+        ".wish-face-front": 3,
+        ".wish-face-front .preset-art>img": 3,
+        ".wish-face-front .preset-backing": 3,
+        ".wish-front-title>strong": 3,
+        ".wish-front-value": 3,
+        ".wish-hover-layer": 3,
+        ".wish-phase-tabs button[aria-selected=\"true\"]": 1,
+        ".wish-turn-rotor": 3,
+        ".wish-turn-shadow": 3
+      },
+      "differences": []
+    },
+    {
+      "name": "dark active front only",
+      "matched": {
+        ".dock": 1,
+        ".dock-tabs button.selected": 1,
+        ".wish-balance-bar": 1,
+        ".wish-face-back": 3,
+        ".wish-face-back .wish-card-liquid": 2,
+        ".wish-face-back .wish-redeem-button": 3,
+        ".wish-face-front": 3,
+        ".wish-face-front .preset-art>img": 3,
+        ".wish-face-front .preset-backing": 3,
+        ".wish-front-title>strong": 3,
+        ".wish-front-value": 3,
+        ".wish-hover-layer": 3,
+        ".wish-phase-tabs button[aria-selected=\"true\"]": 1,
+        ".wish-turn-rotor": 3,
+        ".wish-turn-shadow": 3
+      },
+      "differences": [
+        {
+          "selector": ".wish-face-front",
+          "index": 0,
+          "group": "self",
+          "property": "background",
+          "before": "radial-gradient(76% 64% at 0% 0%, rgba(244, 252, 255, 0.72), rgba(0, 0, 0, 0) 76%) repeat scroll 0% 0% / auto padding-box border-box, radial-gradient(46% 12% at 67% 100%, rgba(222, 248, 255, 0.5), rgba(0, 0, 0, 0) 77%) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 0.560784 0.847059 0.94902 / 0.88) none repeat scroll 0% 0% / auto padding-box border-box",
+          "after": "radial-gradient(76% 64% at 0% 0%, rgba(244, 252, 255, 0.5), rgba(0, 0, 0, 0) 76%) repeat scroll 0% 0% / auto padding-box border-box, radial-gradient(46% 5% at 67% 100%, rgba(222, 248, 255, 0.25), rgba(0, 0, 0, 0) 77%) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 0.560784 0.847059 0.94902 / 0.82) none repeat scroll 0% 0% / auto padding-box border-box"
+        },
+        {
+          "selector": ".wish-face-front",
+          "index": 0,
+          "group": "self",
+          "property": "box-shadow",
+          "before": "rgba(255, 255, 255, 0.85) 1px 1.5px 0px 0px inset, rgba(191, 233, 248, 0.65) -1px -1px 0px 0px inset, rgba(255, 255, 255, 0.88) 5px 4px 6px -4px inset, rgba(16, 61, 82, 0.42) -6px -8px 9px -5px inset, rgba(0, 0, 0, 0.44) 0px 11px 17px -14px",
+          "after": "rgba(244, 252, 255, 0.74) 0.7px 0.8px 0px 0px inset, rgba(191, 233, 248, 0.32) -0.7px -0.7px 0px 0px inset, rgba(0, 0, 0, 0.314) 0px 7px 15px -15px"
+        },
+        {
+          "selector": ".wish-face-front",
+          "index": 0,
+          "group": "before",
+          "property": "padding",
+          "before": "1.6px",
+          "after": "0.85px"
+        },
+        {
+          "selector": ".wish-face-front",
+          "index": 0,
+          "group": "after",
+          "property": "box-shadow",
+          "before": "rgba(255, 255, 255, 0.25) 0px 0px 0px 1px inset, rgba(255, 255, 255, 0.12) 2px 2px 0px 2px inset, rgba(59, 139, 172, 0.125) -2px -2px 0px 2px inset",
+          "after": "rgba(255, 255, 255, 0.07) 0px 0px 0px 1px inset"
+        },
+        {
+          "selector": ".wish-face-front",
+          "index": 1,
+          "group": "self",
+          "property": "background",
+          "before": "radial-gradient(76% 64% at 0% 0%, rgba(244, 252, 255, 0.72), rgba(0, 0, 0, 0) 76%) repeat scroll 0% 0% / auto padding-box border-box, radial-gradient(46% 12% at 67% 100%, rgba(222, 248, 255, 0.5), rgba(0, 0, 0, 0) 77%) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 0.560784 0.847059 0.94902 / 0.88) none repeat scroll 0% 0% / auto padding-box border-box",
+          "after": "radial-gradient(76% 64% at 0% 0%, rgba(244, 252, 255, 0.5), rgba(0, 0, 0, 0) 76%) repeat scroll 0% 0% / auto padding-box border-box, radial-gradient(46% 5% at 67% 100%, rgba(222, 248, 255, 0.25), rgba(0, 0, 0, 0) 77%) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 0.560784 0.847059 0.94902 / 0.82) none repeat scroll 0% 0% / auto padding-box border-box"
+        },
+        {
+          "selector": ".wish-face-front",
+          "index": 1,
+          "group": "self",
+          "property": "box-shadow",
+          "before": "rgba(255, 255, 255, 0.85) 1px 1.5px 0px 0px inset, rgba(191, 233, 248, 0.65) -1px -1px 0px 0px inset, rgba(255, 255, 255, 0.88) 5px 4px 6px -4px inset, rgba(16, 61, 82, 0.42) -6px -8px 9px -5px inset, rgba(0, 0, 0, 0.44) 0px 11px 17px -14px",
+          "after": "rgba(244, 252, 255, 0.74) 0.7px 0.8px 0px 0px inset, rgba(191, 233, 248, 0.32) -0.7px -0.7px 0px 0px inset, rgba(0, 0, 0, 0.314) 0px 7px 15px -15px"
+        },
+        {
+          "selector": ".wish-face-front",
+          "index": 1,
+          "group": "before",
+          "property": "padding",
+          "before": "1.6px",
+          "after": "0.85px"
+        },
+        {
+          "selector": ".wish-face-front",
+          "index": 1,
+          "group": "after",
+          "property": "box-shadow",
+          "before": "rgba(255, 255, 255, 0.25) 0px 0px 0px 1px inset, rgba(255, 255, 255, 0.12) 2px 2px 0px 2px inset, rgba(59, 139, 172, 0.125) -2px -2px 0px 2px inset",
+          "after": "rgba(255, 255, 255, 0.07) 0px 0px 0px 1px inset"
+        },
+        {
+          "selector": ".wish-face-front",
+          "index": 2,
+          "group": "self",
+          "property": "background",
+          "before": "radial-gradient(76% 64% at 0% 0%, rgba(244, 252, 255, 0.72), rgba(0, 0, 0, 0) 76%) repeat scroll 0% 0% / auto padding-box border-box, radial-gradient(46% 12% at 67% 100%, rgba(222, 248, 255, 0.5), rgba(0, 0, 0, 0) 77%) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 0.560784 0.847059 0.94902 / 0.88) none repeat scroll 0% 0% / auto padding-box border-box",
+          "after": "radial-gradient(76% 64% at 0% 0%, rgba(244, 252, 255, 0.5), rgba(0, 0, 0, 0) 76%) repeat scroll 0% 0% / auto padding-box border-box, radial-gradient(46% 5% at 67% 100%, rgba(222, 248, 255, 0.25), rgba(0, 0, 0, 0) 77%) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 0.560784 0.847059 0.94902 / 0.82) none repeat scroll 0% 0% / auto padding-box border-box"
+        },
+        {
+          "selector": ".wish-face-front",
+          "index": 2,
+          "group": "self",
+          "property": "box-shadow",
+          "before": "rgba(255, 255, 255, 0.85) 1px 1.5px 0px 0px inset, rgba(191, 233, 248, 0.65) -1px -1px 0px 0px inset, rgba(255, 255, 255, 0.88) 5px 4px 6px -4px inset, rgba(16, 61, 82, 0.42) -6px -8px 9px -5px inset, rgba(0, 0, 0, 0.44) 0px 11px 17px -14px",
+          "after": "rgba(244, 252, 255, 0.74) 0.7px 0.8px 0px 0px inset, rgba(191, 233, 248, 0.32) -0.7px -0.7px 0px 0px inset, rgba(0, 0, 0, 0.314) 0px 7px 15px -15px"
+        },
+        {
+          "selector": ".wish-face-front",
+          "index": 2,
+          "group": "before",
+          "property": "padding",
+          "before": "1.6px",
+          "after": "0.85px"
+        },
+        {
+          "selector": ".wish-face-front",
+          "index": 2,
+          "group": "after",
+          "property": "box-shadow",
+          "before": "rgba(255, 255, 255, 0.25) 0px 0px 0px 1px inset, rgba(255, 255, 255, 0.12) 2px 2px 0px 2px inset, rgba(59, 139, 172, 0.125) -2px -2px 0px 2px inset",
+          "after": "rgba(255, 255, 255, 0.07) 0px 0px 0px 1px inset"
+        },
+        {
+          "selector": ".wish-face-front .preset-backing",
+          "index": 0,
+          "group": "self",
+          "property": "background",
+          "before": "linear-gradient(135deg, rgba(255, 255, 255, 0.25), rgba(0, 0, 0, 0) 68%) repeat scroll 0% 0% / auto padding-box border-box, rgba(230, 248, 255, 0.08) none repeat scroll 0% 0% / auto padding-box border-box",
+          "after": "linear-gradient(135deg, rgba(255, 255, 255, 0.16), rgba(0, 0, 0, 0) 68%) repeat scroll 0% 0% / auto padding-box border-box, rgba(230, 248, 255, 0.03) none repeat scroll 0% 0% / auto padding-box border-box"
+        },
+        {
+          "selector": ".wish-face-front .preset-backing",
+          "index": 0,
+          "group": "self",
+          "property": "box-shadow",
+          "before": "rgba(255, 255, 255, 0.75) 1px 1px 0px 0px inset, rgba(255, 255, 255, 0.19) -1px -1px 0px 0px inset, rgba(8, 44, 62, 0.4) 2px 7px 9px -5px",
+          "after": "rgba(255, 255, 255, 0.75) 1px 1px 0px 0px inset, rgba(255, 255, 255, 0.19) -1px -1px 0px 0px inset, rgba(8, 44, 62, 0.15) 2px 7px 9px -5px"
+        },
+        {
+          "selector": ".wish-face-front .preset-backing",
+          "index": 1,
+          "group": "self",
+          "property": "background",
+          "before": "linear-gradient(135deg, rgba(255, 255, 255, 0.25), rgba(0, 0, 0, 0) 68%) repeat scroll 0% 0% / auto padding-box border-box, rgba(230, 248, 255, 0.08) none repeat scroll 0% 0% / auto padding-box border-box",
+          "after": "linear-gradient(135deg, rgba(255, 255, 255, 0.16), rgba(0, 0, 0, 0) 68%) repeat scroll 0% 0% / auto padding-box border-box, rgba(230, 248, 255, 0.03) none repeat scroll 0% 0% / auto padding-box border-box"
+        },
+        {
+          "selector": ".wish-face-front .preset-backing",
+          "index": 1,
+          "group": "self",
+          "property": "box-shadow",
+          "before": "rgba(255, 255, 255, 0.75) 1px 1px 0px 0px inset, rgba(255, 255, 255, 0.19) -1px -1px 0px 0px inset, rgba(8, 44, 62, 0.4) 2px 7px 9px -5px",
+          "after": "rgba(255, 255, 255, 0.75) 1px 1px 0px 0px inset, rgba(255, 255, 255, 0.19) -1px -1px 0px 0px inset, rgba(8, 44, 62, 0.15) 2px 7px 9px -5px"
+        },
+        {
+          "selector": ".wish-face-front .preset-backing",
+          "index": 2,
+          "group": "self",
+          "property": "background",
+          "before": "linear-gradient(135deg, rgba(255, 255, 255, 0.25), rgba(0, 0, 0, 0) 68%) repeat scroll 0% 0% / auto padding-box border-box, rgba(230, 248, 255, 0.08) none repeat scroll 0% 0% / auto padding-box border-box",
+          "after": "linear-gradient(135deg, rgba(255, 255, 255, 0.16), rgba(0, 0, 0, 0) 68%) repeat scroll 0% 0% / auto padding-box border-box, rgba(230, 248, 255, 0.03) none repeat scroll 0% 0% / auto padding-box border-box"
+        },
+        {
+          "selector": ".wish-face-front .preset-backing",
+          "index": 2,
+          "group": "self",
+          "property": "box-shadow",
+          "before": "rgba(255, 255, 255, 0.75) 1px 1px 0px 0px inset, rgba(255, 255, 255, 0.19) -1px -1px 0px 0px inset, rgba(8, 44, 62, 0.4) 2px 7px 9px -5px",
+          "after": "rgba(255, 255, 255, 0.75) 1px 1px 0px 0px inset, rgba(255, 255, 255, 0.19) -1px -1px 0px 0px inset, rgba(8, 44, 62, 0.15) 2px 7px 9px -5px"
+        }
+      ]
+    },
+    {
+      "name": "dark realized unchanged",
+      "matched": {
+        ".dock": 1,
+        ".dock-tabs button.selected": 1,
+        ".wish-balance-bar": 1,
+        ".wish-face-back": 1,
+        ".wish-face-front": 1,
+        ".wish-face-front .preset-art>img": 1,
+        ".wish-face-front .preset-backing": 1,
+        ".wish-front-title>strong": 1,
+        ".wish-front-value": 1,
+        ".wish-hover-layer": 1,
+        ".wish-phase-tabs button[aria-selected=\"true\"]": 1,
+        ".wish-turn-rotor": 1,
+        ".wish-turn-shadow": 1
+      },
+      "differences": []
+    },
+    {
+      "name": "dark rows unchanged",
+      "matched": {
+        ".dock": 1,
+        ".dock-tabs button.selected": 1,
+        ".wish-balance-bar": 1,
+        ".wish-collection-row": 3,
+        ".wish-phase-tabs button[aria-selected=\"true\"]": 1
+      },
+      "differences": []
+    },
+    {
+      "name": "dark creation preview unchanged",
+      "matched": {
+        ".dock": 1,
+        ".dock-tabs button.selected": 1,
+        ".wish-balance-bar": 1,
+        ".wish-collection-row": 3,
+        ".wish-compose-preview": 1,
+        ".wish-front-title>strong": 1,
+        ".wish-front-value": 1,
+        ".wish-phase-tabs button[aria-selected=\"true\"]": 1
+      },
+      "differences": []
+    }
+  ],
+  "interactions": {
+    "darkExpandedBack": {
+      "face": "back",
+      "turning": "false",
+      "redemption50Enabled": false
+    },
+    "darkSmall100": {
+      "face": "back",
+      "turning": "false",
+      "redemptionEnabled": true
+    },
+    "purchasePanelOpened": true,
+    "cancelReturnsToBack": "back"
+  },
+  "responsive": {
+    "front": {
+      "appClass": "app reduced large-text",
+      "appScrollWidth": 318,
+      "appWidth": 318,
+      "cards": [
+        {
+          "face": "front",
+          "id": "w1",
+          "scrollWidth": 280,
+          "turning": "false",
+          "width": 280
+        },
+        {
+          "face": "front",
+          "id": "w2",
+          "scrollWidth": 280,
+          "turning": "false",
+          "width": 280
+        },
+        {
+          "face": "front",
+          "id": "w3",
+          "scrollWidth": 280,
+          "turning": "false",
+          "width": 280
+        }
+      ],
+      "focus": "卡片视图",
+      "theme": "dark"
+    },
+    "reducedKeyboardBack": {
+      "appClass": "app reduced large-text",
+      "appScrollWidth": 318,
+      "appWidth": 318,
+      "cards": [
+        {
+          "face": "back",
+          "id": "w1",
+          "scrollWidth": 280,
+          "turning": "false",
+          "width": 280
+        },
+        {
+          "face": "front",
+          "id": "w2",
+          "scrollWidth": 280,
+          "turning": "false",
+          "width": 280
+        },
+        {
+          "face": "front",
+          "id": "w3",
+          "scrollWidth": 280,
+          "turning": "false",
+          "width": 280
+        }
+      ],
+      "focus": "翻回降噪耳机正面",
+      "theme": "dark"
+    }
+  },
+  "runtime": {
+    "before": [],
+    "after": []
+  },
+  "limitations": [
+    "No full settlement/redemption outcome replay in this pass",
+    "No personal photo upload, tablet, VoiceOver or physical device retest",
+    "Existing host iframe observer error and rapid-confirm issue unchanged"
+  ],
+  "visualAcceptance": "Pending Rex review"
+}
