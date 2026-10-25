@@ -1,0 +1,245 @@
+{
+  "baseline": "7b902a0",
+  "checks": [
+    {
+      "name": "dark untouched back/buttons/UI",
+      "pass": true
+    },
+    {
+      "name": "dark 50% settled flip",
+      "result": {
+        "disabled": true,
+        "face": "back",
+        "label": "兑换不可用，当前进度 50%，达到 100% 后可兑换",
+        "turning": "false"
+      }
+    },
+    {
+      "name": "dark 100% enabled after turn",
+      "result": {
+        "disabled": false,
+        "edge": "wish-button-rim",
+        "face": "back",
+        "turning": "false"
+      }
+    },
+    {
+      "name": "light untouched back/buttons/UI",
+      "pass": true
+    },
+    {
+      "name": "light keyboard flip and disabled state",
+      "result": {
+        "disabled": true,
+        "face": "back",
+        "focusedBack": true,
+        "turning": "false"
+      }
+    },
+    {
+      "name": "320 and 160% light reduced layout unchanged",
+      "pass": true,
+      "result": {
+        "app": [
+          318,
+          318
+        ],
+        "cards": [
+          {
+            "front": "front",
+            "size": [
+              280,
+              252
+            ],
+            "title": "降噪耳机",
+            "value": "¥1,200"
+          },
+          {
+            "front": "front",
+            "size": [
+              280,
+              252
+            ],
+            "title": "周末看展",
+            "value": "¥320"
+          },
+          {
+            "front": "front",
+            "size": [
+              280,
+              252
+            ],
+            "title": "去看海",
+            "value": ""
+          }
+        ],
+        "page": [
+          318,
+          318
+        ],
+        "reduced": true
+      }
+    },
+    {
+      "name": "320 and 160% dark reduced layout unchanged",
+      "pass": true,
+      "result": {
+        "app": [
+          318,
+          318
+        ],
+        "cards": [
+          {
+            "front": "front",
+            "size": [
+              280,
+              252
+            ],
+            "title": "降噪耳机",
+            "value": "¥1,200"
+          },
+          {
+            "front": "front",
+            "size": [
+              280,
+              252
+            ],
+            "title": "周末看展",
+            "value": "¥320"
+          },
+          {
+            "front": "front",
+            "size": [
+              280,
+              252
+            ],
+            "title": "去看海",
+            "value": ""
+          }
+        ],
+        "page": [
+          318,
+          318
+        ],
+        "reduced": true
+      }
+    },
+    {
+      "name": "320 reduced expanded flip",
+      "result": {
+        "card": [
+          274,
+          420
+        ],
+        "disabled": true,
+        "face": "back",
+        "turning": "false"
+      }
+    },
+    {
+      "name": "768 dark grid geometry unchanged",
+      "pass": true,
+      "result": {
+        "app": [
+          766,
+          766
+        ],
+        "cards": [
+          {
+            "front": "front",
+            "size": [
+              183,
+              218
+            ],
+            "title": "降噪耳机",
+            "value": "¥1,200"
+          },
+          {
+            "front": "front",
+            "size": [
+              183,
+              218
+            ],
+            "title": "周末看展",
+            "value": "¥320"
+          },
+          {
+            "front": "front",
+            "size": [
+              183,
+              218
+            ],
+            "title": "去看海",
+            "value": ""
+          }
+        ],
+        "page": [
+          766,
+          766
+        ],
+        "reduced": true
+      }
+    },
+    {
+      "name": "achieved front identical",
+      "pass": true,
+      "layers": 0
+    },
+    {
+      "name": "rows geometry and materials identical",
+      "pass": true,
+      "layers": 0
+    },
+    {
+      "name": "creation preview identical",
+      "pass": true,
+      "layers": 0
+    },
+    {
+      "name": "cover preview identical",
+      "pass": true,
+      "layers": 0
+    },
+    {
+      "name": "preview elements exist for comparison",
+      "coverBefore": 1,
+      "coverAfter": 1,
+      "creationBefore": 1,
+      "creationAfter": 1
+    },
+    {
+      "name": "100% purchase check and cancel",
+      "result": "Opened purchase check with expected ¥320 and wallet ¥600; cancelled with 继续看看; returned wallet ¥600 without a debit."
+    },
+    {
+      "name": "dark foreign front amount and currency",
+      "result": [
+        {
+          "amountColor": "rgb(239, 250, 255)",
+          "currencyColor": "rgb(195, 227, 239)",
+          "text": "US$50USD"
+        },
+        {
+          "amountColor": "rgb(239, 250, 255)",
+          "currencyColor": "rgb(195, 227, 239)",
+          "text": "JP¥10,000JPY"
+        }
+      ]
+    }
+  ],
+  "errors": {
+    "isolated": [],
+    "pair": [
+      {
+        "level": "error",
+        "message": "Uncaught TypeError: Failed to execute 'observe' on 'MutationObserver': parameter 1 is not of type 'Node'.",
+        "timestamp": "2026-10-25T13:56:23.531Z"
+      }
+    ]
+  },
+  "limitations": [
+    "Full purchase/settlement outcome animation not rerun; existing scripts unchanged.",
+    "Photo upload/full-bleed visual testing, VoiceOver, other engines, native devices and frame-time profiling not run.",
+    "Previously isolated MutationObserver empty-node signature recurred once in the paired iframe environment; not fixed or newly attributed in this turn."
+  ]
+}

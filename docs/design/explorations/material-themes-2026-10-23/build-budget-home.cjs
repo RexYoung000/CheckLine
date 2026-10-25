@@ -44,7 +44,11 @@ let helper=fs.readFileSync(path.join(dir,'src/budget-home.js'),'utf8').replace('
 helper+='\n'+fs.readFileSync(path.join(dir,'src/budget-home-liquid.js'),'utf8');
 helper+='\n'+fs.readFileSync(path.join(dir,'src/budget-detail.js'),'utf8');
 helper+='\n'+fs.readFileSync(path.join(dir,'src/budget-pages.js'),'utf8');
+helper+='\n'+fs.readFileSync(path.join(dir,'src/wish-front.js'),'utf8');
 once('function cartridgeFace(c){',helper+'\nfunction cartridgeFace(c){');
+// Only the flip-card front calls the layered renderer. Forms, rows, achieved
+// wishes and purchase outcomes keep the frozen renderer and interactions.
+once('${wishFaceFront(w)}<button class="wish-face-tap"','${wmWishFront(w,completion)}<button class="wish-face-tap"');
 once('const t=totals(c),ready=readerConnected();let face=readerLiquidFace(c);','const t=totals(c),ready=readerConnected();let face=hmMaterializeFace(readerLiquidFace(c),c,true);');
 once('<div class="liquid-card restored-detail-card">${libraryCardFace(c)}</div>','${dmDetailCard(c)}');
 const bubbles=match(html,/function readerBubbleMarkup\(\)\{[\s\S]*?\n\}/);

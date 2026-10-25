@@ -1,0 +1,10 @@
+{
+  "baseline": "7b902a0",
+  "generated_page_other_than_front_css_and_static_renderer_identical": true,
+  "new_helper_has_no_listeners_storage_timers": true,
+  "scope": "unfinished wish front; unchanged achieved, outcomes, full-bleed photo, rows, forms, back; native excluded",
+  "final_source_scope_pass": true,
+  "generated_sha256": "5fe42dd28861baf33cab10fddd680f1143c6c2ae9bdb47c87ecc3a1972985ddd",
+  "build_repeatable": true,
+  "native_diff_empty": true
+}

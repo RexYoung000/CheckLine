@@ -2056,6 +2056,16 @@ function smInstallPages(){
   };
 }
 
+/* Static optics around the existing cover. No listeners, storage or motion. */
+function wmWishFront(w,completion=false){
+  const front=wishFaceFront(w),cover=wishCoverOf(w);
+  if(w.achieved||completion||(cover.type==='photo'&&cover.mode==='fill'))return front;
+  return front
+    .replace('class="wish-front-layout ', 'class="wish-front-layout wish-layered-front ')
+    .replace('<div class="wish-front-title">','<span class="wish-front-depth" aria-hidden="true"></span><div class="wish-front-title">')
+    .replace('<div class="wish-front-value">','<span class="wish-front-glass" aria-hidden="true"></span><div class="wish-front-value">');
+}
+
 function cartridgeFace(c){
   const t=totals(c),ready=readerConnected();let face=hmMaterializeFace(readerLiquidFace(c),c,true);
   face=face.replace('data-action="detail"','data-action="cart-tap"').replace(`aria-label="查看${esc(c.name)}的本期记录"`,`aria-label="${ready?'查看':'插入'}${esc(c.name)}${ready?'的详情，长按或上拖可拔出':''}"`);
@@ -2757,7 +2767,7 @@ function wishFaceBack(w,compact=false,completion=false){
 }
 function wishExpandButton(w){return `<button class="wish-expand-button" data-action="wish-expand" data-id="${esc(w.id)}" aria-label="放大${esc(w.name)}">${wishExpandIcon()}</button>`;}
 function wishFlipCard(w,{compact=false,wide=false,face='front',completion=false}={}){
- return `<article class="wish-flip-card wish-card-v28 ${compact?'wish-small-card':'wish-large-card'} ${wide?'wish-wide-card':''} ${w.achieved?'wish-is-done':''}" data-wish-id="${esc(w.id)}" data-face="${face}" data-target="${face}" data-turning="false" ${completion?'data-completion="true"':''}><div class="wish-turn-shadow" aria-hidden="true"></div><div class="wish-hover-layer"><div class="wish-turn-rotor"><section class="wish-face wish-face-front" aria-hidden="${face!=='front'}" ${face!=='front'?'inert':''}>${wishFaceFront(w)}<button class="wish-face-tap" data-action="wish-flip" aria-label="翻面查看${esc(w.name)}${w.achieved?'的购买信息':'的进度'}" aria-pressed="${face==='back'}"></button>${compact?wishExpandButton(w):''}</section><section class="wish-face wish-face-back" aria-hidden="${face!=='back'}" ${face!=='back'?'inert':''}>${wishFaceBack(w,compact,completion)}${compact?wishExpandButton(w):''}</section></div></div></article>`;
+ return `<article class="wish-flip-card wish-card-v28 ${compact?'wish-small-card':'wish-large-card'} ${wide?'wish-wide-card':''} ${w.achieved?'wish-is-done':''}" data-wish-id="${esc(w.id)}" data-face="${face}" data-target="${face}" data-turning="false" ${completion?'data-completion="true"':''}><div class="wish-turn-shadow" aria-hidden="true"></div><div class="wish-hover-layer"><div class="wish-turn-rotor"><section class="wish-face wish-face-front" aria-hidden="${face!=='front'}" ${face!=='front'?'inert':''}>${wmWishFront(w,completion)}<button class="wish-face-tap" data-action="wish-flip" aria-label="翻面查看${esc(w.name)}${w.achieved?'的购买信息':'的进度'}" aria-pressed="${face==='back'}"></button>${compact?wishExpandButton(w):''}</section><section class="wish-face wish-face-back" aria-hidden="${face!=='back'}" ${face!=='back'?'inert':''}>${wishFaceBack(w,compact,completion)}${compact?wishExpandButton(w):''}</section></div></div></article>`;
 }
 wishTile=function(w,index,count){return wishFlipCard(w,{compact:true,wide:count%2===1&&index===count-1,face:wishFaceMemory.get(w.id)||'front'});};
 function wishCollectionKey(){return wishCollection.phase+':'+wishCollection.view;}
@@ -4721,40 +4731,61 @@ body.material-embedded .app { width: 100%!important; height: 100dvh; min-height:
   background:radial-gradient(ellipse at 12% 0,#f4fcff61,transparent 62%),#e6f8ff24;
   box-shadow:inset 1px 1px #f4fcffb3,inset -1px -1px #bfe9f82e,1px 3px 5px -4px #0006;
 }
-/* Unfulfilled card fronts share the existing optics renderer above. These
-   face-local roles never reach the back, realized cards, rows or form previews.
-   Keep the original motion owner, dimensions, pigment and personal photographs. */
+/* Unfulfilled fronts: a recessed ice sheet and cover sit BEHIND a separate
+   clear pane. The pane's reflection crosses both without frosting the content.
+   All optical children are static and cannot intercept the existing hit areas. */
 .app[data-home-material][data-theme=light]{
-  --wf-body:color-mix(in srgb,var(--hm-ice) 25%,transparent);
-  --wf-reflected:#ffffffc7;--wf-transmitted:#ffffff99;--wf-depth:#17668d36;
-  --wf-cover:#ffffff26;--wf-cover-shadow:#164f6b2b;
+  --wf-body:color-mix(in srgb,var(--hm-ice) 17%,transparent);
+  --wf-rear:color-mix(in srgb,var(--hm-ice) 18%,transparent);
+  --wf-rear-light:#ffffff70;--wf-rear-edge:#ffffff80;--wf-contact:#27678720;
+  --wf-cover:#e9f9ff59;--wf-cover-edge:#ffffff8c;--wf-cover-shadow:#1a597c26;
+  --wf-pane-light:#ffffff9c;--wf-pane-edge:#ffffffc7;--wf-pane-tint:#eafaff0a;
+  --wf-return:#ffffffa6;--wf-side:#62b3d126;--wf-value:var(--hm-ink);--wf-value-meta:var(--hm-meta-ink);
 }
 .app[data-home-material][data-theme=dark]{
-  /* As on the budget face, reflected white and transmitted ice are separate.
-     The right-hand falloff lets the black environment read through the body;
-     the lower-left caustic keeps the amount over illuminated glass. */
-  --wf-surface:radial-gradient(ellipse 80% 66% at 13% 4%,#f4fcffb8,#f4fcff38 46%,#f4fcff04 76%,transparent),radial-gradient(ellipse 68% 9% at 32% 100%,#bfe9f86b,transparent 83%),radial-gradient(ellipse 100% 105% at 35% 42%,color-mix(in srgb,var(--di-card-tint) 86%,transparent) 25%,color-mix(in srgb,var(--di-card-tint) 78%,transparent) 64%,color-mix(in srgb,var(--di-card-tint) 60%,transparent));
-  --wf-cover:#e6f8ff06;--wf-cover-shadow:#082c3e38;--wf-cover-reflection:#ffffff40;
-  --wf-rim-width:0px;--wf-rim:#000;--wf-rim-mask:none;--wf-rim-filter:url(#wish-front-thickness);
-  --wf-shadow:inset .8px 1px 0 #f4fcffde,inset -.8px -.8px 0 #bfe9f86b,0 7px 15px -15px #00000050;
-  --wf-reflection:radial-gradient(ellipse 58% 5% at 39% 100%,#dff8ff99,transparent 82%);
-  --wf-inner-edge:none;
+  --wf-body:color-mix(in srgb,var(--di-card-tint) 32%,transparent);
+  --wf-rear:radial-gradient(ellipse 105% 98% at 62% 48%,color-mix(in srgb,var(--di-card-tint) 78%,transparent),color-mix(in srgb,var(--di-card-tint) 60%,transparent) 48%,color-mix(in srgb,var(--di-card-tint) 12%,transparent) 100%);
+  --wf-rear-light:#e4f8ff80;--wf-rear-edge:#dbf6ff66;--wf-contact:#04151f42;
+  --wf-cover:#d8f4ff50;--wf-cover-edge:#effbff59;--wf-cover-shadow:#082c3e47;
+  --wf-pane-light:#f2fcffb3;--wf-pane-edge:#ecfbffbd;--wf-pane-tint:#a9e2f809;
+  --wf-return:#bdeeff78;--wf-side:#07374e38;--wf-value:#effaff;--wf-value-meta:#c3e3ef;
 }
-.app[data-home-material][data-theme] .wish-card-v28:not(.wish-is-done):not(.outcome-wish-card) .wish-face-front:not(:has(.cover-photo-fill)){
-  --wm-face-surface:var(--wf-surface,radial-gradient(ellipse 76% 64% at 0% 0%,var(--wf-reflected),transparent 76%),radial-gradient(ellipse 46% 12% at 67% 100%,var(--wf-transmitted),transparent 77%),var(--wf-body));
-  --wm-face-shadow:var(--wf-shadow,inset 1px 1.5px 0 #ffffffd9,inset -1px -1px 0 #bfe9f8a6,inset 5px 4px 6px -4px #ffffffe0,inset -6px -8px 9px -5px var(--wf-depth),0 11px 17px -14px var(--wm-drop));
-  --wm-face-rim-width:var(--wf-rim-width,1.6px);
-  --wm-face-rim:var(--wf-rim,linear-gradient(135deg,#fffffff2 1%,#ffffffb8 14%,#ffffff24 39%,#bfe9f82b 61%,#e6f8ffbd 83%,#ffffff8c));
-  --wm-face-rim-mask:var(--wf-rim-mask,linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0));
-  --wm-face-rim-filter:var(--wf-rim-filter,none);
-  --wm-face-reflection:radial-gradient(ellipse 48% 10% at var(--wish-glare-x) 0%,#ffffffbd,transparent 80%),var(--wf-reflection,linear-gradient(118deg,transparent 10%,#ffffff0a 16%,#ffffff4a 22%,#ffffff0a 29%,transparent 35%),linear-gradient(99deg,#ffffff78,transparent 4%,transparent 97%,#e6f8ff66));
-  --wm-face-reflection-opacity:1;
-  --wm-face-inner-edge:var(--wf-inner-edge,inset 0 0 0 1px #ffffff40,inset 2px 2px 0 2px #ffffff1f,inset -2px -2px 0 2px #3b8bac20);
+.app[data-home-material][data-theme] .wish-face-front:has(>.wish-layered-front){
+  --wm-face-surface:radial-gradient(ellipse 85% 39% at 16% -3%,var(--wf-rear-light),transparent 83%),var(--wf-body);
+  --wm-face-shadow:inset 1px 1.5px 0 var(--wf-pane-edge),inset -1px -1px 0 #bfe9f861,0 10px 15px -15px var(--wm-drop);
+  --wm-face-rim-width:0px;--wm-face-rim:#000;--wm-face-rim-mask:none;--wm-face-rim-filter:url(#wish-front-thickness);
+  --wm-face-reflection:none;--wm-face-reflection-opacity:0;--wm-face-inner-edge:none;
+  backdrop-filter:none;-webkit-backdrop-filter:none;
 }
-.app[data-home-material][data-theme] .wish-card-v28:not(.wish-is-done):not(.outcome-wish-card) .wish-face-front .preset-backing{
-  background:linear-gradient(135deg,var(--wf-cover-reflection,#ffffff40),transparent 68%),var(--wf-cover);
-  box-shadow:inset 1px 1px #ffffffbf,inset -1px -1px #ffffff30,2px 7px 9px -5px var(--wf-cover-shadow);
+.app[data-home-material][data-theme] .wish-layered-front{isolation:isolate}
+.app[data-home-material][data-theme] .wish-layered-front :is(.wish-front-depth,.wish-front-glass){position:absolute;pointer-events:none;display:block}
+.app[data-home-material][data-theme] .wish-layered-front .wish-front-depth{
+  z-index:0;inset:4px 4px 8px 7px;border-radius:25px;transform:rotate(-.8deg);transform-origin:50% 50%;
+  background:radial-gradient(ellipse 90% 65% at 10% 0%,var(--wf-rear-light),transparent 82%),var(--wf-rear);
+  box-shadow:inset 1px 1px var(--wf-rear-edge),inset 0 -1px #d5f3ff24,2px 5px 7px -4px var(--wf-contact);
 }
+.app[data-home-material][data-theme] .wish-layered-front>.wish-art{z-index:1}
+.app[data-home-material][data-theme] .wish-layered-front .preset-backing{
+  background:var(--wf-cover);
+  box-shadow:inset .8px 1px var(--wf-cover-edge),inset -.8px -1px #d5f3ff38,2px 4px 7px -3px var(--wf-cover-shadow);
+}
+.app[data-home-material][data-theme] .wish-layered-front .wish-front-glass{
+  z-index:2;inset:0;border-radius:inherit;
+  background:radial-gradient(ellipse 74% 25% at var(--wish-glare-x) -7%,var(--wf-pane-light),transparent 82%),radial-gradient(ellipse 62% 6% at 42% 100%,var(--wf-return),transparent 80%),linear-gradient(98deg,#ffffff42,transparent 4%,transparent 97%,var(--wf-side)),var(--wf-pane-tint);
+  box-shadow:inset 2px 2px 1px #ffffff38,inset -2px -3px 2px #8bd5ee24;
+}
+.app[data-home-material][data-theme] .wish-layered-front .wish-front-glass::before{
+  content:'';position:absolute;width:var(--wf-glint-width,96px);height:var(--wf-glint-height,108px);left:var(--wf-cover-x,50%);top:50%;transform:translate(-50%,-50%);border-radius:50%;
+  background:linear-gradient(124deg,transparent 34%,#ffffff03 39%,var(--wf-pane-light) 48%,#ffffff24 50%,transparent 57%);
+  opacity:.32;filter:blur(1px);pointer-events:none;
+}
+.app[data-home-material][data-theme] .wish-wide-card .wish-layered-front{--wf-cover-x:calc(100% - 68.5px)}
+.app[data-home-material][data-theme] .wish-large-card .wish-layered-front{--wf-glint-width:150px;--wf-glint-height:156px}
+.app[data-home-material][data-theme] .wish-layered-front :is(.wish-front-title,.wish-front-value){z-index:3}
+@container(max-width:340px){.app[data-home-material][data-theme] .wish-small-card .wish-layered-front{--wf-cover-x:calc(100% - 62px)}}
+@container(min-width:650px){.app[data-home-material][data-theme] .wish-wide-card .wish-layered-front{--wf-cover-x:50%}}
+.app[data-home-material][data-theme].large-text .wish-small-card .wish-layered-front{--wf-cover-x:calc(100% - 74px)}
+.app[data-home-material][data-theme] .wish-layered-front .wish-front-value{--wm-ink:var(--wf-value);--wm-meta:var(--wf-value-meta)}
 .app[data-home-material][data-theme].reduced .wish-bubble-volume>i{animation:none;top:calc(15% + var(--bubble-x) * .65);opacity:.55}
 @media(prefers-reduced-motion:reduce){.app[data-home-material][data-theme] .wish-bubble-volume>i{animation:none;top:calc(15% + var(--bubble-x) * .65);opacity:.55}}
 
