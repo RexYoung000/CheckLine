@@ -1,0 +1,24 @@
+{
+  "baseline": "e597a63",
+  "generatedOnlyRendererChanged": true,
+  "deterministicBuild": true,
+  "generatedSHA256": "9f944eea9a17dfca019d7a9b517eea946958242b0a027a74d1064d660b173909",
+  "rendererAndLifecycleUnchanged": true,
+  "darkEnvironmentHelpersUnchanged": true,
+  "darkColorFormulaUnchanged": true,
+  "stylesUnchanged": {
+    "src/wish-material.css": true,
+    "src/selection-ui.css": true,
+    "src/dark-ui.css": true
+  },
+  "preservedExistingDirtyFiles": {
+    "docs/design/explorations/material-themes-2026-10-23/build.cjs": true,
+    "docs/design/explorations/material-themes-2026-10-23/compare.html": true,
+    "docs/design/explorations/material-themes-2026-10-23/index.html": true,
+    "docs/design/explorations/material-themes-2026-10-23/src/home.css": true,
+    "docs/design/explorations/material-themes-2026-10-23/src/interactions.css": true,
+    "docs/design/explorations/material-themes-2026-10-23/src/study-bridge.js": true,
+    "docs/design/explorations/material-themes-2026-10-23/src/surfaces.css": true
+  },
+  "nativeDiffEmpty": true
+}

@@ -1,0 +1,204 @@
+{
+  "baseline": "e597a63",
+  "scope": "light achieved wishes only",
+  "surfaces": {
+    "before": [
+      {
+        "height": 354,
+        "paint": "1",
+        "ready": "true",
+        "tint": "#b7e1f1",
+        "width": 346
+      },
+      {
+        "height": 354,
+        "paint": "1",
+        "ready": "true",
+        "tint": "#b7e1f1",
+        "width": 346
+      }
+    ],
+    "after": [
+      {
+        "height": 354,
+        "paint": "1",
+        "ready": "true",
+        "tint": "#b7e1f1",
+        "width": 346
+      },
+      {
+        "height": 354,
+        "paint": "1",
+        "ready": "true",
+        "tint": "#b7e1f1",
+        "width": 346
+      }
+    ]
+  },
+  "flipDuring": {
+    "paints": [
+      "12",
+      "12"
+    ],
+    "rotor": "transform: rotateY(147.785deg);"
+  },
+  "flipSettled": {
+    "back": "false",
+    "paints": [
+      "62",
+      "62"
+    ],
+    "rotor": "transform: rotateY(180deg);"
+  },
+  "idleAfter": [
+    "62",
+    "62"
+  ],
+  "reduced": {
+    "back": "false",
+    "paints": [
+      "1",
+      "1"
+    ],
+    "rotor": "transform: none;"
+  },
+  "grid": [
+    {
+      "height": 198,
+      "ready": "true",
+      "width": 165
+    },
+    {
+      "height": 198,
+      "ready": "true",
+      "width": 165
+    },
+    {
+      "height": 158,
+      "ready": "true",
+      "width": 344
+    }
+  ],
+  "narrow": {
+    "faces": [
+      "true",
+      "true",
+      "true",
+      "true",
+      "true",
+      "true"
+    ],
+    "scrollWidth": 318,
+    "width": 318
+  },
+  "tablet": {
+    "faces": [
+      "true",
+      "true",
+      "true",
+      "true",
+      "true",
+      "true"
+    ],
+    "scrollWidth": 766,
+    "width": 766
+  },
+  "rows": [
+    {
+      "height": 575,
+      "ready": "true",
+      "width": 586
+    },
+    {
+      "height": 575,
+      "ready": "true",
+      "width": 586
+    },
+    {
+      "height": 577,
+      "ready": "true",
+      "width": 586
+    }
+  ],
+  "redemption": [
+    {
+      "faces": [
+        {
+          "paint": "1",
+          "ready": "true"
+        },
+        {
+          "paint": "1",
+          "ready": "true"
+        }
+      ],
+      "phase": "gather"
+    },
+    {
+      "faces": [
+        {
+          "paint": "1",
+          "ready": "true"
+        },
+        {
+          "paint": "1",
+          "ready": "true"
+        }
+      ],
+      "phase": "fracture"
+    },
+    {
+      "faces": [
+        {
+          "paint": "1",
+          "ready": "true"
+        },
+        {
+          "paint": "1",
+          "ready": "true"
+        }
+      ],
+      "phase": "reveal"
+    },
+    {
+      "faces": [
+        {
+          "paint": "1",
+          "ready": "true"
+        },
+        {
+          "paint": "1",
+          "ready": "true"
+        }
+      ],
+      "phase": "mint"
+    },
+    {
+      "faces": [
+        {
+          "paint": "1",
+          "ready": "true"
+        },
+        {
+          "ready": "true"
+        }
+      ],
+      "phase": "done"
+    }
+  ],
+  "result": "心愿实现了\n如愿了。\n\n这一刻，属于你。\n\n周末看展\n¥320\n周末看展\n已实现\n¥320\n购买日期\n2026年10月26日\n心愿余额扣减\n−¥320\n\n2026年10月26日 · 已实现\n\n心愿余额\n¥\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n本次 −¥320\n查看已实现\n已保存购买，实际 ¥320，心愿余额 ¥280。",
+  "errors": [
+    {
+      "level": "error",
+      "message": "Uncaught TypeError: Failed to execute 'observe' on 'MutationObserver': parameter 1 is not of type 'Node'.",
+      "timestamp": "2026-10-26T04:29:06.286Z"
+    }
+  ],
+  "notes": [
+    "Before/after use e597a63 and this working tree; identical standard fixture and static card pose.",
+    "Temporary preview uses fresh fixtures, separate storage key, persist() disabled.",
+    "The bounded phase sample did not capture settle; gather, fracture, reveal, mint and final done were observed.",
+    "Reduced motion is the preview setting; no system setting, VoiceOver, native device, photo upload or GPU loss test.",
+    "Previously deferred MutationObserver null-node host error remains; no new error-free claim."
+  ]
+}

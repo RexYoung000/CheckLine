@@ -8,7 +8,7 @@
 
 ## 入口与查看方式
 
-- **本轮收藏卡：[环境倒影加强 · 浅暗已实现心愿](budget-pages-pair.html?view=wish&collection=done&study=metal-environment-4)**。点放大查看亮窗、近处暗影与局部光泽；点卡面翻到购买信息，切换横条看同一材质。该参数只选中既有「已实现」页签，不写入收藏数据。截图中的三张收藏卡使用单独的禁止写回 fixture，正式预览显示当前示例中实际已实现的卡。
+- **本轮浅色收藏卡：[修改前后对照](evidence/collection-light-clean-2026-10-26/compare.html) · [当前交互稿](budget-pages-pair.html?view=wish&collection=done&study=light-clean-metal-5)**。灰影收拢为局部，远处亮窗与表层高光分开，保留干净冰蓝底；暗色保持。点放大、翻面或切换横条查看同一材质。入口只选中既有「已实现」页签，不写入收藏数据；三张收藏卡的检查使用禁止写回 fixture。
 
 - **2026-10-26 当前先看：[预算持续液体 · 浅暗对照](budget-home-pair.html?study=budget-liquid-1)**。满水也保留缓流与插拔／换卡后的惯性；点主卡可查看同步调整的详情液面。使用满水的「周末出行」对照，或查看[详情入口](budget-detail-pair.html?study=budget-liquid-1)。冰蓝配色、心愿和原生 App 保持。
 
@@ -34,6 +34,18 @@
 对照页切换“查看页面”或“减少动态效果”会重新加载两侧的演示入口；检查当前任务原位换主题，请点“单独查看”，使用独立稿的顶部主题按钮。
 
 ## 来源、采用范围与材质规则
+
+### 2026-10-26 浅色收藏金属收拢灰影
+
+以 `e597a63` 为基线。Rex 看过修改前／当前／原参考三方对照后，授权仅调整浅色已实现卡：将多处宽灰影收为一处局部环境暗影，保留清晰但柔和的远处亮窗，表面高光使用更集中的亮芯和有限散光。保留原冰蓝着色角色，避免整面灰影或磨砂。暗色继续使用原灰金属光学公式；主题分支只绘制对应光学场景，不增加持续动画或新的事件监听。
+
+同一浅色收藏材质覆盖小卡、末张横卡、放大卡、购买信息背面、横条和破壳后内卡。金额与内容、尺寸和交互、普通 UI、未实现玻璃心愿、预算、原生工程以及已有实验文件保持。反射仍跟随既有姿态与尺寸更新，静止后停止重绘；静态回退未修改。
+
+实际验证：390 浅色小卡／横卡、放大正反面和横条成功绘制；正常翻面时绘制计数递增，落稳两次均为 62，减少动态效果下键盘 Enter 可翻面且计数保持 1。浅色 320＋更大文字和 768 预览无新增横向溢出。隔离示例确认 ¥320 后，余额 ¥600 → ¥280、已实现 1 → 2，实测看到 gather／fracture／reveal／mint 和最终 done，内卡使用新浅色金属；本次有界取样未捕获 settle，不重复声称逐帧验收。暗色同卡、同尺寸、同姿态前后截图逐像素相同。
+
+生成稿反向替换本轮反射文件后与基线逐字相同，构建可复现，色彩样式及渲染生命周期保持。已有 MutationObserver 空节点日志仍出现，本轮未处理。未重复预算、真实照片上传、GPU 丢失、系统减少动态效果、VoiceOver 或真机检查；材质观感待 Rex 验收。
+
+证据：[前后对照](evidence/collection-light-clean-2026-10-26/compare.html)、[前后截图](evidence/collection-light-clean-2026-10-26/comparison-light.jpg)、[浅色兑换结果](evidence/collection-light-clean-2026-10-26/reward-light-fixture.jpg)、[浏览器检查](evidence/collection-light-clean-2026-10-26/browser-checks.json)、[暗色像素核对](evidence/collection-light-clean-2026-10-26/dark-pixel-check.json)、[源码范围核对](evidence/collection-light-clean-2026-10-26/source-audit.json)。
 
 ### 2026-10-26 已实现收藏卡的环境倒影加强
 
