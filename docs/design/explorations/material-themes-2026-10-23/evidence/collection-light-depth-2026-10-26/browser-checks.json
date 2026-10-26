@@ -1,0 +1,264 @@
+{
+  "baseline": "0e89b6a",
+  "scope": "light achieved wish optical environment only",
+  "flipDuring": [
+    {
+      "class": "wish-face wish-face-front",
+      "data": {
+        "metalReady": "true"
+      },
+      "hidden": "true",
+      "style": null
+    },
+    {
+      "class": "wish-face wish-face-back",
+      "data": {
+        "metalReady": "true"
+      },
+      "hidden": "false",
+      "style": null
+    }
+  ],
+  "flipSettled": [
+    {
+      "canvases": [
+        {
+          "class": "wm-metal-surface",
+          "data": {
+            "paint": "63"
+          },
+          "h": 531,
+          "w": 519
+        }
+      ],
+      "face": "wish-face wish-face-front",
+      "hidden": "true",
+      "parentClass": "wish-turn-rotor",
+      "parentStyle": "transform: rotateY(180deg);"
+    },
+    {
+      "canvases": [
+        {
+          "class": "wm-metal-surface",
+          "data": {
+            "paint": "63"
+          },
+          "h": 531,
+          "w": 519
+        }
+      ],
+      "face": "wish-face wish-face-back",
+      "hidden": "false",
+      "parentClass": "wish-turn-rotor",
+      "parentStyle": "transform: rotateY(180deg);"
+    }
+  ],
+  "grid": [
+    {
+      "height": 198,
+      "ready": "true",
+      "tint": "#b7e1f1",
+      "width": 166
+    },
+    {
+      "height": 198,
+      "ready": "true",
+      "tint": "#b7e1f1",
+      "width": 166
+    },
+    {
+      "height": 158,
+      "ready": "true",
+      "tint": "#b7e1f1",
+      "width": 346
+    }
+  ],
+  "rows": [
+    {
+      "canvases": 1,
+      "ready": "true"
+    },
+    {
+      "canvases": 1,
+      "ready": "true"
+    },
+    {
+      "canvases": 1,
+      "ready": "true"
+    }
+  ],
+  "narrow": {
+    "faces": [
+      {
+        "height": 252,
+        "ready": "true",
+        "width": 280
+      },
+      {
+        "height": 252,
+        "ready": "true",
+        "width": 280
+      },
+      {
+        "height": 252,
+        "ready": "true",
+        "width": 280
+      }
+    ],
+    "font": "24px",
+    "scroll": 318,
+    "width": 318
+  },
+  "tablet": {
+    "faces": [
+      {
+        "height": 218,
+        "ready": "true",
+        "width": 183
+      },
+      {
+        "height": 218,
+        "ready": "true",
+        "width": 183
+      },
+      {
+        "height": 218,
+        "ready": "true",
+        "width": 183
+      }
+    ],
+    "scroll": 766,
+    "width": 766
+  },
+  "reduced": [
+    {
+      "face": "wish-face wish-face-front",
+      "hidden": "true",
+      "paint": "1",
+      "ready": "true",
+      "transform": "transform: none;"
+    },
+    {
+      "face": "wish-face wish-face-back",
+      "hidden": "false",
+      "paint": "1",
+      "ready": "true",
+      "transform": "transform: none;"
+    }
+  ],
+  "redemptionPhases": [
+    {
+      "faces": [
+        {
+          "ready": "true",
+          "tint": "#b7e1f1"
+        },
+        {
+          "ready": "true",
+          "tint": "#b7e1f1"
+        }
+      ],
+      "phase": "gather"
+    },
+    {
+      "faces": [
+        {
+          "ready": "true",
+          "tint": "#b7e1f1"
+        },
+        {
+          "ready": "true",
+          "tint": "#b7e1f1"
+        }
+      ],
+      "phase": "fracture"
+    },
+    {
+      "faces": [
+        {
+          "ready": "true",
+          "tint": "#b7e1f1"
+        },
+        {
+          "ready": "true",
+          "tint": "#b7e1f1"
+        }
+      ],
+      "phase": "reveal"
+    },
+    {
+      "faces": [
+        {
+          "ready": "true",
+          "tint": "#b7e1f1"
+        },
+        {
+          "ready": "true",
+          "tint": "#b7e1f1"
+        }
+      ],
+      "phase": "mint"
+    },
+    {
+      "faces": [
+        {
+          "ready": "true",
+          "tint": "#b7e1f1"
+        },
+        {
+          "ready": "true",
+          "tint": "#b7e1f1"
+        }
+      ],
+      "phase": "settle"
+    },
+    {
+      "faces": [
+        {
+          "ready": "true",
+          "tint": "#b7e1f1"
+        },
+        {
+          "ready": "true",
+          "tint": "#b7e1f1"
+        }
+      ],
+      "phase": "done"
+    }
+  ],
+  "motionDuring": {
+    "paint": [
+      "2",
+      "2"
+    ],
+    "transform": "transform: rotateY(1.71978deg);"
+  },
+  "logs": [],
+  "motionSettled": {
+    "paint": [
+      "62",
+      "62"
+    ],
+    "transform": "transform: rotateY(180deg);"
+  },
+  "motionStill": {
+    "paint": [
+      "62",
+      "62"
+    ],
+    "transform": "transform: rotateY(180deg);"
+  },
+  "redemptionResult": {
+    "achievedTab": "已实现2",
+    "wallet": "心愿余额 ¥280，查看余额变动"
+  },
+  "notRepeated": [
+    "budget interactions",
+    "other pages",
+    "real photo upload",
+    "GPU loss/fallback",
+    "system reduce motion",
+    "VoiceOver",
+    "native app"
+  ]
+}

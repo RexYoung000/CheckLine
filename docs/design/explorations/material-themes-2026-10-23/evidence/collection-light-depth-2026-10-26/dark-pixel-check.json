@@ -1,0 +1,14 @@
+{
+  "sameDimensions": true,
+  "dimensions": [
+    346,
+    354
+  ],
+  "pixelIdentical": true,
+  "meanDifference": [
+    0.0,
+    0.0,
+    0.0
+  ],
+  "byteIdentical": true
+}

@@ -1,0 +1,23 @@
+{
+  "baseline": "0e89b6a5c3cbe5edfbd15df7f5369cf835ad75ff",
+  "onlyLightOpticalFunctionsChanged": true,
+  "generatedBundleOtherwiseIdentical": true,
+  "rendererLifecycleAndUniformsUnchanged": true,
+  "colorAndMaterialCssUnchanged": {
+    "src/wish-material.css": true,
+    "src/selection-ui.css": true,
+    "src/dark-ui.css": true
+  },
+  "unrelatedDirtyFilesPreserved": {
+    "build.cjs": true,
+    "compare.html": true,
+    "index.html": true,
+    "src/home.css": true,
+    "src/interactions.css": true,
+    "src/study-bridge.js": true,
+    "src/surfaces.css": true
+  },
+  "nativeDiff": "",
+  "bundleSha256": "5470394d3f7f2ce9d7c51063e5f87f1e410bbd1648608c7ded7256a4c82de32e",
+  "buildReproducesFromSource": true
+}

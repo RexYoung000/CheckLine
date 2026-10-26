@@ -126,21 +126,27 @@ float room(vec2 q, vec2 sigma) {
 }
 
 float lightRoom(vec2 q, vec2 sigma) {
-  // Keep the ice-blue field open. A distant window is softer than the one
-  // narrow return shadow; avoid multiple broad grey silhouettes on pale metal.
+  // The far window has a soft, finite frame. A single closer side return
+  // has a tighter edge and reflected side to distinguish depth
+  // without spreading grey silhouettes over the clean ice-blue field.
   vec2 windowQ = vec2(q.x + q.y * 0.1, q.y - q.x * 0.06);
-  float window = roomPane(windowQ, vec2(-0.12, 0.025), vec2(0.21, 0.22), sigma + vec2(0.035, 0.06));
-  float division = band(windowQ.x + 0.15, 0.012, sigma.x + 0.021);
-  vec2 returnQ = vec2(q.x - q.y * 0.13, q.y);
-  float returnShadow = roomPane(returnQ, vec2(0.125, 0.14), vec2(0.022, 0.26), sigma + vec2(0.013, 0.075));
-  return 0.58 + window * 0.55 * (1.0 - division * 0.65) - returnShadow * 0.62;
+  float window = roomPane(windowQ, vec2(-0.15, -0.06), vec2(0.17, 0.18), sigma + vec2(0.02, 0.034));
+  float division = band(windowQ.x + 0.16, 0.019, sigma.x + 0.009);
+  float crossbar = band(windowQ.y + 0.08, 0.014, sigma.y + 0.01);
+  float panes = window * (0.68 - division * 0.86 - crossbar * 0.42);
+  vec2 returnQ = vec2(q.x - q.y * 0.2 + pow(max(q.y + 0.04, 0.0), 2.0) * 0.55, q.y);
+  float returnWidth = mix(0.018, 0.036, smoothstep(0.0, 0.3, q.y));
+  float returnShadow = roomPane(returnQ, vec2(0.175, 0.21), vec2(returnWidth, 0.17), sigma + vec2(0.008, 0.035));
+  float returnLight = roomPane(returnQ, vec2(0.216, 0.17), vec2(0.01, 0.13), sigma * 0.7 + vec2(0.006, 0.022));
+  return 0.58 + panes - returnShadow * 0.76 + returnLight * 0.4;
 }
 
 float lightSoftbox(vec2 q, vec2 sigma) {
   // A clearer surface reflection sits above the low-contrast distant room.
   // Its soft spill remains local instead of veiling the whole card in white.
-  float key = strip(q, vec2(0.14, -0.08), normalize(SWEEP), 0.011, sigma * 0.65 + 0.006);
-  float spill = strip(q, vec2(0.14, -0.08), normalize(SWEEP), 0.042, sigma + 0.047);
+  float extent = band(dot(q - vec2(0.14, -0.08), normalize(SWEEP)), 0.25, sigma.y + 0.08);
+  float key = strip(q, vec2(0.14, -0.08), normalize(SWEEP), 0.011, sigma * 0.65 + 0.006) * extent;
+  float spill = strip(q, vec2(0.14, -0.08), normalize(SWEEP), 0.042, sigma + 0.047) * extent;
   float rim = band(q.x - 0.31, 0.008, sigma.x + 0.01);
   return key * 0.9 + spill * 0.16 + rim * 0.28;
 }
