@@ -1811,7 +1811,7 @@ function hmMaterializeFace(face,c,homeOptics=false){
   const id='hm-face-'+(++readerLiquidSequence);
   // The backdrop is actual DOM rear cards, blurred through the front face.
   // Do not bake the pair's illustrative rear cards into the moving cartridge.
-  const fullness=hmHomeFullness(Math.max(0,Math.min(1,totals(c).remaining/c.limit)));
+  const fullness=hmLiquidFullness(Math.max(0,Math.min(1,totals(c).remaining/c.limit)));
   const optics=homeOptics?' data-home-optics style="--hm-fullness:'+fullness+'"':'';
   face='<div class="hm-card-body"'+optics+'>'+hmOptics('body',id+'-body')+'</div><div class="hm-card-edge">'+hmOptics('edge',id+'-edge')+'</div>'+face;
   face=face.replace(/<div class="water continuous-water"[\s\S]*?<\/div>/,hmLiquidWaterMarkup(c,id+'-water',homeOptics));
@@ -1828,15 +1828,15 @@ function hmBubbleField(withBurst=true){
   return '<div class="card-bubble-field" aria-hidden="true">'+burst+ambient+still+'</div>';
 }
 
-// Home-only free surface. No tiled translation, phase reset or ledger writes.
-// A sealed upper rim remains visible at high fill. This optical capacity does
-// not change the real balance ratio; detail callers keep the original geometry.
-function hmHomeFullness(ratio){
+// Budget free surface: a full balance is still liquid, never a solid card.
+// Home and detail share a narrow headspace and bounded high-fill ripples.
+// This visual capacity does not change the real balance ratio or write data.
+function hmLiquidFullness(ratio){
   const x=Math.max(0,Math.min(1,(ratio-.88)/.12));
   return x*x*(3-2*x);
 }
-function hmLiquidShape(ratio,time,tilt=0,impact=0,minimumEdge=0){
-  const edge=Math.max(minimumEdge,Math.max(0,Math.min(1,ratio/.12,(1-ratio)/.12)));
+function hmLiquidShape(ratio,time,tilt=0,impact=0){
+  const edge=Math.max(hmLiquidFullness(ratio)*.48,Math.max(0,Math.min(1,ratio/.12,(1-ratio)/.12)));
   const amplitude=5.8*edge*(.92+.08*Math.sin(time*.37));
   // Keep combined drag/contact displacement below four SVG units. This
   // preserves a thin free surface even when a fast switch lands mid-sway.
@@ -1863,9 +1863,9 @@ function hmLiquidShape(ratio,time,tilt=0,impact=0,minimumEdge=0){
 }
 function hmLiquidWaterMarkup(c,id,homeOptics=false){
   const ratio=Math.max(0,Math.min(1,totals(c).remaining/c.limit));
-  const fullness=homeOptics?hmHomeFullness(ratio):0;
-  const shape=hmLiquidShape(ratio,0,0,0,fullness*.48),height=Math.max(24,258*ratio+24);
-  const optics=homeOptics?` data-home-optics style="--water-height:${ratio*100}%;--hm-fullness:${fullness};--hm-water-headspace:${20*fullness}px"`:` style="--water-height:${ratio*100}%"`;
+  const fullness=hmLiquidFullness(ratio);
+  const shape=hmLiquidShape(ratio,0),height=Math.max(24,258*ratio+24);
+  const optics=`${homeOptics?' data-home-optics':''} style="--water-height:${ratio*100}%;--hm-fullness:${fullness};--hm-water-headspace:${20*fullness}px"`;
   const transmission=homeOptics?`<g class="hm-water-full-optics" fill="none" stroke="#d6f6ff" stroke-linecap="round"><path class="hm-water-side-reflection" d="M8 31C5 47 6 64 7 86M393 ${height-95}C395 ${height-58} 394 ${height-28} 379 ${height-13}"/><path class="hm-water-bottom-reflection" d="M67 ${height-7}Q176 ${height-1} 289 ${height-10}"/></g>`:'';
   return `<div class="water continuous-water hm-water" data-empty="${ratio===0}" data-liquid-ratio="${ratio}"${optics}><svg class="hm-fluid-svg" viewBox="0 0 400 ${height}" preserveAspectRatio="none" aria-hidden="true"><defs><linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--water-top)"/><stop offset=".33" stop-color="var(--water-middle)"/><stop offset="1" stop-color="var(--water-bottom)"/></linearGradient><linearGradient id="${id}-glint" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#fff" stop-opacity="0"/><stop offset=".3" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".7"/><stop offset=".7" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient></defs><path class="liquid-volume" d="${shape.volume}" fill="url(#${id})"/>${transmission}<path class="hm-water-surface" d="${shape.surface}"/><path class="hm-water-back" d="${shape.rear}"/><path class="r3-waterline" d="${shape.line}"/><path class="hm-water-glint" d="${shape.line}" stroke="url(#${id}-glint)"/></svg></div>`;
 }
@@ -1876,8 +1876,7 @@ function hmStartLiquid(){
   const media=matchMedia('(prefers-reduced-motion:reduce)');
   function paint(staticView=false){
     if(!paths)return;
-    const minimumEdge=svg.parentElement.hasAttribute('data-home-optics')?hmHomeFullness(ratio)*.48:0;
-    const shape=hmLiquidShape(ratio,staticView?0:time,staticView?0:tilt,staticView?0:impact,minimumEdge);
+    const shape=hmLiquidShape(ratio,staticView?0:time,staticView?0:tilt,staticView?0:impact);
     for(const key of ['volume','surface','rear','line'])paths[key].setAttribute('d',shape[key]);
     paths.glint.setAttribute('d',shape.line);
     const light=.44+.15*Math.sin(time*.31);
@@ -1891,7 +1890,6 @@ function hmStartLiquid(){
     if(reader.library)return 'library';
     if(readerFold.progress>.001)return 'records';
     if(ratio===0)return 'empty';
-    if(ratio===1)return 'full';
     return '';
   }
   function stop(reason){
@@ -2006,7 +2004,7 @@ function dmStartDetail(){
     if(card&&card.clientHeight!==cardHeight){cardHeight=card.clientHeight;cancelBubbles();}
     const reason=pauseReason();if(reason){stop(reason);return;}
     startBubbles();for(const a of bubbles)if(a.playState==='paused')a.play();
-    if(ratio===0||ratio===1){cancelAnimationFrame(frame);frame=0;last=0;svg.dataset.liquidState=ratio===0?'empty':'full';return;}
+    if(ratio===0){stop('empty');return;}
     svg.dataset.liquidState='flowing';if(!frame){last=0;frame=requestAnimationFrame(tick);}
   }
   const observer=new MutationObserver(sync);
@@ -4560,9 +4558,10 @@ body.material-embedded .app { width: 100%!important; height: 100dvh; min-height:
 .app[data-home-material][data-theme] .cartridge-world:not(.library-open) .cartridge-stack-layer .liquid-card{background:color-mix(in srgb,var(--hm-rear-tint) 55%,transparent);border:1px solid #e6f8ff66;box-shadow:inset 0 1px #ffffff35;filter:none;backdrop-filter:none}
 .app[data-home-material][data-theme] .cartridge-world:not(.library-open) .cartridge-stack-layer :is(.card-top,.card-bottom,.water){opacity:.15}
 .app[data-home-material][data-theme] .cartridge-world:not(.library-open) .hm-water{background:transparent}
-/* Full water has a visible sealed rim, a separated meniscus and transmitted
-   light at the side walls. Lower fills and the detail material stay unchanged. */
-.app[data-home-material][data-theme] .cartridge-world:not(.library-open) .hm-water[data-home-optics]{height:calc(var(--water-height) - var(--hm-water-headspace));--water-top:color-mix(in srgb,var(--hm-water-top-color) calc((1 - var(--hm-fullness))*100%),var(--hm-water-full-top,var(--hm-water-top-color)));--water-middle:color-mix(in srgb,var(--hm-water-mid-color) calc((1 - var(--hm-fullness))*100%),var(--hm-water-full-mid,var(--hm-water-mid-color)));--water-bottom:color-mix(in srgb,var(--hm-water-base-color) calc((1 - var(--hm-fullness))*100%),var(--hm-water-full-bottom,var(--hm-water-base-color)))}
+/* Home and detail keep a free surface inside the upper rim at full balance.
+   Only home uses the accepted high-fill transmission colors below. */
+.app[data-home-material][data-theme] .hm-water{height:calc(var(--water-height) - var(--hm-water-headspace))}
+.app[data-home-material][data-theme] .cartridge-world:not(.library-open) .hm-water[data-home-optics]{--water-top:color-mix(in srgb,var(--hm-water-top-color) calc((1 - var(--hm-fullness))*100%),var(--hm-water-full-top,var(--hm-water-top-color)));--water-middle:color-mix(in srgb,var(--hm-water-mid-color) calc((1 - var(--hm-fullness))*100%),var(--hm-water-full-mid,var(--hm-water-mid-color)));--water-bottom:color-mix(in srgb,var(--hm-water-base-color) calc((1 - var(--hm-fullness))*100%),var(--hm-water-full-bottom,var(--hm-water-base-color)))}
 .app[data-home-material][data-theme=dark] .cartridge-world:not(.library-open) .hm-water[data-home-optics]{--hm-water-full-top:rgb(166 232 255 / .09);--hm-water-full-mid:rgb(23 109 147 / .30);--hm-water-full-bottom:rgb(9 59 81 / .56)}
 .app[data-home-material][data-theme=dark] .cartridge-world:not(.library-open) .hm-card-body[data-home-optics]{--hm-body-alpha:calc(var(--di-card-alpha) - .10*var(--hm-fullness))}
 .hm-water-full-optics{opacity:var(--hm-fullness);pointer-events:none}

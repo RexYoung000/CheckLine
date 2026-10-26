@@ -8,7 +8,7 @@ function hmMaterializeFace(face,c,homeOptics=false){
   const id='hm-face-'+(++readerLiquidSequence);
   // The backdrop is actual DOM rear cards, blurred through the front face.
   // Do not bake the pair's illustrative rear cards into the moving cartridge.
-  const fullness=hmHomeFullness(Math.max(0,Math.min(1,totals(c).remaining/c.limit)));
+  const fullness=hmLiquidFullness(Math.max(0,Math.min(1,totals(c).remaining/c.limit)));
   const optics=homeOptics?' data-home-optics style="--hm-fullness:'+fullness+'"':'';
   face='<div class="hm-card-body"'+optics+'>'+hmOptics('body',id+'-body')+'</div><div class="hm-card-edge">'+hmOptics('edge',id+'-edge')+'</div>'+face;
   face=face.replace(/<div class="water continuous-water"[\s\S]*?<\/div>/,hmLiquidWaterMarkup(c,id+'-water',homeOptics));

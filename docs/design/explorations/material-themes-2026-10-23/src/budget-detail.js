@@ -55,7 +55,7 @@ function dmStartDetail(){
     if(card&&card.clientHeight!==cardHeight){cardHeight=card.clientHeight;cancelBubbles();}
     const reason=pauseReason();if(reason){stop(reason);return;}
     startBubbles();for(const a of bubbles)if(a.playState==='paused')a.play();
-    if(ratio===0||ratio===1){cancelAnimationFrame(frame);frame=0;last=0;svg.dataset.liquidState=ratio===0?'empty':'full';return;}
+    if(ratio===0){stop('empty');return;}
     svg.dataset.liquidState='flowing';if(!frame){last=0;frame=requestAnimationFrame(tick);}
   }
   const observer=new MutationObserver(sync);

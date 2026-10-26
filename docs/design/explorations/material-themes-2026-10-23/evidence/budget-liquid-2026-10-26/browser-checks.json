@@ -1,0 +1,2301 @@
+{
+  "date": "2026-10-26",
+  "scope": "HTML budget home and detail; independent fixtures and no persist writes",
+  "checks": [
+    {
+      "case": "dark-full-home",
+      "before": [
+        {
+          "bubbleTransform": "matrix(0.871191, 0, 0, 0.871191, -0.152317, -122.504)",
+          "bubbles": 16,
+          "card": {
+            "height": 186.71873474121097,
+            "width": 219.1015625,
+            "x": 505.4453125,
+            "y": 189.3528594970703
+          },
+          "headspace": "20px",
+          "line": {
+            "height": 2.92059326171875,
+            "y": 194.52755737304688
+          },
+          "path": {
+            "sha256": "ade26a302ee28ceb8d1aec953d12ed8572df51bd8d1ca0a2ba5cdee9d066f1e4",
+            "prefix": "M0.00 14.40C3.33 14.54 6.67 14.69 10.00 14.82C13.33 14.95 16.67 15.07 20.00 15.18C23.33 15.28 26"
+          },
+          "ratio": "1",
+          "rear": {
+            "sha256": "65c8e41e6a108b6f575eab2c1176539f4dd23afd6093dd97a0b6acd84676ec09",
+            "prefix": "M0.00 12.87C3.33 12.99 6.67 13.12 10.00 13.23C13.33 13.35 16.67 13.45 20.00 13.54C23.33 13.63 26"
+          },
+          "state": "full",
+          "text": "这个月\n10月1日—10月31日 · CNY\n还能花\n¥\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n,\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9",
+          "waterColors": [
+            "color-mix(in srgb,rgb(134 226 255 / .20) calc((1 - 1)*100%),rgb(166 232 255 / .09))",
+            "color-mix(in srgb,rgb(11 76 116 / .64) calc((1 - 1)*100%),rgb(23 109 147 / .30))",
+            "color-mix(in srgb,rgb(16 62 88 / .75) calc((1 - 1)*100%),rgb(9 59 81 / .56))"
+          ],
+          "waterDisplay": "block",
+          "waterHeight": "271.833px"
+        },
+        {
+          "bubbleTransform": "matrix(0.877375, 0, 0, 0.877375, -0.156575, -126.685)",
+          "bubbles": 16,
+          "card": {
+            "height": 186.71873474121097,
+            "width": 219.1015625,
+            "x": 505.4453125,
+            "y": 189.3528594970703
+          },
+          "headspace": "20px",
+          "line": {
+            "height": 2.92059326171875,
+            "y": 194.52755737304688
+          },
+          "path": {
+            "sha256": "ade26a302ee28ceb8d1aec953d12ed8572df51bd8d1ca0a2ba5cdee9d066f1e4",
+            "prefix": "M0.00 14.40C3.33 14.54 6.67 14.69 10.00 14.82C13.33 14.95 16.67 15.07 20.00 15.18C23.33 15.28 26"
+          },
+          "ratio": "1",
+          "rear": {
+            "sha256": "65c8e41e6a108b6f575eab2c1176539f4dd23afd6093dd97a0b6acd84676ec09",
+            "prefix": "M0.00 12.87C3.33 12.99 6.67 13.12 10.00 13.23C13.33 13.35 16.67 13.45 20.00 13.54C23.33 13.63 26"
+          },
+          "state": "full",
+          "text": "这个月\n10月1日—10月31日 · CNY\n还能花\n¥\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n,\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9",
+          "waterColors": [
+            "color-mix(in srgb,rgb(134 226 255 / .20) calc((1 - 1)*100%),rgb(166 232 255 / .09))",
+            "color-mix(in srgb,rgb(11 76 116 / .64) calc((1 - 1)*100%),rgb(23 109 147 / .30))",
+            "color-mix(in srgb,rgb(16 62 88 / .75) calc((1 - 1)*100%),rgb(9 59 81 / .56))"
+          ],
+          "waterDisplay": "block",
+          "waterHeight": "271.833px"
+        }
+      ],
+      "after": [
+        {
+          "bubbleTransform": "matrix(0.657423, 0, 0, 0.657423, -0.0369868, -21.7888)",
+          "bubbles": 16,
+          "card": {
+            "height": 186.71873474121097,
+            "width": 219.1015625,
+            "x": 505.4453125,
+            "y": 189.3528594970703
+          },
+          "headspace": "20px",
+          "line": {
+            "height": 2.9249420166015625,
+            "y": 194.35316467285156
+          },
+          "path": {
+            "sha256": "699234210998201f58c4f234c3fa9b7e7cea36e8c1dcce4d816e034b7ef3c3fc",
+            "prefix": "M0.00 13.69C3.33 13.54 6.67 13.40 10.00 13.25C13.33 13.10 16.67 12.95 20.00 12.80C23.33 12.66 26"
+          },
+          "ratio": "1",
+          "rear": {
+            "sha256": "bc67101fe395606db09603d323b6c3a576e557c876c6e7c81308817bb5b13e22",
+            "prefix": "M0.00 12.23C3.33 12.07 6.67 11.91 10.00 11.74C13.33 11.58 16.67 11.41 20.00 11.25C23.33 11.09 26"
+          },
+          "state": "flowing",
+          "text": "这个月\n10月1日—10月31日 · CNY\n还能花\n¥\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n,\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9",
+          "waterColors": [
+            "color-mix(in srgb,rgb(134 226 255 / .20) calc((1 - 1)*100%),rgb(166 232 255 / .09))",
+            "color-mix(in srgb,rgb(11 76 116 / .64) calc((1 - 1)*100%),rgb(23 109 147 / .30))",
+            "color-mix(in srgb,rgb(16 62 88 / .75) calc((1 - 1)*100%),rgb(9 59 81 / .56))"
+          ],
+          "waterDisplay": "block",
+          "waterHeight": "271.833px"
+        },
+        {
+          "bubbleTransform": "matrix(0.819453, 0, 0, 0.819453, -0.116689, -87.524)",
+          "bubbles": 16,
+          "card": {
+            "height": 186.71873474121097,
+            "width": 219.1015625,
+            "x": 505.4453125,
+            "y": 189.3528594970703
+          },
+          "headspace": "20px",
+          "line": {
+            "height": 2.939361572265625,
+            "y": 194.7498016357422
+          },
+          "path": {
+            "sha256": "9b35e1b5035aa35ab54fb7d50a431c6fa30eb27f2870e9a26ed7675c480dafbf",
+            "prefix": "M0.00 11.86C3.33 11.86 6.67 11.84 10.00 11.85C13.33 11.85 16.67 11.87 20.00 11.91C23.33 11.95 26"
+          },
+          "ratio": "1",
+          "rear": {
+            "sha256": "f6e726945bfd6e8e07c84070aa27a3b4882c9c56142e8bf1a6cc12b9a5813188",
+            "prefix": "M0.00 10.04C3.33 10.04 6.67 10.03 10.00 10.05C13.33 10.06 16.67 10.10 20.00 10.14C23.33 10.19 26"
+          },
+          "state": "flowing",
+          "text": "这个月\n10月1日—10月31日 · CNY\n还能花\n¥\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n,\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9",
+          "waterColors": [
+            "color-mix(in srgb,rgb(134 226 255 / .20) calc((1 - 1)*100%),rgb(166 232 255 / .09))",
+            "color-mix(in srgb,rgb(11 76 116 / .64) calc((1 - 1)*100%),rgb(23 109 147 / .30))",
+            "color-mix(in srgb,rgb(16 62 88 / .75) calc((1 - 1)*100%),rgb(9 59 81 / .56))"
+          ],
+          "waterDisplay": "block",
+          "waterHeight": "271.833px"
+        }
+      ],
+      "beforeStatic": true,
+      "afterFlowing": true,
+      "colorsUnchanged": true
+    },
+    {
+      "case": "dark-full-detail",
+      "before": {
+        "bubbleTransform": "matrix(0.850315, 0, 0, 0.850315, -0.137941, -87.7215)",
+        "bubbles": 16,
+        "card": {
+          "height": 140.7578125,
+          "width": 217.8203125,
+          "x": 506.0859375,
+          "y": 349.7890625
+        },
+        "headspace": "",
+        "line": {
+          "height": 0,
+          "y": 342.1876220703125
+        },
+        "path": {
+          "sha256": "6a92739ab73b99869ebe5c8c83d50d25368f8c86de35514a58dee0f2c1cfb2d4",
+          "prefix": "M0.00 14.00C3.33 14.00 6.67 14.00 10.00 14.00C13.33 14.00 16.67 14.00 20.00 14.00C23.33 14.00 26"
+        },
+        "ratio": "1",
+        "rear": {
+          "sha256": "6a92739ab73b99869ebe5c8c83d50d25368f8c86de35514a58dee0f2c1cfb2d4",
+          "prefix": "M0.00 14.00C3.33 14.00 6.67 14.00 10.00 14.00C13.33 14.00 16.67 14.00 20.00 14.00C23.33 14.00 26"
+        },
+        "state": "full",
+        "text": "这个月\n每月循环 · CNY\n还能花\n¥3,000",
+        "waterColors": [
+          "rgb(134 226 255 / .20)",
+          "rgb(11 76 116 / .64)",
+          "rgb(16 62 88 / .75)"
+        ],
+        "waterDisplay": "block",
+        "waterHeight": "219.999px"
+      },
+      "after": [
+        {
+          "bubbleTransform": "matrix(0.640575, 0, 0, 0.640575, -0.0311859, -13.5166)",
+          "bubbles": 16,
+          "card": {
+            "height": 140.7578125,
+            "width": 217.8203125,
+            "x": 506.0859375,
+            "y": 349.7890625
+          },
+          "headspace": "20px",
+          "line": {
+            "height": 2.02850341796875,
+            "y": 353.1726989746094
+          },
+          "path": {
+            "sha256": "3ca2ac28a151a01e941734d5a58939343c49e3a19a5a9777a3b5a89da39b08c2",
+            "prefix": "M0.00 15.25C3.33 15.32 6.67 15.40 10.00 15.46C13.33 15.51 16.67 15.56 20.00 15.59C23.33 15.63 26"
+          },
+          "ratio": "1",
+          "rear": {
+            "sha256": "71e8db2ec358533d12c364e834b5e64a29836cda88e8ab0e579928438a5a6499",
+            "prefix": "M0.00 14.01C3.33 14.08 6.67 14.17 10.00 14.23C13.33 14.29 16.67 14.33 20.00 14.37C23.33 14.40 26"
+          },
+          "state": "flowing",
+          "text": "这个月\n每月循环 · CNY\n还能花\n¥3,000",
+          "waterColors": [
+            "rgb(134 226 255 / .20)",
+            "rgb(11 76 116 / .64)",
+            "rgb(16 62 88 / .75)"
+          ],
+          "waterDisplay": "block",
+          "waterHeight": "199.998px"
+        },
+        {
+          "bubbleTransform": "matrix(0.73494, 0, 0, 0.73494, -0.0636768, -27.5988)",
+          "bubbles": 16,
+          "card": {
+            "height": 140.7578125,
+            "width": 217.8203125,
+            "x": 506.0859375,
+            "y": 349.7890625
+          },
+          "headspace": "20px",
+          "line": {
+            "height": 2.046295166015625,
+            "y": 353.1566467285156
+          },
+          "path": {
+            "sha256": "d39f5314fc3d9603ad56d4607b7cf1cde442d1f42edb72697e191d82a3dc549a",
+            "prefix": "M0.00 14.31C3.33 14.37 6.67 14.45 10.00 14.51C13.33 14.57 16.67 14.62 20.00 14.67C23.33 14.71 26"
+          },
+          "ratio": "1",
+          "rear": {
+            "sha256": "3c652176644e2342c67b881300e0a0459878a6b64607383eb50b4f7a5305263d",
+            "prefix": "M0.00 13.08C3.33 13.15 6.67 13.22 10.00 13.28C13.33 13.34 16.67 13.39 20.00 13.44C23.33 13.48 26"
+          },
+          "state": "flowing",
+          "text": "这个月\n每月循环 · CNY\n还能花\n¥3,000",
+          "waterColors": [
+            "rgb(134 226 255 / .20)",
+            "rgb(11 76 116 / .64)",
+            "rgb(16 62 88 / .75)"
+          ],
+          "waterDisplay": "block",
+          "waterHeight": "199.998px"
+        }
+      ],
+      "afterFlowing": true,
+      "colorsUnchanged": true,
+      "homePaused": true
+    },
+    {
+      "case": "full-menu-pause",
+      "state": "covered",
+      "stable": true
+    },
+    {
+      "case": "full-unplugged",
+      "flowing": true,
+      "state": "flowing"
+    },
+    {
+      "case": "full-insert",
+      "samples": [
+        {
+          "effects": 8,
+          "path": {
+            "sha256": "4ae90e11c95528680d55a06308a86cc8eb15c4516c47c1da66abc0e3142ea5cb",
+            "prefix": "M0.00 13.47C3.33 13.34 6.67 13.21 10.00 13.09C13.33 12.97 16.67 12.87 20.00 12.77C23.33 12.68 26"
+          },
+          "phase": "inserting",
+          "state": "flowing"
+        },
+        {
+          "effects": 8,
+          "path": {
+            "sha256": "900f06da4222d148b421d50a87ab01e78699786b8eab8250633d18085be95aef",
+            "prefix": "M0.00 14.77C3.33 14.64 6.67 14.51 10.00 14.38C13.33 14.26 16.67 14.14 20.00 14.02C23.33 13.91 26"
+          },
+          "phase": "charging",
+          "state": "flowing"
+        },
+        {
+          "effects": 8,
+          "path": {
+            "sha256": "4cd3d68c304b364a12cc599c4865bcff63d83a815575c68beb9071bf340c6216",
+            "prefix": "M0.00 14.84C3.33 14.71 6.67 14.57 10.00 14.45C13.33 14.32 16.67 14.20 20.00 14.09C23.33 13.97 26"
+          },
+          "phase": "charging",
+          "state": "flowing"
+        },
+        {
+          "effects": 8,
+          "path": {
+            "sha256": "6a135c6fd757936b4328012505e77c79d368ca3ee648869f31f4bc447bc9c2bb",
+            "prefix": "M0.00 14.99C3.33 14.86 6.67 14.73 10.00 14.60C13.33 14.48 16.67 14.35 20.00 14.24C23.33 14.12 26"
+          },
+          "phase": "charging",
+          "state": "flowing"
+        },
+        {
+          "effects": 8,
+          "path": {
+            "sha256": "8c29bea8694a0c149183f0700dfa0c9611f56db78f171f1ce36ced2c25090449",
+            "prefix": "M0.00 15.04C3.33 14.91 6.67 14.78 10.00 14.66C13.33 14.53 16.67 14.41 20.00 14.29C23.33 14.18 26"
+          },
+          "phase": "charging",
+          "state": "flowing"
+        }
+      ]
+    },
+    {
+      "case": "full-insert-settled",
+      "label": "这个月，已插入，单击查看、上拖或长按拔出",
+      "phase": "connected",
+      "state": "flowing"
+    },
+    {
+      "case": "full-switch-settled",
+      "label": "周末出行，已插入，单击查看、上拖或长按拔出",
+      "phase": "connected",
+      "ratio": "1",
+      "state": "flowing"
+    },
+    {
+      "case": "light-levels",
+      "samples": [
+        {
+          "theme": "light",
+          "fill": 0,
+          "home": [
+            {
+              "bubbleTransform": "none",
+              "bubbles": 16,
+              "card": {
+                "height": 186.71873474121097,
+                "width": 219.1015625,
+                "x": 505.4453125,
+                "y": 189.3528594970703
+              },
+              "headspace": "0px",
+              "line": {
+                "height": 0,
+                "y": 0
+              },
+              "path": {
+                "sha256": "6a92739ab73b99869ebe5c8c83d50d25368f8c86de35514a58dee0f2c1cfb2d4",
+                "prefix": "M0.00 14.00C3.33 14.00 6.67 14.00 10.00 14.00C13.33 14.00 16.67 14.00 20.00 14.00C23.33 14.00 26"
+              },
+              "ratio": "0",
+              "rear": {
+                "sha256": "6a92739ab73b99869ebe5c8c83d50d25368f8c86de35514a58dee0f2c1cfb2d4",
+                "prefix": "M0.00 14.00C3.33 14.00 6.67 14.00 10.00 14.00C13.33 14.00 16.67 14.00 20.00 14.00C23.33 14.00 26"
+              },
+              "state": "empty",
+              "text": "这个月\n10月1日—10月31日 · CNY\n还能花\n¥\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9",
+              "waterColors": [
+                "color-mix(in srgb,rgb(55 185 232 / .16) calc((1 - 0)*100%),rgb(55 185 232 / .16))",
+                "color-mix(in srgb,rgb(55 185 232 / .22) calc((1 - 0)*100%),rgb(55 185 232 / .22))",
+                "color-mix(in srgb,rgb(55 185 232 / .28) calc((1 - 0)*100%),rgb(55 185 232 / .28))"
+              ],
+              "waterDisplay": "none",
+              "waterHeight": "0%"
+            },
+            {
+              "bubbleTransform": "none",
+              "bubbles": 16,
+              "card": {
+                "height": 186.71873474121097,
+                "width": 219.1015625,
+                "x": 505.4453125,
+                "y": 189.3528594970703
+              },
+              "headspace": "0px",
+              "line": {
+                "height": 0,
+                "y": 0
+              },
+              "path": {
+                "sha256": "6a92739ab73b99869ebe5c8c83d50d25368f8c86de35514a58dee0f2c1cfb2d4",
+                "prefix": "M0.00 14.00C3.33 14.00 6.67 14.00 10.00 14.00C13.33 14.00 16.67 14.00 20.00 14.00C23.33 14.00 26"
+              },
+              "ratio": "0",
+              "rear": {
+                "sha256": "6a92739ab73b99869ebe5c8c83d50d25368f8c86de35514a58dee0f2c1cfb2d4",
+                "prefix": "M0.00 14.00C3.33 14.00 6.67 14.00 10.00 14.00C13.33 14.00 16.67 14.00 20.00 14.00C23.33 14.00 26"
+              },
+              "state": "empty",
+              "text": "这个月\n10月1日—10月31日 · CNY\n还能花\n¥\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9",
+              "waterColors": [
+                "color-mix(in srgb,rgb(55 185 232 / .16) calc((1 - 0)*100%),rgb(55 185 232 / .16))",
+                "color-mix(in srgb,rgb(55 185 232 / .22) calc((1 - 0)*100%),rgb(55 185 232 / .22))",
+                "color-mix(in srgb,rgb(55 185 232 / .28) calc((1 - 0)*100%),rgb(55 185 232 / .28))"
+              ],
+              "waterDisplay": "none",
+              "waterHeight": "0%"
+            }
+          ],
+          "detail": [
+            {
+              "bubbleTransform": "none",
+              "bubbles": 16,
+              "card": {
+                "height": 140.7578125,
+                "width": 217.8203125,
+                "x": 506.0859375,
+                "y": 349.7890625
+              },
+              "headspace": "0px",
+              "line": {
+                "height": 0,
+                "y": 0
+              },
+              "path": {
+                "sha256": "6a92739ab73b99869ebe5c8c83d50d25368f8c86de35514a58dee0f2c1cfb2d4",
+                "prefix": "M0.00 14.00C3.33 14.00 6.67 14.00 10.00 14.00C13.33 14.00 16.67 14.00 20.00 14.00C23.33 14.00 26"
+              },
+              "ratio": "0",
+              "rear": {
+                "sha256": "6a92739ab73b99869ebe5c8c83d50d25368f8c86de35514a58dee0f2c1cfb2d4",
+                "prefix": "M0.00 14.00C3.33 14.00 6.67 14.00 10.00 14.00C13.33 14.00 16.67 14.00 20.00 14.00C23.33 14.00 26"
+              },
+              "state": "empty",
+              "text": "这个月\n每月循环 · CNY\n还能花\n¥0",
+              "waterColors": [
+                "rgb(55 185 232 / .16)",
+                "rgb(55 185 232 / .22)",
+                "rgb(55 185 232 / .28)"
+              ],
+              "waterDisplay": "none",
+              "waterHeight": "0%"
+            },
+            {
+              "bubbleTransform": "none",
+              "bubbles": 16,
+              "card": {
+                "height": 140.7578125,
+                "width": 217.8203125,
+                "x": 506.0859375,
+                "y": 349.7890625
+              },
+              "headspace": "0px",
+              "line": {
+                "height": 0,
+                "y": 0
+              },
+              "path": {
+                "sha256": "6a92739ab73b99869ebe5c8c83d50d25368f8c86de35514a58dee0f2c1cfb2d4",
+                "prefix": "M0.00 14.00C3.33 14.00 6.67 14.00 10.00 14.00C13.33 14.00 16.67 14.00 20.00 14.00C23.33 14.00 26"
+              },
+              "ratio": "0",
+              "rear": {
+                "sha256": "6a92739ab73b99869ebe5c8c83d50d25368f8c86de35514a58dee0f2c1cfb2d4",
+                "prefix": "M0.00 14.00C3.33 14.00 6.67 14.00 10.00 14.00C13.33 14.00 16.67 14.00 20.00 14.00C23.33 14.00 26"
+              },
+              "state": "empty",
+              "text": "这个月\n每月循环 · CNY\n还能花\n¥0",
+              "waterColors": [
+                "rgb(55 185 232 / .16)",
+                "rgb(55 185 232 / .22)",
+                "rgb(55 185 232 / .28)"
+              ],
+              "waterDisplay": "none",
+              "waterHeight": "0%"
+            }
+          ],
+          "homeMoving": false,
+          "detailMoving": false
+        },
+        {
+          "theme": "light",
+          "fill": 0.001,
+          "home": [
+            {
+              "bubbleTransform": "matrix(0.85016, 0, 0, 0.85016, -0.137834, -8.00798)",
+              "bubbles": 16,
+              "card": {
+                "height": 186.71873474121097,
+                "width": 219.1015625,
+                "x": 505.4453125,
+                "y": 189.3528594970703
+              },
+              "headspace": "0px",
+              "line": {
+                "height": 0.044830322265625,
+                "y": 369.478271484375
+              },
+              "path": {
+                "sha256": "68d73cc4d7b539f55aa33c79fae41fd6e06c46b489c0cecdbcac00638fe9a898",
+                "prefix": "M0.00 14.00C3.33 14.00 6.67 14.00 10.00 14.01C13.33 14.01 16.67 14.01 20.00 14.01C23.33 14.01 26"
+              },
+              "ratio": "0.001",
+              "rear": {
+                "sha256": "8a72a1e57460522ae8d0cfe389d387036614c8d2ad5b5d93b2f8e75874c27723",
+                "prefix": "M0.00 13.97C3.33 13.97 6.67 13.98 10.00 13.98C13.33 13.98 16.67 13.98 20.00 13.98C23.33 13.98 26"
+              },
+              "state": "flowing",
+              "text": "这个月\n10月1日—10月31日 · CNY\n还能花\n¥\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9",
+              "waterColors": [
+                "color-mix(in srgb,rgb(55 185 232 / .16) calc((1 - 0)*100%),rgb(55 185 232 / .16))",
+                "color-mix(in srgb,rgb(55 185 232 / .22) calc((1 - 0)*100%),rgb(55 185 232 / .22))",
+                "color-mix(in srgb,rgb(55 185 232 / .28) calc((1 - 0)*100%),rgb(55 185 232 / .28))"
+              ],
+              "waterDisplay": "block",
+              "waterHeight": "0.280845px"
+            },
+            {
+              "bubbleTransform": "matrix(0.852459, 0, 0, 0.852459, -0.139418, -8.12295)",
+              "bubbles": 16,
+              "card": {
+                "height": 186.71873474121097,
+                "width": 219.1015625,
+                "x": 505.4453125,
+                "y": 189.3528594970703
+              },
+              "headspace": "0px",
+              "line": {
+                "height": 0.047637939453125,
+                "y": 369.4754638671875
+              },
+              "path": {
+                "sha256": "37d84d69c9f866a1f8e2d537074c3411ba8e7de1745bf595f4e0066902434c18",
+                "prefix": "M0.00 14.00C3.33 14.00 6.67 14.00 10.00 14.00C13.33 14.01 16.67 14.01 20.00 14.01C23.33 14.01 26"
+              },
+              "ratio": "0.001",
+              "rear": {
+                "sha256": "c61ed12247d094fb6ea724b343843e79f719c12f6c492ffc11923ec65b638437",
+                "prefix": "M0.00 13.97C3.33 13.97 6.67 13.97 10.00 13.98C13.33 13.98 16.67 13.98 20.00 13.98C23.33 13.98 26"
+              },
+              "state": "flowing",
+              "text": "这个月\n10月1日—10月31日 · CNY\n还能花\n¥\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9",
+              "waterColors": [
+                "color-mix(in srgb,rgb(55 185 232 / .16) calc((1 - 0)*100%),rgb(55 185 232 / .16))",
+                "color-mix(in srgb,rgb(55 185 232 / .22) calc((1 - 0)*100%),rgb(55 185 232 / .22))",
+                "color-mix(in srgb,rgb(55 185 232 / .28) calc((1 - 0)*100%),rgb(55 185 232 / .28))"
+              ],
+              "waterDisplay": "block",
+              "waterHeight": "0.280845px"
+            }
+          ],
+          "detail": [
+            {
+              "bubbleTransform": "matrix(0.848789, 0, 0, 0.848789, -0.136891, -7.93947)",
+              "bubbles": 16,
+              "card": {
+                "height": 140.7578125,
+                "width": 217.8203125,
+                "x": 506.0859375,
+                "y": 349.7890625
+              },
+              "headspace": "0px",
+              "line": {
+                "height": 0.044708251953125,
+                "y": 483.9701232910156
+              },
+              "path": {
+                "sha256": "cfed602ca55cae75900e2d7247e831c879f4d1148f124e23379fa770895c266b",
+                "prefix": "M0.00 14.00C3.33 14.00 6.67 14.00 10.00 14.01C13.33 14.01 16.67 14.01 20.00 14.01C23.33 14.01 26"
+              },
+              "ratio": "0.001",
+              "rear": {
+                "sha256": "7ba675bdafbf1edefd16217831479dc467971c48011fd9df09710ab370129bf6",
+                "prefix": "M0.00 13.97C3.33 13.97 6.67 13.98 10.00 13.98C13.33 13.98 16.67 13.98 20.00 13.98C23.33 13.98 26"
+              },
+              "state": "flowing",
+              "text": "这个月\n每月循环 · CNY\n还能花\n¥3",
+              "waterColors": [
+                "rgb(55 185 232 / .16)",
+                "rgb(55 185 232 / .22)",
+                "rgb(55 185 232 / .28)"
+              ],
+              "waterDisplay": "block",
+              "waterHeight": "0.219792px"
+            },
+            {
+              "bubbleTransform": "matrix(0.854085, 0, 0, 0.854085, -0.140537, -8.20423)",
+              "bubbles": 16,
+              "card": {
+                "height": 140.7578125,
+                "width": 217.8203125,
+                "x": 506.0859375,
+                "y": 349.7890625
+              },
+              "headspace": "0px",
+              "line": {
+                "height": 0.044708251953125,
+                "y": 483.9701232910156
+              },
+              "path": {
+                "sha256": "b94bf4d3d36b81253a2e665affcfe5ca3d65b58e7788441cf9173f6bdddf4869",
+                "prefix": "M0.00 14.00C3.33 14.00 6.67 14.00 10.00 14.01C13.33 14.01 16.67 14.01 20.00 14.01C23.33 14.01 26"
+              },
+              "ratio": "0.001",
+              "rear": {
+                "sha256": "fb662231dbbbca643b48194bbb9742f37616294d0d5c0ed797cab88f84740952",
+                "prefix": "M0.00 13.97C3.33 13.97 6.67 13.98 10.00 13.98C13.33 13.98 16.67 13.98 20.00 13.98C23.33 13.98 26"
+              },
+              "state": "flowing",
+              "text": "这个月\n每月循环 · CNY\n还能花\n¥3",
+              "waterColors": [
+                "rgb(55 185 232 / .16)",
+                "rgb(55 185 232 / .22)",
+                "rgb(55 185 232 / .28)"
+              ],
+              "waterDisplay": "block",
+              "waterHeight": "0.219792px"
+            }
+          ],
+          "homeMoving": true,
+          "detailMoving": true
+        },
+        {
+          "theme": "light",
+          "fill": 0.4266666666666667,
+          "home": [
+            {
+              "bubbleTransform": "matrix(0.851041, 0, 0, 0.851041, -0.138441, -49.8722)",
+              "bubbles": 16,
+              "card": {
+                "height": 186.71873474121097,
+                "width": 219.1015625,
+                "x": 505.4453125,
+                "y": 189.3528594970703
+              },
+              "headspace": "0px",
+              "line": {
+                "height": 6.03497314453125,
+                "y": 287.16015625
+              },
+              "path": {
+                "sha256": "8a39003cb7a6f4f9b4b6666ca0668a5c6aee0bec0767e6fb7b39362e92c844c8",
+                "prefix": "M0.00 13.86C3.33 14.13 6.67 14.42 10.00 14.67C13.33 14.93 16.67 15.17 20.00 15.38C23.33 15.60 26"
+              },
+              "ratio": "0.4266666666666667",
+              "rear": {
+                "sha256": "e0c5acfbadb7249d44bbf72aa53d19330c1cc386dd08ef93c42828237e7078af",
+                "prefix": "M0.00 10.60C3.33 10.84 6.67 11.09 10.00 11.31C13.33 11.53 16.67 11.74 20.00 11.93C23.33 12.11 26"
+              },
+              "state": "flowing",
+              "text": "这个月\n10月1日—10月31日 · CNY\n还能花\n¥\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n,\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9",
+              "waterColors": [
+                "color-mix(in srgb,rgb(55 185 232 / .16) calc((1 - 0)*100%),rgb(55 185 232 / .16))",
+                "color-mix(in srgb,rgb(55 185 232 / .22) calc((1 - 0)*100%),rgb(55 185 232 / .22))",
+                "color-mix(in srgb,rgb(55 185 232 / .28) calc((1 - 0)*100%),rgb(55 185 232 / .28))"
+              ],
+              "waterDisplay": "block",
+              "waterHeight": "124.512px"
+            },
+            {
+              "bubbleTransform": "matrix(0.852079, 0, 0, 0.852079, -0.139156, -50.1937)",
+              "bubbles": 16,
+              "card": {
+                "height": 186.71873474121097,
+                "width": 219.1015625,
+                "x": 505.4453125,
+                "y": 189.3528594970703
+              },
+              "headspace": "0px",
+              "line": {
+                "height": 6.00360107421875,
+                "y": 287.1560974121094
+              },
+              "path": {
+                "sha256": "336fc79aad4fb8fc5e07d1e807ad72145462f50bd0d91c39a133b9f4f826b4cc",
+                "prefix": "M0.00 13.79C3.33 14.06 6.67 14.34 10.00 14.60C13.33 14.85 16.67 15.09 20.00 15.30C23.33 15.52 26"
+              },
+              "ratio": "0.4266666666666667",
+              "rear": {
+                "sha256": "5960ac78949f3b62ef0e09894f17397ffd657074001df61d36076ca3e6b72ca6",
+                "prefix": "M0.00 10.52C3.33 10.76 6.67 11.01 10.00 11.23C13.33 11.45 16.67 11.65 20.00 11.84C23.33 12.02 26"
+              },
+              "state": "flowing",
+              "text": "这个月\n10月1日—10月31日 · CNY\n还能花\n¥\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n,\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9",
+              "waterColors": [
+                "color-mix(in srgb,rgb(55 185 232 / .16) calc((1 - 0)*100%),rgb(55 185 232 / .16))",
+                "color-mix(in srgb,rgb(55 185 232 / .22) calc((1 - 0)*100%),rgb(55 185 232 / .22))",
+                "color-mix(in srgb,rgb(55 185 232 / .28) calc((1 - 0)*100%),rgb(55 185 232 / .28))"
+              ],
+              "waterDisplay": "block",
+              "waterHeight": "124.512px"
+            }
+          ],
+          "detail": [
+            {
+              "bubbleTransform": "matrix(0.853633, 0, 0, 0.853633, -0.140226, -38.2013)",
+              "bubbles": 16,
+              "card": {
+                "height": 140.7578125,
+                "width": 217.8203125,
+                "x": 506.0859375,
+                "y": 349.7890625
+              },
+              "headspace": "0px",
+              "line": {
+                "height": 4.78704833984375,
+                "y": 419.9818115234375
+              },
+              "path": {
+                "sha256": "4be6931749029f07a23bfceac789a3a8a1bee831d5fc51ffb49d107e44ea5543",
+                "prefix": "M0.00 13.85C3.33 14.12 6.67 14.40 10.00 14.66C13.33 14.91 16.67 15.15 20.00 15.37C23.33 15.58 26"
+              },
+              "ratio": "0.4266666666666667",
+              "rear": {
+                "sha256": "9a49777a966c276a47c3215cd72f8e2e44c99315ec5a4ebcbe3cada1294a0ca5",
+                "prefix": "M0.00 10.58C3.33 10.82 6.67 11.07 10.00 11.29C13.33 11.51 16.67 11.72 20.00 11.91C23.33 12.09 26"
+              },
+              "state": "flowing",
+              "text": "这个月\n每月循环 · CNY\n还能花\n¥1,280",
+              "waterColors": [
+                "rgb(55 185 232 / .16)",
+                "rgb(55 185 232 / .22)",
+                "rgb(55 185 232 / .28)"
+              ],
+              "waterDisplay": "block",
+              "waterHeight": "93.8633px"
+            },
+            {
+              "bubbleTransform": "matrix(0.854799, 0, 0, 0.854799, -0.141029, -38.4735)",
+              "bubbles": 16,
+              "card": {
+                "height": 140.7578125,
+                "width": 217.8203125,
+                "x": 506.0859375,
+                "y": 349.7890625
+              },
+              "headspace": "0px",
+              "line": {
+                "height": 4.753326416015625,
+                "y": 419.9818115234375
+              },
+              "path": {
+                "sha256": "36718ef215e799f68a3c622e009de5d8d1cb0a6c63d55930e25895d8a8702e86",
+                "prefix": "M0.00 13.77C3.33 14.03 6.67 14.32 10.00 14.57C13.33 14.82 16.67 15.06 20.00 15.28C23.33 15.49 26"
+              },
+              "ratio": "0.4266666666666667",
+              "rear": {
+                "sha256": "b2679d5f62979852a0d1facbcd708ff8c1c39f4df32f90166f84168f6454ed03",
+                "prefix": "M0.00 10.50C3.33 10.73 6.67 10.98 10.00 11.20C13.33 11.42 16.67 11.63 20.00 11.81C23.33 11.99 26"
+              },
+              "state": "flowing",
+              "text": "这个月\n每月循环 · CNY\n还能花\n¥1,280",
+              "waterColors": [
+                "rgb(55 185 232 / .16)",
+                "rgb(55 185 232 / .22)",
+                "rgb(55 185 232 / .28)"
+              ],
+              "waterDisplay": "block",
+              "waterHeight": "93.8633px"
+            }
+          ],
+          "homeMoving": true,
+          "detailMoving": true
+        },
+        {
+          "theme": "light",
+          "fill": 0.95,
+          "home": [
+            {
+              "bubbleTransform": "matrix(0.861137, 0, 0, 0.861137, -0.145393, -112.697)",
+              "bubbles": 16,
+              "card": {
+                "height": 186.71873474121097,
+                "width": 219.1015625,
+                "x": 505.4453125,
+                "y": 189.3528594970703
+              },
+              "headspace": "12.47685185185184px",
+              "line": {
+                "height": 2.5458526611328125,
+                "y": 199.3928375244141
+              },
+              "path": {
+                "sha256": "04cefc3e6271f5648703e3f8154b107a6c4c3c3f4c8536f1e6dabc3c179c4007",
+                "prefix": "M0.00 13.67C3.33 13.78 6.67 13.89 10.00 13.98C13.33 14.08 16.67 14.17 20.00 14.26C23.33 14.34 26"
+              },
+              "ratio": "0.95",
+              "rear": {
+                "sha256": "fa3afd8d2b7e4d43c92203ead48bc6434ba3d13d9ad0199d98a0406df9fdcc9f",
+                "prefix": "M0.00 12.30C3.33 12.39 6.67 12.48 10.00 12.57C13.33 12.65 16.67 12.73 20.00 12.80C23.33 12.87 26"
+              },
+              "state": "flowing",
+              "text": "这个月\n10月1日—10月31日 · CNY\n还能花\n¥\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n,\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9",
+              "waterColors": [
+                "color-mix(in srgb,rgb(55 185 232 / .16) calc((1 - 0.623842592592592)*100%),rgb(55 185 232 / .16))",
+                "color-mix(in srgb,rgb(55 185 232 / .22) calc((1 - 0.623842592592592)*100%),rgb(55 185 232 / .22))",
+                "color-mix(in srgb,rgb(55 185 232 / .28) calc((1 - 0.623842592592592)*100%),rgb(55 185 232 / .28))"
+              ],
+              "waterDisplay": "block",
+              "waterHeight": "264.763px"
+            },
+            {
+              "bubbleTransform": "matrix(0.863796, 0, 0, 0.863796, -0.147224, -114.448)",
+              "bubbles": 16,
+              "card": {
+                "height": 186.71873474121097,
+                "width": 219.1015625,
+                "x": 505.4453125,
+                "y": 189.3528594970703
+              },
+              "headspace": "12.47685185185184px",
+              "line": {
+                "height": 2.5841064453125,
+                "y": 199.3995819091797
+              },
+              "path": {
+                "sha256": "10aa3430057d8a9cbbb4b0c7a27e2316cef6cf46fdd4739d77e5ee283c62175b",
+                "prefix": "M0.00 13.60C3.33 13.70 6.67 13.81 10.00 13.90C13.33 14.00 16.67 14.09 20.00 14.17C23.33 14.25 26"
+              },
+              "ratio": "0.95",
+              "rear": {
+                "sha256": "a228553d4a58fd5caea95c29973a6c1551bbeaacb8f93a66ce0f3e5c9d436a40",
+                "prefix": "M0.00 12.22C3.33 12.31 6.67 12.40 10.00 12.48C13.33 12.56 16.67 12.64 20.00 12.71C23.33 12.78 26"
+              },
+              "state": "flowing",
+              "text": "这个月\n10月1日—10月31日 · CNY\n还能花\n¥\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n,\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9",
+              "waterColors": [
+                "color-mix(in srgb,rgb(55 185 232 / .16) calc((1 - 0.623842592592592)*100%),rgb(55 185 232 / .16))",
+                "color-mix(in srgb,rgb(55 185 232 / .22) calc((1 - 0.623842592592592)*100%),rgb(55 185 232 / .22))",
+                "color-mix(in srgb,rgb(55 185 232 / .28) calc((1 - 0.623842592592592)*100%),rgb(55 185 232 / .28))"
+              ],
+              "waterDisplay": "block",
+              "waterHeight": "264.763px"
+            }
+          ],
+          "detail": [
+            {
+              "bubbleTransform": "matrix(0.847416, 0, 0, 0.847416, -0.135945, -76.942)",
+              "bubbles": 16,
+              "card": {
+                "height": 140.7578125,
+                "width": 217.8203125,
+                "x": 506.0859375,
+                "y": 349.7890625
+              },
+              "headspace": "12.47685185185184px",
+              "line": {
+                "height": 1.868438720703125,
+                "y": 355.6246032714844
+              },
+              "path": {
+                "sha256": "eccffe87b08cc7424ab32f29f5c756c4a31e69acc5fc2aa5c6594a3bdceaacb9",
+                "prefix": "M0.00 13.97C3.33 14.08 6.67 14.20 10.00 14.31C13.33 14.41 16.67 14.52 20.00 14.61C23.33 14.70 26"
+              },
+              "ratio": "0.95",
+              "rear": {
+                "sha256": "8ad440ebb54f7ff551ccecf22b51c6d18d4ed5f3ec76e86dc841119c48626cae",
+                "prefix": "M0.00 12.61C3.33 12.71 6.67 12.82 10.00 12.91C13.33 13.00 16.67 13.09 20.00 13.17C23.33 13.24 26"
+              },
+              "state": "flowing",
+              "text": "这个月\n每月循环 · CNY\n还能花\n¥2,850",
+              "waterColors": [
+                "rgb(55 185 232 / .16)",
+                "rgb(55 185 232 / .22)",
+                "rgb(55 185 232 / .28)"
+              ],
+              "waterDisplay": "block",
+              "waterHeight": "196.518px"
+            },
+            {
+              "bubbleTransform": "matrix(0.849292, 0, 0, 0.849292, -0.137237, -77.8589)",
+              "bubbles": 16,
+              "card": {
+                "height": 140.7578125,
+                "width": 217.8203125,
+                "x": 506.0859375,
+                "y": 349.7890625
+              },
+              "headspace": "12.47685185185184px",
+              "line": {
+                "height": 1.85595703125,
+                "y": 355.621337890625
+              },
+              "path": {
+                "sha256": "6f7865875a591a666ce8e6a2520f81be32ca32e932c7770104ed00e60a752a7e",
+                "prefix": "M0.00 13.93C3.33 14.04 6.67 14.16 10.00 14.26C13.33 14.37 16.67 14.47 20.00 14.56C23.33 14.65 26"
+              },
+              "ratio": "0.95",
+              "rear": {
+                "sha256": "5c0b728aecbc130828707d1b938747e7b722f7a11030eec9d1a2e655d4cb809a",
+                "prefix": "M0.00 12.57C3.33 12.66 6.67 12.77 10.00 12.86C13.33 12.95 16.67 13.04 20.00 13.12C23.33 13.19 26"
+              },
+              "state": "flowing",
+              "text": "这个月\n每月循环 · CNY\n还能花\n¥2,850",
+              "waterColors": [
+                "rgb(55 185 232 / .16)",
+                "rgb(55 185 232 / .22)",
+                "rgb(55 185 232 / .28)"
+              ],
+              "waterDisplay": "block",
+              "waterHeight": "196.518px"
+            }
+          ],
+          "homeMoving": true,
+          "detailMoving": true
+        },
+        {
+          "theme": "light",
+          "fill": 1,
+          "home": [
+            {
+              "bubbleTransform": "matrix(0.848954, 0, 0, 0.848954, -0.137004, -107.469)",
+              "bubbles": 16,
+              "card": {
+                "height": 186.71873474121097,
+                "width": 219.1015625,
+                "x": 505.4453125,
+                "y": 189.3528594970703
+              },
+              "headspace": "20px",
+              "line": {
+                "height": 2.7813262939453125,
+                "y": 194.46714782714844
+              },
+              "path": {
+                "sha256": "ec12b89c585f134259bbee77eda4bab6aec87111993c5282af5400580ca5fab6",
+                "prefix": "M0.00 14.02C3.33 14.15 6.67 14.29 10.00 14.41C13.33 14.54 16.67 14.66 20.00 14.76C23.33 14.87 26"
+              },
+              "ratio": "1",
+              "rear": {
+                "sha256": "5f3a91a3ad8ce056652b0e23d952567fc5860aceb1e602185ccf09cc41ab18cb",
+                "prefix": "M0.00 12.46C3.33 12.57 6.67 12.70 10.00 12.81C13.33 12.91 16.67 13.02 20.00 13.11C23.33 13.20 26"
+              },
+              "state": "flowing",
+              "text": "这个月\n10月1日—10月31日 · CNY\n还能花\n¥\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n,\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9",
+              "waterColors": [
+                "color-mix(in srgb,rgb(55 185 232 / .16) calc((1 - 1)*100%),rgb(55 185 232 / .16))",
+                "color-mix(in srgb,rgb(55 185 232 / .22) calc((1 - 1)*100%),rgb(55 185 232 / .22))",
+                "color-mix(in srgb,rgb(55 185 232 / .28) calc((1 - 1)*100%),rgb(55 185 232 / .28))"
+              ],
+              "waterDisplay": "block",
+              "waterHeight": "271.833px"
+            },
+            {
+              "bubbleTransform": "matrix(0.849987, 0, 0, 0.849987, -0.137715, -108.168)",
+              "bubbles": 16,
+              "card": {
+                "height": 186.71873474121097,
+                "width": 219.1015625,
+                "x": 505.4453125,
+                "y": 189.3528594970703
+              },
+              "headspace": "20px",
+              "line": {
+                "height": 2.767791748046875,
+                "y": 194.46055603027344
+              },
+              "path": {
+                "sha256": "bb651f69a24cdea024d6e5b677bc4de43afd0da942e595cdb1bea8279da3e7a9",
+                "prefix": "M0.00 13.98C3.33 14.12 6.67 14.26 10.00 14.38C13.33 14.50 16.67 14.62 20.00 14.72C23.33 14.83 26"
+              },
+              "ratio": "1",
+              "rear": {
+                "sha256": "3212c1f6204201370afc223c4b9f5227fbdd26010880ab8a8fc5073a4f3e54a7",
+                "prefix": "M0.00 12.42C3.33 12.54 6.67 12.66 10.00 12.77C13.33 12.87 16.67 12.98 20.00 13.07C23.33 13.15 26"
+              },
+              "state": "flowing",
+              "text": "这个月\n10月1日—10月31日 · CNY\n还能花\n¥\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n,\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9",
+              "waterColors": [
+                "color-mix(in srgb,rgb(55 185 232 / .16) calc((1 - 1)*100%),rgb(55 185 232 / .16))",
+                "color-mix(in srgb,rgb(55 185 232 / .22) calc((1 - 1)*100%),rgb(55 185 232 / .22))",
+                "color-mix(in srgb,rgb(55 185 232 / .28) calc((1 - 1)*100%),rgb(55 185 232 / .28))"
+              ],
+              "waterDisplay": "block",
+              "waterHeight": "271.833px"
+            }
+          ],
+          "detail": [
+            {
+              "bubbleTransform": "matrix(0.850833, 0, 0, 0.850833, -0.138298, -80.0042)",
+              "bubbles": 16,
+              "card": {
+                "height": 140.7578125,
+                "width": 217.8203125,
+                "x": 506.0859375,
+                "y": 349.7890625
+              },
+              "headspace": "20px",
+              "line": {
+                "height": 2.102691650390625,
+                "y": 353.03802490234375
+              },
+              "path": {
+                "sha256": "15137f480fbe46894f4221948bf4409cc6e86db16a46e1bc0a3684ac9a6ec792",
+                "prefix": "M0.00 14.00C3.33 14.13 6.67 14.27 10.00 14.40C13.33 14.52 16.67 14.64 20.00 14.74C23.33 14.85 26"
+              },
+              "ratio": "1",
+              "rear": {
+                "sha256": "7a42508eafddaed92831194bbe73f48f9373d40ebd234b2262ed4cbafa2bb1e9",
+                "prefix": "M0.00 12.44C3.33 12.56 6.67 12.68 10.00 12.79C13.33 12.89 16.67 13.00 20.00 13.09C23.33 13.18 26"
+              },
+              "state": "flowing",
+              "text": "这个月\n每月循环 · CNY\n还能花\n¥3,000",
+              "waterColors": [
+                "rgb(55 185 232 / .16)",
+                "rgb(55 185 232 / .22)",
+                "rgb(55 185 232 / .28)"
+              ],
+              "waterDisplay": "block",
+              "waterHeight": "199.998px"
+            },
+            {
+              "bubbleTransform": "matrix(0.85198, 0, 0, 0.85198, -0.139088, -80.575)",
+              "bubbles": 16,
+              "card": {
+                "height": 140.7578125,
+                "width": 217.8203125,
+                "x": 506.0859375,
+                "y": 349.7890625
+              },
+              "headspace": "20px",
+              "line": {
+                "height": 2.090606689453125,
+                "y": 353.0361328125
+              },
+              "path": {
+                "sha256": "f916e252706f6d7bfac84e0fc2f10397fc59c35c85b400ca7e13bfacf703d6c3",
+                "prefix": "M0.00 13.96C3.33 14.10 6.67 14.23 10.00 14.36C13.33 14.48 16.67 14.59 20.00 14.70C23.33 14.80 26"
+              },
+              "ratio": "1",
+              "rear": {
+                "sha256": "6e70823d3499b3c6c4413eefb18a5ff00999adf3e18f7d0b0fef7301badf7801",
+                "prefix": "M0.00 12.40C3.33 12.51 6.67 12.64 10.00 12.74C13.33 12.85 16.67 12.95 20.00 13.04C23.33 13.13 26"
+              },
+              "state": "flowing",
+              "text": "这个月\n每月循环 · CNY\n还能花\n¥3,000",
+              "waterColors": [
+                "rgb(55 185 232 / .16)",
+                "rgb(55 185 232 / .22)",
+                "rgb(55 185 232 / .28)"
+              ],
+              "waterDisplay": "block",
+              "waterHeight": "199.998px"
+            }
+          ],
+          "homeMoving": true,
+          "detailMoving": true
+        }
+      ]
+    },
+    {
+      "case": "dark-levels",
+      "samples": [
+        {
+          "theme": "dark",
+          "fill": 0,
+          "home": [
+            {
+              "bubbleTransform": "none",
+              "bubbles": 16,
+              "card": {
+                "height": 186.71873474121097,
+                "width": 219.1015625,
+                "x": 505.4453125,
+                "y": 189.3528594970703
+              },
+              "headspace": "0px",
+              "line": {
+                "height": 0,
+                "y": 0
+              },
+              "path": {
+                "sha256": "6a92739ab73b99869ebe5c8c83d50d25368f8c86de35514a58dee0f2c1cfb2d4",
+                "prefix": "M0.00 14.00C3.33 14.00 6.67 14.00 10.00 14.00C13.33 14.00 16.67 14.00 20.00 14.00C23.33 14.00 26"
+              },
+              "ratio": "0",
+              "rear": {
+                "sha256": "6a92739ab73b99869ebe5c8c83d50d25368f8c86de35514a58dee0f2c1cfb2d4",
+                "prefix": "M0.00 14.00C3.33 14.00 6.67 14.00 10.00 14.00C13.33 14.00 16.67 14.00 20.00 14.00C23.33 14.00 26"
+              },
+              "state": "empty",
+              "text": "这个月\n10月1日—10月31日 · CNY\n还能花\n¥\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9",
+              "waterColors": [
+                "color-mix(in srgb,rgb(134 226 255 / .20) calc((1 - 0)*100%),rgb(166 232 255 / .09))",
+                "color-mix(in srgb,rgb(11 76 116 / .64) calc((1 - 0)*100%),rgb(23 109 147 / .30))",
+                "color-mix(in srgb,rgb(16 62 88 / .75) calc((1 - 0)*100%),rgb(9 59 81 / .56))"
+              ],
+              "waterDisplay": "none",
+              "waterHeight": "0%"
+            },
+            {
+              "bubbleTransform": "none",
+              "bubbles": 16,
+              "card": {
+                "height": 186.71873474121097,
+                "width": 219.1015625,
+                "x": 505.4453125,
+                "y": 189.3528594970703
+              },
+              "headspace": "0px",
+              "line": {
+                "height": 0,
+                "y": 0
+              },
+              "path": {
+                "sha256": "6a92739ab73b99869ebe5c8c83d50d25368f8c86de35514a58dee0f2c1cfb2d4",
+                "prefix": "M0.00 14.00C3.33 14.00 6.67 14.00 10.00 14.00C13.33 14.00 16.67 14.00 20.00 14.00C23.33 14.00 26"
+              },
+              "ratio": "0",
+              "rear": {
+                "sha256": "6a92739ab73b99869ebe5c8c83d50d25368f8c86de35514a58dee0f2c1cfb2d4",
+                "prefix": "M0.00 14.00C3.33 14.00 6.67 14.00 10.00 14.00C13.33 14.00 16.67 14.00 20.00 14.00C23.33 14.00 26"
+              },
+              "state": "empty",
+              "text": "这个月\n10月1日—10月31日 · CNY\n还能花\n¥\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9",
+              "waterColors": [
+                "color-mix(in srgb,rgb(134 226 255 / .20) calc((1 - 0)*100%),rgb(166 232 255 / .09))",
+                "color-mix(in srgb,rgb(11 76 116 / .64) calc((1 - 0)*100%),rgb(23 109 147 / .30))",
+                "color-mix(in srgb,rgb(16 62 88 / .75) calc((1 - 0)*100%),rgb(9 59 81 / .56))"
+              ],
+              "waterDisplay": "none",
+              "waterHeight": "0%"
+            }
+          ],
+          "detail": [
+            {
+              "bubbleTransform": "none",
+              "bubbles": 16,
+              "card": {
+                "height": 140.7578125,
+                "width": 217.8203125,
+                "x": 506.0859375,
+                "y": 349.7890625
+              },
+              "headspace": "0px",
+              "line": {
+                "height": 0,
+                "y": 0
+              },
+              "path": {
+                "sha256": "6a92739ab73b99869ebe5c8c83d50d25368f8c86de35514a58dee0f2c1cfb2d4",
+                "prefix": "M0.00 14.00C3.33 14.00 6.67 14.00 10.00 14.00C13.33 14.00 16.67 14.00 20.00 14.00C23.33 14.00 26"
+              },
+              "ratio": "0",
+              "rear": {
+                "sha256": "6a92739ab73b99869ebe5c8c83d50d25368f8c86de35514a58dee0f2c1cfb2d4",
+                "prefix": "M0.00 14.00C3.33 14.00 6.67 14.00 10.00 14.00C13.33 14.00 16.67 14.00 20.00 14.00C23.33 14.00 26"
+              },
+              "state": "empty",
+              "text": "这个月\n每月循环 · CNY\n还能花\n¥0",
+              "waterColors": [
+                "rgb(134 226 255 / .20)",
+                "rgb(11 76 116 / .64)",
+                "rgb(16 62 88 / .75)"
+              ],
+              "waterDisplay": "none",
+              "waterHeight": "0%"
+            },
+            {
+              "bubbleTransform": "none",
+              "bubbles": 16,
+              "card": {
+                "height": 140.7578125,
+                "width": 217.8203125,
+                "x": 506.0859375,
+                "y": 349.7890625
+              },
+              "headspace": "0px",
+              "line": {
+                "height": 0,
+                "y": 0
+              },
+              "path": {
+                "sha256": "6a92739ab73b99869ebe5c8c83d50d25368f8c86de35514a58dee0f2c1cfb2d4",
+                "prefix": "M0.00 14.00C3.33 14.00 6.67 14.00 10.00 14.00C13.33 14.00 16.67 14.00 20.00 14.00C23.33 14.00 26"
+              },
+              "ratio": "0",
+              "rear": {
+                "sha256": "6a92739ab73b99869ebe5c8c83d50d25368f8c86de35514a58dee0f2c1cfb2d4",
+                "prefix": "M0.00 14.00C3.33 14.00 6.67 14.00 10.00 14.00C13.33 14.00 16.67 14.00 20.00 14.00C23.33 14.00 26"
+              },
+              "state": "empty",
+              "text": "这个月\n每月循环 · CNY\n还能花\n¥0",
+              "waterColors": [
+                "rgb(134 226 255 / .20)",
+                "rgb(11 76 116 / .64)",
+                "rgb(16 62 88 / .75)"
+              ],
+              "waterDisplay": "none",
+              "waterHeight": "0%"
+            }
+          ],
+          "homeMoving": false,
+          "detailMoving": false
+        },
+        {
+          "theme": "dark",
+          "fill": 0.001,
+          "home": [
+            {
+              "bubbleTransform": "matrix(0.852834, 0, 0, 0.852834, -0.139676, -8.14169)",
+              "bubbles": 16,
+              "card": {
+                "height": 186.71873474121097,
+                "width": 219.1015625,
+                "x": 505.4453125,
+                "y": 189.3528594970703
+              },
+              "headspace": "0px",
+              "line": {
+                "height": 0.047637939453125,
+                "y": 369.4754638671875
+              },
+              "path": {
+                "sha256": "c4c9bb57e77eaf2272a2ccae308658416346ce4f1cf278a3bc34b16c4fb7acd1",
+                "prefix": "M0.00 14.00C3.33 14.00 6.67 14.00 10.00 14.00C13.33 14.01 16.67 14.01 20.00 14.01C23.33 14.01 26"
+              },
+              "ratio": "0.001",
+              "rear": {
+                "sha256": "a49f335992b32c375d0612373bcb715f072b0ac4b20a9cbe4ea9aadccd683f9a",
+                "prefix": "M0.00 13.97C3.33 13.97 6.67 13.97 10.00 13.98C13.33 13.98 16.67 13.98 20.00 13.98C23.33 13.98 26"
+              },
+              "state": "flowing",
+              "text": "这个月\n10月1日—10月31日 · CNY\n还能花\n¥\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9",
+              "waterColors": [
+                "color-mix(in srgb,rgb(134 226 255 / .20) calc((1 - 0)*100%),rgb(166 232 255 / .09))",
+                "color-mix(in srgb,rgb(11 76 116 / .64) calc((1 - 0)*100%),rgb(23 109 147 / .30))",
+                "color-mix(in srgb,rgb(16 62 88 / .75) calc((1 - 0)*100%),rgb(9 59 81 / .56))"
+              ],
+              "waterDisplay": "block",
+              "waterHeight": "0.280845px"
+            },
+            {
+              "bubbleTransform": "matrix(0.854027, 0, 0, 0.854027, -0.140497, -8.20134)",
+              "bubbles": 16,
+              "card": {
+                "height": 186.71873474121097,
+                "width": 219.1015625,
+                "x": 505.4453125,
+                "y": 189.3528594970703
+              },
+              "headspace": "0px",
+              "line": {
+                "height": 0.047637939453125,
+                "y": 369.4754638671875
+              },
+              "path": {
+                "sha256": "ecf0d4177dbb09fe07594cac645670dc89dc40d32fe867b0fd71b148872e3322",
+                "prefix": "M0.00 14.00C3.33 14.00 6.67 14.00 10.00 14.00C13.33 14.01 16.67 14.01 20.00 14.01C23.33 14.01 26"
+              },
+              "ratio": "0.001",
+              "rear": {
+                "sha256": "31023ba8836722030f4f51c8f3b80ff60094c3413e62ec6a6713bfbbda26bb49",
+                "prefix": "M0.00 13.97C3.33 13.97 6.67 13.97 10.00 13.98C13.33 13.98 16.67 13.98 20.00 13.98C23.33 13.98 26"
+              },
+              "state": "flowing",
+              "text": "这个月\n10月1日—10月31日 · CNY\n还能花\n¥\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9",
+              "waterColors": [
+                "color-mix(in srgb,rgb(134 226 255 / .20) calc((1 - 0)*100%),rgb(166 232 255 / .09))",
+                "color-mix(in srgb,rgb(11 76 116 / .64) calc((1 - 0)*100%),rgb(23 109 147 / .30))",
+                "color-mix(in srgb,rgb(16 62 88 / .75) calc((1 - 0)*100%),rgb(9 59 81 / .56))"
+              ],
+              "waterDisplay": "block",
+              "waterHeight": "0.280845px"
+            }
+          ],
+          "detail": [
+            {
+              "bubbleTransform": "matrix(0.852187, 0, 0, 0.852187, -0.13923, -8.10933)",
+              "bubbles": 16,
+              "card": {
+                "height": 140.7578125,
+                "width": 217.8203125,
+                "x": 506.0859375,
+                "y": 349.7890625
+              },
+              "headspace": "0px",
+              "line": {
+                "height": 0.044708251953125,
+                "y": 483.9701232910156
+              },
+              "path": {
+                "sha256": "c9db885e0edc3ed19387c3d0bb317a89c1efaabc83a88dae7b77cc05ceebd03c",
+                "prefix": "M0.00 14.00C3.33 14.00 6.67 14.01 10.00 14.01C13.33 14.01 16.67 14.01 20.00 14.01C23.33 14.02 26"
+              },
+              "ratio": "0.001",
+              "rear": {
+                "sha256": "c17393a03f99e7f58447c2c1ed5f0dc59595ba0224fd787a845e43e728c3c389",
+                "prefix": "M0.00 13.97C3.33 13.98 6.67 13.98 10.00 13.98C13.33 13.98 16.67 13.98 20.00 13.98C23.33 13.99 26"
+              },
+              "state": "flowing",
+              "text": "这个月\n每月循环 · CNY\n还能花\n¥3",
+              "waterColors": [
+                "rgb(134 226 255 / .20)",
+                "rgb(11 76 116 / .64)",
+                "rgb(16 62 88 / .75)"
+              ],
+              "waterDisplay": "block",
+              "waterHeight": "0.219792px"
+            },
+            {
+              "bubbleTransform": "matrix(0.853334, 0, 0, 0.853334, -0.14002, -8.1667)",
+              "bubbles": 16,
+              "card": {
+                "height": 140.7578125,
+                "width": 217.8203125,
+                "x": 506.0859375,
+                "y": 349.7890625
+              },
+              "headspace": "0px",
+              "line": {
+                "height": 0.044708251953125,
+                "y": 483.9701232910156
+              },
+              "path": {
+                "sha256": "cfed602ca55cae75900e2d7247e831c879f4d1148f124e23379fa770895c266b",
+                "prefix": "M0.00 14.00C3.33 14.00 6.67 14.00 10.00 14.01C13.33 14.01 16.67 14.01 20.00 14.01C23.33 14.01 26"
+              },
+              "ratio": "0.001",
+              "rear": {
+                "sha256": "c29a6505a3d06d9751886ac124a3ed41eaf55bdb9a0b74c81370826eb01c7e98",
+                "prefix": "M0.00 13.97C3.33 13.97 6.67 13.98 10.00 13.98C13.33 13.98 16.67 13.98 20.00 13.98C23.33 13.99 26"
+              },
+              "state": "flowing",
+              "text": "这个月\n每月循环 · CNY\n还能花\n¥3",
+              "waterColors": [
+                "rgb(134 226 255 / .20)",
+                "rgb(11 76 116 / .64)",
+                "rgb(16 62 88 / .75)"
+              ],
+              "waterDisplay": "block",
+              "waterHeight": "0.219792px"
+            }
+          ],
+          "homeMoving": true,
+          "detailMoving": true
+        },
+        {
+          "theme": "dark",
+          "fill": 0.4266666666666667,
+          "home": [
+            {
+              "bubbleTransform": "matrix(0.851594, 0, 0, 0.851594, -0.138822, -50.0435)",
+              "bubbles": 16,
+              "card": {
+                "height": 186.71873474121097,
+                "width": 219.1015625,
+                "x": 505.4453125,
+                "y": 189.3528594970703
+              },
+              "headspace": "0px",
+              "line": {
+                "height": 6.07489013671875,
+                "y": 287.16278076171875
+              },
+              "path": {
+                "sha256": "6b3b5a4c178582a750d4da8cc65a665df6a4383a6496f3cc0a61887547f97e2f",
+                "prefix": "M0.00 13.94C3.33 14.21 6.67 14.50 10.00 14.76C13.33 15.01 16.67 15.25 20.00 15.47C23.33 15.69 26"
+              },
+              "ratio": "0.4266666666666667",
+              "rear": {
+                "sha256": "0e2ff0d6acb8697cc9b3881e0c33c537f54289285f5063d69caa28fdea12e8c5",
+                "prefix": "M0.00 10.68C3.33 10.92 6.67 11.18 10.00 11.40C13.33 11.62 16.67 11.83 20.00 12.02C23.33 12.20 26"
+              },
+              "state": "flowing",
+              "text": "这个月\n10月1日—10月31日 · CNY\n还能花\n¥\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n,\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9",
+              "waterColors": [
+                "color-mix(in srgb,rgb(134 226 255 / .20) calc((1 - 0)*100%),rgb(166 232 255 / .09))",
+                "color-mix(in srgb,rgb(11 76 116 / .64) calc((1 - 0)*100%),rgb(23 109 147 / .30))",
+                "color-mix(in srgb,rgb(16 62 88 / .75) calc((1 - 0)*100%),rgb(9 59 81 / .56))"
+              ],
+              "waterDisplay": "block",
+              "waterHeight": "124.512px"
+            },
+            {
+              "bubbleTransform": "matrix(0.853023, 0, 0, 0.853023, -0.139806, -50.4862)",
+              "bubbles": 16,
+              "card": {
+                "height": 186.71873474121097,
+                "width": 219.1015625,
+                "x": 505.4453125,
+                "y": 189.3528594970703
+              },
+              "headspace": "0px",
+              "line": {
+                "height": 6.02801513671875,
+                "y": 287.1560974121094
+              },
+              "path": {
+                "sha256": "4fbf2319fac7a108add22f5b531fccd9c79f3c6d1223548e1868d48f164500ef",
+                "prefix": "M0.00 13.84C3.33 14.11 6.67 14.40 10.00 14.65C13.33 14.90 16.67 15.14 20.00 15.36C23.33 15.58 26"
+              },
+              "ratio": "0.4266666666666667",
+              "rear": {
+                "sha256": "723985e281ab6c982307dbab9c722aa4b65cc0d88ac1d22b89cf6eb3aa37c1e3",
+                "prefix": "M0.00 10.58C3.33 10.81 6.67 11.06 10.00 11.29C13.33 11.51 16.67 11.71 20.00 11.90C23.33 12.08 26"
+              },
+              "state": "flowing",
+              "text": "这个月\n10月1日—10月31日 · CNY\n还能花\n¥\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n,\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9",
+              "waterColors": [
+                "color-mix(in srgb,rgb(134 226 255 / .20) calc((1 - 0)*100%),rgb(166 232 255 / .09))",
+                "color-mix(in srgb,rgb(11 76 116 / .64) calc((1 - 0)*100%),rgb(23 109 147 / .30))",
+                "color-mix(in srgb,rgb(16 62 88 / .75) calc((1 - 0)*100%),rgb(9 59 81 / .56))"
+              ],
+              "waterDisplay": "block",
+              "waterHeight": "124.512px"
+            }
+          ],
+          "detail": [
+            {
+              "bubbleTransform": "matrix(0.854947, 0, 0, 0.854947, -0.141131, -38.508)",
+              "bubbles": 16,
+              "card": {
+                "height": 140.7578125,
+                "width": 217.8203125,
+                "x": 506.0859375,
+                "y": 349.7890625
+              },
+              "headspace": "0px",
+              "line": {
+                "height": 4.78143310546875,
+                "y": 419.9818115234375
+              },
+              "path": {
+                "sha256": "72dcb99f4622752229e488a9f165725b66f660f874cc858be7bed87edb01e8de",
+                "prefix": "M0.00 13.83C3.33 14.10 6.67 14.39 10.00 14.64C13.33 14.89 16.67 15.13 20.00 15.35C23.33 15.57 26"
+              },
+              "ratio": "0.4266666666666667",
+              "rear": {
+                "sha256": "5287624d7cd3cc2adbfcce8f36c0ab5c87b5e2699feea90a4655efc418ad14a9",
+                "prefix": "M0.00 10.57C3.33 10.80 6.67 11.06 10.00 11.28C13.33 11.50 16.67 11.70 20.00 11.89C23.33 12.07 26"
+              },
+              "state": "flowing",
+              "text": "这个月\n每月循环 · CNY\n还能花\n¥1,280",
+              "waterColors": [
+                "rgb(134 226 255 / .20)",
+                "rgb(11 76 116 / .64)",
+                "rgb(16 62 88 / .75)"
+              ],
+              "waterDisplay": "block",
+              "waterHeight": "93.8633px"
+            },
+            {
+              "bubbleTransform": "matrix(0.855998, 0, 0, 0.855998, -0.141855, -38.7535)",
+              "bubbles": 16,
+              "card": {
+                "height": 140.7578125,
+                "width": 217.8203125,
+                "x": 506.0859375,
+                "y": 349.7890625
+              },
+              "headspace": "0px",
+              "line": {
+                "height": 4.753326416015625,
+                "y": 419.9818115234375
+              },
+              "path": {
+                "sha256": "0e37b215f96a1484c4242fa4cd414a84c70ed9d18e69375dae1bc9dfb72d19ce",
+                "prefix": "M0.00 13.76C3.33 14.03 6.67 14.31 10.00 14.56C13.33 14.81 16.67 15.05 20.00 15.27C23.33 15.48 26"
+              },
+              "ratio": "0.4266666666666667",
+              "rear": {
+                "sha256": "a5b9d11d42c4248690bc089bbe5d2bbeb2ae55cac49f4499a3123ddd278fc899",
+                "prefix": "M0.00 10.49C3.33 10.72 6.67 10.97 10.00 11.19C13.33 11.41 16.67 11.62 20.00 11.80C23.33 11.99 26"
+              },
+              "state": "flowing",
+              "text": "这个月\n每月循环 · CNY\n还能花\n¥1,280",
+              "waterColors": [
+                "rgb(134 226 255 / .20)",
+                "rgb(11 76 116 / .64)",
+                "rgb(16 62 88 / .75)"
+              ],
+              "waterDisplay": "block",
+              "waterHeight": "93.8633px"
+            }
+          ],
+          "homeMoving": true,
+          "detailMoving": true
+        },
+        {
+          "theme": "dark",
+          "fill": 0.95,
+          "home": [
+            {
+              "bubbleTransform": "matrix(0.854424, 0, 0, 0.854424, -0.140771, -108.277)",
+              "bubbles": 16,
+              "card": {
+                "height": 186.71873474121097,
+                "width": 219.1015625,
+                "x": 505.4453125,
+                "y": 189.3528594970703
+              },
+              "headspace": "12.47685185185184px",
+              "line": {
+                "height": 2.4471588134765625,
+                "y": 199.3885498046875
+              },
+              "path": {
+                "sha256": "52a854f7721994233875daa9f7ceb8b4d1d775fc3a9f104812d671cb66edfa6d",
+                "prefix": "M0.00 13.84C3.33 13.95 6.67 14.07 10.00 14.17C13.33 14.28 16.67 14.37 20.00 14.46C23.33 14.55 26"
+              },
+              "ratio": "0.95",
+              "rear": {
+                "sha256": "8918c0287bef867e0889beff88ba76a12f2834269c03f39f0a28b6719221c549",
+                "prefix": "M0.00 12.48C3.33 12.57 6.67 12.67 10.00 12.76C13.33 12.85 16.67 12.94 20.00 13.01C23.33 13.09 26"
+              },
+              "state": "flowing",
+              "text": "这个月\n10月1日—10月31日 · CNY\n还能花\n¥\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n,\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9",
+              "waterColors": [
+                "color-mix(in srgb,rgb(134 226 255 / .20) calc((1 - 0.623842592592592)*100%),rgb(166 232 255 / .09))",
+                "color-mix(in srgb,rgb(11 76 116 / .64) calc((1 - 0.623842592592592)*100%),rgb(23 109 147 / .30))",
+                "color-mix(in srgb,rgb(16 62 88 / .75) calc((1 - 0.623842592592592)*100%),rgb(9 59 81 / .56))"
+              ],
+              "waterDisplay": "block",
+              "waterHeight": "264.763px"
+            },
+            {
+              "bubbleTransform": "matrix(0.855121, 0, 0, 0.855121, -0.141251, -108.736)",
+              "bubbles": 16,
+              "card": {
+                "height": 186.71873474121097,
+                "width": 219.1015625,
+                "x": 505.4453125,
+                "y": 189.3528594970703
+              },
+              "headspace": "12.47685185185184px",
+              "line": {
+                "height": 2.4578399658203125,
+                "y": 199.3885498046875
+              },
+              "path": {
+                "sha256": "804db6ba031157199051360523780fd2bdb8c9b94d78ced980da5fa7fad780a2",
+                "prefix": "M0.00 13.82C3.33 13.93 6.67 14.05 10.00 14.15C13.33 14.25 16.67 14.35 20.00 14.44C23.33 14.53 26"
+              },
+              "ratio": "0.95",
+              "rear": {
+                "sha256": "9ef4308a516f402f2d512a753c2b1dd2077806e607967787b1513c66f7d5bfe8",
+                "prefix": "M0.00 12.46C3.33 12.55 6.67 12.65 10.00 12.74C13.33 12.83 16.67 12.91 20.00 12.99C23.33 13.07 26"
+              },
+              "state": "flowing",
+              "text": "这个月\n10月1日—10月31日 · CNY\n还能花\n¥\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n,\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9",
+              "waterColors": [
+                "color-mix(in srgb,rgb(134 226 255 / .20) calc((1 - 0.623842592592592)*100%),rgb(166 232 255 / .09))",
+                "color-mix(in srgb,rgb(11 76 116 / .64) calc((1 - 0.623842592592592)*100%),rgb(23 109 147 / .30))",
+                "color-mix(in srgb,rgb(16 62 88 / .75) calc((1 - 0.623842592592592)*100%),rgb(9 59 81 / .56))"
+              ],
+              "waterDisplay": "block",
+              "waterHeight": "264.763px"
+            }
+          ],
+          "detail": [
+            {
+              "bubbleTransform": "matrix(0.851468, 0, 0, 0.851468, -0.138735, -78.9227)",
+              "bubbles": 16,
+              "card": {
+                "height": 140.7578125,
+                "width": 217.8203125,
+                "x": 506.0859375,
+                "y": 349.7890625
+              },
+              "headspace": "12.47685185185184px",
+              "line": {
+                "height": 1.8822021484375,
+                "y": 355.6265563964844
+              },
+              "path": {
+                "sha256": "0049c0ab626470fe7947a83b81fb9db308312f7849eadf8c3659afc745d24b57",
+                "prefix": "M0.00 14.00C3.33 14.11 6.67 14.24 10.00 14.34C13.33 14.45 16.67 14.55 20.00 14.64C23.33 14.73 26"
+              },
+              "ratio": "0.95",
+              "rear": {
+                "sha256": "1b5ab0c8ac7b177b759cfb700a1e11d68de111a8ebd6abf3bd7ef821452206c9",
+                "prefix": "M0.00 12.65C3.33 12.75 6.67 12.85 10.00 12.95C13.33 13.04 16.67 13.13 20.00 13.20C23.33 13.28 26"
+              },
+              "state": "flowing",
+              "text": "这个月\n每月循环 · CNY\n还能花\n¥2,850",
+              "waterColors": [
+                "rgb(134 226 255 / .20)",
+                "rgb(11 76 116 / .64)",
+                "rgb(16 62 88 / .75)"
+              ],
+              "waterDisplay": "block",
+              "waterHeight": "196.518px"
+            },
+            {
+              "bubbleTransform": "matrix(0.852479, 0, 0, 0.852479, -0.139431, -79.4167)",
+              "bubbles": 16,
+              "card": {
+                "height": 140.7578125,
+                "width": 217.8203125,
+                "x": 506.0859375,
+                "y": 349.7890625
+              },
+              "headspace": "12.47685185185184px",
+              "line": {
+                "height": 1.8736572265625,
+                "y": 355.6246032714844
+              },
+              "path": {
+                "sha256": "71d6b841e49cf2ccef69f80175170965d382290049620de472f0cb8537b6d34e",
+                "prefix": "M0.00 13.97C3.33 14.08 6.67 14.21 10.00 14.31C13.33 14.42 16.67 14.52 20.00 14.61C23.33 14.70 26"
+              },
+              "ratio": "0.95",
+              "rear": {
+                "sha256": "a6d48188f49e871ef87c1fbe35df9ae6944b2798261cd31fda96e9dff8b351ff",
+                "prefix": "M0.00 12.61C3.33 12.71 6.67 12.82 10.00 12.91C13.33 13.01 16.67 13.09 20.00 13.17C23.33 13.25 26"
+              },
+              "state": "flowing",
+              "text": "这个月\n每月循环 · CNY\n还能花\n¥2,850",
+              "waterColors": [
+                "rgb(134 226 255 / .20)",
+                "rgb(11 76 116 / .64)",
+                "rgb(16 62 88 / .75)"
+              ],
+              "waterDisplay": "block",
+              "waterHeight": "196.518px"
+            }
+          ],
+          "homeMoving": true,
+          "detailMoving": true
+        },
+        {
+          "theme": "dark",
+          "fill": 1,
+          "home": [
+            {
+              "bubbleTransform": "matrix(0.848795, 0, 0, 0.848795, -0.136895, -107.363)",
+              "bubbles": 16,
+              "card": {
+                "height": 186.71873474121097,
+                "width": 219.1015625,
+                "x": 505.4453125,
+                "y": 189.3528594970703
+              },
+              "headspace": "20px",
+              "line": {
+                "height": 2.7796478271484375,
+                "y": 194.46714782714844
+              },
+              "path": {
+                "sha256": "a07f4baf307c48fcdf8e7a69e07a012bfc2077e7010dfee47b455d7f7c43f89f",
+                "prefix": "M0.00 14.02C3.33 14.15 6.67 14.29 10.00 14.41C13.33 14.53 16.67 14.65 20.00 14.76C23.33 14.86 26"
+              },
+              "ratio": "1",
+              "rear": {
+                "sha256": "f4da5732d2f679c5358e3c7ed5278a2a0df563bd039d6d12031023d7d50a81bf",
+                "prefix": "M0.00 12.45C3.33 12.57 6.67 12.69 10.00 12.80C13.33 12.91 16.67 13.01 20.00 13.10C23.33 13.19 26"
+              },
+              "state": "flowing",
+              "text": "这个月\n10月1日—10月31日 · CNY\n还能花\n¥\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n,\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9",
+              "waterColors": [
+                "color-mix(in srgb,rgb(134 226 255 / .20) calc((1 - 1)*100%),rgb(166 232 255 / .09))",
+                "color-mix(in srgb,rgb(11 76 116 / .64) calc((1 - 1)*100%),rgb(23 109 147 / .30))",
+                "color-mix(in srgb,rgb(16 62 88 / .75) calc((1 - 1)*100%),rgb(9 59 81 / .56))"
+              ],
+              "waterDisplay": "block",
+              "waterHeight": "271.833px"
+            },
+            {
+              "bubbleTransform": "matrix(0.849551, 0, 0, 0.849551, -0.137415, -107.874)",
+              "bubbles": 16,
+              "card": {
+                "height": 186.71873474121097,
+                "width": 219.1015625,
+                "x": 505.4453125,
+                "y": 189.3528594970703
+              },
+              "headspace": "20px",
+              "line": {
+                "height": 2.774505615234375,
+                "y": 194.46055603027344
+              },
+              "path": {
+                "sha256": "77b3e645c9c8856605892d150b933c41cd25d96db3361b02a31def861a67578a",
+                "prefix": "M0.00 13.99C3.33 14.12 6.67 14.26 10.00 14.38C13.33 14.51 16.67 14.62 20.00 14.73C23.33 14.83 26"
+              },
+              "ratio": "1",
+              "rear": {
+                "sha256": "b81642d0deddaec2fe6fe4a160fd5812f4118ba46901f4963788ca7137ab540b",
+                "prefix": "M0.00 12.43C3.33 12.54 6.67 12.67 10.00 12.77C13.33 12.88 16.67 12.98 20.00 13.07C23.33 13.16 26"
+              },
+              "state": "flowing",
+              "text": "这个月\n10月1日—10月31日 · CNY\n还能花\n¥\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n,\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9",
+              "waterColors": [
+                "color-mix(in srgb,rgb(134 226 255 / .20) calc((1 - 1)*100%),rgb(166 232 255 / .09))",
+                "color-mix(in srgb,rgb(11 76 116 / .64) calc((1 - 1)*100%),rgb(23 109 147 / .30))",
+                "color-mix(in srgb,rgb(16 62 88 / .75) calc((1 - 1)*100%),rgb(9 59 81 / .56))"
+              ],
+              "waterDisplay": "block",
+              "waterHeight": "271.833px"
+            }
+          ],
+          "detail": [
+            {
+              "bubbleTransform": "matrix(0.861082, 0, 0, 0.861082, -0.145356, -85.1025)",
+              "bubbles": 16,
+              "card": {
+                "height": 140.7578125,
+                "width": 217.8203125,
+                "x": 506.0859375,
+                "y": 349.7890625
+              },
+              "headspace": "20px",
+              "line": {
+                "height": 2.11920166015625,
+                "y": 353.0329284667969
+              },
+              "path": {
+                "sha256": "5e1c81dc6f5012cce6334720d9e637a7de3179ad3a8bfdf27b082631d00f1fdf",
+                "prefix": "M0.00 13.74C3.33 13.86 6.67 13.99 10.00 14.11C13.33 14.23 16.67 14.34 20.00 14.44C23.33 14.54 26"
+              },
+              "ratio": "1",
+              "rear": {
+                "sha256": "54e6ef0a769968672fe9961d03ffe4802b2963ff7acde2edf8f6759f9938c5b3",
+                "prefix": "M0.00 12.16C3.33 12.27 6.67 12.38 10.00 12.48C13.33 12.58 16.67 12.68 20.00 12.77C23.33 12.85 26"
+              },
+              "state": "flowing",
+              "text": "这个月\n每月循环 · CNY\n还能花\n¥3,000",
+              "waterColors": [
+                "rgb(134 226 255 / .20)",
+                "rgb(11 76 116 / .64)",
+                "rgb(16 62 88 / .75)"
+              ],
+              "waterDisplay": "block",
+              "waterHeight": "199.998px"
+            },
+            {
+              "bubbleTransform": "matrix(0.862139, 0, 0, 0.862139, -0.146083, -85.628)",
+              "bubbles": 16,
+              "card": {
+                "height": 140.7578125,
+                "width": 217.8203125,
+                "x": 506.0859375,
+                "y": 349.7890625
+              },
+              "headspace": "20px",
+              "line": {
+                "height": 2.13446044921875,
+                "y": 353.0329284667969
+              },
+              "path": {
+                "sha256": "5924f0387883c5cb8dac905aa6fd31476d9049c5bf565dc23536fdf43a546b32",
+                "prefix": "M0.00 13.70C3.33 13.83 6.67 13.96 10.00 14.07C13.33 14.19 16.67 14.30 20.00 14.40C23.33 14.50 26"
+              },
+              "ratio": "1",
+              "rear": {
+                "sha256": "6534612ae2831c289a91d5772998f7edaccdb9a07341714abef9bcfb9735dfe4",
+                "prefix": "M0.00 12.12C3.33 12.23 6.67 12.34 10.00 12.44C13.33 12.54 16.67 12.64 20.00 12.72C23.33 12.81 26"
+              },
+              "state": "flowing",
+              "text": "这个月\n每月循环 · CNY\n还能花\n¥3,000",
+              "waterColors": [
+                "rgb(134 226 255 / .20)",
+                "rgb(11 76 116 / .64)",
+                "rgb(16 62 88 / .75)"
+              ],
+              "waterDisplay": "block",
+              "waterHeight": "199.998px"
+            }
+          ],
+          "homeMoving": true,
+          "detailMoving": true
+        }
+      ]
+    },
+    {
+      "case": "reduced-full",
+      "samples": [
+        {
+          "theme": "light",
+          "homeState": "reduced",
+          "detailState": "reduced",
+          "homeStable": true,
+          "detailStable": true,
+          "home": {
+            "bubbleTransform": "none",
+            "bubbles": 16,
+            "card": {
+              "height": 186.71873474121097,
+              "width": 219.1015625,
+              "x": 505.4453125,
+              "y": 189.3528594970703
+            },
+            "headspace": "20px",
+            "line": {
+              "height": 2.92059326171875,
+              "y": 194.52755737304688
+            },
+            "path": {
+              "sha256": "ade26a302ee28ceb8d1aec953d12ed8572df51bd8d1ca0a2ba5cdee9d066f1e4",
+              "prefix": "M0.00 14.40C3.33 14.54 6.67 14.69 10.00 14.82C13.33 14.95 16.67 15.07 20.00 15.18C23.33 15.28 26"
+            },
+            "ratio": "1",
+            "rear": {
+              "sha256": "65c8e41e6a108b6f575eab2c1176539f4dd23afd6093dd97a0b6acd84676ec09",
+              "prefix": "M0.00 12.87C3.33 12.99 6.67 13.12 10.00 13.23C13.33 13.35 16.67 13.45 20.00 13.54C23.33 13.63 26"
+            },
+            "state": "reduced",
+            "text": "这个月\n10月1日—10月31日 · CNY\n还能花\n¥\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n,\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9",
+            "waterColors": [
+              "color-mix(in srgb,rgb(55 185 232 / .16) calc((1 - 1)*100%),rgb(55 185 232 / .16))",
+              "color-mix(in srgb,rgb(55 185 232 / .22) calc((1 - 1)*100%),rgb(55 185 232 / .22))",
+              "color-mix(in srgb,rgb(55 185 232 / .28) calc((1 - 1)*100%),rgb(55 185 232 / .28))"
+            ],
+            "waterDisplay": "block",
+            "waterHeight": "271.833px"
+          },
+          "detail": {
+            "bubbleTransform": "none",
+            "bubbles": 16,
+            "card": {
+              "height": 140.7578125,
+              "width": 217.8203125,
+              "x": 506.0859375,
+              "y": 349.7890625
+            },
+            "headspace": "20px",
+            "line": {
+              "height": 2.211395263671875,
+              "y": 353.08685302734375
+            },
+            "path": {
+              "sha256": "ade26a302ee28ceb8d1aec953d12ed8572df51bd8d1ca0a2ba5cdee9d066f1e4",
+              "prefix": "M0.00 14.40C3.33 14.54 6.67 14.69 10.00 14.82C13.33 14.95 16.67 15.07 20.00 15.18C23.33 15.28 26"
+            },
+            "ratio": "1",
+            "rear": {
+              "sha256": "65c8e41e6a108b6f575eab2c1176539f4dd23afd6093dd97a0b6acd84676ec09",
+              "prefix": "M0.00 12.87C3.33 12.99 6.67 13.12 10.00 13.23C13.33 13.35 16.67 13.45 20.00 13.54C23.33 13.63 26"
+            },
+            "state": "reduced",
+            "text": "这个月\n每月循环 · CNY\n还能花\n¥3,000",
+            "waterColors": [
+              "rgb(55 185 232 / .16)",
+              "rgb(55 185 232 / .22)",
+              "rgb(55 185 232 / .28)"
+            ],
+            "waterDisplay": "block",
+            "waterHeight": "199.998px"
+          }
+        },
+        {
+          "theme": "dark",
+          "homeState": "reduced",
+          "detailState": "reduced",
+          "homeStable": true,
+          "detailStable": true,
+          "home": {
+            "bubbleTransform": "none",
+            "bubbles": 16,
+            "card": {
+              "height": 186.71873474121097,
+              "width": 219.1015625,
+              "x": 505.4453125,
+              "y": 189.3528594970703
+            },
+            "headspace": "20px",
+            "line": {
+              "height": 2.92059326171875,
+              "y": 194.52755737304688
+            },
+            "path": {
+              "sha256": "ade26a302ee28ceb8d1aec953d12ed8572df51bd8d1ca0a2ba5cdee9d066f1e4",
+              "prefix": "M0.00 14.40C3.33 14.54 6.67 14.69 10.00 14.82C13.33 14.95 16.67 15.07 20.00 15.18C23.33 15.28 26"
+            },
+            "ratio": "1",
+            "rear": {
+              "sha256": "65c8e41e6a108b6f575eab2c1176539f4dd23afd6093dd97a0b6acd84676ec09",
+              "prefix": "M0.00 12.87C3.33 12.99 6.67 13.12 10.00 13.23C13.33 13.35 16.67 13.45 20.00 13.54C23.33 13.63 26"
+            },
+            "state": "reduced",
+            "text": "这个月\n10月1日—10月31日 · CNY\n还能花\n¥\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n,\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9",
+            "waterColors": [
+              "color-mix(in srgb,rgb(134 226 255 / .20) calc((1 - 1)*100%),rgb(166 232 255 / .09))",
+              "color-mix(in srgb,rgb(11 76 116 / .64) calc((1 - 1)*100%),rgb(23 109 147 / .30))",
+              "color-mix(in srgb,rgb(16 62 88 / .75) calc((1 - 1)*100%),rgb(9 59 81 / .56))"
+            ],
+            "waterDisplay": "block",
+            "waterHeight": "271.833px"
+          },
+          "detail": {
+            "bubbleTransform": "none",
+            "bubbles": 16,
+            "card": {
+              "height": 140.7578125,
+              "width": 217.8203125,
+              "x": 506.0859375,
+              "y": 349.7890625
+            },
+            "headspace": "20px",
+            "line": {
+              "height": 2.211395263671875,
+              "y": 353.08685302734375
+            },
+            "path": {
+              "sha256": "ade26a302ee28ceb8d1aec953d12ed8572df51bd8d1ca0a2ba5cdee9d066f1e4",
+              "prefix": "M0.00 14.40C3.33 14.54 6.67 14.69 10.00 14.82C13.33 14.95 16.67 15.07 20.00 15.18C23.33 15.28 26"
+            },
+            "ratio": "1",
+            "rear": {
+              "sha256": "65c8e41e6a108b6f575eab2c1176539f4dd23afd6093dd97a0b6acd84676ec09",
+              "prefix": "M0.00 12.87C3.33 12.99 6.67 13.12 10.00 13.23C13.33 13.35 16.67 13.45 20.00 13.54C23.33 13.63 26"
+            },
+            "state": "reduced",
+            "text": "这个月\n每月循环 · CNY\n还能花\n¥3,000",
+            "waterColors": [
+              "rgb(134 226 255 / .20)",
+              "rgb(11 76 116 / .64)",
+              "rgb(16 62 88 / .75)"
+            ],
+            "waterDisplay": "block",
+            "waterHeight": "199.998px"
+          }
+        }
+      ]
+    },
+    {
+      "case": "settlement-return",
+      "outcome": {
+        "kind": "settlement",
+        "phase": "done",
+        "text": "这期结算好了\n这个月\n2026年10月1日—2026年10月25日\n转入心愿余额\n+¥120\n心愿余额\n¥\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n本次 +¥120\n\n这份结余，留给想要的。\n\n回到预算\n已保存结算。转入心愿余额 ¥120，心愿余额 ¥400。"
+      },
+      "water": {
+        "bubbleTransform": "none",
+        "bubbles": 16,
+        "card": {
+          "height": 186.71873474121097,
+          "width": 219.1015625,
+          "x": 505.4453125,
+          "y": 135.60841369628906
+        },
+        "headspace": "0px",
+        "line": {
+          "height": 3.3397216796875,
+          "y": 302.2843017578125
+        },
+        "path": {
+          "sha256": "c40b3198bb6361d40c795e5a1102ad4ceabb0113b28c50d20be96b667980a317",
+          "prefix": "M0.00 13.42C3.33 13.55 6.67 13.69 10.00 13.81C13.33 13.93 16.67 14.05 20.00 14.15C23.33 14.26 26"
+        },
+        "ratio": "0.06521739130434782",
+        "rear": {
+          "sha256": "e957c5c2ed21a309f39493d2f1bbc13e452a5a9c208bf70e3c74d274d355b3fb",
+          "prefix": "M0.00 11.62C3.33 11.73 6.67 11.85 10.00 11.95C13.33 12.05 16.67 12.15 20.00 12.24C23.33 12.33 26"
+        },
+        "state": "flowing",
+        "text": "这个月\n10月1日—10月31日 · CNY\n还能花\n¥\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9",
+        "waterColors": [
+          "color-mix(in srgb,rgb(134 226 255 / .20) calc((1 - 0)*100%),rgb(166 232 255 / .09))",
+          "color-mix(in srgb,rgb(11 76 116 / .64) calc((1 - 0)*100%),rgb(23 109 147 / .30))",
+          "color-mix(in srgb,rgb(16 62 88 / .75) calc((1 - 0)*100%),rgb(9 59 81 / .56))"
+        ],
+        "waterDisplay": "block",
+        "waterHeight": "19.0242px"
+      },
+      "flowing": true
+    },
+    {
+      "case": "responsive-full",
+      "samples": [
+        {
+          "theme": "dark",
+          "size": "320",
+          "widths": {
+            "client": 318,
+            "pageClient": 318,
+            "pageScroll": 331,
+            "scroll": 318
+          },
+          "home": {
+            "bubbleTransform": "matrix(0.84822, 0, 0, 0.84822, -0.136499, -112.422)",
+            "bubbles": 16,
+            "card": {
+              "height": 195.78123474121097,
+              "width": 179.421875,
+              "x": 525.2890625,
+              "y": 189.4466094970703
+            },
+            "headspace": "20px",
+            "line": {
+              "height": 3.0811767578125,
+              "y": 194.937255859375
+            },
+            "path": {
+              "sha256": "3a2d2d050413a46092d05cbe3a360d2df68c1415d7f9d59d0df00086baad8981",
+              "prefix": "M0.00 13.48C3.33 13.59 6.67 13.71 10.00 13.82C13.33 13.93 16.67 14.03 20.00 14.12C23.33 14.22 26"
+            },
+            "ratio": "1",
+            "rear": {
+              "sha256": "314284f04660ffae9482f268b37d1aa5d722de5b7f0f387f125a5a6af8e1172e",
+              "prefix": "M0.00 11.89C3.33 11.98 6.67 12.09 10.00 12.18C13.33 12.27 16.67 12.36 20.00 12.44C23.33 12.52 26"
+            },
+            "state": "flowing",
+            "text": "这个月\n10月1日—10月31日 · CNY\n还能花\n¥\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n,\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9",
+            "waterColors": [
+              "color-mix(in srgb,rgb(134 226 255 / .20) calc((1 - 1)*100%),rgb(166 232 255 / .09))",
+              "color-mix(in srgb,rgb(11 76 116 / .64) calc((1 - 1)*100%),rgb(23 109 147 / .30))",
+              "color-mix(in srgb,rgb(16 62 88 / .75) calc((1 - 1)*100%),rgb(9 59 81 / .56))"
+            ],
+            "waterDisplay": "block",
+            "waterHeight": "285.998px"
+          },
+          "detail": {
+            "bubbleTransform": "matrix(0.850219, 0, 0, 0.850219, -0.137875, -99.5091)",
+            "bubbles": 16,
+            "card": {
+              "height": 172.7421875,
+              "width": 178.15625,
+              "x": 525.921875,
+              "y": 356.70623779296875
+            },
+            "headspace": "20px",
+            "line": {
+              "height": 2.55096435546875,
+              "y": 361.2481384277344
+            },
+            "path": {
+              "sha256": "13e2009003c2e9cb60b36c6eb4adaf2681d935f674b1c5ce2bf5ac7cbe1afe63",
+              "prefix": "M0.00 13.96C3.33 14.09 6.67 14.23 10.00 14.35C13.33 14.48 16.67 14.59 20.00 14.70C23.33 14.80 26"
+            },
+            "ratio": "1",
+            "rear": {
+              "sha256": "df5ba6bf1e40f40d3ee6cea3c16b70364bffd4787ac088669bd5b674fd165d66",
+              "prefix": "M0.00 12.40C3.33 12.51 6.67 12.63 10.00 12.74C13.33 12.85 16.67 12.95 20.00 13.04C23.33 13.13 26"
+            },
+            "state": "flowing",
+            "text": "这个月\n每月循环 · CNY\n还能花\n¥3,000",
+            "waterColors": [
+              "rgb(134 226 255 / .20)",
+              "rgb(11 76 116 / .64)",
+              "rgb(16 62 88 / .75)"
+            ],
+            "waterDisplay": "block",
+            "waterHeight": "249.989px"
+          },
+          "homeSurfaceInside": true,
+          "detailSurfaceInside": true
+        },
+        {
+          "theme": "dark",
+          "size": "768",
+          "widths": {
+            "client": 766,
+            "pageClient": 766,
+            "pageScroll": 766,
+            "scroll": 766
+          },
+          "home": {
+            "bubbleTransform": "matrix(0.847562, 0, 0, 0.847562, -0.136045, -129.423)",
+            "bubbles": 16,
+            "card": {
+              "height": 223.56248474121097,
+              "width": 262.3203125,
+              "x": 615.828125,
+              "y": 189.3528594970703
+            },
+            "headspace": "20px",
+            "line": {
+              "height": 3.4348602294921875,
+              "y": 195.9521026611328
+            },
+            "path": {
+              "sha256": "607078319d083798fccbb7a83a66656efb997d0009520f661a3edf293476dada",
+              "prefix": "M0.00 13.61C3.33 13.73 6.67 13.86 10.00 13.97C13.33 14.08 16.67 14.19 20.00 14.28C23.33 14.38 26"
+            },
+            "ratio": "1",
+            "rear": {
+              "sha256": "204973c36763b596de6b3309266eebcf69b87f1b4a38fec2b3f010cc7b8d48bd",
+              "prefix": "M0.00 12.02C3.33 12.13 6.67 12.24 10.00 12.33C13.33 12.43 16.67 12.52 20.00 12.60C23.33 12.69 26"
+            },
+            "state": "flowing",
+            "text": "这个月\n10月1日—10月31日 · CNY\n还能花\n¥\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n,\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9",
+            "waterColors": [
+              "color-mix(in srgb,rgb(134 226 255 / .20) calc((1 - 1)*100%),rgb(166 232 255 / .09))",
+              "color-mix(in srgb,rgb(11 76 116 / .64) calc((1 - 1)*100%),rgb(23 109 147 / .30))",
+              "color-mix(in srgb,rgb(16 62 88 / .75) calc((1 - 1)*100%),rgb(9 59 81 / .56))"
+            ],
+            "waterDisplay": "block",
+            "waterHeight": "329.419px"
+          },
+          "detail": {
+            "bubbleTransform": "matrix(0.849382, 0, 0, 0.849382, -0.137299, -79.4842)",
+            "bubbles": 16,
+            "card": {
+              "height": 140.7578125,
+              "width": 353.1796875,
+              "x": 570.40625,
+              "y": 349.7890625
+            },
+            "headspace": "20px",
+            "line": {
+              "height": 2.0977783203125,
+              "y": 353.0361328125
+            },
+            "path": {
+              "sha256": "5b75c8bdb25f1de62a5c93c1bf7697460efbb78d47c31b48d282076d760f8c07",
+              "prefix": "M0.00 13.99C3.33 14.12 6.67 14.26 10.00 14.38C13.33 14.51 16.67 14.62 20.00 14.73C23.33 14.83 26"
+            },
+            "ratio": "1",
+            "rear": {
+              "sha256": "1b546971f07352653a380ff56705b63b49a0d174642205d65b47cfbaaf3f9e39",
+              "prefix": "M0.00 12.43C3.33 12.54 6.67 12.66 10.00 12.77C13.33 12.88 16.67 12.98 20.00 13.07C23.33 13.16 26"
+            },
+            "state": "flowing",
+            "text": "这个月\n每月循环 · CNY\n还能花\n¥3,000",
+            "waterColors": [
+              "rgb(134 226 255 / .20)",
+              "rgb(11 76 116 / .64)",
+              "rgb(16 62 88 / .75)"
+            ],
+            "waterDisplay": "block",
+            "waterHeight": "199.998px"
+          },
+          "homeSurfaceInside": true,
+          "detailSurfaceInside": true
+        },
+        {
+          "theme": "light",
+          "size": "320",
+          "widths": {
+            "client": 318,
+            "pageClient": 318,
+            "pageScroll": 331,
+            "scroll": 318
+          },
+          "home": {
+            "bubbleTransform": "matrix(0.846873, 0, 0, 0.846873, -0.135571, -111.465)",
+            "bubbles": 16,
+            "card": {
+              "height": 195.78123474121097,
+              "width": 179.421875,
+              "x": 525.2890625,
+              "y": 189.4466094970703
+            },
+            "headspace": "20px",
+            "line": {
+              "height": 3.0340576171875,
+              "y": 194.9281005859375
+            },
+            "path": {
+              "sha256": "a4cb182829dc41b52285588174a365e67354ab090ee80533ee8abf057ac4b449",
+              "prefix": "M0.00 13.56C3.33 13.68 6.67 13.80 10.00 13.91C13.33 14.03 16.67 14.13 20.00 14.23C23.33 14.32 26"
+            },
+            "ratio": "1",
+            "rear": {
+              "sha256": "854b87df7a9e38505b09d5e4b2f7340f24963998d52155213915e3f16a00a739",
+              "prefix": "M0.00 11.97C3.33 12.07 6.67 12.18 10.00 12.28C13.33 12.37 16.67 12.46 20.00 12.54C23.33 12.63 26"
+            },
+            "state": "flowing",
+            "text": "这个月\n10月1日—10月31日 · CNY\n还能花\n¥\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n,\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9",
+            "waterColors": [
+              "color-mix(in srgb,rgb(55 185 232 / .16) calc((1 - 1)*100%),rgb(55 185 232 / .16))",
+              "color-mix(in srgb,rgb(55 185 232 / .22) calc((1 - 1)*100%),rgb(55 185 232 / .22))",
+              "color-mix(in srgb,rgb(55 185 232 / .28) calc((1 - 1)*100%),rgb(55 185 232 / .28))"
+            ],
+            "waterDisplay": "block",
+            "waterHeight": "285.998px"
+          },
+          "detail": {
+            "bubbleTransform": "matrix(0.847032, 0, 0, 0.847032, -0.135681, -97.5297)",
+            "bubbles": 16,
+            "card": {
+              "height": 172.7421875,
+              "width": 178.15625,
+              "x": 525.921875,
+              "y": 357.90460205078125
+            },
+            "headspace": "20px",
+            "line": {
+              "height": 2.575958251953125,
+              "y": 362.45257568359375
+            },
+            "path": {
+              "sha256": "29569f6a5c1b63fb41acf919ec0e86b144ae452469c63d26c2346d8c58b3022a",
+              "prefix": "M0.00 14.02C3.33 14.16 6.67 14.30 10.00 14.42C13.33 14.54 16.67 14.66 20.00 14.77C23.33 14.87 26"
+            },
+            "ratio": "1",
+            "rear": {
+              "sha256": "c5c89d2afffc2d3fd50f0d95baa1c8ecce4f4944d6bf0e86352c58c5195fd656",
+              "prefix": "M0.00 12.46C3.33 12.58 6.67 12.70 10.00 12.81C13.33 12.92 16.67 13.02 20.00 13.11C23.33 13.20 26"
+            },
+            "state": "flowing",
+            "text": "这个月\n每月循环 · CNY\n还能花\n¥3,000",
+            "waterColors": [
+              "rgb(55 185 232 / .16)",
+              "rgb(55 185 232 / .22)",
+              "rgb(55 185 232 / .28)"
+            ],
+            "waterDisplay": "block",
+            "waterHeight": "249.989px"
+          },
+          "homeSurfaceInside": true,
+          "detailSurfaceInside": true
+        },
+        {
+          "theme": "light",
+          "size": "768",
+          "widths": {
+            "client": 766,
+            "pageClient": 766,
+            "pageScroll": 766,
+            "scroll": 766
+          },
+          "home": {
+            "bubbleTransform": "matrix(0.847987, 0, 0, 0.847987, -0.136338, -129.773)",
+            "bubbles": 16,
+            "card": {
+              "height": 223.56248474121097,
+              "width": 262.3203125,
+              "x": 615.828125,
+              "y": 189.3528594970703
+            },
+            "headspace": "20px",
+            "line": {
+              "height": 3.4703826904296875,
+              "y": 195.95999145507812
+            },
+            "path": {
+              "sha256": "ecc754ef1efb648f76fef5b516886c940c1869eab418d1451c3e97447dc24356",
+              "prefix": "M0.00 13.55C3.33 13.67 6.67 13.79 10.00 13.90C13.33 14.01 16.67 14.11 20.00 14.21C23.33 14.31 26"
+            },
+            "ratio": "1",
+            "rear": {
+              "sha256": "3d13221b8fc38da2ca0ea6f47eb17768470b3e9e364d6e10eacf0b11756122b3",
+              "prefix": "M0.00 11.96C3.33 12.06 6.67 12.17 10.00 12.26C13.33 12.36 16.67 12.45 20.00 12.53C23.33 12.61 26"
+            },
+            "state": "flowing",
+            "text": "这个月\n10月1日—10月31日 · CNY\n还能花\n¥\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n,\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9",
+            "waterColors": [
+              "color-mix(in srgb,rgb(55 185 232 / .16) calc((1 - 1)*100%),rgb(55 185 232 / .16))",
+              "color-mix(in srgb,rgb(55 185 232 / .22) calc((1 - 1)*100%),rgb(55 185 232 / .22))",
+              "color-mix(in srgb,rgb(55 185 232 / .28) calc((1 - 1)*100%),rgb(55 185 232 / .28))"
+            ],
+            "waterDisplay": "block",
+            "waterHeight": "329.419px"
+          },
+          "detail": {
+            "bubbleTransform": "matrix(0.8541, 0, 0, 0.8541, -0.140548, -81.8369)",
+            "bubbles": 16,
+            "card": {
+              "height": 140.7578125,
+              "width": 353.1796875,
+              "x": 570.40625,
+              "y": 349.7890625
+            },
+            "headspace": "20px",
+            "line": {
+              "height": 2.07342529296875,
+              "y": 353.032958984375
+            },
+            "path": {
+              "sha256": "61a2200587c1a136602b5dee24af33e48456b9ee7222c9ef4072ff5033e95967",
+              "prefix": "M0.00 13.85C3.33 13.97 6.67 14.11 10.00 14.23C13.33 14.35 16.67 14.46 20.00 14.57C23.33 14.67 26"
+            },
+            "ratio": "1",
+            "rear": {
+              "sha256": "ab6fad101ce4f2ef63f1b1a6de41137392ad08cc388ee25da97173152a207483",
+              "prefix": "M0.00 12.28C3.33 12.39 6.67 12.51 10.00 12.61C13.33 12.71 16.67 12.81 20.00 12.90C23.33 12.99 26"
+            },
+            "state": "flowing",
+            "text": "这个月\n每月循环 · CNY\n还能花\n¥3,000",
+            "waterColors": [
+              "rgb(55 185 232 / .16)",
+              "rgb(55 185 232 / .22)",
+              "rgb(55 185 232 / .28)"
+            ],
+            "waterDisplay": "block",
+            "waterHeight": "199.998px"
+          },
+          "homeSurfaceInside": true,
+          "detailSurfaceInside": true
+        }
+      ]
+    },
+    {
+      "case": "record-changes-liquid-level",
+      "amountRecorded": 150,
+      "expectedRatio": 0.95,
+      "actualRatio": 0.95,
+      "state": "flowing",
+      "flowing": true
+    },
+    {
+      "case": "historical-optics-control",
+      "beforeState": "full",
+      "afterState": "flowing",
+      "beforeLineAboveCard": true,
+      "afterLineInsideCard": true
+    }
+  ],
+  "errors": {
+    "isolatedAfter": [],
+    "isolatedBefore": [],
+    "pair": [
+      {
+        "level": "error",
+        "message": "Uncaught TypeError: Failed to execute 'observe' on 'MutationObserver': parameter 1 is not of type 'Node'.",
+        "timestamp": "2026-10-26T02:02:32.498Z"
+      }
+    ],
+    "diagnostic": []
+  },
+  "notVerified": [
+    "Native app and device performance",
+    "VoiceOver and other browser engines",
+    "Actual OS reduced-motion or tab-background suspension (existing source guards retained)",
+    "Full wish purchase flow (source unchanged)"
+  ]
+}

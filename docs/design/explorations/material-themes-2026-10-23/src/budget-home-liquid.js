@@ -1,12 +1,12 @@
-// Home-only free surface. No tiled translation, phase reset or ledger writes.
-// A sealed upper rim remains visible at high fill. This optical capacity does
-// not change the real balance ratio; detail callers keep the original geometry.
-function hmHomeFullness(ratio){
+// Budget free surface: a full balance is still liquid, never a solid card.
+// Home and detail share a narrow headspace and bounded high-fill ripples.
+// This visual capacity does not change the real balance ratio or write data.
+function hmLiquidFullness(ratio){
   const x=Math.max(0,Math.min(1,(ratio-.88)/.12));
   return x*x*(3-2*x);
 }
-function hmLiquidShape(ratio,time,tilt=0,impact=0,minimumEdge=0){
-  const edge=Math.max(minimumEdge,Math.max(0,Math.min(1,ratio/.12,(1-ratio)/.12)));
+function hmLiquidShape(ratio,time,tilt=0,impact=0){
+  const edge=Math.max(hmLiquidFullness(ratio)*.48,Math.max(0,Math.min(1,ratio/.12,(1-ratio)/.12)));
   const amplitude=5.8*edge*(.92+.08*Math.sin(time*.37));
   // Keep combined drag/contact displacement below four SVG units. This
   // preserves a thin free surface even when a fast switch lands mid-sway.
@@ -33,9 +33,9 @@ function hmLiquidShape(ratio,time,tilt=0,impact=0,minimumEdge=0){
 }
 function hmLiquidWaterMarkup(c,id,homeOptics=false){
   const ratio=Math.max(0,Math.min(1,totals(c).remaining/c.limit));
-  const fullness=homeOptics?hmHomeFullness(ratio):0;
-  const shape=hmLiquidShape(ratio,0,0,0,fullness*.48),height=Math.max(24,258*ratio+24);
-  const optics=homeOptics?` data-home-optics style="--water-height:${ratio*100}%;--hm-fullness:${fullness};--hm-water-headspace:${20*fullness}px"`:` style="--water-height:${ratio*100}%"`;
+  const fullness=hmLiquidFullness(ratio);
+  const shape=hmLiquidShape(ratio,0),height=Math.max(24,258*ratio+24);
+  const optics=`${homeOptics?' data-home-optics':''} style="--water-height:${ratio*100}%;--hm-fullness:${fullness};--hm-water-headspace:${20*fullness}px"`;
   const transmission=homeOptics?`<g class="hm-water-full-optics" fill="none" stroke="#d6f6ff" stroke-linecap="round"><path class="hm-water-side-reflection" d="M8 31C5 47 6 64 7 86M393 ${height-95}C395 ${height-58} 394 ${height-28} 379 ${height-13}"/><path class="hm-water-bottom-reflection" d="M67 ${height-7}Q176 ${height-1} 289 ${height-10}"/></g>`:'';
   return `<div class="water continuous-water hm-water" data-empty="${ratio===0}" data-liquid-ratio="${ratio}"${optics}><svg class="hm-fluid-svg" viewBox="0 0 400 ${height}" preserveAspectRatio="none" aria-hidden="true"><defs><linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--water-top)"/><stop offset=".33" stop-color="var(--water-middle)"/><stop offset="1" stop-color="var(--water-bottom)"/></linearGradient><linearGradient id="${id}-glint" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#fff" stop-opacity="0"/><stop offset=".3" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".7"/><stop offset=".7" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient></defs><path class="liquid-volume" d="${shape.volume}" fill="url(#${id})"/>${transmission}<path class="hm-water-surface" d="${shape.surface}"/><path class="hm-water-back" d="${shape.rear}"/><path class="r3-waterline" d="${shape.line}"/><path class="hm-water-glint" d="${shape.line}" stroke="url(#${id}-glint)"/></svg></div>`;
 }
@@ -46,8 +46,7 @@ function hmStartLiquid(){
   const media=matchMedia('(prefers-reduced-motion:reduce)');
   function paint(staticView=false){
     if(!paths)return;
-    const minimumEdge=svg.parentElement.hasAttribute('data-home-optics')?hmHomeFullness(ratio)*.48:0;
-    const shape=hmLiquidShape(ratio,staticView?0:time,staticView?0:tilt,staticView?0:impact,minimumEdge);
+    const shape=hmLiquidShape(ratio,staticView?0:time,staticView?0:tilt,staticView?0:impact);
     for(const key of ['volume','surface','rear','line'])paths[key].setAttribute('d',shape[key]);
     paths.glint.setAttribute('d',shape.line);
     const light=.44+.15*Math.sin(time*.31);
@@ -61,7 +60,6 @@ function hmStartLiquid(){
     if(reader.library)return 'library';
     if(readerFold.progress>.001)return 'records';
     if(ratio===0)return 'empty';
-    if(ratio===1)return 'full';
     return '';
   }
   function stop(reason){

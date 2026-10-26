@@ -14,8 +14,14 @@
     const view=kind==='home'?'home':size==='large'?'wish-back':'wish';
     html=replace(html,'const materialQuery = new URL(location.href).searchParams;',`const materialQuery = new URLSearchParams(${JSON.stringify('theme='+theme+'&view='+view+(reduce?'&reduce=1':''))});`);
     if(kind==='wish'&&size==='large')html=replace(html,'if (card) wishTurnTo(card, 180);','// Review opens the existing enlarged front, without turning it.');
-    // Same source, with the original home optics branch selected for A/B.
-    if(before&&html.includes('hmMaterializeFace(readerLiquidFace(c),c,true)'))html=replace(html,'hmMaterializeFace(readerLiquidFace(c),c,true)','hmMaterializeFace(readerLiquidFace(c),c,false)');
+    // Preserve the historical diagnostic baseline: clipped full surface and
+    // no full-water motion. These replacements affect only the "before" frame.
+    if(before){
+      html=replace(html,'hmMaterializeFace(readerLiquidFace(c),c,true)','hmMaterializeFace(readerLiquidFace(c),c,false)');
+      html=replace(html,'Math.max(hmLiquidFullness(ratio)*.48,Math.max(0,Math.min(1,ratio/.12,(1-ratio)/.12)))','Math.max(0,Math.min(1,ratio/.12,(1-ratio)/.12))');
+      html=replace(html,'--hm-water-headspace:${20*fullness}px','--hm-water-headspace:0px');
+      html=replace(html,"if(ratio===0)return 'empty';","if(ratio===0)return 'empty';\n    if(ratio===1)return 'full';");
+    }
     const framing=`<style>
       html,body{width:100%!important;min-width:0!important;height:570px!important;overflow:hidden!important}
       .app{height:570px!important;min-height:570px!important}.page{overflow:hidden!important}

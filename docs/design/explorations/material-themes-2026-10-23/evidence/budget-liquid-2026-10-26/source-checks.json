@@ -1,0 +1,26 @@
+{
+  "baseline": "2f8aabb",
+  "geometry": {
+    "unchangedHomeSamples": 630,
+    "unchangedBelow88Percent": 378,
+    "fullMovingSamples": 54,
+    "boundedSamples": 630,
+    "minY": 4.85,
+    "maxY": 22.94
+  },
+  "generatedOutsideScopedWaterCodeIdentical": true,
+  "preservedFiles": {
+    "build.cjs": true,
+    "compare.html": true,
+    "index.html": true,
+    "src/home.css": true,
+    "src/interactions.css": true,
+    "src/study-bridge.js": true,
+    "src/surfaces.css": true,
+    "src/wish-front.js": true,
+    "src/wish-material.css": true,
+    "budget-card-pair.html": true
+  },
+  "buildRepeatable": true,
+  "nativeDiffEmpty": true
+}
