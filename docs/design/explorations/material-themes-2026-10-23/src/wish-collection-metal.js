@@ -258,7 +258,9 @@ void main() {
   };
 }
 function wmStartCollectionMetal(){
-  const selector='.wish-is-done .wish-face,.outcome-wish-card .wish-face,.wish-collection-row.is-realized';
+  // Only the dark unfulfilled inner sheet joins the existing optical surface;
+  // its independent ice-glass pane and the light-theme sheet stay untouched.
+  const selector='.wish-is-done .wish-face,.outcome-wish-card .wish-face,.wish-collection-row.is-realized,[data-theme=dark] .wish-layered-front>.wish-front-depth';
   const surfaces=new Map(),media=matchMedia('(prefers-reduced-motion:reduce)');
   let renderer,frame=0,closed=false;
   const angle=(text,axis)=>Number(text.match(new RegExp('rotate'+axis+'\\((-?[\\d.]+)deg\\)'))?.[1]||0)*Math.PI/180;
@@ -299,7 +301,7 @@ function wmStartCollectionMetal(){
   }
   // Read existing pose/style writes; never install a competing pointer/turn loop.
   const observer=new MutationObserver(records=>{
-    if(records.some(r=>r.type==='childList'||r.target===app||r.target.closest?.('.wish-is-done,.outcome-wish-card,.wish-collection-row.is-realized')))schedule();
+    if(records.some(r=>r.type==='childList'||r.target===app||r.target.closest?.('.wish-is-done,.outcome-wish-card,.wish-collection-row.is-realized')||(app.dataset.theme==='dark'&&r.target.closest?.('.wish-flip-card:has(.wish-front-depth)'))))schedule();
   });
   observer.observe(app,{subtree:true,childList:true,attributes:true,attributeFilter:['style','class','data-theme']});
   media.addEventListener('change',schedule);

@@ -1,0 +1,28 @@
+{
+  "light": {
+    "dimensions": [
+      346,
+      354
+    ],
+    "sameDimensions": true,
+    "pixelIdentical": true,
+    "meanDifference": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "achieved-dark": {
+    "dimensions": [
+      346,
+      354
+    ],
+    "sameDimensions": true,
+    "pixelIdentical": true,
+    "meanDifference": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  }
+}

@@ -1,0 +1,311 @@
+{
+  "baseline": "9bb5fc1",
+  "scope": "dark unfulfilled front inner sheet and preset mount",
+  "beforeGlass": [
+    {
+      "background": "radial-gradient(74% 25% at 30% -7%, rgba(242, 252, 255, 0.7), rgba(0, 0, 0, 0) 82%) repeat scroll 0% 0% / auto padding-box border-box, radial-gradient(62% 6% at 42% 100%, rgba(189, 238, 255, 0.47), rgba(0, 0, 0, 0) 80%) repeat scroll 0% 0% / auto padding-box border-box, linear-gradient(98deg, rgba(255, 255, 255, 0.26), rgba(0, 0, 0, 0) 4%, rgba(0, 0, 0, 0) 97%, rgba(7, 55, 78, 0.22)) repeat scroll 0% 0% / auto padding-box border-box, rgba(169, 226, 248, 0.035) none repeat scroll 0% 0% / auto padding-box border-box",
+      "height": 198,
+      "highlight": {
+        "background": "rgba(0, 0, 0, 0) linear-gradient(124deg, rgba(0, 0, 0, 0) 34%, rgba(255, 255, 255, 0.01) 39%, rgba(242, 252, 255, 0.7) 48%, rgba(255, 255, 255, 0.14) 50%, rgba(0, 0, 0, 0) 57%) repeat scroll 0% 0% / auto padding-box border-box",
+        "filter": "blur(1px)",
+        "height": "108px",
+        "opacity": "0.32",
+        "transform": "matrix(1, 0, 0, 1, -48, -54)",
+        "width": "96px"
+      },
+      "radius": "25px",
+      "shadow": "rgba(255, 255, 255, 0.22) 2px 2px 1px 0px inset, rgba(139, 213, 238, 0.14) -2px -3px 2px 0px inset",
+      "width": 166
+    },
+    {
+      "background": "radial-gradient(74% 25% at 30% -7%, rgba(242, 252, 255, 0.7), rgba(0, 0, 0, 0) 82%) repeat scroll 0% 0% / auto padding-box border-box, radial-gradient(62% 6% at 42% 100%, rgba(189, 238, 255, 0.47), rgba(0, 0, 0, 0) 80%) repeat scroll 0% 0% / auto padding-box border-box, linear-gradient(98deg, rgba(255, 255, 255, 0.26), rgba(0, 0, 0, 0) 4%, rgba(0, 0, 0, 0) 97%, rgba(7, 55, 78, 0.22)) repeat scroll 0% 0% / auto padding-box border-box, rgba(169, 226, 248, 0.035) none repeat scroll 0% 0% / auto padding-box border-box",
+      "height": 198,
+      "highlight": {
+        "background": "rgba(0, 0, 0, 0) linear-gradient(124deg, rgba(0, 0, 0, 0) 34%, rgba(255, 255, 255, 0.01) 39%, rgba(242, 252, 255, 0.7) 48%, rgba(255, 255, 255, 0.14) 50%, rgba(0, 0, 0, 0) 57%) repeat scroll 0% 0% / auto padding-box border-box",
+        "filter": "blur(1px)",
+        "height": "108px",
+        "opacity": "0.32",
+        "transform": "matrix(1, 0, 0, 1, -48, -54)",
+        "width": "96px"
+      },
+      "radius": "25px",
+      "shadow": "rgba(255, 255, 255, 0.22) 2px 2px 1px 0px inset, rgba(139, 213, 238, 0.14) -2px -3px 2px 0px inset",
+      "width": 166
+    },
+    {
+      "background": "radial-gradient(74% 25% at 30% -7%, rgba(242, 252, 255, 0.7), rgba(0, 0, 0, 0) 82%) repeat scroll 0% 0% / auto padding-box border-box, radial-gradient(62% 6% at 42% 100%, rgba(189, 238, 255, 0.47), rgba(0, 0, 0, 0) 80%) repeat scroll 0% 0% / auto padding-box border-box, linear-gradient(98deg, rgba(255, 255, 255, 0.26), rgba(0, 0, 0, 0) 4%, rgba(0, 0, 0, 0) 97%, rgba(7, 55, 78, 0.22)) repeat scroll 0% 0% / auto padding-box border-box, rgba(169, 226, 248, 0.035) none repeat scroll 0% 0% / auto padding-box border-box",
+      "height": 158,
+      "highlight": {
+        "background": "rgba(0, 0, 0, 0) linear-gradient(124deg, rgba(0, 0, 0, 0) 34%, rgba(255, 255, 255, 0.01) 39%, rgba(242, 252, 255, 0.7) 48%, rgba(255, 255, 255, 0.14) 50%, rgba(0, 0, 0, 0) 57%) repeat scroll 0% 0% / auto padding-box border-box",
+        "filter": "blur(1px)",
+        "height": "108px",
+        "opacity": "0.32",
+        "transform": "matrix(1, 0, 0, 1, -48, -54)",
+        "width": "96px"
+      },
+      "radius": "25px",
+      "shadow": "rgba(255, 255, 255, 0.22) 2px 2px 1px 0px inset, rgba(139, 213, 238, 0.14) -2px -3px 2px 0px inset",
+      "width": 346
+    }
+  ],
+  "afterGlass": [
+    {
+      "background": "radial-gradient(74% 25% at 30% -7%, rgba(242, 252, 255, 0.7), rgba(0, 0, 0, 0) 82%) repeat scroll 0% 0% / auto padding-box border-box, radial-gradient(62% 6% at 42% 100%, rgba(189, 238, 255, 0.47), rgba(0, 0, 0, 0) 80%) repeat scroll 0% 0% / auto padding-box border-box, linear-gradient(98deg, rgba(255, 255, 255, 0.26), rgba(0, 0, 0, 0) 4%, rgba(0, 0, 0, 0) 97%, rgba(7, 55, 78, 0.22)) repeat scroll 0% 0% / auto padding-box border-box, rgba(169, 226, 248, 0.035) none repeat scroll 0% 0% / auto padding-box border-box",
+      "height": 198,
+      "highlight": {
+        "background": "rgba(0, 0, 0, 0) linear-gradient(124deg, rgba(0, 0, 0, 0) 34%, rgba(255, 255, 255, 0.01) 39%, rgba(242, 252, 255, 0.7) 48%, rgba(255, 255, 255, 0.14) 50%, rgba(0, 0, 0, 0) 57%) repeat scroll 0% 0% / auto padding-box border-box",
+        "filter": "blur(1px)",
+        "height": "108px",
+        "opacity": "0.32",
+        "transform": "matrix(1, 0, 0, 1, -48, -54)",
+        "width": "96px"
+      },
+      "radius": "25px",
+      "shadow": "rgba(255, 255, 255, 0.22) 2px 2px 1px 0px inset, rgba(139, 213, 238, 0.14) -2px -3px 2px 0px inset",
+      "width": 166
+    },
+    {
+      "background": "radial-gradient(74% 25% at 30% -7%, rgba(242, 252, 255, 0.7), rgba(0, 0, 0, 0) 82%) repeat scroll 0% 0% / auto padding-box border-box, radial-gradient(62% 6% at 42% 100%, rgba(189, 238, 255, 0.47), rgba(0, 0, 0, 0) 80%) repeat scroll 0% 0% / auto padding-box border-box, linear-gradient(98deg, rgba(255, 255, 255, 0.26), rgba(0, 0, 0, 0) 4%, rgba(0, 0, 0, 0) 97%, rgba(7, 55, 78, 0.22)) repeat scroll 0% 0% / auto padding-box border-box, rgba(169, 226, 248, 0.035) none repeat scroll 0% 0% / auto padding-box border-box",
+      "height": 198,
+      "highlight": {
+        "background": "rgba(0, 0, 0, 0) linear-gradient(124deg, rgba(0, 0, 0, 0) 34%, rgba(255, 255, 255, 0.01) 39%, rgba(242, 252, 255, 0.7) 48%, rgba(255, 255, 255, 0.14) 50%, rgba(0, 0, 0, 0) 57%) repeat scroll 0% 0% / auto padding-box border-box",
+        "filter": "blur(1px)",
+        "height": "108px",
+        "opacity": "0.32",
+        "transform": "matrix(1, 0, 0, 1, -48, -54)",
+        "width": "96px"
+      },
+      "radius": "25px",
+      "shadow": "rgba(255, 255, 255, 0.22) 2px 2px 1px 0px inset, rgba(139, 213, 238, 0.14) -2px -3px 2px 0px inset",
+      "width": 166
+    },
+    {
+      "background": "radial-gradient(74% 25% at 30% -7%, rgba(242, 252, 255, 0.7), rgba(0, 0, 0, 0) 82%) repeat scroll 0% 0% / auto padding-box border-box, radial-gradient(62% 6% at 42% 100%, rgba(189, 238, 255, 0.47), rgba(0, 0, 0, 0) 80%) repeat scroll 0% 0% / auto padding-box border-box, linear-gradient(98deg, rgba(255, 255, 255, 0.26), rgba(0, 0, 0, 0) 4%, rgba(0, 0, 0, 0) 97%, rgba(7, 55, 78, 0.22)) repeat scroll 0% 0% / auto padding-box border-box, rgba(169, 226, 248, 0.035) none repeat scroll 0% 0% / auto padding-box border-box",
+      "height": 158,
+      "highlight": {
+        "background": "rgba(0, 0, 0, 0) linear-gradient(124deg, rgba(0, 0, 0, 0) 34%, rgba(255, 255, 255, 0.01) 39%, rgba(242, 252, 255, 0.7) 48%, rgba(255, 255, 255, 0.14) 50%, rgba(0, 0, 0, 0) 57%) repeat scroll 0% 0% / auto padding-box border-box",
+        "filter": "blur(1px)",
+        "height": "108px",
+        "opacity": "0.32",
+        "transform": "matrix(1, 0, 0, 1, -48, -54)",
+        "width": "96px"
+      },
+      "radius": "25px",
+      "shadow": "rgba(255, 255, 255, 0.22) 2px 2px 1px 0px inset, rgba(139, 213, 238, 0.14) -2px -3px 2px 0px inset",
+      "width": 346
+    }
+  ],
+  "glassEqual": true,
+  "darkInner": {
+    "canvas": [
+      {
+        "class": "wm-metal-surface",
+        "height": 513,
+        "paint": "1",
+        "width": 503
+      }
+    ],
+    "ready": "true",
+    "tint": "#ffffff"
+  },
+  "flipDuring": {
+    "paint": "7",
+    "transform": "transform: rotateY(79.8637deg);"
+  },
+  "flipSettled": {
+    "paint": "30",
+    "transform": "transform: rotateY(180deg);"
+  },
+  "insufficient": {
+    "disabled": true,
+    "label": "兑换不可用，当前进度 50%，达到 100% 后可兑换",
+    "text": "兑换"
+  },
+  "flipStill": {
+    "paint": "30",
+    "transform": "transform: rotateY(180deg);"
+  },
+  "beforeBack": {
+    "background": "radial-gradient(83% 73% at 9% 0%, rgba(244, 252, 255, 0.6), rgba(244, 252, 255, 0.19) 33%, rgba(0, 0, 0, 0) 78%) repeat scroll 0% 0% / auto padding-box border-box, radial-gradient(56% 32% at 95% 100%, rgba(197, 246, 255, 0.22), rgba(0, 0, 0, 0) 75%) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 0.560784 0.847059 0.94902 / 0.92) none repeat scroll 0% 0% / auto padding-box border-box",
+    "color": "rgb(18, 56, 75)",
+    "innerCanvas": 0,
+    "radius": "25px",
+    "shadow": "rgba(244, 252, 255, 0.8) 1px 1.5px 0px 0px inset, rgba(191, 233, 248, 0.42) -1px -1px 0px 0px inset, rgba(225, 247, 255, 0.8) 6px 7px 10px -8px inset, rgba(16, 61, 82, 0.65) -6px -7px 9px -7px inset, rgba(0, 0, 0, 0.44) 0px 9px 17px -14px"
+  },
+  "afterBack": {
+    "background": "radial-gradient(83% 73% at 9% 0%, rgba(244, 252, 255, 0.6), rgba(244, 252, 255, 0.19) 33%, rgba(0, 0, 0, 0) 78%) repeat scroll 0% 0% / auto padding-box border-box, radial-gradient(56% 32% at 95% 100%, rgba(197, 246, 255, 0.22), rgba(0, 0, 0, 0) 75%) repeat scroll 0% 0% / auto padding-box border-box, color(srgb 0.560784 0.847059 0.94902 / 0.92) none repeat scroll 0% 0% / auto padding-box border-box",
+    "color": "rgb(18, 56, 75)",
+    "innerCanvas": 0,
+    "radius": "25px",
+    "shadow": "rgba(244, 252, 255, 0.8) 1px 1.5px 0px 0px inset, rgba(191, 233, 248, 0.42) -1px -1px 0px 0px inset, rgba(225, 247, 255, 0.8) 6px 7px 10px -8px inset, rgba(16, 61, 82, 0.65) -6px -7px 9px -7px inset, rgba(0, 0, 0, 0.44) 0px 9px 17px -14px"
+  },
+  "backEqual": true,
+  "lightInnerCanvas": 0,
+  "switchLight": {
+    "innerCanvases": 0,
+    "theme": "light"
+  },
+  "switchDark": {
+    "innerCanvases": 3,
+    "ready": [
+      "true",
+      "true",
+      "true"
+    ],
+    "theme": "dark"
+  },
+  "narrow": {
+    "font": "24px",
+    "ready": [
+      "true",
+      "true",
+      "true"
+    ],
+    "scroll": 318,
+    "width": 318
+  },
+  "tablet": {
+    "ready": [
+      "true",
+      "true",
+      "true"
+    ],
+    "scroll": 766,
+    "width": 766
+  },
+  "reduced": {
+    "backHidden": "false",
+    "paint": "1",
+    "transform": "transform: none;"
+  },
+  "fallback": {
+    "background": "radial-gradient(70% 42% at 37% 7%, rgba(255, 255, 255, 0.4), rgba(0, 0, 0, 0) 100%) repeat scroll 0% 0% / auto padding-box border-box, linear-gradient(122deg, rgba(0, 0, 0, 0) 17%, rgba(255, 255, 255, 0.15) 37%, rgba(0, 0, 0, 0) 57%) repeat scroll 0% 0% / auto padding-box border-box, radial-gradient(22% 75% at 62% 92%, rgba(16, 16, 18, 0.55), rgba(0, 0, 0, 0) 100%) repeat scroll 0% 0% / auto padding-box border-box, rgb(69, 69, 71) none repeat scroll 0% 0% / auto padding-box border-box",
+    "canvas": 0,
+    "visible": true
+  },
+  "syntheticPhotos": [
+    {
+      "class": "wish-face wish-face-front",
+      "images": [
+        {
+          "complete": true,
+          "dataSource": true,
+          "naturalWidth": 96
+        }
+      ],
+      "innerCanvas": 1,
+      "layered": true
+    },
+    {
+      "class": "wish-face wish-face-front",
+      "images": [
+        {
+          "complete": true,
+          "dataSource": true,
+          "naturalWidth": 96
+        }
+      ],
+      "innerCanvas": 0,
+      "layered": false
+    },
+    {
+      "class": "wish-face wish-face-front",
+      "images": [],
+      "innerCanvas": 1,
+      "layered": true
+    }
+  ],
+  "redemptionPhases": [
+    {
+      "faces": [
+        {
+          "ready": "true",
+          "tint": "#ffffff"
+        },
+        {
+          "ready": "true",
+          "tint": "#ffffff"
+        }
+      ],
+      "phase": "gather"
+    },
+    {
+      "faces": [
+        {
+          "ready": "true",
+          "tint": "#ffffff"
+        },
+        {
+          "ready": "true",
+          "tint": "#ffffff"
+        }
+      ],
+      "phase": "fracture"
+    },
+    {
+      "faces": [
+        {
+          "ready": "true",
+          "tint": "#ffffff"
+        },
+        {
+          "ready": "true",
+          "tint": "#ffffff"
+        }
+      ],
+      "phase": "reveal"
+    },
+    {
+      "faces": [
+        {
+          "ready": "true",
+          "tint": "#ffffff"
+        },
+        {
+          "ready": "true",
+          "tint": "#ffffff"
+        }
+      ],
+      "phase": "mint"
+    },
+    {
+      "faces": [
+        {
+          "ready": "true",
+          "tint": "#ffffff"
+        },
+        {
+          "ready": "true",
+          "tint": "#ffffff"
+        }
+      ],
+      "phase": "settle"
+    },
+    {
+      "faces": [
+        {
+          "ready": "true",
+          "tint": "#ffffff"
+        },
+        {
+          "ready": "true",
+          "tint": "#ffffff"
+        }
+      ],
+      "phase": "done"
+    }
+  ],
+  "logs": [],
+  "redemptionResult": {
+    "achievedTab": "已实现2",
+    "unfulfilledInnerCanvases": 0,
+    "wallet": "心愿余额 ¥280，查看余额变动"
+  },
+  "limitations": [
+    "No changes or regression pass on budget/other pages/native app",
+    "Preview reduce motion only; not system settings or VoiceOver",
+    "Synthetic photo fixture; no user photo upload",
+    "Forced no-renderer fallback; not real GPU context loss",
+    "Historical media assets absent in isolated server; not required by tested cards"
+  ]
+}

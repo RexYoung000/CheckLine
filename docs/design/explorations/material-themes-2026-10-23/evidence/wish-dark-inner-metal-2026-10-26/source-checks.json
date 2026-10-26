@@ -1,0 +1,21 @@
+{
+  "baseline": "9bb5fc1940d95b53fe59003086beb5275af97eca",
+  "shaderAndOpticalParametersUnchanged": true,
+  "paintAndLifecycleBodyUnchanged": true,
+  "onlyDarkInnerCssAdded": true,
+  "generatedBundleOtherwiseIdentical": true,
+  "frontMarkupHelperUnchanged": true,
+  "nativeDiff": "",
+  "unrelatedDirtyFilesPreserved": {
+    "build.cjs": true,
+    "compare.html": true,
+    "index.html": true,
+    "src/home.css": true,
+    "src/interactions.css": true,
+    "src/study-bridge.js": true,
+    "src/surfaces.css": true
+  },
+  "bundleSha256": "3ee1d30ffd965143fef89aded43882fa8f1850629b128bc636793793e6d8efd5",
+  "rebuildMatches": true,
+  "observerScopeExtension": "Existing observer also recognizes dark unfulfilled card pose/style changes; no new observer or animation loop."
+}
