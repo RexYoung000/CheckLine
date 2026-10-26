@@ -1,0 +1,344 @@
+{
+  "scope": "achieved-wish reflection only",
+  "startedAt": "2026-10-26T03:45:35.180Z",
+  "surfaces": {
+    "light": [
+      {
+        "blur": "none",
+        "height": 158,
+        "paints": "3",
+        "ready": "true",
+        "tint": "#b7e1f1",
+        "width": 344
+      },
+      {
+        "blur": "none",
+        "height": 158,
+        "paints": "3",
+        "ready": "true",
+        "tint": "#b7e1f1",
+        "width": 344
+      },
+      {
+        "blur": "none",
+        "height": 354,
+        "paints": "1",
+        "ready": "true",
+        "tint": "#b7e1f1",
+        "width": 344
+      },
+      {
+        "blur": "none",
+        "height": 354,
+        "paints": "1",
+        "ready": "true",
+        "tint": "#b7e1f1",
+        "width": 344
+      }
+    ],
+    "dark": [
+      {
+        "blur": "none",
+        "height": 158,
+        "paints": "3",
+        "ready": "true",
+        "tint": "#ffffff",
+        "width": 344
+      },
+      {
+        "blur": "none",
+        "height": 158,
+        "paints": "3",
+        "ready": "true",
+        "tint": "#ffffff",
+        "width": 344
+      },
+      {
+        "blur": "none",
+        "height": 354,
+        "paints": "1",
+        "ready": "true",
+        "tint": "#ffffff",
+        "width": 344
+      },
+      {
+        "blur": "none",
+        "height": 354,
+        "paints": "1",
+        "ready": "true",
+        "tint": "#ffffff",
+        "width": 344
+      }
+    ]
+  },
+  "flipDuring": [
+    {
+      "class": "wish-flip-card wish-card-v28 wish-large-card  wish-is-done",
+      "paints": [
+        "34",
+        "34"
+      ],
+      "rotor": "transform: rotateY(180.025deg);"
+    }
+  ],
+  "flipSettled": {
+    "class": "wish-flip-card wish-card-v28 wish-large-card  wish-is-done",
+    "paints": [
+      "54",
+      "54"
+    ],
+    "rotor": "transform: rotateY(180deg);",
+    "visible": "一本想读的书\n¥68\n一本想读的书\n已实现\n¥68\n购买日期\n2026年10月1日\n心愿余额扣减\n−¥68"
+  },
+  "idleSample1": [
+    "54",
+    "54"
+  ],
+  "idleSample2": [
+    "54",
+    "54"
+  ],
+  "reducedBefore": [
+    "1",
+    "1"
+  ],
+  "reducedAfter": [
+    {
+      "paint": [
+        "1",
+        "1"
+      ],
+      "rotor": "transform: none;"
+    }
+  ],
+  "reducedResult": {
+    "back": "false",
+    "class": "wish-flip-card wish-card-v28 wish-small-card wish-wide-card wish-is-done",
+    "front": "true",
+    "text": "一本想读的书\n已实现\n¥68\n购买日期\n2026年10月1日\n心愿余额扣减\n−¥68"
+  },
+  "rows": {
+    "light": [
+      {
+        "height": 352,
+        "paint": "43",
+        "ready": "true",
+        "width": 344
+      }
+    ],
+    "dark": [
+      {
+        "height": 352,
+        "paint": "43",
+        "ready": "true",
+        "width": 344
+      }
+    ]
+  },
+  "narrow": {
+    "cards": [
+      {
+        "height": 252,
+        "ready": "true",
+        "width": 280
+      },
+      {
+        "height": 252,
+        "ready": "true",
+        "width": 280
+      },
+      {
+        "height": 252,
+        "ready": "true",
+        "width": 280
+      }
+    ],
+    "scroll": 318,
+    "textScale": "24px",
+    "width": 318
+  },
+  "tablet": {
+    "cards": [
+      {
+        "height": 218,
+        "ready": "true",
+        "width": 183
+      },
+      {
+        "height": 218,
+        "ready": "true",
+        "width": 183
+      },
+      {
+        "height": 218,
+        "ready": "true",
+        "width": 183
+      }
+    ],
+    "scroll": 766,
+    "width": 766
+  },
+  "fixtureGrid": {
+    "light": [
+      {
+        "height": 198,
+        "ready": "true",
+        "width": 165
+      },
+      {
+        "height": 198,
+        "ready": "true",
+        "width": 165
+      },
+      {
+        "height": 158,
+        "ready": "true",
+        "width": 344
+      }
+    ],
+    "dark": [
+      {
+        "height": 198,
+        "ready": "true",
+        "width": 165
+      },
+      {
+        "height": 198,
+        "ready": "true",
+        "width": 165
+      },
+      {
+        "height": 158,
+        "ready": "true",
+        "width": 344
+      }
+    ]
+  },
+  "insufficient": [
+    {
+      "disabled": false,
+      "label": "翻回降噪耳机正面",
+      "text": ""
+    },
+    {
+      "disabled": true,
+      "label": "兑换不可用，当前进度 50%，达到 100% 后可兑换",
+      "text": "兑换"
+    },
+    {
+      "disabled": false,
+      "label": "放大降噪耳机",
+      "text": ""
+    }
+  ],
+  "redemption": [
+    {
+      "metal": [
+        {
+          "paint": "1",
+          "ready": "true"
+        },
+        {
+          "paint": "1",
+          "ready": "true"
+        }
+      ],
+      "phase": "gather"
+    },
+    {
+      "metal": [
+        {
+          "paint": "1",
+          "ready": "true"
+        },
+        {
+          "paint": "1",
+          "ready": "true"
+        }
+      ],
+      "phase": "fracture"
+    },
+    {
+      "metal": [
+        {
+          "paint": "1",
+          "ready": "true"
+        },
+        {
+          "paint": "1",
+          "ready": "true"
+        }
+      ],
+      "phase": "reveal"
+    },
+    {
+      "metal": [
+        {
+          "paint": "1",
+          "ready": "true"
+        },
+        {
+          "paint": "1",
+          "ready": "true"
+        }
+      ],
+      "phase": "mint"
+    },
+    {
+      "metal": [
+        {
+          "paint": "1",
+          "ready": "true"
+        },
+        {
+          "paint": "1",
+          "ready": "true"
+        }
+      ],
+      "phase": "settle"
+    },
+    {
+      "metal": [
+        {
+          "paint": "1",
+          "ready": "true"
+        },
+        {
+          "ready": "true"
+        }
+      ],
+      "phase": "done"
+    }
+  ],
+  "reward": {
+    "metal": [
+      {
+        "height": 304,
+        "ready": "true",
+        "width": 360
+      },
+      {
+        "height": 304,
+        "ready": "true",
+        "width": 360
+      }
+    ],
+    "phase": "done",
+    "text": "心愿实现了\n如愿了。\n\n这一刻，属于你。\n\n周末看展\n¥320\n周末看展\n已实现\n¥320\n购买日期\n2026年10月26日\n心愿余额扣减\n−¥320\n\n2026年10月26日 · 已实现\n\n心愿余额\n¥\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n本次 −¥320\n查看已实现\n已保存购买，实际 ¥320，心愿余额 ¥280。"
+  },
+  "errors": [
+    {
+      "level": "error",
+      "message": "Uncaught TypeError: Failed to execute 'observe' on 'MutationObserver': parameter 1 is not of type 'Node'.",
+      "timestamp": "2026-10-26T03:48:00.031Z"
+    }
+  ],
+  "finishedAt": "2026-10-26T03:49:38.681Z",
+  "notes": [
+    "Isolation: dedicated temporary HTML, separate storage key and persist() disabled; no phone ledger or production fixture writes.",
+    "The recorded MutationObserver null-node error is the previously deferred host/page error; no new error-free claim is made.",
+    "Reduced motion tested with preview control; operating-system setting, actual GPU loss, VoiceOver and native devices were not tested.",
+    "Only dark 320 with larger text and 768 layout were incrementally retested; 390 light/dark grid and expanded cards were viewed.",
+    "Fracture phase sequence verified; particle geometry and animation source remain unchanged."
+  ]
+}

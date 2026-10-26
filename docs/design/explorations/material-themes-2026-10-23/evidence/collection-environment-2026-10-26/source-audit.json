@@ -1,0 +1,22 @@
+{
+  "baseline": "cd4fcab",
+  "generatedOnlyRendererChanged": true,
+  "renderLifecycleUnchanged": true,
+  "deterministicBuild": true,
+  "generatedSHA256": "ca9ed4903362d486f2ab5e7f8f928c349f2126a1e9a59cea05b01fa9c04342b9",
+  "preservedExistingDirtyFiles": {
+    "docs/design/explorations/material-themes-2026-10-23/build.cjs": true,
+    "docs/design/explorations/material-themes-2026-10-23/compare.html": true,
+    "docs/design/explorations/material-themes-2026-10-23/index.html": true,
+    "docs/design/explorations/material-themes-2026-10-23/src/home.css": true,
+    "docs/design/explorations/material-themes-2026-10-23/src/interactions.css": true,
+    "docs/design/explorations/material-themes-2026-10-23/src/study-bridge.js": true,
+    "docs/design/explorations/material-themes-2026-10-23/src/surfaces.css": true
+  },
+  "colorAndMotionFilesUnchanged": {
+    "src/wish-material.css": true,
+    "src/selection-ui.css": true,
+    "src/dark-ui.css": true
+  },
+  "nativeDiffEmpty": true
+}
