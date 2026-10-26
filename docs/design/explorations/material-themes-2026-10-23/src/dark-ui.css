@@ -1,4 +1,5 @@
-/* One dark ice ramp for transmitted card faces and selected controls.
+/* One dark ice ramp for transmitted card faces. Interface selections
+   use the separate neutral roles in selection-ui.css.
    The original brand pigment stays in the accepted material source. Adjust
    its displayed lightness here, before it meets the black environment. */
 .app[data-home-material][data-theme=dark]{
@@ -11,6 +12,8 @@
   --wm-ink:var(--di-ink);--wm-meta:#204b62;
   --dui-canvas:#0b0b0d;--dui-panel:#151517f7;--dui-surface:#1c1c1fe6;--dui-control:#202023;--dui-selected:#343438;
   --dui-text:#f3f3f5;--dui-muted:#aaaab0;--dui-line:#ffffff10;--dui-highlight:#ffffff0d;--dui-primary:#f2f2f4;--dui-primary-ink:#171719;
+  --model-top:#b5b5ba;--model-shade:#424247;--model-mid:#68686e;--model-lower:#8f8f96;--model-edge:#d2d2d8;
+  --model-rim-top:#f5f5f8;--model-rim-mid:#ceced4;--model-rim-shade:#74747b;--model-rim-bottom:#e4e4e9;--model-glint:#dddde3;
   --material-canvas:var(--dui-canvas);--canvas:var(--dui-canvas);--home-sky:var(--dui-canvas);--home-heading:var(--dui-text);
   --home-floor:linear-gradient(180deg,#ffffff10,#ffffff03 220px,transparent 520px);
   --hm-ground:var(--dui-canvas);--hm-panel-ink:var(--dui-text);--hm-panel-secondary:var(--dui-muted);--hm-panel-edge:var(--dui-line);
@@ -25,7 +28,7 @@
   --material-panel:var(--dui-panel);--material-full-panel:var(--dui-panel);--material-block:var(--dui-surface);--material-field:var(--dui-control);--material-control:var(--dui-control);--material-selected:var(--dui-selected);
   --material-edge:var(--dui-line);--material-edge-low:var(--dui-line);--material-primary:var(--dui-primary);--material-primary-ink:var(--dui-primary-ink);--icon-accent:var(--dui-text);
 }
-.app[data-home-material][data-theme=dark] .budget-library-picker{--scene:var(--dui-canvas);--accent:var(--di-selection);color:var(--dui-text)}
+.app[data-home-material][data-theme=dark] .budget-library-picker{--scene:var(--dui-canvas);--accent:var(--ui-selection-mark);color:var(--dui-text)}
 .app[data-home-material][data-theme=dark] .budget-library-picker>header button{color:var(--dui-text)}
 .app[data-home-material][data-theme=dark] .picker-confirm button{background:var(--dui-primary);color:var(--dui-primary-ink)}
 .app[data-home-material][data-theme=dark] .picker-confirm button+button{background:var(--dui-control);color:var(--dui-text)}

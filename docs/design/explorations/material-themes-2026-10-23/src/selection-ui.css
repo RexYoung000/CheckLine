@@ -6,7 +6,7 @@
   --ui-tab-lens-shadow:inset 0 1px 1px #fff,inset 0 -1px 1px #18181f14,inset 1px 0 1px #ffffffb3;
 }
 .app[data-home-material][data-theme=dark]{
-  --ui-selection-surface:var(--di-selection);--ui-selection-ink:var(--di-ink);--ui-selection-edge:var(--di-edge);--ui-selection-mark:var(--di-selection);
+  --ui-selection-surface:#38383c;--ui-selection-ink:#f3f3f5;--ui-selection-edge:#98989e;--ui-selection-mark:#e8e8ec;
   --ui-tab-lens:linear-gradient(145deg,#ffffff24,#ffffff06 52%,#ffffff12);
   --ui-tab-lens-shadow:inset 0 1px 1px #ffffff52,inset 0 -1px 1px #ffffff12,inset 1px 0 1px #ffffff24,0 2px 5px #0005;
 }
@@ -32,7 +32,7 @@
   background:var(--ui-selection-surface);color:var(--ui-selection-ink);
 }
 .app[data-home-material][data-theme] .wish-preset-grid button[aria-pressed=true]{border-color:var(--ui-selection-edge)}
-.app[data-home-material][data-theme=dark] .wish-preset-grid button[aria-pressed=true]{--icon-accent:var(--di-ink);--ink:var(--di-ink);--muted:var(--di-ink);--faint:var(--di-ink)}
+.app[data-home-material][data-theme=dark] .wish-preset-grid button[aria-pressed=true]{--icon-accent:var(--ui-selection-ink);--ink:var(--ui-selection-ink);--muted:var(--ui-selection-ink);--faint:var(--ui-selection-ink)}
 .app[data-home-material][data-theme] :is(.sheet,.overlay-shade) :is(input[type=checkbox],input[type=radio]):checked{accent-color:var(--ui-selection-mark)}
 /* Focus belongs to the interface, including library controls and compound
    fields. Keep a single outer ring when an input lives inside a field group. */

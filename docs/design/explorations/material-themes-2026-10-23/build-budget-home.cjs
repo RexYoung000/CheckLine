@@ -45,6 +45,7 @@ helper+='\n'+fs.readFileSync(path.join(dir,'src/budget-home-liquid.js'),'utf8');
 helper+='\n'+fs.readFileSync(path.join(dir,'src/budget-detail.js'),'utf8');
 helper+='\n'+fs.readFileSync(path.join(dir,'src/budget-pages.js'),'utf8');
 helper+='\n'+fs.readFileSync(path.join(dir,'src/wish-front.js'),'utf8');
+helper+='\n'+fs.readFileSync(path.join(dir,'src/wish-collection-metal.js'),'utf8');
 once('function cartridgeFace(c){',helper+'\nfunction cartridgeFace(c){');
 // Only the flip-card front calls the layered renderer. Forms, rows, achieved
 // wishes and purchase outcomes keep the frozen renderer and interactions.
@@ -53,11 +54,16 @@ once('const t=totals(c),ready=readerConnected();let face=readerLiquidFace(c);','
 once('<div class="liquid-card restored-detail-card">${libraryCardFace(c)}</div>','${dmDetailCard(c)}');
 const bubbles=match(html,/function readerBubbleMarkup\(\)\{[\s\S]*?\n\}/);
 once(bubbles,'function readerBubbleMarkup(){return hmBubbleField();}');
+once(match(html,/function readerStartAmbient\(\)\{[\s\S]*?\n\}/),'function readerStartAmbient(){hmStartAmbient();}');
+once('const pause=document.hidden||!!ui.sheet||reader.library||!!window.CheckLineDrawerState?.active;',
+     'const pause=document.hidden||reducedMotion()||!!ui.sheet||reader.library||readerFold.progress>.001||!!window.CheckLineDrawerState?.active;');
+once("if(face){const liquid=$('.water',face),rise=", "if(face){hmContactSplash(face);const liquid=$('.water',face),rise=");
 once('const materialQuery = new URL(location.href).searchParams;','smInstallPages();\n  const materialQuery = new URL(location.href).searchParams;');
 once("['detail', '预算工作区'], ['record', '消费详情']", "['detail', '预算工作区'], ['budget-records', '预算消费记录'], ['record', '消费详情']");
 once("} else if (['detail', 'record', 'trend', 'history', 'info'].includes(view)) {", "} else if (view === 'budget-records') {\n        const card = materialNeedBudget();\n        if (card) navigate('detail', {id:card.id, section:'records'});\n      } else if (['detail', 'record', 'trend', 'history', 'info'].includes(view)) {");
 const css=['budget-home','budget-detail','budget-pages','wish-material','dark-ui','light-ui','selection-ui'].map(name=>fs.readFileSync(path.join(dir,'src/'+name+'.css'),'utf8')).join('\n');
 once('</head>','<style id="budget-home-material">\n'+themeTokens+'\n'+css+'\n</style></head>');
+once('</head>','<!-- React Bits ReflectiveCard: studio shader adapted for CheckLine.\n'+fs.readFileSync(path.join(dir,'licenses/ReactBits-ReflectiveCard.txt'),'utf8')+'\n-->\n</head>');
 once('data-material-study="r3-aligned"','data-material-study="r3-aligned" data-home-material="approved-pair"');
 once('data-review-storage="checkline-material-themes-r37-20261024"','data-review-storage="checkline-budget-home-material-20261024"');
 html=html.replace(/<title>[^<]*<\/title>/,'<title>CheckLine · 冰蓝预算交互稿</title>');

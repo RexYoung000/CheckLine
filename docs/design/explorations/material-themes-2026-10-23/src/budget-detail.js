@@ -15,8 +15,7 @@ function dmStartDetail(){
     const scale=app.getBoundingClientRect().width/app.clientWidth;
     const rise=Math.max(20,card.querySelector('.water').getBoundingClientRect().height/scale);
     for(const el of card.querySelectorAll('[data-ambient]')){
-      const i=Number(el.dataset.ambient),drift=(readerNoise(i,9)-.5)*28,duration=6800+readerNoise(i,10)*4500;
-      bubbles.push(el.animate([{opacity:0,transform:'translate(0,0) scale(.55)'},{opacity:.67,transform:`translate(${drift*.2}px,-${rise*.15}px) scale(.75)`,offset:.16},{opacity:.55,transform:`translate(${drift*.6}px,-${rise*.65}px) scale(.95)`,offset:.68},{opacity:0,transform:`translate(${drift}px,-${rise+14}px) scale(1.06)`}],{duration,iterations:Infinity,delay:-readerNoise(i,11)*duration,easing:'linear'}));
+      bubbles.push(el.animate(...hmAmbientBubbleMotion(el,rise)));
     }
   }
   function paint(still=false){

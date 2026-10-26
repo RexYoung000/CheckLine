@@ -1,0 +1,1315 @@
+{
+  "checkedAt": "2026-10-26T03:21:20.667Z",
+  "scope": "HTML preview only; isolated fixture, no persistent writes",
+  "fixture": {
+    "collection": "Known reference wishes rendered as already purchased for layout testing only.",
+    "photos": "Synthetic 96px local data image, inset and fill; no user upload.",
+    "liquid": "Sample budget adjusted to 0% or 100% remaining only in temporary test document."
+  },
+  "material": {
+    "narrowReduced": {
+      "cards": [
+        {
+          "face": "back",
+          "paint": [
+            "3",
+            "4"
+          ],
+          "turning": "false",
+          "width": 280
+        },
+        {
+          "face": "front",
+          "paint": [
+            "3",
+            "4"
+          ],
+          "turning": "false",
+          "width": 280
+        },
+        {
+          "face": "front",
+          "paint": [
+            "3",
+            "4"
+          ],
+          "turning": "false",
+          "width": 280
+        }
+      ],
+      "large": true,
+      "reduced": true,
+      "scroll": 318,
+      "width": 318
+    },
+    "reducedIdle": [
+      "3",
+      "4",
+      "3",
+      "4",
+      "3",
+      "4"
+    ],
+    "tablet": {
+      "cards": [
+        183,
+        183,
+        183
+      ],
+      "scroll": 766,
+      "width": 766
+    },
+    "rows": [
+      {
+        "blur": "none",
+        "ready": "true",
+        "text": "降噪耳机¥1,200",
+        "width": 280
+      },
+      {
+        "blur": "none",
+        "ready": "true",
+        "text": "周末看展¥320",
+        "width": 280
+      },
+      {
+        "blur": "none",
+        "ready": "true",
+        "text": "一本想读的书¥68",
+        "width": 280
+      }
+    ],
+    "photos": [
+      {
+        "blur": "none",
+        "classes": "wish-face wish-face-front",
+        "ink": "rgb(242, 243, 245)",
+        "photos": [
+          {
+            "complete": true,
+            "width": 96
+          }
+        ],
+        "ready": "true"
+      },
+      {
+        "blur": "none",
+        "classes": "wish-face wish-face-front",
+        "ink": "rgb(255, 255, 255)",
+        "photos": [
+          {
+            "complete": true,
+            "width": 96
+          }
+        ],
+        "ready": "true"
+      },
+      {
+        "blur": "none",
+        "classes": "wish-face wish-face-front",
+        "ink": "rgb(242, 243, 245)",
+        "photos": [],
+        "ready": "true"
+      }
+    ],
+    "flipSamples": [
+      {
+        "face": "back",
+        "paint": "18",
+        "turning": "true"
+      },
+      {
+        "face": "back",
+        "paint": "20",
+        "turning": "true"
+      },
+      {
+        "face": "back",
+        "paint": "22",
+        "turning": "true"
+      },
+      {
+        "face": "back",
+        "paint": "23",
+        "turning": "true"
+      },
+      {
+        "face": "back",
+        "paint": "25",
+        "turning": "true"
+      },
+      {
+        "face": "back",
+        "paint": "25",
+        "turning": "true"
+      },
+      {
+        "face": "back",
+        "paint": "26",
+        "turning": "true"
+      },
+      {
+        "face": "back",
+        "paint": "28",
+        "turning": "true"
+      },
+      {
+        "face": "back",
+        "paint": "30",
+        "turning": "true"
+      },
+      {
+        "face": "back",
+        "paint": "31",
+        "turning": "true"
+      },
+      {
+        "face": "back",
+        "paint": "33",
+        "turning": "true"
+      },
+      {
+        "face": "back",
+        "paint": "35",
+        "turning": "true"
+      },
+      {
+        "face": "back",
+        "paint": "36",
+        "turning": "true"
+      },
+      {
+        "face": "back",
+        "paint": "37",
+        "turning": "true"
+      },
+      {
+        "face": "back",
+        "paint": "39",
+        "turning": "true"
+      },
+      {
+        "face": "back",
+        "paint": "41",
+        "turning": "true"
+      }
+    ],
+    "flipSettled": {
+      "paint": "63",
+      "turning": "false"
+    },
+    "gates": [
+      {
+        "disabled": true,
+        "glass": true,
+        "metal": false,
+        "text": "降噪耳机"
+      },
+      {
+        "disabled": false,
+        "glass": true,
+        "metal": false,
+        "text": "周末看展"
+      },
+      {
+        "disabled": true,
+        "glass": true,
+        "metal": false,
+        "text": "去看海"
+      }
+    ],
+    "rewardResult": {
+      "blur": "none",
+      "canvas": true,
+      "metal": "true",
+      "text": "周末看展¥320周末看展已实现¥320购买日期2026年10月26日心愿余额扣减−¥320"
+    },
+    "rewardTimeline": [
+      {
+        "fragments": "44",
+        "glass": true,
+        "metal": "true",
+        "motion": "true",
+        "phase": "gather"
+      },
+      {
+        "fragments": "44",
+        "glass": true,
+        "metal": "true",
+        "motion": "true",
+        "phase": "fracture"
+      },
+      {
+        "fragments": "44",
+        "glass": true,
+        "metal": "true",
+        "motion": "true",
+        "phase": "reveal"
+      },
+      {
+        "fragments": "44",
+        "glass": true,
+        "metal": "true",
+        "motion": "true",
+        "phase": "mint"
+      },
+      {
+        "fragments": "44",
+        "glass": true,
+        "metal": "true",
+        "motion": "true",
+        "phase": "settle"
+      },
+      {
+        "fragments": "44",
+        "glass": true,
+        "metal": "true",
+        "motion": "false",
+        "phase": "done"
+      }
+    ],
+    "fallback": {
+      "background": "radial-gradient(70% 42% at 37% 7%, rgba(255, 255, 255, 0.4), rgba(0, 0, 0, 0) 100%), linear-gradient(122deg, rgba(0, 0, 0, 0) 17%, rgba(255, 255, 255, 0.15) 37%, rgba(0, 0, 0, 0) 57%), radial-gradient(22% 75% at 62% 92%, rgba(16, 16, 18, 0.55), rgba(0, 0, 0, 0) 100%), linear-gradient(90deg, rgba(0, 0, 0, 0) 8%, rgba(16, 16, 18, 0.55) 30%, rgba(0, 0, 0, 0) 55%), none",
+      "blur": "none",
+      "canvas": false
+    }
+  },
+  "ui": {
+    "calendar": {
+      "records": "10月25日",
+      "selected": [
+        {
+          "bg": "rgb(232, 232, 236)",
+          "color": "rgb(243, 243, 245)",
+          "label": "10月25日，¥28"
+        },
+        {
+          "bg": "rgb(56, 56, 60)",
+          "color": "rgb(243, 243, 245)",
+          "label": "10月25日，有消费"
+        }
+      ],
+      "text": "这个月 · 10月1日—10月31日近 14 天¥25010月13日10月26日2026 年 10 月一二三四五六日1234567891011121314151617181920212223242526272829303110月25日咖啡10月25日¥28"
+    },
+    "preset": {
+      "bg": "rgb(56, 56, 60)",
+      "icon": "#f3f3f5",
+      "ink": "rgb(243, 243, 245)"
+    },
+    "inputFocus": [
+      {
+        "class": "wish-money-control",
+        "color": "rgb(152, 152, 158)",
+        "focus": true,
+        "style": "solid",
+        "width": "2px"
+      },
+      {
+        "class": "wish-currency-control",
+        "color": "rgb(170, 170, 176)",
+        "focus": true,
+        "style": "none",
+        "width": "3px"
+      }
+    ],
+    "mascot": {
+      "hasGray": true,
+      "loaded": true,
+      "mid": "#68686e",
+      "top": "#b5b5ba",
+      "width": 162
+    }
+  },
+  "budget": {
+    "unplugged1": {
+      "count": 28,
+      "particles": [
+        {
+          "opacity": "0.849501",
+          "svgOpacity": "1",
+          "transform": "matrix(0.911178, 0, 0, 0.911178, 1.97249, -48.62)"
+        },
+        {
+          "opacity": "0.750378",
+          "svgOpacity": "1",
+          "transform": "matrix(0.999284, 0, 0, 0.999284, 0.930243, -86.3575)"
+        },
+        {
+          "opacity": "0.809828",
+          "svgOpacity": "1",
+          "transform": "matrix(0.961537, 0, 0, 0.961537, 8.57063, -67.6542)"
+        },
+        {
+          "opacity": "0.786072",
+          "svgOpacity": "1",
+          "transform": "matrix(0.976621, 0, 0, 0.976621, 7.33533, -75.128)"
+        },
+        {
+          "opacity": "0.726122",
+          "svgOpacity": "1",
+          "transform": "matrix(1.01468, 0, 0, 1.01468, -2.24752, -93.9885)"
+        }
+      ],
+      "phase": "unplugged",
+      "spray": [
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0"
+      ],
+      "water": {
+        "empty": "false",
+        "homeOptics": "",
+        "liquidRatio": "0.4266666666666667"
+      }
+    },
+    "unplugged2": {
+      "count": 28,
+      "particles": [
+        {
+          "opacity": "0.848628",
+          "svgOpacity": "1",
+          "transform": "matrix(0.912755, 0, 0, 0.912755, 2.00764, -49.1611)"
+        },
+        {
+          "opacity": "0.748716",
+          "svgOpacity": "1",
+          "transform": "matrix(1.00034, 0, 0, 1.00034, 0.867187, -86.8803)"
+        },
+        {
+          "opacity": "0.808391",
+          "svgOpacity": "1",
+          "transform": "matrix(0.96245, 0, 0, 0.96245, 8.5309, -68.1066)"
+        },
+        {
+          "opacity": "0.784322",
+          "svgOpacity": "1",
+          "transform": "matrix(0.977732, 0, 0, 0.977732, 7.28512, -75.6785)"
+        },
+        {
+          "opacity": "0.724498",
+          "svgOpacity": "1",
+          "transform": "matrix(1.01572, 0, 0, 1.01572, -2.3152, -94.4995)"
+        }
+      ],
+      "phase": "unplugged",
+      "spray": [
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0"
+      ],
+      "water": {
+        "empty": "false",
+        "homeOptics": "",
+        "liquidRatio": "0.4266666666666667"
+      }
+    },
+    "insertSamples": [
+      {
+        "t": 1792982187385,
+        "phase": "inserting",
+        "spray": [
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "ambient": {
+          "opacity": "0.725676",
+          "svgOpacity": "1",
+          "transform": "matrix(1.01497, 0, 0, 1.01497, -3.18744, -94.1286)"
+        }
+      },
+      {
+        "t": 1792982187415,
+        "phase": "charging",
+        "spray": [
+          "0.0619299",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0.0213748",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        "ambient": {
+          "opacity": "0.736873",
+          "svgOpacity": "1",
+          "transform": "matrix(1.00786, 0, 0, 1.00786, -2.70384, -90.6061)"
+        }
+      },
+      {
+        "t": 1792982187433,
+        "phase": "charging",
+        "spray": [
+          "0.242268",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0.176085",
+          "0",
+          "0.0442815",
+          "0",
+          "0",
+          "0.189434",
+          "0.139394"
+        ],
+        "ambient": {
+          "opacity": "0.735636",
+          "svgOpacity": "1",
+          "transform": "matrix(1.00864, 0, 0, 1.00864, -2.7573, -90.9955)"
+        }
+      },
+      {
+        "t": 1792982187449,
+        "phase": "charging",
+        "spray": [
+          "0.431324",
+          "0",
+          "0",
+          "0",
+          "0.0729567",
+          "0.339706",
+          "0",
+          "0.196193",
+          "0.00697147",
+          "0",
+          "0.40428",
+          "0.321443"
+        ],
+        "ambient": {
+          "opacity": "0.734307",
+          "svgOpacity": "1",
+          "transform": "matrix(1.00949, 0, 0, 1.00949, -2.81467, -91.4134)"
+        }
+      },
+      {
+        "t": 1792982187467,
+        "phase": "charging",
+        "spray": [
+          "0.550707",
+          "0.128793",
+          "0",
+          "0",
+          "0.199889",
+          "0.444125",
+          "0",
+          "0.294191",
+          "0.105414",
+          "0",
+          "0.539723",
+          "0.437516"
+        ],
+        "ambient": {
+          "opacity": "0.73344",
+          "svgOpacity": "1",
+          "transform": "matrix(1.01004, 0, 0, 1.01004, -2.85212, -91.6862)"
+        }
+      },
+      {
+        "t": 1792982187486,
+        "phase": "charging",
+        "spray": [
+          "0.64962",
+          "0.240506",
+          "0",
+          "0",
+          "0.307122",
+          "0.531441",
+          "0.036944",
+          "0.376829",
+          "0.189167",
+          "0",
+          "0.651565",
+          "0.534381"
+        ],
+        "ambient": {
+          "opacity": "0.732699",
+          "svgOpacity": "1",
+          "transform": "matrix(1.01051, 0, 0, 1.01051, -2.88413, -91.9194)"
+        }
+      },
+      {
+        "t": 1792982187506,
+        "phase": "charging",
+        "spray": [
+          "0.856959",
+          "0.481761",
+          "0.0661282",
+          "0.192721",
+          "0.537634",
+          "0.717286",
+          "0.281228",
+          "0.554982",
+          "0.371993",
+          "0.0104885",
+          "0.845155",
+          "0.739554"
+        ],
+        "ambient": {
+          "opacity": "0.731056",
+          "svgOpacity": "1",
+          "transform": "matrix(1.01155, 0, 0, 1.01155, -2.9551, -92.4363)"
+        }
+      },
+      {
+        "t": 1792982187518,
+        "phase": "charging",
+        "spray": [
+          "0.856959",
+          "0.481761",
+          "0.0661282",
+          "0.192721",
+          "0.537634",
+          "0.717286",
+          "0.281228",
+          "0.554982",
+          "0.371993",
+          "0.0104885",
+          "0.845155",
+          "0.739554"
+        ],
+        "ambient": {
+          "opacity": "0.731056",
+          "svgOpacity": "1",
+          "transform": "matrix(1.01155, 0, 0, 1.01155, -2.9551, -92.4363)"
+        }
+      },
+      {
+        "t": 1792982187538,
+        "phase": "charging",
+        "spray": [
+          "0.722207",
+          "0.756314",
+          "0.372526",
+          "0.480187",
+          "0.79887",
+          "0.819071",
+          "0.566591",
+          "0.75977",
+          "0.585817",
+          "0.239378",
+          "0.690871",
+          "0.793526"
+        ],
+        "ambient": {
+          "opacity": "0.729056",
+          "svgOpacity": "1",
+          "transform": "matrix(1.01282, 0, 0, 1.01282, -3.04147, -93.0654)"
+        }
+      },
+      {
+        "t": 1792982187553,
+        "phase": "charging",
+        "spray": [
+          "0.597473",
+          "0.769486",
+          "0.666661",
+          "0.752849",
+          "0.751018",
+          "0.700988",
+          "0.83407",
+          "0.803578",
+          "0.789816",
+          "0.465746",
+          "0.555873",
+          "0.66632"
+        ],
+        "ambient": {
+          "opacity": "0.727021",
+          "svgOpacity": "1",
+          "transform": "matrix(1.01411, 0, 0, 1.01411, -3.12936, -93.7056)"
+        }
+      },
+      {
+        "t": 1792982187570,
+        "phase": "charging",
+        "spray": [
+          "0.551731",
+          "0.712368",
+          "0.778446",
+          "0.856005",
+          "0.696666",
+          "0.656767",
+          "0.814306",
+          "0.75882",
+          "0.855085",
+          "0.554415",
+          "0.507143",
+          "0.619209"
+        ],
+        "ambient": {
+          "opacity": "0.726196",
+          "svgOpacity": "1",
+          "transform": "matrix(1.01464, 0, 0, 1.01464, -3.16499, -93.9651)"
+        }
+      },
+      {
+        "t": 1792982187589,
+        "phase": "charging",
+        "spray": [
+          "0.486022",
+          "0.629917",
+          "0.809806",
+          "0.770106",
+          "0.618093",
+          "0.592283",
+          "0.724731",
+          "0.692923",
+          "0.784114",
+          "0.687423",
+          "0.437963",
+          "0.551083"
+        ],
+        "ambient": {
+          "opacity": "0.724917",
+          "svgOpacity": "1",
+          "transform": "matrix(1.01545, 0, 0, 1.01545, -3.22026, -94.3677)"
+        }
+      },
+      {
+        "t": 1792982187602,
+        "phase": "charging",
+        "spray": [
+          "0.486022",
+          "0.629917",
+          "0.809806",
+          "0.770106",
+          "0.618093",
+          "0.592283",
+          "0.724731",
+          "0.692923",
+          "0.784114",
+          "0.687423",
+          "0.437963",
+          "0.551083"
+        ],
+        "ambient": {
+          "opacity": "0.724917",
+          "svgOpacity": "1",
+          "transform": "matrix(1.01545, 0, 0, 1.01545, -3.22026, -94.3677)"
+        }
+      },
+      {
+        "t": 1792982187620,
+        "phase": "charging",
+        "spray": [
+          "0.391128",
+          "0.51029",
+          "0.662377",
+          "0.634095",
+          "0.503734",
+          "0.496905",
+          "0.593515",
+          "0.594027",
+          "0.676802",
+          "0.840434",
+          "0.339966",
+          "0.45169"
+        ],
+        "ambient": {
+          "opacity": "0.722819",
+          "svgOpacity": "1",
+          "transform": "matrix(1.01678, 0, 0, 1.01678, -3.31086, -95.0276)"
+        }
+      },
+      {
+        "t": 1792982187641,
+        "phase": "charging",
+        "spray": [
+          "0.341194",
+          "0.447184",
+          "0.583884",
+          "0.561467",
+          "0.44318",
+          "0.445482",
+          "0.523758",
+          "0.539954",
+          "0.617766",
+          "0.770593",
+          "0.289444",
+          "0.398856"
+        ],
+        "ambient": {
+          "opacity": "0.72156",
+          "svgOpacity": "1",
+          "transform": "matrix(1.01758, 0, 0, 1.01758, -3.36522, -95.4236)"
+        }
+      },
+      {
+        "t": 1792982187664,
+        "phase": "charging",
+        "spray": [
+          "0.284531",
+          "0.375491",
+          "0.494278",
+          "0.478248",
+          "0.374146",
+          "0.385893",
+          "0.444074",
+          "0.476572",
+          "0.548272",
+          "0.687731",
+          "0.23315",
+          "0.338376"
+        ],
+        "ambient": {
+          "opacity": "0.719959",
+          "svgOpacity": "1",
+          "transform": "matrix(1.0186, 0, 0, 1.0186, -3.43437, -95.9273)"
+        }
+      },
+      {
+        "t": 1792982187691,
+        "phase": "charging",
+        "spray": [
+          "0.243068",
+          "0.322976",
+          "0.428403",
+          "0.416794",
+          "0.323386",
+          "0.341301",
+          "0.385398",
+          "0.428581",
+          "0.495452",
+          "0.624362",
+          "0.192783",
+          "0.293701"
+        ],
+        "ambient": {
+          "opacity": "0.718638",
+          "svgOpacity": "1",
+          "transform": "matrix(1.01944, 0, 0, 1.01944, -3.49145, -96.3431)"
+        }
+      },
+      {
+        "t": 1792982187713,
+        "phase": "charging",
+        "spray": [
+          "0.208969",
+          "0.279737",
+          "0.374018",
+          "0.365844",
+          "0.281446",
+          "0.303866",
+          "0.336867",
+          "0.387878",
+          "0.450519",
+          "0.570233",
+          "0.160213",
+          "0.256637"
+        ],
+        "ambient": {
+          "opacity": "0.717428",
+          "svgOpacity": "1",
+          "transform": "matrix(1.0202, 0, 0, 1.0202, -3.5437, -96.7236)"
+        }
+      },
+      {
+        "t": 1792982187729,
+        "phase": "charging",
+        "spray": [
+          "0.152547",
+          "0.208009",
+          "0.283452",
+          "0.280466",
+          "0.211519",
+          "0.239981",
+          "0.255815",
+          "0.317382",
+          "0.372394",
+          "0.475708",
+          "0.107925",
+          "0.194475"
+        ],
+        "ambient": {
+          "opacity": "0.715092",
+          "svgOpacity": "1",
+          "transform": "matrix(1.02169, 0, 0, 1.02169, -3.64456, -97.4584)"
+        }
+      },
+      {
+        "t": 1792982187747,
+        "phase": "charging",
+        "spray": [
+          "0.128693",
+          "0.177557",
+          "0.244817",
+          "0.243796",
+          "0.181665",
+          "0.212007",
+          "0.221133",
+          "0.286019",
+          "0.3375",
+          "0.433336",
+          "0.0866078",
+          "0.167773"
+        ],
+        "ambient": {
+          "opacity": "0.713932",
+          "svgOpacity": "1",
+          "transform": "matrix(1.02242, 0, 0, 1.02242, -3.6947, -97.8235)"
+        }
+      }
+    ],
+    "insertSettled": {
+      "count": 28,
+      "particles": [
+        {
+          "opacity": "0.421167",
+          "svgOpacity": "1",
+          "transform": "matrix(1.058, 0, 0, 1.058, -3.70465, -114.498)"
+        },
+        {
+          "opacity": "0.718755",
+          "svgOpacity": "1",
+          "transform": "matrix(1.01936, 0, 0, 1.01936, -1.83762, -96.3062)"
+        },
+        {
+          "opacity": "0.0493809",
+          "svgOpacity": "1",
+          "transform": "matrix(0.659328, 0, 0, 0.659328, 0.117478, -0.951541)"
+        },
+        {
+          "opacity": "0.879718",
+          "svgOpacity": "1",
+          "transform": "matrix(0.85662, 0, 0, 0.85662, -0.482139, -29.9044)"
+        },
+        {
+          "opacity": "0.764948",
+          "svgOpacity": "1",
+          "transform": "matrix(0.990033, 0, 0, 0.990033, 1.07865, -81.7738)"
+        }
+      ],
+      "phase": "connected",
+      "spray": [
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0"
+      ],
+      "water": {
+        "empty": "false",
+        "homeOptics": "",
+        "liquidRatio": "0.4266666666666667"
+      }
+    },
+    "full1": {
+      "count": 28,
+      "particles": [
+        {
+          "opacity": "0.840787",
+          "svgOpacity": "1",
+          "transform": "matrix(0.926913, 0, 0, 0.926913, 2.32316, -117.931)"
+        },
+        {
+          "opacity": "0.733696",
+          "svgOpacity": "1",
+          "transform": "matrix(1.00988, 0, 0, 1.00988, 0.297238, -199.993)"
+        },
+        {
+          "opacity": "0.795036",
+          "svgOpacity": "1",
+          "transform": "matrix(0.97093, 0, 0, 0.97093, 8.16186, -157.862)"
+        },
+        {
+          "opacity": "0.768672",
+          "svgOpacity": "1",
+          "transform": "matrix(0.987669, 0, 0, 0.987669, 6.83604, -175.97)"
+        },
+        {
+          "opacity": "0.70975",
+          "svgOpacity": "1",
+          "transform": "matrix(1.02508, 0, 0, 1.02508, -2.92973, -216.439)"
+        }
+      ],
+      "phase": "connected",
+      "spray": [
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0"
+      ],
+      "water": {
+        "empty": "false",
+        "homeOptics": "",
+        "liquidRatio": "1"
+      }
+    },
+    "full2": {
+      "count": 28,
+      "particles": [
+        {
+          "opacity": "0.696871",
+          "svgOpacity": "1",
+          "transform": "matrix(0.781631, 0, 0, 0.781631, -0.0460837, -29.3165)"
+        },
+        {
+          "opacity": "0.855013",
+          "svgOpacity": "1",
+          "transform": "matrix(0.901226, 0, 0, 0.901226, 2.54201, -98.6935)"
+        },
+        {
+          "opacity": "0.147204",
+          "svgOpacity": "1",
+          "transform": "matrix(0.677805, 0, 0, 0.677805, 0.364197, -6.19271)"
+        },
+        {
+          "opacity": "0.858579",
+          "svgOpacity": "1",
+          "transform": "matrix(0.894788, 0, 0, 0.894788, 5.77452, -93.8716)"
+        },
+        {
+          "opacity": "0.848984",
+          "svgOpacity": "1",
+          "transform": "matrix(0.912111, 0, 0, 0.912111, 1.30847, -106.846)"
+        }
+      ],
+      "phase": "connected",
+      "spray": [
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0"
+      ],
+      "water": {
+        "empty": "false",
+        "homeOptics": "",
+        "liquidRatio": "1"
+      }
+    },
+    "covered1": {
+      "count": 28,
+      "particles": [
+        {
+          "opacity": "0.850077",
+          "svgOpacity": "1",
+          "transform": "matrix(0.910138, 0, 0, 0.910138, 1.94932, -105.368)"
+        },
+        {
+          "opacity": "0.751473",
+          "svgOpacity": "1",
+          "transform": "matrix(0.998588, 0, 0, 0.998588, 0.971815, -187.782)"
+        },
+        {
+          "opacity": "0.810776",
+          "svgOpacity": "1",
+          "transform": "matrix(0.960936, 0, 0, 0.960936, 8.59683, -147.051)"
+        },
+        {
+          "opacity": "0.787226",
+          "svgOpacity": "1",
+          "transform": "matrix(0.975888, 0, 0, 0.975888, 7.36843, -163.226)"
+        },
+        {
+          "opacity": "0.727193",
+          "svgOpacity": "1",
+          "transform": "matrix(1.014, 0, 0, 1.014, -2.2029, -204.459)"
+        }
+      ],
+      "phase": "connected",
+      "spray": [
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0"
+      ],
+      "water": {
+        "empty": "false",
+        "homeOptics": "",
+        "liquidRatio": "1"
+      }
+    },
+    "covered2": {
+      "count": 28,
+      "particles": [
+        {
+          "opacity": "0.850077",
+          "svgOpacity": "1",
+          "transform": "matrix(0.910138, 0, 0, 0.910138, 1.94932, -105.368)"
+        },
+        {
+          "opacity": "0.751473",
+          "svgOpacity": "1",
+          "transform": "matrix(0.998588, 0, 0, 0.998588, 0.971815, -187.782)"
+        },
+        {
+          "opacity": "0.810776",
+          "svgOpacity": "1",
+          "transform": "matrix(0.960936, 0, 0, 0.960936, 8.59683, -147.051)"
+        },
+        {
+          "opacity": "0.787226",
+          "svgOpacity": "1",
+          "transform": "matrix(0.975888, 0, 0, 0.975888, 7.36843, -163.226)"
+        },
+        {
+          "opacity": "0.727193",
+          "svgOpacity": "1",
+          "transform": "matrix(1.014, 0, 0, 1.014, -2.2029, -204.459)"
+        }
+      ],
+      "phase": "connected",
+      "spray": [
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0"
+      ],
+      "water": {
+        "empty": "false",
+        "homeOptics": "",
+        "liquidRatio": "1"
+      }
+    },
+    "resumed": {
+      "count": 28,
+      "particles": [
+        {
+          "opacity": "0.837879",
+          "svgOpacity": "1",
+          "transform": "matrix(0.932163, 0, 0, 0.932163, 2.44016, -121.863)"
+        },
+        {
+          "opacity": "0.728132",
+          "svgOpacity": "1",
+          "transform": "matrix(1.01341, 0, 0, 1.01341, 0.0861042, -203.815)"
+        },
+        {
+          "opacity": "0.790109",
+          "svgOpacity": "1",
+          "transform": "matrix(0.974058, 0, 0, 0.974058, 8.02573, -161.246)"
+        },
+        {
+          "opacity": "0.762864",
+          "svgOpacity": "1",
+          "transform": "matrix(0.991356, 0, 0, 0.991356, 6.66941, -179.959)"
+        },
+        {
+          "opacity": "0.704291",
+          "svgOpacity": "1",
+          "transform": "matrix(1.02855, 0, 0, 1.02855, -3.15722, -220.189)"
+        }
+      ],
+      "phase": "connected",
+      "spray": [
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0"
+      ],
+      "water": {
+        "empty": "false",
+        "homeOptics": "",
+        "liquidRatio": "1"
+      }
+    },
+    "reduced": {
+      "ambient": [
+        {
+          "display": "none",
+          "opacity": "0",
+          "transform": "none"
+        },
+        {
+          "display": "none",
+          "opacity": "0",
+          "transform": "none"
+        },
+        {
+          "display": "none",
+          "opacity": "0",
+          "transform": "none"
+        }
+      ],
+      "still": [
+        {
+          "display": "block",
+          "opacity": "1"
+        },
+        {
+          "display": "block",
+          "opacity": "1"
+        },
+        {
+          "display": "block",
+          "opacity": "1"
+        }
+      ]
+    },
+    "empty": {
+      "count": 28,
+      "particles": [
+        {
+          "opacity": "0",
+          "svgOpacity": "1",
+          "transform": "none"
+        },
+        {
+          "opacity": "0",
+          "svgOpacity": "1",
+          "transform": "none"
+        },
+        {
+          "opacity": "0",
+          "svgOpacity": "1",
+          "transform": "none"
+        },
+        {
+          "opacity": "0",
+          "svgOpacity": "1",
+          "transform": "none"
+        },
+        {
+          "opacity": "0",
+          "svgOpacity": "1",
+          "transform": "none"
+        }
+      ],
+      "phase": "connected",
+      "spray": [
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0"
+      ],
+      "water": {
+        "empty": "true",
+        "homeOptics": "",
+        "liquidRatio": "0"
+      }
+    },
+    "detailFull1": {
+      "bubbles": [
+        "matrix(0.967856, 0, 0, 0.967856, 1.71264, -114.285)",
+        "matrix(1.04968, 0, 0, 1.04968, -0.240506, -176.934)",
+        "matrix(0.999561, 0, 0, 0.999561, 6.91575, -139.649)",
+        "matrix(1.02206, 0, 0, 1.02206, 5.282, -157.645)"
+      ],
+      "count": 28,
+      "water": {
+        "empty": "false",
+        "liquidRatio": "1"
+      }
+    },
+    "detailFull2": {
+      "bubbles": [
+        "matrix(0.910409, 0, 0, 0.910409, 1.95535, -78.0727)",
+        "matrix(0.960619, 0, 0, 0.960619, 3.24101, -108.495)",
+        "matrix(1.02335, 0, 0, 1.02335, 5.8804, -158.68)",
+        "matrix(0.995751, 0, 0, 0.995751, 6.47078, -136.601)"
+      ],
+      "state": "flowing"
+    }
+  },
+  "currentIndependentPageErrors": [],
+  "limitations": [
+    "Existing comparison-host MutationObserver null-node error deferred by user.",
+    "No native build, real-device GPU performance, VoiceOver, actual OS reduce-motion toggle, camera, real-photo upload or real GPU context-loss test.",
+    "Visual strength and final material acceptance remain with Rex."
+  ],
+  "deliverable": {
+    "url": "http://127.0.0.1:18873/budget-pages-pair.html?view=wish&collection=done&study=ice-gray-reflection-3",
+    "themes": [
+      {
+        "mascot": "#8bd5e9",
+        "metalReady": "true",
+        "selectedBg": "rgb(226, 243, 250)",
+        "theme": "light"
+      },
+      {
+        "mascot": "#b5b5ba",
+        "metalReady": "true",
+        "selectedBg": "rgb(56, 56, 60)",
+        "theme": "dark"
+      }
+    ]
+  }
+}

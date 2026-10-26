@@ -60,6 +60,36 @@
   background:radial-gradient(ellipse at 12% 0,#f4fcff61,transparent 62%),#e6f8ff24;
   box-shadow:inset 1px 1px #f4fcffb3,inset -1px -1px #bfe9f82e,1px 3px 5px -4px #0006;
 }
+/* Achieved wishes are opaque reflective metal, as specified by Rex's
+   ReflectiveCard reference. The procedural studio surface shares the existing
+   card pose; the same ice / gray metal roles remain in the static fallback. */
+.app[data-home-material][data-theme=light]{--wc-base:#afd4e0;--wc-tint:#b7e1f1;--wc-light:#ffffffc7;--wc-shade:#29485547;--wc-edge:#ffffffe0;--wc-low:#46637155;--wc-drop:#243f4c36;--wc-mount:#c8e4ed;--wc-ink:#213d4b;--wc-meta:#405d6b}
+.app[data-home-material][data-theme=dark]{--wc-base:#454547;--wc-tint:#ffffff;--wc-light:#ffffff66;--wc-shade:#1010128c;--wc-edge:#e1e1e359;--wc-low:#00000080;--wc-drop:#0009;--wc-mount:#4a4a4e;--wc-ink:#f2f3f5;--wc-meta:#d3d3d7}
+.app[data-home-material][data-theme] :is(.wish-is-done,.outcome-wish-card,.wish-collection-row.is-realized){
+  --wm-ink:var(--wc-ink);--wm-meta:var(--wc-meta);--wm-drop:var(--wc-drop);
+  --wm-face-surface:radial-gradient(ellipse 70% 42% at 37% 7%,var(--wc-light),transparent 100%),linear-gradient(122deg,transparent 17%,#ffffff26 37%,transparent 57%),radial-gradient(ellipse 22% 75% at 62% 92%,var(--wc-shade),transparent 100%),linear-gradient(90deg,transparent 8%,var(--wc-shade) 30%,transparent 55%),var(--wc-base);
+  --wm-face-shadow:inset 1px 1px 0 var(--wc-edge),inset -1px -1px 0 var(--wc-low),0 8px 14px -11px var(--wc-drop);
+  --wm-face-rim:transparent;--wm-face-rim-filter:none;
+  --wm-face-reflection:none;--wm-face-reflection-opacity:1;--wm-face-inner-edge:inset 0 0 0 1px var(--wc-low),inset 0 1px 0 var(--wc-edge);
+}
+.app[data-home-material][data-theme] :is(.wish-is-done,.outcome-wish-card) .wish-face,
+.app[data-home-material][data-theme] .wish-collection-row.is-realized{backdrop-filter:none;-webkit-backdrop-filter:none}
+.app[data-home-material][data-theme] :is(.wish-is-done,.outcome-wish-card) .wish-face::before{content:none}
+.app[data-home-material][data-theme] :is(.wish-is-done,.outcome-wish-card,.wish-collection-row.is-realized) .preset-backing{
+  background:linear-gradient(145deg,#ffffff14,transparent 70%),var(--wc-mount);
+  box-shadow:inset 0 1px var(--wc-edge),inset 0 -1px var(--wc-low),0 3px 5px -3px var(--wc-drop);
+}
+.app[data-home-material][data-theme] :is(.wish-is-done,.outcome-wish-card,.wish-collection-row.is-realized) .preset-art>img{--icon-accent:var(--wc-ink);filter:none}
+.app[data-home-material][data-theme] :is(.wish-is-done,.outcome-wish-card) .wish-achieved-facts{color:var(--wc-ink)}
+.app[data-home-material][data-theme] :is(.wish-is-done,.outcome-wish-card) .wish-achieved-label{color:var(--wc-meta)}
+.app[data-home-material][data-theme] :is(.wish-is-done,.outcome-wish-card) .cover-photo-fill .wish-front-title>strong{backdrop-filter:none;-webkit-backdrop-filter:none}
+.app[data-home-material][data-theme] :is(.wish-is-done,.outcome-wish-card) .cover-photo-fill :is(.wish-front-title>strong,.wish-front-value,.wish-money){color:#fff}
+.app[data-home-material][data-theme] .outcome-wish-card .outcome-paper{background:transparent;box-shadow:none}
+.app[data-home-material][data-theme] .outcome-wish-card .outcome-memory-mark{color:var(--wc-ink);background:var(--wc-mount);border-color:var(--wc-edge);box-shadow:inset 0 1px var(--wc-edge)}
+.wm-metal-surface{position:absolute;inset:0;z-index:0;width:100%;height:100%;border-radius:inherit;pointer-events:none;opacity:0}
+[data-metal-ready=true]>.wm-metal-surface{opacity:1}
+.app[data-home-material] :is(.wish-is-done,.outcome-wish-card) :is(.wish-front-layout,.wish-back-topline,.wish-achieved-facts){position:relative;z-index:1}
+.app[data-home-material] .wish-collection-row.is-realized>:not(.wm-metal-surface){position:relative;z-index:1}
 /* Unfulfilled fronts: a recessed ice sheet and cover sit BEHIND a separate
    clear pane. The pane's reflection crosses both without frosting the content.
    All optical children are static and cannot intercept the existing hit areas. */
