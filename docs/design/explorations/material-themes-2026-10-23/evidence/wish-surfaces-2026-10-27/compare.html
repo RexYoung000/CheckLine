@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>心愿横条与封面预览 · 修改前后</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#edf0f3;color:#202327;font-family:-apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif}main{max-width:1440px;padding:32px 24px 60px;margin:auto}h1{font-size:26px;letter-spacing:-.5px}h2{font-size:20px;margin:38px 0 12px}p,li{font-size:14px;line-height:1.8;color:#505960}nav{display:flex;flex-wrap:wrap;gap:20px;margin:22px 0}a{color:#255a70;text-underline-offset:4px}a:focus-visible{outline:2px solid #2789b3;outline-offset:5px}.pair{display:grid;grid-template-columns:1fr 1fr;gap:20px}figure{margin:0;background:#f8f9fa;border:1px solid #dfe4e7;border-radius:16px;overflow:hidden}figcaption{padding:16px 18px;font-size:14px}img{display:block;width:100%;height:auto}details{margin-top:30px;background:#f8f9fa;padding:18px;border-radius:12px}summary{cursor:pointer;font-weight:600}li{margin:8px 0}@media(max-width:760px){.pair{grid-template-columns:1fr}main{padding:20px 16px 40px}}
+</style>
+</head>
+<body><main>
+<h1>心愿横条与封面预览 · 修改前后</h1>
+<p>横条、新建心愿、封面选择接入现有分层材质。浅色保留冰蓝透光；暗色由冰蓝外壳包住银灰内卡，预设图标底座同步。暗色「选择／编辑封面」文字改为中性亮色。</p>
+<nav><a href="../../budget-pages-pair.html?view=wish&study=wish-surfaces-8">打开浅暗交互稿</a><a href="../../budget-pages-pair.html?view=new-wish&study=wish-surfaces-8">打开新建心愿</a><a href="#rows">横条前后</a><a href="#compose">新建前后</a></nav>
+<p>下方为浏览器实际截图：每张图内左侧浅色、右侧暗色。内容来自禁止写回的隔离示例，修改前基线为 e578c47。点击图片可查看原尺寸。</p>
+<section id="rows"><h2>未实现心愿 · 横条视图</h2>
+<div class="pair"><figure><figcaption>修改前 · 横条仍使用旧冰蓝表面</figcaption><a href="rows-before.jpg"><img src="rows-before.jpg" alt="修改前横条视图的浅暗对照"></a></figure><figure><figcaption>修改后 · 银灰内卡与冰蓝前片分层，保留覆盖进度</figcaption><a href="rows-after.jpg"><img src="rows-after.jpg" alt="修改后横条视图的浅暗对照"></a></figure></div></section>
+<section id="compose"><h2>新建心愿 · 封面预览</h2>
+<div class="pair"><figure><figcaption>修改前 · 预览与已创建卡面材质不一致</figcaption><a href="compose-before.jpg"><img src="compose-before.jpg" alt="修改前新建心愿的浅暗预览"></a></figure><figure><figcaption>修改后 · 预览同步内卡、玻璃与局部反射</figcaption><a href="compose-after.jpg"><img src="compose-after.jpg" alt="修改后新建心愿的浅暗预览"></a></figure></div></section>
+<details><summary>实际验证与待验收项</summary>
+<ul><li>390 浅暗横条的整行点击、放大、键盘翻面和返回通过；50% 仍禁用兑换，100% 可以进入核对。隔离购买后余额从 ¥600 变为 ¥280，完成卡仍不带玻璃。</li><li>名称／金额更新、预设选择、取消／应用、创建完成、照片嵌入／铺满与键盘移动图片通过。铺满模式继续显示原图，不增加金属层。</li><li>320＋更大文字、768 横条和预览减少动态效果检查通过；新增画布静止后不持续重绘。强制无绘制器时保留静态材质与操作入口。</li><li>原完整清单卡的主要计算样式与基线相同；金属着色器、业务与动效逻辑、预算及原生工程保持。没有回归全部 21 个入口或完成 VoiceOver／真机验收。</li><li>此前暂缓的 MutationObserver 空节点错误仍有日志，本轮未处理。材质密度、前后层次与预览协调感待 Rex 视觉验收。</li></ul>
+<p><a href="cover-preset-after.jpg">封面选择截图</a> · <a href="cover-photo-after.jpg">图片预览截图</a> · <a href="redemption-after.jpg">兑换结果截图</a> · <a href="browser-checks.json">浏览器记录</a> · <a href="source-checks.json">源码范围检查</a></p>
+</details>
+</main></body></html>

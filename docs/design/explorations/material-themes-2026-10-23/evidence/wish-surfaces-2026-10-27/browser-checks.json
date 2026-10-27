@@ -1,0 +1,394 @@
+{
+  "rows": {
+    "light": [
+      {
+        "canvas": 0,
+        "depth": 1,
+        "glass": true,
+        "height": 88,
+        "label": "放大降噪耳机，心愿余额覆盖50%",
+        "liquid": "1",
+        "nestedButtons": 0,
+        "pointerEvents": "none",
+        "ready": null,
+        "text": "降噪耳机\n¥1,200",
+        "width": 346
+      },
+      {
+        "canvas": 0,
+        "depth": 1,
+        "glass": true,
+        "height": 88,
+        "label": "放大周末看展，心愿余额覆盖100%",
+        "liquid": "1",
+        "nestedButtons": 0,
+        "pointerEvents": "none",
+        "ready": null,
+        "text": "周末看展\n¥320",
+        "width": 346
+      },
+      {
+        "canvas": 0,
+        "depth": 1,
+        "glass": true,
+        "height": 88,
+        "label": "放大去看海",
+        "liquid": "1",
+        "nestedButtons": 0,
+        "pointerEvents": "none",
+        "ready": null,
+        "text": "去看海\n金额待定",
+        "width": 346
+      }
+    ],
+    "dark": [
+      {
+        "canvas": 1,
+        "depth": 1,
+        "glass": true,
+        "height": 88,
+        "label": "放大降噪耳机，心愿余额覆盖50%",
+        "liquid": "0.36",
+        "nestedButtons": 0,
+        "paint": "1",
+        "pointerEvents": "none",
+        "ready": "true",
+        "text": "降噪耳机\n¥1,200",
+        "width": 346
+      },
+      {
+        "canvas": 1,
+        "depth": 1,
+        "glass": true,
+        "height": 88,
+        "label": "放大周末看展，心愿余额覆盖100%",
+        "liquid": "0.36",
+        "nestedButtons": 0,
+        "paint": "1",
+        "pointerEvents": "none",
+        "ready": "true",
+        "text": "周末看展\n¥320",
+        "width": 346
+      },
+      {
+        "canvas": 1,
+        "depth": 1,
+        "glass": true,
+        "height": 88,
+        "label": "放大去看海",
+        "liquid": "1",
+        "nestedButtons": 0,
+        "paint": "1",
+        "pointerEvents": "none",
+        "ready": "true",
+        "text": "去看海\n金额待定",
+        "width": 346
+      }
+    ]
+  },
+  "compose": {
+    "light": {
+      "canvas": 0,
+      "depth": 1,
+      "glass": true,
+      "label": "rgb(23, 106, 145)",
+      "layered": 1,
+      "overflow": false,
+      "ready": null,
+      "text": "旅行耳机\n¥1,200\n编辑封面"
+    },
+    "dark": {
+      "canvas": 1,
+      "depth": 1,
+      "glass": true,
+      "label": "rgb(243, 243, 245)",
+      "layered": 1,
+      "overflow": false,
+      "ready": "true",
+      "text": "旅行耳机\n¥1,200\n编辑封面"
+    }
+  },
+  "cancelledPreset": {
+    "light": true,
+    "dark": true
+  },
+  "created": {
+    "light": [
+      {
+        "icon": "wish-headphones",
+        "layered": true,
+        "ready": null,
+        "title": "旅行耳机\n¥1,200"
+      }
+    ],
+    "dark": [
+      {
+        "icon": "wish-headphones",
+        "layered": true,
+        "ready": "true",
+        "title": "旅行耳机\n¥1,200"
+      }
+    ]
+  },
+  "insufficient": {
+    "light": true,
+    "dark": true
+  },
+  "fullProgress": {
+    "confirmationOpened": true,
+    "outcome": {
+      "light": [
+        {
+          "canvases": 1,
+          "class": "wish-flip-card wish-card-v28 wish-large-card outcome-wish-card",
+          "layered": 0,
+          "rim": "none"
+        }
+      ],
+      "dark": [
+        {
+          "canvases": 1,
+          "class": "wish-flip-card wish-card-v28 wish-large-card outcome-wish-card",
+          "layered": 0,
+          "rim": "none"
+        }
+      ]
+    }
+  },
+  "responsive": {
+    "dark320Rows": [
+      {
+        "canvas": "1",
+        "children": [
+          {
+            "overflow": false,
+            "w": 69
+          },
+          {
+            "overflow": false,
+            "w": 95
+          }
+        ],
+        "h": 92,
+        "overflow": false,
+        "w": 280
+      },
+      {
+        "canvas": "1",
+        "children": [
+          {
+            "overflow": false,
+            "w": 93
+          },
+          {
+            "overflow": false,
+            "w": 71
+          }
+        ],
+        "h": 88,
+        "overflow": false,
+        "w": 280
+      },
+      {
+        "canvas": "1",
+        "children": [
+          {
+            "overflow": false,
+            "w": 92
+          }
+        ],
+        "h": 88,
+        "overflow": false,
+        "w": 280
+      }
+    ],
+    "dark320Compose": {
+      "canvasCount": 1,
+      "glass": true,
+      "h": 184,
+      "label": "rgb(243, 243, 245)",
+      "metal": "true",
+      "overflow": false,
+      "paint": "1",
+      "text": "周末旅行的降噪耳机\n¥1,200\n选择封面",
+      "w": 276
+    },
+    "dark320Cover": {
+      "canvas": 1,
+      "depth": 1,
+      "focusRing": "solid",
+      "glass": 1,
+      "h": 184,
+      "overflow": false,
+      "w": 276
+    },
+    "light320Rows": [
+      {
+        "canvases": 0,
+        "h": 92,
+        "overflow": false,
+        "w": 280
+      },
+      {
+        "canvases": 0,
+        "h": 88,
+        "overflow": false,
+        "w": 280
+      },
+      {
+        "canvases": 0,
+        "h": 88,
+        "overflow": false,
+        "w": 280
+      }
+    ],
+    "light320Compose": {
+      "canvas": 0,
+      "depth": 1,
+      "h": 184,
+      "overflow": false,
+      "w": 276
+    },
+    "light768Rows": [
+      {
+        "canvas": 0,
+        "overflow": false,
+        "w": 586
+      },
+      {
+        "canvas": 0,
+        "overflow": false,
+        "w": 586
+      },
+      {
+        "canvas": 0,
+        "overflow": false,
+        "w": 586
+      }
+    ],
+    "dark768Rows": [
+      {
+        "canvas": 1,
+        "overflow": false,
+        "w": 586
+      },
+      {
+        "canvas": 1,
+        "overflow": false,
+        "w": 586
+      },
+      {
+        "canvas": 1,
+        "overflow": false,
+        "w": 586
+      }
+    ],
+    "reducedIdle": [
+      "1",
+      "1",
+      "1"
+    ]
+  },
+  "photos": {
+    "inset": {
+      "light": {
+        "canvas": 0,
+        "img": [
+          {
+            "complete": true,
+            "filter": "drop-shadow(rgba(56, 32, 78, 0.086) 0px 7px 7px)",
+            "src": "data:image/png;base64,iVBORw0K"
+          }
+        ],
+        "layers": 1
+      },
+      "dark": {
+        "canvas": 1,
+        "img": [
+          {
+            "complete": true,
+            "filter": "drop-shadow(rgba(56, 32, 78, 0.086) 0px 7px 7px)",
+            "src": "data:image/png;base64,iVBORw0K"
+          }
+        ],
+        "layers": 1
+      }
+    },
+    "fill": {
+      "light": {
+        "canvas": 0,
+        "image": [
+          {
+            "complete": true,
+            "filter": "none",
+            "position": "50% 50%"
+          }
+        ],
+        "layers": 0,
+        "pan": "0"
+      },
+      "dark": {
+        "canvas": 0,
+        "image": [
+          {
+            "complete": true,
+            "filter": "none",
+            "position": "50% 50%"
+          }
+        ],
+        "layers": 0,
+        "pan": "0"
+      }
+    },
+    "keyboardPan": {
+      "light": "55% 50%",
+      "dark": "55% 50%"
+    },
+    "returnToInset": {
+      "light": {
+        "canvas": 0,
+        "layer": 1
+      },
+      "dark": {
+        "canvas": 1,
+        "layer": 1
+      }
+    }
+  },
+  "fallback": {
+    "background": "radial-gradient(70% 42% at 37% 7%, rgba(255, 255, 255, 0.4), rgba(0, 0, 0, 0) 100%), linear-gradient(122deg, rgba(0, 0, 0, 0) 17%, rgba(255, 255, 255, 0.15) 37%, rgba(0, 0, 0, 0) 57%), radial-gradient(22% 75% at 62% 92%, rgba(16, 16, 18, 0.55), rgba(0, 0, 0, 0) 100%), none",
+    "canvas": 0,
+    "depth": 1,
+    "glass": true,
+    "visible": true,
+    "editorOpened": true
+  },
+  "existingFrontStyleEqual": true,
+  "console": [
+    {
+      "level": "error",
+      "message": "Uncaught TypeError: Failed to execute 'observe' on 'MutationObserver': parameter 1 is not of type 'Node'.",
+      "timestamp": "2026-10-26T15:38:05.147Z"
+    },
+    {
+      "level": "error",
+      "message": "Uncaught TypeError: Failed to execute 'observe' on 'MutationObserver': parameter 1 is not of type 'Node'.",
+      "timestamp": "2026-10-26T15:41:09.181Z"
+    },
+    {
+      "level": "error",
+      "message": "Uncaught TypeError: Failed to execute 'observe' on 'MutationObserver': parameter 1 is not of type 'Node'.",
+      "timestamp": "2026-10-26T23:22:04.119Z"
+    },
+    {
+      "level": "error",
+      "message": "Uncaught TypeError: Failed to execute 'observe' on 'MutationObserver': parameter 1 is not of type 'Node'.",
+      "timestamp": "2026-10-27T00:24:58.859Z"
+    },
+    {
+      "level": "error",
+      "message": "Uncaught TypeError: Failed to execute 'observe' on 'MutationObserver': parameter 1 is not of type 'Node'.",
+      "timestamp": "2026-10-27T00:26:58.029Z"
+    }
+  ]
+}

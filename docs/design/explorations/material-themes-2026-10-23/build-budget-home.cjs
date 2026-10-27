@@ -47,9 +47,14 @@ helper+='\n'+fs.readFileSync(path.join(dir,'src/budget-pages.js'),'utf8');
 helper+='\n'+fs.readFileSync(path.join(dir,'src/wish-front.js'),'utf8');
 helper+='\n'+fs.readFileSync(path.join(dir,'src/wish-collection-metal.js'),'utf8');
 once('function cartridgeFace(c){',helper+'\nfunction cartridgeFace(c){');
-// Only the flip-card front calls the layered renderer. Forms, rows, achieved
-// wishes and purchase outcomes keep the frozen renderer and interactions.
+// Share the accepted front optics with active rows and live cover previews.
+// Achieved wishes, full-bleed photos and purchase outcomes keep their renderers.
 once('${wishFaceFront(w)}<button class="wish-face-tap"','${wmWishFront(w,completion)}<button class="wish-face-tap"');
+once('items.map(wishCollectionRow)','items.map(wmWishCollectionRow)');
+once('wishFaceFront(w,true)','wmWishFront(w)');
+once('wishFaceFront({...w,cover:s.working},true)','wmWishFront({...w,cover:s.working})');
+once('wishFaceFront({...w,cover:c},true)','wmWishFront({...w,cover:c})');
+once('wishFaceFront(wishTaskPreview(ui.task),true)','wmWishFront(wishTaskPreview(ui.task))');
 once('const t=totals(c),ready=readerConnected();let face=readerLiquidFace(c);','const t=totals(c),ready=readerConnected();let face=hmMaterializeFace(readerLiquidFace(c),c,true);');
 once('<div class="liquid-card restored-detail-card">${libraryCardFace(c)}</div>','${dmDetailCard(c)}');
 const bubbles=match(html,/function readerBubbleMarkup\(\)\{[\s\S]*?\n\}/);

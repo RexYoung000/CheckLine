@@ -15,7 +15,7 @@
 .app[data-home-material][data-theme] .wish-library :is(.wish-phase-tabs button[aria-selected=true],.wish-view-options button[aria-pressed=true]){box-shadow:inset 0 1px #ffffff50}
 .app[data-home-material][data-theme] :is(.wish-face,.wish-card-v28 .wish-face-back,.wish-compose-preview,.wish-cover-preview,.wish-collection-row){--ink:var(--wm-ink);--muted:var(--wm-meta);--accent:#176a91;--icon-accent:#176a91;background:var(--wm-face-surface,radial-gradient(ellipse at 9% 0,var(--wm-reflection),transparent 57%),var(--wm-card));color:var(--wm-ink);border:0;box-shadow:var(--wm-face-shadow,inset 1px 1.5px 0 var(--wm-edge),inset -1px -1px 0 var(--wm-low-edge),inset 0 -4px 7px -6px #103d5299,0 9px 17px -14px var(--wm-drop));backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
 .app[data-home-material][data-theme] .wish-face::after{background:var(--wm-face-reflection,radial-gradient(ellipse at var(--wish-glare-x) 0,#ffffff55,transparent 43%));box-shadow:var(--wm-face-inner-edge,none);opacity:var(--wm-face-reflection-opacity,.4);pointer-events:none}
-.app[data-home-material][data-theme] .wish-face::before{content:'';position:absolute;inset:0;z-index:3;padding:var(--wm-face-rim-width,1.2px);border-radius:inherit;background:var(--wm-face-rim,linear-gradient(135deg,#ffffffe8,#ffffff24 43%,#dcf6ff61 72%,#91ddf780));filter:var(--wm-face-rim-filter,none);mask:var(--wm-face-rim-mask,linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0));mask-composite:exclude;-webkit-mask:var(--wm-face-rim-mask,linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0));-webkit-mask-composite:xor;pointer-events:none}
+.app[data-home-material][data-theme] :is(.wish-face,.wish-compose-preview:has(.wish-layered-front),.wish-cover-preview:has(>.wish-layered-front),.wish-collection-row.wish-layered-front)::before{content:'';position:absolute;inset:0;z-index:3;padding:var(--wm-face-rim-width,1.2px);border-radius:inherit;background:var(--wm-face-rim,linear-gradient(135deg,#ffffffe8,#ffffff24 43%,#dcf6ff61 72%,#91ddf780));filter:var(--wm-face-rim-filter,none);mask:var(--wm-face-rim-mask,linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0));mask-composite:exclude;-webkit-mask:var(--wm-face-rim-mask,linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0));-webkit-mask-composite:xor;pointer-events:none}
 .app[data-home-material][data-theme] .wish-face :is(.wish-front-title>strong,.wish-front-value,.wish-front-value .wish-money,.wish-back-topline){color:var(--wm-ink)}
 .app[data-home-material][data-theme] .wish-face :is(.wish-money small,.wish-achieved-facts>div>span){color:var(--wm-meta)}
 .app[data-home-material][data-theme] .preset-backing{background:var(--wm-control);box-shadow:inset 1px 1px #ffffff9c,inset -1px -1px var(--wm-low-edge),0 7px 15px -13px var(--wm-drop)}
@@ -31,6 +31,7 @@
 .app[data-home-material][data-theme] .wish-face-back .wish-liquid-actions>.wish-redeem-button:disabled{color:var(--wm-disabled-ink);background:var(--wm-disabled);border-color:transparent;box-shadow:inset 0 1px #ffffff26;opacity:1}
 .app[data-home-material][data-theme] :is(.wish-expand-button,.wish-cover-mini){color:var(--wm-meta)}
 .app[data-home-material][data-theme] .wish-card-v28 .wish-face :is(.wish-cover-mini,.wish-expand-button){color:var(--wm-meta)}
+.app[data-home-material][data-theme=dark] .wish-cover-edit-label{color:var(--dui-text)}
 .app[data-home-material][data-theme] .wish-home :is(.wish-empty,.wish-draft-chip,.wish-recovery){background:var(--hm-tile);color:var(--hm-panel-ink);border:1px solid var(--hm-panel-edge);box-shadow:inset 0 1px #ffffff40}
 .app[data-home-material][data-theme] .overlay-shade:has(.wish-full-view){background:var(--wm-focus);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
 .app[data-home-material][data-theme] .wish-full-view .wish-focus-toolbar .icon-button{color:var(--hm-panel-ink);background:var(--hm-nav);box-shadow:inset 0 1px var(--hm-panel-edge)}
@@ -109,7 +110,7 @@
   --wf-pane-light:#f2fcffb3;--wf-pane-edge:#ecfbffbd;--wf-pane-tint:#a9e2f809;
   --wf-return:#bdeeff78;--wf-side:#07374e38;--wf-value:#effaff;--wf-value-meta:#c3e3ef;
 }
-.app[data-home-material][data-theme] .wish-face-front:has(>.wish-layered-front){
+.app[data-home-material][data-theme] :is(.wish-face-front:has(>.wish-layered-front),.wish-compose-preview:has(.wish-layered-front),.wish-cover-preview:has(>.wish-layered-front),.wish-collection-row.wish-layered-front){
   --wm-face-surface:radial-gradient(ellipse 85% 39% at 16% -3%,var(--wf-rear-light),transparent 83%),var(--wf-body);
   --wm-face-shadow:inset 1px 1.5px 0 var(--wf-pane-edge),inset -1px -1px 0 #bfe9f861,0 10px 15px -15px var(--wm-drop);
   --wm-face-rim-width:0px;--wm-face-rim:#000;--wm-face-rim-mask:none;--wm-face-rim-filter:url(#wish-front-thickness);
@@ -119,7 +120,7 @@
 .app[data-home-material][data-theme] .wish-layered-front{isolation:isolate}
 .app[data-home-material][data-theme] .wish-layered-front :is(.wish-front-depth,.wish-front-glass){position:absolute;pointer-events:none;display:block}
 .app[data-home-material][data-theme] .wish-layered-front .wish-front-depth{
-  z-index:0;inset:4px 4px 8px 7px;border-radius:25px;transform:rotate(-.8deg);transform-origin:50% 50%;
+  z-index:0;inset:4px 4px 8px 7px;border-radius:var(--wf-depth-radius,25px);transform:rotate(-.8deg);transform-origin:50% 50%;
   background:radial-gradient(ellipse 90% 65% at 10% 0%,var(--wf-rear-light),transparent 82%),var(--wf-rear);
   box-shadow:inset 1px 1px var(--wf-rear-edge),inset 0 -1px #d5f3ff24,2px 5px 7px -4px var(--wf-contact);
 }
@@ -130,7 +131,7 @@
 }
 /* Dark inner metal shares the collection roles. Keep these overrides on the
    inner sheet / cover, so the accepted outer glass receives no new tint. */
-.app[data-home-material][data-theme=dark] .wish-face-front:has(>.wish-layered-front){--wm-ink:var(--wc-ink);--wm-meta:var(--wc-meta)}
+.app[data-home-material][data-theme=dark] :is(.wish-face-front:has(>.wish-layered-front),.wish-compose-preview:has(.wish-layered-front),.wish-cover-preview:has(>.wish-layered-front),.wish-collection-row.wish-layered-front){--wm-ink:var(--wc-ink);--wm-meta:var(--wc-meta)}
 .app[data-home-material][data-theme=dark] .wish-layered-front .wish-front-depth{
   background:radial-gradient(ellipse 70% 42% at 37% 7%,var(--wc-light),transparent 100%),linear-gradient(122deg,transparent 17%,#ffffff26 37%,transparent 57%),radial-gradient(ellipse 22% 75% at 62% 92%,var(--wc-shade),transparent 100%),var(--wc-base);
   box-shadow:inset 1px 1px var(--wc-edge),inset 0 -1px var(--wc-low),2px 5px 7px -4px var(--wc-drop);
@@ -142,7 +143,7 @@
 .app[data-home-material][data-theme=dark] .wish-layered-front .preset-art>img{--icon-accent:var(--wc-ink);filter:none}
 .app[data-home-material][data-theme] .wish-layered-front .wish-front-glass{
   z-index:2;inset:0;border-radius:inherit;
-  background:radial-gradient(ellipse 74% 25% at var(--wish-glare-x) -7%,var(--wf-pane-light),transparent 82%),radial-gradient(ellipse 62% 6% at 42% 100%,var(--wf-return),transparent 80%),linear-gradient(98deg,#ffffff42,transparent 4%,transparent 97%,var(--wf-side)),var(--wf-pane-tint);
+  background:radial-gradient(ellipse 74% 25% at var(--wish-glare-x,30%) -7%,var(--wf-pane-light),transparent 82%),radial-gradient(ellipse 62% 6% at 42% 100%,var(--wf-return),transparent 80%),linear-gradient(98deg,#ffffff42,transparent 4%,transparent 97%,var(--wf-side)),var(--wf-pane-tint);
   box-shadow:inset 2px 2px 1px #ffffff38,inset -2px -3px 2px #8bd5ee24;
 }
 .app[data-home-material][data-theme] .wish-layered-front .wish-front-glass::before{
@@ -157,5 +158,14 @@
 @container(min-width:650px){.app[data-home-material][data-theme] .wish-wide-card .wish-layered-front{--wf-cover-x:50%}}
 .app[data-home-material][data-theme].large-text .wish-small-card .wish-layered-front{--wf-cover-x:calc(100% - 74px)}
 .app[data-home-material][data-theme] .wish-layered-front .wish-front-value{--wm-ink:var(--wf-value);--wm-meta:var(--wf-value-meta)}
+/* Narrow surfaces reuse the same layers, with only their framing adapted. */
+.app[data-home-material][data-theme] :is(.wish-compose-preview,.wish-cover-preview) .wish-layered-front{--wf-depth-radius:21px;--wf-cover-x:calc(100% - 72px)}
+@container(max-width:340px){.app[data-home-material][data-theme] :is(.wish-compose-preview,.wish-cover-preview) .wish-layered-front{--wf-cover-x:calc(100% - 55px)}}
+.app[data-home-material][data-theme] .wish-collection-row.wish-layered-front{--wf-depth-radius:18px;--wf-cover-x:32px;--wf-glint-width:62px;--wf-glint-height:68px}
+.app[data-home-material][data-theme] .wish-collection-row.wish-layered-front>.wish-card-liquid{z-index:1}
+.app[data-home-material][data-theme] .wish-collection-row.wish-layered-front>:is(.wish-row-name,.wish-money,.wish-row-open,svg){z-index:3}
+.app[data-home-material][data-theme] .wish-collection-row.wish-layered-front>svg{color:var(--wm-meta)}
+.app[data-home-material][data-theme=dark] .wish-collection-row.wish-layered-front .wish-fluid-volume{opacity:.36}
+.app[data-home-material][data-theme=dark] .wish-collection-row.wish-layered-front .wish-fluid-volume path{stroke:var(--wf-pane-edge);stroke-width:1;vector-effect:non-scaling-stroke}
 .app[data-home-material][data-theme].reduced .wish-bubble-volume>i{animation:none;top:calc(15% + var(--bubble-x) * .65);opacity:.55}
 @media(prefers-reduced-motion:reduce){.app[data-home-material][data-theme] .wish-bubble-volume>i{animation:none;top:calc(15% + var(--bubble-x) * .65);opacity:.55}}
