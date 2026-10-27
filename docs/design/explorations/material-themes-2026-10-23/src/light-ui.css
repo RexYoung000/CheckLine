@@ -21,6 +21,13 @@
 }
 .app[data-home-material][data-theme=light] .budget-library-picker{--scene:var(--lui-canvas);--accent:var(--ui-selection-mark);color:var(--lui-text)}
 .app[data-home-material][data-theme=light] .budget-library-picker>header button{color:var(--lui-text)}
+.app[data-home-material][data-theme=light] .budget-library-picker .loop-dome-viewer{background:var(--lui-panel)}
+.app[data-home-material][data-theme=light] .budget-library-picker .picker-confirm button{background:var(--lui-primary);color:var(--lui-primary-ink)}
+.app[data-home-material][data-theme=light] .budget-library-picker .picker-confirm button+button{background:var(--lui-control);color:var(--lui-text)}
+.app[data-home-material][data-theme=light] .picker-list input{color:var(--lui-text);background:var(--lui-control);border-color:var(--lui-line)}
+.app[data-home-material][data-theme=light] .picker-list input::placeholder{color:var(--lui-muted)}
+.app[data-home-material][data-theme=light] .picker-list button{background:var(--lui-surface);color:var(--lui-text);box-shadow:inset 0 0 0 1px var(--lui-line)}
+.app[data-home-material][data-theme=light] .picker-list button span{color:var(--lui-text)}
 .app[data-home-material][data-theme=light] .dm-subpage :is(.record-row,.history-row,.amount-block:not(.no-bg),.calendar-grid){box-shadow:inset 0 1px var(--lui-highlight),0 3px 12px -10px #17171b24}
 .app[data-home-material][data-theme=light] .dm-subpage :is(select,.tertiary,.secondary){background:var(--lui-control);box-shadow:inset 0 1px var(--lui-highlight)}
 .app[data-home-material][data-theme=light] .dm-subpage .chart .bar{background:#b4b4bb;box-shadow:inset 0 1px #ffffff80;border-color:#1111180a}

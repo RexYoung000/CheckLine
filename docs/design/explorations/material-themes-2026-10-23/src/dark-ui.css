@@ -30,12 +30,13 @@
 }
 .app[data-home-material][data-theme=dark] .budget-library-picker{--scene:var(--dui-canvas);--accent:var(--ui-selection-mark);color:var(--dui-text)}
 .app[data-home-material][data-theme=dark] .budget-library-picker>header button{color:var(--dui-text)}
-.app[data-home-material][data-theme=dark] .picker-confirm button{background:var(--dui-primary);color:var(--dui-primary-ink)}
-.app[data-home-material][data-theme=dark] .picker-confirm button+button{background:var(--dui-control);color:var(--dui-text)}
+.app[data-home-material][data-theme=dark] .budget-library-picker .loop-dome-viewer{background:var(--dui-panel)}
+.app[data-home-material][data-theme=dark] .budget-library-picker .picker-confirm button{background:var(--dui-primary);color:var(--dui-primary-ink)}
+.app[data-home-material][data-theme=dark] .budget-library-picker .picker-confirm button+button{background:var(--dui-control);color:var(--dui-text)}
 .app[data-home-material][data-theme=dark] .picker-list input{color:var(--dui-text);background:var(--dui-control);border-color:var(--dui-line)}
 .app[data-home-material][data-theme=dark] .picker-list input::placeholder{color:var(--dui-muted)}
-.app[data-home-material][data-theme=dark] .picker-list button{background:radial-gradient(ellipse at 9% 0,var(--wm-reflection),transparent 57%),var(--wm-card);color:var(--di-ink)}
-.app[data-home-material][data-theme=dark] .picker-list button span{color:var(--di-ink)}
+.app[data-home-material][data-theme=dark] .picker-list button{background:var(--dui-surface);color:var(--dui-text);box-shadow:inset 0 0 0 1px var(--dui-line)}
+.app[data-home-material][data-theme=dark] .picker-list button span{color:var(--dui-text)}
 .app[data-home-material][data-theme=dark] :is(.reader-card-face,.dm-detail-card) .card-top :is(.card-more,.icon-button){color:var(--hm-ink)}
 .app[data-home-material][data-theme=dark] .dm-subpage :is(.record-row,.history-row,.amount-block:not(.no-bg),.calendar-grid){box-shadow:inset 0 1px var(--dui-highlight),0 6px 14px -13px #0009}
 .app[data-home-material][data-theme=dark] .dm-subpage :is(select,.tertiary,.secondary){box-shadow:inset 0 1px var(--dui-highlight)}

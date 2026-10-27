@@ -284,7 +284,7 @@ function wmStartCollectionMetal(){
       let s=surfaces.get(face);
       if(!s){const canvas=document.createElement('canvas');canvas.className='wm-metal-surface';canvas.setAttribute('aria-hidden','true');face.prepend(canvas);s={canvas,key:''};surfaces.set(face,s);resize.observe(face);}
       const width=face.clientWidth,height=face.clientHeight;if(!width||!height)continue;
-      const card=face.closest('.wish-flip-card'),isBack=face.classList.contains('wish-face-back');
+      const card=face.closest('.wish-flip-card'),isBack=!!face.closest('.wish-face-back');
       const hover=card?.querySelector('.wish-hover-layer')?.style.transform||'',turn=card?.querySelector('.wish-turn-rotor')?.style.transform||'';
       const light=app.dataset.theme==='light',still=reducedMotion(),cs=getComputedStyle(card||face);
       const rx=still?0:angle(hover,'X'),ry=still?0:angle(hover,'Y')+angle(turn,'Y')-(isBack?Math.PI:0);

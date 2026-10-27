@@ -8,7 +8,9 @@
 
 ## 入口与查看方式
 
-- **本轮心愿入口同步：[修改前后对照](evidence/wish-surfaces-2026-10-27/compare.html) · [浅暗交互稿](budget-pages-pair.html?view=wish&study=wish-surfaces-8)**。心愿清单切换「横条视图」，或下拉选择「添加心愿／心愿封面」；统一浅色冰蓝透光、暗色银灰内卡与冰蓝外壳，并修正暗色封面按钮的低对比度文字。背面、预算／卡库、原生 App 保持。
+- **本轮心愿背面与卡库：[修改前后对照](evidence/wish-back-library-2026-10-27/compare.html) · [背面浅暗](budget-pages-pair.html?view=wish-back&study=back-library-9) · [卡库浅暗](budget-pages-pair.html?view=library&study=back-library-9)**。背面接入正面的玻璃与内卡层次；卡库弧线、球面及放大复用预算材质，搜索与放大背景同步中性色。现有动效、其他页面和原生 App 保持，视觉待验收。
+
+- **上一轮心愿入口同步：[修改前后对照](evidence/wish-surfaces-2026-10-27/compare.html) · [浅暗交互稿](budget-pages-pair.html?view=wish&study=wish-surfaces-8)**。心愿清单切换「横条视图」，或下拉选择「添加心愿／心愿封面」；统一浅色冰蓝透光、暗色银灰内卡与冰蓝外壳，并修正暗色封面按钮的低对比度文字。当轮背面、预算／卡库、原生 App 保持。
 
 - **上一轮暗色未实现卡：[修改前后对照](evidence/wish-dark-inner-metal-2026-10-26/compare.html) · [浅暗交互稿](budget-pages-pair.html?view=wish&study=dark-inner-metal-7)**。外层冰蓝玻璃保持，内卡与图标底座改为银灰金属，和兑换后收藏卡呼应。默认查看「未实现」，点放大或翻面体验；对照截图来自禁止写回的隔离示例，不写入真实购买或手机账本。
 
@@ -38,6 +40,16 @@
 对照页切换“查看页面”或“减少动态效果”会重新加载两侧的演示入口；检查当前任务原位换主题，请点“单独查看”，使用独立稿的顶部主题按钮。
 
 ## 来源、采用范围与材质规则
+
+### 2026-10-27 心愿背面与预算卡库同步
+
+以 `59c9dd6` 为基线。未实现心愿背面接入当前正面的内卡／冰蓝玻璃分层，暗色内卡复用银灰金属，覆盖进度仍位于内卡上方、玻璃下方。已实现背面、正面、按钮热区与兑换规则保持。卡库弧线、球面和放大贴图统一读取预算主卡的颜色及光学来源，补足局部反光、折射边、液面和透明球面气泡；静态缩略图不增加新的运动循环，常驻背景和布局保持。球面放大层的旧蓝绿背景改为白灰／黑灰，主按钮恢复既有黑白角色。
+
+对应搜索／减少动态效果列表使用既有浅暗中性 UI，保持浅色冰蓝／暗色黑白重点色。普通预算首页、详情、其他页面、金额算法、动效参数、原生 App 与其他未提交实验不改。`src/library-card-material.js` 取代旧 `dark-library-palette.js`；构建时从已确认主卡、现有水体形状和气泡源码提取材质，运行时解析当前颜色角色，弧线／球面的渲染器和运动参数不改。
+
+实际检查：390 浅暗心愿翻面、50% 禁用／100% 核对兑换、破壳收藏与已实现背面正常；球面放大／返回、键盘选用后插入正常。320＋160% 文字无横向溢出，768 卡库贴图完整，搜索及预览减少动态效果列表使用中性色；主题原位切换后贴图更新。空水没有气泡，满水保留顶部液面；新增背面金属静止后不持续重绘。验证数据禁止写回，未操作手机账本。未重测全部 21 页、系统减少动态效果、VoiceOver 或真机；此前暂缓的 MutationObserver 空节点日志仍存在。
+
+证据：[前后对照](evidence/wish-back-library-2026-10-27/compare.html)、[背面浅暗](evidence/wish-back-library-2026-10-27/wish-back-after.jpg)、[球面放大浅暗](evidence/wish-back-library-2026-10-27/library-enlarged-after.jpg)、[浏览器检查](evidence/wish-back-library-2026-10-27/browser-checks.json)、[源码范围](evidence/wish-back-library-2026-10-27/source-checks.json)。材质密度、背面衔接和卡库高光强度待 Rex 验收。
 
 ### 2026-10-26 心愿横条与封面预览同步
 

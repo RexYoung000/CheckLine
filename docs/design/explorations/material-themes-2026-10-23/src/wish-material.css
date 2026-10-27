@@ -110,7 +110,7 @@
   --wf-pane-light:#f2fcffb3;--wf-pane-edge:#ecfbffbd;--wf-pane-tint:#a9e2f809;
   --wf-return:#bdeeff78;--wf-side:#07374e38;--wf-value:#effaff;--wf-value-meta:#c3e3ef;
 }
-.app[data-home-material][data-theme] :is(.wish-face-front:has(>.wish-layered-front),.wish-compose-preview:has(.wish-layered-front),.wish-cover-preview:has(>.wish-layered-front),.wish-collection-row.wish-layered-front){
+.app[data-home-material][data-theme] :is(.wish-face-front:has(>.wish-layered-front),.wish-face-back.wish-layered-back,.wish-compose-preview:has(.wish-layered-front),.wish-cover-preview:has(>.wish-layered-front),.wish-collection-row.wish-layered-front){
   --wm-face-surface:radial-gradient(ellipse 85% 39% at 16% -3%,var(--wf-rear-light),transparent 83%),var(--wf-body);
   --wm-face-shadow:inset 1px 1.5px 0 var(--wf-pane-edge),inset -1px -1px 0 #bfe9f861,0 10px 15px -15px var(--wm-drop);
   --wm-face-rim-width:0px;--wm-face-rim:#000;--wm-face-rim-mask:none;--wm-face-rim-filter:url(#wish-front-thickness);
@@ -131,7 +131,7 @@
 }
 /* Dark inner metal shares the collection roles. Keep these overrides on the
    inner sheet / cover, so the accepted outer glass receives no new tint. */
-.app[data-home-material][data-theme=dark] :is(.wish-face-front:has(>.wish-layered-front),.wish-compose-preview:has(.wish-layered-front),.wish-cover-preview:has(>.wish-layered-front),.wish-collection-row.wish-layered-front){--wm-ink:var(--wc-ink);--wm-meta:var(--wc-meta)}
+.app[data-home-material][data-theme=dark] :is(.wish-face-front:has(>.wish-layered-front),.wish-face-back.wish-layered-back,.wish-compose-preview:has(.wish-layered-front),.wish-cover-preview:has(>.wish-layered-front),.wish-collection-row.wish-layered-front){--wm-ink:var(--wc-ink);--wm-meta:var(--wc-meta)}
 .app[data-home-material][data-theme=dark] .wish-layered-front .wish-front-depth{
   background:radial-gradient(ellipse 70% 42% at 37% 7%,var(--wc-light),transparent 100%),linear-gradient(122deg,transparent 17%,#ffffff26 37%,transparent 57%),radial-gradient(ellipse 22% 75% at 62% 92%,var(--wc-shade),transparent 100%),var(--wc-base);
   box-shadow:inset 1px 1px var(--wc-edge),inset 0 -1px var(--wc-low),2px 5px 7px -4px var(--wc-drop);
@@ -162,10 +162,11 @@
 .app[data-home-material][data-theme] :is(.wish-compose-preview,.wish-cover-preview) .wish-layered-front{--wf-depth-radius:21px;--wf-cover-x:calc(100% - 72px)}
 @container(max-width:340px){.app[data-home-material][data-theme] :is(.wish-compose-preview,.wish-cover-preview) .wish-layered-front{--wf-cover-x:calc(100% - 55px)}}
 .app[data-home-material][data-theme] .wish-collection-row.wish-layered-front{--wf-depth-radius:18px;--wf-cover-x:32px;--wf-glint-width:62px;--wf-glint-height:68px}
-.app[data-home-material][data-theme] .wish-collection-row.wish-layered-front>.wish-card-liquid{z-index:1}
+.app[data-home-material][data-theme] :is(.wish-collection-row.wish-layered-front,.wish-face-back.wish-layered-back)>.wish-card-liquid{z-index:1}
 .app[data-home-material][data-theme] .wish-collection-row.wish-layered-front>:is(.wish-row-name,.wish-money,.wish-row-open,svg){z-index:3}
 .app[data-home-material][data-theme] .wish-collection-row.wish-layered-front>svg{color:var(--wm-meta)}
-.app[data-home-material][data-theme=dark] .wish-collection-row.wish-layered-front .wish-fluid-volume{opacity:.36}
+.app[data-home-material][data-theme=dark] :is(.wish-collection-row.wish-layered-front,.wish-face-back.wish-layered-back) .wish-fluid-volume{opacity:.36}
 .app[data-home-material][data-theme=dark] .wish-collection-row.wish-layered-front .wish-fluid-volume path{stroke:var(--wf-pane-edge);stroke-width:1;vector-effect:non-scaling-stroke}
+.app[data-home-material][data-theme] .wish-face-back.wish-layered-back{--wf-cover-x:70%}
 .app[data-home-material][data-theme].reduced .wish-bubble-volume>i{animation:none;top:calc(15% + var(--bubble-x) * .65);opacity:.55}
 @media(prefers-reduced-motion:reduce){.app[data-home-material][data-theme] .wish-bubble-volume>i{animation:none;top:calc(15% + var(--bubble-x) * .65);opacity:.55}}

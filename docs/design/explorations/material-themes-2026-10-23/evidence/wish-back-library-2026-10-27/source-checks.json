@@ -1,0 +1,19 @@
+{
+  "baseline": "59c9dd6",
+  "generatedOutsideScopedSourcesLibraryAndTwoCallsUnchanged": true,
+  "existingExperimentsUnchanged": {
+    "docs/design/explorations/material-themes-2026-10-23/build.cjs": true,
+    "docs/design/explorations/material-themes-2026-10-23/compare.html": true,
+    "docs/design/explorations/material-themes-2026-10-23/index.html": true,
+    "docs/design/explorations/material-themes-2026-10-23/src/home.css": true,
+    "docs/design/explorations/material-themes-2026-10-23/src/interactions.css": true,
+    "docs/design/explorations/material-themes-2026-10-23/src/study-bridge.js": true,
+    "docs/design/explorations/material-themes-2026-10-23/src/surfaces.css": true
+  },
+  "nativeDiffEmpty": true,
+  "generatedSHA256": "22b9122a8820beb691c64ad8c6a22f43a93154376e882bd44eb439e72fa48fce",
+  "rebuildSameHash": true,
+  "inlineScriptBlocksParsed": 1,
+  "libraryStaticSourceOnly": true,
+  "collectionRendererChange": "Only ancestor back-face detection for inner-sheet normal"
+}

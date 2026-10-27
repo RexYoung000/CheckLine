@@ -12,10 +12,6 @@ let html = execFileSync('git', ['show', baseline + ':' + baselinePath], {cwd:rep
 const pair = fs.readFileSync(path.join(dir,'budget-card-pair.html'),'utf8');
 function match(text, expression) {const found=text.match(expression);if(!found)throw Error('Missing material source: '+expression);return found[0];}
 function once(before,after) {if(html.split(before).length!==2)throw Error('Expected one baseline boundary: '+before.slice(0,80));html=html.replace(before,after);}
-// The existing library renderer keeps its light branch and all interactions.
-once('function ui(t, dark = false, enlarged = false) {',fs.readFileSync(path.join(dir,'src/dark-library-palette.js'),'utf8')+'\nfunction ui(t, dark = false, enlarged = false) {');
-once("{ink:'#f0fbff',title:'#102b38',top:'#37b9e8',bottom:'#102b38',ambient:'#c5f6ff',ambientOpacity:.86,water1:'#c5f6ff33',waterMid:'#37b9e833',water2:'#102b388c',rim:'#fffffff2'}",'darkIceLibraryPalette(t)');
-once('<rect width="400" height="300" fill="url(#environment)"/>','<rect width="400" height="300" fill="url(#environment)" fill-opacity="${p.opacity || 1}"/>');
 const themeTokens = ['light','dark'].map(theme => {
   const block=match(pair,new RegExp('\\.'+theme+' \\{[\\s\\S]*?\\n\\}'));
   return block.replace('.'+theme, '.app[data-home-material][data-theme='+theme+']').replace(/\s*color-scheme: [^;]+;/,'').replaceAll('--','--hm-');
@@ -40,6 +36,21 @@ const svg=(content)=>'<svg class="hm-optics" viewBox="40 76 352 300" preserveAsp
 const body=svg('<rect x="40" y="76" width="352" height="300" style="fill:var(--body-tint,var(--ice));fill-opacity:var(--body-alpha,var(--ice-alpha))"/><rect x="40" y="76" width="352" height="300" fill="url(#light-reflection)"/>');
 const edge=svg(scene.slice(edgeStart,edgeEnd));
 const normalize=s=>s.replaceAll('light-','HMID-').replaceAll('var(--','var(--hm-');
+// Arc, sphere and enlarged textures read the same approved optics as the DOM card.
+const homeSource=fs.readFileSync(path.join(dir,'src/budget-home.js'),'utf8');
+const liquidSource=fs.readFileSync(path.join(dir,'src/budget-home-liquid.js'),'utf8');
+const homeCss=fs.readFileSync(path.join(dir,'src/budget-home.css'),'utf8');
+const liquidShape=liquidSource.slice(liquidSource.indexOf('function hmLiquidFullness('),liquidSource.indexOf('function hmLiquidWaterMarkup('));
+const bubbleSvg=homeSource.slice(homeSource.indexOf('function hmBubbleSvg('),homeSource.indexOf('function hmBubbleField(')).replace('hmBubbleSvg','libraryBubbleSvg').replaceAll('readerLiquidSequence','libraryBubbleSequence');
+const fullColors=Object.fromEntries(['top','mid','bottom'].map(name=>[name==='bottom'?'base':name,match(homeCss,new RegExp('--hm-water-full-'+name+':[^;}]+')).split(':').slice(1).join(':')]));
+const librarySource=fs.readFileSync(path.join(dir,'src/library-card-material.js'),'utf8')
+  .replace('__LIBRARY_LIQUID_SHAPE__',liquidShape)
+  .replace('__LIBRARY_BUBBLE_SVG__',bubbleSvg)
+  .replace('__LIBRARY_FULL_COLORS__',JSON.stringify(fullColors))
+  .replace('__LIBRARY_BODY__',JSON.stringify(normalize(body).replaceAll('HMID','library-body')))
+  .replace('__LIBRARY_EDGE__',JSON.stringify(normalize(edge).replaceAll('HMID','library-edge')));
+once(match(html,/function ui\(t, dark = false, enlarged = false\) \{[\s\S]*?\n\}/),librarySource.trim());
+
 let helper=fs.readFileSync(path.join(dir,'src/budget-home.js'),'utf8').replace('__HOME_BODY__',JSON.stringify(normalize(body))).replace('__HOME_EDGE__',JSON.stringify(normalize(edge)));
 helper+='\n'+fs.readFileSync(path.join(dir,'src/budget-home-liquid.js'),'utf8');
 helper+='\n'+fs.readFileSync(path.join(dir,'src/budget-detail.js'),'utf8');
@@ -50,6 +61,8 @@ once('function cartridgeFace(c){',helper+'\nfunction cartridgeFace(c){');
 // Share the accepted front optics with active rows and live cover previews.
 // Achieved wishes, full-bleed photos and purchase outcomes keep their renderers.
 once('${wishFaceFront(w)}<button class="wish-face-tap"','${wmWishFront(w,completion)}<button class="wish-face-tap"');
+once('class="wish-face wish-face-back" aria-hidden="${face!==\'back\'}"','class="wish-face wish-face-back ${!w.achieved&&!completion?\'wish-layered-front wish-layered-back\':\'\'}" aria-hidden="${face!==\'back\'}"');
+once('${wishFaceBack(w,compact,completion)}','${wmWishBack(w,compact,completion)}');
 once('items.map(wishCollectionRow)','items.map(wmWishCollectionRow)');
 once('wishFaceFront(w,true)','wmWishFront(w)');
 once('wishFaceFront({...w,cover:s.working},true)','wmWishFront({...w,cover:s.working})');

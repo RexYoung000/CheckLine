@@ -1,0 +1,296 @@
+{
+  "back": {
+    "light": {
+      "canvas": 0,
+      "class": "wish-face wish-face-back wish-layered-front wish-layered-back",
+      "depth": 1,
+      "glass": 1,
+      "metal": null,
+      "readout": "rgb(18, 56, 75)",
+      "turning": "false"
+    },
+    "dark": {
+      "canvas": 1,
+      "class": "wish-face wish-face-back wish-layered-front wish-layered-back",
+      "depth": 1,
+      "glass": 1,
+      "metal": "true",
+      "readout": "rgb(242, 243, 245)",
+      "turning": "false"
+    }
+  },
+  "lightLibraryTextures": [
+    {
+      "loaded": true,
+      "unresolved": false,
+      "bubbles": 10
+    },
+    {
+      "loaded": true,
+      "unresolved": false,
+      "bubbles": 10
+    },
+    {
+      "loaded": true,
+      "unresolved": false,
+      "bubbles": 10
+    }
+  ],
+  "darkLibraryTextures": [
+    {
+      "loaded": true,
+      "unresolved": false,
+      "bubbles": 10
+    },
+    {
+      "loaded": true,
+      "unresolved": false,
+      "bubbles": 10
+    },
+    {
+      "loaded": true,
+      "unresolved": false,
+      "bubbles": 10
+    }
+  ],
+  "lightLibraryViewer": {
+    "background": "rgba(251, 251, 252, 0.97)",
+    "buttons": [
+      {
+        "background": "rgb(36, 36, 38)",
+        "ink": "rgb(255, 255, 255)",
+        "text": "使用这张卡"
+      },
+      {
+        "background": "rgb(240, 240, 242)",
+        "ink": "rgb(28, 28, 31)",
+        "text": "返回"
+      }
+    ]
+  },
+  "darkLibraryViewer": {
+    "background": "rgba(21, 21, 23, 0.97)",
+    "buttons": [
+      {
+        "background": "rgb(242, 242, 244)",
+        "ink": "rgb(23, 23, 25)",
+        "text": "使用这张卡"
+      },
+      {
+        "background": "rgb(32, 32, 35)",
+        "ink": "rgb(243, 243, 245)",
+        "text": "返回"
+      }
+    ]
+  },
+  "libraryUse": {
+    "light": "周末出行已接通，还能花¥1,200",
+    "dark": "周末出行已接通，还能花¥1,200",
+    "keyboard": true
+  },
+  "halfProgress": {
+    "light": true,
+    "dark": true
+  },
+  "lightRedemption": {
+    "glass": 0,
+    "layers": 0,
+    "metalSurfaces": 1,
+    "text": "周末看展¥320周末看展已实现¥320购买日期2026年10月27日心愿余额扣减−¥320"
+  },
+  "darkRedemption": {
+    "glass": 0,
+    "layers": 0,
+    "metalSurfaces": 1,
+    "text": "周末看展¥320周末看展已实现¥320购买日期2026年10月27日心愿余额扣减−¥320"
+  },
+  "lightAchievedBack": {
+    "depth": 0,
+    "glass": 0,
+    "metal": "true",
+    "text": "周末看展已实现¥320购买日期2026年10月27日心愿余额扣减−¥320"
+  },
+  "darkAchievedBack": {
+    "depth": 0,
+    "glass": 0,
+    "metal": "true",
+    "text": "周末看展已实现¥320购买日期2026年10月27日心愿余额扣减−¥320"
+  },
+  "narrowDarkBack": {
+    "back": [
+      {
+        "glass": "none",
+        "overflow": false,
+        "ready": "true"
+      },
+      {
+        "glass": "none",
+        "overflow": false,
+        "ready": "true"
+      },
+      {
+        "glass": "none",
+        "overflow": false,
+        "ready": "true"
+      }
+    ],
+    "classes": "app large-text reduced",
+    "overflow": false,
+    "paints": [
+      "3",
+      "4",
+      "3",
+      "4",
+      "3",
+      "4"
+    ],
+    "width": 318
+  },
+  "idleMetal": true,
+  "narrowLightBack": {
+    "backColor": "rgb(18, 56, 75)",
+    "canvases": 0,
+    "overflow": false,
+    "theme": "light",
+    "width": 318
+  },
+  "narrowLightLibrary": {
+    "buttons": [
+      {
+        "background": "rgba(255, 255, 255, 0.94)",
+        "ink": "rgb(28, 28, 31)",
+        "text": "周末出行¥1,200"
+      }
+    ],
+    "overflow": false
+  },
+  "narrowDarkLibrary": {
+    "buttons": [
+      {
+        "background": "rgba(28, 28, 31, 0.9)",
+        "ink": "rgb(243, 243, 245)",
+        "text": "周末出行¥1,200"
+      }
+    ],
+    "overflow": false
+  },
+  "tabletDark": {
+    "images": [
+      {
+        "complete": true,
+        "width": 800
+      },
+      {
+        "complete": true,
+        "width": 800
+      },
+      {
+        "complete": true,
+        "width": 800
+      }
+    ],
+    "overflow": false,
+    "width": 766
+  },
+  "tabletLight": {
+    "images": [
+      {
+        "complete": true,
+        "width": 800
+      },
+      {
+        "complete": true,
+        "width": 800
+      },
+      {
+        "complete": true,
+        "width": 800
+      }
+    ],
+    "overflow": false,
+    "width": 766
+  },
+  "libraryThemeSwitch": {
+    "lightInk": true,
+    "variablesResolved": true,
+    "grayViewer": true
+  },
+  "lightWaterBounds": [
+    {
+      "loaded": true,
+      "water": false,
+      "bubbles": 0,
+      "waterY": null,
+      "variablesResolved": true
+    },
+    {
+      "loaded": true,
+      "water": true,
+      "bubbles": 10,
+      "waterY": "20",
+      "variablesResolved": true
+    },
+    {
+      "loaded": true,
+      "water": true,
+      "bubbles": 10,
+      "waterY": "20",
+      "variablesResolved": true
+    }
+  ],
+  "darkWaterBounds": [
+    {
+      "loaded": true,
+      "water": false,
+      "bubbles": 0,
+      "waterY": null,
+      "variablesResolved": true
+    },
+    {
+      "loaded": true,
+      "water": true,
+      "bubbles": 10,
+      "waterY": "20",
+      "variablesResolved": true
+    },
+    {
+      "loaded": true,
+      "water": true,
+      "bubbles": 10,
+      "waterY": "20",
+      "variablesResolved": true
+    }
+  ],
+  "lightUnpriced": {
+    "ink": "rgb(23, 106, 145)",
+    "overflow": false,
+    "text": "去看海未设金额填写金额兑换"
+  },
+  "darkUnpriced": {
+    "ink": "rgb(23, 106, 145)",
+    "overflow": false,
+    "text": "去看海未设金额填写金额兑换"
+  },
+  "staticFallback": {
+    "background": "radial-gradient(70% 42% at 37% 7%, rgba(255, 255, 255, 0.4), rgba(0, 0, 0, 0) 100%), linear-gradient(122deg, rgba(0, 0, 0, 0) 17%, rgba(255, 255, 255, 0.15) 37%, rgba(0, 0, 0, 0) 57%), radial-gradient(22% 75% at 62% 92%, rgba(16, 16, 18, 0.55), rgba(0, 0, 0, 0) 100%), none",
+    "canvases": 0,
+    "glass": 1,
+    "ink": "rgb(242, 243, 245)",
+    "turning": "false"
+  },
+  "console": {
+    "knownDeferredMutationObserver": true,
+    "otherMessages": []
+  },
+  "scope": {
+    "baseline": "59c9dd6",
+    "data": "isolated fixture; persist disabled; no phone ledger",
+    "motion": "existing timing, gesture and outcome code preserved; back inner normal follows existing face turn",
+    "notVerified": [
+      "all 21 routes",
+      "system reduced motion preference",
+      "VoiceOver",
+      "physical devices"
+    ]
+  }
+}
