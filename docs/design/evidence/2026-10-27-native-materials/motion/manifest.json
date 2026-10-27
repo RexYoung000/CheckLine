@@ -1,0 +1,38 @@
+[
+  {
+    "file": "insertion.mp4",
+    "source": "/tmp/checkline-native-final-record.mp4",
+    "sourceSHA256": "1b490b8c480a04ab970b807a710c02ffbbb832cc1f22288a712de659d49c8d6b",
+    "startSeconds": 53,
+    "requestedDurationSeconds": 7.2,
+    "actualDurationSeconds": 7.205596,
+    "speed": 1
+  },
+  {
+    "file": "flip.mp4",
+    "source": "/tmp/checkline-native-final-record.mp4",
+    "sourceSHA256": "1b490b8c480a04ab970b807a710c02ffbbb832cc1f22288a712de659d49c8d6b",
+    "startSeconds": 73,
+    "requestedDurationSeconds": 7.1,
+    "actualDurationSeconds": 7.101167,
+    "speed": 1
+  },
+  {
+    "file": "settlement.mp4",
+    "source": "/tmp/checkline-rewards-full.mp4",
+    "sourceSHA256": "3ca8b606cd3e417e352d6829afb982fe503bd916553722de2821866aeed154e3",
+    "startSeconds": 77.5,
+    "requestedDurationSeconds": 3.9,
+    "actualDurationSeconds": 3.913751,
+    "speed": 1
+  },
+  {
+    "file": "redemption.mp4",
+    "source": "/tmp/checkline-reward-loaded.mp4",
+    "sourceSHA256": "a0f317a5ef898b75e05b517ac813c7bf1d4d59b7a129bb1e25031bac4bd3f6d6",
+    "startSeconds": 10.8,
+    "requestedDurationSeconds": 4.2,
+    "actualDurationSeconds": 3.317342,
+    "speed": 1
+  }
+]

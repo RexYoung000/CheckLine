@@ -76,6 +76,7 @@ import XCTest
         XCTAssertTrue(app.descendants(matching: .any)["native.outcome.result"].waitForExistence(timeout: 5),app.debugDescription)
         XCTAssertTrue(app.staticTexts["周末旅行"].exists)
         XCTAssertTrue(app.buttons["回到预算"].exists)
+        XCTAssertTrue(app.buttons["native.outcome.skip"].waitForNonExistence(timeout: 6), "The saved settlement animation must finish without another ledger write.")
         attach(app,"native-settlement-result-current-page")
     }
     func testCoverUpdatesWithinSameSheetAndUnpricedWishCannotRedeem() {
@@ -129,7 +130,8 @@ import XCTest
         if app.buttons["Done"].firstMatch.exists { app.buttons["Done"].firstMatch.tap() }
         let priceSave=app.buttons["native.wish.price.save"]
         XCTAssertTrue(priceSave.isHittable);priceSave.tap()
-        XCTAssertTrue(app.buttons["native.wish.redeem"].firstMatch.isEnabled)
+        XCTAssertFalse(app.buttons["native.wish.redeem"].firstMatch.isEnabled,
+                       "Adding a price does not fund an empty wallet; coverage must reach 100%.")
     }
     func testVoiceOverReachesHolderActionsAndBudgetAmount() throws {
         guard #available(iOS 27.0,*) else { throw XCTSkip("VoiceOver automation requires iOS 27.") }
@@ -168,13 +170,15 @@ import XCTest
     }
     func testExpandedWishPurchaseReturnsToRealizedList() {
         let app=launch("wishes")
-        let expand=app.buttons["native.wish.expand"].firstMatch
+        let fundedCard=app.descendants(matching: .any).matching(NSPredicate(format: "identifier BEGINSWITH %@", "native.wish.card.")).containing(.staticText, identifier: "一副新耳机").firstMatch
+        let expand=fundedCard.buttons["native.wish.expand"].firstMatch
         XCTAssertTrue(expand.waitForExistence(timeout: 10));expand.tap()
         XCTAssertTrue(app.descendants(matching: .any)["native.wish.expanded"].waitForExistence(timeout: 5),app.debugDescription)
         let card=app.descendants(matching: .any).matching(NSPredicate(format: "identifier BEGINSWITH %@", "native.wish.card.")).firstMatch
         card.coordinate(withNormalizedOffset: CGVector(dx: 0.5,dy: 0.5)).tap()
         let redeem=app.buttons["native.wish.redeem"].firstMatch
-        XCTAssertTrue(redeem.waitForExistence(timeout: 5));redeem.tap()
+        waitUntilActionable(redeem)
+        redeem.tap()
         let amount=app.textFields["wallet.wishes.actual"]
         XCTAssertTrue(amount.waitForExistence(timeout: 5));amount.tap();amount.typeText("300")
         app.buttons["完成输入"].firstMatch.tap()
@@ -182,6 +186,9 @@ import XCTest
         reveal(consent,app);consent.tap()
         app.buttons["wallet.wishes.confirm"].tap()
         XCTAssertTrue(app.buttons["查看已实现"].waitForExistence(timeout: 5))
+        attach(app,"native-expanded-shell-break")
+        XCTAssertTrue(app.buttons["native.outcome.skip"].waitForNonExistence(timeout: 6), "Let the full shell-break and collection reveal settle before leaving.")
+        attach(app,"native-expanded-collection-revealed")
         app.buttons["查看已实现"].tap()
         XCTAssertTrue(app.buttons["native.wish.balance"].waitForExistence(timeout: 5),app.debugDescription)
         XCTAssertTrue(app.segmentedControls["native.wish.tabs"].buttons["已实现"].isSelected)
@@ -209,6 +216,11 @@ import XCTest
     }
     private func reveal(_ element: XCUIElement,_ app: XCUIApplication) {
         for _ in 0..<8 { if element.isHittable { return };app.scrollViews.firstMatch.swipeUp(velocity: .slow) }
+    }
+    private func waitUntilActionable(_ element: XCUIElement, file: StaticString = #filePath, line: UInt = #line) {
+        let ready = XCTNSPredicateExpectation(predicate: NSPredicate(format: "exists == true AND enabled == true AND hittable == true"), object: element)
+        XCTAssertEqual(XCTWaiter.wait(for: [ready], timeout: 8), .completed,
+                       "The funded wish's redemption button must become enabled and hittable after its flip settles.", file: file, line: line)
     }
     private func attach(_ app: XCUIApplication,_ name: String) {
         let shot=XCTAttachment(screenshot: app.screenshot());shot.name=name;shot.lifetime = .keepAlways;add(shot)

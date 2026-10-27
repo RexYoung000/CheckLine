@@ -100,7 +100,7 @@ import UIKit
             for morph: CGFloat in [0, 1] {
                 for time in [0.0, 9, 35, 900000000] {
                     let particles = LiquidBubbleField.ambient(size: size, level: level, morph: morph, time: time, seed: 41)
-                    #expect(particles.count == 22 && particles.filter { $0.opacity > 0.15 }.count > 10)
+                    #expect(particles.count == 28 && particles.filter { $0.opacity > 0.15 }.count > 10)
                     for particle in particles {
                         #expect(particle.center.x >= 0 && particle.center.x <= size.width)
                         #expect(particle.center.y >= 0 && particle.center.y <= size.height)

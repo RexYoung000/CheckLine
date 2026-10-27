@@ -94,7 +94,8 @@ struct CreateWishSheet: View {
     @State private var showsCover = false
     @State private var errorText: String?
     @State private var discardRequested = false
-    @FocusState private var fieldFocused: Bool
+    private enum Field: Hashable { case name, amount }
+    @FocusState private var fieldFocused: Field?
     @Environment(\.dismiss) private var dismiss
     @Environment(\.dynamicTypeSize) private var typeSize
 
@@ -114,15 +115,19 @@ struct CreateWishSheet: View {
                 VStack(alignment: .leading, spacing: 24) {
                     VStack(alignment: .leading, spacing: 12) {
                         Text(String(localized: "wallet.wishes.name")).font(.subheadline).foregroundStyle(PaperTheme.muted)
-                        TextField("", text: field(\.name)).font(.title3).focused($fieldFocused)
+                        TextField("", text: field(\.name)).font(.title3).focused($fieldFocused, equals: .name)
                             .accessibilityLabel(String(localized: "wallet.wishes.name")).accessibilityIdentifier("wallet.wishes.name")
                             .onChange(of: task.draft.name) { _, value in if value.count > 80 { task.draft.name = String(value.prefix(80)) } }
                     }.padding(18).walletSurface(radius: 18)
+                        .overlay(RoundedRectangle(cornerRadius: 18).strokeBorder(fieldFocused == .name ? PaperTheme.focus : .clear, lineWidth: 1.5))
                     Button { showsCover = true } label: {
                         ZStack(alignment: .topLeading) {
                             WishCoverArtwork(cover: workspace.wishCovers.cover(for: task.draft.entityID))
                             Label(String(localized: "native.cover.title"), systemImage: "photo").font(.subheadline).padding(18)
-                        }.frame(height: 145).modifier(NativeGlassCard())
+                        }.frame(height: 145)
+                            .background { WishCardBackdrop(radius: 28) }
+                            .overlay { WishGlassPane(radius: 28) }
+                            .clipShape(RoundedRectangle(cornerRadius: 28))
                     }.buttonStyle(.plain).accessibilityIdentifier("native.cover.open")
                     estimateFields
                     LocalDraftFailureView(task: task)
@@ -149,7 +154,7 @@ struct CreateWishSheet: View {
                         }
                     }
                     ToolbarItemGroup(placement: .keyboard) {
-                        Spacer(); Button(String(localized: "ui.keyboard.done")) { fieldFocused = false }
+                        Spacer(); Button(String(localized: "ui.keyboard.done")) { fieldFocused = nil }
                     }
                 }
         }.modifier(NativeDrawerStyle())
@@ -179,7 +184,7 @@ struct CreateWishSheet: View {
         return layout {
             VStack(alignment: .leading, spacing: 12) {
                 Text(String(localized: "wallet.wishes.estimate")).font(.subheadline).foregroundStyle(PaperTheme.muted)
-                TextField("0.00", text: field(\.amount)).keyboardType(AmountKeyboard.type).font(.largeTitle).monospacedDigit().focused($fieldFocused)
+                TextField("0.00", text: field(\.amount)).keyboardType(AmountKeyboard.type).font(.largeTitle).monospacedDigit().focused($fieldFocused, equals: .amount)
                     .accessibilityLabel(String(localized: "wallet.wishes.estimate")).accessibilityIdentifier("wallet.wishes.estimate")
             }.frame(maxWidth: .infinity, alignment: .leading)
             VStack(alignment: .leading, spacing: 8) {
@@ -188,6 +193,7 @@ struct CreateWishSheet: View {
                     .accessibilityIdentifier("wallet.wishes.currency")
             }
         }.padding(18).walletSurface(radius: 18)
+            .overlay(RoundedRectangle(cornerRadius: 18).strokeBorder(fieldFocused == .amount ? PaperTheme.focus : .clear, lineWidth: 1.5))
     }
 
     private func save() {
@@ -227,17 +233,19 @@ struct WishPurchaseSummary: View {
 }
 
 struct WishDetailView: View {
+    @Environment(\.accessibilityReduceTransparency) private var reduceTransparency
     @Bindable var workspace: CheckLineWorkspace
     var wishID: UUID
     @State private var redeem = false
     @State private var expanded = false
     @State private var price = false
+    @State private var referenceQuote = false
     @Environment(\.dismiss) private var dismiss
     var body: some View {
         ScrollView {
             VStack(spacing: 24) {
                 if let wish = workspace.ledger.wishes[wishID] {
-                    NativeWishCard(workspace: workspace, wish: wish, onExpand: { expanded = true }, onRedeem: { redeem = true }, onPrice: { price = true })
+                    NativeWishCard(workspace: workspace, wish: wish, isActive: !redeem && !expanded && !price && !referenceQuote, onExpand: { expanded = true }, onRedeem: { redeem = true }, onPrice: { price = true }, onQuote: { referenceQuote = true })
                     if wish.state == .completed, let redemption = workspace.ledger.redemptions.values.first(where: { $0.wishID == wishID && $0.state == .completed }) {
                         WishPurchaseSummary(redemption: redemption, entry: workspace.ledger.walletEntries[redemption.walletEntryID]).padding(20).walletSurface()
                     }
@@ -247,15 +255,18 @@ struct WishDetailView: View {
                 }
             }.padding(22).frame(maxWidth: 560).frame(maxWidth: .infinity)
         }.background(PaperTheme.canvas.ignoresSafeArea())
+            .blur(radius: expanded && !reduceTransparency ? 8 : 0).allowsHitTesting(!expanded).accessibilityHidden(expanded)
             .navigationTitle(String(localized: "wallet.wishes.detail")).navigationBarTitleDisplayMode(.inline)
             .toolbar(.visible, for: .navigationBar).toolbar(.hidden, for: .tabBar, .bottomBar)
             .sheet(isPresented: $redeem) { WishRedemptionView(workspace: workspace, wishID: wishID).modifier(NativeDrawerStyle()) }
             .sheet(isPresented: $price) { if let wish = workspace.ledger.wishes[wishID] { WishPriceSheet(workspace: workspace, wish: wish) } }
-            .fullScreenCover(isPresented: $expanded) { ExpandedWishView(workspace: workspace, wishID: wishID) }
+            .sheet(isPresented: $referenceQuote) { if let wish = workspace.ledger.wishes[wishID] { WishReferenceQuoteView(workspace: workspace, wish: wish) } }
+            .fullScreenCover(isPresented: $expanded) { ExpandedWishView(workspace: workspace, wishID: wishID).presentationBackground(.clear) }
     }
 }
 
 struct WishRedemptionView: View {
+    @Environment(\.accessibilityReduceTransparency) private var reduceTransparency
     @Bindable var workspace: CheckLineWorkspace
     let wishID: UUID
     @State private var task: LocalTaskDraftSession
@@ -272,7 +283,10 @@ struct WishRedemptionView: View {
     init(workspace: CheckLineWorkspace, wishID: UUID) {
         self.workspace = workspace
         self.wishID = wishID
-        _task = State(initialValue: LocalTaskDraftSession(store: workspace.draftStore, kind: "wishRedemption", currency: workspace.ledger.wishes[wishID]?.currencyCode ?? workspace.ledger.walletSettings.walletCurrencyCode, wishID: wishID))
+        let currency = workspace.ledger.wishes[wishID]?.currencyCode ?? workspace.ledger.walletSettings.walletCurrencyCode
+        let session = LocalTaskDraftSession(store: workspace.draftStore, kind: "wishRedemption", currency: currency, wishID: wishID)
+        session.prefillReference(try? workspace.wishReferenceQuotes.reference(for: wishID, source: currency, target: workspace.ledger.walletSettings.walletCurrencyCode))
+        _task = State(initialValue: session)
     }
 
     private var wish: Wish? { workspace.ledger.wishes[wishID] }
@@ -280,7 +294,7 @@ struct WishRedemptionView: View {
     private var currency: String { task.draft.currency }
     private var needsQuote: Bool { currency != walletCurrency }
     private var parsed: Decimal? { MoneyFormat.parseAmount(task.draft.amount) }
-    private var rate: Binding<String> { Binding(get: { task.draft.exchangeRateText ?? "" }, set: { task.draft.exchangeRateText = $0 }) }
+    private var rate: Binding<String> { Binding(get: { task.draft.exchangeRateText ?? "" }, set: { task.draft.exchangeRateText = $0; task.draft.fieldsTouched = true }) }
     private var quoteDate: Binding<Date> { Binding(get: { task.draft.exchangeQuotedAt ?? task.draft.occurredAt }, set: { task.draft.exchangeQuotedAt = $0 }) }
     private var quote: ExchangeQuote? {
         guard needsQuote, let value = MoneyFormat.parseAmount(rate.wrappedValue) else { return nil }
@@ -292,7 +306,7 @@ struct WishRedemptionView: View {
     }
     private var preview: WishRedemptionPreview? { try? previewResult?.get() }
     private var saved: WishRedemption? { workspace.ledger.redemptions.values.first { $0.wishID == wishID && $0.state == .completed } }
-    private var canSubmit: Bool { purchased && preview != nil && task.canSubmit && saved == nil && wish?.targetAmount != nil }
+    private var canSubmit: Bool { purchased && preview != nil && task.canSubmit && saved == nil && wish.map { workspace.wishCoverage(for: $0).canRedeem } == true }
     private func field<Value>(_ path: WritableKeyPath<TaskDraft, Value>) -> Binding<Value> {
         Binding(get: { task.draft[keyPath: path] }, set: { task.draft[keyPath: path] = $0; task.draft.fieldsTouched = true })
     }
@@ -312,6 +326,9 @@ struct WishRedemptionView: View {
                                 Button(String(localized: "native.wish.setPrice")) { priceSheet=true }.buttonStyle(PaperQuietButtonStyle())
                             }
                             purchaseFields
+                            if !workspace.wishCoverage(for: wish).canRedeem {
+                                Text(String(localized: "native.wish.coverageRequired")).font(.subheadline).foregroundStyle(PaperTheme.muted)
+                            }
                             if !amountFocused && !task.draft.amount.isEmpty && parsed == nil {
                                 Text(String(localized: "wallet.wishes.invalid")).font(.caption).foregroundStyle(PaperTheme.accent)
                                     .accessibilityIdentifier("wallet.wishes.invalidAmount")
@@ -358,7 +375,9 @@ struct WishRedemptionView: View {
                         }
                     }
                 }
-        }.overlay {
+        }.blur(radius: outcome == nil || reduceTransparency ? 0 : 8)
+            .allowsHitTesting(outcome == nil).accessibilityHidden(outcome != nil)
+            .overlay {
             if let outcome { OutcomeCelebration(receipt: outcome) {
                 chrome?.wishesShowCompleted = true
                 chrome?.selectedTab = .wishes
@@ -376,7 +395,12 @@ struct WishRedemptionView: View {
             purchased = false
             if saved != nil { try? task.clear() }
         }.onChange(of: task.draft.amount) { _, _ in purchased = false; failed = false }
-            .onChange(of: task.draft.currency) { _, _ in purchased = false; failed = false; amountFocused = false }
+            .onChange(of: task.draft.currency) { _, value in
+                purchased = false; failed = false; amountFocused = false
+                let reference = try? workspace.wishReferenceQuotes.reference(for: wishID, source: value, target: walletCurrency)
+                task.draft.exchangeRateText = reference?.rate.description
+                task.draft.exchangeQuotedAt = reference?.quotedAt
+            }
             .onChange(of: task.draft.exchangeRateText) { _, _ in purchased = false; failed = false }
             .onChange(of: workspace.ledger) { _, _ in purchased = false }
     }
@@ -395,6 +419,7 @@ struct WishRedemptionView: View {
                     .accessibilityIdentifier("wallet.wishes.purchaseCurrency")
             }
         }.padding(18).walletSurface()
+            .overlay(RoundedRectangle(cornerRadius: 24).strokeBorder(amountFocused ? PaperTheme.focus : .clear, lineWidth: 1.5))
     }
 
     private var walletImpact: some View {

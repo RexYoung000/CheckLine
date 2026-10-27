@@ -192,7 +192,8 @@ struct AgentTaskPanel: View {
                     } label: {
                         CheckLineIcon(symbol: voiceCapture.isListening ? "stop.fill" : "mic", size: 20)
                             .frame(width: 44, height: 44)
-                            .background(voiceCapture.isListening ? PaperTheme.accent.opacity(0.15) : Color.clear, in: Circle())
+                            .foregroundStyle(voiceCapture.isListening ? PaperTheme.selectedInk : PaperTheme.ink)
+                            .background(voiceCapture.isListening ? PaperTheme.selectedFill : Color.clear, in: Circle())
                     }.accessibilityLabel(String(localized: voiceCapture.isListening ? "ui.voice.finish" : "ui.agent.voice"))
                         .accessibilityIdentifier("wallet.agent.voice")
                         .disabled(workspace.isWorking || (voiceCapture.isActive && !voiceCapture.isListening))
@@ -201,14 +202,17 @@ struct AgentTaskPanel: View {
                         Task { await workspace.submitText() }
                     } label: {
                         CheckLineIcon(symbol: "arrow.up", size: 20)
-                            .foregroundStyle(canSend ? Color.white : PaperTheme.muted)
+                            .foregroundStyle(canSend ? PaperTheme.primaryInk : PaperTheme.muted)
                             .frame(width: 44, height: 44)
-                            .background(canSend ? PaperTheme.accent : PaperTheme.stroke, in: Circle())
+                            .background(canSend ? PaperTheme.primary : PaperTheme.stroke, in: Circle())
                     }.disabled(!canSend)
                         .accessibilityLabel(String(localized: "v1.agent.send"))
                         .accessibilityIdentifier("wallet.agent.send")
                 }
-            }.padding(16).walletSurface(radius: 24)
+            }
+            .padding(16)
+            .walletSurface(radius: 24)
+            .paperFocusRing(inputFocused, radius: 24)
 
             if workspace.lastUndo != nil && !workspace.showsStructuredConfirm {
                 Button(String(localized: "action.undo")) {

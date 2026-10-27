@@ -13,7 +13,7 @@ struct SettingsPlaceholderView: View {
                     HStack(spacing: 14) {
                         CheckLineIcon(symbol: "iphone.gen3")
                             .font(.title3)
-                            .foregroundStyle(PaperTheme.accent)
+                            .foregroundStyle(PaperTheme.muted)
                             .frame(width: 48, height: 48)
                             .walletSurface(radius: 16)
                         VStack(alignment: .leading, spacing: 6) {
@@ -30,6 +30,7 @@ struct SettingsPlaceholderView: View {
                             }
                         }
                         .pickerStyle(.segmented)
+                        .tint(PaperTheme.focus)
                     }
                     .padding(16)
                     .walletSurface()
@@ -83,7 +84,7 @@ struct SettingsPlaceholderView: View {
     private func settingsRow<Destination: View>(title: String, symbol: String, summary: String? = nil, @ViewBuilder destination: () -> Destination) -> some View {
         NavigationLink(destination: destination) {
             HStack(spacing: 14) {
-                CheckLineIcon(symbol: symbol).font(.body).foregroundStyle(PaperTheme.accent).frame(width: 34)
+                CheckLineIcon(symbol: symbol).font(.body).foregroundStyle(PaperTheme.muted).frame(width: 34)
                 ViewThatFits(in: .horizontal) {
                     HStack(spacing: 12) {
                         Text(title).font(.body).foregroundStyle(PaperTheme.ink)
@@ -121,7 +122,7 @@ struct SettingsPlaceholderView: View {
                     Text(String(localized: key)); Text(value).font(.subheadline).foregroundStyle(PaperTheme.muted)
                 }
             }
-        }.font(.body).tint(PaperTheme.accent).padding(16)
+        }.font(.body).tint(PaperTheme.muted).padding(16)
     }
 }
 

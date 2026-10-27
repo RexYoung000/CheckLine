@@ -19,6 +19,7 @@ struct WalletExchangeQuoteFields: View {
                 .keyboardType(AmountKeyboard.type)
                 .textContentType(.none)
                 .padding(16).walletSurface(radius: 18)
+                .paperFocusRing(rateFocused, radius: 18)
                 .accessibilityIdentifier("wallet.exchange.rate")
                 .simultaneousGesture(TapGesture().onEnded { rateFocused = true })
                 .onChange(of: rateText) { _, _ in quotedAt = Date() }
@@ -35,6 +36,7 @@ struct WalletExchangeQuoteFields: View {
 }
 
 struct SettlementReviewView: View {
+    @Environment(\.accessibilityReduceTransparency) private var reduceTransparency
     @Bindable var workspace: CheckLineWorkspace
     let periodID: UUID
     var endingEarly = false
@@ -175,6 +177,8 @@ struct SettlementReviewView: View {
                 }
             }
         }
+        .blur(radius: outcome == nil || reduceTransparency ? 0 : 8)
+        .allowsHitTesting(outcome == nil).accessibilityHidden(outcome != nil)
         .overlay { if let outcome { OutcomeCelebration(receipt: outcome) { dismiss() } } }
         .modifier(NativeDrawerStyle())
         .onAppear { reviewedLedger = workspace.ledger }

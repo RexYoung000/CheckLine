@@ -163,7 +163,7 @@ struct CreateComposerSheet: View {
         }
         .frame(maxWidth: .infinity)
         .presentationBackground(PaperTheme.canvas)
-        .tint(PaperTheme.accent)
+        .tint(PaperTheme.focus)
         .toolbar {
             ToolbarItemGroup(placement: .keyboard) {
                 if focusedFormField != nil {
@@ -450,7 +450,10 @@ struct CreateComposerSheet: View {
                             .font(.title3).frame(minHeight: 44).focused($focusedFormField, equals: .name)
                             .accessibilityLabel(String(localized: "v1.composer.name.placeholder"))
                             .accessibilityIdentifier("wallet.composer.name")
-                    }.padding(18).walletSurface()
+                    }
+                    .padding(18)
+                    .walletSurface()
+                    .paperFocusRing(focusedFormField == .name)
                     VStack(alignment: .leading, spacing: 16) {
                         let layout = typeSize.isAccessibilitySize ? AnyLayout(VStackLayout(alignment: .leading, spacing: 12)) : AnyLayout(HStackLayout(spacing: 12))
                         layout {
@@ -466,7 +469,10 @@ struct CreateComposerSheet: View {
                                 currencyButton
                             }
                         }
-                    }.padding(18).walletSurface()
+                    }
+                    .padding(18)
+                    .walletSurface()
+                    .paperFocusRing(focusedFormField == .amount)
                     VStack(alignment: .leading, spacing: 14) {
                         if typeSize.isAccessibilitySize {
                             cyclePicker.pickerStyle(.menu)
@@ -485,7 +491,8 @@ struct CreateComposerSheet: View {
                         currencyButton
                         PaperHeroField(
                             placeholder: String(localized: "v1.composer.amount.placeholder"),
-                            text: field(\.amount), keyboard: AmountKeyboard.type
+                            text: field(\.amount), keyboard: AmountKeyboard.type,
+                            isFocused: focusedFormField == .amount
                         ).focused($focusedFormField, equals: .amount)
                             .accessibilityIdentifier("wallet.composer.amount")
                     }.padding(.vertical, 16)
@@ -494,10 +501,17 @@ struct CreateComposerSheet: View {
                             merchantRow
                             selectionRow("v1.agent.attribution", value: currentAttributionTitle) { showingCardPicker = true }
                             selectionRow("v1.composer.date", value: occurredAt.formatted(date: .abbreviated, time: .omitted)) { showingDatePicker = true }
-                        }.padding(4).walletSurface()
+                        }
+                        .padding(4)
+                        .walletSurface()
                         DisclosureGroup(isExpanded: $extrasExpanded) {
                             noteCard
-                            PaperField(title: String(localized: "ui.record.rawText"), text: Binding(get: { workspace.taskSourceText }, set: { workspace.taskSourceText = $0 }), axis: .vertical).focused($focusedFormField, equals: .source)
+                            PaperField(
+                                title: String(localized: "ui.record.rawText"),
+                                text: Binding(get: { workspace.taskSourceText }, set: { workspace.taskSourceText = $0 }),
+                                axis: .vertical,
+                                isFocused: focusedFormField == .source
+                            ).focused($focusedFormField, equals: .source)
                             attachmentInput
                         } label: {
                             CheckLineIconLabel(note.isEmpty && workspace.taskSourceText.isEmpty && workspace.taskDraft.attachments.isEmpty ? String(localized: "ui.record.extras") : String(format: String(localized: "ui.record.extrasCount"), note.count + workspace.taskSourceText.count, workspace.taskDraft.attachments.count), symbol: "text.badge.plus")
@@ -558,6 +572,7 @@ struct CreateComposerSheet: View {
         }
         .padding(.horizontal, 16)
         .frame(minHeight: 52)
+        .paperFocusRing(focusedFormField == .merchant, radius: 16)
     }
 
     private var noteCard: some View {
@@ -592,6 +607,7 @@ struct CreateComposerSheet: View {
         }
         .padding(12)
         .walletSurface()
+        .paperFocusRing(focusedFormField == .note)
     }
 
     private var attachmentInput: some View {

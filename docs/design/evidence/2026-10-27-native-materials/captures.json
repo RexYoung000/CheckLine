@@ -1,0 +1,866 @@
+[
+  {
+    "group": "main",
+    "name": "liquid-draw-count-visible-after-agent",
+    "path": "main-liquid-draw-count-visible-after-agent.txt",
+    "test": "NativeLiquidPerformanceUITests/testAgentCoverPausesLiquidDrawIntervalsAndReturnResumes()",
+    "device": "iPhone 18 Pro",
+    "timestamp": 1793106757.752
+  },
+  {
+    "group": "main",
+    "name": "liquid-draw-count-agent-covered",
+    "path": "main-liquid-draw-count-agent-covered.txt",
+    "test": "NativeLiquidPerformanceUITests/testAgentCoverPausesLiquidDrawIntervalsAndReturnResumes()",
+    "device": "iPhone 18 Pro",
+    "timestamp": 1793106748.276
+  },
+  {
+    "group": "main",
+    "name": "liquid-draw-count-visible-before-agent",
+    "path": "main-liquid-draw-count-visible-before-agent.txt",
+    "test": "NativeLiquidPerformanceUITests/testAgentCoverPausesLiquidDrawIntervalsAndReturnResumes()",
+    "device": "iPhone 18 Pro",
+    "timestamp": 1793106738.363
+  },
+  {
+    "group": "main",
+    "name": "material-dark-collection",
+    "path": "screens/main-material-dark-collection.jpg",
+    "test": "NativeMaterialAcceptanceUITests/testCollectionPreviewEntrances()",
+    "device": "iPhone 18 Pro",
+    "timestamp": 1793108719.223
+  },
+  {
+    "group": "main",
+    "name": "material-dark-redemption",
+    "path": "screens/main-material-dark-redemption.jpg",
+    "test": "NativeMaterialAcceptanceUITests/testDarkPreviewEntrances()",
+    "device": "iPhone 18 Pro",
+    "timestamp": 1793108227.071
+  },
+  {
+    "group": "main",
+    "name": "material-dark-settlement-fx",
+    "path": "screens/main-material-dark-settlement-fx.jpg",
+    "test": "NativeMaterialAcceptanceUITests/testDarkPreviewEntrances()",
+    "device": "iPhone 18 Pro",
+    "timestamp": 1793108219.118
+  },
+  {
+    "group": "main",
+    "name": "material-dark-settings",
+    "path": "screens/main-material-dark-settings.jpg",
+    "test": "NativeMaterialAcceptanceUITests/testDarkPreviewEntrances()",
+    "device": "iPhone 18 Pro",
+    "timestamp": 1793108211.26
+  },
+  {
+    "group": "main",
+    "name": "material-dark-agent",
+    "path": "screens/main-material-dark-agent.jpg",
+    "test": "NativeMaterialAcceptanceUITests/testDarkPreviewEntrances()",
+    "device": "iPhone 18 Pro",
+    "timestamp": 1793108203.398
+  },
+  {
+    "group": "main",
+    "name": "material-dark-wish-cover",
+    "path": "screens/main-material-dark-wish-cover.jpg",
+    "test": "NativeMaterialAcceptanceUITests/testDarkPreviewEntrances()",
+    "device": "iPhone 18 Pro",
+    "timestamp": 1793108195.461
+  },
+  {
+    "group": "main",
+    "name": "material-dark-create-wish",
+    "path": "screens/main-material-dark-create-wish.jpg",
+    "test": "NativeMaterialAcceptanceUITests/testDarkPreviewEntrances()",
+    "device": "iPhone 18 Pro",
+    "timestamp": 1793108187.268
+  },
+  {
+    "group": "main",
+    "name": "material-dark-create-budget",
+    "path": "screens/main-material-dark-create-budget.jpg",
+    "test": "NativeMaterialAcceptanceUITests/testDarkPreviewEntrances()",
+    "device": "iPhone 18 Pro",
+    "timestamp": 1793108178.803
+  },
+  {
+    "group": "main",
+    "name": "material-dark-record",
+    "path": "screens/main-material-dark-record.jpg",
+    "test": "NativeMaterialAcceptanceUITests/testDarkPreviewEntrances()",
+    "device": "iPhone 18 Pro",
+    "timestamp": 1793108170.374
+  },
+  {
+    "group": "main",
+    "name": "material-dark-wallet-entry",
+    "path": "screens/main-material-dark-wallet-entry.jpg",
+    "test": "NativeMaterialAcceptanceUITests/testDarkPreviewEntrances()",
+    "device": "iPhone 18 Pro",
+    "timestamp": 1793108161.625
+  },
+  {
+    "group": "main",
+    "name": "material-dark-wallet",
+    "path": "screens/main-material-dark-wallet.jpg",
+    "test": "NativeMaterialAcceptanceUITests/testDarkPreviewEntrances()",
+    "device": "iPhone 18 Pro",
+    "timestamp": 1793108153.237
+  },
+  {
+    "group": "main",
+    "name": "material-dark-wish-expanded",
+    "path": "screens/main-material-dark-wish-expanded.jpg",
+    "test": "NativeMaterialAcceptanceUITests/testDarkPreviewEntrances()",
+    "device": "iPhone 18 Pro",
+    "timestamp": 1793108145.365
+  },
+  {
+    "group": "main",
+    "name": "material-dark-wishes",
+    "path": "screens/main-material-dark-wishes.jpg",
+    "test": "NativeMaterialAcceptanceUITests/testDarkPreviewEntrances()",
+    "device": "iPhone 18 Pro",
+    "timestamp": 1793108135.318
+  },
+  {
+    "group": "main",
+    "name": "material-dark-budget-info",
+    "path": "screens/main-material-dark-budget-info.jpg",
+    "test": "NativeMaterialAcceptanceUITests/testDarkPreviewEntrances()",
+    "device": "iPhone 18 Pro",
+    "timestamp": 1793108127.139
+  },
+  {
+    "group": "main",
+    "name": "material-dark-history-review",
+    "path": "screens/main-material-dark-history-review.jpg",
+    "test": "NativeMaterialAcceptanceUITests/testDarkPreviewEntrances()",
+    "device": "iPhone 18 Pro",
+    "timestamp": 1793108118.354
+  },
+  {
+    "group": "main",
+    "name": "material-dark-calendar",
+    "path": "screens/main-material-dark-calendar.jpg",
+    "test": "NativeMaterialAcceptanceUITests/testDarkPreviewEntrances()",
+    "device": "iPhone 18 Pro",
+    "timestamp": 1793108109.389
+  },
+  {
+    "group": "main",
+    "name": "material-dark-expense-detail",
+    "path": "screens/main-material-dark-expense-detail.jpg",
+    "test": "NativeMaterialAcceptanceUITests/testDarkPreviewEntrances()",
+    "device": "iPhone 18 Pro",
+    "timestamp": 1793108101.222
+  },
+  {
+    "group": "main",
+    "name": "material-dark-records",
+    "path": "screens/main-material-dark-records.jpg",
+    "test": "NativeMaterialAcceptanceUITests/testDarkPreviewEntrances()",
+    "device": "iPhone 18 Pro",
+    "timestamp": 1793108092.386
+  },
+  {
+    "group": "main",
+    "name": "material-dark-budget-detail",
+    "path": "screens/main-material-dark-budget-detail.jpg",
+    "test": "NativeMaterialAcceptanceUITests/testDarkPreviewEntrances()",
+    "device": "iPhone 18 Pro",
+    "timestamp": 1793108083.909
+  },
+  {
+    "group": "main",
+    "name": "material-dark-library",
+    "path": "screens/main-material-dark-library.jpg",
+    "test": "NativeMaterialAcceptanceUITests/testDarkPreviewEntrances()",
+    "device": "iPhone 18 Pro",
+    "timestamp": 1793108075.324
+  },
+  {
+    "group": "main",
+    "name": "material-dark-records-layer",
+    "path": "screens/main-material-dark-records-layer.jpg",
+    "test": "NativeMaterialAcceptanceUITests/testDarkPreviewEntrances()",
+    "device": "iPhone 18 Pro",
+    "timestamp": 1793108067.147
+  },
+  {
+    "group": "main",
+    "name": "material-dark-budgets",
+    "path": "screens/main-material-dark-budgets.jpg",
+    "test": "NativeMaterialAcceptanceUITests/testDarkPreviewEntrances()",
+    "device": "iPhone 18 Pro",
+    "timestamp": 1793108059.077
+  },
+  {
+    "group": "main",
+    "name": "material-light-collection",
+    "path": "screens/main-material-light-collection.jpg",
+    "test": "NativeMaterialAcceptanceUITests/testCollectionPreviewEntrances()",
+    "device": "iPhone 18 Pro",
+    "timestamp": 1793108710.389
+  },
+  {
+    "group": "main",
+    "name": "material-light-redemption",
+    "path": "screens/main-material-light-redemption.jpg",
+    "test": "NativeMaterialAcceptanceUITests/testLightPreviewEntrances()",
+    "device": "iPhone 18 Pro",
+    "timestamp": 1793108408.322
+  },
+  {
+    "group": "main",
+    "name": "material-light-settlement-fx",
+    "path": "screens/main-material-light-settlement-fx.jpg",
+    "test": "NativeMaterialAcceptanceUITests/testLightPreviewEntrances()",
+    "device": "iPhone 18 Pro",
+    "timestamp": 1793108400.631
+  },
+  {
+    "group": "main",
+    "name": "material-light-settings",
+    "path": "screens/main-material-light-settings.jpg",
+    "test": "NativeMaterialAcceptanceUITests/testLightPreviewEntrances()",
+    "device": "iPhone 18 Pro",
+    "timestamp": 1793108392.884
+  },
+  {
+    "group": "main",
+    "name": "material-light-agent",
+    "path": "screens/main-material-light-agent.jpg",
+    "test": "NativeMaterialAcceptanceUITests/testLightPreviewEntrances()",
+    "device": "iPhone 18 Pro",
+    "timestamp": 1793108385.145
+  },
+  {
+    "group": "main",
+    "name": "material-light-wish-cover",
+    "path": "screens/main-material-light-wish-cover.jpg",
+    "test": "NativeMaterialAcceptanceUITests/testLightPreviewEntrances()",
+    "device": "iPhone 18 Pro",
+    "timestamp": 1793108377.419
+  },
+  {
+    "group": "main",
+    "name": "material-light-create-wish",
+    "path": "screens/main-material-light-create-wish.jpg",
+    "test": "NativeMaterialAcceptanceUITests/testLightPreviewEntrances()",
+    "device": "iPhone 18 Pro",
+    "timestamp": 1793108369.576
+  },
+  {
+    "group": "main",
+    "name": "material-light-create-budget",
+    "path": "screens/main-material-light-create-budget.jpg",
+    "test": "NativeMaterialAcceptanceUITests/testLightPreviewEntrances()",
+    "device": "iPhone 18 Pro",
+    "timestamp": 1793108361.883
+  },
+  {
+    "group": "main",
+    "name": "material-light-record",
+    "path": "screens/main-material-light-record.jpg",
+    "test": "NativeMaterialAcceptanceUITests/testLightPreviewEntrances()",
+    "device": "iPhone 18 Pro",
+    "timestamp": 1793108354.129
+  },
+  {
+    "group": "main",
+    "name": "material-light-wallet-entry",
+    "path": "screens/main-material-light-wallet-entry.jpg",
+    "test": "NativeMaterialAcceptanceUITests/testLightPreviewEntrances()",
+    "device": "iPhone 18 Pro",
+    "timestamp": 1793108346.411
+  },
+  {
+    "group": "main",
+    "name": "material-light-wallet",
+    "path": "screens/main-material-light-wallet.jpg",
+    "test": "NativeMaterialAcceptanceUITests/testLightPreviewEntrances()",
+    "device": "iPhone 18 Pro",
+    "timestamp": 1793108338.634
+  },
+  {
+    "group": "main",
+    "name": "material-light-wish-expanded",
+    "path": "screens/main-material-light-wish-expanded.jpg",
+    "test": "NativeMaterialAcceptanceUITests/testLightPreviewEntrances()",
+    "device": "iPhone 18 Pro",
+    "timestamp": 1793108330.91
+  },
+  {
+    "group": "main",
+    "name": "material-light-wishes",
+    "path": "screens/main-material-light-wishes.jpg",
+    "test": "NativeMaterialAcceptanceUITests/testLightPreviewEntrances()",
+    "device": "iPhone 18 Pro",
+    "timestamp": 1793108321.073
+  },
+  {
+    "group": "main",
+    "name": "material-light-budget-info",
+    "path": "screens/main-material-light-budget-info.jpg",
+    "test": "NativeMaterialAcceptanceUITests/testLightPreviewEntrances()",
+    "device": "iPhone 18 Pro",
+    "timestamp": 1793108313.428
+  },
+  {
+    "group": "main",
+    "name": "material-light-history-review",
+    "path": "screens/main-material-light-history-review.jpg",
+    "test": "NativeMaterialAcceptanceUITests/testLightPreviewEntrances()",
+    "device": "iPhone 18 Pro",
+    "timestamp": 1793108305.639
+  },
+  {
+    "group": "main",
+    "name": "material-light-calendar",
+    "path": "screens/main-material-light-calendar.jpg",
+    "test": "NativeMaterialAcceptanceUITests/testLightPreviewEntrances()",
+    "device": "iPhone 18 Pro",
+    "timestamp": 1793108297.978
+  },
+  {
+    "group": "main",
+    "name": "material-light-expense-detail",
+    "path": "screens/main-material-light-expense-detail.jpg",
+    "test": "NativeMaterialAcceptanceUITests/testLightPreviewEntrances()",
+    "device": "iPhone 18 Pro",
+    "timestamp": 1793108290.196
+  },
+  {
+    "group": "main",
+    "name": "material-light-records",
+    "path": "screens/main-material-light-records.jpg",
+    "test": "NativeMaterialAcceptanceUITests/testLightPreviewEntrances()",
+    "device": "iPhone 18 Pro",
+    "timestamp": 1793108282.413
+  },
+  {
+    "group": "main",
+    "name": "material-light-budget-detail",
+    "path": "screens/main-material-light-budget-detail.jpg",
+    "test": "NativeMaterialAcceptanceUITests/testLightPreviewEntrances()",
+    "device": "iPhone 18 Pro",
+    "timestamp": 1793108274.571
+  },
+  {
+    "group": "main",
+    "name": "material-light-library",
+    "path": "screens/main-material-light-library.jpg",
+    "test": "NativeMaterialAcceptanceUITests/testLightPreviewEntrances()",
+    "device": "iPhone 18 Pro",
+    "timestamp": 1793108266.804
+  },
+  {
+    "group": "main",
+    "name": "material-light-records-layer",
+    "path": "screens/main-material-light-records-layer.jpg",
+    "test": "NativeMaterialAcceptanceUITests/testLightPreviewEntrances()",
+    "device": "iPhone 18 Pro",
+    "timestamp": 1793108259.092
+  },
+  {
+    "group": "main",
+    "name": "material-light-budgets",
+    "path": "screens/main-material-light-budgets.jpg",
+    "test": "NativeMaterialAcceptanceUITests/testLightPreviewEntrances()",
+    "device": "iPhone 18 Pro",
+    "timestamp": 1793108251.373
+  },
+  {
+    "group": "main",
+    "name": "material-reference-actual-over-balance",
+    "path": "screens/main-material-reference-actual-over-balance.jpg",
+    "test": "NativeMaterialAcceptanceUITests/testReferenceRateApplyCancelAndActualPurchaseGate()",
+    "device": "iPhone 18 Pro",
+    "timestamp": 1793107184.679
+  },
+  {
+    "group": "main",
+    "name": "material-reference-rate-review",
+    "path": "screens/main-material-reference-rate-review.jpg",
+    "test": "NativeMaterialAcceptanceUITests/testReferenceRateApplyCancelAndActualPurchaseGate()",
+    "device": "iPhone 18 Pro",
+    "timestamp": 1793107178.919
+  },
+  {
+    "group": "small",
+    "name": "material-reduced-transparency-contrast-dark",
+    "path": "screens/small-material-reduced-transparency-contrast-dark.jpg",
+    "test": "NativeMaterialAcceptanceUITests/testSystemReduceTransparencyAndContrastRetainReadableCards()",
+    "device": "CheckLine UI Small",
+    "timestamp": 1793107003.045
+  },
+  {
+    "group": "small",
+    "name": "material-reduced-transparency-contrast-light",
+    "path": "screens/small-material-reduced-transparency-contrast-light.jpg",
+    "test": "NativeMaterialAcceptanceUITests/testSystemReduceTransparencyAndContrastRetainReadableCards()",
+    "device": "CheckLine UI Small",
+    "timestamp": 1793106997.581
+  },
+  {
+    "group": "small",
+    "name": "native-small-dark-large-unpriced-wish",
+    "path": "screens/small-native-small-dark-large-unpriced-wish.jpg",
+    "test": "NativePortUITests/testEnglishDarkLargeTextBalanceAndUnpricedWish()",
+    "device": "CheckLine UI Small",
+    "timestamp": 1793107024.777
+  },
+  {
+    "group": "small",
+    "name": "native-small-dark-large-balance",
+    "path": "screens/small-native-small-dark-large-balance.jpg",
+    "test": "NativePortUITests/testEnglishDarkLargeTextBalanceAndUnpricedWish()",
+    "device": "CheckLine UI Small",
+    "timestamp": 1793107014.197
+  },
+  {
+    "group": "small",
+    "name": "english-task-saved",
+    "path": "screens/small-english-task-saved.jpg",
+    "test": "TaskEnvironmentUITests/testEnglishTaskKeepsItsFieldsAndSaveReachableWithKeyboard()",
+    "device": "CheckLine UI Small",
+    "timestamp": 1793107042.675
+  },
+  {
+    "group": "small",
+    "name": "english-task-keyboard",
+    "path": "screens/small-english-task-keyboard.jpg",
+    "test": "TaskEnvironmentUITests/testEnglishTaskKeepsItsFieldsAndSaveReachableWithKeyboard()",
+    "device": "CheckLine UI Small",
+    "timestamp": 1793107038.286
+  },
+  {
+    "group": "small",
+    "name": "system-reduce-motion-task-saved",
+    "path": "screens/small-system-reduce-motion-task-saved.jpg",
+    "test": "TaskEnvironmentUITests/testSystemReduceMotionIsReflectedInAppAndTaskStillWorks()",
+    "device": "CheckLine UI Small",
+    "timestamp": 1793107067.44
+  },
+  {
+    "group": "small",
+    "name": "system-reduce-motion-setting",
+    "path": "screens/small-system-reduce-motion-setting.jpg",
+    "test": "TaskEnvironmentUITests/testSystemReduceMotionIsReflectedInAppAndTaskStillWorks()",
+    "device": "CheckLine UI Small",
+    "timestamp": 1793107058.7
+  },
+  {
+    "group": "ipad",
+    "name": "r34-library-bottom-return-restored",
+    "path": "screens/ipad-r34-library-bottom-return-restored.jpg",
+    "test": "R34HomeInteractionUITests/testDomeVerticalBrowsingStaysInLibraryAndOnlyBottomDragReturns()",
+    "device": "iPad mini (A17 Pro)",
+    "timestamp": 1793107167.409
+  },
+  {
+    "group": "ipad",
+    "name": "r34-dome-after-two-axis-browsing",
+    "path": "screens/ipad-r34-dome-after-two-axis-browsing.jpg",
+    "test": "R34HomeInteractionUITests/testDomeVerticalBrowsingStaysInLibraryAndOnlyBottomDragReturns()",
+    "device": "iPad mini (A17 Pro)",
+    "timestamp": 1793107163.689
+  },
+  {
+    "group": "ipad",
+    "name": "r34-dome-small-library-multiple-rows",
+    "path": "screens/ipad-r34-dome-small-library-multiple-rows.jpg",
+    "test": "R34HomeInteractionUITests/testDomeVerticalBrowsingStaysInLibraryAndOnlyBottomDragReturns()",
+    "device": "iPad mini (A17 Pro)",
+    "timestamp": 1793107160.171
+  },
+  {
+    "group": "ipad",
+    "name": "App UI hierarchy for Rex",
+    "path": "ipad-App UI hierarchy for Rex.txt",
+    "test": "R34WishPresentationUITests/testExpandedWishIsActuallyLargerAndGestureTurnsToRedeemableBack()",
+    "device": "iPad mini (A17 Pro)",
+    "timestamp": 1793107187.357
+  },
+  {
+    "group": "ipad",
+    "name": "Debug description for `\"wallet.wishes.actual\" TextField`",
+    "path": "ipad-Debug description for `\"wallet.wishes.actual\" TextField`.txt",
+    "test": "R34WishPresentationUITests/testExpandedWishIsActuallyLargerAndGestureTurnsToRedeemableBack()",
+    "device": "iPad mini (A17 Pro)",
+    "timestamp": 1793107183.34
+  },
+  {
+    "group": "ipad",
+    "name": "wish-row-expanded-incomplete-action-isolated",
+    "path": "screens/ipad-wish-row-expanded-incomplete-action-isolated.jpg",
+    "test": "R34WishPresentationUITests/testWishRowOpensExpandedCardAndIncompleteButtonDoesNotFlip()",
+    "device": "iPad mini (A17 Pro)",
+    "timestamp": 1793108202.052
+  },
+  {
+    "group": "ipad",
+    "name": "english-task-saved",
+    "path": "screens/ipad-english-task-saved.jpg",
+    "test": "TaskEnvironmentUITests/testEnglishTaskKeepsItsFieldsAndSaveReachableWithKeyboard()",
+    "device": "iPad mini (A17 Pro)",
+    "timestamp": 1793107219.343
+  },
+  {
+    "group": "ipad",
+    "name": "english-task-keyboard",
+    "path": "screens/ipad-english-task-keyboard.jpg",
+    "test": "TaskEnvironmentUITests/testEnglishTaskKeepsItsFieldsAndSaveReachableWithKeyboard()",
+    "device": "iPad mini (A17 Pro)",
+    "timestamp": 1793107214.766
+  },
+  {
+    "group": "ipad",
+    "name": "calendar-outside-selected-period",
+    "path": "screens/ipad-calendar-outside-selected-period.jpg",
+    "test": "TaskWorkspaceUITests/testCalendarDistinguishesDatesOutsideSelectedPeriod()",
+    "device": "iPad mini (A17 Pro)",
+    "timestamp": 1793107226.206
+  },
+  {
+    "group": "ipad",
+    "name": "r34-wish-redemption-still-requires-confirmation",
+    "path": "screens/ipad-r34-wish-redemption-still-requires-confirmation.jpg",
+    "test": "R34WishPresentationUITests/testExpandedWishIsActuallyLargerAndGestureTurnsToRedeemableBack()",
+    "device": "iPad mini (A17 Pro)",
+    "timestamp": 1793108181.496
+  },
+  {
+    "group": "ipad",
+    "name": "r34-wish-expanded-liquid-back",
+    "path": "screens/ipad-r34-wish-expanded-liquid-back.jpg",
+    "test": "R34WishPresentationUITests/testExpandedWishIsActuallyLargerAndGestureTurnsToRedeemableBack()",
+    "device": "iPad mini (A17 Pro)",
+    "timestamp": 1793108179.744
+  },
+  {
+    "group": "ipad",
+    "name": "r34-wish-expanded-front-scale",
+    "path": "screens/ipad-r34-wish-expanded-front-scale.jpg",
+    "test": "R34WishPresentationUITests/testExpandedWishIsActuallyLargerAndGestureTurnsToRedeemableBack()",
+    "device": "iPad mini (A17 Pro)",
+    "timestamp": 1793108176.181
+  },
+  {
+    "group": "ipad",
+    "name": "r34-wish-horizontal-liquid-rows",
+    "path": "screens/ipad-r34-wish-horizontal-liquid-rows.jpg",
+    "test": "R34WishPresentationUITests/testWishCardsUseTwoColumnsAndOddLastCardSpansThenSwitchToRows()",
+    "device": "iPad mini (A17 Pro)",
+    "timestamp": 1793108188.998
+  },
+  {
+    "group": "ipad",
+    "name": "r34-wish-two-columns-and-wide-last",
+    "path": "screens/ipad-r34-wish-two-columns-and-wide-last.jpg",
+    "test": "R34WishPresentationUITests/testWishCardsUseTwoColumnsAndOddLastCardSpansThenSwitchToRows()",
+    "device": "iPad mini (A17 Pro)",
+    "timestamp": 1793108188.35
+  },
+  {
+    "group": "flows",
+    "name": "native-agent-wish-created",
+    "path": "screens/flows-native-agent-wish-created.jpg",
+    "test": "NativePortUITests/testAgentWishDraftRequiresExplicitReviewAndConfirmation()",
+    "device": "iPhone 18 Pro",
+    "timestamp": 1793107579.107
+  },
+  {
+    "group": "flows",
+    "name": "native-unpriced-wish-disabled",
+    "path": "screens/flows-native-unpriced-wish-disabled.jpg",
+    "test": "NativePortUITests/testCoverUpdatesWithinSameSheetAndUnpricedWishCannotRedeem()",
+    "device": "iPhone 18 Pro",
+    "timestamp": 1793107604.69
+  },
+  {
+    "group": "flows",
+    "name": "native-small-dark-large-unpriced-wish",
+    "path": "screens/flows-native-small-dark-large-unpriced-wish.jpg",
+    "test": "NativePortUITests/testEnglishDarkLargeTextBalanceAndUnpricedWish()",
+    "device": "iPhone 18 Pro",
+    "timestamp": 1793107652.266
+  },
+  {
+    "group": "flows",
+    "name": "native-small-dark-large-balance",
+    "path": "screens/flows-native-small-dark-large-balance.jpg",
+    "test": "NativePortUITests/testEnglishDarkLargeTextBalanceAndUnpricedWish()",
+    "device": "iPhone 18 Pro",
+    "timestamp": 1793107640.579
+  },
+  {
+    "group": "flows",
+    "name": "native-expanded-purchase-realized-list",
+    "path": "screens/flows-native-expanded-purchase-realized-list.jpg",
+    "test": "NativePortUITests/testExpandedWishPurchaseReturnsToRealizedList()",
+    "device": "iPhone 18 Pro",
+    "timestamp": 1793107681.367
+  },
+  {
+    "group": "flows",
+    "name": "native-drag-restored",
+    "path": "screens/flows-native-drag-restored.jpg",
+    "test": "NativePortUITests/testHolderDragAndCompactWindowDragReturn()",
+    "device": "iPhone 18 Pro",
+    "timestamp": 1793107696.789
+  },
+  {
+    "group": "flows",
+    "name": "native-drag-records",
+    "path": "screens/flows-native-drag-records.jpg",
+    "test": "NativePortUITests/testHolderDragAndCompactWindowDragReturn()",
+    "device": "iPhone 18 Pro",
+    "timestamp": 1793107694.588
+  },
+  {
+    "group": "flows",
+    "name": "native-settlement-result-current-page",
+    "path": "screens/flows-native-settlement-result-current-page.jpg",
+    "test": "NativePortUITests/testSettlementReceivesInCurrentPage()",
+    "device": "iPhone 18 Pro",
+    "timestamp": 1793107712.202
+  },
+  {
+    "group": "flows",
+    "name": "native-records-layer",
+    "path": "screens/flows-native-records-layer.jpg",
+    "test": "NativePortUITests/testTwoTabsAndHolderLayersDoNotSwitchOnBlankTap()",
+    "device": "iPhone 18 Pro",
+    "timestamp": 1793107731.142
+  },
+  {
+    "group": "flows",
+    "name": "native-library-sphere",
+    "path": "screens/flows-native-library-sphere.jpg",
+    "test": "NativePortUITests/testTwoTabsAndHolderLayersDoNotSwitchOnBlankTap()",
+    "device": "iPhone 18 Pro",
+    "timestamp": 1793107726.944
+  },
+  {
+    "group": "flows",
+    "name": "native-library-arc",
+    "path": "screens/flows-native-library-arc.jpg",
+    "test": "NativePortUITests/testTwoTabsAndHolderLayersDoNotSwitchOnBlankTap()",
+    "device": "iPhone 18 Pro",
+    "timestamp": 1793107726.496
+  },
+  {
+    "group": "flows",
+    "name": "native-budget-voiceover",
+    "path": "flows-native-budget-voiceover.txt",
+    "test": "NativePortUITests/testVoiceOverReachesHolderActionsAndBudgetAmount()",
+    "device": "iPhone 18 Pro",
+    "timestamp": 1793107754.011
+  },
+  {
+    "group": "flows",
+    "name": "native-wish-result",
+    "path": "screens/flows-native-wish-result.jpg",
+    "test": "NativePortUITests/testWishFlipPurchaseResultAndRealizedList()",
+    "device": "iPhone 18 Pro",
+    "timestamp": 1793107775.906
+  },
+  {
+    "group": "flows",
+    "name": "r34-arc-side-card-focused",
+    "path": "screens/flows-r34-arc-side-card-focused.jpg",
+    "test": "R34HomeInteractionUITests/testArcSideCardFocusesBeforeSelectingAndReturnSurfaceDoesNotRespondToTap()",
+    "device": "iPhone 18 Pro",
+    "timestamp": 1793107794.24
+  },
+  {
+    "group": "flows",
+    "name": "r34-arc-visible-edge-touch-geometry",
+    "path": "flows-r34-arc-visible-edge-touch-geometry.txt",
+    "test": "R34HomeInteractionUITests/testArcSideCardFocusesBeforeSelectingAndReturnSurfaceDoesNotRespondToTap()",
+    "device": "iPhone 18 Pro",
+    "timestamp": 1793107792.555
+  },
+  {
+    "group": "flows",
+    "name": "r34-arc-side-visible-edge-before-focus",
+    "path": "screens/flows-r34-arc-side-visible-edge-before-focus.jpg",
+    "test": "R34HomeInteractionUITests/testArcSideCardFocusesBeforeSelectingAndReturnSurfaceDoesNotRespondToTap()",
+    "device": "iPhone 18 Pro",
+    "timestamp": 1793107792.143
+  },
+  {
+    "group": "flows",
+    "name": "r34-arc-viewport-geometry",
+    "path": "flows-r34-arc-viewport-geometry.txt",
+    "test": "R34HomeInteractionUITests/testArcSideCardFocusesBeforeSelectingAndReturnSurfaceDoesNotRespondToTap()",
+    "device": "iPhone 18 Pro",
+    "timestamp": 1793107792.312
+  },
+  {
+    "group": "flows",
+    "name": "r34-library-bottom-return-restored",
+    "path": "screens/flows-r34-library-bottom-return-restored.jpg",
+    "test": "R34HomeInteractionUITests/testDomeVerticalBrowsingStaysInLibraryAndOnlyBottomDragReturns()",
+    "device": "iPhone 18 Pro",
+    "timestamp": 1793107820.238
+  },
+  {
+    "group": "flows",
+    "name": "r34-dome-after-two-axis-browsing",
+    "path": "screens/flows-r34-dome-after-two-axis-browsing.jpg",
+    "test": "R34HomeInteractionUITests/testDomeVerticalBrowsingStaysInLibraryAndOnlyBottomDragReturns()",
+    "device": "iPhone 18 Pro",
+    "timestamp": 1793107816.773
+  },
+  {
+    "group": "flows",
+    "name": "r34-dome-small-library-multiple-rows",
+    "path": "screens/flows-r34-dome-small-library-multiple-rows.jpg",
+    "test": "R34HomeInteractionUITests/testDomeVerticalBrowsingStaysInLibraryAndOnlyBottomDragReturns()",
+    "device": "iPhone 18 Pro",
+    "timestamp": 1793107813.532
+  },
+  {
+    "group": "flows",
+    "name": "r34-reinserted-same-budget",
+    "path": "screens/flows-r34-reinserted-same-budget.jpg",
+    "test": "R34HomeInteractionUITests/testEjectionDisconnectsSummaryAndTapReinsertsBeforeOpeningDetails()",
+    "device": "iPhone 18 Pro",
+    "timestamp": 1793107840.101
+  },
+  {
+    "group": "flows",
+    "name": "r34-ejected-disconnected-summary",
+    "path": "screens/flows-r34-ejected-disconnected-summary.jpg",
+    "test": "R34HomeInteractionUITests/testEjectionDisconnectsSummaryAndTapReinsertsBeforeOpeningDetails()",
+    "device": "iPhone 18 Pro",
+    "timestamp": 1793107837.141
+  },
+  {
+    "group": "flows",
+    "name": "r34-stack-reverse-restored",
+    "path": "screens/flows-r34-stack-reverse-restored.jpg",
+    "test": "R34HomeInteractionUITests/testHorizontalThrowChangesRealBudgetAndReverseSwipeRestoresIt()",
+    "device": "iPhone 18 Pro",
+    "timestamp": 1793107862.436
+  },
+  {
+    "group": "flows",
+    "name": "r34-stack-trip-promoted",
+    "path": "screens/flows-r34-stack-trip-promoted.jpg",
+    "test": "R34HomeInteractionUITests/testHorizontalThrowChangesRealBudgetAndReverseSwipeRestoresIt()",
+    "device": "iPhone 18 Pro",
+    "timestamp": 1793107858.904
+  },
+  {
+    "group": "flows",
+    "name": "r34-stack-daily-selected",
+    "path": "screens/flows-r34-stack-daily-selected.jpg",
+    "test": "R34HomeInteractionUITests/testHorizontalThrowChangesRealBudgetAndReverseSwipeRestoresIt()",
+    "device": "iPhone 18 Pro",
+    "timestamp": 1793107855.52
+  },
+  {
+    "group": "flows",
+    "name": "r34-records-window-holder-and-buttons",
+    "path": "screens/flows-r34-records-window-holder-and-buttons.jpg",
+    "test": "R34HomeInteractionUITests/testShortHolderDragReturnsAndRecordsControlsFollowRetreatedHolder()",
+    "device": "iPhone 18 Pro",
+    "timestamp": 1793107884.144
+  },
+  {
+    "group": "flows",
+    "name": "r34-wish-redemption-still-requires-confirmation",
+    "path": "screens/flows-r34-wish-redemption-still-requires-confirmation.jpg",
+    "test": "R34WishPresentationUITests/testExpandedWishIsActuallyLargerAndGestureTurnsToRedeemableBack()",
+    "device": "iPhone 18 Pro",
+    "timestamp": 1793107908.752
+  },
+  {
+    "group": "flows",
+    "name": "r34-wish-expanded-liquid-back",
+    "path": "screens/flows-r34-wish-expanded-liquid-back.jpg",
+    "test": "R34WishPresentationUITests/testExpandedWishIsActuallyLargerAndGestureTurnsToRedeemableBack()",
+    "device": "iPhone 18 Pro",
+    "timestamp": 1793107906.692
+  },
+  {
+    "group": "flows",
+    "name": "r34-wish-expanded-front-scale",
+    "path": "screens/flows-r34-wish-expanded-front-scale.jpg",
+    "test": "R34WishPresentationUITests/testExpandedWishIsActuallyLargerAndGestureTurnsToRedeemableBack()",
+    "device": "iPhone 18 Pro",
+    "timestamp": 1793107903.514
+  },
+  {
+    "group": "flows",
+    "name": "r34-wish-horizontal-liquid-rows",
+    "path": "screens/flows-r34-wish-horizontal-liquid-rows.jpg",
+    "test": "R34WishPresentationUITests/testWishCardsUseTwoColumnsAndOddLastCardSpansThenSwitchToRows()",
+    "device": "iPhone 18 Pro",
+    "timestamp": 1793107921.928
+  },
+  {
+    "group": "flows",
+    "name": "r34-wish-two-columns-and-wide-last",
+    "path": "screens/flows-r34-wish-two-columns-and-wide-last.jpg",
+    "test": "R34WishPresentationUITests/testWishCardsUseTwoColumnsAndOddLastCardSpansThenSwitchToRows()",
+    "device": "iPhone 18 Pro",
+    "timestamp": 1793107921.285
+  },
+  {
+    "group": "flows",
+    "name": "wish-row-expanded-incomplete-action-isolated",
+    "path": "screens/flows-wish-row-expanded-incomplete-action-isolated.jpg",
+    "test": "R34WishPresentationUITests/testWishRowOpensExpandedCardAndIncompleteButtonDoesNotFlip()",
+    "device": "iPhone 18 Pro",
+    "timestamp": 1793107940.476
+  },
+  {
+    "group": "flows",
+    "name": "voiceover-record-saved",
+    "path": "screens/flows-voiceover-record-saved.jpg",
+    "test": "TaskEnvironmentUITests/testVoiceOverCanReadAndSaveManualRecord()",
+    "device": "iPhone 18 Pro",
+    "timestamp": 1793107963.496
+  },
+  {
+    "group": "flows",
+    "name": "voiceover-manual-task-speech",
+    "path": "flows-voiceover-manual-task-speech.txt",
+    "test": "TaskEnvironmentUITests/testVoiceOverCanReadAndSaveManualRecord()",
+    "device": "iPhone 18 Pro",
+    "timestamp": 1793107961.526
+  },
+  {
+    "group": "reward",
+    "name": "native-expanded-purchase-realized-list",
+    "path": "screens/reward-native-expanded-purchase-realized-list.jpg",
+    "test": "NativePortUITests/testExpandedWishPurchaseReturnsToRealizedList()",
+    "device": "iPhone 18 Pro",
+    "timestamp": 1793109982.223
+  },
+  {
+    "group": "reward",
+    "name": "native-expanded-collection-revealed",
+    "path": "screens/reward-native-expanded-collection-revealed.jpg",
+    "test": "NativePortUITests/testExpandedWishPurchaseReturnsToRealizedList()",
+    "device": "iPhone 18 Pro",
+    "timestamp": 1793109980.288
+  },
+  {
+    "group": "reward",
+    "name": "native-expanded-shell-break",
+    "path": "screens/reward-native-expanded-shell-break.jpg",
+    "test": "NativePortUITests/testExpandedWishPurchaseReturnsToRealizedList()",
+    "device": "iPhone 18 Pro",
+    "timestamp": 1793109978.069
+  }
+]

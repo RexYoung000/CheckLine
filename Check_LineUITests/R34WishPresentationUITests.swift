@@ -23,7 +23,7 @@ import XCTest
         attach(app, "r34-wish-two-columns-and-wide-last")
 
         app.buttons["native.wish.layout"].tap()
-        let rows = wishCards(in: app).allElementsBoundByIndex
+        let rows = app.buttons.matching(NSPredicate(format: "identifier BEGINSWITH %@", "native.wish.card.")).allElementsBoundByIndex
         XCTAssertEqual(rows.count, 3)
         for row in rows {
             XCTAssertGreaterThan(row.frame.width, first.width * 1.7)
@@ -34,7 +34,9 @@ import XCTest
 
     func testExpandedWishIsActuallyLargerAndGestureTurnsToRedeemableBack() {
         let app = launchWishes()
-        let small = wishCards(in: app).firstMatch
+        let small = wishCards(in: app).allElementsBoundByIndex.first {
+            $0.frame.width < app.frame.width * 0.7 && !$0.staticTexts["去山里露营"].exists
+        } ?? wishCards(in: app).firstMatch
         let identifier = small.identifier
         let smallFrame = small.frame
         let expand = small.buttons["native.wish.expand"].firstMatch
@@ -56,6 +58,7 @@ import XCTest
         start.press(forDuration: 0.06, thenDragTo: start.withOffset(CGVector(dx: -card.frame.width * 0.56, dy: 0)))
         waitForValue(card, containing: "背面")
         let redeem = card.buttons["native.wish.redeem"].firstMatch
+        waitUntilActionable(redeem)
         XCTAssertTrue(redeem.isHittable, "Only the active back face may receive redemption input.")
         XCTAssertTrue(redeem.isEnabled)
         XCTAssertEqual(redeem.label, "兑换")
@@ -70,6 +73,28 @@ import XCTest
         XCTAssertFalse(app.buttons["wallet.wishes.confirm"].isEnabled,
                        "Opening redemption cannot replace explicit real-purchase confirmation.")
         attach(app, "r34-wish-redemption-still-requires-confirmation")
+    }
+
+    func testWishRowOpensExpandedCardAndIncompleteButtonDoesNotFlip() {
+        let app = launchWishes()
+        app.buttons["native.wish.layout"].tap()
+        let row = app.buttons.matching(NSPredicate(format: "identifier BEGINSWITH %@ AND label == %@", "native.wish.card.", "去山里露营")).firstMatch
+        XCTAssertTrue(row.waitForExistence(timeout: 5))
+        let identifier = row.identifier
+        row.tap()
+        let expanded = app.descendants(matching: .any)["native.wish.expanded"].firstMatch
+        XCTAssertTrue(expanded.waitForExistence(timeout: 5))
+        let card = expanded.descendants(matching: .any)[identifier].firstMatch
+        card.coordinate(withNormalizedOffset: CGVector(dx: 0.4, dy: 0.36)).tap()
+        waitForValue(card, containing: "背面")
+        let redeem = card.buttons["native.wish.redeem"].firstMatch
+        XCTAssertTrue(redeem.waitForExistence(timeout: 5))
+        XCTAssertFalse(redeem.isEnabled, "Reference coverage below 100% must disable redemption.")
+        redeem.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).tap()
+        XCTAssertTrue((card.value as? String)?.contains("背面") == true,
+                      "The disabled action strip must not fall through to the flip surface.")
+        XCTAssertFalse(app.textFields["wallet.wishes.actual"].exists)
+        attach(app, "wish-row-expanded-incomplete-action-isolated")
     }
 
     private func launchWishes() -> XCUIApplication {
@@ -89,6 +114,12 @@ import XCTest
         let expectation = XCTNSPredicateExpectation(predicate: NSPredicate(format: "value CONTAINS %@", expected), object: element)
         XCTAssertEqual(XCTWaiter.wait(for: [expectation], timeout: 5), .completed,
                        "Expected the current wish face to be \(expected).", file: file, line: line)
+    }
+
+    private func waitUntilActionable(_ element: XCUIElement, file: StaticString = #filePath, line: UInt = #line) {
+        let ready = XCTNSPredicateExpectation(predicate: NSPredicate(format: "exists == true AND enabled == true AND hittable == true"), object: element)
+        XCTAssertEqual(XCTWaiter.wait(for: [ready], timeout: 8), .completed,
+                       "A fully covered wish must become actionable only after its back face settles.", file: file, line: line)
     }
 
     private func attach(_ app: XCUIApplication, _ name: String) {

@@ -18,13 +18,14 @@ struct WishWalletSummaryView: View {
                     VStack(alignment: .leading, spacing: 12) {
                         Text(MoneyFormat.string(projection.balance, currencyCode: currencyCode))
                             .font(.largeTitle.weight(.medium)).monospacedDigit().lineLimit(1).minimumScaleFactor(0.5)
+                            .foregroundStyle(PaperTheme.ink)
                             .accessibilityLabel(String(localized: "v1.wish.balance"))
                             .accessibilityValue(MoneyFormat.string(projection.balance, currencyCode: currencyCode))
                             .accessibilityIdentifier("wallet.wishes.balance.detail")
                         Text(String(localized: "ui.wish.balanceSummary"))
                             .font(.subheadline).foregroundStyle(PaperTheme.muted)
                     }
-                    .padding(22).modifier(NativeGlassCard())
+                    .padding(22).walletSurface()
                     if projection.recoveryGap > 0 {
                         recoverySummary
                     }

@@ -6,16 +6,36 @@ struct NativeWishListView: View {
     @Environment(\.shellChrome) private var chrome
     @Environment(\.dynamicTypeSize) private var typeSize
     @Environment(\.walletReduceMotion) private var reduceMotion
+    @Environment(\.accessibilityReduceTransparency) private var reduceTransparency
     @State private var agentDraftAvailable = false
     @State private var draftKind = "wishCreate"
-    @State private var completed = false
+    @State private var completed = DesignPreviewData.isEnabled && DesignPreviewData.screen == "collection"
     @State private var rows = false
     @State private var adding = false
     @State private var balance = false
     @State private var expanded: Wish?
     @State private var redeeming: Wish?
     @State private var pricing: Wish?
+    @State private var quoting: Wish?
+    @State private var lastExpandedWishID: UUID?
+    @State private var didOpenPreview = false
+    @State private var didSelectCompletedPreview = false
+    @AccessibilityFocusState private var focusedWishID: UUID?
     private var completedCount: Int { workspace.ledger.wishes.values.filter { $0.state == .completed }.count }
+    private var isListExposed: Bool {
+        expanded == nil && redeeming == nil && pricing == nil && quoting == nil && !adding && !balance
+            && !workspace.showAgent && !workspace.showComposer
+            && (chrome?.selectedTab ?? .wishes) == .wishes
+            && chrome?.isSettingsPresented != true && chrome?.isSourcesPresented != true
+            && chrome?.isAttentionPresented != true && chrome?.isShowingDetail != true
+    }
+    private var previewStartsOnBack: Bool {
+        #if DEBUG
+        DesignPreviewData.isEnabled && DesignPreviewData.screen == "wish-expanded"
+        #else
+        false
+        #endif
+    }
     private var wishes: [Wish] {
         workspace.ledger.wishes.values.filter { $0.state == (completed ? .completed : .active) }
             .sorted { lhs, rhs in
@@ -42,7 +62,7 @@ struct NativeWishListView: View {
                     } label: {
                         Image(systemName: rows ? "square.grid.2x2" : "list.bullet").font(.system(size: 18)).frame(width: 44, height: 44)
                             .background(PaperTheme.card.opacity(0.68), in: RoundedRectangle(cornerRadius: 13))
-                    }.buttonStyle(.plain).foregroundStyle(PaperTheme.accent)
+                    }.buttonStyle(.plain).foregroundStyle(PaperTheme.ink)
                         .accessibilityLabel(String(localized: "native.layout"))
                         .accessibilityValue(String(localized: rows ? "native.wish.rows" : "native.wish.cards"))
                         .accessibilityIdentifier("native.wish.layout")
@@ -51,13 +71,25 @@ struct NativeWishListView: View {
                 wishGrid
             }.frame(maxWidth: 560).frame(maxWidth: .infinity)
         }
+        .blur(radius: expanded == nil || reduceTransparency ? 0 : 8)
+        .allowsHitTesting(expanded == nil)
+        .accessibilityHidden(expanded != nil)
         .sheet(isPresented: $adding, onDismiss: refreshWishDraft) { CreateWishSheet(workspace: workspace, draftKind: draftKind) }
         .sheet(isPresented: $balance, onDismiss: { chrome?.isShowingDetail = false }) { WishWalletSummaryView(workspace: workspace) }
         .sheet(item: $redeeming) { WishRedemptionView(workspace: workspace, wishID: $0.id).modifier(NativeDrawerStyle()) }
         .sheet(item: $pricing) { WishPriceSheet(workspace: workspace, wish: $0) }
-        .fullScreenCover(item: $expanded, onDismiss: { chrome?.isShowingDetail = false }) { ExpandedWishView(workspace: workspace, wishID: $0.id) }
+        .sheet(item: $quoting) { WishReferenceQuoteView(workspace: workspace, wish: $0) }
+        .fullScreenCover(item: $expanded, onDismiss: {
+            chrome?.isShowingDetail = false
+            focusedWishID = lastExpandedWishID
+        }) { ExpandedWishView(workspace: workspace, wishID: $0.id, startFlipped: previewStartsOnBack).presentationBackground(.clear) }
+        .onChange(of: expanded?.id) { _, value in if value != nil { chrome?.isShowingDetail = true } }
         .onChange(of: completedCount) { old, new in if new > old { completed = true } }
-        .onAppear { refreshWishDraft(); if chrome?.wishesShowCompleted == true { completed = true } }
+        .onAppear {
+            refreshWishDraft()
+            if chrome?.wishesShowCompleted == true { completed = true }
+        }
+        .task(id: chrome?.selectedTab) { await applyWishPreviewIfNeeded() }
         .onChange(of: chrome?.wishesShowCompleted) { _, value in if value == true { completed = true } }
     }
 
@@ -70,13 +102,14 @@ struct NativeWishListView: View {
                 HStack(alignment: .firstTextBaseline, spacing: 9) {
                     Text(MoneyFormat.string(workspace.wallet.balance, currencyCode: workspace.ledger.walletSettings.walletCurrencyCode))
                         .font(.system(size: typeSize.isAccessibilitySize ? 27 : 25, weight: .medium)).monospacedDigit().lineLimit(1).minimumScaleFactor(0.45)
+                        .foregroundStyle(PaperTheme.ink)
                     if typeSize.isAccessibilitySize { Spacer(minLength: 8) }
-                    Image(systemName: "chevron.right").font(.system(size: 13, weight: .medium)).foregroundStyle(PaperTheme.accent.opacity(0.7))
+                    Image(systemName: "chevron.right").font(.system(size: 13, weight: .medium)).foregroundStyle(PaperTheme.muted)
                 }
             }
             .padding(.horizontal, 19).padding(.vertical, typeSize.isAccessibilitySize ? 15 : 0)
             .frame(maxWidth: .infinity, minHeight: 54)
-            .modifier(NativeGlassCard(radius: 20))
+            .walletSurface(radius: 20)
         }.buttonStyle(.plain).accessibilityIdentifier("native.wish.balance")
     }
 
@@ -108,9 +141,33 @@ struct NativeWishListView: View {
     }
     private func card(_ wish: Wish, row: Bool = false, wide: Bool = false) -> some View {
         NativeWishCard(workspace: workspace, wish: wish, row: row, wide: wide,
-                       onExpand: { expanded = wish }, onRedeem: { redeeming = wish }, onPrice: { pricing = wish })
+                       isActive: isListExposed,
+                       onExpand: { lastExpandedWishID = wish.id; focusedWishID = nil; expanded = wish }, onRedeem: { redeeming = wish }, onPrice: { pricing = wish }, onQuote: { quoting = wish })
+            .accessibilityFocused($focusedWishID, equals: wish.id)
     }
     private func refreshWishDraft() { agentDraftAvailable = (try? workspace.draftStore.load(TaskDraft(kind: "agentWishCreate").key)) != nil }
+    private func applyWishPreviewIfNeeded() async {
+        #if DEBUG
+        guard DesignPreviewData.isEnabled, chrome?.selectedTab == .wishes else { return }
+        let collection = DesignPreviewData.screen == "collection"
+        guard (collection && !didSelectCompletedPreview) || (previewStartsOnBack && !didOpenPreview && expanded == nil) else { return }
+        // TabView may mount the wishes page while another tab still owns the
+        // presentation context. Wait until its selected layout has been applied.
+        await Task.yield()
+        do { try await Task.sleep(for: .milliseconds(120)); try Task.checkCancellation() } catch { return }
+        guard chrome?.selectedTab == .wishes else { return }
+        if collection, !didSelectCompletedPreview {
+            completed = true
+            didSelectCompletedPreview = true
+            return
+        }
+        guard previewStartsOnBack, !didOpenPreview, expanded == nil,
+              let wish = workspace.ledger.wishes.values.first(where: { $0.symbolName == "headphones" && $0.state == .active }) else { return }
+        didOpenPreview = true
+        lastExpandedWishID = wish.id
+        expanded = wish
+        #endif
+    }
 }
 
 /// A single continuous angle owns the front, back, drag and spring settling.
@@ -122,9 +179,12 @@ struct NativeWishCard: View {
     var wide = false
     var expanded = false
     var expandedHeight: CGFloat?
+    var isActive = true
+    var startFlipped = false
     var onExpand: () -> Void
     var onRedeem: () -> Void
     var onPrice: () -> Void
+    var onQuote: () -> Void = {}
     @State private var angle = 0.0
     @State private var targetAngle = 0.0
     @State private var turnTask: Task<Void, Never>?
@@ -132,21 +192,42 @@ struct NativeWishCard: View {
     @State private var lastDragEnd = Date.distantPast
     @State private var tilt = CGSize.zero
     @State private var glare = UnitPoint(x: 0.25, y: 0.15)
+    @State private var turning = false
+    @State private var appliedInitialFace = false
+    @State private var measuredActionsHeight: CGFloat = 0
     @Environment(\.walletReduceMotion) private var reduceMotion
     @Environment(\.dynamicTypeSize) private var typeSize
     @Environment(\.scenePhase) private var scenePhase
     private var cover: WishCover { workspace.wishCovers.cover(for: wish.id, fallback: wish.symbolName) }
     private var flipped: Bool { cos(angle * .pi / 180) < 0 }
-    private var canRedeem: Bool { wish.targetAmount.map { $0 > 0 } ?? false }
-    private var ratio: CGFloat? {
-        guard let amount = wish.targetAmount, amount > 0,
-              (wish.currencyCode ?? workspace.ledger.walletSettings.walletCurrencyCode) == workspace.ledger.walletSettings.walletCurrencyCode else { return nil }
-        return CGFloat(NSDecimalNumber(decimal: min(1, max(0, workspace.wallet.balance / amount))).doubleValue)
+    private var coverage: WishCoverage { workspace.wishCoverage(for: wish) }
+    private var canRedeem: Bool { coverage.canRedeem }
+    private var ratio: CGFloat? { coverage.progress.map { CGFloat(NSDecimalNumber(decimal: $0).doubleValue) } }
+    private var role: WishMaterialRole { wish.state == .completed ? .collection : .unfulfilled }
+    private var photoFill: Bool { cover.layout == .fill && cover.imageData != nil }
+    private var showsQuoteControl: Bool {
+        wish.state == .active && (wish.currencyCode ?? workspace.ledger.walletSettings.walletCurrencyCode) != workspace.ledger.walletSettings.walletCurrencyCode
+    }
+    private var backSpacing: CGFloat { expanded ? 18 : 8 }
+    private var backPadding: CGFloat { expanded ? 24 : 14 }
+    private var minimumActionsHeight: CGFloat {
+        let extraCount = (coverage.state == .unpriced ? 1 : 0) + (showsQuoteControl ? 1 : 0)
+        return (expanded ? 50 : 44) + CGFloat(extraCount) * (44 + backSpacing)
+    }
+    private var actionsHeight: CGFloat { max(minimumActionsHeight, measuredActionsHeight) }
+    private var actionExclusionHeight: CGFloat { actionsHeight + backPadding + backSpacing }
+    private func pose(back: Bool = false) -> CGSize {
+        guard !reduceMotion else { return .zero }
+        return CGSize(width: tilt.width + angle - (back ? 180 : 0), height: tilt.height)
     }
     private var height: CGFloat {
-        if expanded { return max(typeSize.isAccessibilitySize ? 420 : 354, expandedHeight ?? 0) }
-        if typeSize.isAccessibilitySize { return row ? 210 : 270 }
-        return row ? 118 : wide ? 158 : 198
+        let base: CGFloat
+        if expanded { base = max(typeSize.isAccessibilitySize ? 420 : 354, expandedHeight ?? 0) }
+        else if typeSize.isAccessibilitySize { base = row ? 210 : 270 }
+        else { base = row ? 118 : wide ? 158 : 198 }
+        guard !row, wish.state == .active else { return base }
+        let readoutHeight: CGFloat = expanded ? 80 : 44
+        return max(base, actionsHeight + readoutHeight + backPadding * 2 + backSpacing * 3)
     }
     private var displayedPrice: (amount: Decimal, currencyCode: String)? {
         if wish.state == .completed,
@@ -158,19 +239,39 @@ struct NativeWishCard: View {
     }
 
     var body: some View {
+        Group {
+            if row {
+                Button(action: onExpand) { collectionRow }.buttonStyle(.plain)
+                    .accessibilityLabel(wish.name)
+                    .accessibilityValue(rowAccessibilityValue)
+                    .accessibilityIdentifier("native.wish.card.\(wish.id)")
+            } else { turningCard }
+        }
+    }
+
+    private var rowAccessibilityValue: String {
+        var parts = [String(localized: wish.state == .completed ? "native.wish.realized" : "native.wish.unrealized")]
+        if let price = displayedPrice { parts.append(MoneyFormat.string(price.amount, currencyCode: price.currencyCode)) }
+        if wish.state != .completed {
+            if let percent = coverage.displayPercent { parts.append((Double(percent) / 100).formatted(.percent.precision(.fractionLength(0)))) }
+            else { parts.append(String(localized: coverage.state == .needsQuote ? "native.wish.noRate" : "native.wish.noPrice")) }
+        }
+        return parts.joined(separator: " ")
+    }
+
+    private var turningCard: some View {
         GeometryReader { proxy in
             ZStack {
-                if reduceMotion {
+                // A settled face owns a flat native hit plane. Keeping the back
+                // inside two 180-degree 3D transforms can inverse-map a button
+                // tap onto the transparent flip target on iPhone and iPad.
+                if reduceMotion || (!turning && dragBase == nil) {
                     if flipped { back } else { front }
                 } else {
-                    front.modifier(WishFlipFace(angle: angle, back: false)).accessibilityHidden(flipped)
-                    back.modifier(WishFlipFace(angle: angle, back: true)).accessibilityHidden(!flipped)
-                }
-            }
-            .overlay {
-                if !reduceMotion {
-                    RoundedRectangle(cornerRadius: 25).fill(RadialGradient(colors: [.white.opacity(0.19), .clear], center: glare, startRadius: 0, endRadius: proxy.size.width * 0.85))
-                        .blendMode(.plusLighter).allowsHitTesting(false).accessibilityHidden(true)
+                    front.modifier(WishFlipFace(angle: angle, back: false))
+                        .allowsHitTesting(false).accessibilityHidden(true)
+                    back.modifier(WishFlipFace(angle: angle, back: true))
+                        .allowsHitTesting(false).accessibilityHidden(true)
                 }
             }
             .rotation3DEffect(.degrees(reduceMotion ? 0 : Double(tilt.height)), axis: (x: 1, y: 0, z: 0), perspective: 0.4)
@@ -180,7 +281,7 @@ struct NativeWishCard: View {
                     x: -tilt.width * 0.7, y: 6 + abs(tilt.height) * 0.5)
             .simultaneousGesture(flipGesture(width: proxy.size.width))
             .onContinuousHover { phase in
-                guard !reduceMotion, dragBase == nil else { return }
+                guard isActive, !reduceMotion, dragBase == nil, !flipped else { return }
                 switch phase {
                 case .active(let point):
                     glare = UnitPoint(x: point.x / max(1, proxy.size.width), y: point.y / max(1, proxy.size.height))
@@ -208,16 +309,54 @@ struct NativeWishCard: View {
         .accessibilityValue(String(localized: flipped ? "native.wish.back" : "native.wish.front"))
         .accessibilityAction(named: String(localized: "native.wish.flip")) { flip() }
         .accessibilityIdentifier("native.wish.card.\(wish.id)")
-        .onChange(of: scenePhase) { _, phase in
-            if phase != .active { turnTask?.cancel(); dragBase = nil; tilt = .zero; angle = targetAngle }
+        .onAppear {
+            guard !appliedInitialFace else { return }
+            appliedInitialFace = true
+            if startFlipped { angle = 180; targetAngle = 180 }
         }
-        .onChange(of: reduceMotion) { _, _ in turnTask?.cancel(); dragBase = nil; tilt = .zero; angle = targetAngle }
-        .onDisappear { turnTask?.cancel(); dragBase = nil; tilt = .zero; angle = targetAngle }
+        .onChange(of: scenePhase) { _, phase in
+            if phase != .active { turnTask?.cancel(); turning = false; dragBase = nil; tilt = .zero; angle = targetAngle }
+        }
+        .onChange(of: reduceMotion) { _, _ in turnTask?.cancel(); turning = false; dragBase = nil; tilt = .zero; angle = targetAngle }
+        .onChange(of: isActive) { _, value in if !value { turnTask?.cancel(); turning = false; dragBase = nil; tilt = .zero; angle = targetAngle } }
+        .onDisappear { turnTask?.cancel(); turning = false; dragBase = nil; tilt = .zero; angle = targetAngle }
+        .onPreferenceChange(WishActionHeightPreference.self) { value in
+            if abs(value - measuredActionsHeight) > 0.5 { measuredActionsHeight = value }
+        }
+    }
+
+    private var collectionRow: some View {
+        ZStack {
+            WishCardBackdrop(role: role, radius: 23, photoFill: photoFill)
+            if role == .unfulfilled, let ratio {
+                NativeLiquidSurface(progress: ratio, horizontal: true, active: isActive, horizontalAmount: 1).opacity(0.38)
+            }
+            if photoFill {
+                WishCoverArtwork(cover: cover, row: true, materialRole: role)
+            }
+            HStack(spacing: 12) {
+                if !photoFill {
+                    WishCoverArtwork(cover: cover, materialRole: role).frame(width: 64, height: 76)
+                }
+                VStack(alignment: .leading, spacing: 8) {
+                    Text(wish.name).font(.headline).lineLimit(2)
+                    if let price = displayedPrice {
+                        Text(MoneyFormat.string(price.amount, currencyCode: price.currencyCode)).font(.title3.weight(.medium)).monospacedDigit().lineLimit(1).minimumScaleFactor(0.5)
+                    } else { Text(String(localized: "native.wish.noPrice")).font(.caption) }
+                }.frame(maxWidth: .infinity, alignment: .leading)
+                Image(systemName: "arrow.up.left.and.arrow.down.right").font(.system(size: 14)).frame(width: 30, height: 44)
+            }.padding(.horizontal, 15).padding(.vertical, 13)
+            if role == .unfulfilled && !photoFill { WishGlassPane(radius: 23) }
+        }
+        .foregroundStyle(photoFill ? .white : WishMaterialPalette.ink)
+        .frame(height: height).clipShape(RoundedRectangle(cornerRadius: 23, style: .continuous))
+        .contentShape(RoundedRectangle(cornerRadius: 23, style: .continuous))
     }
 
     private var front: some View {
         ZStack(alignment: .topLeading) {
-            WishCoverArtwork(cover: cover, row: row || wide, large: expanded)
+            WishCoverArtwork(cover: cover, row: row || wide, large: expanded, materialRole: role)
+            if role == .unfulfilled && !photoFill { WishGlassPane(radius: expanded ? 32 : 25, glare: glare) }
             VStack(alignment: .leading, spacing: 8) {
                 Text(wish.name).font(expanded ? .title2.weight(.semibold) : row || wide ? .headline : .system(size: 14, weight: .semibold))
                     .lineLimit(2).frame(maxWidth: .infinity, alignment: .leading).padding(.trailing, expanded ? 0 : 23)
@@ -236,68 +375,84 @@ struct NativeWishCard: View {
             }.padding(expanded ? 26 : 16).allowsHitTesting(false)
             Color.clear.contentShape(Rectangle()).onTapGesture { flip() }
         }
-        .modifier(NativeGlassCard(radius: expanded ? 32 : 25))
-        .foregroundStyle(cover.layout == .fill && cover.imageData != nil ? .white : PaperTheme.ink)
+        .background(WishCardBackdrop(role: role, radius: expanded ? 32 : 25, pose: pose(), glare: glare, photoFill: photoFill))
+        .clipShape(RoundedRectangle(cornerRadius: expanded ? 32 : 25, style: .continuous))
+        .foregroundStyle(photoFill ? .white : WishMaterialPalette.ink)
         .accessibilityHidden(flipped)
     }
 
     private var back: some View {
         ZStack {
             if wish.state != .completed {
-                NativeLiquidSurface(progress: ratio ?? 0, horizontal: row, active: flipped, horizontalAmount: row ? 1 : 0)
+                NativeLiquidSurface(progress: ratio ?? 0, horizontal: row, active: flipped && isActive && ratio != nil, horizontalAmount: row ? 1 : 0)
+                    .opacity(0.42)
+                WishGlassPane(radius: expanded ? 32 : 25, glare: glare)
             }
-            Color.clear.contentShape(Rectangle()).onTapGesture { flip() }
+            VStack(spacing: 0) {
+                Color.clear.contentShape(Rectangle())
+                    .frame(height: wish.state == .completed ? height : max(0, height - actionExclusionHeight))
+                    .onTapGesture { flip() }
+                Spacer(minLength: 0)
+            }
             if wish.state == .completed { achievedBack }
-            else if row { rowBack }
             else { standingBack }
         }
-        .modifier(NativeGlassCard(radius: expanded ? 32 : 25)).foregroundStyle(PaperTheme.ink)
+        .background(WishCardBackdrop(role: role, radius: expanded ? 32 : 25, pose: pose(back: true), glare: glare))
+        .clipShape(RoundedRectangle(cornerRadius: expanded ? 32 : 25, style: .continuous))
+        .foregroundStyle(WishMaterialPalette.ink)
         .accessibilityHidden(!flipped)
     }
 
     private var standingBack: some View {
-        VStack(spacing: expanded ? 18 : 8) {
+        VStack(spacing: backSpacing) {
             Spacer(minLength: 0)
             progressReadout.font(.system(size: expanded ? 65 : wide ? 42 : 36, weight: .medium, design: .rounded))
                 .frame(maxWidth: .infinity, alignment: .leading).allowsHitTesting(false)
             Spacer(minLength: 0)
-            redeemButton
-            if !canRedeem { priceButton }
-        }.padding(expanded ? 24 : 14)
+            actionControls
+        }.padding(backPadding)
     }
 
-    private var rowBack: some View {
-        HStack(spacing: 12) {
-            progressReadout.font(.system(size: 31, weight: .medium, design: .rounded))
-                .frame(maxWidth: .infinity, alignment: .leading).allowsHitTesting(false)
-            VStack(spacing: 0) {
-                redeemButton
-                if !canRedeem { priceButton }
-            }.frame(maxWidth: 126)
-        }.padding(.horizontal, 19).padding(.vertical, 13)
+    private var actionControls: some View {
+        VStack(spacing: backSpacing) {
+            redeemButton
+            if coverage.state == .unpriced { priceButton }
+            if showsQuoteControl { quoteButton }
+        }
+        .background {
+            GeometryReader { proxy in
+                Color.clear.preference(key: WishActionHeightPreference.self, value: proxy.size.height)
+            }.allowsHitTesting(false)
+        }
     }
 
     @ViewBuilder private var progressReadout: some View {
-        if let ratio {
-            Text(ratio, format: .percent.precision(.fractionLength(0))).monospacedDigit().lineLimit(1).minimumScaleFactor(0.7)
+        if let percent = coverage.displayPercent {
+            Text(Double(percent) / 100, format: .percent.precision(.fractionLength(0))).monospacedDigit().lineLimit(1).minimumScaleFactor(0.7)
         } else {
-            Text(String(localized: canRedeem ? "native.wish.noRate" : "native.wish.noPrice"))
-                .font(expanded ? .title3 : .subheadline).foregroundStyle(PaperTheme.muted).fixedSize(horizontal: false, vertical: true)
+            Text(String(localized: coverage.state == .needsQuote ? "native.wish.noRate" : "native.wish.noPrice"))
+                .font(expanded ? .title3 : .subheadline).foregroundStyle(WishMaterialPalette.meta).fixedSize(horizontal: false, vertical: true)
         }
     }
     private var redeemButton: some View {
-        Button(String(localized: "native.wish.redeem"), action: onRedeem)
+        Button(String(localized: "native.wish.redeem")) { if isActive && canRedeem && !turning && dragBase == nil { onRedeem() } }
             .font(.system(size: expanded ? 16 : 13, weight: .semibold))
-            .foregroundStyle(.white).frame(maxWidth: .infinity, minHeight: expanded ? 50 : 44)
-            .background(PaperTheme.accent.opacity(canRedeem ? 0.96 : 0.35), in: RoundedRectangle(cornerRadius: expanded ? 18 : 14))
-            .overlay { if canRedeem { WishRedeemEdgeGlow(radius: expanded ? 18 : 14,active: flipped) } }
-            .buttonStyle(.plain).disabled(!canRedeem)
+            .foregroundStyle(canRedeem ? PaperTheme.primaryInk : PaperTheme.muted).frame(maxWidth: .infinity, minHeight: expanded ? 50 : 44)
+            .background(canRedeem ? PaperTheme.primary : PaperTheme.card, in: RoundedRectangle(cornerRadius: expanded ? 18 : 14))
+            .overlay { if canRedeem { WishRedeemEdgeGlow(radius: expanded ? 18 : 14,active: flipped && !turning && isActive) } }
+            .buttonStyle(.plain).disabled(!isActive || !canRedeem || turning || dragBase != nil)
+            .accessibilityHint(String(localized: canRedeem ? "wallet.wishes.redemption" : coverage.state == .needsQuote ? "native.wish.noRate" : coverage.state == .unpriced ? "native.wish.noPrice" : "native.wish.coverageRequired"))
             .accessibilityIdentifier("native.wish.redeem")
     }
     private var priceButton: some View {
         Button(String(localized: "native.wish.setPrice"), action: onPrice)
-            .font(.caption).foregroundStyle(PaperTheme.accent).frame(maxWidth: .infinity, minHeight: 35)
-            .buttonStyle(.plain).accessibilityIdentifier("native.wish.fillPrice")
+            .font(.caption).foregroundStyle(PaperTheme.accent).frame(maxWidth: .infinity, minHeight: 44)
+            .buttonStyle(.plain).disabled(!isActive || turning || dragBase != nil).accessibilityIdentifier("native.wish.fillPrice")
+    }
+    private var quoteButton: some View {
+        Button(String(localized: "native.wish.checkRate"), action: onQuote)
+            .font(.caption).foregroundStyle(PaperTheme.accent).frame(maxWidth: .infinity, minHeight: 44)
+            .buttonStyle(.plain).disabled(!isActive || turning || dragBase != nil).accessibilityIdentifier("native.wish.checkRate")
     }
     private var achievedBack: some View {
         VStack(alignment: .leading, spacing: row ? 6 : 14) {
@@ -306,18 +461,27 @@ struct NativeWishCard: View {
                 Text(MoneyFormat.string(price.amount, currencyCode: price.currencyCode))
                     .font(.system(size: expanded ? 37 : 26, weight: .medium)).monospacedDigit().lineLimit(1).minimumScaleFactor(0.5)
             }
-            if let date = wish.completedAt { Text(date, format: .dateTime.year().month().day()).font(.caption).foregroundStyle(PaperTheme.muted) }
+            if let date = wish.completedAt { Text(date, format: .dateTime.year().month().day()).font(.caption).foregroundStyle(WishMaterialPalette.meta) }
+            if let redemption = workspace.ledger.redemptions.values.first(where: { $0.wishID == wish.id && $0.state == .completed }),
+               let entry = workspace.ledger.walletEntries[redemption.walletEntryID] {
+                Text(String(localized: "wallet.exchange.walletChange") + " " + MoneyFormat.string(entry.walletSignedAmount, currencyCode: entry.walletCurrencyCode))
+                    .font(expanded ? .subheadline : .caption2).foregroundStyle(WishMaterialPalette.meta)
+                if expanded, entry.conversion.kind != .identity { WalletConversionDetails(entry: entry) }
+            }
         }.padding(expanded ? 26 : 17).frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading).allowsHitTesting(false)
     }
 
     private func flipGesture(width: CGFloat) -> some Gesture {
         DragGesture(minimumDistance: 8)
             .onChanged { value in
-                guard !reduceMotion else { return }
+                guard isActive, !reduceMotion else { return }
+                // The lower action strip is excluded from the flip recognizer.
                 if dragBase == nil {
+                    guard !flipped || wish.state == .completed || value.startLocation.y < height - actionExclusionHeight else { return }
                     guard abs(value.translation.width) > abs(value.translation.height) * 1.1 else { return }
                     turnTask?.cancel()
                     dragBase = angle
+                    turning = true
                 }
                 angle = (dragBase ?? angle) + Double(value.translation.width / max(1, width)) * 180
                 tilt = CGSize(width: 0, height: min(3, max(-3, -value.translation.height / 16)))
@@ -333,15 +497,16 @@ struct NativeWishCard: View {
             }
     }
     private func flip() {
-        guard Date().timeIntervalSince(lastDragEnd) > 0.25 else { return }
+        guard isActive, Date().timeIntervalSince(lastDragEnd) > 0.25 else { return }
         let base = (targetAngle / 180).rounded() * 180
         settle(cos(base * .pi / 180) < 0 ? base - 180 : base + 180)
     }
     private func settle(_ target: Double, velocity: Double = 0) {
         turnTask?.cancel()
         targetAngle = target
+        turning = true
         withAnimation(reduceMotion ? nil : .easeOut(duration: 0.2)) { tilt = .zero }
-        if reduceMotion { withAnimation(.easeOut(duration: 0.1)) { angle = target } }
+        if reduceMotion { withAnimation(.easeOut(duration: 0.1)) { angle = target }; turning = false }
         else {
             // Integrating the visible angle makes a running flip interruptible at
             // the actual finger-down angle, rather than the previous target.
@@ -357,10 +522,16 @@ struct NativeWishCard: View {
                 }
                 guard !Task.isCancelled else { return }
                 angle = target
+                turning = false
             }
         }
         PaperHaptics.selection()
     }
+}
+
+private struct WishActionHeightPreference: PreferenceKey {
+    static var defaultValue: CGFloat { 0 }
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) { value = max(value, nextValue()) }
 }
 
 private struct WishFlipFace: AnimatableModifier {
@@ -385,7 +556,7 @@ private struct WishRedeemEdgeGlow: View {
     var body: some View {
         TimelineView(.animation(minimumInterval: 1.0 / 24, paused: reduceMotion || !visible || !active || scenePhase != .active)) { clock in
             let phase = reduceMotion ? 0 : clock.date.timeIntervalSinceReferenceDate / 3.2 * 360
-            RoundedRectangle(cornerRadius: radius).strokeBorder(AngularGradient(colors: [.white.opacity(0.1), .white.opacity(0.13), Color(red: 0.9, green: 0.8, blue: 1), .white.opacity(0.95), .white.opacity(0.12), .white.opacity(0.08)], center: .center, angle: .degrees(phase)), lineWidth: 1.5)
+            RoundedRectangle(cornerRadius: radius).strokeBorder(AngularGradient(colors: [.white.opacity(0.1), .white.opacity(0.13), Color(red: 0.78, green: 0.93, blue: 1), .white.opacity(0.95), .white.opacity(0.12), .white.opacity(0.08)], center: .center, angle: .degrees(phase)), lineWidth: 1.5)
                 .shadow(color: PaperTheme.accent.opacity(0.28), radius: 4)
         }.allowsHitTesting(false).accessibilityHidden(true).onAppear { visible = true }.onDisappear { visible = false }
     }
@@ -397,6 +568,7 @@ struct WishCoverArtwork: View {
     var large = false
     var turn = 0.0
     var artworkOpacity = 1.0
+    var materialRole: WishMaterialRole = .unfulfilled
     @State private var image: UIImage?
     var body: some View {
         GeometryReader { proxy in
@@ -421,11 +593,12 @@ struct WishCoverArtwork: View {
                     }
                 } else if cover.layout == .symbol {
                     let size = artSize(proxy.size)
-                    CheckLineIcon(symbol: cover.symbol, size: size * 0.68).foregroundStyle(PaperTheme.accent)
+                    CheckLineIcon(symbol: cover.symbol, size: size * 0.68)
+                        .foregroundStyle(materialRole == .collection ? WishMaterialPalette.ink : Color.paper(light: 0x176A91, dark: 0xF2F3F5))
                         .frame(width: size, height: size)
-                        .background(.white.opacity(0.24), in: RoundedRectangle(cornerRadius: size * 0.26))
-                        .overlay(RoundedRectangle(cornerRadius: size * 0.26).strokeBorder(.white.opacity(0.55), lineWidth: 1))
-                        .rotationEffect(.degrees(-8)).shadow(color: PaperTheme.accent.opacity(0.14), radius: 13, y: 9)
+                        .background(LinearGradient(colors: [WishMaterialPalette.mount, WishMaterialPalette.mount.opacity(0.9)], startPoint: .topLeading, endPoint: .bottomTrailing), in: RoundedRectangle(cornerRadius: size * 0.26))
+                        .overlay(RoundedRectangle(cornerRadius: size * 0.26).strokeBorder(LinearGradient(colors: [WishMaterialPalette.edge.opacity(0.65), .black.opacity(0.15)], startPoint: .topLeading, endPoint: .bottomTrailing), lineWidth: 0.8))
+                        .rotationEffect(.degrees(-8)).shadow(color: .black.opacity(0.16), radius: 6, x: 2, y: 4)
                         .rotation3DEffect(.degrees(turn), axis: (x: 0, y: 1, z: 0), perspective: 0.5).opacity(artworkOpacity)
                         .position(artCenter(proxy.size))
                 }
@@ -443,41 +616,48 @@ struct WishCoverArtwork: View {
 struct ExpandedWishView: View {
     @Bindable var workspace: CheckLineWorkspace
     let wishID: UUID
+    var startFlipped = false
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.accessibilityReduceTransparency) private var reduceTransparency
     @State private var redeem = false
     @State private var price = false
     @State private var coverEditor = false
+    @State private var quote = false
     var body: some View {
         ZStack {
-            Color(red: 0.035, green: 0.025, blue: 0.055).ignoresSafeArea()
+            WishFocusScrim(onTap: { dismiss() })
             GeometryReader { proxy in
                 if let wish = workspace.ledger.wishes[wishID] {
                     let spacious = proxy.size.width > 600
                     NativeWishCard(workspace: workspace, wish: wish, expanded: true,
                                    expandedHeight: spacious ? min(540, max(354, proxy.size.height - 44)) : nil,
-                                   onExpand: {}, onRedeem: { redeem = true }, onPrice: { price = true })
+                                   isActive: !redeem && !price && !coverEditor && !quote,
+                                   startFlipped: startFlipped,
+                                   onExpand: {}, onRedeem: { redeem = true }, onPrice: { price = true }, onQuote: { quote = true })
                         .frame(width: min(spacious ? 640 : 368, max(0, proxy.size.width - 44)))
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                         .sheet(isPresented: $redeem, onDismiss: {
                             if workspace.ledger.wishes[wishID]?.state == .completed { dismiss() }
                         }) { WishRedemptionView(workspace: workspace, wishID: wishID).modifier(NativeDrawerStyle()) }
                         .sheet(isPresented: $price) { WishPriceSheet(workspace: workspace, wish: wish) }
+                        .sheet(isPresented: $quote) { WishReferenceQuoteView(workspace: workspace, wish: wish) }
                 }
             }
         }
         .sheet(isPresented: $coverEditor) { WishCoverPicker(store: workspace.wishCovers, wishID: wishID, name: workspace.ledger.wishes[wishID]?.name ?? "") }
         .safeAreaInset(edge: .top) {
             HStack {
-                Button { coverEditor = true } label: { Image(systemName: "photo").frame(width: 44, height: 44).background(.white.opacity(0.12), in: Circle()) }
+                Button { coverEditor = true } label: { Image(systemName: "photo").frame(width: 44, height: 44).background(PaperTheme.card.opacity(reduceTransparency ? 1 : 0.88), in: Circle()) }
                     .accessibilityLabel(String(localized: "native.cover.title")).accessibilityIdentifier("native.wish.cover.edit")
                 Spacer()
-                Button { dismiss() } label: { Image(systemName: "xmark").frame(width: 44, height: 44).background(.white.opacity(0.12), in: Circle()) }
+                Button { dismiss() } label: { Image(systemName: "xmark").frame(width: 44, height: 44).background(PaperTheme.card.opacity(reduceTransparency ? 1 : 0.88), in: Circle()) }
                     .accessibilityLabel(String(localized: "action.close"))
-            }.foregroundStyle(.white).padding(.horizontal, 22).padding(.vertical, 10)
+            }.foregroundStyle(PaperTheme.ink).padding(.horizontal, 22).padding(.vertical, 10)
         }
         .accessibilityElement(children: .contain)
         .accessibilityLabel(String(localized: "wallet.wishes.title"))
         .accessibilityIdentifier("native.wish.expanded")
+        .accessibilityAction(.escape) { dismiss() }
     }
 }
 
@@ -500,7 +680,8 @@ struct WishPriceSheet: View {
                             .focused($amountFocused).accessibilityLabel(String(localized: "native.wish.setPrice")).accessibilityIdentifier("native.wish.price.amount")
                             .frame(minHeight: 54).textFieldStyle(.plain)
                         CurrencyMenuButton(currency: $currency, preferred: workspace.ledger.walletSettings.walletCurrencyCode)
-                    }.padding(18).background(PaperTheme.accent.opacity(0.07), in: RoundedRectangle(cornerRadius: 24))
+                    }.padding(18).background(PaperTheme.card, in: RoundedRectangle(cornerRadius: 24))
+                        .paperFocusRing(amountFocused, radius: 24)
                     if failed { Text(String(localized: "v1.banner.failed")).foregroundStyle(PaperTheme.accent) }
                 }.padding(24)
             }.scrollDismissesKeyboard(.interactively)
@@ -585,11 +766,15 @@ struct WishCoverPicker: View {
     private var preview: some View {
         ZStack(alignment: .topLeading) {
             WishCoverArtwork(cover: previewCover, row: true, turn: iconTurn, artworkOpacity: artOpacity)
+            if !(previewCover.layout == .fill && previewCover.imageData != nil) { WishGlassPane(radius: 25) }
             Text(name.isEmpty ? String(localized: "wallet.wishes.add") : name)
                 .font(.title3.weight(.semibold)).lineLimit(2).padding(21).frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.trailing, 100).allowsHitTesting(false)
         }
-        .frame(height: 162).modifier(NativeGlassCard(radius: 25))
+        .frame(height: 162)
+        .background(WishCardBackdrop(radius: 25, photoFill: previewCover.layout == .fill && previewCover.imageData != nil))
+        .clipShape(RoundedRectangle(cornerRadius: 25, style: .continuous))
+        .foregroundStyle(previewCover.layout == .fill && previewCover.imageData != nil ? .white : WishMaterialPalette.ink)
         .contentShape(RoundedRectangle(cornerRadius: 25))
         .gesture(DragGesture(minimumDistance: 7).onChanged { value in
             guard photoMode, cover.layout == .fill, cover.imageData != nil else { return }
@@ -620,9 +805,9 @@ struct WishCoverPicker: View {
                 if let symbol { CheckLineIcon(symbol: symbol, size: 25).frame(height: 30) }
                 else { Image(systemName: "rectangle.slash").font(.system(size: 23, weight: .ultraLight)).frame(height: 30) }
                 Text(title).font(.caption2).lineLimit(1).minimumScaleFactor(0.65)
-            }.foregroundStyle(PaperTheme.accent).frame(maxWidth: .infinity, minHeight: 80)
-                .background(PaperTheme.accent.opacity(selected ? 0.13 : 0.045), in: RoundedRectangle(cornerRadius: 18))
-                .overlay(RoundedRectangle(cornerRadius: 18).strokeBorder(PaperTheme.accent.opacity(selected ? 0.55 : 0), lineWidth: 1))
+            }.foregroundStyle(selected ? PaperTheme.selectedInk : PaperTheme.ink).frame(maxWidth: .infinity, minHeight: 80)
+                .background(selected ? PaperTheme.selectedFill : PaperTheme.card, in: RoundedRectangle(cornerRadius: 18))
+                .overlay(RoundedRectangle(cornerRadius: 18).strokeBorder(selected ? PaperTheme.selectedStroke : .clear, lineWidth: 1))
         }.buttonStyle(.plain).accessibilityLabel(title).accessibilityAddTraits(selected ? .isSelected : [])
             .accessibilityIdentifier("native.cover.preset.\(symbol ?? "none")")
     }

@@ -942,3 +942,11 @@
 "settlement.early.nextLimit" = "下期额度";
 "settlement.early.futureRecords" = "本期还有未来日期的记录，请先调整这些记录，再提前结算。";
 "wallet.budget.edit.oneShotScope" = "确认后，仅本次预算使用新上限。消费记录和心愿余额不变。";
+
+// Native wish reference coverage
+"native.wish.checkRate" = "核对汇率";
+"native.wish.coverageRequired" = "达到 100% 后可兑换";
+"native.wish.referenceExplanation" = "仅用于估算当前心愿的覆盖进度。购买时仍需核对实际金额、币种和汇率。";
+"native.wish.referenceTarget" = "目标折合";
+"native.wish.referenceFailed" = "参考汇率未能保存或读取，请重试。原有已应用值保持。";
+"native.wish.applyReference" = "应用参考汇率";

@@ -123,8 +123,16 @@ enum DesignPreviewData {
             return
         }
         ledger = try WalletLedger.append(ledger: ledger, type: .surplus, sourceSignedAmount: 860, sourceCurrencyCode: "CNY", quote: nil, at: now).0
-        for (key, symbol, amount) in [("wallet.demo.headphones", "headphones", Decimal(699)), ("wallet.demo.camp", "tent", Decimal(1_200)), ("wallet.demo.book", "book", Decimal(89))] {
-            ledger.upsert(Wish(id: UUID(), name: String(localized: String.LocalizationValue(key)), targetAmount: amount, currencyCode: "CNY", referenceURL: nil, state: .active, createdAt: now, completedAt: nil, symbolName: symbol))
+        for (index, sample) in [("wallet.demo.headphones", "headphones", Decimal(699)), ("wallet.demo.camp", "tent", Decimal(1_200)), ("wallet.demo.book", "book", Decimal(89))].enumerated() {
+            let (key, symbol, amount) = sample
+            let fx = screen == "wishes-fx" && symbol == "headphones"
+            ledger.upsert(Wish(id: UUID(), name: String(localized: String.LocalizationValue(key)), targetAmount: fx ? 100 : amount,
+                currencyCode: fx ? "USD" : "CNY", referenceURL: nil, state: .active,
+                createdAt: now.addingTimeInterval(Double(-index)), completedAt: nil, symbolName: symbol))
+        }
+        if screen == "collection", let book = ledger.wishes.values.first(where: { $0.symbolName == "book" }) {
+            ledger = try WishRedemptionEngine.confirm(ledger: ledger, wishID: book.id, actualAmount: 89,
+                currencyCode: "CNY", quote: nil, now: now)
         }
         try LedgerStore.replaceAll(ledger, in: context)
         #endif

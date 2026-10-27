@@ -7,6 +7,7 @@
 
 import SwiftData
 import SwiftUI
+import UIKit
 
 @main
 struct CheckLineApp: App {
@@ -14,6 +15,7 @@ struct CheckLineApp: App {
     private let storageUnavailable: Bool
 
     init() {
+        Self.configureSegmentedControlAppearance()
         if DesignPreviewData.isEnabled {
             do {
                 container = try CheckLinePersistence.makeContainer(inMemory: true)
@@ -34,6 +36,13 @@ struct CheckLineApp: App {
                 storageUnavailable = true
             }
         }
+    }
+
+    private static func configureSegmentedControlAppearance() {
+        let appearance = UISegmentedControl.appearance()
+        appearance.selectedSegmentTintColor = PaperTheme.segmentedSelectedFillUIColor
+        appearance.setTitleTextAttributes([.foregroundColor: PaperTheme.segmentedMutedUIColor], for: .normal)
+        appearance.setTitleTextAttributes([.foregroundColor: PaperTheme.segmentedSelectedInkUIColor], for: .selected)
     }
 
     var body: some Scene {

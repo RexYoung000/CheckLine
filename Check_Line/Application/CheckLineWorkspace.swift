@@ -42,6 +42,7 @@ final class CheckLineWorkspace {
         }
     }
     let wishCovers: WishCoverStore
+    let wishReferenceQuotes: WishReferenceQuoteStore
     let draftStore: TaskDraftStore
     var lastSavedEntityID: UUID?
     var pendingBudgetText: String?
@@ -84,7 +85,8 @@ final class CheckLineWorkspace {
         saveLedger: (@MainActor (Ledger, ModelContext) throws -> Void)? = nil,
         attachmentStore: ExpenseAttachmentStore? = nil,
         draftStore: TaskDraftStore? = nil,
-        cloudSettings: CloudAgentSettings? = nil
+        cloudSettings: CloudAgentSettings? = nil,
+        wishReferenceQuotes: WishReferenceQuoteStore? = nil
     ) {
         self.context = context
         self.calendar = calendar
@@ -93,6 +95,7 @@ final class CheckLineWorkspace {
         let isolated = DesignPreviewData.isEnabled || context.container.configurations.allSatisfy { $0.isStoredInMemoryOnly }
         self.cloudSettings = cloudSettings ?? ((!isolated && session == nil) ? .loadForDevice() : CloudAgentSettings())
         self.wishCovers = WishCoverStore(inMemory: isolated)
+        self.wishReferenceQuotes = wishReferenceQuotes ?? WishReferenceQuoteStore(inMemory: isolated)
         self.draftStore = draftStore ?? TaskDraftStore(inMemory: isolated)
         self.attachmentStore = attachmentStore ?? ExpenseAttachmentStore(root: isolated ? FileManager.default.temporaryDirectory.appendingPathComponent("CheckLineDemoAttachments-" + UUID().uuidString) : nil)
         if let loaded = try? LedgerStore.load(from: context, now: now) {
@@ -345,6 +348,19 @@ final class CheckLineWorkspace {
 
     var wallet: WalletProjection {
         WalletLedger.projection(ledger: ledger)
+    }
+
+    func wishCoverage(for wish: Wish) -> WishCoverage {
+        let currency = ledger.walletSettings.walletCurrencyCode
+        return WishCoverage.calculate(wish: wish, walletBalance: wallet.balance, walletCurrency: currency,
+            reference: try? wishReferenceQuotes.reference(for: wish.id, source: wish.currencyCode ?? currency, target: currency))
+    }
+
+    func applyWishReference(_ reference: WishReferenceQuote) throws {
+        guard let wish = ledger.wishes[reference.wishID], wish.state == .active,
+              reference.matches(wishID: wish.id, source: wish.currencyCode ?? ledger.walletSettings.walletCurrencyCode,
+                                target: ledger.walletSettings.walletCurrencyCode) else { throw LedgerError.invalidExchangeRate }
+        try wishReferenceQuotes.apply(reference)
     }
 
     var attributionChoices: [AttributionChoice] {

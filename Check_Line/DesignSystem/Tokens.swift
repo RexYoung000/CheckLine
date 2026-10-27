@@ -22,33 +22,74 @@ enum CheckLineAppearance: String, CaseIterable, Identifiable {
     }
 }
 
-/// Shared brand surfaces. Native glass is reserved for controls and navigation.
+/// Shared neutral UI roles and independent optical colors for the budget liquid.
 enum PaperTheme {
-    static let canvas = Color.paper(light: 0xF5F4F1, dark: 0x1C1B20)
-    static let card = Color.paper(light: 0xFAF9F6, dark: 0x29262F)
-    static let pocket = Color.paper(light: 0xEEECE9, dark: 0x242228)
-    static let cardholderSurface = Color.paper(light: 0xE4DFE8, dark: 0x37313E)
-    static let cardholderBottom = Color.paper(light: 0xEEE9F0, dark: 0x26232C)
-    static let cardholderSummary = Color.paper(light: 0xF9F7FA, dark: 0x42394A)
-    static let ink = Color.paper(light: 0x302A38, dark: 0xF1ECF5)
-    static let muted = Color.paper(light: 0x645B6D, dark: 0xB6AEBF)
-    static let accent = Color.paper(light: 0x76618E, dark: 0xC2ACDC)
+    private static let lightCanvasHex: UInt32 = 0xFFFFFF
+    private static let darkCanvasHex: UInt32 = 0x101113
+    private static let selectedFillLightHex: UInt32 = 0xDDF3F8
+    private static let selectedFillDarkHex: UInt32 = 0x34383B
+    private static let selectedInkLightHex: UInt32 = 0x17272C
+    private static let selectedInkDarkHex: UInt32 = 0xF0F2F3
+
+    static let canvas = Color.paper(light: lightCanvasHex, dark: darkCanvasHex)
+    static let card = Color.paper(light: 0xFFFFFF, dark: 0x1B1D20)
+    static let pocket = Color.paper(light: 0xF5F7F8, dark: 0x17191C)
+    static let cardholderSurface = Color.paper(light: 0xEBF0F2, dark: 0x25282B)
+    static let cardholderBottom = Color.paper(light: 0xF6F8F9, dark: 0x1C1F22)
+    static let cardholderSummary = Color.paper(light: 0xF4F7F8, dark: 0x292C30)
+    static let ink = Color.paper(light: 0x17191B, dark: 0xF2F4F5)
+    static let muted = Color.paper(light: 0x686E73, dark: 0xA9AFB4)
+
+    /// High-contrast primary actions use black on light surfaces and white on dark ones.
+    static let primary = Color.paper(light: 0x17191B, dark: 0xF2F4F5)
+    static let primaryInk = Color.paper(light: 0xFFFFFF, dark: 0x17191B)
+
+    /// Selected controls use a small ice-blue cue in light mode and neutral gray in dark mode.
+    static let selectedFill = Color.paper(light: selectedFillLightHex, dark: selectedFillDarkHex)
+    static let selectedInk = Color.paper(light: selectedInkLightHex, dark: selectedInkDarkHex)
+    static let selectedStroke = Color.paper(light: 0x8BD2E2, dark: 0x747C82)
+    static let focus = Color.paper(light: 0x57B7D0, dark: 0xAEB6BB)
+
+    /// Default text and icon accent; focus remains a brighter, separate role.
+    static let accent = Color.paper(light: 0x0A647B, dark: 0xAEB6BB)
     static let gold = Color.paper(light: 0xB99C72, dark: 0xD2B78B)
-    static let waterTop = Color.paper(light: 0xD5CCE2, dark: 0x61516F)
-    static let waterBottom = Color.paper(light: 0xA392BC, dark: 0x51415F)
-    static let waveBack = Color.paper(light: 0xB6A2C9, dark: 0x766185)
+    static let waterTop = Color.paper(light: 0xD8F4FA, dark: 0x82D4E8)
+    static let waterBottom = Color.paper(light: 0x8DD7EA, dark: 0x388FA7)
+    static let waveBack = Color.paper(light: 0xBCEAF4, dark: 0x4F9DB2)
     static let paper = canvas
     static let paperInk = ink
     static let stroke = ink.opacity(0.10)
     static let lineTrack = ink.opacity(0.10)
-    static let lineInk = accent
+    static let lineInk = focus
     static let chipIdle = ink.opacity(0.07)
     static let navigationBase = card
     static let shadow = Color.black.opacity(0.18)
 
+    static var overlayScrim: Color {
+        Color(uiColor: UIColor { trait in
+            UIColor.black.withAlphaComponent(trait.userInterfaceStyle == .dark ? 0.40 : 0.32)
+        })
+    }
+
     static var canvasUIColor: UIColor {
+        dynamicUIColor(light: lightCanvasHex, dark: darkCanvasHex)
+    }
+
+    static var segmentedSelectedFillUIColor: UIColor {
+        dynamicUIColor(light: selectedFillLightHex, dark: selectedFillDarkHex)
+    }
+
+    static var segmentedSelectedInkUIColor: UIColor {
+        dynamicUIColor(light: selectedInkLightHex, dark: selectedInkDarkHex)
+    }
+
+    static var segmentedMutedUIColor: UIColor {
+        dynamicUIColor(light: 0x686E73, dark: 0xA9AFB4)
+    }
+
+    private static func dynamicUIColor(light: UInt32, dark: UInt32) -> UIColor {
         UIColor { trait in
-            let hex: UInt32 = trait.userInterfaceStyle == .dark ? 0x1C1B20 : 0xF5F4F1
+            let hex = trait.userInterfaceStyle == .dark ? dark : light
             return UIColor(red: CGFloat((hex >> 16) & 255) / 255,
                            green: CGFloat((hex >> 8) & 255) / 255,
                            blue: CGFloat(hex & 255) / 255, alpha: 1)

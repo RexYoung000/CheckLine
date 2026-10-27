@@ -28,22 +28,22 @@ struct OutcomeCelebration: View {
     @Environment(\.walletReduceMotion) private var reduceMotion
     @Environment(\.scenePhase) private var scenePhase
     @Environment(\.dynamicTypeSize) private var typeSize
+    @Environment(\.accessibilityReduceTransparency) private var reduceTransparency
     @State private var started = Date()
     @State private var settled = false
     @State private var seed = UInt64.random(in: 1...UInt64.max)
     @State private var fracture = GlassFracture.makeScene(seed: UInt64.random(in: 1...UInt64.max))
-    private let pearl = Color(red: 0.97, green: 0.94, blue: 0.99)
+    private var pearl: Color { PaperTheme.ink }
     private let gold = Color(red: 0.91, green: 0.79, blue: 0.47)
     private var isWish: Bool { receipt.kind == .wish }
-    private var surface: Color { isWish ? Color(red: 0.17, green: 0.145, blue: 0.21) : PaperTheme.canvas }
-    private var foreground: Color { isWish ? pearl : PaperTheme.ink }
+    private var foreground: Color { PaperTheme.ink }
 
     var body: some View {
         GeometryReader { geometry in
             TimelineView(.animation(minimumInterval: 1.0 / 60, paused: settled || reduceMotion || scenePhase != .active)) { clock in
                 let elapsed = (settled || reduceMotion) ? receipt.duration : min(receipt.duration, clock.date.timeIntervalSince(started))
                 ZStack {
-                    surface.ignoresSafeArea()
+                    WishFocusScrim()
                     if isWish { aurora(elapsed).ignoresSafeArea() }
                     ScrollView {
                         VStack(alignment: .leading, spacing: geometry.size.height < 700 ? 14 : 22) {
@@ -66,10 +66,9 @@ struct OutcomeCelebration: View {
                     Button(action: finish) {
                         Text(String(localized: isWish ? "native.outcome.viewRealized" : "native.returnBudget")).frame(maxWidth: .infinity)
                     }
-                    .buttonStyle(PaperSolidButtonStyle(foreground: isWish ? Color(red: 0.23, green: 0.17, blue: 0.3) : .white,
-                                                       background: isWish ? Color(red: 0.84, green: 0.78, blue: 0.94) : PaperTheme.accent))
+                    .buttonStyle(PaperSolidButtonStyle(foreground: PaperTheme.primaryInk, background: PaperTheme.primary))
                     .frame(maxWidth: 560).padding(.horizontal, 22).padding(.vertical, 12).frame(maxWidth: .infinity)
-                    .background(surface.opacity(0.96))
+                    .background(Color.clear)
                 }
             }
             .onChange(of: geometry.size) { old, new in if old != new { settled = true } }
@@ -94,12 +93,12 @@ struct OutcomeCelebration: View {
             }
             Button(action: finish) { Image(systemName: "xmark").font(.subheadline).frame(width: 44, height: 44).background(foreground.opacity(0.06), in: Circle()) }
                 .accessibilityLabel(String(localized: "action.close"))
-        }
+        }.padding(10).background(PaperTheme.card.opacity(reduceTransparency ? 1 : 0.92), in: RoundedRectangle(cornerRadius: 20))
     }
 
     private func aurora(_ elapsed: Double) -> some View {
         let strength = elapsed < 0.9 ? reveal(elapsed, 0.1, 0.8) * 0.3 : 0.12 + pow(1 - reveal(elapsed, 0.9, 1.4), 2) * 0.68
-        return RadialGradient(colors: [PaperTheme.accent.opacity(strength), Color(red: 0.73, green: 0.63, blue: 0.83).opacity(strength * 0.5), .clear], center: UnitPoint(x: 0.5, y: 0.43), startRadius: 5, endRadius: 400)
+        return RadialGradient(colors: [PaperTheme.accent.opacity(strength * 0.4), .white.opacity(strength * 0.2), .clear], center: UnitPoint(x: 0.5, y: 0.43), startRadius: 5, endRadius: 260)
     }
 
     private func wishScene(_ elapsed: TimeInterval, compact: Bool) -> some View {
@@ -114,7 +113,9 @@ struct OutcomeCelebration: View {
                 wishRevealedCard(elapsed)
                 if elapsed < 0.91 {
                     ZStack {
-                        NativeLiquidSurface(progress: receipt.progress ?? 1, active: false)
+                        WishCardBackdrop(radius: 28, roll: pose.angle)
+                        NativeLiquidSurface(progress: receipt.progress ?? 1, active: false).opacity(0.42)
+                        WishGlassPane(radius: 28)
                         if let progress = receipt.progress { Text(progress, format: .percent.precision(.fractionLength(0))).font(.system(size: 48, weight: .medium)).foregroundStyle(PaperTheme.ink) }
                     }.clipShape(RoundedRectangle(cornerRadius: 28)).opacity(1 - reveal(elapsed, 0.69, 0.22))
                 }
@@ -126,7 +127,7 @@ struct OutcomeCelebration: View {
             .frame(height: height)
             .scaleEffect(pose.scale).rotationEffect(.degrees(pose.angle)).offset(x: pose.x, y: pose.y)
             HStack(spacing: 8) {
-                Image(systemName: "checkmark.seal.fill").font(.title3).foregroundStyle(Color(red: 0.82, green: 0.73, blue: 0.94))
+                Image(systemName: "checkmark.seal.fill").font(.title3).foregroundStyle(PaperTheme.accent)
                     .scaleEffect(elapsed < 2.2 ? 0.65 : 1 + sin(reveal(elapsed, 2.2, 0.39) * .pi) * 0.13)
                 Text(receipt.date, format: .dateTime.year().month().day()).font(.caption).foregroundStyle(pearl.opacity(0.65))
             }.opacity(reveal(elapsed, 2.2, 0.39))
@@ -145,6 +146,7 @@ struct OutcomeCelebration: View {
     }
 
     private func wishRevealedCard(_ elapsed: Double) -> some View {
+        let cardPose = RewardTiming.wishPose(elapsed: elapsed)
         let artProgress = reveal(elapsed, 0.81, 1.35)
         let artScale = rewardKeyframe(artProgress, [0, 0.27, 0.52, 0.79, 1], [0.74, 0.99, 1.24, 1.08, 1])
         let artY = rewardKeyframe(artProgress, [0, 0.27, 0.52, 0.79, 1], [9, -7, -11, -4, 0])
@@ -152,7 +154,7 @@ struct OutcomeCelebration: View {
         let isPhotoFill = receipt.cover.layout == .fill && receipt.cover.imageData != nil
         return ZStack(alignment: .topLeading) {
             if receipt.cover.layout != .none {
-                WishCoverArtwork(cover: receipt.cover, large: true)
+                WishCoverArtwork(cover: receipt.cover, large: true, materialRole: .collection)
                     .scaleEffect(artScale).offset(y: artY).rotationEffect(.degrees(artRotation))
                     .opacity(reveal(elapsed, 0.81, 0.37))
             }
@@ -163,12 +165,12 @@ struct OutcomeCelebration: View {
                 Spacer()
                 Text(MoneyFormat.string(receipt.originalAmount, currencyCode: receipt.originalCurrency)).font(.title2.weight(.medium)).monospacedDigit()
                     .opacity(reveal(elapsed, 2.02, 0.37)).offset(y: 7 * (1 - reveal(elapsed, 2.02, 0.37)))
-            }.padding(20).foregroundStyle(isPhotoFill ? .white : PaperTheme.ink)
+            }.padding(20).foregroundStyle(isPhotoFill ? .white : WishMaterialPalette.ink)
             RoundedRectangle(cornerRadius: 28).stroke(.white.opacity(max(0, (1 - reveal(elapsed, 1.22, 1.18))) * 0.75), lineWidth: 1.4)
                 .blendMode(.plusLighter).opacity(reveal(elapsed, 0.93, 0.3))
         }
         .background {
-            RoundedRectangle(cornerRadius: 28).fill(LinearGradient(colors: [PaperTheme.card, PaperTheme.waterTop.opacity(0.72)], startPoint: .topLeading, endPoint: .bottomTrailing))
+            WishCardBackdrop(role: .collection, radius: 28, roll: cardPose.angle)
                 .opacity(elapsed < 0.9 ? 0.015 : 0.015 + smooth(reveal(elapsed, 1.54, 0.58)) * 0.985)
         }
         .clipShape(RoundedRectangle(cornerRadius: 28))
@@ -246,6 +248,7 @@ struct OutcomeCelebration: View {
         }
         .frame(maxWidth: .infinity,minHeight: compact ? 78 : 82,alignment: .leading).padding(compact ? 18 : 22)
         .background(LinearGradient(colors: [PaperTheme.card,PaperTheme.accent.opacity(0.13)],startPoint: .topLeading,endPoint: .bottomTrailing),in: RoundedRectangle(cornerRadius: 25))
+        .background(PaperTheme.card, in: RoundedRectangle(cornerRadius: 25))
         .overlay { RoundedRectangle(cornerRadius: 25).stroke(rim,lineWidth: 1.2) }
         .shadow(color: shadow,radius: 22,y: 7).scaleEffect(scale).offset(y: lift)
         .accessibilityElement(children: .ignore)
@@ -304,7 +307,7 @@ private struct RewardGlassPane: View {
             context.opacity = sin(phase * .pi) * progress * 0.6
             context.translateBy(x: origin.x + cos(angle) * radius, y: origin.y + sin(angle) * radius * 0.75)
             context.rotate(by: .radians(angle + .pi / 2))
-            context.fill(Path(ellipseIn: CGRect(x: -0.8 - n * 0.7, y: -1.6 - n * 1.3, width: 1.6 + n * 1.4, height: 3.2 + n * 2.6)), with: .color(i % 4 == 0 ? Color(red: 0.82, green: 0.9, blue: 0.88) : Color(red: 0.93, green: 0.89, blue: 0.99)))
+            context.fill(Path(ellipseIn: CGRect(x: -0.8 - n * 0.7, y: -1.6 - n * 1.3, width: 1.6 + n * 1.4, height: 3.2 + n * 2.6)), with: .color(i % 4 == 0 ? Color(red: 0.82, green: 0.9, blue: 0.88) : Color(red: 0.91, green: 0.97, blue: 1)))
         }
     }
 
@@ -323,15 +326,15 @@ private struct RewardGlassPane: View {
             if age > 0.2 { layer.addFilter(.blur(radius: max(0, (cell.depth - 90) / 160) * age * 1.2)) }
             let path = polygonPath(points)
             let colors: [Gradient.Stop] = [
-                .init(color: Color(red: 0.945, green: 0.906, blue: 0.988).opacity(0.66 + cell.shade * 0.3), location: 0),
-                .init(color: Color(red: 0.702, green: 0.604, blue: 0.804).opacity(0.85), location: 0.35),
-                .init(color: Color(red: 0.969, green: 0.945, blue: 0.996).opacity(0.63), location: 0.51),
-                .init(color: Color(red: 0.643, green: 0.537, blue: 0.757).opacity(0.8), location: 0.55),
-                .init(color: Color(red: 0.459, green: 0.353, blue: 0.573).opacity(0.89), location: 1)
+                .init(color: Color(red: 0.91, green: 0.97, blue: 0.99).opacity(0.66 + cell.shade * 0.3), location: 0),
+                .init(color: Color(red: 0.61, green: 0.78, blue: 0.85).opacity(0.85), location: 0.35),
+                .init(color: Color(red: 0.95, green: 0.99, blue: 1).opacity(0.63), location: 0.51),
+                .init(color: Color(red: 0.46, green: 0.66, blue: 0.74).opacity(0.8), location: 0.55),
+                .init(color: Color(red: 0.25, green: 0.44, blue: 0.53).opacity(0.89), location: 1)
             ]
             layer.fill(path, with: .linearGradient(Gradient(stops: colors), startPoint: CGPoint(x: rect.minX - cell.shade * 65, y: rect.minY), endPoint: CGPoint(x: rect.maxX, y: rect.maxY)))
             if age > 0 {
-                layer.stroke(path, with: .color(Color(red: 0.243, green: 0.157, blue: 0.357).opacity(0.38)), style: StrokeStyle(lineWidth: 2, lineJoin: .round))
+                layer.stroke(path, with: .color(Color(red: 0.12, green: 0.29, blue: 0.37).opacity(0.38)), style: StrokeStyle(lineWidth: 2, lineJoin: .round))
                 var glint = layer; glint.translateBy(x: -0.55, y: -0.8)
                 glint.stroke(path, with: .color(.white.opacity(0.52 + abs(sin(age * cell.spinY)) * 0.45)), lineWidth: 0.85)
                 if cell.shade > 0.65 {
@@ -350,7 +353,7 @@ private struct RewardGlassPane: View {
                 let b = CGPoint(x: rect.minX + (edge.a.x + (edge.b.x - edge.a.x) * progress) * rect.width,
                                 y: rect.minY + (edge.a.y + (edge.b.y - edge.a.y) * progress) * rect.height)
                 var line = Path(); line.move(to: a); line.addLine(to: b)
-                context.stroke(line, with: .color(Color(red: 0.247, green: 0.169, blue: 0.345).opacity(fade * 0.62)), lineWidth: 1.7)
+                context.stroke(line, with: .color(Color(red: 0.13, green: 0.31, blue: 0.4).opacity(fade * 0.62)), lineWidth: 1.7)
                 context.stroke(line, with: .color(.white.opacity(fade * (0.58 + flash * 0.4))), lineWidth: 0.52 + flash * 0.55)
             }
             context.stroke(Path(roundedRect: rect.insetBy(dx: 0.6, dy: 0.6), cornerRadius: 28), with: .color(.white.opacity(0.25 + pressure * 0.4)), lineWidth: 1.1)
@@ -410,7 +413,7 @@ private struct RewardCoinHarvest: View {
                 if p > 0.2 {
                     var trail = context; trail.opacity = alpha * 0.14
                     var path = Path(); path.move(to: CGPoint(x: x - bend * 0.14, y: y - 17)); path.addQuadCurve(to: CGPoint(x: x, y: y), control: CGPoint(x: x - 3, y: y - 7))
-                    trail.stroke(path, with: .color(i % 3 == 0 ? Color(red: 0.96, green: 0.85, blue: 0.61) : Color(red: 0.8, green: 0.7, blue: 0.9)), style: StrokeStyle(lineWidth: radius * 0.65, lineCap: .round))
+                    trail.stroke(path, with: .color(i % 3 == 0 ? Color(red: 0.96, green: 0.85, blue: 0.61) : Color(red: 0.77, green: 0.88, blue: 0.94)), style: StrokeStyle(lineWidth: radius * 0.65, lineCap: .round))
                 }
                 drawCoin(context, at: CGPoint(x: x, y: y), radius: radius, rotation: phase + p * spin,
                          tilt: (p - 0.5) * 0.65 + sin(p * 5 + phase) * 0.22, gold: i % 3 == 0, alpha: alpha, symbol: currencySymbol)
@@ -425,19 +428,19 @@ private struct RewardCoinHarvest: View {
         let face = cos(rotation), squeeze = 0.14 + abs(face) * 0.86
         context.scaleBy(x: squeeze, y: 1); context.opacity = alpha
         let rect = CGRect(x: -radius, y: -radius, width: radius * 2, height: radius * 2)
-        context.fill(Path(ellipseIn: rect.offsetBy(dx: 2.3, dy: 1.4)), with: .color(gold ? Color(red: 0.529, green: 0.4, blue: 0.227) : Color(red: 0.463, green: 0.322, blue: 0.561)))
+        context.fill(Path(ellipseIn: rect.offsetBy(dx: 2.3, dy: 1.4)), with: .color(gold ? Color(red: 0.529, green: 0.4, blue: 0.227) : Color(red: 0.31, green: 0.42, blue: 0.48)))
         let stops: [Gradient.Stop] = gold ? [
             .init(color: Color(red: 1, green: 0.961, blue: 0.816), location: 0), .init(color: Color(red: 0.91, green: 0.788, blue: 0.471), location: 0.32),
             .init(color: Color(red: 1, green: 0.957, blue: 0.784), location: 0.52), .init(color: Color(red: 0.769, green: 0.588, blue: 0.29), location: 0.55), .init(color: Color(red: 0.886, green: 0.737, blue: 0.412), location: 1)
         ] : [
-            .init(color: Color(red: 0.961, green: 0.91, blue: 1), location: 0), .init(color: Color(red: 0.78, green: 0.651, blue: 0.886), location: 0.32),
-            .init(color: Color(red: 0.957, green: 0.918, blue: 1), location: 0.52), .init(color: Color(red: 0.608, green: 0.463, blue: 0.706), location: 0.55), .init(color: Color(red: 0.71, green: 0.576, blue: 0.812), location: 1)
+            .init(color: Color(red: 0.93, green: 0.97, blue: 1), location: 0), .init(color: Color(red: 0.72, green: 0.82, blue: 0.88), location: 0.32),
+            .init(color: Color(red: 0.94, green: 0.98, blue: 1), location: 0.52), .init(color: Color(red: 0.46, green: 0.59, blue: 0.67), location: 0.55), .init(color: Color(red: 0.59, green: 0.72, blue: 0.79), location: 1)
         ]
         context.fill(Path(ellipseIn: rect), with: .linearGradient(Gradient(stops: stops), startPoint: rect.origin, endPoint: CGPoint(x: rect.maxX, y: rect.maxY)))
         context.stroke(Path(ellipseIn: rect), with: .color(.white.opacity(0.8)), lineWidth: 0.8)
-        context.stroke(Path(ellipseIn: rect.insetBy(dx: radius * 0.24, dy: radius * 0.24)), with: .color(gold ? Color(red: 0.65, green: 0.518, blue: 0.282) : Color(red: 0.58, green: 0.439, blue: 0.671)), lineWidth: 0.65)
+        context.stroke(Path(ellipseIn: rect.insetBy(dx: radius * 0.24, dy: radius * 0.24)), with: .color(gold ? Color(red: 0.65, green: 0.518, blue: 0.282) : Color(red: 0.41, green: 0.55, blue: 0.63)), lineWidth: 0.65)
         if abs(face) > 0.32 {
-            context.draw(Text(verbatim: symbol).font(.system(size: radius * 1.2, weight: .semibold)).foregroundStyle(gold ? Color(red: 0.518, green: 0.392, blue: 0.22) : Color(red: 0.463, green: 0.333, blue: 0.553)), at: CGPoint(x: 0, y: radius * 0.06))
+            context.draw(Text(verbatim: symbol).font(.system(size: radius * 1.2, weight: .semibold)).foregroundStyle(gold ? Color(red: 0.518, green: 0.392, blue: 0.22) : Color(red: 0.28, green: 0.41, blue: 0.49)), at: CGPoint(x: 0, y: radius * 0.06))
         }
     }
 
@@ -450,7 +453,7 @@ private struct RewardCoinHarvest: View {
             var arc = Path()
             arc.addArc(center: .zero, radius: 1, startAngle: .degrees(180), endAngle: .degrees(360), clockwise: false)
             let transform = CGAffineTransform(scaleX: 20 + p * 110, y: 6 + p * 20).concatenating(CGAffineTransform(translationX: end.x, y: end.y + 10))
-            context.stroke(arc.applying(transform), with: .color(index == 5 ? Color(red: 1, green: 0.88, blue: 0.627) : Color(red: 0.851, green: 0.761, blue: 0.929)), lineWidth: 1.6)
+            context.stroke(arc.applying(transform), with: .color(index == 5 ? Color(red: 1, green: 0.88, blue: 0.627) : Color(red: 0.82, green: 0.92, blue: 0.98)), lineWidth: 1.6)
         }
         if elapsed >= 2.05 {
             rewardBloom(original, origin: end, elapsed: elapsed - 2.05, strength: 1.15, seed: seed)
@@ -482,8 +485,8 @@ private func rewardBloom(_ original: GraphicsContext, origin: CGPoint, elapsed: 
     var context = original
     context.fill(Path(ellipseIn: CGRect(x: origin.x - radius, y: origin.y - radius, width: radius * 2, height: radius * 2)), with: .radialGradient(Gradient(stops: [
         .init(color: Color(red: 1, green: 0.976, blue: 0.922).opacity(alpha * 0.62), location: 0),
-        .init(color: Color(red: 0.945, green: 0.878, blue: 1).opacity(alpha * 0.4), location: 0.18),
-        .init(color: Color(red: 0.741, green: 0.592, blue: 0.867).opacity(alpha * 0.2), location: 0.5),
+        .init(color: Color(red: 0.9, green: 0.96, blue: 1).opacity(alpha * 0.4), location: 0.18),
+        .init(color: Color(red: 0.58, green: 0.79, blue: 0.9).opacity(alpha * 0.2), location: 0.5),
         .init(color: .clear, location: 1)
     ]), center: origin, startRadius: 0, endRadius: radius))
     context.opacity = alpha * 0.6
@@ -497,7 +500,7 @@ private func rewardBloom(_ original: GraphicsContext, origin: CGPoint, elapsed: 
 
 private func rewardParticles(_ original: GraphicsContext, origin: CGPoint, elapsed: Double, seed: UInt64, wish: Bool, strength: Double) {
     var random = VisualRandom(state: seed &+ 9000)
-    let colors = wish ? [Color(red: 0.965, green: 0.906, blue: 1), Color(red: 0.776, green: 0.647, blue: 0.878), .white, Color(red: 0.749, green: 0.867, blue: 0.843)] : [Color(red: 0.929, green: 0.808, blue: 0.522), Color(red: 0.737, green: 0.616, blue: 0.847), Color(red: 1, green: 0.961, blue: 0.875), Color(red: 0.824, green: 0.698, blue: 0.38)]
+    let colors = wish ? [Color(red: 0.92, green: 0.98, blue: 1), Color(red: 0.67, green: 0.82, blue: 0.91), .white, Color(red: 0.75, green: 0.9, blue: 0.97)] : [Color(red: 0.929, green: 0.808, blue: 0.522), Color(red: 0.7, green: 0.83, blue: 0.92), Color(red: 1, green: 0.961, blue: 0.875), Color(red: 0.824, green: 0.698, blue: 0.38)]
     for i in 0..<(wish ? 64 : 48) {
         let angle = wish ? random.next() * .pi * 2 : .pi + random.next() * .pi
         let speed = 80 + random.next() * 230, vx = cos(angle) * speed, vy = sin(angle) * speed * 0.68 - 110

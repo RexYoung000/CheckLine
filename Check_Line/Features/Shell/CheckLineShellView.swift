@@ -33,7 +33,7 @@ struct CheckLineShellView: View {
         .environment(\.shellChrome, chrome)
         .sheet(isPresented: Binding(get: { workspace.showComposer || workspace.showAgent }, set: {
             if !$0 { workspace.showComposer = false; workspace.showAgent = false }
-        })) { CreateComposerSheet(workspace: workspace) }
+        })) { CreateComposerSheet(workspace: workspace).liquidMetricsProbe() }
         .sheet(isPresented: $chrome.isSourcesPresented) {
             NavigationStack { SourceReviewView().toolbar { ToolbarItem(placement: .topBarTrailing) {
                 Button(String(localized: "action.close"), iconSymbol: "xmark") { chrome.isSourcesPresented = false }.labelStyle(.iconOnly)
@@ -65,6 +65,9 @@ struct CheckLineShellView: View {
             if let tab = CheckLineAppTab(rawValue: DesignPreviewData.screen) { chrome.selectedTab = tab == .home || tab == .insights ? .budgets : tab; chrome.settleNavigation() }
             if DesignPreviewData.screen == "budget-empty" { chrome.selectedTab = .budgets; chrome.settleNavigation() }
             if DesignPreviewData.screen == "wishes-empty" { chrome.selectedTab = .wishes; chrome.settleNavigation() }
+            if ["wishes-fx", "collection", "wish-expanded", "wallet", "wallet-entry", "wish-cover"].contains(DesignPreviewData.screen) {
+                chrome.selectedTab = .wishes; chrome.wishesShowCompleted = DesignPreviewData.screen == "collection"; chrome.settleNavigation()
+            }
             if ["analysis-empty", "analysis-no-records"].contains(DesignPreviewData.screen) { chrome.selectedTab = .insights; chrome.settleNavigation() }
             if DesignPreviewData.screen == "budget-inline" { chrome.selectedTab = .budgets; chrome.settleNavigation() }
             #if DEBUG
@@ -92,7 +95,7 @@ struct CheckLineShellView: View {
                 }
                 workspace.showComposer = true
             case "create-budget": workspace.openComposer(.budget)
-            case "create-wish", "budget-detail", "records", "calendar", "wish-detail", "redemption", "agent-mascot", "import-review", "management-review", "retrospective-record", "settlement-fx", "history-review": showsPreviewDetail = true
+            case "create-wish", "budget-detail", "records", "calendar", "wish-detail", "redemption", "agent-mascot", "import-review", "management-review", "retrospective-record", "settlement-fx", "history-review", "budget-info", "expense-detail", "wallet", "wallet-entry", "wish-cover": showsPreviewDetail = true
             default: break
             }
             if DesignPreviewData.runsMotionTour {
@@ -156,6 +159,19 @@ struct CheckLineShellView: View {
             case "agent-mascot": CloudMascotReview()
             #endif
             case "create-wish": CreateWishSheet(workspace: workspace)
+            case "wallet": WishWalletSummaryView(workspace: workspace)
+            case "wallet-entry":
+                if let entry = workspace.ledger.sortedWalletEntries.last { NavigationStack { WalletEntryDetailView(workspace: workspace, entryID: entry.id) } }
+            case "wish-cover":
+                if let wish = workspace.ledger.wishes.values.first(where: { $0.symbolName == "headphones" }) {
+                    WishCoverPicker(store: workspace.wishCovers, wishID: wish.id, name: wish.name)
+                }
+            case "expense-detail":
+                if let expense = workspace.ledger.expenses.values.filter({ $0.attributionState != .pending }).max(by: { $0.occurredAt < $1.occurredAt }) {
+                    NavigationStack { WalletExpenseDetail(workspace: workspace, expenseID: expense.id) }
+                }
+            case "budget-info":
+                if let card = workspace.selectedCard { BudgetDetailSheet(workspace: workspace, budgetID: card.id, initialSection: .information) }
             case "budget-detail":
                 if let card = workspace.selectedCard { BudgetDetailSheet(workspace: workspace, budgetID: card.id, initialSection: .overview) }
             case "records", "calendar":

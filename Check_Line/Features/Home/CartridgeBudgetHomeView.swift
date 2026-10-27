@@ -24,6 +24,8 @@ struct CartridgeBudgetHomeView: View {
     @State private var impactCompression: CGFloat = 1
     @State private var holderImpact: CGFloat = 0
     @State private var contactDate: Date?
+    @State private var liquidImpulse: LiquidSurfaceImpulse?
+    @State private var liquidSwitchDirection = 0.0
     @State private var motionTask: Task<Void, Never>?
     @State private var motionID = UUID()
     @State private var internalSelection: UUID?
@@ -43,12 +45,21 @@ struct CartridgeBudgetHomeView: View {
     @State private var libraryUsesArc = true
     @State private var libraryFocusedCard: HomeBudgetCardModel?
     @State private var libraryIsMounted = false
+    @State private var enteredPreviewStage = false
 
     private var card: HomeBudgetCardModel? { workspace.selectedCard }
     private var recordProgress: CGFloat { max(0, -layerPosition) }
     private var libraryProgress: CGFloat { max(0, layerPosition) }
     private var connected: Bool { phase == .connected || phase == .charging }
     private var gestureIsActive: Bool { holderDragOrigin != nil || cardDragAxis != nil }
+    private var liquidIsActive: Bool {
+        stage == .dashboard && recordProgress < 0.001 && libraryProgress < 0.001
+            && detail == nil && selectedExpense == nil && deletingExpense == nil
+            && !showArchive && !showUnbudgeted && !workspace.showComposer && !workspace.showAgent
+            && chrome?.isSettingsPresented != true && chrome?.isSourcesPresented != true
+            && chrome?.isAttentionPresented != true
+            && (chrome == nil || chrome?.selectedTab == .budgets || chrome?.selectedTab == .home)
+    }
     private var frontMovement: CGSize {
         guard stage == .dashboard else { return CGSize(width: cardDrag.width * 0.55, height: 0) }
         if cardDragAxis == .horizontal {
@@ -89,7 +100,10 @@ struct CartridgeBudgetHomeView: View {
                 }.modifier(NativeDrawerStyle())
             }
             .sheet(isPresented: $showArchive, onDismiss: { chrome?.isShowingDetail = false }) { ArchivedBudgetSheet(workspace: workspace) }
-            .onAppear { availabilityDate = Date(); chrome?.isShowingDetail = false; synchronizeStack() }
+            .onAppear {
+                availabilityDate = Date(); chrome?.isShowingDetail = false; synchronizeStack()
+                enterDesignPreviewStage()
+            }
             .onReceive(NotificationCenter.default.publisher(for: UIApplication.significantTimeChangeNotification)) { _ in availabilityDate = Date() }
             .onDisappear { settlePresentation() }
             .onChange(of: card?.id) { old, current in
@@ -116,7 +130,7 @@ struct CartridgeBudgetHomeView: View {
                 }
                 chrome.workspaceRequest = nil
             }
-        }
+        }.liquidMetricsProbe()
     }
 
     private var emptyHome: some View {
@@ -268,6 +282,9 @@ struct CartridgeBudgetHomeView: View {
     private func frontCard(_ card: HomeBudgetCardModel, width: CGFloat, height: CGFloat, morph: CGFloat, libraryStyle: CGFloat = 0) -> some View {
         ZStack(alignment: .bottom) {
             CartridgeContactExtension().frame(width: max(80, width - 78), height: 68 * (1 - morph))
+                // The upper 20pt sit behind the transparent face. Hide that
+                // overlap so the tail cannot appear as a square blue bar inside it.
+                .mask(alignment: .bottom) { Rectangle().frame(height: 48 * (1 - morph)) }
                 .offset(y: 48 * (1 - morph)).opacity(Double(clamp(1 - recordProgress * 3) * (1 - libraryStyle)))
             cartridgeFace(card, morph: morph, interactive: true)
                 .opacity(Double(1 - libraryStyle))
@@ -289,15 +306,20 @@ struct CartridgeBudgetHomeView: View {
         }
     }
 
-    private func cartridgeFace(_ card: HomeBudgetCardModel, morph: CGFloat, interactive: Bool) -> some View {
+    private func cartridgeFace(_ card: HomeBudgetCardModel, morph: CGFloat, interactive: Bool, rearStack: Bool = false) -> some View {
         GeometryReader { geometry in
             ZStack(alignment: .topLeading) {
-                NativeLiquidSurface(progress: CGFloat(BudgetPresentation.fill(card)), burstAt: interactive ? contactDate : nil, active: interactive && libraryProgress < 0.5, horizontalAmount: morph)
+                NativeLiquidSurface(progress: CGFloat(BudgetPresentation.fill(card)), burstAt: interactive ? contactDate : nil,
+                                    active: interactive && liquidIsActive, horizontalAmount: morph,
+                                    dragOffset: interactive ? cardDrag.width : 0, impulse: interactive ? liquidImpulse : nil,
+                                    staticPreview: !interactive)
+                    .opacity(rearStack ? 0.15 : 1)
                 Text(card.name)
                     .font(.system(size: lerp(typeSize.isAccessibilitySize ? 22 : 24, 15, morph), weight: .semibold))
                     .lineLimit(morph > 0.6 ? 1 : 2)
                     .frame(maxWidth: geometry.size.width - lerp(44, 135, morph), alignment: .leading)
                     .offset(x: lerp(22, 18, morph), y: lerp(22, geometry.size.height * 0.5 - 10, morph))
+                    .opacity(rearStack ? 0.12 : 1).blur(radius: rearStack ? 3 : 0)
                 VStack(alignment: .leading, spacing: 3) {
                     if BudgetPresentation.isUpcoming(card, now: availabilityDate) {
                         Text(String(format: String(localized: "settlement.early.resumes"), card.periodStart.formatted(date: .abbreviated, time: .omitted)))
@@ -309,8 +331,9 @@ struct CartridgeBudgetHomeView: View {
                             Text(verbatim: "· " + card.currencyCode)
                         }
                     }
-                }.font(.system(size: 11)).foregroundStyle(PaperTheme.muted)
-                    .opacity(Double(clamp(1 - morph * 3))).offset(x: 22, y: typeSize.isAccessibilitySize ? 62 : 57)
+                }.font(.system(size: 11)).foregroundStyle(BudgetGlassPalette.metadata)
+                    .opacity(Double(clamp(1 - morph * 3)) * (rearStack ? 0.12 : 1))
+                    .blur(radius: rearStack ? 3 : 0).offset(x: 22, y: typeSize.isAccessibilitySize ? 62 : 57)
                 VStack(alignment: .trailing, spacing: 5 * (1 - morph)) {
                     Text(String(localized: BudgetPresentation.isUpcoming(card, now: availabilityDate) ? "settlement.early.nextLimit" : BudgetPresentation.remaining(card) >= 0 ? "v1.card.remaining" : card.snapshot.certainOverrunAmount > 0 ? "wallet.overrun" : "wallet.possibleOverrun"))
                         .font(.system(size: 12)).frame(height: 15 * (1 - morph)).clipped().opacity(Double(clamp(1 - morph * 4)))
@@ -322,6 +345,8 @@ struct CartridgeBudgetHomeView: View {
                             .font(.system(size: 48, weight: .medium)).monospacedDigit().lineLimit(1).minimumScaleFactor(0.5)
                     }
                 }
+                .opacity(rearStack ? 0.08 : 1).blur(radius: rearStack ? 4 : 0)
+                .foregroundStyle(morph > 0.6 ? PaperTheme.ink : BudgetGlassPalette.amount(level: CGFloat(BudgetPresentation.fill(card))))
                 .frame(width: geometry.size.width - 44, height: geometry.size.height, alignment: .bottomTrailing)
                 .offset(x: 22, y: -lerp(28, (geometry.size.height - 29) / 2, morph))
                 if interactive {
@@ -333,8 +358,8 @@ struct CartridgeBudgetHomeView: View {
                         .accessibilityLabel(String(localized: "capture.title")).accessibilityIdentifier("wallet.home.capture")
                         .disabled(BudgetPresentation.isUpcoming(card, now: availabilityDate))
                 }
-            }.foregroundStyle(PaperTheme.ink)
-        }.modifier(NativeGlassCard(radius: lerp(27, 25, morph)))
+            }.foregroundStyle(morph > 0.6 ? PaperTheme.ink : BudgetGlassPalette.ink)
+        }.modifier(NativeGlassCard(radius: lerp(27, 25, morph), level: CGFloat(BudgetPresentation.fill(card))))
     }
 
     private func rearStack(width: CGFloat, height: CGFloat) -> some View {
@@ -345,11 +370,12 @@ struct CartridgeBudgetHomeView: View {
                 let depth = CGFloat(index + 1)
                 let lift = cardDragAxis == .horizontal ? min(1, abs(cardDrag.width) / 70) * 0.4 : 0
                 let offset = cardLift - (depth - lift) * (connected ? 16 : 6)
-                cartridgeFace(item, morph: 0, interactive: false)
+                cartridgeFace(item, morph: 0, interactive: false, rearStack: true)
                     .frame(width: width, height: height)
                     .scaleEffect(1 - (depth - lift) * 0.072, anchor: .top)
                     .offset(y: offset)
-                    .opacity(flyingCard?.id == item.id ? 0 : 0.32)
+                    .blur(radius: 2.2)
+                    .opacity(flyingCard?.id == item.id ? 0 : 0.40)
                     .zIndex(Double(3 - index))
                     .accessibilityIdentifier("native.home.stack.back.\(index + 1)")
             }
@@ -617,6 +643,15 @@ struct CartridgeBudgetHomeView: View {
         String(localized: stageTransitioning || gestureIsActive ? "native.holder.moving" : "native.holder.ready") + " · " + String(localized: stage == .records ? "native.records" : stage == .library ? "native.library" : "tab.budgets")
     }
     private func recordDays(_ expenses: [Expense]) -> [Date] { Array(Set(expenses.map { Calendar.current.startOfDay(for: $0.occurredAt) })).sorted(by: >) }
+    private func enterDesignPreviewStage() {
+        guard DesignPreviewData.isEnabled, !enteredPreviewStage else { return }
+        enteredPreviewStage = true
+        switch DesignPreviewData.screen {
+        case "library": setStage(.library)
+        case "records-layer": setStage(.records)
+        default: break
+        }
+    }
     private func synchronizeStack() {
         let ids = workspace.cards.map(\.id)
         stackOrder = stackOrder.filter { ids.contains($0) }
@@ -652,7 +687,7 @@ struct CartridgeBudgetHomeView: View {
         motionTask?.cancel(); motionTask = nil; motionID = UUID(); flyingCard = nil
         if phase == .inserting || phase == .charging { phase = .connected; cardLift = 8 }
         else if phase == .changing || phase == .ejecting { phase = .detached; cardLift = -56 }
-        contactDate = nil; cardScale = 1; impactCompression = 1; holderImpact = 0
+        contactDate = nil; liquidImpulse = nil; liquidSwitchDirection = 0; cardScale = 1; impactCompression = 1; holderImpact = 0
     }
     private func settlePresentation() {
         cardPressTask?.cancel(); cardInputIsActive = false; cardPressDidFire = false
@@ -663,7 +698,7 @@ struct CartridgeBudgetHomeView: View {
     private func eject() {
         guard stage == .dashboard, connected else { return }
         motionTask?.cancel(); let token = UUID(); motionID = token
-        phase = .ejecting; contactDate = nil; PaperHaptics.light()
+        phase = .ejecting; contactDate = nil; liquidImpulse = nil; liquidSwitchDirection = 0; PaperHaptics.light()
         withAnimation(reduceMotion ? nil : .timingCurve(0.2, 0.7, 0.3, 1, duration: 0.28)) { cardLift = -56; cardDrag = .zero; cardScale = 1 }
         motionTask = Task { @MainActor in
             if !reduceMotion { try? await Task.sleep(for: .milliseconds(280)) }
@@ -679,7 +714,9 @@ struct CartridgeBudgetHomeView: View {
         motionTask = Task { @MainActor in
             if !reduceMotion { try? await Task.sleep(for: .milliseconds(180)) }
             guard !Task.isCancelled, motionID == token else { return }
-            phase = .charging; contactDate = reduceMotion ? nil : Date(); PaperHaptics.light()
+            phase = .charging; contactDate = reduceMotion ? nil : Date()
+            if !reduceMotion, liquidSwitchDirection != 0 { liquidImpulse = LiquidSurfaceImpulse(direction: liquidSwitchDirection*0.86) }
+            liquidSwitchDirection = 0; PaperHaptics.light()
             if !reduceMotion {
                 withAnimation(.linear(duration: 0.018)) { impactCompression = 0.995; holderImpact = 0.9 }
                 try? await Task.sleep(for: .milliseconds(18))
@@ -701,6 +738,8 @@ struct CartridgeBudgetHomeView: View {
         guard old.id != next.id else { return }
         motionTask?.cancel(); let token = UUID(); motionID = token
         receiptPositions[old.id] = receiptPosition; phase = .changing; contactDate = nil
+        liquidSwitchDirection = Double(direction)
+        liquidImpulse = reduceMotion ? nil : LiquidSurfaceImpulse(direction: Double(direction))
         flyingCard = old; flightPose = CartridgeFlightPose(x: frontMovement.width, y: cardLift + frontMovement.height, rotation: Double(cardDrag.width / 260) * 6)
         internalSelection = next.id
         stackOrder.removeAll { $0 == next.id || $0 == old.id }; stackOrder.insert(next.id, at: 0); stackOrder.append(old.id)
@@ -765,9 +804,9 @@ private struct BudgetSheetSelection: Identifiable {
 private struct CartridgeContactExtension: View {
     var body: some View {
         UnevenRoundedRectangle(bottomLeadingRadius: 17, bottomTrailingRadius: 17)
-            .fill(LinearGradient(colors: [PaperTheme.card.opacity(0.8), PaperTheme.accent.opacity(0.38), PaperTheme.waterBottom.opacity(0.55)], startPoint: .topLeading, endPoint: .bottomTrailing))
+            .fill(LinearGradient(colors: [BudgetGlassPalette.tint.opacity(0.20), BudgetGlassPalette.tint.opacity(0.30), BudgetGlassPalette.tint.opacity(0.45)], startPoint: .topLeading, endPoint: .bottomTrailing))
             .overlay { UnevenRoundedRectangle(bottomLeadingRadius: 17, bottomTrailingRadius: 17).strokeBorder(.white.opacity(0.58), lineWidth: 0.8) }
-            .shadow(color: PaperTheme.accent.opacity(0.12), radius: 6, y: 4)
+            .shadow(color: BudgetGlassPalette.ink.opacity(0.12), radius: 6, y: 4)
             .accessibilityHidden(true)
     }
 }

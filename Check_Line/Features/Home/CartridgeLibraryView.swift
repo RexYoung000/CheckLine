@@ -15,6 +15,10 @@ struct CartridgeLibraryView: View {
     @Environment(\.accessibilityVoiceOverEnabled) private var voiceOver
     @Environment(\.dynamicTypeSize) private var typeSize
     @Environment(\.scenePhase) private var scenePhase
+    @Environment(\.colorScheme) private var scheme
+    @Environment(\.accessibilityReduceTransparency) private var reduceTransparency
+    @AccessibilityFocusState private var focusedLibraryCard: UUID?
+    @AccessibilityFocusState private var focusedUseCard: Bool
     @State private var layout: LibraryLayout = .arc
     @State private var searching = false
     @State private var query = ""
@@ -47,6 +51,7 @@ struct CartridgeLibraryView: View {
             let footerHeight: CGFloat = 64
             VStack(spacing: 0) {
                 header.opacity(Double(presentationProgress))
+                    .allowsHitTesting(openedID == nil).accessibilityHidden(openedID != nil)
                 if searching { searchField.opacity(Double(presentationProgress)) }
                 Group {
                     if searching || staticMode { accessibleGrid.opacity(Double(presentationProgress)) }
@@ -61,6 +66,7 @@ struct CartridgeLibraryView: View {
                 .accessibilityValue(layoutTitle)
                 returnGrip
                     .frame(height: footerHeight)
+                    .allowsHitTesting(openedID == nil).accessibilityHidden(openedID != nil)
             }
             .frame(width: proxy.size.width, height: proxy.size.height)
             .foregroundStyle(PaperTheme.ink)
@@ -71,6 +77,7 @@ struct CartridgeLibraryView: View {
                     Spacer(minLength: 0).allowsHitTesting(false)
                     Color.clear.frame(width: 22).contentShape(Rectangle()).gesture(returnGesture)
                 }.frame(height: max(0, proxy.size.height - 58)).accessibilityHidden(true)
+                    .allowsHitTesting(openedID == nil)
                 }
             }
         }
@@ -79,6 +86,10 @@ struct CartridgeLibraryView: View {
         .onAppear { initialSelectedID = workspace.selectedBudgetID; publishArcPresentation() }
         .onChange(of: Int(arcPosition.rounded())) { _, _ in publishArcPresentation() }
         .onChange(of: layout) { _, _ in publishArcPresentation() }
+        .onChange(of: openedID) { old, current in
+            if current != nil { focusedUseCard = true }
+            else { focusedUseCard = false; focusedLibraryCard = old }
+        }
         .onChange(of: searching) { _, _ in publishArcPresentation() }
         .onDisappear { stopInertia() }
         .onChange(of: scenePhase) { _, phase in if phase != .active { stopInertia(); dragOrigin = nil } }
@@ -131,6 +142,7 @@ struct CartridgeLibraryView: View {
             .padding(.horizontal, 16).padding(.vertical, 11)
             .background(PaperTheme.card.opacity(0.65), in: Capsule())
             .overlay(Capsule().strokeBorder(.white.opacity(0.6), lineWidth: 1))
+            .paperFocusRing(searchFocused, radius: 26)
             .padding(.horizontal, 22).padding(.vertical, 8)
             .accessibilityIdentifier("native.library.searchField")
     }
@@ -262,6 +274,7 @@ struct CartridgeLibraryView: View {
                     let place = metrics.position(index: index, offset: domePosition)
                     CartridgeLibraryCard(card: card, expenses: BudgetPresentation.expenses(card, in: workspace.ledger), compact: true)
                         .frame(width: metrics.cardWidth, height: metrics.cardHeight)
+                        .blur(radius: openedID != nil && !reduceTransparency ? 6 : 0)
                         .offset(y: returnTravel)
                         .rotation3DEffect(.degrees(place.angleY), axis: (x: 0, y: 1, z: 0), perspective: 0.4)
                         .rotation3DEffect(.degrees(place.angleX), axis: (x: 1, y: 0, z: 0), perspective: 0.4)
@@ -281,6 +294,7 @@ struct CartridgeLibraryView: View {
                         .accessibilityAddTraits(.isButton)
                         .accessibilityIdentifier("native.library.card.\(card.id.uuidString)")
                         .accessibilityHidden(place.opacity < 0.2 || openedID != nil)
+                        .accessibilityFocused($focusedLibraryCard, equals: card.id)
                 }
                 if let openedID, let card = cards.first(where: { $0.id == openedID }) {
                     domeFocusedCard(card, size: proxy.size)
@@ -337,14 +351,18 @@ struct CartridgeLibraryView: View {
 
     private func domeFocusedCard(_ card: HomeBudgetCardModel, size: CGSize) -> some View {
         ZStack {
-            PaperTheme.canvas.opacity(0.86)
+            Color.black.opacity(scheme == .dark ? 0.40 : 0.32)
+                .contentShape(Rectangle())
+                .onTapGesture { withAnimation(reduceMotion ? nil : .easeOut(duration: 0.2)) { openedID = nil } }
+                .accessibilityHidden(true)
             VStack(spacing: 24) {
                 CartridgeLibraryCard(card: card, expenses: BudgetPresentation.expenses(card, in: workspace.ledger), compact: false)
                     .frame(width: min(340, size.width * 0.84), height: min(255, size.width * 0.63))
                 HStack(spacing: 12) {
                     Button(String(localized: "native.library.useCard")) { choose(card) }
-                        .buttonStyle(PaperSolidButtonStyle(background: PaperTheme.accent))
+                        .buttonStyle(PaperSolidButtonStyle())
                         .accessibilityIdentifier("native.library.useCard")
+                        .accessibilityFocused($focusedUseCard)
                     Button(String(localized: "action.back")) {
                         withAnimation(reduceMotion ? nil : .easeOut(duration: 0.2)) { openedID = nil }
                     }.buttonStyle(PaperQuietButtonStyle())
@@ -502,8 +520,7 @@ struct CartridgeLibraryCard: View {
             let small = compact || proxy.size.width < 220
             let inset: CGFloat = small ? 12 : 20
             ZStack {
-                CartridgeLibraryWater(level: CGFloat(BudgetPresentation.fill(card)))
-                    .fill(LinearGradient(colors: [PaperTheme.waterTop.opacity(0.8), PaperTheme.waterBottom.opacity(0.85)], startPoint: .topLeading, endPoint: .bottomTrailing))
+                NativeLiquidSurface(progress: CGFloat(BudgetPresentation.fill(card)), active: false, staticPreview: true)
                 VStack(alignment: .leading, spacing: small ? 5 : 10) {
                     Text(card.name).font(.system(size: small ? 13 : 19, weight: .semibold))
                         .lineLimit(1).minimumScaleFactor(0.7)
@@ -511,6 +528,7 @@ struct CartridgeLibraryCard: View {
                     Text(MoneyFormat.string(BudgetPresentation.remaining(card), currencyCode: card.currencyCode))
                         .font(.system(size: small ? 23 : 38, weight: .medium)).monospacedDigit()
                         .lineLimit(1).minimumScaleFactor(0.38).frame(maxWidth: .infinity, alignment: .trailing)
+                        .foregroundStyle(BudgetGlassPalette.amount(level: CGFloat(BudgetPresentation.fill(card))))
                     HStack(spacing: 3) {
                         symbolCollection(small: small).fixedSize(horizontal: true,vertical: false)
                         Spacer(minLength: 2)
@@ -518,18 +536,13 @@ struct CartridgeLibraryCard: View {
                             .font(.system(size: small ? 9 : 12, weight: .medium)).monospacedDigit()
                             .lineLimit(1).minimumScaleFactor(0.5)
                             .padding(.horizontal, small ? 5 : 8).padding(.vertical, small ? 4 : 6)
-                            .background(PaperTheme.card.opacity(0.44), in: Capsule())
+                            .background(.white.opacity(0.30), in: Capsule())
                     }
                 }.padding(inset)
             }
-            .modifier(NativeGlassCard(radius: small ? 18 : 27))
-            .overlay(alignment: .topLeading) {
-                RoundedRectangle(cornerRadius: small ? 16 : 25).trim(from: 0.49, to: 0.89)
-                    .stroke(.white.opacity(0.75), style: StrokeStyle(lineWidth: 1.5, lineCap: .round))
-                    .padding(5).allowsHitTesting(false)
-            }
+            .modifier(NativeGlassCard(radius: small ? 18 : 27, level: CGFloat(BudgetPresentation.fill(card))))
         }
-        .foregroundStyle(PaperTheme.ink)
+        .foregroundStyle(BudgetGlassPalette.ink)
         .accessibilityElement(children: .ignore)
     }
 
@@ -538,30 +551,15 @@ struct CartridgeLibraryCard: View {
             ForEach(Array(expenses.prefix(3))) { expense in
                 CheckLineIcon(symbol: BudgetPresentation.symbol(for: expense), size: small ? 8 : 11)
                     .frame(width: small ? 17 : 25, height: small ? 17 : 25)
-                    .background(PaperTheme.card.opacity(0.85), in: Circle())
+                    .background(.white.opacity(0.42), in: Circle())
                     .overlay(Circle().strokeBorder(.white.opacity(0.75), lineWidth: 0.8))
             }
             if expenses.count > 3 {
                 Text("+\(expenses.count - 3)")
                     .font(.system(size: small ? 8 : 10, weight: .medium)).monospacedDigit()
                     .padding(.horizontal, small ? 5 : 7).frame(height: small ? 17 : 25)
-                    .background(PaperTheme.card.opacity(0.9), in: Capsule())
+                    .background(.white.opacity(0.42), in: Capsule())
             }
         }.accessibilityHidden(true)
-    }
-}
-
-private struct CartridgeLibraryWater: Shape {
-    var level: CGFloat
-    func path(in rect: CGRect) -> Path {
-        guard level > 0 else { return Path() }
-        let y = rect.height * (1 - min(1, level))
-        var path = Path()
-        path.move(to: CGPoint(x: 0, y: y))
-        path.addCurve(to: CGPoint(x: rect.width, y: y), control1: CGPoint(x: rect.width * 0.35, y: y - 10), control2: CGPoint(x: rect.width * 0.62, y: y + 10))
-        path.addLine(to: CGPoint(x: rect.maxX, y: rect.maxY))
-        path.addLine(to: CGPoint(x: 0, y: rect.maxY))
-        path.closeSubpath()
-        return path
     }
 }

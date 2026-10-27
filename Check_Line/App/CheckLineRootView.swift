@@ -13,7 +13,7 @@ struct CheckLineRootView: View {
                 StorageUnavailableView()
             } else {
                 ProgressView()
-                    .tint(PaperTheme.ink)
+                    .tint(PaperTheme.focus)
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .background(PaperTheme.canvas.ignoresSafeArea())
                     .onAppear {

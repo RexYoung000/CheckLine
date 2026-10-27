@@ -75,18 +75,18 @@ struct ComponentLightFrame: View {
     var origin: ComponentLightOrigin = .top
 
     private var band: AngularGradient {
-        let lavender = Color.paper(light: 0xBBA0E8, dark: 0xB893F1)
-        let cyan = Color.paper(light: 0x89CFDD, dark: 0x85D6E2)
-        let pink = Color.paper(light: 0xF3B5D7, dark: 0xF3B7DD)
-        let violet = Color.paper(light: 0xC3A0ED, dark: 0xC7A4F2)
+        let iceBlue = Color.paper(light: 0xA6E0ED, dark: 0x95D4E2)
+        let paleLavender = Color.paper(light: 0xD1C1E7, dark: 0xC1B5D3)
+        let softPink = Color.paper(light: 0xF0BDD5, dark: 0xDFAFC5)
+        let silverWhite = Color.paper(light: 0xF3F6F7, dark: 0xDDE2E5)
         return AngularGradient(stops: [
-            .init(color: lavender.opacity(0), location: 0),
-            .init(color: lavender, location: 12.0 / 360),
-            .init(color: cyan, location: 26.0 / 360),
-            .init(color: pink, location: 39.0 / 360),
-            .init(color: violet, location: 50.0 / 360),
-            .init(color: violet.opacity(0), location: 62.0 / 360),
-            .init(color: violet.opacity(0), location: 1)
+            .init(color: iceBlue.opacity(0), location: 0),
+            .init(color: iceBlue, location: 12.0 / 360),
+            .init(color: paleLavender, location: 26.0 / 360),
+            .init(color: softPink, location: 39.0 / 360),
+            .init(color: silverWhite, location: 50.0 / 360),
+            .init(color: silverWhite.opacity(0), location: 62.0 / 360),
+            .init(color: silverWhite.opacity(0), location: 1)
         ], center: .center, angle: .degrees(origin.degrees - 50 + 200 * progress))
     }
 

@@ -42,9 +42,9 @@ struct WalletSymbol: View {
     var body: some View {
         CheckLineIcon(symbol: name, size: size * 0.42)
             .font(.system(size: size * 0.42, weight: .regular))
-            .foregroundStyle(PaperTheme.accent)
+            .foregroundStyle(PaperTheme.ink)
             .frame(width: size, height: size)
-            .background(PaperTheme.accent.opacity(0.11), in: RoundedRectangle(cornerRadius: size * 0.32, style: .continuous))
+            .background(PaperTheme.pocket, in: RoundedRectangle(cornerRadius: size * 0.32, style: .continuous))
             .accessibilityHidden(true)
     }
 }
@@ -250,25 +250,26 @@ struct LiquidBudgetCard: View {
     var reflectionPoint: CGPoint?
     var remainingChange: BudgetRemainingChange?
     var remainingMotionContext = RemainingMotionContext()
+    var clippedViewport: CGRect? = nil
     @Environment(\.walletReduceMotion) private var reduceMotion
     @Environment(\.scenePhase) private var scenePhase
     @Environment(\.dynamicTypeSize) private var typeSize
     @State private var visible = false
+    @State private var insideViewport = true
     @State private var hoverPoint: CGPoint?
-    private var animates: Bool { flows && !reduceMotion && visible && scenePhase == .active }
+    private var animates: Bool { flows && !reduceMotion && visible && insideViewport && scenePhase == .active }
     private var activeReflection: CGPoint? { reduceMotion ? nil : reflectionPoint ?? hoverPoint }
 
     var body: some View {
+        let viewport = clippedViewport
         ZStack {
-            LinearGradient(colors: [Color.paper(light: 0xFBFAF8, dark: 0x302B35), Color.paper(light: 0xF4EFF5, dark: 0x28232D)], startPoint: .topLeading, endPoint: .bottomTrailing)
-            RadialGradient(colors: [PaperTheme.accent.opacity(0.07), .clear], center: .topLeading, startRadius: 0, endRadius: 260)
             NativeLiquidSurface(progress: CGFloat(BudgetPresentation.fill(card)), active: animates)
             .accessibilityHidden(true)
             reflection
             VStack(alignment: .leading, spacing: 10) {
                 Text(card.name).font(.title2.weight(.semibold)).lineLimit(2).padding(.trailing, 44)
                 Text((BudgetPresentation.isUpcoming(card) ? String(localized: "ui.schedule.notStarted") : card.cycleType == .repeating ? String(localized: "v1.cycle.repeating") : String(localized: "v1.cycle.oneShot")) + " · " + card.currencyCode)
-                    .font(.caption).foregroundStyle(PaperTheme.muted)
+                    .font(.caption).foregroundStyle(BudgetGlassPalette.metadata)
                 Spacer(minLength: 8)
                 HStack {
                     Spacer(minLength: 0)
@@ -278,24 +279,23 @@ struct LiquidBudgetCard: View {
                         BudgetRemainingAmountText(card: card, change: remainingChange, context: remainingMotionContext)
                             .font(.system(.largeTitle).weight(.medium)).monospacedDigit()
                             .lineLimit(1).minimumScaleFactor(0.5)
+                            .foregroundStyle(BudgetGlassPalette.amount(level: CGFloat(BudgetPresentation.fill(card))))
                         if showsRemainingRatio && BudgetPresentation.remaining(card) >= 0 {
                             Text("\(Int((BudgetPresentation.fill(card) * 100).rounded()))% " + String(localized: "budget.remaining.short"))
-                                .font(.caption2).foregroundStyle(PaperTheme.muted)
+                                .font(.caption2).foregroundStyle(BudgetGlassPalette.metadata)
                         }
                     }
                 }
             }
             .padding(22)
             .padding(.bottom, max(0, bottomInset - 22))
-            .foregroundStyle(PaperTheme.ink)
+            .foregroundStyle(BudgetGlassPalette.ink)
         }
         .frame(minHeight: typeSize.isAccessibilitySize ? 280 : 258)
-        .clipShape(RoundedRectangle(cornerRadius: 29, style: .continuous))
-        .overlay {
-            RoundedRectangle(cornerRadius: 29, style: .continuous)
-                .strokeBorder(LinearGradient(colors: [.white.opacity(0.66), PaperTheme.accent.opacity(0.10), PaperTheme.ink.opacity(0.09)], startPoint: .topLeading, endPoint: .bottomTrailing), lineWidth: 0.9)
-        }
-        .shadow(color: PaperTheme.accent.opacity(0.12), radius: 14, y: 8)
+        .modifier(NativeGlassCard(radius: 29, level: CGFloat(BudgetPresentation.fill(card))))
+        .onGeometryChange(for: Bool.self) { geometry in
+            viewport.map { $0.intersects(geometry.frame(in: .global)) } ?? true
+        } action: { insideViewport = $0 }
         .onContinuousHover { phase in
             switch phase {
             case .active(let point): hoverPoint = point
@@ -392,7 +392,7 @@ struct WalletExpenseRow: View {
     var body: some View {
         HStack(spacing: 12) {
             CheckLineIcon(symbol: BudgetPresentation.symbol(for: expense))
-                .foregroundStyle(PaperTheme.accent).frame(width: 36, height: 40)
+                .foregroundStyle(PaperTheme.muted).frame(width: 36, height: 40)
             VStack(alignment: .leading, spacing: 4) {
                 Text(expense.merchant ?? String(localized: "v1.card.record.untitled")).font(.subheadline).lineLimit(2)
                 if showsDate {

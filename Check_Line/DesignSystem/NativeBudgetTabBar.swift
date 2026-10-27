@@ -19,7 +19,7 @@ struct NativeBudgetTabBar: UIViewRepresentable {
         bar.itemWidth = 56
         bar.itemSpacing = 2
         bar.tintColor = UIColor(PaperTheme.accent)
-        bar.unselectedItemTintColor = UIColor(PaperTheme.ink)
+        bar.unselectedItemTintColor = UIColor(PaperTheme.muted)
         bar.accessibilityIdentifier = "wallet.nativeTabBar"
         bar.items = [CheckLineAppTab.budgets, .wishes].enumerated().map { index, tab in
             let image = CheckLineIconAssets.templateImage(for: tab.systemImage).withRenderingMode(.alwaysTemplate)

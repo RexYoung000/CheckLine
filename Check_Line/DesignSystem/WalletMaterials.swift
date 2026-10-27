@@ -44,8 +44,8 @@ struct WalletReceiptCard: View {
 
     private var colors: [Color] {
         depth == 0
-            ? [Color.paper(light: 0xE5DDEB, dark: 0x413749), Color.paper(light: 0xDDD3E6, dark: 0x3C3244)]
-            : [Color.paper(light: 0xD8CDE2, dark: 0x372F3E), Color.paper(light: 0xCABBD8, dark: 0x2F2934)]
+            ? [Color.paper(light: 0xF7F9FA, dark: 0x383B3F), Color.paper(light: 0xEEF2F4, dark: 0x303337)]
+            : [Color.paper(light: 0xEEF1F3, dark: 0x303337), Color.paper(light: 0xE7EBED, dark: 0x292C30)]
     }
 
     var body: some View {
@@ -64,7 +64,7 @@ struct WalletReceiptCard: View {
             RoundedRectangle(cornerRadius: 17, style: .continuous)
                 .strokeBorder(LinearGradient(colors: [PaperTheme.ink.opacity(0.1), PaperTheme.ink.opacity(0.02)], startPoint: .top, endPoint: .bottom), lineWidth: 0.8)
         }
-        .shadow(color: Color(red: 0.09, green: 0.06, blue: 0.14).opacity(0.16), radius: 2, y: 2)
+        .shadow(color: .black.opacity(0.14), radius: 2, y: 2)
         .accessibilityElement(children: .combine)
     }
 }

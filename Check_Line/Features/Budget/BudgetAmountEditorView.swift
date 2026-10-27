@@ -45,6 +45,7 @@ struct BudgetAmountEditorView: View {
                                 .font(.title2.monospacedDigit())
                                 .accessibilityIdentifier("wallet.budget.edit.amount")
                         }.padding(16).walletSurface(radius: 18)
+                            .paperFocusRing(amountFocused, radius: 18)
                         Text(String(localized: "wallet.budget.edit.inputHint"))
                             .font(.subheadline).foregroundStyle(PaperTheme.muted)
                     }

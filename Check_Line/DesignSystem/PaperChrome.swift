@@ -80,8 +80,8 @@ struct PaperSolidButtonStyle: ButtonStyle {
     @Environment(\.walletReduceMotion) private var reduceMotion
     @Environment(\.isEnabled) private var isEnabled
     var enabled: Bool = true
-    var foreground: Color = PaperTheme.canvas
-    var background: Color = PaperTheme.ink
+    var foreground: Color = PaperTheme.primaryInk
+    var background: Color = PaperTheme.primary
 
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
@@ -138,6 +138,7 @@ struct PaperField: View {
     var keyboard: UIKeyboardType = .default
     var axis: Axis = .horizontal
     var identifier: String? = nil
+    var isFocused = false
 
     var body: some View {
         VStack(alignment: .leading, spacing: PaperTheme.Space.xs) {
@@ -151,7 +152,10 @@ struct PaperField: View {
                 .padding(.vertical, 8)
                 .accessibilityLabel(title)
                 .accessibilityIdentifier(identifier ?? title)
-        }.padding(14).walletSurface(radius: 18)
+        }
+        .padding(14)
+        .walletSurface(radius: 18)
+        .paperFocusRing(isFocused, radius: 18)
     }
 }
 
@@ -168,7 +172,7 @@ struct PaperChoiceChip<Value: Hashable>: View {
         } label: {
             Text(title)
                 .font(PaperTheme.Typography.chip)
-                .foregroundStyle(selected ? PaperTheme.canvas : PaperTheme.muted)
+                .foregroundStyle(selected ? PaperTheme.selectedInk : PaperTheme.muted)
                 .lineLimit(1)
                 .minimumScaleFactor(0.72)
                 .padding(.horizontal, 12)
@@ -176,8 +180,13 @@ struct PaperChoiceChip<Value: Hashable>: View {
                 .frame(minHeight: 44)
                 .background(
                     RoundedRectangle(cornerRadius: PaperTheme.Radius.chip, style: .continuous)
-                        .fill(selected ? PaperTheme.ink : PaperTheme.chipIdle)
+                        .fill(selected ? PaperTheme.selectedFill : PaperTheme.chipIdle)
                 )
+                .overlay {
+                    RoundedRectangle(cornerRadius: PaperTheme.Radius.chip, style: .continuous)
+                        .strokeBorder(selected ? PaperTheme.selectedStroke : .clear, lineWidth: 1)
+                        .allowsHitTesting(false)
+                }
         }
         .buttonStyle(PaperChipPressStyle())
         .accessibilityAddTraits(selected ? .isSelected : [])
@@ -261,6 +270,7 @@ struct PaperHeroField: View {
     var placeholder: String
     @Binding var text: String
     var keyboard: UIKeyboardType = .default
+    var isFocused = false
 
     var body: some View {
         TextField("", text: $text, prompt: Text(placeholder).foregroundStyle(PaperTheme.muted))
@@ -270,6 +280,7 @@ struct PaperHeroField: View {
             .keyboardType(keyboard)
             .padding(.horizontal, 16)
             .accessibilityLabel(placeholder)
+            .paperFocusRing(isFocused, radius: 18)
     }
 }
 
@@ -287,12 +298,16 @@ struct PaperCapsuleSegment<Value: Hashable>: View {
                 } label: {
                     Text(item.1)
                         .font(PaperTheme.Typography.chip)
-                        .foregroundStyle(selected ? PaperTheme.canvas : PaperTheme.muted)
+                        .foregroundStyle(selected ? PaperTheme.selectedInk : PaperTheme.muted)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 10)
                         .background(
-                            Capsule().fill(selected ? PaperTheme.ink : Color.clear)
+                            Capsule().fill(selected ? PaperTheme.selectedFill : Color.clear)
                         )
+                        .overlay {
+                            Capsule().strokeBorder(selected ? PaperTheme.selectedStroke : .clear, lineWidth: 1)
+                                .allowsHitTesting(false)
+                        }
                 }
                 .buttonStyle(PaperChipPressStyle())
                 .accessibilityAddTraits(selected ? .isSelected : [])
@@ -312,12 +327,12 @@ struct PaperSubmitBar: View {
         Button(action: action) {
             Text(title)
                 .font(.headline)
-                .foregroundStyle(PaperTheme.canvas)
+                .foregroundStyle(PaperTheme.primaryInk)
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 14)
                 .frame(minHeight: 52)
                 .background(
-                    PaperTheme.ink.opacity(enabled ? 1 : 0.28),
+                    PaperTheme.primary.opacity(enabled ? 1 : 0.28),
                     in: RoundedRectangle(cornerRadius: 26, style: .continuous)
                 )
         }
@@ -325,5 +340,19 @@ struct PaperSubmitBar: View {
         .disabled(enabled == false)
         .padding(.horizontal, 20)
         .padding(.bottom, 16)
+    }
+}
+
+extension View {
+    /// Draws the single visible focus edge over a surface's existing neutral border.
+    func paperFocusRing(_ isFocused: Bool, radius: CGFloat = PaperTheme.Radius.card) -> some View {
+        overlay {
+            if isFocused {
+                RoundedRectangle(cornerRadius: radius, style: .continuous)
+                    .strokeBorder(PaperTheme.focus, lineWidth: 1.25)
+                    .allowsHitTesting(false)
+                    .accessibilityHidden(true)
+            }
+        }
     }
 }

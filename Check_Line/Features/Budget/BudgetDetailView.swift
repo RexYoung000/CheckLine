@@ -68,8 +68,16 @@ struct BudgetDetailContent: View {
     @State private var historyExpanded = false
     @State private var coverageExpanded = false
     @State private var availabilityDate = Date()
+    @State private var visible = false
+    @State private var liquidViewport = CGRect.zero
     @Environment(\.scenePhase) private var scenePhase
     private var card: HomeBudgetCardModel? { HomeProjector.card(budgetID: budgetID, periodID: periodID, in: workspace.ledger) }
+    private var liquidIsActive: Bool {
+        visible && section == .overview && settlementSelection == nil && editingCard == nil
+            && !workspace.showComposer && !workspace.showAgent
+            && chrome?.isSettingsPresented != true && chrome?.isSourcesPresented != true
+            && chrome?.isAttentionPresented != true
+    }
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: PaperTheme.Space.l) {
@@ -86,12 +94,14 @@ struct BudgetDetailContent: View {
             }.padding(22).frame(maxWidth: 760).frame(maxWidth: .infinity)
         }
         .background(PaperTheme.canvas.ignoresSafeArea()).foregroundStyle(PaperTheme.ink)
+        .onGeometryChange(for: CGRect.self) { $0.frame(in: .global) } action: { liquidViewport = $0 }
         .accessibilityIdentifier("wallet.workspace.page")
         .navigationTitle(section == .overview ? card?.name ?? String(localized: "ui.workspace.title") : section.title)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar(.visible, for: .navigationBar).toolbar(.hidden, for: .tabBar, .bottomBar)
         .toolbarBackground(.hidden, for: .navigationBar)
-        .onAppear { availabilityDate = Date() }
+        .onAppear { visible = true; availabilityDate = Date() }
+        .onDisappear { visible = false }
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.significantTimeChangeNotification)) { _ in availabilityDate = Date() }
         .onChange(of: scenePhase) { _, value in if value == .active { availabilityDate = Date() } }
         .task {
@@ -117,7 +127,8 @@ struct BudgetDetailContent: View {
             if card.periodState == .settled, let settlement = workspace.ledger.settlement(forPeriod: card.periodID) {
                 historicalSummary(card, settlement: settlement)
             } else {
-            LiquidBudgetCard(card: card, showsRemainingRatio: false, flows: true, referenceDate: availabilityDate)
+            LiquidBudgetCard(card: card, showsRemainingRatio: false, flows: liquidIsActive, referenceDate: availabilityDate,
+                             clippedViewport: liquidViewport.isEmpty ? nil : liquidViewport)
             let metricsLayout = typeSize.isAccessibilitySize
                 ? AnyLayout(VStackLayout(alignment: .leading, spacing: 16))
                 : AnyLayout(HStackLayout(alignment: .top, spacing: 20))
@@ -183,7 +194,7 @@ struct BudgetDetailContent: View {
     private func destinationBlock(_ key: String, _ symbol: String) -> some View {
         VStack(alignment: .leading, spacing: 14) {
             HStack {
-                CheckLineIcon(symbol: symbol, size: 24).foregroundStyle(PaperTheme.accent)
+                CheckLineIcon(symbol: symbol, size: 24).foregroundStyle(PaperTheme.muted)
                 Spacer(minLength: 8)
                 CheckLineIcon(symbol: "arrow.up.right", size: 16).foregroundStyle(PaperTheme.muted)
             }
@@ -494,7 +505,7 @@ struct BudgetCalendarView: View {
                 Button { changeMonth(1) } label: { CheckLineIcon(symbol: "chevron.right").frame(width: 44, height: 44) }.accessibilityLabel(String(localized: "wallet.month.next"))
             }
             let values = days.map { BudgetPresentation.dailyAmount($0, card: card, ledger: ledger) }
-            let maximum = max(values.max() ?? 0, 1)
+            let expenseDays = Set(BudgetPresentation.expenses(card, in: ledger).map { calendar.startOfDay(for: $0.occurredAt) })
             if typeSize.isAccessibilitySize {
                 DatePicker(String(localized: "wallet.date"), selection: $selectedDay, displayedComponents: .date)
                     .datePickerStyle(.compact)
@@ -508,12 +519,18 @@ struct BudgetCalendarView: View {
                 ForEach(Array(days.enumerated()), id: \.element) { index, day in
                     let selected = calendar.isDate(day, inSameDayAs: selectedDay)
                     let inPeriod = containsInSelectedPeriod(day)
-                    let opacity = !inPeriod ? 0.025 : values[index] == 0 ? 0.06 : 0.16 + 0.45 * NSDecimalNumber(decimal: max(0, values[index]) / maximum).doubleValue
+                    let hasRecords = expenseDays.contains(calendar.startOfDay(for: day))
                     Button { selectedDay = day } label: {
-                        Text(calendar.component(.day, from: day), format: .number)
-                            .font(.subheadline.monospacedDigit()).frame(maxWidth: .infinity, minHeight: 44)
-                            .foregroundStyle(selected ? PaperTheme.paperInk : PaperTheme.ink)
-                            .background(selected ? PaperTheme.accent : PaperTheme.accent.opacity(opacity), in: RoundedRectangle(cornerRadius: 11))
+                        VStack(spacing: 3) {
+                            Text(calendar.component(.day, from: day), format: .number).font(.subheadline.monospacedDigit())
+                            Circle().fill(selected ? PaperTheme.selectedInk : PaperTheme.accent)
+                                .frame(width: 3, height: 3).opacity(hasRecords && inPeriod ? 1 : 0)
+                        }
+                        .frame(maxWidth: .infinity, minHeight: 44)
+                        .foregroundStyle(selected ? PaperTheme.selectedInk : inPeriod ? PaperTheme.ink : PaperTheme.muted)
+                        .background(selected ? PaperTheme.selectedFill : .clear, in: RoundedRectangle(cornerRadius: 11))
+                        .overlay { RoundedRectangle(cornerRadius: 11).strokeBorder(selected ? PaperTheme.selectedStroke : .clear, lineWidth: 1) }
+                        .contentShape(Rectangle())
                     }.buttonStyle(.plain)
                         .accessibilityLabel(day.formatted(date: .complete, time: .omitted))
                         .accessibilityValue(inPeriod ? MoneyFormat.string(values[index], currencyCode: card.currencyCode) : String(localized: "ui.calendar.outsidePeriod"))

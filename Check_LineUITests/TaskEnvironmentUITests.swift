@@ -60,7 +60,14 @@ final class TaskEnvironmentUITests: XCTestCase {
         defer {
             if !wasEnabled {
                 settings.activate()
-                if toggle.exists { toggle.coordinate(withNormalizedOffset: CGVector(dx: 0.93, dy: 0.5)).tap() }
+                XCTAssertTrue(settings.wait(for: .runningForeground, timeout: 5))
+                let ready = XCTNSPredicateExpectation(predicate: NSPredicate(format: "exists == 1 AND hittable == 1"), object: toggle)
+                XCTAssertEqual(XCTWaiter.wait(for: [ready], timeout: 5), .completed)
+                // Activating Settings can finish before its transition is hit-testable.
+                Thread.sleep(forTimeInterval: 0.6)
+                if toggle.value as? String != "0" { toggle.coordinate(withNormalizedOffset: CGVector(dx: 0.93, dy: 0.5)).tap() }
+                let restored = XCTNSPredicateExpectation(predicate: NSPredicate(format: "value == %@", "0"), object: toggle)
+                XCTAssertEqual(XCTWaiter.wait(for: [restored], timeout: 5), .completed)
             }
         }
         let app = launch("settings")

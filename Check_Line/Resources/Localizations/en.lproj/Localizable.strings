@@ -942,3 +942,11 @@
 "settlement.early.nextLimit" = "Next period limit";
 "settlement.early.futureRecords" = "This period includes future-dated records. Review them before settling early.";
 "wallet.budget.edit.oneShotScope" = "After confirmation, only this one-time budget uses the new limit. Expenses and the wish balance stay unchanged.";
+
+// Native wish reference coverage
+"native.wish.checkRate" = "Check exchange rate";
+"native.wish.coverageRequired" = "Redeem when coverage reaches 100%";
+"native.wish.referenceExplanation" = "This reference estimates coverage for this wish. Confirm the actual amount, currency and exchange rate again when purchasing.";
+"native.wish.referenceTarget" = "Target equivalent";
+"native.wish.referenceFailed" = "Could not save or read the reference rate. Try again. Your previously applied rate is unchanged.";
+"native.wish.applyReference" = "Apply reference rate";

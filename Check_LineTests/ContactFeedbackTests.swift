@@ -5,8 +5,10 @@ import UIKit
 
 @Suite(.serialized) @MainActor struct ContactFeedbackTests {
     @Observable final class PlaybackState {
-        var contact: Date? = Date()
+        // Start the finite interval only after the hosting view actually appears.
+        var contact: Date?
         var phase = ScenePhase.active
+        var hostVisible = false
         var visibleContact: Date?
         var visible: Bool { visibleContact != nil }
         var appearances = 0
@@ -16,34 +18,64 @@ import UIKit
         let state: PlaybackState
         var body: some View {
             let contact = state.contact
-            ContactEffectTimeline(startedAt: state.contact, duration: 0.72) { _ in
-                Color.red
-                    .id(contact)
-                    .onAppear { state.visibleContact = contact; state.appearances += 1 }
-                    .onDisappear { if state.visibleContact == contact { state.visibleContact = nil } }
+            ZStack {
+                // Keep the hosting probe mounted before a contact exists.
+                Color.clear
+                ContactEffectTimeline(startedAt: state.contact, duration: 0.72) { _ in
+                    Color.red
+                        .id(contact)
+                        .onAppear { state.visibleContact = contact; state.appearances += 1 }
+                        .onDisappear { if state.visibleContact == contact { state.visibleContact = nil } }
+                }
             }
             .frame(width: 128, height: 48)
             .environment(\.scenePhase, state.phase)
+            .onAppear { state.hostVisible = true }
+            .onDisappear { state.hostVisible = false }
         }
     }
 
-    private func host(_ state: PlaybackState) -> UIWindow {
-        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 160, height: 80))
-        if let scene = UIApplication.shared.connectedScenes.compactMap({ $0 as? UIWindowScene }).first {
-            window.windowScene = scene
+    @MainActor private struct HostedProbe {
+        let window: UIWindow
+        let previousKeyWindow: UIWindow?
+        func close() {
+            window.isHidden = true
+            window.rootViewController = nil
+            previousKeyWindow?.makeKey()
         }
-        window.rootViewController = UIHostingController(rootView: Probe(state: state))
-        window.isHidden = false
-        return window
+    }
+
+    private func host(_ state: PlaybackState) async throws -> HostedProbe {
+        let scenes = UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }
+        let scene = try #require(scenes.first { $0.activationState == .foregroundActive } ?? scenes.first,
+                                 "The playback test needs the test app's connected UIWindowScene.")
+        let previousKeyWindow = scene.windows.first { $0.isKeyWindow }
+        let window = UIWindow(windowScene: scene)
+        window.frame = scene.coordinateSpace.bounds
+        let controller = UIHostingController(rootView: Probe(state: state))
+        window.rootViewController = controller
+        controller.loadViewIfNeeded()
+        window.makeKeyAndVisible()
+        window.layoutIfNeeded()
+        controller.view.layoutIfNeeded()
+        let hosted = HostedProbe(window: window, previousKeyWindow: previousKeyWindow)
+        do {
+            try await wait(timeout: 2) { state.hostVisible && controller.view.window === window }
+            return hosted
+        } catch {
+            hosted.close()
+            throw error
+        }
     }
 
     @Test("CLICK截止后实际卸载绘制子树，不能冻结淡出末帧")
     func removesFinishedDecoration() async throws {
-        let state = PlaybackState(), window = host(state)
-        defer { window.isHidden = true; window.rootViewController = nil }
-        try await Task.sleep(for: .milliseconds(220))
+        let state = PlaybackState(), hosted = try await host(state)
+        defer { hosted.close() }
+        state.contact = Date()
+        try await wait { state.visible }
         #expect(state.visible && state.appearances == 1)
-        try await Task.sleep(for: .milliseconds(650))
+        try await wait { !state.visible }
         #expect(!state.visible)
         try await Task.sleep(for: .milliseconds(180))
         #expect(!state.visible && state.appearances == 1)
@@ -51,8 +83,9 @@ import UIKit
 
     @Test("新接触不被旧截止回调移除，第二次也彻底结束")
     func replacedContactOwnsItsDeadline() async throws {
-        let state = PlaybackState(), window = host(state)
-        defer { window.isHidden = true; window.rootViewController = nil }
+        let state = PlaybackState(), hosted = try await host(state)
+        defer { hosted.close() }
+        state.contact = Date()
         try await wait { state.visible }
         try await Task.sleep(for: .milliseconds(250))
         state.contact = Date()
@@ -65,27 +98,29 @@ import UIKit
         #expect(!state.visible)
     }
 
-    private func wait(until condition: () -> Bool) async throws {
-        let deadline = Date().addingTimeInterval(1.2)
+    private func wait(timeout: TimeInterval = 1.2, until condition: () -> Bool) async throws {
+        let deadline = Date().addingTimeInterval(timeout)
         while !condition() && Date() < deadline { try await Task.sleep(for: .milliseconds(10)) }
-        #expect(condition())
+        try #require(condition())
     }
 
     @Test("后台移除反馈，过期接触回前台不重播")
     func motionAndBackgroundDoNotRetainOldFrame() async throws {
         let state = PlaybackState()
         state.phase = .background
-        let window = host(state)
-        defer { window.isHidden = true; window.rootViewController = nil }
+        let hosted = try await host(state)
+        defer { hosted.close() }
+        state.contact = Date()
         try await Task.sleep(for: .milliseconds(160))
         #expect(!state.visible && state.appearances == 0)
         state.phase = .active; state.contact = Date()
-        try await Task.sleep(for: .milliseconds(180))
+        try await wait { state.visible }
         #expect(state.visible)
         state.phase = .background
-        try await Task.sleep(for: .milliseconds(120))
+        try await wait { !state.visible }
         #expect(!state.visible)
-        try await Task.sleep(for: .milliseconds(650))
+        let expiry = max(0, 0.78 - Date().timeIntervalSince(state.contact!))
+        try await Task.sleep(for: .seconds(expiry))
         state.phase = .active
         try await Task.sleep(for: .milliseconds(120))
         #expect(!state.visible && state.appearances == 1)
