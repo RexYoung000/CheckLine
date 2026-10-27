@@ -5213,7 +5213,9 @@ body.material-embedded .app { width: 100%!important; height: 100dvh; min-height:
   background:radial-gradient(ellipse 74% 25% at var(--wish-glare-x,30%) -7%,var(--wf-pane-light),transparent 82%),radial-gradient(ellipse 62% 6% at 42% 100%,var(--wf-return),transparent 80%),linear-gradient(98deg,#ffffff42,transparent 4%,transparent 97%,var(--wf-side)),var(--wf-pane-tint);
   box-shadow:inset 2px 2px 1px #ffffff38,inset -2px -3px 2px #8bd5ee24;
 }
-.app[data-home-material][data-theme] .wish-layered-front .wish-front-glass::before{
+/* The reverse uses the pane's perimeter reflections. A bounded diagonal strip
+   over progress reads as a solid object, so keep that cover glint on fronts. */
+.app[data-home-material][data-theme] .wish-layered-front:not(.wish-layered-back) .wish-front-glass::before{
   content:'';position:absolute;width:var(--wf-glint-width,96px);height:var(--wf-glint-height,108px);left:var(--wf-cover-x,50%);top:50%;transform:translate(-50%,-50%);border-radius:50%;
   background:linear-gradient(124deg,transparent 34%,#ffffff03 39%,var(--wf-pane-light) 48%,#ffffff24 50%,transparent 57%);
   opacity:.32;filter:blur(1px);pointer-events:none;
@@ -5234,7 +5236,6 @@ body.material-embedded .app { width: 100%!important; height: 100dvh; min-height:
 .app[data-home-material][data-theme] .wish-collection-row.wish-layered-front>svg{color:var(--wm-meta)}
 .app[data-home-material][data-theme=dark] :is(.wish-collection-row.wish-layered-front,.wish-face-back.wish-layered-back) .wish-fluid-volume{opacity:.36}
 .app[data-home-material][data-theme=dark] .wish-collection-row.wish-layered-front .wish-fluid-volume path{stroke:var(--wf-pane-edge);stroke-width:1;vector-effect:non-scaling-stroke}
-.app[data-home-material][data-theme] .wish-face-back.wish-layered-back{--wf-cover-x:70%}
 .app[data-home-material][data-theme].reduced .wish-bubble-volume>i{animation:none;top:calc(15% + var(--bubble-x) * .65);opacity:.55}
 @media(prefers-reduced-motion:reduce){.app[data-home-material][data-theme] .wish-bubble-volume>i{animation:none;top:calc(15% + var(--bubble-x) * .65);opacity:.55}}
 
