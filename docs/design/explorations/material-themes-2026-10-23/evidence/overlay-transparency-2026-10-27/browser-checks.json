@@ -1,0 +1,323 @@
+{
+  "date": "2026-10-27",
+  "baseline": "b89fd2c",
+  "fixture": "Local isolated synthetic data; persistence disabled",
+  "wish": {
+    "light": {
+      "background": "rgba(0, 0, 0, 0.32)",
+      "blur": "blur(16px)",
+      "disabled": true,
+      "turning": "false"
+    },
+    "dark": {
+      "background": "rgba(0, 0, 0, 0.4)",
+      "blur": "blur(16px)",
+      "disabled": true,
+      "turning": "false"
+    }
+  },
+  "library": {
+    "light": {
+      "background": "rgba(0, 0, 0, 0.32)",
+      "blur": "blur(12px)"
+    },
+    "dark": {
+      "background": "rgba(0, 0, 0, 0.4)",
+      "blur": "blur(12px)"
+    }
+  },
+  "collection": {
+    "light": {
+      "background": "rgba(0, 0, 0, 0.32)",
+      "blur": "blur(16px)",
+      "glassShells": 0
+    },
+    "dark": {
+      "background": "rgba(0, 0, 0, 0.4)",
+      "blur": "blur(16px)",
+      "glassShells": 0
+    }
+  },
+  "redemption": {
+    "light": {
+      "background": "rgba(0, 0, 0, 0.32)",
+      "blur": "blur(16px)",
+      "glassShells": 0
+    },
+    "dark": {
+      "background": "rgba(0, 0, 0, 0.4)",
+      "blur": "blur(16px)",
+      "glassShells": 0
+    }
+  },
+  "close": {
+    "lightEscape": true,
+    "darkClose": true
+  },
+  "libraryClose": {
+    "light": true,
+    "dark": true
+  },
+  "redemptionReturn": {
+    "light": {
+      "outcomeClosed": true,
+      "doneSelected": "true",
+      "wallet": true
+    },
+    "dark": {
+      "outcomeClosed": true,
+      "doneSelected": "true",
+      "wallet": true
+    }
+  },
+  "otherOverlayStyleAudit": {
+    "new-wish": {
+      "light": [
+        {
+          "background": "rgba(7, 18, 27, 0.08)",
+          "blur": "none",
+          "class": "overlay-shade "
+        },
+        {
+          "background": "rgba(251, 251, 252, 0.97)",
+          "blur": "blur(20px) saturate(1.16)",
+          "class": "sheet expanded wish-compose-sheet"
+        }
+      ],
+      "dark": [
+        {
+          "background": "rgba(0, 0, 0, 0.22)",
+          "blur": "none",
+          "class": "overlay-shade "
+        },
+        {
+          "background": "rgba(21, 21, 23, 0.97)",
+          "blur": "blur(20px) saturate(1.16)",
+          "class": "sheet expanded wish-compose-sheet"
+        }
+      ]
+    },
+    "wish-cover": {
+      "light": [
+        {
+          "background": "rgba(7, 18, 27, 0.08)",
+          "blur": "none",
+          "class": "overlay-shade "
+        },
+        {
+          "background": "rgba(251, 251, 252, 0.97)",
+          "blur": "blur(20px) saturate(1.16)",
+          "class": "sheet expanded wish-cover-sheet"
+        }
+      ],
+      "dark": [
+        {
+          "background": "rgba(0, 0, 0, 0.22)",
+          "blur": "none",
+          "class": "overlay-shade "
+        },
+        {
+          "background": "rgba(21, 21, 23, 0.97)",
+          "blur": "blur(20px) saturate(1.16)",
+          "class": "sheet expanded wish-cover-sheet"
+        }
+      ]
+    },
+    "capture": {
+      "light": [
+        {
+          "background": "rgba(18, 53, 67, 0.14)",
+          "blur": "none",
+          "class": "overlay-shade "
+        },
+        {
+          "background": "rgba(251, 251, 252, 0.97)",
+          "blur": "blur(20px) saturate(1.16)",
+          "class": "sheet expanded"
+        }
+      ],
+      "dark": [
+        {
+          "background": "rgba(2, 11, 16, 0.25)",
+          "blur": "none",
+          "class": "overlay-shade "
+        },
+        {
+          "background": "rgba(21, 21, 23, 0.97)",
+          "blur": "blur(20px) saturate(1.16)",
+          "class": "sheet expanded"
+        }
+      ]
+    },
+    "agent": {
+      "light": [
+        {
+          "background": "rgba(18, 53, 67, 0.14)",
+          "blur": "none",
+          "class": "overlay-shade "
+        },
+        {
+          "background": "rgba(251, 251, 252, 0.97)",
+          "blur": "blur(20px) saturate(1.16)",
+          "class": "sheet agent-sheet "
+        }
+      ],
+      "dark": [
+        {
+          "background": "rgba(2, 11, 16, 0.25)",
+          "blur": "none",
+          "class": "overlay-shade "
+        },
+        {
+          "background": "rgba(21, 21, 23, 0.97)",
+          "blur": "blur(20px) saturate(1.16)",
+          "class": "sheet agent-sheet "
+        }
+      ]
+    },
+    "settings": {
+      "light": [
+        {
+          "background": "rgba(18, 53, 67, 0.14)",
+          "blur": "none",
+          "class": "overlay-shade "
+        },
+        {
+          "background": "rgba(251, 251, 252, 0.97)",
+          "blur": "blur(20px) saturate(1.16)",
+          "class": "sheet "
+        }
+      ],
+      "dark": [
+        {
+          "background": "rgba(2, 11, 16, 0.25)",
+          "blur": "none",
+          "class": "overlay-shade "
+        },
+        {
+          "background": "rgba(21, 21, 23, 0.97)",
+          "blur": "blur(20px) saturate(1.16)",
+          "class": "sheet "
+        }
+      ]
+    },
+    "new-budget": {
+      "light": [
+        {
+          "background": "rgba(18, 53, 67, 0.14)",
+          "blur": "none",
+          "class": "overlay-shade "
+        },
+        {
+          "background": "rgba(251, 251, 252, 0.97)",
+          "blur": "blur(20px) saturate(1.16)",
+          "class": "sheet expanded"
+        }
+      ],
+      "dark": [
+        {
+          "background": "rgba(2, 11, 16, 0.25)",
+          "blur": "none",
+          "class": "overlay-shade "
+        },
+        {
+          "background": "rgba(21, 21, 23, 0.97)",
+          "blur": "blur(20px) saturate(1.16)",
+          "class": "sheet expanded"
+        }
+      ]
+    },
+    "settlement": {
+      "light": [
+        {
+          "background": "rgba(18, 53, 67, 0.14)",
+          "blur": "none",
+          "class": "overlay-shade "
+        },
+        {
+          "background": "rgba(251, 251, 252, 0.97)",
+          "blur": "blur(20px) saturate(1.16)",
+          "class": "sheet full"
+        }
+      ],
+      "dark": [
+        {
+          "background": "rgba(2, 11, 16, 0.25)",
+          "blur": "none",
+          "class": "overlay-shade "
+        },
+        {
+          "background": "rgba(21, 21, 23, 0.97)",
+          "blur": "blur(20px) saturate(1.16)",
+          "class": "sheet full"
+        }
+      ]
+    },
+    "redemption": {
+      "light": [
+        {
+          "background": "rgba(7, 18, 27, 0.08)",
+          "blur": "none",
+          "class": "overlay-shade "
+        },
+        {
+          "background": "rgba(251, 251, 252, 0.97)",
+          "blur": "blur(20px) saturate(1.16)",
+          "class": "sheet full wish-purchase-sheet"
+        }
+      ],
+      "dark": [
+        {
+          "background": "rgba(0, 0, 0, 0.22)",
+          "blur": "none",
+          "class": "overlay-shade "
+        },
+        {
+          "background": "rgba(21, 21, 23, 0.97)",
+          "blur": "blur(20px) saturate(1.16)",
+          "class": "sheet full wish-purchase-sheet"
+        }
+      ]
+    },
+    "detail": {
+      "light": [
+        {
+          "background": "rgba(7, 18, 27, 0.08)",
+          "blur": "blur(1.5px)",
+          "class": "reader-drawer-shade"
+        },
+        {
+          "background": "rgba(251, 251, 252, 0.97)",
+          "blur": "blur(22px)",
+          "class": "reader-drawer"
+        }
+      ],
+      "dark": [
+        {
+          "background": "rgba(0, 0, 0, 0.22)",
+          "blur": "blur(1.5px)",
+          "class": "reader-drawer-shade"
+        },
+        {
+          "background": "rgba(21, 21, 23, 0.97)",
+          "blur": "blur(22px)",
+          "class": "reader-drawer"
+        }
+      ]
+    }
+  },
+  "notes": [
+    "Nine other routes checked for actual shade/panel CSS only; not nine end-to-end business tests.",
+    "Final wish blur preserves 16px; library preserves 12px.",
+    "All application JavaScript and motion code unchanged.",
+    "Full 21-route regression, VoiceOver, OS reduced motion and native devices not rerun.",
+    "MutationObserver non-Node error remains deferred per earlier user instruction."
+  ],
+  "consoleErrors": [
+    {
+      "level": "error",
+      "message": "Uncaught TypeError: Failed to execute 'observe' on 'MutationObserver': parameter 1 is not of type 'Node'.",
+      "timestamp": "2026-10-27T02:40:16.100Z"
+    }
+  ]
+}

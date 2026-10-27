@@ -8,6 +8,8 @@
 
 ## 入口与查看方式
 
+- **展开遮罩修正：[前后对照](evidence/overlay-transparency-2026-10-27/compare.html) · [浅暗交互稿](budget-pages-pair.html?view=wish-back&study=overlay-context-11)**。心愿大卡、兑换完成层与卡库球面放大层统一半透明黑色遮罩，浅色 32%、暗色 40%；心愿保留 16px 模糊，卡库保留 12px，底页仍能辨认。普通面板和详情抽屉的轻遮罩保持，卡片配色、材质、动效与原生 App 不改。
+
 - **背面高光修正：[前后对照](evidence/wish-back-reflection-2026-10-27/compare.html) · [浅暗交互稿](budget-pages-pair.html?view=wish-back&study=back-glare-10)**。取消背面看起来像实体斜柱的高光条，保留玻璃上沿反射、边缘回光与内卡环境倒影。只改未实现背面样式，正面、卡库、配色、动效及原生保持；浅暗翻面和禁用态已检查，视觉待验收。
 
 - **本轮心愿背面与卡库：[修改前后对照](evidence/wish-back-library-2026-10-27/compare.html) · [背面浅暗](budget-pages-pair.html?view=wish-back&study=back-library-9) · [卡库浅暗](budget-pages-pair.html?view=library&study=back-library-9)**。背面接入正面的玻璃与内卡层次；卡库弧线、球面及放大复用预算材质，搜索与放大背景同步中性色。现有动效、其他页面和原生 App 保持，视觉待验收。

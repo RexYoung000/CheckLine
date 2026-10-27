@@ -1,0 +1,17 @@
+{
+  "baseline": "b89fd2c",
+  "generatedOutsideThreeStylesIdentical": true,
+  "inlineScriptsIdentical": true,
+  "inlineScriptCount": 1,
+  "nativeDiff": [],
+  "existingExperimentsPreserved": {
+    "docs/design/explorations/material-themes-2026-10-23/build.cjs": true,
+    "docs/design/explorations/material-themes-2026-10-23/compare.html": true,
+    "docs/design/explorations/material-themes-2026-10-23/index.html": true,
+    "docs/design/explorations/material-themes-2026-10-23/src/home.css": true,
+    "docs/design/explorations/material-themes-2026-10-23/src/interactions.css": true,
+    "docs/design/explorations/material-themes-2026-10-23/src/study-bridge.js": true,
+    "docs/design/explorations/material-themes-2026-10-23/src/surfaces.css": true
+  },
+  "rebuildReproducible": true
+}

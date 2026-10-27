@@ -20,7 +20,7 @@
   --hm-tile:var(--dui-surface);--hm-receipt:#1d1d20f0;--hm-receipt-back:#161618cc;--hm-muted:var(--dui-muted);
   --hm-nav:#1d1d20ed;--hm-nav-selected:var(--dui-selected);--hm-accent:var(--dui-text);
   --dm-sheet:var(--dui-panel);--dm-primary:var(--dui-primary);--dm-primary-ink:var(--dui-primary-ink);
-  --wm-focus:#080809ed;--wm-disabled:#2b2b2e;--wm-disabled-ink:#9999a0;
+  --material-focus-overlay:rgb(0 0 0 / .4);--wm-disabled:#2b2b2e;--wm-disabled-ink:#9999a0;
 }
 /* Reuse the same neutral interface roles in every existing route and panel. */
 .app[data-home-material][data-theme=dark]:is(:has(.budget-home-head),:has(.dm-detail-card),:has(.dm-subpage),:has(.wish-home)){
@@ -30,7 +30,7 @@
 }
 .app[data-home-material][data-theme=dark] .budget-library-picker{--scene:var(--dui-canvas);--accent:var(--ui-selection-mark);color:var(--dui-text)}
 .app[data-home-material][data-theme=dark] .budget-library-picker>header button{color:var(--dui-text)}
-.app[data-home-material][data-theme=dark] .budget-library-picker .loop-dome-viewer{background:var(--dui-panel)}
+.app[data-home-material][data-theme=dark] .budget-library-picker .loop-dome-viewer{background:var(--material-focus-overlay)}
 .app[data-home-material][data-theme=dark] .budget-library-picker .picker-confirm button{background:var(--dui-primary);color:var(--dui-primary-ink)}
 .app[data-home-material][data-theme=dark] .budget-library-picker .picker-confirm button+button{background:var(--dui-control);color:var(--dui-text)}
 .app[data-home-material][data-theme=dark] .picker-list input{color:var(--dui-text);background:var(--dui-control);border-color:var(--dui-line)}
