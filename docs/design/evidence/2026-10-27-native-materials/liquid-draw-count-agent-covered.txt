@@ -1,4 +1,0 @@
-window=agent-covered
-seconds=3
-start=frames=311;running=0
-end=frames=311;running=0

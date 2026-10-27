@@ -1,4 +1,0 @@
-Query chain:
- →Find: Target Application 'Rex.Check-Line'
-  ↪︎Find: Descendants matching type TextField
-    ↪︎Find: Elements matching predicate '"wallet.wishes.actual" IN identifiers'

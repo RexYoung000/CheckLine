@@ -481,22 +481,6 @@
   },
   {
     "group": "ipad",
-    "name": "App UI hierarchy for Rex",
-    "path": "ipad-App UI hierarchy for Rex.txt",
-    "test": "R34WishPresentationUITests/testExpandedWishIsActuallyLargerAndGestureTurnsToRedeemableBack()",
-    "device": "iPad mini (A17 Pro)",
-    "timestamp": 1793107187.357
-  },
-  {
-    "group": "ipad",
-    "name": "Debug description for `\"wallet.wishes.actual\" TextField`",
-    "path": "ipad-Debug description for `\"wallet.wishes.actual\" TextField`.txt",
-    "test": "R34WishPresentationUITests/testExpandedWishIsActuallyLargerAndGestureTurnsToRedeemableBack()",
-    "device": "iPad mini (A17 Pro)",
-    "timestamp": 1793107183.34
-  },
-  {
-    "group": "ipad",
     "name": "wish-row-expanded-incomplete-action-isolated",
     "path": "screens/ipad-wish-row-expanded-incomplete-action-isolated.jpg",
     "test": "R34WishPresentationUITests/testWishRowOpensExpandedCardAndIncompleteButtonDoesNotFlip()",

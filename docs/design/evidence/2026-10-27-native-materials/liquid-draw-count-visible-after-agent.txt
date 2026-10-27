@@ -1,4 +1,0 @@
-window=visible-after-agent
-seconds=3
-start=frames=457;running=1
-end=frames=580;running=1
