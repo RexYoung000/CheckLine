@@ -1,9 +1,22 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { requestFor } from "../review/fixtures.mjs";
-import { validateRequest, validateCandidate } from "../src/contract.mjs";
+import { validateRequest, validateCandidate, modelCandidateSchema, matches } from "../src/contract.mjs";
 
 const request = () => requestFor({ input: "  午餐35元\n" });
+
+test("advertised clarification field choices agree with actual model validation", () => {
+  for (const clarificationField of ["input", "action", "amount", "occurredAt", null]) {
+    const candidate = { intentType: "needsClarification", clarificationField };
+    assert.equal(matches(modelCandidateSchema, candidate), true);
+    assert.doesNotThrow(() => validateCandidate(candidate, true));
+  }
+  for (const clarificationField of ["input/action", "transaction", "requestedIntent", "requiresDateReview"]) {
+    const candidate = { intentType: "needsClarification", clarificationField };
+    assert.equal(matches(modelCandidateSchema, candidate), false);
+    assert.throws(() => validateCandidate(candidate, true), { code: "invalid_model_output" });
+  }
+});
 test("request preserves exact original text and contains no exported ledger values", () => {
   const raw = request();
   assert.equal(validateRequest(raw).userMessage, "  午餐35元\n");

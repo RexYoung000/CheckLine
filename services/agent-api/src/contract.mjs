@@ -53,6 +53,10 @@ export const candidateSchema = object({
 export const modelCandidateSchema = object(Object.fromEntries(Object.entries(candidateSchema.properties)
   .filter(([key]) => !["requestedIntent", "requiresDateReview", "requiresBudgetReview"].includes(key))), ["intentType"]);
 
+const clarificationFields = [...Object.keys(modelCandidateSchema.properties), "input", "action"];
+// Both schemas share this property: advertise exactly the values validation accepts.
+candidateSchema.properties.clarificationField.enum = [...clarificationFields, null];
+
 export const requestSchema = object({
   // Legacy client compatibility only. Never used as the server system prompt.
   system: text(8000),
@@ -136,8 +140,7 @@ export function validateCandidate(value, fromModel = false) {
       throw new WorkflowError("invalid_model_output", 502, true);
     }
   }
-  const fields = [...Object.keys(modelCandidateSchema.properties), "input", "action"];
-  if (value.clarificationField && !fields.includes(value.clarificationField)) {
+  if (value.clarificationField && !clarificationFields.includes(value.clarificationField)) {
     throw new WorkflowError("invalid_model_output", 502, true);
   }
   return value;

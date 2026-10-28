@@ -110,6 +110,58 @@ test("a newly completed expense remains a capture candidate", async () => {
   assert.deepEqual(result, candidate);
 });
 
+for (const clarificationField of ["action", "input", "amount", "occurredAt"]) {
+  test(`model-first clarification still keeps both unresolved facts: ${clarificationField}`, async () => {
+    const raw = requestFor({ input: "这笔日期改一下，不是今天的，不计入餐饮预算，金额35元" });
+    raw.context.deviceTime = { timestamp: "2026-10-28T04:00:00Z", timeZoneIdentifier: "Asia/Shanghai" };
+    const result = await interpret(raw, { complete: async () => ({
+      intentType: "needsClarification", clarificationField, amount: "35", currencyCode: "CNY",
+      budgetName: "餐饮", occurredAt: "2026-10-28",
+    }) });
+    assert.equal(result.intentType, "needsClarification");
+    assert.equal(result.clarificationField, "action");
+    assert.equal(result.budgetName, null); assert.equal(result.requiresBudgetReview, true);
+    assert.equal(result.occurredAt, null); assert.equal(result.requiresDateReview, true);
+    assert.equal(result.amount, "35"); assert(!Object.hasOwn(result, "requestedIntent"));
+  });
+}
+
+test("model-first amount question retains date and attribution gates without assuming capture", async () => {
+  const raw = requestFor({ input: "午餐金额没填，不是今天的，不计入餐饮预算" });
+  const result = await interpret(raw, { complete: async () => ({ intentType: "needsClarification", clarificationField: "amount" }) });
+  assert.equal(result.clarificationField, "amount");
+  assert.equal(result.requiresDateReview, true); assert.equal(result.requiresBudgetReview, true);
+  assert(!Object.hasOwn(result, "requestedIntent")); assert(!Object.hasOwn(result, "amount"));
+});
+
+test("model-first correction accepts only an explicitly named replacement", async () => {
+  const raw = requestFor({ input: "这笔不是今天的，不计入餐饮而记到旅行，金额改成38元" });
+  raw.context.budgetCards.push({ name: "旅行", cycleType: "oneShot", currencyCode: "CNY" });
+  const result = await interpret(raw, { complete: async () => ({
+    intentType: "needsClarification", clarificationField: "action", amount: "38", budgetName: "餐饮",
+  }) });
+  assert.equal(result.budgetName, "旅行"); assert.equal(result.requiresDateReview, true);
+  assert(!Object.hasOwn(result, "requiresBudgetReview")); assert(!Object.hasOwn(result, "requestedIntent"));
+});
+
+test("unrelated and financial clarifications do not enter capture gates", async () => {
+  for (const candidate of [{ intentType: "outOfScope" },
+    { intentType: "needsClarification", clarificationField: "cycleType" },
+    { intentType: "needsClarification", clarificationField: "periodID" }]) {
+    const result = await interpret(requestFor({ input: "下个月调整保险投资计划，不计入餐饮预算" }), {
+      complete: async () => candidate,
+    });
+    assert.deepEqual(result, candidate);
+  }
+});
+
+test("a non-expense clarification does not acquire an invented transaction date", async () => {
+  const raw = requestFor({ input: "我今天没有买咖啡，看到报价35元" });
+  raw.context.deviceTime = { timestamp: "2026-10-28T04:00:00Z", timeZoneIdentifier: "Asia/Shanghai" };
+  const result = await interpret(raw, { complete: async () => ({ intentType: "needsClarification", clarificationField: "action" }) });
+  assert(!Object.hasOwn(result, "occurredAt")); assert(!Object.hasOwn(result, "requestedIntent"));
+});
+
 test("a model can only route wallet and destructive actions to local selection", async () => {
   for (const [intentType, field] of [["settlePeriod", "periodID"], ["adjustPeriodAmount", "periodID"],
     ["deleteExpense", "expenseID"], ["redeemWish", "wishID"], ["lateExpense", "periodID"]]) {
