@@ -1,0 +1,23 @@
+{
+  "at": "2026-10-28T09:55:46.124444+00:00",
+  "origin": "local_mac_curl_default_trust",
+  "results": [
+    {
+      "path": "/health",
+      "status": 200,
+      "tlsVerify": 0
+    },
+    {
+      "path": "/review",
+      "status": 404,
+      "tlsVerify": 0
+    },
+    {
+      "path": "/v1/agent/interpret",
+      "status": 401,
+      "tlsVerify": 0
+    }
+  ],
+  "pythonDefaultTrust": "unable_to_get_local_issuer_certificate; no verification bypass used",
+  "release": "20261028-d63d6aa"
+}
