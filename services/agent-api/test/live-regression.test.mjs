@@ -1,10 +1,17 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { createServer } from "node:http";
+import { execFile } from "node:child_process";
+import { mkdtemp, readFile, rm, symlink } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { promisify } from "node:util";
+import { fileURLToPath, pathToFileURL } from "node:url";
 import { REGRESSION_CASES, runRegression, runCLI, evaluateCandidate } from "../scripts/live-regression.mjs";
 
 const TOKEN = "synthetic-runner-test-token";
 const endpoint = "https://example.invalid/v1/agent/interpret";
+const execFileAsync = promisify(execFile);
 const good = id => ({ intentType: "capture", amount: "35", currencyCode: "CNY", merchant: "合成咖啡馆", budgetName: "餐饮", occurredAt: "2026-10-27T16:00:00Z", ...({
   missing_amount: { intentType: "needsClarification", amount: null, clarificationField: "amount", requestedIntent: "capture" },
   denied_expense: { intentType: "needsClarification", clarificationField: "input", budgetName: null, occurredAt: null },
@@ -163,3 +170,39 @@ test("runner uses actual local HTTP, bounds timeout and never retries it", async
     assert.equal(summary.results[0].status, "request_timeout"); assert.equal(calls, 1);
   } finally { server.closeAllConnections(); await new Promise(resolve => server.close(resolve)); }
 });
+
+for (const mode of ["entry", "import"]) {
+  test(`a directory-symlink ${mode} stays opt-in in a real child process`, async () => {
+    const root = await mkdtemp(join(tmpdir(), "CheckLineLiveSymlink-"));
+    const current = join(root, "current");
+    const summaryPath = join(root, "summary.json");
+    await symlink(fileURLToPath(new URL("../", import.meta.url)), current, "dir");
+    const entry = join(current, "scripts", "live-regression.mjs");
+    let requests = 0;
+    const server = createServer((_request, response) => { ++requests; response.writeHead(500); response.end(); });
+    await new Promise(resolve => server.listen(0, "127.0.0.1", resolve));
+    try {
+      const endpoint = `http://127.0.0.1:${server.address().port}/v1/agent/interpret`;
+      const args = mode === "entry" ? [entry, "--endpoint", endpoint, "--output", summaryPath]
+        : ["--input-type=module", "--eval", `await import(${JSON.stringify(pathToFileURL(entry).href)}); console.log('imported');`];
+      const result = await execFileAsync(process.execPath, args, { env: { CHECKLINE_AGENT_TOKEN: TOKEN }, timeout: 5_000 });
+      assert.equal(result.stderr, "");
+      if (mode === "entry") {
+        assert.notEqual(result.stdout.trim(), "", "CLI entry must produce a not-run report");
+        const lines = result.stdout.trim().split("\n").map(line => JSON.parse(line));
+        assert.equal(lines.length, 21);
+        assert.equal(lines.at(-1).status, "not_run");
+        assert.equal(lines.at(-1).counts.attempted, 0); assert.equal(lines.at(-1).counts.notRun, 20);
+        const summary = JSON.parse(await readFile(summaryPath, "utf8"));
+        assert.equal(summary.results.length, 20); assert(summary.results.every(item => item.status === "not_run"));
+      } else {
+        assert.equal(result.stdout.trim(), "imported");
+        await assert.rejects(readFile(summaryPath), { code: "ENOENT" });
+      }
+      assert.equal(requests, 0); assert(!result.stdout.includes(TOKEN));
+    } finally {
+      server.closeAllConnections(); await new Promise(resolve => server.close(resolve));
+      await rm(root, { recursive: true, force: true });
+    }
+  });
+}

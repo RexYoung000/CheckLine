@@ -1,4 +1,4 @@
-import { writeFile } from "node:fs/promises";
+import { realpath, writeFile } from "node:fs/promises";
 import { pathToFileURL } from "node:url";
 import { setTimeout as delay } from "node:timers/promises";
 import { validateCandidate, validateRequest } from "../src/contract.mjs";
@@ -183,4 +183,10 @@ export async function runCLI(argv, { env = process.env, fetcher = fetch, sleep =
     stdout(JSON.stringify({ status: code === "runner_error" ? "runner_error" : "not_run", error: code }) + "\n"); return 2;
   }
 }
-if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) process.exitCode = await runCLI(process.argv.slice(2));
+async function isCommandEntry() {
+  if (!process.argv[1]) return false;
+  if (import.meta.url === pathToFileURL(process.argv[1]).href) return true;
+  try { return import.meta.url === pathToFileURL(await realpath(process.argv[1])).href; }
+  catch { return false; }
+}
+if (await isCommandEntry()) process.exitCode = await runCLI(process.argv.slice(2));
