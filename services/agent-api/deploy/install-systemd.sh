@@ -57,7 +57,7 @@ if [[ -e "$release_dir" ]]; then
   exit 2
 fi
 install -d -m 0755 "$release_dir"
-cp -R -- "$source_dir/src" "$source_dir/review" "$source_dir/test" "$release_dir/"
+cp -R -- "$source_dir/src" "$source_dir/review" "$source_dir/test" "$source_dir/scripts" "$release_dir/"
 install -m 0644 "$source_dir/package.json" "$release_dir/package.json"
 chown -R root:root "$release_dir"
 find "$release_dir" -type d -exec chmod 0755 {} +
