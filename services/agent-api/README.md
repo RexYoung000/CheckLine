@@ -54,6 +54,19 @@ npm run review
 
 **演示使用固定虚构模型结果，不调用 DeepSeek，也不代表模型准确率。** 演示仅绑定 `127.0.0.1`，响应标记 `X-CheckLine-Mode: demonstration`。退出时停止该进程。
 
+### 显式运行真实模型回归
+
+`scripts/live-regression.mjs` 使用 20 个固定合成样例核对真实接口，覆盖消费／非消费、缺字段、归属否定与修正、设备日期、动作及复合追问。默认只列样例，不读取 Token 或发请求：
+
+```bash
+node scripts/live-regression.mjs
+node scripts/live-regression.mjs --endpoint https://123.207.2.148/v1/agent/interpret --run --output /tmp/checkline-live-regression.json
+```
+
+显式 `--run` 读取环境变量 `CHECKLINE_AGENT_TOKEN`；在服务器使用现有环境文件时可指定 `--token-env AGENT_API_TOKEN`，不把真实 Token 写进命令参数、仓库或报告。只允许 HTTPS 或本机回环 HTTP，拒绝重定向。默认顺序调用、间隔 3500 ms、最多 20 次、不自动重试；可用 `--case id,id` 限定复验范围。401／429 后停止后续调用，未执行项单独计数，不能算通过。
+
+输出区分实际通过、断言失败、接口失败与未执行。报告只包含合成样例的允许字段及安全错误，不记录原始响应、请求头、密钥或模型思考。响应必须标记 `live`；模拟响应仅用于 runner 自测，不能作为真实模型证据。后续表达会显式重述当前事实，服务器没有草稿／聊天历史／账本，因此该测试不能替代原生多轮合并、去重或手机端到端测试。
+
 ## 接口契约
 
 - `GET /health`：进程就绪状态；不检查 DeepSeek 连通性，不输出密钥或环境变量。
