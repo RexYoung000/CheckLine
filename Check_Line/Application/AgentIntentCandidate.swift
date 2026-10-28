@@ -26,6 +26,10 @@ nonisolated struct AgentIntentCandidate: Equatable, Sendable, Codable {
     var clarificationOptions: [String]? = nil
     /// Server-owned hint for a known action that still needs local fields or an object.
     var requestedIntent: String? = nil
+    /// Server-owned unresolved date state when another field is asked first.
+    var requiresDateReview: Bool? = nil
+    /// Server-owned disputed attribution when action or date is asked first.
+    var requiresBudgetReview: Bool? = nil
 
     static func clarification(field: String, options: [String] = []) -> AgentIntentCandidate {
         AgentIntentCandidate(

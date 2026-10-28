@@ -27,10 +27,18 @@ let taskGeneration=0;
 
 export function createReviewTask(item) {
   const candidate=copy(item.candidate??{});
-  return {id:item.local.taskID,instanceID:++taskGeneration,itemID:item.id,input:item.input,operation:item.kind??candidate.requestedIntent??candidate.intentType,
+  return applyPendingReviews({id:item.local.taskID,instanceID:++taskGeneration,itemID:item.id,input:item.input,operation:item.kind??candidate.requestedIntent??candidate.intentType,
     candidate,draft:copy(candidate),local:copy(item.local),answers:{},touched:[],history:[],version:0,phase:'active',
-    requiresDate:candidate.clarificationField==='occurredAt',error:item.status!==200?item.error:null,
-    recoveryCandidate:copy(item.recoveryCandidate),fault:item.fault,delay:item.delay??180,commands:{},faultUsed:false};
+    requiresDate:candidate.requiresDateReview===true||candidate.clarificationField==='occurredAt',error:item.status!==200?item.error:null,
+    recoveryCandidate:copy(item.recoveryCandidate),fault:item.fault,delay:item.delay??180,commands:{},faultUsed:false});
+}
+function applyPendingReviews(t) {
+  if(t.draft.requiresBudgetReview===true){
+    t.draft.budgetName=null;t.draft.budgetID=null;t.draft.periodID=null;
+    t.local.userMessage='';delete t.local.entry;delete t.answers.attribution;t.local.quote=null;
+  }
+  if(t.draft.requiresDateReview===true){t.requiresDate=true;t.draft.occurredAt=null;}
+  return t;
 }
 export function taskToken(t) { return JSON.stringify({id:t.id,instanceID:t.instanceID,version:t.version,operation:t.operation,draft:t.draft,local:t.local,answers:t.answers}); }
 export function suspendReviewTask(original) {
@@ -238,7 +246,7 @@ function applyReply(t,values){
       if(match){value=match[1];if(match[2]){t.draft.currencyCode=/美元|USD/i.test(match[2])?'USD':'CNY';t.touched.push('currencyCode');}}
     }
     t.draft[key]=key==='currencyCode'?value.toUpperCase():value;
-    if(key==='occurredAt'&&calendarDay(value)) t.requiresDate=false;
+    if(key==='occurredAt'&&calendarDay(value)){t.requiresDate=false;delete t.draft.requiresDateReview;}
     t.touched.push(key);
   }
   if(['scheduleKind','startDay','endDay'].some(key=>Object.hasOwn(values??{},key))) t.draft.monthlySchedule={kind:t.draft.scheduleKind??t.draft.monthlySchedule?.kind??'cycle',startDay:Number(t.draft.startDay??t.draft.monthlySchedule?.startDay??1),endDay:Number(t.draft.endDay??t.draft.monthlySchedule?.endDay??31)};
@@ -294,7 +302,7 @@ export function advanceReviewTask(original,event){
   if(event.type==='choose'){
     const p=planReviewTask(t),selected=p.choices.find(c=>c.id===event.id);if(!selected)return t;
     const data=selected.data;
-    if(data.attribution)t.answers.attribution={...data.attribution,basis:attributionBasis(t.draft,t.local)};
+    if(data.attribution){delete t.draft.requiresBudgetReview;t.answers.attribution={...data.attribution,basis:attributionBasis(t.draft,t.local)};}
     else if(data.periodID)t.answers.periodID=data.periodID;
     else if(data.expenseID)t.answers.expenseID=data.expenseID;
     else if(data.wishID)t.answers.wishID=data.wishID;
@@ -307,8 +315,9 @@ export function advanceReviewTask(original,event){
     t.phase='active';t.error=null;t.requestToken=null;
     const candidate=t.recoveryCandidate;
     if(!candidate){t.error='model_unavailable';t.recoveryFailure='重试仍未完成，可以改为手动填写。';return t;}
-    for(const [key,value]of Object.entries(candidate))if(value!=null&&!t.touched.includes(key))t.draft[key]=value;
-    t.operation=candidate.requestedIntent??candidate.intentType;t.draft.intentType=t.operation;t.version++;return t;
+    for(const [key,value]of Object.entries(candidate))if(value!=null&&!t.touched.includes(key)
+      &&!(key==='requiresDateReview'&&t.touched.includes('occurredAt')))t.draft[key]=value;
+    t.operation=candidate.requestedIntent??candidate.intentType;t.draft.intentType=t.operation;t.version++;return applyPendingReviews(t);
   }
   if(event.type!=='action')return t;
   const id=event.id;
@@ -356,7 +365,11 @@ export function advanceReviewTask(original,event){
   if(id==='continueSplit'&&t.parentSplit){
     t.splitCompleted=[...t.parentSplit.completed,t.parentSplit.currentID];t.splitItems=t.parentSplit.items;t.parentSplit=null;t.id=t.local.taskID;t.operation='split';t.phase='active';t.answers={};t.result=null;t.commands={};t.commandID=null;t.version++;return t;
   }
-  if(id==='editDraft'){t.draft={...t.local.activeDraft,amount:t.draft.amount,currencyCode:t.draft.currencyCode??t.local.activeDraft.currencyCode};t.operation='capture';t.answers={};t.version++;return t;}
+  if(id==='editDraft'){
+    const reviews={...(t.draft.requiresBudgetReview===true?{requiresBudgetReview:true}:{}),...(t.requiresDate?{requiresDateReview:true}:{})};
+    t.draft={...t.local.activeDraft,amount:t.draft.amount??t.local.activeDraft.amount,currencyCode:t.draft.currencyCode??t.local.activeDraft.currencyCode,...reviews};
+    t.operation='capture';t.answers={};t.version++;return applyPendingReviews(t);
+  }
   if(['editExpense','adjustPeriodAmount'].includes(id)){t.operation=id;t.draft.newAmount=t.draft.amount;t.answers={};t.version++;return t;}
   if(id==='createWish'){t.operation='createWish';t.draft.name=t.draft.name??t.draft.merchant;t.answers={};return t;}
   if(id==='newWish'||id==='toCreateBudget'){t.operation=id==='newWish'?'createWish':'createBudget';t.draft={};t.answers={};t.version++;return t;}

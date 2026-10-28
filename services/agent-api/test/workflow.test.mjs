@@ -70,6 +70,40 @@ test("an unbound amendment cannot preserve a guessed relative date", async () =>
   assert.equal(result.occurredAt, null);
 });
 
+for (const [input, budgetName, occurredAt] of [
+  ["这笔日期改一下，不是今天的，不计入餐饮预算", "餐饮", "2026-10-28T04:00:00Z"],
+  ["这笔日期改一下，2026-10-29，不放到餐饮预算", "餐饮", "2026-10-29"],
+  ["这笔日期改一下，不是今天的，不计入不存在的预算", "不存在", "2026-10-28T04:00:00Z"],
+]) {
+  test(`an action clarification clears denied facts and retains date review: ${input}`, async () => {
+    const raw = requestFor({ input });
+    raw.context.deviceTime = { timestamp: "2026-10-28T04:00:00Z", timeZoneIdentifier: "Asia/Shanghai" };
+    const result = await interpret(raw, { complete: async () => ({
+      intentType: "capture", amount: "35", currencyCode: "CNY", merchant: "午餐", budgetName, occurredAt,
+    }) });
+    assert.equal(result.intentType, "needsClarification");
+    assert.equal(result.clarificationField, "action");
+    assert(!Object.hasOwn(result, "requestedIntent"));
+    assert.equal(result.budgetName, null);
+    assert.equal(result.occurredAt, null);
+    assert.equal(result.requiresDateReview, true);
+    assert.equal(result.requiresBudgetReview, true);
+    assert.equal(result.amount, "35"); assert.equal(result.merchant, "午餐");
+  });
+}
+
+test("an amendment keeps an affirmative replacement target while retaining denied date review", async () => {
+  const raw = requestFor({ input: "这笔日期改一下，不是今天的，不计入餐饮而记到旅行" });
+  raw.context.budgetCards.push({ name: "旅行", cycleType: "oneShot", currencyCode: "CNY" });
+  raw.context.deviceTime = { timestamp: "2026-10-28T04:00:00Z", timeZoneIdentifier: "Asia/Shanghai" };
+  const result = await interpret(raw, { complete: async () => ({
+    intentType: "capture", amount: "35", currencyCode: "CNY", budgetName: "餐饮", occurredAt: "2026-10-28",
+  }) });
+  assert.equal(result.clarificationField, "action"); assert.equal(result.budgetName, "旅行");
+  assert.equal(result.occurredAt, null); assert.equal(result.requiresDateReview, true);
+  assert(!Object.hasOwn(result, "requiresBudgetReview"));
+});
+
 test("a newly completed expense remains a capture candidate", async () => {
   const candidate = { intentType: "capture", amount: "38", currencyCode: "CNY", merchant: "午餐" };
   const result = await interpret(requestFor({ input: "午餐花了38元" }), { complete: async () => candidate });
@@ -86,3 +120,13 @@ test("a model can only route wallet and destructive actions to local selection",
     assert.equal(result.clarificationField, field);
   }
 });
+
+for (const key of ["requiresDateReview", "requiresBudgetReview"]) {
+  for (const value of [true, false, null]) {
+    test(`a model cannot forge ${key}: ${value}`, async () => {
+      await assert.rejects(() => interpret(requestFor({ input: "午餐35元" }), {
+        complete: async () => ({ intentType: "capture", amount: "35", [key]: value }),
+      }), { code: "invalid_model_output", status: 502 });
+    });
+  }
+}

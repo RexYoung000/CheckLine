@@ -69,3 +69,13 @@ test("valid leap date, ISO timestamp and monthly dates survive validation", () =
   validateCandidate({ intentType: "capture", occurredAt: "2024-02-29T13:30:00+08:00" });
   validateCandidate({ intentType: "createBudget", monthlySchedule: { kind: "cycle", startDay: 31, endDay: 31 } });
 });
+
+test("optional review metadata remains compatible and typed", () => {
+  validateCandidate({ intentType: "capture" });
+  for (const key of ["requiresDateReview", "requiresBudgetReview"]) {
+    for (const value of [true, false, null]) validateCandidate({ intentType: "needsClarification", [key]: value });
+    for (const value of ["true", 1]) {
+      assert.throws(() => validateCandidate({ intentType: "capture", [key]: value }), { code: "invalid_model_output" });
+    }
+  }
+});

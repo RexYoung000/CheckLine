@@ -45,11 +45,13 @@ export const candidateSchema = object({
   clarificationField: nullable(text(40)),
   clarificationOptions: nullable(list(50, 160)),
   requestedIntent: nullable({ type: "string", enum: INTENTS.filter((intent) => !["needsClarification", "outOfScope", "recommendPurchase"].includes(intent)) }),
+  requiresDateReview: { type: ["boolean", "null"] },
+  requiresBudgetReview: { type: ["boolean", "null"] },
 }, ["intentType"]);
 
-// Server-owned continuation hint is never part of the upstream model schema.
+// Server-owned continuation metadata is never part of the upstream model schema.
 export const modelCandidateSchema = object(Object.fromEntries(Object.entries(candidateSchema.properties)
-  .filter(([key]) => key !== "requestedIntent")), ["intentType"]);
+  .filter(([key]) => !["requestedIntent", "requiresDateReview", "requiresBudgetReview"].includes(key))), ["intentType"]);
 
 export const requestSchema = object({
   // Legacy client compatibility only. Never used as the server system prompt.

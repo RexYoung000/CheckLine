@@ -45,7 +45,7 @@ nonisolated struct TaskDraft: Codable, Equatable, Sendable {
     var hasInput: Bool { fieldsTouched || monthlySchedule != nil || !text.isEmpty || agentRequestText?.isEmpty == false || !name.isEmpty || !amount.isEmpty || !merchant.isEmpty || !note.isEmpty || !attachments.isEmpty || committedEntityID != nil }
 
     /// Only explicit parser fields replace user input; defaults never replace a chosen date.
-    mutating func apply(_ candidate: AgentIntentCandidate) {
+    mutating func apply(_ candidate: AgentIntentCandidate, calendar: Calendar = .current) {
         if let value = candidate.amount { amount = value }
         if let value = candidate.currencyCode { currency = value }
         if let value = candidate.name { name = value }
@@ -56,7 +56,16 @@ nonisolated struct TaskDraft: Codable, Equatable, Sendable {
         if let value = candidate.endDate { agentBudgetEndDate = value }
         if let value = candidate.monthlySchedule { monthlySchedule = value }
         if let value = candidate.periodID { attributionID = value; explicitAttribution = true }
-        if let value = candidate.occurredAt, let date = ISO8601DateFormatter().date(from: value) { occurredAt = date }
+        if let value = candidate.occurredAt {
+            if let date = AgentDateParser.parse(value, calendar: calendar) {
+                occurredAt = date
+                agentNeedsDate = false
+            } else {
+                // Preserve the user's prior value for editing, but never treat it
+                // as the successfully parsed answer to this explicit date.
+                agentNeedsDate = true
+            }
+        }
     }
 }
 

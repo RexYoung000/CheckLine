@@ -88,7 +88,9 @@ final class TaskEnvironmentUITests: XCTestCase {
         let app = XCUIApplication()
         app.launchArguments = ["-AppleLanguages", "(zh-Hans)", "-AppleLocale", "zh_CN"]
         app.launch()
-        app.buttons["wallet.functions"].tap(); app.buttons["创建预算卡"].tap()
+        let createBudget = app.buttons["wallet.header.create"]
+        XCTAssertTrue(createBudget.waitForExistence(timeout: 5))
+        createBudget.tap()
         let name = app.textFields["输入预算名称"]
         XCTAssertTrue(name.waitForExistence(timeout: 5))
         name.tap(); name.typeText("草稿恢复样例")
@@ -96,7 +98,8 @@ final class TaskEnvironmentUITests: XCTestCase {
         amount.tap(); amount.typeText("123.45")
         app.buttons["wallet.composer.close"].tap()
         app.terminate(); app.launch()
-        app.buttons["wallet.functions"].tap(); app.buttons["创建预算卡"].tap()
+        XCTAssertTrue(createBudget.waitForExistence(timeout: 5))
+        createBudget.tap()
         XCTAssertTrue(name.waitForExistence(timeout: 5))
         XCTAssertEqual(name.value as? String, "草稿恢复样例")
         XCTAssertEqual(amount.value as? String, "123.45")

@@ -14,19 +14,35 @@ nonisolated enum DeduplicationEngine {
         candidate: NormalizedTransactionCandidate,
         ledger: Ledger
     ) -> DeduplicationDecision {
+        let purchases = ledger.expenses.values.filter { $0.kind == .purchase }
+            .sorted { $0.id.uuidString < $1.id.uuidString }
+
+        // A stable transaction identity can be replayed by the same source. It must
+        // still refer to an existing purchase with the same original money facts.
         if let hash = candidate.externalReferenceHash, hash.isEmpty == false {
-            if let evidence = ledger.evidences.values.first(where: { $0.externalReferenceHash == hash }) {
-                return .merge(existingExpenseID: evidence.expenseID)
+            let identified = purchases.filter { expense in
+                ledger.evidences(forExpense: expense.id).contains { $0.externalReferenceHash == hash }
+            }
+            if identified.count == 1, let expense = identified.first,
+               expense.originalAmount == candidate.originalAmount,
+               expense.originalCurrencyCode == candidate.originalCurrencyCode {
+                return .merge(existingExpenseID: expense.id)
+            }
+            if let expense = identified.first {
+                return .pending(existingExpenseID: expense.id)
             }
         }
 
-        let matches = ledger.expenses.values.filter { expense in
-            expense.kind == .purchase
-                && expense.originalAmount == candidate.originalAmount
-                && expense.originalCurrencyCode == candidate.originalCurrencyCode
+        // Each manual/text/voice/image task expresses a new user record. Task
+        // retries are handled by the coordinator's stable expense ID, not similarity.
+        guard isTransactionSource(candidate.sourceType) else { return .newExpense }
+
+        let matches = purchases.filter {
+            $0.originalAmount == candidate.originalAmount
+                && $0.originalCurrencyCode == candidate.originalCurrencyCode
         }
 
-        var highConfidence: UUID?
+        var highConfidence: [UUID] = []
         var uncertain: UUID?
 
         for expense in matches {
@@ -34,17 +50,22 @@ nonisolated enum DeduplicationEngine {
             let merchantMatch = normalized(expense.merchant) == normalized(candidate.merchant)
                 && normalized(candidate.merchant) != nil
 
-            if delta <= highConfidenceWindow, merchantMatch {
-                highConfidence = expense.id
-                break
+            let hasDifferentTransactionSource = ledger.evidences(forExpense: expense.id).contains {
+                isTransactionSource($0.sourceType) && $0.sourceType != candidate.sourceType
             }
-            if delta <= uncertainWindow {
+            if delta <= highConfidenceWindow, merchantMatch, hasDifferentTransactionSource {
+                highConfidence.append(expense.id)
+            }
+            if delta <= uncertainWindow, uncertain == nil {
                 uncertain = expense.id
             }
         }
 
-        if let highConfidence {
+        if highConfidence.count == 1, let highConfidence = highConfidence.first {
             return .merge(existingExpenseID: highConfidence)
+        }
+        if let ambiguous = highConfidence.first {
+            return .pending(existingExpenseID: ambiguous)
         }
         if let uncertain {
             return .pending(existingExpenseID: uncertain)
@@ -71,6 +92,13 @@ nonisolated enum DeduplicationEngine {
         )
         ledger.upsert(evidence)
         return ledger
+    }
+
+    private static func isTransactionSource(_ source: SourceType) -> Bool {
+        switch source {
+        case .applePay, .sms, .email, .statement: true
+        case .manual, .agentText, .voice, .image: false
+        }
     }
 
     private static func normalized(_ merchant: String?) -> String? {

@@ -65,6 +65,9 @@ final class CheckLineWorkspace {
     let cloudSettings: CloudAgentSettings
     var needsCloudConsent = false
     var cloudPendingAction: AgentIntentCandidate?
+    private var cloudPendingTaskIdentity: TaskIdentity?
+    private var cloudPendingContinuesTask = false
+    private var cloudPendingInput: String?
     private var cloudRequest: Task<AgentIntentCandidate, Error>?
     private var requestGeneration = UUID()
     let attachmentStore: ExpenseAttachmentStore
@@ -419,6 +422,7 @@ final class CheckLineWorkspace {
 
     var canConfirmProposal: Bool {
         guard !draftStorageFailed && !draftLoadFailed && !attachmentImportBlocksSubmission && taskDraft.committedEntityID == nil else { return false }
+        guard taskDraft.kind != "record" || taskDraft.agentNeedsDate != true else { return false }
         if captureProposal != nil {
             return MoneyFormat.parseAmount(confirmAmountText) != nil && !confirmCurrencyCode.isEmpty
                 && attributionChoices.contains { $0.id == selectedAttributionID }
@@ -427,6 +431,7 @@ final class CheckLineWorkspace {
     }
 
     func cancelAgentProposal() {
+        clearCloudPendingAction()
         lastTurn = nil
         isReviewingRetainedDraft = false
         confirmAmountText = ""
@@ -435,6 +440,7 @@ final class CheckLineWorkspace {
     }
 
     func leaveTaskReview() {
+        clearCloudPendingAction()
         lastTurn = nil
         isReviewingRetainedDraft = false
         retainedTaskAvailable = taskDraft.hasInput
@@ -447,12 +453,17 @@ final class CheckLineWorkspace {
         guard !draftLoadFailed && !draftStorageFailed && !attachmentImportBlocksSubmission else { return }
         reconcileCommittedTask()
         guard taskDraft.committedEntityID == nil else { return }
-        if taskDraft.kind == "record", !attributionChoices.contains(where: { $0.id == taskDraft.attributionID }) {
-            banner = .needsPeriod; agentBanner = .needsPeriod
+        if taskDraft.kind == "record" && MoneyFormat.parseAmount(taskDraft.amount) == nil {
+            taskDraft.pendingAgentField = "amount"; lastTurn = nil; banner = .needsAmount; agentBanner = .needsAmount
             return
         }
-        if taskDraft.agentUsesCloud == true && MoneyFormat.parseAmount(taskDraft.amount) == nil {
-            taskDraft.pendingAgentField = "amount"; lastTurn = nil; banner = .needsAmount; agentBanner = .needsAmount
+        if taskDraft.kind == "record", taskDraft.agentNeedsDate == true {
+            requireAgentDateReview()
+            return
+        }
+        if taskDraft.kind == "record", taskDraft.agentUsesCloud != true,
+           !attributionChoices.contains(where: { $0.id == taskDraft.attributionID }) {
+            banner = .needsPeriod; agentBanner = .needsPeriod
             return
         }
         var candidate = AgentIntentCandidate(intentType: taskDraft.kind == "budget" ? "createBudget" : "capture",
@@ -529,7 +540,7 @@ final class CheckLineWorkspace {
                 retainedTaskAvailable = false; isReviewingRetainedDraft = false
                 conversation.append(AgentConversationEntry(isUser: true, text: text))
                 conversation.append(AgentConversationEntry(isUser: false, text: String(localized: "native.agent.wishReady")))
-                draftText = ""; lastTurn = nil; agentBanner = nil; cloudPendingAction = nil
+                draftText = ""; lastTurn = nil; agentBanner = nil; clearCloudPendingAction()
             } catch { agentBanner = .failed }
             return
         }
@@ -552,7 +563,7 @@ final class CheckLineWorkspace {
         defer { if requestGeneration == generation { isWorking = false } }
         banner = nil
         agentBanner = nil
-        cloudPendingAction = nil
+        clearCloudPendingAction()
 
         switch BudgetLoopInterpreter.interpret(text: text) {
         case .recommendPurchase, .outOfScope:
@@ -576,9 +587,22 @@ final class CheckLineWorkspace {
             return
         }
 
-        var candidate = LocalRegexFallback.candidate(from: text)
         let hasActiveTask = taskDraft.agentRequestText != nil || taskDraft.pendingAgentField != nil
             || (taskDraft.kind == "budget" && taskDraft.formTouched && taskDraft.hasInput)
+        let isBudgetFieldAnswer = hasActiveTask && taskDraft.kind == "budget" && !LocalRegexFallback.isExplicitRecordRequest(text)
+        if !LocalRegexFallback.isBudgetCreationRequest(text), !isBudgetFieldAnswer,
+           LocalRegexFallback.requiresConsumptionClarification(text) {
+            // Do not let an existing period selection or a pending merchant
+            // answer turn a denied/planned transaction into a direct capture.
+            // Keep every draft field and the unsaved text for clarification.
+            cancelAgentProposal()
+            retainedTaskAvailable = taskDraft.hasInput
+            banner = .needsClarification("input")
+            agentBanner = banner
+            rememberAgentReply()
+            return
+        }
+        var candidate = LocalRegexFallback.candidate(from: text)
         let explicitStart = LocalRegexFallback.isBudgetCreationRequest(text) || LocalRegexFallback.isExplicitRecordRequest(text)
         if hasActiveTask && !explicitStart {
             if LocalRegexFallback.isAmountReply(text) {
@@ -601,14 +625,35 @@ final class CheckLineWorkspace {
             }
         }
 
+        var requiresLocalDateReview = false
+        if !cloudSettings.isEnabled, !isBudgetFieldAnswer, !LocalRegexFallback.isBudgetCreationRequest(text) {
+            let dateReference = LocalRegexFallback.captureDateReference(in: text)
+            let hasRecordFields = taskDraft.kind == "record" && (hasActiveTask || taskDraft.formTouched
+                || taskDraft.fieldsTouched || taskDraft.explicitAttribution || !taskDraft.amount.isEmpty)
+            if candidate.intentType == "capture" || (hasRecordFields && LocalRegexFallback.isDateReply(text)) {
+                if candidate.intentType != "capture" { candidate = .capture() }
+                switch dateReference {
+                case .unspecified: break
+                case .requiresReview: requiresLocalDateReview = true
+                case .dayOffset(let offset):
+                    if let date = calendar.date(byAdding: .day, value: offset, to: calendar.startOfDay(for: now)) {
+                        candidate.occurredAt = ISO8601DateFormatter().string(from: date)
+                    } else { requiresLocalDateReview = true }
+                }
+            }
+        }
         var localDateReply = false
-        if hasActiveTask && taskDraft.pendingAgentField == "occurredAt" {
+        if hasActiveTask && taskDraft.pendingAgentField == "occurredAt" && !explicitStart {
             let offsets = ["今天": 0, "昨天": -1, "前天": -2, "today": 0, "yesterday": -1]
             if let offset = offsets[text.lowercased()], let date = calendar.date(byAdding: .day, value: offset, to: calendar.startOfDay(for: now)) {
                 candidate = .capture(); candidate.occurredAt = ISO8601DateFormatter().string(from: date); localDateReply = true
+            } else if AgentDateParser.parse(text, calendar: calendar) != nil {
+                candidate = .capture(); candidate.occurredAt = text; localDateReply = true
             }
+            if localDateReply { requiresLocalDateReview = false }
         }
-        if hasActiveTask && taskDraft.pendingAgentField == "merchant" && !explicitStart {
+        if hasActiveTask && taskDraft.pendingAgentField == "merchant" && !explicitStart,
+           cloudSettings.isEnabled || !LocalRegexFallback.isDateReply(text) {
             candidate = .capture(merchant: text)
         }
         let localFieldReply = localDateReply || (hasActiveTask && !explicitStart && (
@@ -638,6 +683,10 @@ final class CheckLineWorkspace {
                 let fieldHint: String? = {
                     if let known = candidate.requestedIntent { return known }
                     if LocalRegexFallback.isBudgetCreationRequest(text) { return "createBudget" }
+                    if hasActiveTask && !explicitStart,
+                       ["amount", "currencyCode", "occurredAt", "merchant", "budgetName"].contains(candidate.clarificationField ?? "") {
+                        return taskDraft.kind == "budget" ? "createBudget" : "capture"
+                    }
                     if ["amount", "currencyCode", "occurredAt", "merchant", "budgetName"].contains(candidate.clarificationField ?? ""), candidate.merchant != nil { return "capture" }
                     return nil
                 }()
@@ -646,9 +695,18 @@ final class CheckLineWorkspace {
                     requiredCloudField = candidate.clarificationField
                     candidate.intentType = requested
                 } else if !["capture", "createBudget", "queryBudgetStatus", "recommendPurchase", "outOfScope"].contains(candidate.intentType) {
+                    if explicitStart {
+                        startAgentTask(LocalRegexFallback.isBudgetCreationRequest(text) ? .budget : .record, now: now)
+                    }
                     cloudPendingAction = candidate
-                    taskDraft.agentRequestText = text
+                    cloudPendingTaskIdentity = taskIdentity
+                    cloudPendingContinuesTask = hasActiveTask && !explicitStart
+                    cloudPendingInput = text
+                    taskDraft.agentRequestText = [cloudPendingContinuesTask ? taskDraft.agentRequestText : nil, text]
+                        .compactMap { $0 }.joined(separator: "\n")
+                    taskDraft.pendingAgentField = candidate.clarificationField ?? "action"
                     draftText = ""
+                    lastTurn = nil
                     agentBanner = .needsClarification(candidate.clarificationField ?? "action")
                     rememberAgentReply()
                     return
@@ -672,10 +730,12 @@ final class CheckLineWorkspace {
         let turn: AgentTurn
         if candidate.intentType == "createBudget" || candidate.intentType == "capture" {
             let kind: ComposerIntent = candidate.intentType == "createBudget" ? .budget : .record
-            // A bare new expense description is not an amount correction. Never
-            // reuse the previous number just because both messages are captures.
+            // A bare new merchant description must not inherit the previous
+            // number. Explicit field corrections and merchant answers stay scoped.
+            let isFieldCorrection = text.range(of: #"(?i)^\s*(?:这笔|这次|该笔|刚才那笔|商家|备注|日期|币种|归属|金额|改成|改为|更正|修改|this\s+(?:expense|purchase|record)|merchant|note|date|currency|amount|change\b|correct\b)"#, options: .regularExpression) != nil
             let startsAnotherExpense = kind == .record && hasActiveTask && !taskDraft.amount.isEmpty
                 && candidate.amount == nil && candidate.merchant != nil
+                && taskDraft.pendingAgentField != "merchant" && !isFieldCorrection
             let continuesTask = hasActiveTask && taskDraft.kind == kind.rawValue && !explicitStart && !startsAnotherExpense
             let hasExplicitFields = taskDraft.formTouched || taskDraft.fieldsTouched
                 || taskDraft.explicitAttribution || !taskDraft.attachments.isEmpty
@@ -685,13 +745,7 @@ final class CheckLineWorkspace {
             }
             composerIntent = kind
             if receivedCloud { taskDraft.agentUsesCloud = true }
-            if taskDraft.agentUsesCloud == true {
-                if candidate.currencyCode != nil { taskDraft.agentCurrencyExplicit = true }
-                if requiredCloudField == "occurredAt" { taskDraft.agentNeedsDate = true }
-                if candidate.occurredAt != nil { taskDraft.agentNeedsDate = false }
-                if let budgetName = candidate.budgetName { taskDraft.agentBudgetName = budgetName }
-            }
-            taskDraft.apply(candidate)
+            mergeAgentCandidate(candidate, requiredField: requiresLocalDateReview ? "occurredAt" : requiredCloudField, into: &taskDraft, now: now)
             let previousText = taskDraft.agentRequestText
             taskDraft.agentRequestText = [previousText, text].compactMap { $0 }.joined(separator: "\n")
             draftText = ""
@@ -716,14 +770,14 @@ final class CheckLineWorkspace {
                     merged.periodID = taskDraft.attributionID
                 }
             }
-            if taskDraft.agentUsesCloud == true && kind == .record {
-                guard MoneyFormat.parseAmount(taskDraft.amount) != nil else {
+            if kind == .record {
+                if taskDraft.agentUsesCloud == true && MoneyFormat.parseAmount(taskDraft.amount) == nil {
                     taskDraft.pendingAgentField = "amount"; agentBanner = .needsAmount; lastTurn = nil; rememberAgentReply(); return
                 }
                 if taskDraft.agentNeedsDate == true {
-                    taskDraft.pendingAgentField = "occurredAt"; agentBanner = .needsClarification("occurredAt"); lastTurn = nil; rememberAgentReply(); return
+                    requireAgentDateReview(); rememberAgentReply(); return
                 }
-                if !prepareCloudAttribution(for: &merged) { rememberAgentReply(); return }
+                if taskDraft.agentUsesCloud == true && !prepareCloudAttribution(for: &merged) { rememberAgentReply(); return }
             }
             let result = IntentValidator.validate(merged, ledger: ledger, now: now, sourceType: .agentText, calendar: calendar)
             if case .intent(let intent) = result {
@@ -755,7 +809,7 @@ final class CheckLineWorkspace {
     func chooseCloudBudget(_ budgetID: UUID?, now: Date = Date()) {
         if let action = cloudPendingAction {
             if (action.requestedIntent ?? action.intentType) == "queryBudgetStatus", let budgetID {
-                cloudPendingAction = nil
+                clearCloudPendingAction()
                 let value = session.turn(intent: .queryBudgetStatus(budgetID: budgetID), ledger: ledger, now: now)
                 lastTurn = value; applyTurn(value, now: now); agentBanner = banner; rememberAgentReply()
             }
@@ -796,16 +850,18 @@ final class CheckLineWorkspace {
     }
 
     func resolveCloudOperation(_ kind: ComposerIntent, now: Date = Date()) {
-        guard var candidate = cloudPendingAction else { return }
-        let source = taskDraft.agentRequestText ?? ""
-        let local = LocalRegexFallback.candidate(from: source)
+        guard var candidate = cloudPendingAction, cloudPendingTaskIdentity == taskIdentity else { return }
+        let continues = cloudPendingContinuesTask && taskDraft.kind == kind.rawValue
+        let source = continues ? taskDraft.agentRequestText ?? "" : cloudPendingInput ?? taskDraft.agentRequestText ?? ""
+        var draft = continues ? taskDraft : TaskDraft(kind: kind.rawValue, mode: "agent")
         candidate.intentType = kind == .record ? "capture" : "createBudget"
-        if kind == .record && candidate.merchant == nil { candidate.merchant = local.merchant }
-        var draft = TaskDraft(kind: kind.rawValue, mode: "agent")
-        draft.agentUsesCloud = true; draft.agentRequestText = source; draft.occurredAt = now
-        draft.currency = ledger.walletSettings.walletCurrencyCode
-        draft.apply(candidate)
-        taskDraft = draft; composerIntent = kind; cloudPendingAction = nil
+        if kind == .record && candidate.merchant == nil && draft.merchant.isEmpty {
+            candidate.merchant = LocalRegexFallback.candidate(from: source).merchant
+        }
+        draft.agentUsesCloud = true; draft.agentRequestText = source
+        if !continues { draft.occurredAt = now; draft.currency = ledger.walletSettings.walletCurrencyCode }
+        mergeAgentCandidate(candidate, requiredField: nil, into: &draft, now: now)
+        taskDraft = draft; composerIntent = kind; clearCloudPendingAction()
         reviewRetainedTask(now: now)
         rememberAgentReply()
     }
@@ -815,10 +871,49 @@ final class CheckLineWorkspace {
               ledger == reviewed, cloudDeletePreview(expenseID, in: reviewed, now: now) != nil else { return false }
         persist(intent: .deleteExpense(expenseID: expenseID), confirmation: .impact(ImpactAcknowledgement()), now: now, recordedBanner: .deleted)
         guard banner == .deleted else { return false }
-        cloudPendingAction = nil
+        clearCloudPendingAction()
         taskDraft = TaskDraft(mode: "agent")
         agentBanner = .deleted; rememberAgentReply()
         return true
+    }
+
+    private func mergeAgentCandidate(_ candidate: AgentIntentCandidate, requiredField: String?, into draft: inout TaskDraft, now: Date) {
+        if draft.agentUsesCloud == true {
+            if candidate.currencyCode != nil { draft.agentCurrencyExplicit = true }
+            let requiresBudgetReview = requiredField == "budgetName" || candidate.requiresBudgetReview == true
+            if draft.kind == "record", candidate.budgetName != nil || requiresBudgetReview {
+                // A newly named or disputed destination replaces the old choice;
+                // its stable local object and actual period must be resolved anew.
+                draft.explicitAttribution = false
+                draft.attributionID = "unbudgeted"
+                draft.agentEntryExplicitBudget = false
+                let name = candidate.budgetName?.trimmingCharacters(in: .whitespacesAndNewlines)
+                draft.agentBudgetName = requiresBudgetReview || name?.isEmpty == true ? nil : name
+            }
+        }
+        draft.apply(candidate, calendar: calendar)
+        if draft.kind == "record" {
+            if let raw = candidate.occurredAt {
+                draft.agentNeedsDate = AgentDateParser.parse(raw, calendar: calendar).map {
+                    AgentDateParser.isFutureDay($0, relativeTo: now, calendar: calendar)
+                } ?? true
+            }
+            if requiredField == "occurredAt" || candidate.requiresDateReview == true { draft.agentNeedsDate = true }
+        }
+    }
+
+    private func requireAgentDateReview() {
+        taskDraft.pendingAgentField = "occurredAt"
+        lastTurn = nil; isReviewingRetainedDraft = false
+        banner = .needsClarification("occurredAt"); agentBanner = banner
+        panelExpanded = true
+    }
+
+    private func clearCloudPendingAction() {
+        cloudPendingAction = nil
+        cloudPendingTaskIdentity = nil
+        cloudPendingContinuesTask = false
+        cloudPendingInput = nil
     }
 
     private func prepareCloudAttribution(for candidate: inout AgentIntentCandidate) -> Bool {
@@ -887,7 +982,7 @@ final class CheckLineWorkspace {
         } else {
             candidate = LocalRegexFallback.candidate(from: text)
         }
-        taskDraft.apply(candidate)
+        taskDraft.apply(candidate, calendar: calendar)
     }
 
     private func rememberAgentReply() {
@@ -895,6 +990,10 @@ final class CheckLineWorkspace {
     }
 
     func confirmStructured(now: Date = Date()) {
+        if taskDraft.kind == "record", taskDraft.agentNeedsDate == true {
+            requireAgentDateReview()
+            return
+        }
         guard canConfirmProposal, showsStructuredConfirm, let turn = lastTurn, case .intent(let intent) = turn.understand else { return }
         defer { agentBanner = banner; rememberAgentReply() }
         if case .capture(var draft) = intent {
@@ -1038,6 +1137,7 @@ final class CheckLineWorkspace {
     }
 
     func beginTask(_ intent: ComposerIntent, mode: String, now: Date = Date(), budgetID: UUID? = nil) {
+        clearCloudPendingAction()
         composerIntent = intent
         let card = cards.first { $0.id == (budgetID ?? (mode == "agent" ? agentBudgetID : selectedBudgetID)) } ?? selectedCard
         var fresh = TaskDraft(kind: intent.rawValue, contextBudgetID: intent == .record ? card?.id : nil,

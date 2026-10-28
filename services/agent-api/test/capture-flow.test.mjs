@@ -10,6 +10,21 @@ const scenario = (id) => structuredClone(scenarios.find((item) => item.id === id
 const select = (draft, local, id) => ({ attribution: { basis: attributionBasis(draft, local), kind: "budget", id } });
 const planFor = (item, answers) => planCapture(item.candidate, item.local, answers);
 
+for (const input of ["午餐35元，不计入餐饮预算", "午餐35元，记到餐饮预算或旅行预算",
+  "午餐35元，记到餐饮预算，不是记到餐饮预算"]) {
+  test(`a revised negative or ambiguous target invalidates old entry and answer: ${input}`, () => {
+    const item = scenario("card-entry");
+    const prior = select(item.candidate, item.local, item.local.entry.budgetID);
+    assert.equal(planFor(item, prior).ready, true);
+    item.local.userMessage = input;
+    const result = planFor(item, prior);
+    assert.equal(result.stage, "chooseBudget");
+    assert.equal(result.ready, false);
+    const renewed = select(item.candidate, item.local, item.local.entry.budgetID);
+    assert.equal(planFor(item, renewed).ready, true);
+  });
+}
+
 for (const [id, stage] of Object.entries({ "relative-date": "chooseBudget", expense: "ready", "card-entry": "ready",
   "guessed-budget": "chooseBudget", unassigned: "chooseBudget", "multiple-cards": "chooseBudget",
   "duplicate-name": "chooseBudget", "entry-conflict": "conflict", "outside-period": "outsidePeriod",

@@ -1,4 +1,4 @@
-import { explicitBudgetNames } from "../src/budget-reference.mjs";
+import { inspectBudgetReferences } from "../src/budget-reference.mjs";
 
 // Executable review contract for the future LOCAL App gate. Never called by the live API.
 // All money values are supplied decimal strings; this module does no monetary arithmetic.
@@ -23,7 +23,7 @@ export function moneyLabel(amount, currency) {
 
 export function attributionBasis(draft, local) {
   // Any edit, task switch, or card/period mutation invalidates a previous answer.
-  return JSON.stringify({ taskID: local.taskID, draft, cards: local.cards, entry: local.entry,
+  return JSON.stringify({ taskID: local.taskID, draft, userMessage: local.userMessage, cards: local.cards, entry: local.entry,
     deviceTime: local.deviceTime });
 }
 
@@ -60,7 +60,8 @@ export function planCapture(draft, local, answers = {}) {
   });
   const options = eligible.map((card) => cardOption(card, day)).concat([unbudgetedOption]);
   const choice = answers.attribution?.basis === basis ? answers.attribution : null;
-  const explicitNames = explicitBudgetNames(local.userMessage, cards);
+  const references = inspectBudgetReferences(local.userMessage, cards);
+  const explicitNames = references.names;
   const named = cards.filter((card) => explicitNames.includes(card.name));
   // Only a current task's real card entry can supply default attribution; root focus cannot.
   const entry = local.entry?.taskID === local.taskID && local.entry.origin === "card"
@@ -74,6 +75,8 @@ export function planCapture(draft, local, answers = {}) {
     card = cards.find((item) => item.id === choice.id);
     if (!card) return result("chooseBudget", "这张卡已不可用，请重新选择。", { options });
     origin = "用户选择";
+  } else if (references.needsSelection) {
+    return result("chooseBudget", "这次归属需要重新核对，这笔记到哪张预算卡？", { options });
   } else if (named.length > 0 && entry && !named.some((item) => item.id === entry.id)) {
     return result("conflict", `你从「${entry.name}」进入，但这次点名了其他预算。这笔记到哪里？`,
       { options: [entry, ...named].map((item) => cardOption(item, day)).concat([unbudgetedOption]) });

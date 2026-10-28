@@ -186,6 +186,58 @@ test('server-owned continuation retains the action while rejecting model forgery
   }
   await assert.rejects(()=>interpret(requestFor({input:'午餐35元'}),{complete:async()=>({intentType:'capture',amount:'35',requestedIntent:'deleteExpense'})}),{code:'invalid_model_output'});
   assert(!SYSTEM_PROMPT.includes('"requestedIntent"'));
+  assert(!SYSTEM_PROMPT.includes('"requiresDateReview"'));
+  assert(!SYSTEM_PROMPT.includes('"requiresBudgetReview"'));
+});
+test('a compound budget question preserves date review before a fresh local choice',async()=>{
+  const item=structuredClone(cases.find(c=>c.id==='card-entry'));
+  const input='午餐35元，不是今天的，不计入餐饮预算';
+  const raw=requestFor({input});raw.context.deviceTime=item.local.deviceTime;
+  item.candidate=await interpret(raw,{complete:async()=>({intentType:'capture',amount:'35',currencyCode:'CNY',merchant:'午餐',budgetName:'餐饮',occurredAt:null})});
+  item.input=input;item.local.userMessage=input;
+  let t=createReviewTask(item);
+  const before=t.local.expenses.length;
+  assert.equal(t.draft.clarificationField,'budgetName');assert.equal(t.requiresDate,true);
+  assert.equal(plan(t).fields[0].key,'occurredAt');assert.equal(t.local.expenses.length,before);
+  t=reply(t,{occurredAt:'2026-10-13'});
+  assert.equal(t.requiresDate,false);assert(!Object.hasOwn(t.draft,'requiresDateReview'));
+  assert.equal(plan(t).stage,'chooseBudget');
+  t=choose(t,plan(t).choices.find(c=>c.data.attribution?.kind==='unbudgeted').id);
+  assert.equal(plan(t).stage,'ready');
+  t=confirm(t);assert.equal(t.local.expenses.length,before+1);
+  assert.equal(t.local.expenses.at(-1).periodID??null,null);
+});
+for (const suppliesAmount of [true, false]) test(`an amendment keeps date and budget review after choosing the same unfinished task (amount supplied: ${suppliesAmount})`,async()=>{
+  const item=structuredClone(cases.find(c=>c.id==='correction'));
+  const input='这笔日期改一下，不是今天的，不计入餐饮预算';
+  const raw=requestFor({input});raw.context.deviceTime=item.local.deviceTime;
+  item.candidate=await interpret(raw,{complete:async()=>({intentType:'capture',...(suppliesAmount?{amount:'35'}:{}),currencyCode:'CNY',merchant:'午餐',budgetName:'餐饮',occurredAt:item.local.deviceTime.timestamp})});
+  item.input=input;item.local.userMessage=input;
+  item.local.activeDraft={...item.local.activeDraft,amount:'35',budgetName:'餐饮',budgetID:'food',periodID:'food-oct',attachments:['synthetic-attachment']};
+  item.local.entry={taskID:item.local.taskID,origin:'card',budgetID:'food'};
+  let t=createReviewTask(item);const id=t.id,before=t.local.expenses.length;
+  assert.equal(plan(t).stage,'chooseOperation');
+  t=act(t,'editDraft');
+  assert.equal(t.id,id);assert.equal(t.local.expenses.length,before);
+  assert.equal(t.draft.budgetName,null);assert.equal(t.draft.budgetID,null);assert.equal(t.draft.periodID,null);
+  assert.equal(t.draft.occurredAt,null);assert.equal(t.draft.requiresDateReview,true);assert.equal(t.draft.requiresBudgetReview,true);
+  assert.equal(t.local.entry,undefined);assert.deepEqual(t.draft.attachments,['synthetic-attachment']);
+  assert.equal(t.draft.amount,'35');assert.equal(t.draft.merchant,'午餐');assert.equal(t.input,input);
+  assert.equal(plan(t).fields[0].key,'occurredAt');
+  t=reply(t,{occurredAt:'2026-10-13'});assert.equal(plan(t).stage,'chooseBudget');
+  t=choose(t,plan(t).choices.find(c=>c.data.attribution?.kind==='unbudgeted').id);
+  assert.equal(plan(t).stage,'ready');assert(!Object.hasOwn(t.draft,'requiresBudgetReview'));
+  assert.equal(t.local.expenses.length,before);
+});
+test('a recovered model response applies the same date and attribution review requirements',async()=>{
+  const item=structuredClone(cases.find(c=>c.id==='card-entry'));
+  const input='午餐35元，不是今天的，不计入餐饮预算';
+  const raw=requestFor({input});raw.context.deviceTime=item.local.deviceTime;
+  item.recoveryCandidate=await interpret(raw,{complete:async()=>({intentType:'capture',amount:'35',currencyCode:'CNY',merchant:'午餐',budgetName:'餐饮',occurredAt:null})});
+  item.input=input;item.local.userMessage=input;item.candidate={};item.status=503;item.error='model_unavailable';
+  let t=createReviewTask(item);t=resolve(act(t,'retry'));
+  assert.equal(plan(t).fields[0].key,'occurredAt');assert.equal(t.local.entry,undefined);
+  t=reply(t,{occurredAt:'2026-10-13'});assert.equal(plan(t).stage,'chooseBudget');
 });
 test('review decimal projections are exact across cents and large values',()=>{
   assert.equal(decimalAdd('0.1','0.2'),'0.3');assert.equal(decimalSubtract('1','0.01'),'0.99');assert.equal(decimalCompare('35.00','35'),0);

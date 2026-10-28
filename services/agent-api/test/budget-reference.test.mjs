@@ -37,3 +37,58 @@ test("refund is not deletion regardless of model intent", async () => {
     assert.equal(result.amount, "35");
   }
 });
+
+for (const input of [
+  "午餐35元，不计入餐饮预算", "午餐35元，不放到餐饮预算", "午餐35元，并非记到餐饮预算",
+  "午餐35元，并非餐饮预算", "午餐35元，不属于餐饮预算", "午餐35元，不要记到餐饮预算",
+  "Lunch 35 CNY, not in 餐饮 budget",
+]) {
+  test(`a negated budget invalidates an earlier selection and asks: ${input}`, async () => {
+    for (const budgetName of [null, "餐饮"]) {
+      const result = await interpret(requestFor({ input }), {
+        complete: async () => ({ intentType: "capture", amount: "35", currencyCode: "CNY", merchant: "午餐", budgetName }),
+      });
+      assert.equal(result.intentType, "needsClarification");
+      assert.equal(result.clarificationField, "budgetName");
+      assert.equal(result.requestedIntent, "capture");
+      assert.equal(result.requiresBudgetReview, true);
+      assert.equal(result.budgetName, null);
+      assert.equal(result.amount, "35");
+    }
+  });
+}
+
+for (const input of [
+  "午餐35元，不计入餐饮而记到旅行", "午餐35元，不放到餐饮预算，但记到旅行预算",
+  "午餐35元，并非记到餐饮预算，而是记到旅行预算", "午餐35元，不是餐饮预算而是旅行预算",
+  "Lunch 35 CNY, not in 餐饮 budget but in 旅行 budget",
+]) {
+  test(`negation stays within its target when another budget is explicitly selected: ${input}`, async () => {
+    const request = requestFor({ input });
+    request.context.budgetCards.push({ name: "旅行", cycleType: "oneShot", currencyCode: "CNY" });
+    const result = await interpret(request, {
+      complete: async () => ({ intentType: "capture", amount: "35", currencyCode: "CNY", budgetName: "餐饮" }),
+    });
+    assert.equal(result.intentType, "capture");
+    assert.equal(result.budgetName, "旅行");
+  });
+}
+
+for (const input of ["午餐35元，记到餐饮预算或旅行预算", "午餐35元，记到餐饮或旅行", "午餐35元，记到餐饮预算或未知预算",
+  "午餐35元，记到餐饮预算，不是记到餐饮预算", "午餐35元，不计入不存在的预算"]) {
+  test(`alternative, conflicting or unresolved negative targets require a fresh selection: ${input}`, async () => {
+    const request = requestFor({ input });
+    request.context.budgetCards.push({ name: "旅行", cycleType: "oneShot", currencyCode: "CNY" });
+    const result = await interpret(request, { complete: async () => ({ intentType: "capture", amount: "35", budgetName: "餐饮" }) });
+    assert.equal(result.clarificationField, "budgetName");
+    assert.equal(result.requestedIntent, "capture");
+    assert.equal(result.budgetName, null);
+  });
+}
+
+test("a negation unrelated to the selected budget does not invalidate it", async () => {
+  const result = await interpret(requestFor({ input: "不太饿，午餐35元，记到餐饮预算" }), {
+    complete: async () => ({ intentType: "capture", amount: "35", budgetName: null }),
+  });
+  assert.equal(result.intentType, "capture"); assert.equal(result.budgetName, "餐饮");
+});

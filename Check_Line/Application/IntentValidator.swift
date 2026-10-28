@@ -32,7 +32,7 @@ nonisolated enum IntentValidator {
         case "outOfScope":
             return .intent(.outOfScope)
         case "capture":
-            return validateCapture(candidate, ledger: ledger, now: now, sourceType: sourceType)
+            return validateCapture(candidate, ledger: ledger, now: now, sourceType: sourceType, calendar: calendar)
         case "queryBudgetStatus":
             return validateQuery(candidate, ledger: ledger)
         case "createBudget":
@@ -56,7 +56,8 @@ nonisolated enum IntentValidator {
         _ candidate: AgentIntentCandidate,
         ledger: Ledger,
         now: Date,
-        sourceType: SourceType
+        sourceType: SourceType,
+        calendar: Calendar
     ) -> AgentUnderstandResult {
         let amount: Decimal?
         if let raw = candidate.amount {
@@ -96,8 +97,8 @@ nonisolated enum IntentValidator {
         }
 
         let occurredAt: Date
-        if let raw = nonempty(candidate.occurredAt) {
-            guard let parsed = parseDate(raw) else {
+        if let raw = candidate.occurredAt {
+            guard let parsed = AgentDateParser.parse(raw, calendar: calendar) else {
                 return .needsClarification(field: "occurredAt", options: [])
             }
             occurredAt = parsed
@@ -161,7 +162,10 @@ nonisolated enum IntentValidator {
                                                           startDate: plan.startDate, endDate: plan.endDate)))
         }
         let start: Date
-        if let explicit = parseDate(candidate.startDate) {
+        if let raw = candidate.startDate {
+            guard let explicit = AgentDateParser.parse(raw, calendar: calendar) else {
+                return .needsClarification(field: "startDate", options: [])
+            }
             start = explicit
         } else if cycle == .repeating {
             start = calendar.date(from: calendar.dateComponents([.year, .month], from: now)) ?? now
@@ -169,7 +173,10 @@ nonisolated enum IntentValidator {
             start = now
         }
         let end: Date?
-        if let explicit = parseDate(candidate.endDate) {
+        if let raw = candidate.endDate {
+            guard let explicit = AgentDateParser.parse(raw, calendar: calendar) else {
+                return .needsClarification(field: "endDate", options: [])
+            }
             end = explicit
         } else if cycle == .repeating,
                   let nextMonth = calendar.date(byAdding: .month, value: 1, to: start) {
@@ -264,18 +271,6 @@ nonisolated enum IntentValidator {
     private static func parseAmount(_ raw: String?) -> Decimal? {
         guard let trimmed = nonempty(raw) else { return nil }
         return MoneyFormat.parseAmount(trimmed)
-    }
-
-    private static func parseDate(_ raw: String?) -> Date? {
-        guard let trimmed = nonempty(raw) else { return nil }
-        let withFractional = ISO8601DateFormatter()
-        withFractional.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
-        if let date = withFractional.date(from: trimmed) {
-            return date
-        }
-        let basic = ISO8601DateFormatter()
-        basic.formatOptions = [.withInternetDateTime]
-        return basic.date(from: trimmed)
     }
 
     private static func parseCycle(_ raw: String?) -> CycleType? {

@@ -58,6 +58,7 @@
 | `engineering/ARCHITECTURE.md` | Xcode 工程事实、新 V1 目标模型和领域服务 |
 | `engineering/SETUP.md` | 开发环境、构建和本地化验证 |
 | `../services/agent-api/README.md` | 小朵 Workflow、腾讯云 IP HTTPS、私有原生接入与维护边界 |
+| `engineering/evidence/2026-10-28-agent-workflow-repair/README.md` | Agent 防误记、任务去重、归属／动作／日期追问修复；隔离回归、截图与部署／手机边界 |
 | `engineering/evidence/2026-10-16-agent-api-deployment.md` | 腾讯云内部部署版本、服务器检查、真实模型样例与后续接入边界 |
 | `engineering/evidence/2026-10-16-agent-phone-integration.md` | IP HTTPS、限时凭据、原生任务链路、真实模型操作与手机安装记录 |
 | `engineering/PERMISSIONS.md` | Agent 与可选数据来源的权限/降级要求 |

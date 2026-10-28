@@ -1,10 +1,15 @@
 import { readFile } from "node:fs/promises";
 import assert from "node:assert/strict";
-import { candidateSchema, requestSchema, INTENTS } from "../src/contract.mjs";
+import { candidateSchema, modelCandidateSchema, requestSchema, INTENTS } from "../src/contract.mjs";
 
 const swift = await readFile(new URL("../../../Check_Line/Application/AgentIntentCandidate.swift", import.meta.url), "utf8");
 const keys = [...swift.matchAll(/\bvar\s+(\w+)\s*:/g)].map((match) => match[1]).sort();
 assert.deepEqual(Object.keys(candidateSchema.properties).sort(), keys);
+for (const key of ["requiresDateReview", "requiresBudgetReview"]) {
+  assert.match(swift, new RegExp(`var\\s+${key}\\s*:\\s*Bool\\?`));
+  assert.deepEqual(candidateSchema.properties[key].type, ["boolean", "null"]);
+}
+for (const key of ["requestedIntent", "requiresDateReview", "requiresBudgetReview"]) assert(!Object.hasOwn(modelCandidateSchema.properties, key));
 const validator = await readFile(new URL("../../../Check_Line/Application/IntentValidator.swift", import.meta.url), "utf8");
 const switchCases = new Set([...validator.matchAll(/case "(\w+)":/g)].map((match) => match[1]));
 for (const intent of INTENTS.filter((value) => value !== "needsClarification")) assert(switchCases.has(intent));

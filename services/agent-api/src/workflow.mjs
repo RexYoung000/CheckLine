@@ -1,6 +1,6 @@
 import { modelCandidateSchema, validateCandidate, validateRequest } from "./contract.mjs";
 import { resolveConsumptionDay } from "./device-date.mjs";
-import { explicitBudgetNames } from "./budget-reference.mjs";
+import { inspectBudgetReferences } from "./budget-reference.mjs";
 
 export const SYSTEM_PROMPT = `You extract one untrusted intent candidate for CheckLine, a budget and wish tool.
 Return exactly one JSON object following this schema. Never output prose or tools.
@@ -14,6 +14,8 @@ income, and reimbursements are NOT new expenses. Use needsClarification with fie
 if the applicable existing action is unclear. recommendPurchase only for asking what to buy;
 investment, loans, insurance, tax and financial planning are outOfScope.
 Extract budgetName only when the USER explicitly names that budget in a recording instruction.
+Negated targets are not selections. A clear correction such as 不计入A而记到B selects B;
+conflicting or alternative targets need budgetName clarification rather than picking one.
 Lunch, coffee and merchant meanings are not a budget selection, even when there is only one card.
 Leave budgetName null for inferred categories. A capture is only a candidate: the App MUST check
 the selected local card and actual period for the expense date, and ask when attribution is unclear.
@@ -33,6 +35,7 @@ For capture with today/yesterday/day before yesterday, leave occurredAt null and
 other information is sufficient; the workflow computes the calendar day in the device time zone.
 Never guess dates or use the server clock. Missing device time, vague dates, multiple days, ranges,
 and future dates require clarification. Budget date ranges still require local startDate/endDate review.
+Negated or contradictory dates require occurredAt clarification, not the date being denied.
 For createBudget: cycleType repeating/oneShot only if specified; default monthly schedule is computed
 locally. Monthly schedule cycle has startDay and endDay 31; window has the user startDay/endDay.
 Do not convert monthly boundaries to actual dates. For weekly or other unsupported recurrence, ask cycleType.
@@ -69,20 +72,26 @@ export function applyPolicy(candidate, request) {
     return clarify(candidate, "action");
   }
   if (candidate.intentType === "capture") {
-    const explicit = explicitBudgetNames(request.userMessage, request.context.budgetCards);
+    const references = inspectBudgetReferences(request.userMessage, request.context.budgetCards);
+    const explicit = references.names;
     const unknownName = candidate.budgetName && !names.includes(candidate.budgetName);
-    if (explicit.length === 1) candidate = { ...candidate, budgetName: explicit[0] };
+    if (explicit.length === 1 && !references.needsSelection) candidate = { ...candidate, budgetName: explicit[0] };
     else if (candidate.budgetName && !unknownName) candidate = { ...candidate, budgetName: null };
     if (notAnExpense.test(request.userMessage) || candidate.isMultiItem) return clarify(candidate, "input");
+    if (references.needsSelection) candidate = { ...candidate, budgetName: null, requiresBudgetReview: true };
+    const day = resolveConsumptionDay(request.userMessage, request.context.deviceTime, candidate.occurredAt ?? null);
+    if (day.kind === "clarify") candidate = { ...candidate, occurredAt: null, requiresDateReview: true };
+    if (day.kind === "resolved") candidate = { ...candidate, occurredAt: day.occurredAt };
     if (amendment.test(request.userMessage)) {
-      const edit = relativeDate.test(request.userMessage) ? { ...candidate, occurredAt: null } : candidate;
+      const edit = relativeDate.test(request.userMessage)
+        ? { ...candidate, occurredAt: null, requiresDateReview: true } : candidate;
       return clarify(edit, "action");
     }
-    const day = resolveConsumptionDay(request.userMessage, request.context.deviceTime);
-    if (day.kind === "clarify") return askField({ ...candidate, occurredAt: null }, "occurredAt");
-    if (day.kind === "resolved") candidate = { ...candidate, occurredAt: day.occurredAt };
+    if (references.needsSelection) {
+      return askField({ ...candidate, budgetName: null }, "budgetName", names);
+    }
+    if (day.kind === "clarify") return askField(candidate, "occurredAt");
     if (!candidate.amount || !/[1-9]/.test(candidate.amount)) return askField(candidate, "amount");
-    if (explicit.length > 1) return askField({ ...candidate, budgetName: null }, "budgetName", names);
     if (unknownName && explicit.length === 0) return askField(candidate, "budgetName", names);
   }
   if (candidate.budgetName) {

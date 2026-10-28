@@ -11,12 +11,76 @@ nonisolated enum LocalRegexFallback {
                 cycleType: extractBudgetCycle(from: text)
             )
         }
-        guard isCaptureRequest(text) else { return .clarification(field: "input") }
+        guard !requiresConsumptionClarification(text) else { return .clarification(field: "input") }
+        let captureText = textExcludingDateReferences(text)
+        guard isCaptureRequest(captureText) else { return .clarification(field: "input") }
         return AgentIntentCandidate.capture(
-            amount: extractAmount(from: text),
+            amount: extractAmount(from: captureText),
             currencyCode: extractCurrency(from: text),
-            merchant: extractMerchant(from: text)
+            merchant: extractMerchant(from: captureText)
         )
+    }
+
+    enum CaptureDateReference: Equatable {
+        case unspecified
+        case dayOffset(Int)
+        case requiresReview
+    }
+
+    // Only simple relative days are resolved locally. Other date language is a
+    // reason to show the existing date review, never a default to today's date.
+    private static let numericDatePattern = #"(?<![0-9])(?:[0-9]{4}[-/.年][0-9]{1,2}[-/.月][0-9]{1,2}[日号]?(?:T[0-9:.]+(?:Z|[+-][0-9]{2}:[0-9]{2}))?|[0-9]{1,2}月[0-9]{1,2}[日号]?|[0-9]{1,2}[/\-][0-9]{1,2})(?![0-9])"#
+    private static let relativeDatePattern = #"(?i)(?:大前天|前天|昨天|今天|明天|后天|(?:上|下|本|这)(?:个)?(?:星期|礼拜|周|月)(?:[一二三四五六日天])?|(?:星期|礼拜|周)[一二三四五六日天末]|[一二三四五六七八九十]+月[一二三四五六七八九十]+[日号]|\b(?:day before yesterday|day after tomorrow|yesterday|today|tomorrow|(?:last|next|this)\s+(?:week|month|monday|tuesday|wednesday|thursday|friday|saturday|sunday))\b)"#
+
+    static func captureDateReference(in text: String) -> CaptureDateReference {
+        let hasNumericDate = text.range(of: numericDatePattern, options: .regularExpression) != nil
+        let relative = (try? NSRegularExpression(pattern: relativeDatePattern))?
+            .matches(in: text, range: NSRange(text.startIndex..., in: text)) ?? []
+        let hasDateWording = text.range(of: #"(?i)日期|哪天|某天|几天前|几天后|\bdate\b"#, options: .regularExpression) != nil
+        guard hasNumericDate || !relative.isEmpty || hasDateWording else { return .unspecified }
+        let uncertain = text.range(of: #"(?i)不是|并非|不在|不确定|不清楚|记不清|不知道|忘了?|好像|可能|大概|也许|\b(?:not|wasn['’]?t|isn['’]?t|maybe|unsure|unknown|uncertain)\b"#, options: .regularExpression) != nil
+        guard !hasNumericDate, !uncertain, relative.count == 1,
+              let match = relative.first, let range = Range(match.range, in: text) else { return .requiresReview }
+        switch text[range].lowercased() {
+        case "今天", "today": return .dayOffset(0)
+        case "昨天", "yesterday": return .dayOffset(-1)
+        case "前天", "day before yesterday": return .dayOffset(-2)
+        default: return .requiresReview
+        }
+    }
+
+    static func isDateReply(_ text: String) -> Bool {
+        guard captureDateReference(in: text) != .unspecified else { return false }
+        let remainder = replacing(#"(?i)这笔|这次|该笔|日期|时间|不是|并非|不在|不确定|不清楚|记不清|不知道|忘了?|改为|改成|更正|的|是在|是|在|\b(?:date|not|wasn['’]?t|isn['’]?t|unsure|unknown|uncertain)\b"#,
+                                  in: textExcludingDateReferences(text), with: " ")
+        return remainder.trimmingCharacters(in: .whitespacesAndNewlines.union(.punctuationCharacters)).isEmpty
+    }
+
+    private static func textExcludingDateReferences(_ text: String) -> String {
+        let withoutNumericDates = replacing(numericDatePattern, in: text, with: " ")
+        return replacing(#"(?:(?:日期|时间)?(?:不是|并非|不在|是|在)?\s*)?"# + relativeDatePattern + #"的?"#,
+                         in: withoutNumericDates, with: " ")
+    }
+
+    /// An amount is not evidence that money was spent. These conservative
+    /// language guards run before extracting fields or using an explicit budget.
+    /// They ask the user to clarify; they never turn refunds into new actions.
+    static func requiresConsumptionClarification(_ text: String) -> Bool {
+        if text.contains("?") || text.contains("？") { return true }
+        let patterns = [
+            #"(?:还?没(?:有)?|并未|尚未|未曾|从未|不曾)\s*(?:实际|真的|已经|再)?\s*(?:花|买|消费|支出|支付|付款|付|扣款)"#,
+            #"(?:不是|并非|不算(?:是)?|不属于)\s*(?:实际|真的|一笔)?\s*(?:消费|支出|支付|付款|扣款|花的|买的)"#,
+            #"(?:不要|不用|别|先别|不必)\s*(?:再)?\s*(?:记|记录|录入|保存)"#,
+            #"(?:是否|有没有|是不是|会不会)|(?:花|买|消费|支出|支付|付款).*(?:吗|么)\s*[。.!！]?$"#,
+            #"(?:打算|计划|准备|预计|预估|估计|可能|大概|考虑)(?:(?!记一笔|记录|录入|录一笔|再记|另记)[^0-9，,。.!！?？;；]){0,24}(?:买|花|消费|支付|付款|[¥￥$€£]?\s*[0-9])"#,
+            #"(?:想要|想)\s*(?:去|要|再)?\s*(?:买|购买|花|消费|支付|付款)"#,
+            #"预算\s*(?:约|为|是)?\s*[¥￥$€£]?\s*[0-9]"#,
+            #"报价|标价|售价|估价|参考价|价格|退款|退货|退回|报销|工资|收入"#,
+            #"(?i)\b(?:did(?:n['’]?t| not)|have(?:n['’]?t| not)|has(?:n['’]?t| not)|had(?:n['’]?t| not)|never|not)\s+(?:actually\s+)?(?:spen[dt]|paid|bought|buy|pay|purchase[ds]?)\b"#,
+            #"(?i)\b(?:not\s+(?:an?\s+)?(?:expense|purchase|payment)|(?:do not|don['’]?t)\s+(?:record|log|save)|(?:did|have)\s+i\s+(?:spend|pay|buy))\b"#,
+            #"(?i)\b(?:(?:plan(?:ning|ned)?\s+to|intend\s+to|want\s+to|going\s+to)\s+(?!(?:(?:just|please|also)\s+)*(?:record|log)\b)|might\s+(?:spend|cost|buy)|would\s+(?:spend|cost|buy)|will\s+(?:spend|cost|buy)|quote[ds]?|price[ds]?|estimat(?:e[ds]?|ed)|refund(?:ed)?|reimburse(?:d|ment)?|chargeback|salary|income|costs)\b"#,
+        ]
+        return patterns.contains { text.range(of: $0, options: .regularExpression) != nil }
     }
 
     /// Intent to start a record is not a merchant name, nor permission to save one.
