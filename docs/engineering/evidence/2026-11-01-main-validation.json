@@ -1,0 +1,327 @@
+{
+  "date": "2026-11-01",
+  "source": {
+    "branch": "main",
+    "commit": "9c6be6170960fb663e1c5a57c434482bfc0da224",
+    "started": "2026-11-01T21:20:10.718756+08:00"
+  },
+  "environment": {
+    "xcode": "27.2 (27B52)",
+    "metal": "32023.922.4 / MetalToolchain 27B47",
+    "simulator": "iPhone 18 Pro / iOS 27.0",
+    "simulatorSDK": "27.2",
+    "releaseTarget": "generic iOS arm64; deployment target iOS 17.0"
+  },
+  "environmentRecovery": [
+    "此前 CoreSimulator 旧守护进程重启后已恢复。",
+    "Metal Toolchain 下载命令此前超时；本次 showComponent 显示 installed，xcrun metal --version 实际可运行，Debug/Release Shader 编译成功。"
+  ],
+  "debugBuild": {
+    "status": "succeeded",
+    "exitCode": 0,
+    "errors": 0,
+    "warningCount": 7,
+    "warnings": [
+      {
+        "file": "Check_Line/Core/Services/MonthlySchedule.swift",
+        "line": 46,
+        "type": "ActorIsolatedCall",
+        "message": "Call to main actor-isolated instance method 'contains(_:calendar:)' in a synchronous nonisolated context"
+      },
+      {
+        "file": "Check_Line/Core/Services/MonthlySchedule.swift",
+        "line": 48,
+        "type": "ActorIsolatedCall",
+        "message": "Call to main actor-isolated instance method 'contains(_:calendar:)' in a synchronous nonisolated context"
+      },
+      {
+        "file": "Check_Line/Core/Services/MonthlySchedule.swift",
+        "line": 53,
+        "type": "ActorIsolatedCall",
+        "message": "Call to main actor-isolated instance method 'contains(_:calendar:)' in a synchronous nonisolated context"
+      },
+      {
+        "file": "Check_Line/Core/Services/WishRedemptionEngine.swift",
+        "line": 61,
+        "type": "NoUsage",
+        "message": "Initialization of immutable value 'preview' was never used; consider replacing with assignment to '_' or removing it"
+      },
+      {
+        "file": "Check_Line/Core/Services/CycleEngine.swift",
+        "line": 23,
+        "type": "ActorIsolatedCall",
+        "message": "Call to main actor-isolated instance method 'contains(_:calendar:)' in a synchronous nonisolated context"
+      },
+      {
+        "file": "Check_Line/Application/AgentActionCoordinator.swift",
+        "line": 403,
+        "type": "ActorIsolatedCall",
+        "message": "Call to main actor-isolated instance method 'insertBudgetCard(name:amount:currencyCode:cycleType:recurrence:startDate:endDate:now:id:periodID:sortIndex:)' in a synchronous nonisolated context"
+      },
+      {
+        "file": "Check_Line/Application/AgentActionCoordinator.swift",
+        "line": 523,
+        "type": "ActorIsolatedCall",
+        "message": "Call to main actor-isolated instance method 'insertExpense(amount:currencyCode:occurredAt:now:merchant:estimatedBudgetAmount:postedAmount:postedCurrencyCode:kind:reversesExpenseID:id:)' in a synchronous nonisolated context"
+      }
+    ],
+    "command": [
+      "xcodebuild",
+      "build",
+      "-project",
+      "Check_Line.xcodeproj",
+      "-scheme",
+      "CheckLine App",
+      "-configuration",
+      "Debug",
+      "-destination",
+      "platform=iOS Simulator,name=iPhone 18 Pro,OS=27.0",
+      "-derivedDataPath",
+      "$RUN_DIR/DerivedData",
+      "-resultBundlePath",
+      "$RUN_DIR/debug-build.xcresult"
+    ],
+    "resultBundle": "/var/folders/1f/qrpq14zs5l137bq24ls4qmbr0000gn/T/checkline-main-20261101-s5x8yx_l/debug-build.xcresult",
+    "log": "/var/folders/1f/qrpq14zs5l137bq24ls4qmbr0000gn/T/checkline-main-20261101-s5x8yx_l/debug-build.log",
+    "product": "DerivedData/Build/Products/Debug-iphonesimulator/CheckLine.app/default.metallib",
+    "productSHA256": "e5789f3fe51c5d44cf783f20a7f3fe8155410da2e8b65645443591ded4149ddd"
+  },
+  "nativeTests": {
+    "result": "Passed",
+    "exitCode": 0,
+    "tests": 298,
+    "passed": 298,
+    "failed": 0,
+    "skipped": 0,
+    "suites": 58,
+    "suiteNames": [
+      "ConfirmationGateTests",
+      "AgentActionCoordinatorTests",
+      "AgentContinuationRegressionTests",
+      "AgentConversationTests",
+      "AgentDateRegressionTests",
+      "AgentDeduplicationRegressionTests",
+      "AgentSafetyRegressionTests",
+      "LLMRequestPayloadTests",
+      "CloudLLMProviderTests",
+      "LLMProviderSettingsTests",
+      "AgentSessionTests",
+      "AgentContextBuilderTests",
+      "LocalRegexFallbackTests",
+      "IntentValidatorTests",
+      "AgentUnderstanderTests",
+      "AgentWorkflowContractTests",
+      "BudgetAmountEditEngineTests",
+      "BudgetEditInputTests",
+      "BudgetAmountEditWorkspaceTests",
+      "BudgetEngineTests",
+      "BudgetLimitScopeTests",
+      "BudgetLiquidGeometryTests",
+      "HomeProjectorTests",
+      "CheckLineWorkspaceTests",
+      "CloudAgentIntegrationTests",
+      "CloudMascotMotionTests",
+      "CloudMascotWorkspaceTests",
+      "ContactFeedbackTests",
+      "CurrentExperienceRepairTests",
+      "CycleEngineTests",
+      "AttributionEngineTests",
+      "DeduplicationEngineTests",
+      "EarlySettlementTests",
+      "FullCycleTests",
+      "LedgerStoreTests",
+      "M4InteractionTests",
+      "MonthlyScheduleTests",
+      "MonthlyScheduleWorkspaceTests",
+      "NativeExperienceTests",
+      "PhoneFeedbackRepairTests",
+      "PrototypeDeletionTests",
+      "R34LibraryGeometryTests",
+      "RemainingAmountMotionTests",
+      "SettlementWorkspaceLoopTests",
+      "SwiftDataSchemaTests",
+      "TaskDraftTests",
+      "VoiceCaptureSessionTests",
+      "WalletInteractionTests",
+      "LiquidMotionClockTests",
+      "WalletNavigationTests",
+      "WalletPresentationTests",
+      "CurrencyEngineTests",
+      "WalletLedgerTests",
+      "SettlementEngineTests",
+      "WishRedemptionEngineTests",
+      "RetrospectiveAdjustmentEngineTests",
+      "WishCoverageTests",
+      "WishCreationTests"
+    ],
+    "parameterizedTests": 31,
+    "parameterRuns": 146,
+    "command": [
+      "xcodebuild",
+      "test",
+      "-project",
+      "Check_Line.xcodeproj",
+      "-scheme",
+      "CheckLine App",
+      "-configuration",
+      "Debug",
+      "-destination",
+      "platform=iOS Simulator,name=iPhone 18 Pro,OS=27.0",
+      "-derivedDataPath",
+      "$RUN_DIR/DerivedData",
+      "-resultBundlePath",
+      "$RUN_DIR/unit-ios27.xcresult",
+      "-parallel-testing-enabled",
+      "NO",
+      "-collect-test-diagnostics",
+      "never"
+    ],
+    "resultBundle": "/var/folders/1f/qrpq14zs5l137bq24ls4qmbr0000gn/T/checkline-main-20261101-s5x8yx_l/unit-ios27.xcresult",
+    "log": "/var/folders/1f/qrpq14zs5l137bq24ls4qmbr0000gn/T/checkline-main-20261101-s5x8yx_l/unit-ios27.log",
+    "buildWarningCount": 8,
+    "buildWarnings": [
+      {
+        "file": "Check_LineTests/TestDates.swift",
+        "line": 34,
+        "type": "ActorIsolatedCall",
+        "message": "Call to main actor-isolated instance method 'insertExpense(amount:currencyCode:occurredAt:now:merchant:estimatedBudgetAmount:postedAmount:postedCurrencyCode:kind:reversesExpenseID:id:)' in a synchronous nonisolated context"
+      },
+      {
+        "file": "Check_LineTests/WalletInteractionTests.swift",
+        "line": 72,
+        "type": "Swift Compiler Warning",
+        "message": "'shouldFail' mutated after capture by sendable closure"
+      },
+      {
+        "file": "Check_LineTests/AgentSessionTests.swift",
+        "line": 170,
+        "type": "Swift Compiler Warning",
+        "message": "Main actor-isolated instance method 'insertBudgetCard(name:amount:currencyCode:cycleType:recurrence:startDate:endDate:now:id:periodID:sortIndex:)' cannot be called from outside of the actor; this is an error in the Swift 6 language mode"
+      },
+      {
+        "file": "Check_LineTests/AgentUnderstanderTests.swift",
+        "line": 277,
+        "type": "Swift Compiler Warning",
+        "message": "Main actor-isolated instance method 'insertBudgetCard(name:amount:currencyCode:cycleType:recurrence:startDate:endDate:now:id:periodID:sortIndex:)' cannot be called from outside of the actor; this is an error in the Swift 6 language mode"
+      },
+      {
+        "file": "Check_LineTests/AgentUnderstanderTests.swift",
+        "line": 312,
+        "type": "Swift Compiler Warning",
+        "message": "Main actor-isolated instance method 'insertBudgetCard(name:amount:currencyCode:cycleType:recurrence:startDate:endDate:now:id:periodID:sortIndex:)' cannot be called from outside of the actor; this is an error in the Swift 6 language mode"
+      },
+      {
+        "file": "Check_LineTests/AgentUnderstanderTests.swift",
+        "line": 344,
+        "type": "Swift Compiler Warning",
+        "message": "Main actor-isolated instance method 'insertBudgetCard(name:amount:currencyCode:cycleType:recurrence:startDate:endDate:now:id:periodID:sortIndex:)' cannot be called from outside of the actor; this is an error in the Swift 6 language mode"
+      },
+      {
+        "file": "Check_LineTests/WishCoverageTests.swift",
+        "line": 125,
+        "type": "Swift Compiler Warning",
+        "message": "'fail' mutated after capture by sendable closure"
+      },
+      {
+        "file": "Check_LineTests/PhoneFeedbackRepairTests.swift",
+        "line": 11,
+        "type": "Swift Compiler Warning",
+        "message": "Passing non-Sendable parameter 'save' to function expecting a '@Sendable' closure"
+      }
+    ],
+    "logConclusion": "Test run with 298 tests in 58 suites passed after 8.593 seconds.",
+    "runtimeMessages": [
+      "IOSurfaceClientSetSurfaceNotify failed e00002c7",
+      "non-launching port is incompatible with service identifier com.apple.PointerUI.pointeruid.default-service"
+    ],
+    "legacyTestsIncluded": [
+      "PrototypeDeletionTests 验证历史样机，包含在 298 总数中，不作为当前 V1 业务验收证据。"
+    ]
+  },
+  "releaseBuild": {
+    "status": "succeeded",
+    "exitCode": 0,
+    "errors": 0,
+    "warningCount": 7,
+    "warnings": [
+      {
+        "file": "Check_Line/Application/AgentActionCoordinator.swift",
+        "line": 403,
+        "type": "ActorIsolatedCall",
+        "message": "Call to main actor-isolated instance method 'insertBudgetCard(name:amount:currencyCode:cycleType:recurrence:startDate:endDate:now:id:periodID:sortIndex:)' in a synchronous nonisolated context"
+      },
+      {
+        "file": "Check_Line/Application/AgentActionCoordinator.swift",
+        "line": 523,
+        "type": "ActorIsolatedCall",
+        "message": "Call to main actor-isolated instance method 'insertExpense(amount:currencyCode:occurredAt:now:merchant:estimatedBudgetAmount:postedAmount:postedCurrencyCode:kind:reversesExpenseID:id:)' in a synchronous nonisolated context"
+      },
+      {
+        "file": "Check_Line/Core/Services/CycleEngine.swift",
+        "line": 23,
+        "type": "ActorIsolatedCall",
+        "message": "Call to main actor-isolated instance method 'contains(_:calendar:)' in a synchronous nonisolated context"
+      },
+      {
+        "file": "Check_Line/Core/Services/MonthlySchedule.swift",
+        "line": 46,
+        "type": "ActorIsolatedCall",
+        "message": "Call to main actor-isolated instance method 'contains(_:calendar:)' in a synchronous nonisolated context"
+      },
+      {
+        "file": "Check_Line/Core/Services/MonthlySchedule.swift",
+        "line": 48,
+        "type": "ActorIsolatedCall",
+        "message": "Call to main actor-isolated instance method 'contains(_:calendar:)' in a synchronous nonisolated context"
+      },
+      {
+        "file": "Check_Line/Core/Services/MonthlySchedule.swift",
+        "line": 53,
+        "type": "ActorIsolatedCall",
+        "message": "Call to main actor-isolated instance method 'contains(_:calendar:)' in a synchronous nonisolated context"
+      },
+      {
+        "file": "Check_Line/Core/Services/WishRedemptionEngine.swift",
+        "line": 61,
+        "type": "NoUsage",
+        "message": "Initialization of immutable value 'preview' was never used; consider replacing with assignment to '_' or removing it"
+      }
+    ],
+    "command": [
+      "xcodebuild",
+      "build",
+      "-project",
+      "Check_Line.xcodeproj",
+      "-scheme",
+      "CheckLine App",
+      "-configuration",
+      "Release",
+      "-destination",
+      "generic/platform=iOS",
+      "-derivedDataPath",
+      "$RUN_DIR/ReleaseDerivedData",
+      "-resultBundlePath",
+      "$RUN_DIR/release-ios.xcresult",
+      "CODE_SIGNING_ALLOWED=NO"
+    ],
+    "resultBundle": "/var/folders/1f/qrpq14zs5l137bq24ls4qmbr0000gn/T/checkline-main-20261101-s5x8yx_l/release-ios.xcresult",
+    "log": "/var/folders/1f/qrpq14zs5l137bq24ls4qmbr0000gn/T/checkline-main-20261101-s5x8yx_l/release-ios.log",
+    "product": "ReleaseDerivedData/Build/Products/Release-iphoneos/CheckLine.app/default.metallib",
+    "productSHA256": "aff4810c6bd067d1fbc88d414372e9e4a69c323e9e1ae041607f3e941277000a"
+  },
+  "scope": {
+    "nativeSourceChanges": false,
+    "phoneInstallation": false,
+    "releaseSigning": false,
+    "uiAutomation": false,
+    "realModelCall": false,
+    "physicalDeviceVisualAcceptance": false,
+    "otherOSRuntimeTests": false
+  },
+  "notes": [
+    "xcresulttool 设备汇总按动态参数展开显示 413 passed；本文按 Swift Testing 与顶层 test summary 报告 298 tests / 58 suites，不重复计数。",
+    "两次 App 构建各有 7 条编译警告；测试 Target 构建另有 8 条警告。日志另有 AppIntents 元数据跳过提示，不描述为零告警。",
+    "只修改文档；main 代码内容保持 source.commit，未创建其他分支或 worktree。",
+    "原始日志与 xcresult 保存在本机临时目录，未提交仓库；此文件归档提取结果、命令与材质编译产物 SHA-256。"
+  ]
+}
