@@ -1,25 +1,25 @@
 /* Theme-specific art: recolor original vector fills, keeping shape and relief. */
 .app[data-material-study][data-theme=light] {
-  --icon-accent: #176e85;
-  --model-top: #8bd5e9; --model-shade: #17657c; --model-mid: #287a97;
-  --model-lower: #51b2d4; --model-edge: #b0ecf7;
-  --model-rim-top: #f0feff; --model-rim-mid: #c1f3fb;
-  --model-rim-shade: #387f9c; --model-rim-bottom: #ddf9ff; --model-glint: #b3edf9;
-  --redeem-disabled-surface: linear-gradient(150deg, #e4e8e98c, #a9b4b54a);
+  --icon-accent: #168dc2;
+  --model-top: #a9e2fc; --model-shade: #1678a8; --model-mid: #239acf;
+  --model-lower: #55c6f2; --model-edge: #d1f2ff;
+  --model-rim-top: #f0feff; --model-rim-mid: #c7eeff;
+  --model-rim-shade: #378fb7; --model-rim-bottom: #e0f6ff; --model-glint: #c3ecff;
+  --redeem-disabled-surface: #e4e9edb8;
   --redeem-disabled-ink: #5c7279;
 }
 .app[data-material-study][data-theme=dark] {
-  --icon-accent: #b9eaf6;
-  --model-top: #b7f0ff; --model-shade: #0d4d68; --model-mid: #167c9f;
-  --model-lower: #41bedf; --model-edge: #d1f8ff;
-  --model-rim-top: #f5feff; --model-rim-mid: #a8edff;
-  --model-rim-shade: #226b89; --model-rim-bottom: #d9faff; --model-glint: #cff6ff;
-  --redeem-disabled-surface: linear-gradient(150deg, #c4ccce2b, #66707424);
+  --icon-accent: #70d1ff;
+  --model-top: #b5e8ff; --model-shade: #145a82; --model-mid: #168fc7;
+  --model-lower: #42bdf3; --model-edge: #d2f2ff;
+  --model-rim-top: #f5feff; --model-rim-mid: #b8e9ff;
+  --model-rim-shade: #287fa9; --model-rim-bottom: #d9f4ff; --model-glint: #caeeff;
+  --redeem-disabled-surface: #60707c3b;
   --redeem-disabled-ink: #a9b8bd;
 }
-.app[data-material-study][data-theme] .wish-full-view { --icon-accent: #b9eaf6; }
+.app[data-material-study][data-theme] .wish-full-view { --icon-accent: inherit; }
 .app[data-material-study][data-theme] :is(.preset-art > img, .wish-preset-grid img) {
-  filter: drop-shadow(0 2px 2px var(--wish-drop));
+  filter: drop-shadow(0 1px 1px #153e5a24);
 }
 .app[data-material-study][data-theme] :is(.icon-button, .wish-expand-button, .wish-cover-mini, .wish-view-options button, .wish-layout-switch button) { color: var(--accent); }
 .app[data-material-study][data-theme] .wish-full-view :is(.wish-cover-mini, .wish-expand-button) { color: var(--material-floating-ink); }

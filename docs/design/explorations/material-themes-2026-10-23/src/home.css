@@ -1,52 +1,54 @@
 /* R3 stage lighting is anchored at the seated card, not the viewport bottom.
    src/study-bridge.js measures this one visual length after layout/resize. */
 .app[data-material-study][data-theme=light] {
-  --home-sky: radial-gradient(ellipse 98% calc(var(--r3-seat) + var(--r3-card-height) * .6) at 1% calc(var(--r3-card-top) - var(--r3-card-height) * .082), #f4feffcc 0%, #e4faff26 58%, transparent), linear-gradient(180deg, #afe8f5 0px, #c2e5eb calc(var(--r3-card-top) + var(--r3-card-height) * .205), #a6c6cf var(--r3-seat), #d6e2e4 calc(var(--r3-seat) + 260px));
-  --home-heading: #143b48;
-  --home-hero-meta: #315968;
-  --home-hero-number: #143c4d;
-  --home-hero: radial-gradient(ellipse 100% 100% at 10% 0%, #ffffff59, #ffffff0a 62%, transparent), linear-gradient(146deg, #ffffff70, #ffffff33 22%, #ffffff11 63%, #ffffff06);
+  --home-sky: #f8fcff;
+  --home-heading: #17364d;
+  --home-hero-meta: #365d78;
+  --home-hero-number: #15374d;
+  --home-hero: radial-gradient(ellipse at 5% 0%, #ffffff8c, #ffffff00 62%);
   --home-hero-rim: #ffffffa6;
   --home-hero-shadow: #173c4b4d;
-  --home-floor: linear-gradient(180deg, #ffffff25, #ffffff0f 25%, #4d718019);
-  --home-tile: linear-gradient(180deg, #ffffff38, #ffffff0c);
-  --home-receipt: linear-gradient(145deg, #effaff59, #bad1d752);
-  --home-receipt-back: #83b1bf69;
-  --home-floor-ink: #183d48;
-  --home-floor-muted: #3c606c;
-  --home-reader-surface: #e5f4f026;
-  --home-reader-front: #7598a51a;
-  --home-contact: #7babba45;
-  --home-slot: #274b5e;
-  --library-accent: #185e76;
-  --reader-water: #80b4c5;
-  --water-top: #d9f8fc33; --water-middle: #8bcada26; --water-bottom: #335c6b45;
-  --r3-local-card: linear-gradient(165deg, #b6e5ef 0%, #9dc8d1 65%, #719fad);
-  --r3-rim: linear-gradient(140deg, #fffffffa, #ffffff75 28%, #b4dbe626 60%, #ffffff59);
+  --home-floor: #e5f5fcbf;
+  --home-tile: #ffffffb3;
+  --home-receipt: #ffffffe0;
+  --home-receipt-back: #9edcf68c;
+  --home-floor-ink: #17364d;
+  --home-floor-muted: #4f6e83;
+  --home-reader-surface: #b8e6fb52;
+  --home-reader-front: #9edcf624;
+  --home-contact: #69c6ef45;
+  --home-slot: #245877;
+  --library-accent: #087fb8;
+  --reader-water: #37b9ed;
+  --water-top: #37b9ed30; --water-middle: #37b9ed30; --water-bottom: #37b9ed30;
+  --r3-local-card: #ade1f8d9;
+  --r3-rim: linear-gradient(140deg, #fffffffa, #ffffff75 28%, #ffffff26 60%, #ffffff59);
+  --home-card-ink: #17364d;
 }
 .app[data-material-study][data-theme=dark] {
-  --home-sky: radial-gradient(ellipse 98% calc(var(--r3-seat) + var(--r3-card-height) * .6) at 1% calc(var(--r3-card-top) - var(--r3-card-height) * .082), #c5f6ffdb 0%, #c5f6ff14 58%, transparent), linear-gradient(180deg, #37b9e8 0px, #37b9e8 calc(var(--r3-card-top) + var(--r3-card-height) * .205), #102b38 var(--r3-seat), #111719 calc(var(--r3-seat) + var(--r3-card-height) * .64));
-  --home-heading: #102b38;
-  --home-hero-meta: #234958;
-  --home-hero-number: #f7fcfd;
-  --home-hero: radial-gradient(ellipse 100% 100% at 10% 0%, #ffffff47, #ffffff0e 62%, transparent), linear-gradient(146deg, #ffffff70, #ffffff33 22%, #ffffff11 63%, #ffffff06);
+  --home-sky: #0d131a;
+  --home-heading: #f1f9ff;
+  --home-hero-meta: #315a75;
+  --home-hero-number: #12344b;
+  --home-hero: radial-gradient(ellipse at 5% 0%, #ffffff66, #ffffff00 62%);
   --home-hero-rim: #d5f5ff4a;
   --home-hero-shadow: #04191fcc;
-  --home-floor: linear-gradient(180deg, #ffffff26, #ffffff0f 25%, #00000024);
-  --home-tile: linear-gradient(180deg, #ffffff24, #ffffff09);
-  --home-receipt: linear-gradient(145deg, #d3eff52b, #94c4d117);
-  --home-receipt-back: #34566485;
-  --home-floor-ink: #f2f8fa;
-  --home-floor-muted: #c8dce2;
-  --home-reader-surface: #d2eef326;
-  --home-reader-front: #071b2324;
-  --home-contact: #73bbce33;
-  --home-slot: #04161f;
-  --library-accent: #bdeef7;
-  --reader-water: #5096ab;
-  --water-top: #c5f6ff33; --water-middle: #37b9e833; --water-bottom: #102b388c;
-  --r3-local-card: radial-gradient(ellipse 112% 168% at -5.7% -8.2%, #c5f6ffdb, #c5f6ff14 58%, transparent), linear-gradient(180deg, #37b9e8, #37b9e8 20.5%, #102b38);
-  --r3-rim: linear-gradient(140deg, #fffffff2, #ffffff91 28%, #c5f6ff29 60%, #ffffff4d);
+  --home-floor: #17232ff0;
+  --home-tile: #3c56657a;
+  --home-receipt: #2e4654ed;
+  --home-receipt-back: #203747d9;
+  --home-floor-ink: #f1f9ff;
+  --home-floor-muted: #b9cddd;
+  --home-reader-surface: #c6eaff26;
+  --home-reader-front: #0b213329;
+  --home-contact: #50b9e533;
+  --home-slot: #0b2031;
+  --library-accent: #70d1ff;
+  --reader-water: #37b9ed;
+  --water-top: #37b9ed36; --water-middle: #37b9ed36; --water-bottom: #37b9ed36;
+  --r3-local-card: #7ed3f5e0;
+  --r3-rim: linear-gradient(140deg, #fffffff2, #ffffff91 28%, #ffffff29 60%, #ffffff4d);
+  --home-card-ink: #12344b;
 }
 .app[data-material-study][data-theme] .page:has(.budget-home-head) { background: var(--home-sky); }
 .app[data-material-study][data-theme] .cartridge-world {
@@ -80,12 +82,12 @@
   backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
 }
 .app[data-material-study][data-theme] :is(.reader-card-face,.restored-detail-card,.restored-budget-item>.liquid-card) {
-  background: var(--home-hero);
+  background: var(--home-hero), var(--r3-local-card);
   border: 1px solid transparent;
   box-shadow: 0 5px 9px -2px #06232d40, 0 13px 12px -11px #00000057;
   backdrop-filter: blur(2.8px); -webkit-backdrop-filter: blur(2.8px);
 }
-.app[data-material-study][data-theme] .reader-card-face :is(.card-name,.card-more) { color: var(--home-heading); }
+.app[data-material-study][data-theme] .reader-card-face :is(.card-name,.card-more) { color: var(--home-card-ink); }
 .app[data-material-study][data-theme] .reader-card-face .card-period { color: var(--home-hero-meta); }
 .app[data-material-study][data-theme] .reader-card-face .card-value { color: var(--home-hero-number); }
 .app[data-material-study][data-theme] .reader-card-face .card-add {
@@ -93,7 +95,7 @@
   box-shadow: none; backdrop-filter: none;
 }
 .app[data-material-study][data-theme] .cartridge-stack-layer .liquid-card {
-  background: linear-gradient(180deg, #ffffff70, #ffffff0a 28%, #ffffff03);
+  background: var(--r3-local-card);
   border-color: #ffffff1a; box-shadow: none; filter: blur(.8px); opacity: .8;
 }
 .app[data-material-study][data-theme] .contact-extension {
@@ -185,30 +187,30 @@
 .app[data-material-study][data-theme] .loop-dome-fade { background: none; }
 
 /* The review chrome is separate from the product UI. */
-body { background: #edf0ee; color: #223b43; }
+body { background: #f3f8fc; color: #223b43; }
 .review-header { height: 76px; padding: 0 30px; gap: 20px; border-color: #1d465310; }
 .wordmark { color: #173743; }
 .brand-dot { background: #2588a4; }
 .review-label { color: #5f777e; font-size: 13px; margin-left: 20px; }
 .prototype-badge { color: #60777e; }
 .material-toolbar { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
-.material-theme-group { display: inline-flex; gap: 3px; padding: 4px; border: 1px solid #fff9; border-radius: 22px; background: #d8e4e57a; }
+.material-theme-group { display: inline-flex; gap: 3px; padding: 4px; border: 1px solid #fff9; border-radius: 22px; background: #deeff97a; }
 .material-theme-group button { min-width: 61px; min-height: 34px; padding: 6px 14px; border-radius: 18px; color: #4a6873; font-size: 13px; }
 .material-theme-group button[aria-pressed=true] { background: #ffffffb8; color: #173e4d; box-shadow: 0 3px 7px -5px #1237475b, inset 0 1px #fff; }
 .material-compare { color: #215f76; font-size: 13px; text-decoration-thickness: 1px; text-underline-offset: 4px; }
 .review-layout { max-width: 1540px; grid-template-columns: 210px minmax(390px,1fr) 260px; gap: 34px; padding-top: 25px; }
 .review-nav button { color: #54717c; }
-.review-nav button.selected { color: #164d60; background: #ccdee37d; }
+.review-nav button.selected { color: #164d60; background: #c7eafa7d; }
 .review-nav button span { color: #80989f; }
 .eyebrow,.boundary-note { color: #6f878f; }
 .review-controls { color: #58717d; }
 .review-controls button,.review-controls select,.scenario-control select { color: #285b6c; }
 .review-controls button { background: #d4e2e6; }
-.outcome-review-controls { background: #d2e1e553; }
+.outcome-review-controls { background: #d8effb53; }
 .outcome-review-controls button { background: #ffffff73; color: #305d6e; }
 .outcome-review-controls small,.outcome-review-controls p { color: #63808b; }
 .review-sidebar>a,.review-sidebar>button { color: #53727f; }
-.review-sidebar>a { background: #d3e1e670; }
+.review-sidebar>a { background: #d6edfa70; }
 .review-notes { color: #5c7681; }
 .review-notes h1 { color: #223e48; }
 .note-path { border-color: #8db6c5; }
@@ -216,7 +218,7 @@ body { background: #edf0ee; color: #223b43; }
 .decision-notes { display: none; }
 .material-page-control { padding: 0 12px; margin: 0 0 22px; }
 .material-page-control label { display: block; font-size: 12px; margin-bottom: 8px; color: #607c86; }
-.material-page-control select { width: 100%; padding: 10px 10px; border-radius: 12px; border: 1px solid #ffffffb8; background: #f3f8f6a8; color: #194c60; font-size: 13px; }
+.material-page-control select { width: 100%; padding: 10px 10px; border-radius: 12px; border: 1px solid #ffffffb8; background: #ffffffc2; color: #194c60; font-size: 13px; }
 .material-review-notes { font-size: 12px; line-height: 1.8; color: #607c86; }
 .material-review-notes strong { color: #254d5c; font-weight: 600; }
 .review-controls label:first-child { display: none; }
@@ -252,17 +254,17 @@ body.material-embedded .app { width: 100%!important; height: 100dvh; min-height:
 .app[data-material-study][data-theme] :is(.liquid-card.restored-detail-card,.restored-budget-item>.liquid-card) {
   background: var(--home-hero), var(--r3-local-card);
 }
-.app[data-material-study][data-theme] .restored-detail-card :is(.card-name,.card-more) { color: var(--home-heading); }
+.app[data-material-study][data-theme] .restored-detail-card :is(.card-name,.card-more) { color: var(--home-card-ink); }
 .app[data-material-study][data-theme] .restored-detail-card .card-period { color: var(--home-hero-meta); }
 .app[data-material-study][data-theme] .restored-detail-card .card-value { color: var(--home-hero-number); }
 .app[data-material-study][data-theme] .cartridge-stack-layer :is(.card-top,.card-bottom,.water) { opacity: .12; }
 /* Keep focus controls clear when the library has a bright optical backdrop. */
 .app[data-material-study][data-theme] .budget-library-picker>header button { color: var(--home-heading); }
 
-.app[data-material-study][data-theme] .picker-list input { color: var(--home-heading); background: #ffffff1f; }
-.app[data-material-study][data-theme] .picker-list input::placeholder { color: var(--home-hero-meta); }
+.app[data-material-study][data-theme] .picker-list input { color: var(--ink); background: var(--material-field); }
+.app[data-material-study][data-theme] .picker-list input::placeholder { color: var(--muted); }
 .app[data-material-study][data-theme] .picker-list button { background: var(--home-hero), var(--r3-local-card); color: var(--home-hero-number); }
-.app[data-material-study][data-theme] .picker-list button span { color: var(--home-heading); }
+.app[data-material-study][data-theme] .picker-list button span { color: var(--home-card-ink); }
 
 /* The self-contained study does not ship the older exploration's web pages. */
 .review-sidebar>a, .outcome-review-controls>a { display: none; }

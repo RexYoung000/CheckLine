@@ -14,8 +14,8 @@ const oldEnd=html.indexOf('var w=',oldStart);
 if(oldStart<0||oldEnd<0)throw Error('Card texture renderer boundary missing');
 function materialCardTexture(t, dark = false, enlarged = false) {
   const p = dark
-    ? {ink:'#f0fbff',title:'#102b38',top:'#37b9e8',bottom:'#102b38',ambient:'#c5f6ff',ambientOpacity:.86,water1:'#c5f6ff33',waterMid:'#37b9e833',water2:'#102b388c',rim:'#fffffff2'}
-    : {ink:'#123c4e',title:'#163c4d',top:'#b6e5ef',bottom:'#719fad',ambient:'#f4feff',ambientOpacity:.7,water1:'#d9f8fc33',waterMid:'#8bcada26',water2:'#335c6b45',rim:'#fffffffa'};
+    ? {ink:'#12344b',title:'#12344b',top:'#7ed3f5',bottom:'#7ed3f5',ambient:'#ffffff',ambientOpacity:.24,water1:'#37b9ed33',waterMid:'#37b9ed33',water2:'#37b9ed33',rim:'#fffffff2'}
+    : {ink:'#17364d',title:'#17364d',top:'#b8e6fb',bottom:'#b8e6fb',ambient:'#ffffff',ambientOpacity:.52,water1:'#37b9ed33',waterMid:'#37b9ed33',water2:'#37b9ed33',rim:'#fffffffa'};
   const level = 300 * (1 - t.fill / 100), titleSize = enlarged ? 38 : 23, valueSize = enlarged ? 53 : 43;
   const contour = `M0 ${level} C58 ${level-6} 105 ${level+4} 170 ${level} S280 ${level-6} 340 ${level} S380 ${level+4} 400 ${level}`;
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 400 300"><defs>

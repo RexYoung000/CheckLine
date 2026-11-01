@@ -115,11 +115,11 @@
     const theme = app.dataset.theme === 'dark' ? '暗色' : '浅色';
     const select = document.getElementById('material-page');
     if (select && materialLabels.has(view)) select.value = view;
-    materialText('.review-label', '10/24 · 浅暗材质与交互补正');
+    materialText('.review-label', '10/24 · 白色与冰蓝材质校正');
     materialText('.review-sidebar > .eyebrow', '浅暗材质 · 全页面核对');
     materialText('.review-notes > .eyebrow', '本轮材质研究');
-    materialText('#note-title', '以 R3 为基准，保留透光与层次。');
-    materialText('#note-copy', '保留 R3 的受光边缘、深色背衬和透色卡夹；浅暗主题分别配光。页面交互沿用 R34，全部操作只影响隔离示例。');
+    materialText('#note-title', '白色与冰蓝，保留透光与层次。');
+    materialText('#note-copy', '冰蓝主色保持一致，浅色以白色承托，暗色以黑与深灰承托冰蓝卡面。保留局部受光与透色，页面交互沿用 R34，全部操作只影响隔离示例。');
     materialText('#note-path', `当前：${label} · ${theme}。可原位切换外观；查看页面只切换本页示例，不修改 App。`);
     materialText('#screen-caption', `${label} · ${theme}材质`);
     materialText('.preview-footnote', '浅暗材质全页面样稿 · 延续 R34 交互 · 未修改 App');

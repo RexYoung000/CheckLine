@@ -1094,8 +1094,8 @@ void main() {
   outColor = (card + outline * (1.0 - card.a)) * uAlpha * edgeFade();
 }`,ql=(t,l,e)=>Math.min(e,Math.max(l,t)),sa=(t,l,e)=>t+(l-t)*e,gr=t=>t*t*(3-2*t),_e=(t,l)=>(t%l+l)%l;function bp(t){return(t.split("/").pop()||"custom-font").split("?")[0].replace(/\.(woff2?|ttf|otf|eot)$/i,"").replace(/[^a-zA-Z0-9-_ ]/g,"").trim()||"CircularGalleryFont"}async function Tp(t){let l=await fetch(t);if(!l.ok)throw new Error(`Failed to fetch font stylesheet (${l.status})`);let a=(await l.text()).match(/@font-face\s*{[^}]*}/g)||[],u=null,n=[];for(let i of a){let c=i.match(/font-family:\s*['"]?([^;'"]+)['"]?/),f=i.match(/url\(\s*['"]?([^'")]+)['"]?\s*\)/);if(!c||!f)continue;u=c[1].trim();let r={},h=i.match(/font-weight:\s*([^;]+);/),g=i.match(/font-style:\s*([^;]+);/),s=i.match(/unicode-range:\s*([^;]+);/);h&&(r.weight=h[1].trim()),g&&(r.style=g[1].trim()),s&&(r.unicodeRange=s[1].trim()),n.push(new FontFace(u,`url(${f[1]})`,r))}if(!u)throw new Error("No @font-face rule found in the stylesheet");return await Promise.allSettled(n.map(async i=>{await i.load(),document.fonts.add(i)})),u}async function Ep(t){let l=bp(t),e=new FontFace(l,`url(${t})`);return await e.load(),document.fonts.add(e),l}async function zp(t,l){let e=l||(t===zh?mp:null);if(!e)return t;try{let u=e.includes("fonts.googleapis.com")||/\.css(\?.*)?$/i.test(e)?await Tp(e):await Ep(e),n=t.match(/^\s*(.*?\d+px)/);return`${n?n[1].trim():"bold 30px"} "${u}"`}catch{return t}}var Ap=t=>{let l=String(t).match(/(\d+(?:\.\d+)?)px/);return l?parseFloat(l[1])/30:1},Eh=(t,l,e)=>{let a=t.createShader(l);return a?(t.shaderSource(a,e),t.compileShader(a),t.getShaderParameter(a,t.COMPILE_STATUS)?a:(t.deleteShader(a),null)):null},_p=t=>{let l=Eh(t,t.VERTEX_SHADER,pp),e=Eh(t,t.FRAGMENT_SHADER,Sp),a=t.createProgram();if(!l||!e||!a)return null;if(t.attachShader(a,l),t.attachShader(a,e),t.bindAttribLocation(a,0,"aPosition"),t.linkProgram(a),t.deleteShader(l),t.deleteShader(e),!t.getProgramParameter(a,t.LINK_STATUS))return t.deleteProgram(a),null;let u={},n=t.getProgramParameter(a,t.ACTIVE_UNIFORMS);for(let i=0;i<n;i++){let c=t.getActiveUniform(a,i);c&&(u[c.name]=t.getUniformLocation(a,c.name))}return{program:a,uniforms:u}},Mp=({items:t,bend:l=3,textColor:e="#ffffff",borderRadius:a=.05,font:u=zh,fontUrl:n,scrollSpeed:i=2,scrollEase:c=.05,itemSize:f=1,itemAspect:r=.78,bottomInset:h=null,gap:g=.26,wave:s=1,fadeEdges:v=.12,shadow:M=.25,grayscale:O=!1,showTitles:R=!0,snap:d=!0,autoScroll:o=0,openOnClick:m=!0,intro:y=!0,onItemClick:N,onActiveChange:Y,onUnavailable:D,dpr:_,className:J="",style:A,...H})=>{let W=(0,Kt.useRef)(null),gt=(0,Kt.useRef)(null),Gl=(0,Kt.useRef)(null),Xl=(0,Kt.useRef)(null),ne=(0,Kt.useRef)([]),bt=(0,Kt.useRef)(null),da=(0,Kt.useRef)(u),[$u,ku]=(0,Kt.useState)(0),[Oe,Qa]=(0,Kt.useState)(!1),Ll=Array.isArray(t)&&t.length?t:gp,Ne={items:Ll,bend:l,textColor:e,borderRadius:ql(a,0,.5),scrollSpeed:Math.max(0,i),scrollEase:ql(c,.001,1),itemSize:ql(f,.2,2),itemAspect:ql(r,.2,5),bottomInset:h===null?null:Math.max(0,h),gap:Math.max(-.55,g),wave:Math.max(0,s),fadeEdges:ql(v,0,.5),shadow:ql(M,0,1),grayscale:O,showTitles:R,snap:d,autoScroll:o,openOnClick:m,intro:y,onItemClick:N,onUnavailable:D,onActiveChange:Y,dpr:_},ut=(0,Kt.useRef)(Ne);ut.current=Ne,(0,Kt.useEffect)(()=>{let U=!0;return da.current=u,zp(u,n).then(ft=>{U&&(da.current=ft,bt.current?.wake())}),()=>{U=!1}},[u,n]),(0,Kt.useEffect)(()=>{let U=W.current,ft=gt.current,xe=Gl.current,ie=Xl.current,T=ft?.getContext("webgl2",{alpha:!0,premultipliedAlpha:!0,antialias:!1,depth:!1,stencil:!1});if(!U||!ft||!xe||!ie||!T){queueMicrotask(()=>ut.current.onUnavailable?.());return}let ii=_p(T);if(!ii)return;let ot=ii.uniforms,Tr=[];for(let S=0;S<=lf;S++)for(let E=0;E<=Wu;E++)Tr.push(E/Wu-.5,S/lf-.5);let Er=[];for(let S=0;S<lf;S++)for(let E=0;E<Wu;E++){let z=S*(Wu+1)+E,x=z+1,q=z+Wu+1,L=q+1;Er.push(z,x,L,z,L,q)}let ef=T.createVertexArray();T.bindVertexArray(ef);let zr=T.createBuffer();T.bindBuffer(T.ARRAY_BUFFER,zr),T.bufferData(T.ARRAY_BUFFER,new Float32Array(Tr),T.STATIC_DRAW),T.enableVertexAttribArray(0),T.vertexAttribPointer(0,2,T.FLOAT,!1,0,0);let Ar=T.createBuffer();T.bindBuffer(T.ELEMENT_ARRAY_BUFFER,Ar),T.bufferData(T.ELEMENT_ARRAY_BUFFER,new Uint16Array(Er),T.STATIC_DRAW);let af=T.getExtension("EXT_texture_filter_anisotropic"),ci=T.createTexture();T.bindTexture(T.TEXTURE_2D,ci),T.texImage2D(T.TEXTURE_2D,0,T.RGBA,1,1,0,T.RGBA,T.UNSIGNED_BYTE,new Uint8Array([0,0,0,0]));let wa=document.createElement("canvas").getContext("2d",{willReadFrequently:!0}),uf=new Map,_r=S=>{let E=String(S);if(uf.has(E))return uf.get(E);let z=[1,1,1];if(wa){wa.clearRect(0,0,1,1),wa.fillStyle="#ffffff",wa.fillStyle=E,wa.fillRect(0,0,1,1);let[x,q,L]=wa.getImageData(0,0,1,1).data;z=[x/255,q/255,L/255]}return uf.set(E,z),z},De=window.matchMedia?.("(prefers-reduced-motion: reduce)").matches??!1,va=new Map,P={width:1,height:1,ratio:1},p={scroll:0,target:0,velocity:0,open:0,openTarget:0,intro:ut.current.intro&&!De?0:1,waveTime:0,ring:0,keyboard:!1,hovered:null,hover:new Map,focus:new Map,drag:null,lastInput:0,active:0,spacing:1},Va=[],Iu=[],Pu=0,ja=0,fi=!0,nf=0,oi=null,cf=!1,ri=S=>{let E=va.get(S);if(E)return E;let z={texture:null,aspect:1,ready:0,loaded:!1};va.set(S,z);let x=new Image;return x.crossOrigin="anonymous",x.decoding="async",x.onload=()=>{if(!va.has(S))return;let q=T.createTexture();if(T.bindTexture(T.TEXTURE_2D,q),T.pixelStorei(T.UNPACK_FLIP_Y_WEBGL,!0),T.texImage2D(T.TEXTURE_2D,0,T.RGBA,T.RGBA,T.UNSIGNED_BYTE,x),T.pixelStorei(T.UNPACK_FLIP_Y_WEBGL,!1),T.generateMipmap(T.TEXTURE_2D),T.texParameteri(T.TEXTURE_2D,T.TEXTURE_MIN_FILTER,T.LINEAR_MIPMAP_LINEAR),T.texParameteri(T.TEXTURE_2D,T.TEXTURE_MAG_FILTER,T.LINEAR),T.texParameteri(T.TEXTURE_2D,T.TEXTURE_WRAP_S,T.CLAMP_TO_EDGE),T.texParameteri(T.TEXTURE_2D,T.TEXTURE_WRAP_T,T.CLAMP_TO_EDGE),af){let L=T.getParameter(af.MAX_TEXTURE_MAX_ANISOTROPY_EXT);T.texParameterf(T.TEXTURE_2D,af.TEXTURE_MAX_ANISOTROPY_EXT,Math.min(8,L))}z.texture=q,z.aspect=x.naturalWidth/Math.max(1,x.naturalHeight),z.loaded=!0,Pt()},x.src=S,z},Nh=S=>{let E=new Set(S.map(z=>z.image));va.forEach((z,x)=>{E.has(x)||(z.texture&&T.deleteTexture(z.texture),va.delete(x))})},Mr=()=>{let S=ut.current,E=.6*P.height*S.itemSize,z=E*S.itemAspect,x=Math.min(1,P.width*.82/z);return{w:z*x,h:E*x,spacing:z*x*(1+S.gap)}},xh=S=>{let E=ut.current;if(!E.bend)return{y:0,angle:0};let z=Math.abs(E.bend)*P.height/hp,x=Math.max(P.width,P.height*1.9)/2,q=(x*x+z*z)/(2*z),L=Math.min(Math.abs(S),x,q*.999),X=q-Math.sqrt(q*q-L*L),V=Math.sign(S)*Math.asin(L/q);return E.bend>0?{y:-X,angle:-V}:{y:X,angle:V}},ff=()=>ql(P.height*.045,15,22),Dh=S=>{let E=Math.ceil(P.width/Math.max(S,1))+8;Iu.length!==E&&(xe.replaceChildren(),Iu=Array.from({length:E},()=>{let z=document.createElement("span");return z.className=Ae.label,z.style.opacity="0",xe.appendChild(z),{el:z,slot:null,font:"",text:""}}))},Rh=()=>{let S=ut.current,E=S.items,z=E.length,{w:x,h:q,spacing:L}=Mr();p.spacing=L;let X=1-Math.pow(1-p.intro,3),V=p.scroll+(1-X)*L*1.6,$=Math.max(20,Math.min(P.width,P.height)*.06),Jt=q*.072*Ap(da.current),Re=wt=>{let Ce=ri(wt.image).aspect||x/q,Wa=wt.text&&S.showTitles?ff()*2.4:0,di=Wa+(wt.description?52:0),Dt=Math.min(P.width-$*2,(P.height-$*2-di)*Ce);return{width:Dt,height:Dt/Ce,y:di/2,titleSpace:Wa}},Ue=Re(E[_e(p.active,z)]),Ja=Math.max(0,Ue.width/2-x/2),Mt=p.active*L-V,fl=Math.floor((V-P.width/2-L*2)/L),Ql=Math.ceil((V+P.width/2+L*2)/L),ce=[],Fa=null;for(let wt=fl;wt<=Ql;wt++){let Ce=_e(wt,z),Wa=E[Ce],di=ri(Wa.image),Dt=gr(p.focus.get(wt)||0),tn=wt*L-V;tn+=Math.sign(tn-Mt)*p.open*(1-Dt)*Ja;let Kr=xh(tn),mi=Dt>0?Re(Wa):Ue,Hh=Math.abs(wt*L-p.scroll)/L,Jr=gr(ql(p.intro*2.2-Hh*.22,0,1)),Fr=p.hover.get(wt)||0,Wr=1+Fr*.04*(1-Dt),$r={slot:wt,index:Ce,item:Wa,entry:di,x:sa(tn,0,Dt),y:sa(Kr.y+(S.bottomInset===null?0:-P.height/2+q/2+S.bottomInset),mi.y,Dt)-(1-Jr)*q*.18,angle:Kr.angle*(1-Dt),w:sa(x,mi.width,Dt)*Wr,h:sa(q,mi.height,Dt)*Wr,radius:S.borderRadius*Math.min(x,q),alpha:Jr*sa(1,.12,p.open*(1-Dt))*Math.max(.12,1-Math.min(1,Math.abs(tn)/L)*.55),dim:p.open*(1-Dt)*.4,gray:S.grayscale?1-Math.max(Fr,Dt,wt===p.active?p.ring:0):0,focus:Dt,labelAlpha:sa(1-p.open,1,Dt),labelSize:sa(Jt,ff(),Dt),frame:mi};(!Fa||Dt>Fa.focus)&&(Fa=$r),ce.push($r)}ce.sort((wt,Ce)=>wt.focus-Ce.focus||Math.abs(Ce.x)-Math.abs(wt.x)),Va=ce;let df=Fa&&Fa.focus>0?Fa.frame:Ue;return{w:x,h:q,spacing:L,openH:df.height,openY:df.y,titleSpace:df.titleSpace}},Uh=S=>{let E=ut.current,z=P.ratio,x=Math.min(Math.abs(p.velocity)/Math.max(S.spacing*4,1),1),q=De?0:E.wave*x*P.height*.08*z;T.viewport(0,0,ft.width,ft.height),T.clearColor(0,0,0,0),T.clear(T.COLOR_BUFFER_BIT),T.enable(T.BLEND),T.blendFunc(T.ONE,T.ONE_MINUS_SRC_ALPHA),T.useProgram(ii.program),T.bindVertexArray(ef),T.uniform2f(ot.uResolution,ft.width,ft.height),T.uniform1f(ot.uFocal,P.height*1.207*z),T.uniform1f(ot.uWaveTime,p.waveTime),T.uniform1f(ot.uFade,E.fadeEdges),T.uniform3fv(ot.uPlaceholder,_r(E.textColor)),T.uniform3fv(ot.uRingColor,_r(E.textColor)),T.uniform1f(ot.uRingWidth,2*z),T.uniform1f(ot.uRingGap,5*z),T.activeTexture(T.TEXTURE0),T.uniform1i(ot.uTexture,0);let L=Wu*lf*6,X=Math.max(10,S.h*.09)*z,V=$=>{T.uniform2f(ot.uCenter,$.x*z,$.y*z),T.uniform2f(ot.uSize,$.w*z,$.h*z),T.uniform1f(ot.uAngle,$.angle),T.uniform1f(ot.uRadius,Math.min($.radius,$.w/2,$.h/2)*z),T.uniform1f(ot.uWave,q*(1-$.focus)),T.uniform1f(ot.uAlpha,$.alpha)};E.shadow>0&&(T.uniform1f(ot.uShadow,E.shadow),T.uniform1f(ot.uBlur,X),T.uniform2f(ot.uShadowOffset,0,-X*.45),T.uniform1f(ot.uPad,X*1.6),T.bindTexture(T.TEXTURE_2D,ci),Va.forEach($=>{V($),T.drawElements(T.TRIANGLES,L,T.UNSIGNED_SHORT,0)})),T.uniform1f(ot.uShadow,0),T.uniform1f(ot.uPad,10*z),Va.forEach($=>{V($);let Jt=$.entry;T.bindTexture(T.TEXTURE_2D,Jt.texture||ci),T.uniform1f(ot.uImageAspect,Jt.aspect),T.uniform1f(ot.uReady,Jt.ready),T.uniform1f(ot.uGray,$.gray),T.uniform1f(ot.uDim,$.dim),T.uniform1f(ot.uRing,$.slot===p.active?p.ring*(1-$.focus):0),T.drawElements(T.TRIANGLES,L,T.UNSIGNED_SHORT,0)})},Ch=S=>{let E=ut.current;Dh(S.spacing);let z=new Set,x=da.current,q=X=>{if(E.fadeEdges<=0)return 1;let V=ql(X/E.fadeEdges,0,1);return V*V*V*(V*(V*6-15)+10)};E.showTitles&&Va.forEach(X=>{if(!X.item.text)return;let V=Iu[_e(X.slot,Iu.length)];z.add(V),(V.slot!==X.slot||V.text!==X.item.text)&&(V.slot=X.slot,V.text=X.item.text,V.el.textContent=X.item.text),V.font!==x&&(V.font=x,V.el.style.font=x);let $=X.labelSize,Jt=X.h/2+$*1.1,Re=X.x+Math.sin(X.angle)*Jt,Ue=X.y-Math.cos(X.angle)*Jt,Ja=P.width/2+Re,Mt=P.height/2-Ue,fl=q(Ja/P.width)*q(1-Ja/P.width);V.el.style.fontSize=`${$}px`,V.el.style.color=E.textColor,V.el.style.transform=`translate(${Ja}px, ${Mt}px) translate(-50%, -50%) rotate(${-X.angle}rad)`,V.el.style.opacity=String(X.alpha*X.labelAlpha*sa(fl,1,X.focus))}),Iu.forEach(X=>{z.has(X)||X.el.style.opacity!=="0"&&(X.el.style.opacity="0")});let L=P.height/2-(S.openY-S.openH/2)+S.titleSpace+4;ie.style.transform=`translate(-50%, ${L}px)`,ie.style.opacity=String(gr(ql((p.open-.5)/.5,0,1))),ie.style.color=E.textColor,ie.dataset.font!==x&&(ie.dataset.font=x,ie.style.font=x,ie.style.fontWeight="400"),ie.style.fontSize=`${ff()*.8}px`},Za=()=>Math.round(p.target/Math.max(p.spacing,1)),Ka=(S,E=!0)=>{let z=ut.current;if(p.target=S*p.spacing,S!==p.active){p.active=S;let x=_e(S,z.items.length);E&&ku(x),z.onActiveChange?.(x)}Pt()},of=S=>{Ka(S),p.openTarget=1,Qa(!0),Pt()},si=()=>{p.openTarget=0,Qa(!1),Pt()},Or=S=>{if(Pu=0,!fi||document.hidden)return;let E=ut.current,z=ja?ql((S-ja)/1e3,5e-4,.05):1/60;ja=S,E.items!==oi&&(oi=E.items,Nh(E.items),E.items.forEach(Mt=>ri(Mt.image)));let x=S-p.lastInput>1800,q=E.autoScroll&&!De&&!p.drag&&p.open<.01&&p.hovered===null&&!p.keyboard&&x;q&&(p.target+=E.autoScroll*p.spacing*.25*z);let L=De?1:1-Math.pow(1-E.scrollEase,z*60),X=p.scroll;p.scroll+=(p.target-p.scroll)*L,Math.abs(p.target-p.scroll)<.05&&(p.scroll=p.target);let V=(p.scroll-X)/z;p.velocity+=(V-p.velocity)*(1-Math.exp(-z/.08)),Math.abs(p.velocity)<.5&&(p.velocity=0),p.waveTime+=z*2.4;let $=De?1:1-Math.exp(-z/.14);p.open+=(p.openTarget-p.open)*$,Math.abs(p.openTarget-p.open)<.001&&(p.open=p.openTarget),p.ring+=((p.keyboard?1:0)-p.ring)*(1-Math.exp(-z/.1)),Math.abs((p.keyboard?1:0)-p.ring)<.002&&(p.ring=p.keyboard?1:0),p.intro<1&&(p.intro=Math.min(1,p.intro+z/vp));let Jt=!1;p.hover.forEach((Mt,fl)=>{let Ql=fl===p.hovered?1:0,ce=Mt+(Ql-Mt)*(1-Math.exp(-z/.12));Math.abs(Ql-ce)<.002?Ql===0?p.hover.delete(fl):p.hover.set(fl,1):(p.hover.set(fl,ce),Jt=!0)}),p.openTarget>0&&!p.focus.has(p.active)&&p.focus.set(p.active,0),p.focus.forEach((Mt,fl)=>{let Ql=p.openTarget>0&&fl===p.active?1:0,ce=De?Ql:Mt+(Ql-Mt)*(1-Math.exp(-z/.16));Math.abs(Ql-ce)<.001?Ql===0?p.focus.delete(fl):p.focus.set(fl,1):(p.focus.set(fl,ce),Jt=!0)}),va.forEach(Mt=>{!Mt.loaded||Mt.ready>=1||(Mt.ready=De?1:Math.min(1,Mt.ready+z/.45),Jt=!0)});let Re=q?Math.round(p.scroll/Math.max(p.spacing,1)):Za();if(Re!==p.active&&!p.drag){p.active=Re;let Mt=_e(Re,E.items.length);ku(Mt),E.onActiveChange?.(Mt)}let Ue=Rh();Uh(Ue),Ch(Ue),E.autoScroll&&!De||p.scroll!==p.target||p.velocity!==0||p.open!==p.openTarget||p.intro<1||p.ring!==0&&p.ring!==1||Jt?Pu=requestAnimationFrame(Or):ja=0};function Pt(){!Pu&&fi&&!document.hidden&&(Pu=requestAnimationFrame(Or))}let Nr=()=>{let S=ut.current;P.width=Math.max(1,U.clientWidth),P.height=Math.max(1,U.clientHeight),P.ratio=Math.min(S.dpr||window.devicePixelRatio||1,2),ft.width=Math.max(1,Math.round(P.width*P.ratio)),ft.height=Math.max(1,Math.round(P.height*P.ratio));let E=p.spacing,{spacing:z}=Mr();E>1&&z!==E&&(p.scroll=p.scroll/E*z,p.target=p.target/E*z),p.spacing=z,Pt()},xr=S=>{let E=U.getBoundingClientRect();return{x:S.clientX-E.left-E.width/2,y:E.height/2-(S.clientY-E.top)}},Dr=({x:S,y:E})=>{for(let z=Va.length-1;z>=0;z--){let x=Va[z];if(x.alpha<.05)continue;let q=S-x.x,L=E-x.y,X=Math.cos(-x.angle),V=Math.sin(-x.angle),$=X*q-V*L,Jt=V*q+X*L;if(Math.abs($)<=x.w/2&&Math.abs(Jt)<=x.h/2)return x}return null},rf=S=>{let E=S?S.slot:null;E!==p.hovered&&(p.hovered=E,E!==null&&!p.hover.has(E)&&p.hover.set(E,0),Pt()),S?U.setAttribute("data-pointer",""):U.removeAttribute("data-pointer")},sf=()=>{!ut.current.snap&&p.open<.5||Ka(Za())},Rr=S=>{if(S.button!==0||S.target.closest("[data-gallery-close]"))return;let E=xr(S);p.drag={id:S.pointerId,x0:S.clientX,y0:S.clientY,start:p.target,moved:!1,samples:[],p:E},p.lastInput=performance.now(),Pt()},Ur=S=>{let E=p.drag;if(E&&E.id===S.pointerId){let z=S.clientX-E.x0,x=S.clientY-E.y0;if(!E.moved&&Math.hypot(z,x)>6){if(Math.abs(x)>Math.abs(z)&&S.pointerType!=="mouse"){p.drag=null;return}E.moved=!0,U.setPointerCapture?.(S.pointerId),U.setAttribute("data-dragging",""),rf(null)}E.moved&&(p.target=E.start-z*(ut.current.scrollSpeed/2),E.samples.push({x:S.clientX,t:performance.now()}),E.samples.length>6&&E.samples.shift(),p.lastInput=performance.now(),Pt());return}S.pointerType==="mouse"&&rf(Dr(xr(S)))},Cr=S=>{let E=p.drag;if(!E||E.id!==S.pointerId)return;if(p.drag=null,U.removeAttribute("data-dragging"),U.hasPointerCapture?.(S.pointerId)&&U.releasePointerCapture(S.pointerId),E.moved){let q=E.samples;if(q.length>1){let L=q[0],X=q[q.length-1],V=Math.max(X.t-L.t,16),$=(X.x-L.x)/V*1e3;p.target-=$*.18*(ut.current.scrollSpeed/2)}sf();return}let z=Dr(E.p),x=ut.current;if(!z){p.open>.5&&si();return}if(x.onItemClick?.(z.item,z.index),!x.openOnClick){Ka(z.slot);return}p.open>.5&&z.slot===p.active?si():of(z.slot)},Hr=S=>{p.drag&&p.drag.id===S.pointerId&&(p.drag=null,U.removeAttribute("data-dragging"),sf())},Yr=()=>{rf(null)},Br=S=>{let E=S.deltaMode===1?16:S.deltaMode===2?P.height:1,z=Math.abs(S.deltaX)>Math.abs(S.deltaY)?S.deltaX:S.deltaY;z&&(S.preventDefault(),p.target+=z*E*(ut.current.scrollSpeed/2),p.lastInput=performance.now(),clearTimeout(nf),nf=setTimeout(sf,140),Pt())},qr=S=>{let E=ut.current;if(S.target===U&&(S.key==="Enter"||S.key===" ")){S.preventDefault();let x=_e(p.active,E.items.length);E.onItemClick?.(E.items[x],x),E.openOnClick&&of(p.active);return}let z=yp[S.key];if(p.lastInput=performance.now(),z){S.preventDefault(),U.contains(document.activeElement)&&document.activeElement!==U&&(p.keyboard=!0);let x=Za()+z;Ka(x);let q=_e(x,E.items.length);U.contains(document.activeElement)&&document.activeElement!==U&&ne.current[q]?.focus({preventScroll:!0});return}if(S.key==="Home"||S.key==="End"){S.preventDefault();let x=Za()-_e(Za(),E.items.length);Ka(S.key==="Home"?x:x+E.items.length-1);return}S.key==="Escape"&&p.openTarget>0&&(S.preventDefault(),si())},Gr=S=>{S.target.closest("[data-gallery-list]")&&(p.keyboard=cf||S.target.matches(":focus-visible"),Pt())},Xr=S=>{(S.key==="Tab"||S.key.startsWith("Arrow"))&&(cf=!0)},Lr=()=>{cf=!1},Qr=S=>{U.contains(S.relatedTarget)||(p.keyboard=!1,Pt())},wr=()=>{ja=0,Pt()},Vr=new ResizeObserver(Nr);Vr.observe(U);let jr=new IntersectionObserver(S=>{fi=S.some(E=>E.isIntersecting),fi&&(ja=0,Pt())});jr.observe(U),U.addEventListener("pointerdown",Rr),U.addEventListener("pointermove",Ur),U.addEventListener("pointerup",Cr),U.addEventListener("pointercancel",Hr),U.addEventListener("pointerleave",Yr),U.addEventListener("wheel",Br,{passive:!1}),U.addEventListener("keydown",qr),U.addEventListener("focusin",Gr),U.addEventListener("focusout",Qr),document.addEventListener("visibilitychange",wr),document.addEventListener("keydown",Xr,!0),document.addEventListener("pointerdown",Lr,!0),oi=ut.current.items,oi.forEach(S=>ri(S.image)),Nr();let Zr=S=>{let E=ut.current.items.length,z=Za(),x=z-_e(z,E)+S;return[x-E,x,x+E].reduce((q,L)=>Math.abs(L-z)<Math.abs(q-z)?L:q)};return bt.current={wake:Pt,open:S=>of(Zr(S)),focus:S=>Ka(Zr(S),!1),close:si},()=>{cancelAnimationFrame(Pu),clearTimeout(nf),bt.current=null,Vr.disconnect(),jr.disconnect(),U.removeEventListener("pointerdown",Rr),U.removeEventListener("pointermove",Ur),U.removeEventListener("pointerup",Cr),U.removeEventListener("pointercancel",Hr),U.removeEventListener("pointerleave",Yr),U.removeEventListener("wheel",Br),U.removeEventListener("keydown",qr),U.removeEventListener("focusin",Gr),U.removeEventListener("focusout",Qr),document.removeEventListener("visibilitychange",wr),document.removeEventListener("keydown",Xr,!0),document.removeEventListener("pointerdown",Lr,!0),xe.replaceChildren(),va.forEach(S=>S.texture&&T.deleteTexture(S.texture)),T.deleteTexture(ci),T.deleteProgram(ii.program),T.deleteBuffer(zr),T.deleteBuffer(Ar),T.deleteVertexArray(ef),T.getExtension("WEBGL_lose_context")?.loseContext()}},[]),(0,Kt.useEffect)(()=>{bt.current?.wake()});let ni=Ll.length,ma=Ll[$u%ni]||Ll[0];return(0,cl.jsxs)("div",{ref:W,className:`${Ae.root}${J?` ${J}`:""}`,style:{color:e,...A},role:"region","aria-roledescription":"carousel","aria-label":"\u5F27\u5F62\u9884\u7B97\u5361\uFF0C\u5DE6\u53F3\u62D6\u52A8\uFF0C\u70B9\u51FB\u4FA7\u5361\u805A\u7126\uFF0C\u70B9\u51FB\u5F53\u524D\u5361\u4F7F\u7528",...H,children:[(0,cl.jsx)("canvas",{ref:gt,className:Ae.canvas,"aria-hidden":"true"}),(0,cl.jsx)("div",{ref:Gl,className:Ae.labels,"aria-hidden":"true"}),(0,cl.jsx)("div",{ref:Xl,className:Ae.caption,"aria-hidden":!Oe,children:ma?.description&&(0,cl.jsx)("p",{className:Ae.captionText,children:ma.description})}),(0,cl.jsx)("button",{type:"button",className:Ae.close,"data-gallery-close":"",hidden:!Oe,"aria-hidden":!Oe,"data-visible":Oe?"":void 0,tabIndex:Oe?0:-1,"aria-label":"Close",onClick:()=>bt.current?.close(),children:(0,cl.jsx)("svg",{width:"18",height:"18",viewBox:"0 0 18 18",fill:"none","aria-hidden":"true",children:(0,cl.jsx)("path",{d:"M4 4l10 10M14 4L4 14",stroke:"currentColor",strokeWidth:"1.8",strokeLinecap:"round"})})}),(0,cl.jsx)("ul",{className:Ae.hidden,"data-gallery-list":"",children:Ll.map((U,ft)=>(0,cl.jsx)("li",{children:(0,cl.jsx)("button",{type:"button",ref:xe=>{ne.current[ft]=xe},tabIndex:ft===$u?0:-1,"aria-label":`${U.text||U.alt||"Image"}, ${ft+1} of ${ni}`,"aria-current":ft===$u?"true":void 0,onFocus:()=>bt.current?.focus(ft),onClick:()=>{ut.current.onItemClick?.(U,ft),ut.current.openOnClick?bt.current?.open(ft):bt.current?.focus(ft)},children:U.text||U.alt||`Image ${ft+1}`})},`${U.image}-${ft}`))}),(0,cl.jsx)("div",{className:Ae.hidden,"aria-live":"polite",children:Oe&&ma?`${ma.text||ma.alt||"Image"} opened`:""})]})},Ah=Mp;var Et=Vl(Ia(),1);var Me=Vl(La(),1),Op=(t,l)=>(t%l+l)%l,_h=(t,l)=>Op(t+l/2,l)-l/2;function pr({images:t=[],controllerRef:l,onOpenChange:e,initialIndex:a=0}){let u=(0,Et.useRef)(null),n=(0,Et.useRef)([]),i=(0,Et.useRef)({x:0,y:0}),c=(0,Et.useRef)({w:390,h:480}),f=(0,Et.useRef)(null),r=(0,Et.useRef)(0),h=(0,Et.useRef)(0),g=(0,Et.useRef)({x:0,y:0}),s=(0,Et.useRef)(null),[v,M]=(0,Et.useState)(null),O=t.length,R=O<=8,d=R?O<=4?Math.max(1,Math.ceil(O/2)):O<=6?2:3:[8,6,5,4,3,2].find(A=>O%A===0&&A<=Math.sqrt(O*1.7))||Math.min(O,4),o=Math.max(1,Math.ceil(O/d)),m=(0,Et.useCallback)((A,H)=>{let W=R?160:Math.max(d*148,A+224)/d,gt=R?126:Math.max(o*122,H+104)/o;return{px:W,py:gt,periodX:R?Math.ceil((A+224)/W)*W:d*W,periodY:R?Math.ceil((H+104)/gt)*gt:o*gt}},[d,o,R]),y=(0,Et.useCallback)(()=>{cancelAnimationFrame(r.current),r.current=0,g.current={x:0,y:0}},[]),N=(0,Et.useCallback)(()=>{let{w:A,h:H}=c.current,W=Math.max(500,A*1.25),{periodX:gt,periodY:Gl,px:Xl,py:ne}=m(A,H);u.current?.style.setProperty("--dome-perspective",W*2+"px"),n.current.forEach((bt,da)=>{if(!bt)return;let $u=da%d,ku=Math.floor(da/d),Oe=R?Math.min(d,O-ku*d):d,Qa=_h(($u-(Oe-1)/2)*Xl+i.current.x,gt),Ll=_h((ku-(o-1)/2)*ne+i.current.y,Gl),Ne=Qa/W,ut=Ll/W,ni=(A/2+85-Math.abs(Qa))/100,ma=(H/2+90-Math.abs(Ll))/110,U=Math.max(0,Math.min(1,ni,ma)),ft=U>.015&&Math.abs(Ne)<1.35&&Math.abs(ut)<1.25,xe=Ll>H/2-85?(1-U)*15:0;bt.style.transform=`translate3d(${W*Math.sin(Ne)*Math.cos(ut)}px,${W*Math.sin(ut)+xe}px,${W*(Math.cos(Ne)*Math.cos(ut)-1)}px) rotateY(${Ne*180/Math.PI}deg) rotateX(${-ut*180/Math.PI}deg)`,bt.style.opacity=ft?U:0,bt.style.visibility=ft?"visible":"hidden",bt.style.zIndex=String(Math.round(Math.cos(Ne)*Math.cos(ut)*100)),bt.dataset.surfaceX=Qa.toFixed(2),bt.dataset.surfaceY=Ll.toFixed(2),bt.dataset.visible=String(ft),bt.tabIndex=ft?0:-1}),u.current&&(u.current.dataset.offsetX=i.current.x.toFixed(2),u.current.dataset.offsetY=i.current.y.toFixed(2),u.current.dataset.periodX=gt,u.current.dataset.periodY=Gl)},[d,o,R,O,m]),Y=(0,Et.useCallback)(()=>{M(null),s.current=null,e?.(null)},[e]),D=(0,Et.useCallback)(A=>{s.current!==null||performance.now()-h.current<160||!t[A]||(y(),s.current=A,M(A),e?.(A))},[t,e,y]);(0,Et.useEffect)(()=>(l&&(l.current={close:Y,pause:y}),()=>{l&&(l.current=null)}),[Y,y,l]),(0,Et.useEffect)(()=>{let A=Math.min(O-1,Math.max(0,a)),H=u.current?.clientWidth||390,W=u.current?.clientHeight||480;c.current={w:H,h:W};let{px:gt,py:Gl}=m(H,W);i.current=R?{x:0,y:0}:{x:((d-1)/2-A%d)*gt,y:((o-1)/2-Math.floor(A/d))*Gl},N();let Xl=new ResizeObserver(([bt])=>{c.current={w:bt.contentRect.width,h:bt.contentRect.height},N()});u.current&&Xl.observe(u.current);let ne=()=>{y(),f.current=null};return document.addEventListener("visibilitychange",ne),window.addEventListener("blur",ne),()=>{Xl.disconnect(),y(),document.removeEventListener("visibilitychange",ne),window.removeEventListener("blur",ne)}},[N,y]);function _(){g.current.x*=.89,g.current.y*=.89,i.current.x+=g.current.x,i.current.y+=g.current.y,N(),Math.hypot(g.current.x,g.current.y)>.15?r.current=requestAnimationFrame(_):r.current=0}function J(A,H=!1){let W=f.current;if(!(!W||A.pointerId!==W.id)){if(f.current=null,W.moved){h.current=performance.now();try{u.current.releasePointerCapture(A.pointerId)}catch{}H||(r.current=requestAnimationFrame(_))}else if(!H){let gt=A.target.closest("[data-dome-index]");gt&&D(Number(gt.dataset.domeIndex))}}}return(0,Me.jsxs)("div",{ref:u,className:"loop-dome",role:"group",tabIndex:0,"data-open":v!==null,"data-rows":o,"data-columns":d,"aria-label":"\u7403\u9762\u5361\u5E93\uFF0C\u53EF\u8FDE\u7EED\u5DE6\u53F3\u6216\u4E0A\u4E0B\u62D6\u52A8",onPointerDown:A=>{s.current!==null||A.button!==0||(A.preventDefault(),u.current?.focus({preventScroll:!0}),y(),f.current={id:A.pointerId,x:A.clientX,y:A.clientY,time:performance.now(),startX:A.clientX,startY:A.clientY,moved:!1})},onPointerMove:A=>{let H=f.current;if(!H||H.id!==A.pointerId)return;let W=A.clientX-H.x,gt=A.clientY-H.y,Gl=performance.now();if(!H.moved&&Math.hypot(A.clientX-H.startX,A.clientY-H.startY)>7&&(H.moved=!0,u.current.setPointerCapture(A.pointerId)),H.moved){A.preventDefault(),i.current.x+=W,i.current.y+=gt;let Xl=16/Math.max(8,Gl-H.time);g.current={x:Math.max(-13,Math.min(13,W*Xl)),y:Math.max(-13,Math.min(13,gt*Xl))},N()}H.x=A.clientX,H.y=A.clientY,H.time=Gl},onPointerUp:A=>J(A),onPointerCancel:A=>J(A,!0),onKeyDown:A=>{if(A.key==="Escape"){Y();return}let{px:H,py:W}=m(c.current.w,c.current.h),gt={ArrowLeft:[H,0],ArrowRight:[-H,0],ArrowUp:[0,W],ArrowDown:[0,-W]};s.current===null&&gt[A.key]&&(A.preventDefault(),y(),i.current.x+=gt[A.key][0],i.current.y+=gt[A.key][1],N())},children:[(0,Me.jsx)("div",{className:"loop-dome-surface","aria-hidden":v!==null||void 0,inert:v!==null,children:t.map((A,H)=>(0,Me.jsx)("button",{ref:W=>n.current[H]=W,className:"loop-dome-tile","data-dome-index":H,"data-card-id":A.id||H,"aria-label":A.alt,onClick:()=>D(H),children:(0,Me.jsx)("img",{src:A.src,alt:"",draggable:"false"})},A.id||H))}),(0,Me.jsx)("div",{className:"loop-dome-fade","aria-hidden":"true"}),v!==null&&(0,Me.jsx)("div",{className:"loop-dome-viewer",role:"dialog","aria-label":t[v]?.alt,onClick:A=>{A.target===A.currentTarget&&Y()},children:(0,Me.jsx)("img",{className:"loop-dome-enlarged",src:t[v]?.largeSrc||t[v]?.src,alt:t[v]?.alt,draggable:"false"})})]})}var Np=["\u8FD9\u4E2A\u6708","\u5468\u672B\u51FA\u884C","\u5B66\u70B9\u65B0\u4E1C\u897F","\u5496\u5561\u65F6\u5149","\u8FD0\u52A8\u8BA1\u5212","\u5BB6\u7528\u8865\u7ED9","\u79CB\u5929\u51FA\u6E38","\u6570\u7801\u66F4\u65B0","\u9605\u8BFB\u65F6\u5149","\u901A\u52E4","\u6BDB\u5B69\u5B50","\u5348\u9910\u8BA1\u5212","\u4E00\u573A\u6F14\u51FA","\u9A91\u884C\u5468\u672B","\u5BB6\u7684\u89D2\u843D","\u65B0\u7684\u5F00\u59CB","\u751F\u65E5\u793C\u7269","\u5468\u8FB9\u77ED\u9014","\u65E5\u7528\u8865\u7ED9","\u770B\u573A\u7535\u5F71","\u6444\u5F71\u7EC3\u4E60","\u597D\u597D\u5403\u996D","\u97F3\u4E50\u73B0\u573A","\u5065\u8EAB\u8BA1\u5212","\u4E00\u8D9F\u8FDC\u884C","\u70D8\u7119\u65F6\u5149","\u670B\u53CB\u805A\u4F1A","\u82B1\u4E0E\u7EFF\u690D","\u51AC\u5B63\u8863\u6A71","\u9676\u827A\u8BFE","\u770B\u4E00\u573A\u5C55","\u6162\u6162\u751F\u6D3B","\u57CE\u5E02\u6F2B\u6B65","\u5B66\u4E60\u8BA1\u5212","\u5C71\u95F4\u9732\u8425","\u65B0\u5E74\u65C5\u884C","\u624B\u4F5C\u5DE5\u5177","\u8DD1\u6B65\u88C5\u5907","\u7F8E\u672F\u6750\u6599","\u5BB6\u4EBA\u793C\u7269","\u5468\u672B\u65E9\u8336","\u4E00\u987F\u706B\u9505","\u53A8\u623F\u66F4\u65B0","\u4E66\u5E97\u4E4B\u65C5","\u90CA\u5916\u91CE\u9910","\u6ED1\u96EA\u5047\u671F","\u684C\u9762\u6574\u7406","\u745C\u4F3D\u8BFE","\u56DE\u5BB6\u770B\u770B","\u590F\u5929\u51FA\u6E38","\u5496\u5561\u5668\u5177","\u6E38\u620F\u65F6\u95F4","\u5C45\u5BB6\u653E\u677E","\u8FD0\u52A8\u978B","\u5C0F\u5C0F\u5E86\u795D","\u4E00\u5F20\u5531\u7247","\u76AE\u5212\u8247","\u65B0\u83DC\u8C31","\u4EB2\u5B50\u65F6\u5149","\u6D77\u8FB9\u6563\u6B65","\u624B\u4F5C\u793C\u7269","\u4E00\u573A\u6BD4\u8D5B","\u82B1\u56ED\u8BA1\u5212","\u5468\u672B\u7535\u5F71"],Mh=["1,280","1,200","800","260","650","420","2,400","1,600","380","560","780","920","450","860","1,450","2,200"],Wp=Np.map((t,l)=>({id:"sample-"+l,name:t,value:Mh[l%Mh.length],fill:[43,76,63,52,81,38,68,56][l%8]})),Sr=t=>String(t).replaceAll("&","&amp;").replaceAll("<","&lt;");function ui(t, dark = false, enlarged = false) {
   const p = dark
-    ? {ink:'#f0fbff',title:'#102b38',top:'#37b9e8',bottom:'#102b38',ambient:'#c5f6ff',ambientOpacity:.86,water1:'#c5f6ff33',waterMid:'#37b9e833',water2:'#102b388c',rim:'#fffffff2'}
-    : {ink:'#123c4e',title:'#163c4d',top:'#b6e5ef',bottom:'#719fad',ambient:'#f4feff',ambientOpacity:.7,water1:'#d9f8fc33',waterMid:'#8bcada26',water2:'#335c6b45',rim:'#fffffffa'};
+    ? {ink:'#12344b',title:'#12344b',top:'#7ed3f5',bottom:'#7ed3f5',ambient:'#ffffff',ambientOpacity:.24,water1:'#37b9ed33',waterMid:'#37b9ed33',water2:'#37b9ed33',rim:'#fffffff2'}
+    : {ink:'#17364d',title:'#17364d',top:'#b8e6fb',bottom:'#b8e6fb',ambient:'#ffffff',ambientOpacity:.52,water1:'#37b9ed33',waterMid:'#37b9ed33',water2:'#37b9ed33',rim:'#fffffffa'};
   const level = 300 * (1 - t.fill / 100), titleSize = enlarged ? 38 : 23, valueSize = enlarged ? 53 : 43;
   const contour = `M0 ${level} C58 ${level-6} 105 ${level+4} 170 ${level} S280 ${level-6} 340 ${level} S380 ${level+4} 400 ${level}`;
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 400 300"><defs>
@@ -3291,11 +3291,11 @@ const materialInteractions = (() => {
     const theme = app.dataset.theme === 'dark' ? '暗色' : '浅色';
     const select = document.getElementById('material-page');
     if (select && materialLabels.has(view)) select.value = view;
-    materialText('.review-label', '10/24 · 浅暗材质与交互补正');
+    materialText('.review-label', '10/24 · 白色与冰蓝材质校正');
     materialText('.review-sidebar > .eyebrow', '浅暗材质 · 全页面核对');
     materialText('.review-notes > .eyebrow', '本轮材质研究');
-    materialText('#note-title', '以 R3 为基准，保留透光与层次。');
-    materialText('#note-copy', '保留 R3 的受光边缘、深色背衬和透色卡夹；浅暗主题分别配光。页面交互沿用 R34，全部操作只影响隔离示例。');
+    materialText('#note-title', '白色与冰蓝，保留透光与层次。');
+    materialText('#note-copy', '冰蓝主色保持一致，浅色以白色承托，暗色以黑与深灰承托冰蓝卡面。保留局部受光与透色，页面交互沿用 R34，全部操作只影响隔离示例。');
     materialText('#note-path', `当前：${label} · ${theme}。可原位切换外观；查看页面只切换本页示例，不修改 App。`);
     materialText('#screen-caption', `${label} · ${theme}材质`);
     materialText('.preview-footnote', '浅暗材质全页面样稿 · 延续 R34 交互 · 未修改 App');
@@ -3497,117 +3497,119 @@ const materialInteractions = (() => {
 </script>
 <style>.circular-gallery{position:relative;width:100%;height:100%;overflow:hidden;touch-action:pan-y;user-select:none;-webkit-user-select:none;cursor:grab}.circular-gallery[data-pointer]{cursor:pointer}.circular-gallery[data-dragging]{cursor:grabbing}.circular-gallery-canvas{position:absolute;inset:0;display:block;width:100%;height:100%}.circular-gallery-labels{position:absolute;inset:0;pointer-events:none}.circular-gallery-label{position:absolute;top:0;left:0;line-height:1.2;white-space:nowrap;will-change:transform,opacity}.circular-gallery-caption{position:absolute;top:0;left:50%;width:min(90%,36rem);text-align:center;opacity:0;pointer-events:none}.circular-gallery-caption-text{margin:0;line-height:1.5;opacity:.65}.circular-gallery-close{position:absolute;top:12px;right:12px;display:grid;place-items:center;width:40px;height:40px;padding:0;border:0;border-radius:50%;background:transparent;color:inherit;cursor:pointer;opacity:0;pointer-events:none;transition:opacity .2s ease}.circular-gallery-close[data-visible]{opacity:.8;pointer-events:auto}.circular-gallery-close:hover{opacity:1}.circular-gallery-close:focus-visible{outline:2px solid currentColor;outline-offset:2px}.circular-gallery-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}.loop-dome{position:relative;width:100%;height:100%;isolation:isolate;touch-action:none;overflow:hidden;user-select:none;-webkit-user-select:none;--dome-perspective:1000px;--dome-bg:var(--scene,#e9e1ee)}.loop-dome-surface{position:absolute;inset:0;perspective:var(--dome-perspective);perspective-origin:50% 50%;transform-style:preserve-3d}.loop-dome-tile{position:absolute!important;left:50%;top:50%;width:112px;height:84px;margin:-42px 0 0 -56px;padding:0!important;min-height:0!important;border:0!important;border-radius:10px!important;background:transparent!important;backface-visibility:hidden;transform-style:preserve-3d;will-change:transform,opacity;cursor:grab;box-shadow:0 8px 17px -14px #3e275c70;touch-action:none}.loop-dome-tile img{display:block;width:100%;height:100%;pointer-events:none;object-fit:contain;-webkit-user-drag:none}.loop-dome-tile:focus-visible{outline:2px solid var(--accent,#a083b6)!important;outline-offset:4px}.loop-dome-fade{position:absolute;inset:0;z-index:200;pointer-events:none;background:linear-gradient(var(--dome-bg),transparent 13%,transparent 86%,var(--dome-bg));opacity:.6}.loop-dome-viewer{position:absolute;inset:0;background:#3d2a4d40;-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);z-index:210;display:flex;align-items:center;justify-content:center;padding:20px 25px 58px;touch-action:none;animation:dome-view-in .25s ease-out}.loop-dome-enlarged{width:100%;max-height:100%;object-fit:contain;filter:drop-shadow(0 16px 22px #32213e22);animation:dome-card-in .28s cubic-bezier(.2,.7,.25,1)}@keyframes dome-view-in{0%{opacity:0}to{opacity:1}}@keyframes dome-card-in{0%{opacity:.5;transform:scale(.9)}to{opacity:1;transform:none}}@media(prefers-reduced-motion:reduce){.loop-dome-viewer,.loop-dome-enlarged{animation:none}}.loop-dome-surface{pointer-events:none}.loop-dome-tile{pointer-events:auto}.budget-library-picker{--scene:#e8e0ed;--accent:#826297;position:relative;width:100%;height:100%;color:var(--ink,#3e3247);font-family:-apple-system,BlinkMacSystemFont,PingFang SC,sans-serif;isolation:isolate;--font-scale:1}.budget-library-picker.picker-dark{--scene:#352b3d;--accent:#ceb2e4}.budget-library-picker>header{height:52px;display:flex;justify-content:space-between;align-items:center;padding:0 20px;font-size:15px;font-weight:500}.budget-library-picker>header>div{display:flex;gap:3px;align-items:center}.budget-library-picker>header button{display:grid;place-items:center;width:40px;height:40px;min-height:40px;padding:0;background:transparent;border:0;border-radius:50%;font-size:24px;font-weight:300;color:var(--accent)}.picker-layout svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.3}.picker-scene{height:calc(100% - 86px);min-height:280px;position:relative;isolation:isolate}.picker-scene .circular-gallery{touch-action:none}.picker-scene .circular-gallery-close[hidden]{display:none!important}.budget-library-picker>footer{display:flex;justify-content:space-between;padding:0 24px;font-size:10px;color:var(--muted,#a294aa);height:34px;align-items:center}.budget-library-picker>footer span{font-size:10px;font-variant-numeric:tabular-nums}.picker-confirm{position:absolute;z-index:220;bottom:20px;left:0;right:0;display:flex;justify-content:center;gap:8px}.picker-confirm button{min-height:44px;padding:0 20px;border:0;border-radius:24px;background:var(--accent);color:#fff;font-size:12px}.picker-confirm button+button{background:var(--scene);color:var(--ink)}.picker-list{position:absolute;inset:0;padding:10px 23px;overflow:auto}.picker-list input{width:100%;padding:12px 14px;border:1px solid #fff8;border-radius:24px;background:#fff3;color:inherit;min-height:44px;font-size:13px}.picker-list>div{display:grid;gap:10px;margin-top:16px;grid-template-columns:1fr 1fr}.picker-list button{min-height:90px;padding:13px;border-radius:17px;border:1px solid #fff6;background:linear-gradient(140deg,#ffffff72,#ba9acf44);text-align:left;display:flex;flex-direction:column;justify-content:space-between;gap:10px;color:inherit}.picker-list strong{align-self:flex-end;font-size:20px;font-weight:500}.picker-list span{font-size:12px}.picker-list p{font-size:12px;text-align:center;margin-top:28px}.app[style*="--font-scale: 1.6"] .picker-list>div{grid-template-columns:1fr}.picker-large .picker-list>div{grid-template-columns:1fr}.picker-large .picker-list span{font-size:20px}.picker-large .picker-list strong{font-size:28px}.picker-large .picker-list button{min-height:110px}.budget-library-picker>footer{height:60px;padding:0 24px;position:relative;justify-content:center}.picker-scene{height:calc(100% - 112px)}.picker-return{display:grid;place-items:center;width:100%;height:60px;border:0;background:transparent;color:var(--accent);touch-action:none;cursor:grab;border-radius:20px}.picker-return svg{width:24px;height:16px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;opacity:.65}.picker-card-count{position:absolute;right:24px;pointer-events:none;opacity:.65}.picker-close svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}.picker-return{user-select:none;-webkit-user-select:none}
 </style><style id="material-theme-r3">
-/* R3 material source: environmental light passes through glass. The dark
-   theme retains R3 cyan / graphite; light uses an illuminated mineral backing.
-   These roles are shared by every route, drawer, form and saved result. */
+/* Ice blue is shared brand color in both appearances. Flat white / ice-blue
+   environments in light mode; dark uses a black ground and ice-blue cards. Grazing
+   reflections, transparency and contact shadows supply material depth. */
 .app[data-material-study] { --r3-seat: 400px; --r3-card-top: 140px; --r3-card-height: 258px; }
 .app[data-material-study][data-theme=light] {
   color-scheme: light;
-  --material-canvas: radial-gradient(ellipse at 0% 0%, #b5effc94, transparent 58%), radial-gradient(ellipse at 100% 48%, #63b2c52b, transparent 62%), linear-gradient(165deg, #e7f2f4, #ccdee2 64%, #edf0ee);
-  --canvas: #dfeaec;
-  --ink: #163640;
-  --muted: #3f626c;
-  --faint: #4c6972;
-  --accent: #0a647b;
-  --accent-soft: #258fa329;
-  --surface: #e1eff0e0;
-  --field: #5d93a31a;
-  --glass: #ffffff36;
-  --pocket: #82b2bf50;
-  --pocket-bottom: #6b9aa52e;
-  --hairline: #28596721;
-  --card-top: #ccebf1;
-  --water-top: #bcf2f936;
-  --water-bottom: #2362783d;
-  --tile-border: #ffffff91;
-  --tile: #ffffff28;
-  --tile-shadow: #183e4829;
-  --popup: #d8e9ede8;
-  --popup-line: #ffffffa8;
-  --receipt: #d6e9ee69;
-  --receipt-back: #6c9cae36;
-  --material-panel: radial-gradient(ellipse at 0% 0%, #ffffff73, transparent 57%), linear-gradient(155deg, #d6eef3d1, #aecfd8ad 63%, #dce9eade);
-  --material-full-panel: radial-gradient(ellipse at 0% 0%, #c5f6ff99, transparent 58%), linear-gradient(160deg, #e9f3f3, #c3dbe1 68%, #dfe9e9);
-  --material-block: radial-gradient(ellipse at 3% 0%, #ffffff59, transparent 63%), linear-gradient(150deg, #ffffff2e, #e8f8fb0f 61%, #477a8e17);
-  --material-field: linear-gradient(150deg, #ffffff19, #436b7b12);
-  --material-control: linear-gradient(150deg, #ffffff52, #ecf9fc12 70%, #497b9021);
-  --material-selected: linear-gradient(150deg, #ffffff73, #c0e4ed45);
-  --material-edge: #ffffffa6;
-  --material-edge-low: #315c6b24;
-  --material-shadow: #173b4930;
-  --material-shadow-deep: #0d303f45;
-  --material-overlay: #12354324;
-  --material-context-overlay: #183c4a1a;
-  --material-focus-overlay: radial-gradient(ellipse at 8% 0%, #408d9ed9, #1e3e49ed 62%, #152b33f5);
-  --material-floating-ink: #f3fbfc;
-  --material-floating-muted: #d7e8ed;
-  --material-primary: linear-gradient(150deg, #227d94, #115268);
-  --material-primary-ink: #f4fdff;
-  --material-liquid-top: #c2eff35c;
-  --material-liquid-bottom: #3c879a75;
+  --material-canvas: #f8fcff;
+  --canvas: #f8fcff;
+  --ink: #17364d;
+  --muted: #47677e;
+  --faint: #5e7a8e;
+  --accent: #087fb8;
+  --accent-soft: #2db5ed1f;
+  --surface: #fffffff0;
+  --field: #e6f4fc99;
+  --glass: #ffffff85;
+  --pocket: #8ed5f552;
+  --pocket-bottom: #84d0f236;
+  --hairline: #17364d1c;
+  --card-top: #a7def8;
+  --water-top: #37b9ed38;
+  --water-bottom: #37b9ed38;
+  --tile-border: #ffffffd9;
+  --tile: #ffffffc2;
+  --tile-shadow: #23587a1f;
+  --popup: #fffffff0;
+  --popup-line: #ffffffed;
+  --receipt: #ffffffbf;
+  --receipt-back: #83cff069;
+  --material-panel: #ffffffdc;
+  --material-full-panel: #f8fcff;
+  --material-block: #ffffffb8;
+  --material-field: #dceff94d;
+  --material-control: #ffffff85;
+  --material-selected: #bde8fc8c;
+  --material-edge: #ffffffd9;
+  --material-edge-low: #287aa128;
+  --material-shadow: #285e7b24;
+  --material-shadow-deep: #153e5b38;
+  --material-overlay: #13374d24;
+  --material-context-overlay: #17445f12;
+  --material-focus-overlay: #f5fbfff5;
+  --material-floating-ink: #17364d;
+  --material-floating-muted: #47677e;
+  --material-primary: #087fb8;
+  --material-primary-ink: #ffffff;
+  --material-liquid-top: #37b9ed42;
+  --material-liquid-bottom: #37b9ed42;
   --material-danger: #94394c;
   --material-warning: #7e561a;
   --material-success: #176758;
   --material-gold-ink: #73591e;
   --material-gold-soft: #bea36540;
-  --wish-paper: radial-gradient(ellipse at 4% 0%, #ffffff6b, #ffffff0a 65%, transparent), linear-gradient(150deg, #def4f742, #8fbfcc35 70%, #4c7c8d26);
-  --wish-rim: #ffffffab;
-  --wish-ink: #2b6b80;
-  --wish-drop: #183f4d38;
+  --wish-paper: #b8e6fbbd;
+  --wish-rim: #ffffffe0;
+  --wish-ink: #168dbf;
+  --wish-drop: #1c385226;
+  --focus-accent: #087fb8;
 }
 .app[data-material-study][data-theme=dark] {
   color-scheme: dark;
-  --material-canvas: radial-gradient(ellipse at 0% 0%, #61cde16b, transparent 53%), radial-gradient(ellipse at 100% 36%, #238fb32b, transparent 58%), linear-gradient(170deg, #174754, #142d34 46%, #111719 92%);
-  --canvas: #152b32;
-  --ink: #f0f8fa;
-  --muted: #c3d9df;
-  --faint: #a3c0ca;
-  --accent: #b4ecf6;
-  --accent-soft: #75d2e624;
-  --surface: #172e36e8;
-  --field: #a2d8e51a;
-  --glass: #ffffff17;
-  --pocket: #6eacbf26;
-  --pocket-bottom: #112a3333;
-  --hairline: #c8eaf21f;
-  --card-top: #54bdd8;
-  --water-top: #c5f6ff2e;
-  --water-bottom: #102b386e;
-  --tile-border: #ffffff33;
-  --tile: #ffffff19;
-  --tile-shadow: #020a0f75;
-  --popup: #17333eea;
-  --popup-line: #daf4ff50;
-  --receipt: #badce524;
-  --receipt-back: #3255644d;
-  --material-panel: radial-gradient(ellipse at 0% 0%, #9de3f333, transparent 58%), linear-gradient(160deg, #1d4a58d1, #142d35db 55%, #111e24ed);
-  --material-full-panel: radial-gradient(ellipse at 0% 0%, #6ec8dd4d, transparent 52%), linear-gradient(165deg, #204b59, #142c34 50%, #111719);
-  --material-block: radial-gradient(ellipse at 2% 0%, #ffffff14, transparent 62%), linear-gradient(150deg, #ffffff24, #ffffff09 70%, #0000000c);
-  --material-field: linear-gradient(145deg, #bfefff13, #071a231c);
-  --material-control: linear-gradient(150deg, #ffffff2b, #ffffff0a 75%, #00000012);
-  --material-selected: linear-gradient(150deg, #e5faff38, #6eafc128);
-  --material-edge: #d7f5ff52;
-  --material-edge-low: #c6e9f514;
-  --material-shadow: #000c146e;
-  --material-shadow-deep: #00080ca6;
-  --material-overlay: #020b1040;
-  --material-context-overlay: #020e1826;
-  --material-focus-overlay: radial-gradient(ellipse at 5% 0%, #30788be3, #102a33f0 62%, #0d151af7);
-  --material-floating-ink: #f4fbfc;
-  --material-floating-muted: #d3e7ed;
-  --material-primary: linear-gradient(150deg, #cdf3f8, #7bc2d1);
-  --material-primary-ink: #10333e;
-  --material-liquid-top: #b0edfa40;
-  --material-liquid-bottom: #143c4c9e;
+  --material-canvas: #0d131a;
+  --canvas: #0d131a;
+  --ink: #f1f9ff;
+  --muted: #b9cddb;
+  --faint: #a6bfce;
+  --accent: #70d1ff;
+  --accent-soft: #42bcfa24;
+  --surface: #1b2d3bf5;
+  --field: #1a2c3ade;
+  --glass: #ffffff14;
+  --pocket: #203542d9;
+  --pocket-bottom: #182936ed;
+  --hairline: #e0f4ff21;
+  --card-top: #65c7f1;
+  --water-top: #37b9ed40;
+  --water-bottom: #37b9ed40;
+  --tile-border: #e1f4ff4a;
+  --tile: #33495773;
+  --tile-shadow: #07131d52;
+  --popup: #203442f0;
+  --popup-line: #d6f1ff47;
+  --receipt: #304754e3;
+  --receipt-back: #1f3545c2;
+  --material-panel: #1c2e3bed;
+  --material-full-panel: #192b38;
+  --material-block: #203644ed;
+  --material-field: #152b38ad;
+  --material-control: #4861714a;
+  --material-selected: #56c3f842;
+  --material-edge: #def4ff57;
+  --material-edge-low: #e0f2ff1f;
+  --material-shadow: #0715224d;
+  --material-shadow-deep: #06131f8c;
+  --material-overlay: #0b1a285c;
+  --material-context-overlay: #10253838;
+  --material-focus-overlay: #090e16f5;
+  --material-floating-ink: #f1f9ff;
+  --material-floating-muted: #bed2df;
+  --material-primary: #70d1ff;
+  --material-primary-ink: #12344b;
+  --material-liquid-top: #219ee936;
+  --material-liquid-bottom: #219ee936;
   --material-danger: #ffb0c1;
   --material-warning: #ead095;
   --material-success: #b4e9d9;
   --material-gold-ink: #ffedbf;
   --material-gold-soft: #e0c89250;
-  --wish-paper: radial-gradient(ellipse at 4% 0%, #b9f2ff30, #ffffff03 65%, transparent), linear-gradient(150deg, #ffffff20, #84c9df0e 62%, #020d1526);
-  --wish-rim: #def8ff57;
-  --wish-ink: #b9e9f5;
-  --wish-drop: #010a108c;
+  --wish-paper: #7ed3f5e0;
+  --wish-rim: #d4f0ff59;
+  --wish-ink: #70d1ff;
+  --wish-drop: #02091266;
+  --focus-accent: #70d1ff;
 }
 
 .app[data-material-study][data-theme] {
@@ -3721,7 +3723,7 @@ const materialInteractions = (() => {
 .app[data-material-study][data-theme] :is(button, a, summary, input, select, textarea):focus-visible { outline-color: var(--accent); }
 .app[data-material-study][data-theme] .input-wrap:focus-within { outline: 2px solid var(--accent); outline-offset: 3px; }
 
-/* Wish images and preset artwork keep their source colors. Only their glass changes. */
+/* User photos keep their colors; presets use the shared ice-blue art roles. */
 .app[data-material-study][data-theme] .wish-home { --wish-glass: var(--glass); --wish-edge: var(--material-edge); --wish-shadow: var(--material-shadow); }
 .app[data-material-study][data-theme] :is(.wish-face, .wish-card-v28 .wish-face-back, .wish-compose-preview, .wish-cover-preview, .wish-wallet-hero, .wish-library .wish-balance-bar, .wish-entry-hero, .wish-detail-card, .wish-complete-card, .wish-impact-card, .wish-collection-row, .wish-memento-row, .wish-tile, .wish-tile:nth-child(2n), .wish-empty, .wish-purchased-card) {
   background: var(--wish-paper);
@@ -3746,12 +3748,12 @@ const materialInteractions = (() => {
 .app[data-material-study][data-theme] .wish-ledger-symbol.credit { color: var(--material-success); }
 .app[data-material-study][data-theme] .wish-ledger-symbol.debit { color: var(--ink); }
 .app[data-material-study][data-theme] .wish-card-liquid { --water-top: var(--material-liquid-top); --water-bottom: var(--material-liquid-bottom); }
-.app[data-material-study][data-theme] .wish-liquid-unknown { background: linear-gradient(140deg, #ffffff08, var(--accent-soft)); }
+.app[data-material-study][data-theme] .wish-liquid-unknown { background: transparent; }
 .app[data-material-study][data-theme] .preset-backing {
   background: var(--material-control);
   box-shadow: inset 1px 1px var(--material-edge), inset -1px -1px var(--material-edge-low), 0 7px 16px -13px var(--material-shadow-deep);
 }
-.app[data-material-study][data-theme] .no-cover { background: radial-gradient(ellipse at 70% 70%, var(--accent-soft), transparent 65%); }
+.app[data-material-study][data-theme] .no-cover { background: transparent; }
 .app[data-material-study][data-theme] .wish-preset-grid button { background: var(--material-field); color: var(--muted); }
 .app[data-material-study][data-theme] .wish-preset-grid button[aria-pressed=true] { background: var(--material-selected); border-color: var(--accent); color: var(--ink); box-shadow: inset 0 1px 0 var(--material-edge); }
 .app[data-material-study][data-theme] .wish-redeem-button.has-purchase-draft { box-shadow: 0 0 13px -7px var(--accent), inset 0 1px var(--material-edge); }
@@ -3763,11 +3765,11 @@ const materialInteractions = (() => {
 .app[data-material-study][data-theme] :is(.cover-photo-fill .wish-front-value small, .cover-photo-fill .wish-money small) { color: #ffffffe0; }
 .app[data-material-study][data-theme] .cover-photo-fill .wish-corner-label { color: #fff; background: #102e3a80; }
 
-/* A focus veil stays dark enough for a personal photo in either theme. */
+/* Focus keeps the same appearance; full-bleed photos retain their own scrim. */
 .app[data-material-study][data-theme] .overlay-shade:has(:is(.wish-focus-shell, .wish-full-view, .outcome-wish)) { background: var(--material-focus-overlay); }
 .app[data-material-study][data-theme] :is(.wish-full-view, .outcome-wish.wish-full-view) { color: var(--material-floating-ink); }
 .app[data-material-study][data-theme] :is(.wish-full-view .wish-focus-toolbar>span, .outcome-wish .wish-focus-toolbar>span, .outcome-reveal-heading p, .outcome-memory-note, .outcome-wish .outcome-skip, .wish-full-view .wish-result-footer>div, .wish-full-view .wish-result-footer strong) { color: var(--material-floating-muted); }
-.app[data-material-study][data-theme] :is(.wish-full-view .wish-focus-toolbar .icon-button, .outcome-wish .wish-focus-toolbar .icon-button) { color: #f0fbff; background: #bcf0ff1f; box-shadow: inset 0 1px #d3f6ff40; }
+.app[data-material-study][data-theme] :is(.wish-full-view .wish-focus-toolbar .icon-button, .outcome-wish .wish-focus-toolbar .icon-button) { color: var(--material-floating-ink); background: var(--material-control); box-shadow: inset 0 1px var(--material-edge); }
 .app[data-material-study][data-theme] .wish-realized-card .wish-face-front { box-shadow: inset 0 0 0 1px var(--wish-rim), 0 0 35px -13px #9ad8e678; }
 
 /* Saved result surfaces share the new material; amount and animation clocks are untouched. */
@@ -3815,19 +3817,40 @@ const materialInteractions = (() => {
 .app[data-material-study][data-theme] .wish-home { background: transparent; }
 .app[data-material-study][data-theme] .wish-preset-grid button { box-shadow: inset 1px 1px var(--material-edge-low), inset -1px -1px var(--material-edge-low); }
 .app[data-material-study][data-theme] .wish-preset-grid button[aria-pressed=true] { box-shadow: inset 1px 1px var(--material-edge), 0 4px 10px -8px var(--material-shadow-deep); }
-.app[data-material-study][data-theme] .wish-full-view .wish-face { color: var(--material-floating-ink); }
+.app[data-material-study][data-theme] .wish-full-view .wish-face { color: var(--ink); }
 
-/* A full-card focus is a dark optical environment in either appearance. */
+/* A focused card keeps the same ice-blue / charcoal surface as its list. */
 .app[data-material-study][data-theme] .wish-full-view {
   --ink: var(--material-floating-ink); --muted: var(--material-floating-muted);
-  --faint: var(--material-floating-muted); --accent: #d4f3fa;
-  --material-liquid-top: #a5e7f52b; --material-liquid-bottom: #18455b7a;
-  --wish-paper: radial-gradient(ellipse at 0% 0%, #d1faff38, transparent 65%), linear-gradient(150deg, #74b4c02b, #102a3833);
-  --material-block: radial-gradient(ellipse at 0% 0%, #ffffff14, transparent 62%), linear-gradient(150deg, #ffffff24, #ffffff09);
+  --faint: var(--material-floating-muted); --accent: var(--focus-accent);
 }
 .app[data-material-study][data-theme] .wish-full-view .wish-face {
-  background: radial-gradient(ellipse at 0% 0%, #d1faff38, transparent 65%), linear-gradient(150deg, #74b4c02b, #102a3833);
+  background: var(--wish-paper);
 }
+.app[data-material-study][data-theme=dark] .wish-full-view .wish-face {
+  --ink: #12344b; --muted: #315a75; --accent: #087fb8;
+  --icon-accent: #1376a8; color: var(--ink);
+}
+.app[data-material-study][data-theme=dark] .wish-page-head {
+  color: var(--ink);
+}
+.app[data-material-study][data-theme=dark] .page .wish-page-head .icon-button {
+  color: var(--accent); background: var(--material-control);
+}
+
+/* Ice-blue cards need ink foregrounds on the dark ground. Other panels
+   keep their neutral dark surfaces and light text. */
+.app[data-material-study][data-theme=dark] :is(.wish-face, .wish-compose-preview, .wish-cover-preview, .wish-wallet-hero, .wish-library .wish-balance-bar, .wish-entry-hero, .wish-detail-card, .wish-complete-card, .wish-impact-card, .wish-collection-row, .wish-tile, .wish-purchased-card) {
+  --ink: #12344b; --muted: #315a75; --faint: #426b82; --accent: #087fb8;
+  --icon-accent: #075a86; --material-primary: #087fb8; --material-primary-ink: #ffffff;
+  --material-control: #ffffff4d; --material-edge: #ffffffb3; --material-edge-low: #1b536f2b;
+  color: var(--ink);
+}
+.app[data-material-study][data-theme=dark] .wish-full-view .wish-face .wish-cover-mini { color: var(--accent); }
+.app[data-material-study][data-theme=dark] .outcome-root .outcome-wallet {
+  --ink: #12344b; --muted: #315a75; background: #7ed3f5e0; color: var(--ink);
+}
+.app[data-material-study][data-theme=dark] .outcome-root .outcome-wallet .outcome-wallet-number { color: var(--ink); }
 
 /* Large text gets a complete second line for values, rather than a flex item
    with a zero basis beside the full-width label. The task body still scrolls. */
@@ -3842,52 +3865,54 @@ const materialInteractions = (() => {
 /* R3 stage lighting is anchored at the seated card, not the viewport bottom.
    src/study-bridge.js measures this one visual length after layout/resize. */
 .app[data-material-study][data-theme=light] {
-  --home-sky: radial-gradient(ellipse 98% calc(var(--r3-seat) + var(--r3-card-height) * .6) at 1% calc(var(--r3-card-top) - var(--r3-card-height) * .082), #f4feffcc 0%, #e4faff26 58%, transparent), linear-gradient(180deg, #afe8f5 0px, #c2e5eb calc(var(--r3-card-top) + var(--r3-card-height) * .205), #a6c6cf var(--r3-seat), #d6e2e4 calc(var(--r3-seat) + 260px));
-  --home-heading: #143b48;
-  --home-hero-meta: #315968;
-  --home-hero-number: #143c4d;
-  --home-hero: radial-gradient(ellipse 100% 100% at 10% 0%, #ffffff59, #ffffff0a 62%, transparent), linear-gradient(146deg, #ffffff70, #ffffff33 22%, #ffffff11 63%, #ffffff06);
+  --home-sky: #f8fcff;
+  --home-heading: #17364d;
+  --home-hero-meta: #365d78;
+  --home-hero-number: #15374d;
+  --home-hero: radial-gradient(ellipse at 5% 0%, #ffffff8c, #ffffff00 62%);
   --home-hero-rim: #ffffffa6;
   --home-hero-shadow: #173c4b4d;
-  --home-floor: linear-gradient(180deg, #ffffff25, #ffffff0f 25%, #4d718019);
-  --home-tile: linear-gradient(180deg, #ffffff38, #ffffff0c);
-  --home-receipt: linear-gradient(145deg, #effaff59, #bad1d752);
-  --home-receipt-back: #83b1bf69;
-  --home-floor-ink: #183d48;
-  --home-floor-muted: #3c606c;
-  --home-reader-surface: #e5f4f026;
-  --home-reader-front: #7598a51a;
-  --home-contact: #7babba45;
-  --home-slot: #274b5e;
-  --library-accent: #185e76;
-  --reader-water: #80b4c5;
-  --water-top: #d9f8fc33; --water-middle: #8bcada26; --water-bottom: #335c6b45;
-  --r3-local-card: linear-gradient(165deg, #b6e5ef 0%, #9dc8d1 65%, #719fad);
-  --r3-rim: linear-gradient(140deg, #fffffffa, #ffffff75 28%, #b4dbe626 60%, #ffffff59);
+  --home-floor: #e5f5fcbf;
+  --home-tile: #ffffffb3;
+  --home-receipt: #ffffffe0;
+  --home-receipt-back: #9edcf68c;
+  --home-floor-ink: #17364d;
+  --home-floor-muted: #4f6e83;
+  --home-reader-surface: #b8e6fb52;
+  --home-reader-front: #9edcf624;
+  --home-contact: #69c6ef45;
+  --home-slot: #245877;
+  --library-accent: #087fb8;
+  --reader-water: #37b9ed;
+  --water-top: #37b9ed30; --water-middle: #37b9ed30; --water-bottom: #37b9ed30;
+  --r3-local-card: #ade1f8d9;
+  --r3-rim: linear-gradient(140deg, #fffffffa, #ffffff75 28%, #ffffff26 60%, #ffffff59);
+  --home-card-ink: #17364d;
 }
 .app[data-material-study][data-theme=dark] {
-  --home-sky: radial-gradient(ellipse 98% calc(var(--r3-seat) + var(--r3-card-height) * .6) at 1% calc(var(--r3-card-top) - var(--r3-card-height) * .082), #c5f6ffdb 0%, #c5f6ff14 58%, transparent), linear-gradient(180deg, #37b9e8 0px, #37b9e8 calc(var(--r3-card-top) + var(--r3-card-height) * .205), #102b38 var(--r3-seat), #111719 calc(var(--r3-seat) + var(--r3-card-height) * .64));
-  --home-heading: #102b38;
-  --home-hero-meta: #234958;
-  --home-hero-number: #f7fcfd;
-  --home-hero: radial-gradient(ellipse 100% 100% at 10% 0%, #ffffff47, #ffffff0e 62%, transparent), linear-gradient(146deg, #ffffff70, #ffffff33 22%, #ffffff11 63%, #ffffff06);
+  --home-sky: #0d131a;
+  --home-heading: #f1f9ff;
+  --home-hero-meta: #315a75;
+  --home-hero-number: #12344b;
+  --home-hero: radial-gradient(ellipse at 5% 0%, #ffffff66, #ffffff00 62%);
   --home-hero-rim: #d5f5ff4a;
   --home-hero-shadow: #04191fcc;
-  --home-floor: linear-gradient(180deg, #ffffff26, #ffffff0f 25%, #00000024);
-  --home-tile: linear-gradient(180deg, #ffffff24, #ffffff09);
-  --home-receipt: linear-gradient(145deg, #d3eff52b, #94c4d117);
-  --home-receipt-back: #34566485;
-  --home-floor-ink: #f2f8fa;
-  --home-floor-muted: #c8dce2;
-  --home-reader-surface: #d2eef326;
-  --home-reader-front: #071b2324;
-  --home-contact: #73bbce33;
-  --home-slot: #04161f;
-  --library-accent: #bdeef7;
-  --reader-water: #5096ab;
-  --water-top: #c5f6ff33; --water-middle: #37b9e833; --water-bottom: #102b388c;
-  --r3-local-card: radial-gradient(ellipse 112% 168% at -5.7% -8.2%, #c5f6ffdb, #c5f6ff14 58%, transparent), linear-gradient(180deg, #37b9e8, #37b9e8 20.5%, #102b38);
-  --r3-rim: linear-gradient(140deg, #fffffff2, #ffffff91 28%, #c5f6ff29 60%, #ffffff4d);
+  --home-floor: #17232ff0;
+  --home-tile: #3c56657a;
+  --home-receipt: #2e4654ed;
+  --home-receipt-back: #203747d9;
+  --home-floor-ink: #f1f9ff;
+  --home-floor-muted: #b9cddd;
+  --home-reader-surface: #c6eaff26;
+  --home-reader-front: #0b213329;
+  --home-contact: #50b9e533;
+  --home-slot: #0b2031;
+  --library-accent: #70d1ff;
+  --reader-water: #37b9ed;
+  --water-top: #37b9ed36; --water-middle: #37b9ed36; --water-bottom: #37b9ed36;
+  --r3-local-card: #7ed3f5e0;
+  --r3-rim: linear-gradient(140deg, #fffffff2, #ffffff91 28%, #ffffff29 60%, #ffffff4d);
+  --home-card-ink: #12344b;
 }
 .app[data-material-study][data-theme] .page:has(.budget-home-head) { background: var(--home-sky); }
 .app[data-material-study][data-theme] .cartridge-world {
@@ -3921,12 +3946,12 @@ const materialInteractions = (() => {
   backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
 }
 .app[data-material-study][data-theme] :is(.reader-card-face,.restored-detail-card,.restored-budget-item>.liquid-card) {
-  background: var(--home-hero);
+  background: var(--home-hero), var(--r3-local-card);
   border: 1px solid transparent;
   box-shadow: 0 5px 9px -2px #06232d40, 0 13px 12px -11px #00000057;
   backdrop-filter: blur(2.8px); -webkit-backdrop-filter: blur(2.8px);
 }
-.app[data-material-study][data-theme] .reader-card-face :is(.card-name,.card-more) { color: var(--home-heading); }
+.app[data-material-study][data-theme] .reader-card-face :is(.card-name,.card-more) { color: var(--home-card-ink); }
 .app[data-material-study][data-theme] .reader-card-face .card-period { color: var(--home-hero-meta); }
 .app[data-material-study][data-theme] .reader-card-face .card-value { color: var(--home-hero-number); }
 .app[data-material-study][data-theme] .reader-card-face .card-add {
@@ -3934,7 +3959,7 @@ const materialInteractions = (() => {
   box-shadow: none; backdrop-filter: none;
 }
 .app[data-material-study][data-theme] .cartridge-stack-layer .liquid-card {
-  background: linear-gradient(180deg, #ffffff70, #ffffff0a 28%, #ffffff03);
+  background: var(--r3-local-card);
   border-color: #ffffff1a; box-shadow: none; filter: blur(.8px); opacity: .8;
 }
 .app[data-material-study][data-theme] .contact-extension {
@@ -4026,30 +4051,30 @@ const materialInteractions = (() => {
 .app[data-material-study][data-theme] .loop-dome-fade { background: none; }
 
 /* The review chrome is separate from the product UI. */
-body { background: #edf0ee; color: #223b43; }
+body { background: #f3f8fc; color: #223b43; }
 .review-header { height: 76px; padding: 0 30px; gap: 20px; border-color: #1d465310; }
 .wordmark { color: #173743; }
 .brand-dot { background: #2588a4; }
 .review-label { color: #5f777e; font-size: 13px; margin-left: 20px; }
 .prototype-badge { color: #60777e; }
 .material-toolbar { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
-.material-theme-group { display: inline-flex; gap: 3px; padding: 4px; border: 1px solid #fff9; border-radius: 22px; background: #d8e4e57a; }
+.material-theme-group { display: inline-flex; gap: 3px; padding: 4px; border: 1px solid #fff9; border-radius: 22px; background: #deeff97a; }
 .material-theme-group button { min-width: 61px; min-height: 34px; padding: 6px 14px; border-radius: 18px; color: #4a6873; font-size: 13px; }
 .material-theme-group button[aria-pressed=true] { background: #ffffffb8; color: #173e4d; box-shadow: 0 3px 7px -5px #1237475b, inset 0 1px #fff; }
 .material-compare { color: #215f76; font-size: 13px; text-decoration-thickness: 1px; text-underline-offset: 4px; }
 .review-layout { max-width: 1540px; grid-template-columns: 210px minmax(390px,1fr) 260px; gap: 34px; padding-top: 25px; }
 .review-nav button { color: #54717c; }
-.review-nav button.selected { color: #164d60; background: #ccdee37d; }
+.review-nav button.selected { color: #164d60; background: #c7eafa7d; }
 .review-nav button span { color: #80989f; }
 .eyebrow,.boundary-note { color: #6f878f; }
 .review-controls { color: #58717d; }
 .review-controls button,.review-controls select,.scenario-control select { color: #285b6c; }
 .review-controls button { background: #d4e2e6; }
-.outcome-review-controls { background: #d2e1e553; }
+.outcome-review-controls { background: #d8effb53; }
 .outcome-review-controls button { background: #ffffff73; color: #305d6e; }
 .outcome-review-controls small,.outcome-review-controls p { color: #63808b; }
 .review-sidebar>a,.review-sidebar>button { color: #53727f; }
-.review-sidebar>a { background: #d3e1e670; }
+.review-sidebar>a { background: #d6edfa70; }
 .review-notes { color: #5c7681; }
 .review-notes h1 { color: #223e48; }
 .note-path { border-color: #8db6c5; }
@@ -4057,7 +4082,7 @@ body { background: #edf0ee; color: #223b43; }
 .decision-notes { display: none; }
 .material-page-control { padding: 0 12px; margin: 0 0 22px; }
 .material-page-control label { display: block; font-size: 12px; margin-bottom: 8px; color: #607c86; }
-.material-page-control select { width: 100%; padding: 10px 10px; border-radius: 12px; border: 1px solid #ffffffb8; background: #f3f8f6a8; color: #194c60; font-size: 13px; }
+.material-page-control select { width: 100%; padding: 10px 10px; border-radius: 12px; border: 1px solid #ffffffb8; background: #ffffffc2; color: #194c60; font-size: 13px; }
 .material-review-notes { font-size: 12px; line-height: 1.8; color: #607c86; }
 .material-review-notes strong { color: #254d5c; font-weight: 600; }
 .review-controls label:first-child { display: none; }
@@ -4093,17 +4118,17 @@ body.material-embedded .app { width: 100%!important; height: 100dvh; min-height:
 .app[data-material-study][data-theme] :is(.liquid-card.restored-detail-card,.restored-budget-item>.liquid-card) {
   background: var(--home-hero), var(--r3-local-card);
 }
-.app[data-material-study][data-theme] .restored-detail-card :is(.card-name,.card-more) { color: var(--home-heading); }
+.app[data-material-study][data-theme] .restored-detail-card :is(.card-name,.card-more) { color: var(--home-card-ink); }
 .app[data-material-study][data-theme] .restored-detail-card .card-period { color: var(--home-hero-meta); }
 .app[data-material-study][data-theme] .restored-detail-card .card-value { color: var(--home-hero-number); }
 .app[data-material-study][data-theme] .cartridge-stack-layer :is(.card-top,.card-bottom,.water) { opacity: .12; }
 /* Keep focus controls clear when the library has a bright optical backdrop. */
 .app[data-material-study][data-theme] .budget-library-picker>header button { color: var(--home-heading); }
 
-.app[data-material-study][data-theme] .picker-list input { color: var(--home-heading); background: #ffffff1f; }
-.app[data-material-study][data-theme] .picker-list input::placeholder { color: var(--home-hero-meta); }
+.app[data-material-study][data-theme] .picker-list input { color: var(--ink); background: var(--material-field); }
+.app[data-material-study][data-theme] .picker-list input::placeholder { color: var(--muted); }
 .app[data-material-study][data-theme] .picker-list button { background: var(--home-hero), var(--r3-local-card); color: var(--home-hero-number); }
-.app[data-material-study][data-theme] .picker-list button span { color: var(--home-heading); }
+.app[data-material-study][data-theme] .picker-list button span { color: var(--home-card-ink); }
 
 /* The self-contained study does not ship the older exploration's web pages. */
 .review-sidebar>a, .outcome-review-controls>a { display: none; }
@@ -4120,26 +4145,26 @@ body.material-embedded .app { width: 100%!important; height: 100dvh; min-height:
 
 /* Theme-specific art: recolor original vector fills, keeping shape and relief. */
 .app[data-material-study][data-theme=light] {
-  --icon-accent: #176e85;
-  --model-top: #8bd5e9; --model-shade: #17657c; --model-mid: #287a97;
-  --model-lower: #51b2d4; --model-edge: #b0ecf7;
-  --model-rim-top: #f0feff; --model-rim-mid: #c1f3fb;
-  --model-rim-shade: #387f9c; --model-rim-bottom: #ddf9ff; --model-glint: #b3edf9;
-  --redeem-disabled-surface: linear-gradient(150deg, #e4e8e98c, #a9b4b54a);
+  --icon-accent: #168dc2;
+  --model-top: #a9e2fc; --model-shade: #1678a8; --model-mid: #239acf;
+  --model-lower: #55c6f2; --model-edge: #d1f2ff;
+  --model-rim-top: #f0feff; --model-rim-mid: #c7eeff;
+  --model-rim-shade: #378fb7; --model-rim-bottom: #e0f6ff; --model-glint: #c3ecff;
+  --redeem-disabled-surface: #e4e9edb8;
   --redeem-disabled-ink: #5c7279;
 }
 .app[data-material-study][data-theme=dark] {
-  --icon-accent: #b9eaf6;
-  --model-top: #b7f0ff; --model-shade: #0d4d68; --model-mid: #167c9f;
-  --model-lower: #41bedf; --model-edge: #d1f8ff;
-  --model-rim-top: #f5feff; --model-rim-mid: #a8edff;
-  --model-rim-shade: #226b89; --model-rim-bottom: #d9faff; --model-glint: #cff6ff;
-  --redeem-disabled-surface: linear-gradient(150deg, #c4ccce2b, #66707424);
+  --icon-accent: #70d1ff;
+  --model-top: #b5e8ff; --model-shade: #145a82; --model-mid: #168fc7;
+  --model-lower: #42bdf3; --model-edge: #d2f2ff;
+  --model-rim-top: #f5feff; --model-rim-mid: #b8e9ff;
+  --model-rim-shade: #287fa9; --model-rim-bottom: #d9f4ff; --model-glint: #caeeff;
+  --redeem-disabled-surface: #60707c3b;
   --redeem-disabled-ink: #a9b8bd;
 }
-.app[data-material-study][data-theme] .wish-full-view { --icon-accent: #b9eaf6; }
+.app[data-material-study][data-theme] .wish-full-view { --icon-accent: inherit; }
 .app[data-material-study][data-theme] :is(.preset-art > img, .wish-preset-grid img) {
-  filter: drop-shadow(0 2px 2px var(--wish-drop));
+  filter: drop-shadow(0 1px 1px #153e5a24);
 }
 .app[data-material-study][data-theme] :is(.icon-button, .wish-expand-button, .wish-cover-mini, .wish-view-options button, .wish-layout-switch button) { color: var(--accent); }
 .app[data-material-study][data-theme] .wish-full-view :is(.wish-cover-mini, .wish-expand-button) { color: var(--material-floating-ink); }
