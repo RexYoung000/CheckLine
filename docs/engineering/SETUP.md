@@ -133,7 +133,7 @@ xcodebuild \
 
 - 最低系统版本：iOS 17.0
 - 产品代码与文档的唯一主目录：当前 `Check_Line` 仓库
-- 旧目录 `/Users/rexyoung/Desktop/vibe coding/mac&ios/CheckLine/` 已由 Rex 确认废弃并删除，不再作为备份或文档来源
+- 旧目录 `/Users/rexyoung/Desktop/vibe coding/项目导航/11 创意与产品研究/mac&ios/CheckLine/` 已由 Rex 确认废弃并删除，不再作为备份或文档来源
 - Git 远端继续使用 `https://github.com/RexYoung000/CheckLine.git`
 
 文档入口见 `../README.md`，当前工程结构和未来模块边界见 `ARCHITECTURE.md`。
