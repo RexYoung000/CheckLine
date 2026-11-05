@@ -1,0 +1,1729 @@
+{
+  "createdNodeIds": [
+    "3:2",
+    "3:73",
+    "3:74",
+    "3:75",
+    "3:76",
+    "3:77",
+    "3:78",
+    "3:79",
+    "3:80",
+    "3:81",
+    "3:82",
+    "3:83",
+    "3:84",
+    "3:85",
+    "3:86",
+    "3:87",
+    "3:88",
+    "3:89",
+    "3:90",
+    "3:91",
+    "3:92",
+    "3:93",
+    "3:94",
+    "3:95",
+    "3:96",
+    "3:97",
+    "3:98",
+    "3:99",
+    "3:100",
+    "3:101",
+    "3:102",
+    "3:103",
+    "3:104",
+    "3:105",
+    "3:106",
+    "3:107",
+    "3:108",
+    "3:109",
+    "3:208",
+    "3:206",
+    "3:207",
+    "3:110",
+    "3:111",
+    "3:112",
+    "3:113",
+    "3:114",
+    "3:115",
+    "3:116",
+    "3:117",
+    "3:118",
+    "3:119",
+    "3:120",
+    "3:121",
+    "3:122",
+    "3:123",
+    "3:124",
+    "3:125",
+    "3:126",
+    "3:127",
+    "3:128",
+    "3:129",
+    "3:130",
+    "3:131",
+    "3:132",
+    "3:133",
+    "3:134",
+    "3:135",
+    "3:136",
+    "3:137",
+    "3:138",
+    "3:139",
+    "3:140",
+    "3:141",
+    "3:142",
+    "3:143",
+    "3:144",
+    "3:145",
+    "3:146",
+    "3:147",
+    "3:148",
+    "3:149",
+    "3:150",
+    "3:151",
+    "3:152",
+    "3:153",
+    "3:154",
+    "3:155",
+    "3:156",
+    "3:157",
+    "3:158",
+    "3:159",
+    "3:160",
+    "3:161",
+    "3:162",
+    "3:163",
+    "3:164",
+    "3:165",
+    "3:166",
+    "3:167",
+    "3:168",
+    "3:169",
+    "3:170",
+    "3:171",
+    "3:172",
+    "3:173",
+    "3:174",
+    "3:175",
+    "3:176",
+    "3:177",
+    "3:178",
+    "3:179",
+    "3:180",
+    "3:181",
+    "3:182",
+    "3:183",
+    "3:184",
+    "3:185",
+    "3:186",
+    "3:187",
+    "3:188",
+    "3:189",
+    "3:190",
+    "3:191",
+    "3:192",
+    "3:193",
+    "3:194",
+    "3:195",
+    "3:196",
+    "3:197",
+    "3:198",
+    "3:199",
+    "3:200",
+    "3:201",
+    "3:202",
+    "3:203",
+    "3:204",
+    "3:205",
+    "3:209",
+    "3:210",
+    "3:211",
+    "3:212",
+    "3:213",
+    "3:220",
+    "3:218",
+    "3:219",
+    "3:214",
+    "3:215",
+    "3:216",
+    "3:217",
+    "3:221",
+    "3:222",
+    "3:223",
+    "3:224",
+    "3:323",
+    "3:321",
+    "3:322",
+    "3:225",
+    "3:226",
+    "3:227",
+    "3:228",
+    "3:229",
+    "3:230",
+    "3:231",
+    "3:232",
+    "3:233",
+    "3:234",
+    "3:235",
+    "3:236",
+    "3:237",
+    "3:238",
+    "3:239",
+    "3:240",
+    "3:241",
+    "3:242",
+    "3:243",
+    "3:244",
+    "3:245",
+    "3:246",
+    "3:247",
+    "3:248",
+    "3:249",
+    "3:250",
+    "3:251",
+    "3:252",
+    "3:253",
+    "3:254",
+    "3:255",
+    "3:256",
+    "3:257",
+    "3:258",
+    "3:259",
+    "3:260",
+    "3:261",
+    "3:262",
+    "3:263",
+    "3:264",
+    "3:265",
+    "3:266",
+    "3:267",
+    "3:268",
+    "3:269",
+    "3:270",
+    "3:271",
+    "3:272",
+    "3:273",
+    "3:274",
+    "3:275",
+    "3:276",
+    "3:277",
+    "3:278",
+    "3:279",
+    "3:280",
+    "3:281",
+    "3:282",
+    "3:283",
+    "3:284",
+    "3:285",
+    "3:286",
+    "3:287",
+    "3:288",
+    "3:289",
+    "3:290",
+    "3:291",
+    "3:292",
+    "3:293",
+    "3:294",
+    "3:295",
+    "3:296",
+    "3:297",
+    "3:298",
+    "3:299",
+    "3:300",
+    "3:301",
+    "3:302",
+    "3:303",
+    "3:304",
+    "3:305",
+    "3:306",
+    "3:307",
+    "3:308",
+    "3:309",
+    "3:310",
+    "3:311",
+    "3:312",
+    "3:313",
+    "3:314",
+    "3:315",
+    "3:316",
+    "3:317",
+    "3:318",
+    "3:319",
+    "3:320",
+    "3:324",
+    "3:325",
+    "3:326",
+    "3:327",
+    "3:328",
+    "3:335",
+    "3:333",
+    "3:334",
+    "3:329",
+    "3:330",
+    "3:331",
+    "3:332",
+    "3:336",
+    "3:337",
+    "3:338"
+  ],
+  "mutatedNodeIds": [
+    "0:1"
+  ],
+  "pages": {
+    "screens": "0:1",
+    "components": "3:2"
+  },
+  "variables": {
+    "light/canvas": "VariableID:3:6",
+    "light/ink": "VariableID:3:8",
+    "light/muted": "VariableID:3:10",
+    "light/panel": "VariableID:3:12",
+    "light/border": "VariableID:3:14",
+    "light/accent": "VariableID:3:16",
+    "light/selected": "VariableID:3:18",
+    "light/selectedBorder": "VariableID:3:20",
+    "light/well": "VariableID:3:22",
+    "light/onPrimary": "VariableID:3:24",
+    "light/warning": "VariableID:3:26",
+    "light/danger": "VariableID:3:28",
+    "light/cardInk": "VariableID:3:30",
+    "dark/canvas": "VariableID:3:32",
+    "dark/ink": "VariableID:3:34",
+    "dark/muted": "VariableID:3:36",
+    "dark/panel": "VariableID:3:38",
+    "dark/border": "VariableID:3:40",
+    "dark/accent": "VariableID:3:42",
+    "dark/selected": "VariableID:3:44",
+    "dark/selectedBorder": "VariableID:3:46",
+    "dark/well": "VariableID:3:48",
+    "dark/onPrimary": "VariableID:3:50",
+    "dark/warning": "VariableID:3:52",
+    "dark/danger": "VariableID:3:54",
+    "dark/cardInk": "VariableID:3:56",
+    "space6": "VariableID:3:57",
+    "space8": "VariableID:3:58",
+    "space16": "VariableID:3:59",
+    "space24": "VariableID:3:60",
+    "space32": "VariableID:3:61",
+    "radiusCard": "VariableID:3:62",
+    "radiusField": "VariableID:3:63",
+    "radiusSheet": "VariableID:3:64"
+  },
+  "styles": {
+    "caption": "S:c24c737139811e3d5ec89e7dfe17482dc4f4edac,",
+    "footnote": "S:999273d56df38d8e8546b5ae9341cb4e52381cba,",
+    "body": "S:ea80725785cd1be1c50d8a9bbe25f58df2e124be,",
+    "label": "S:29e487c5c804fc28b8d0dda122c28a0aaaf4973b,",
+    "section": "S:5f5fcdfc94a6296e5f19a30b1daa926b8300aa18,",
+    "title": "S:febeb3a2e909a17c9f716968373e33b5cba3758f,",
+    "amount": "S:155aaba1861e5e8c1c5c1bad60330581f08dafd8,",
+    "large": "S:2494fe41d2be80c11082bb5b0b6575a6f9ebc858,"
+  },
+  "components": {
+    "BudgetCard/light": "3:73",
+    "Xiaoduo/light": "3:78",
+    "Button/Primary/light": "3:79",
+    "Button/Secondary/light": "3:81",
+    "Button/Disabled/light": "3:83",
+    "Field/light": "3:85",
+    "ListRow/light": "3:88",
+    "BudgetCard/dark": "3:91",
+    "Xiaoduo/dark": "3:96",
+    "Button/Primary/dark": "3:97",
+    "Button/Secondary/dark": "3:99",
+    "Button/Disabled/dark": "3:101",
+    "Field/dark": "3:103",
+    "ListRow/dark": "3:106"
+  },
+  "counts": {
+    "components": 14,
+    "semanticVariables": 34,
+    "textStyles": 8,
+    "canvasNodes": 36
+  },
+  "font": "Noto Sans SC",
+  "fileKey": "W9DmbsQnul4IJblT2R185b",
+  "sessionId": "b3974b6d-6df4-472b-b7c9-cc8c610cd9ee",
+  "screens": {
+    "light/budgets": {
+      "id": "4:127",
+      "title": "budgets"
+    },
+    "light/wishes": {
+      "id": "4:351",
+      "title": "wishes"
+    },
+    "dark/budgets": {
+      "id": "4:426",
+      "title": "budgets"
+    },
+    "dark/wishes": {
+      "id": "4:650",
+      "title": "wishes"
+    },
+    "light/budget-detail": {
+      "id": "8:264",
+      "title": "budget-detail"
+    },
+    "dark/budget-detail": {
+      "id": "8:628",
+      "title": "budget-detail"
+    },
+    "light/records": {
+      "id": "8:992",
+      "title": "records"
+    },
+    "dark/records": {
+      "id": "8:1253",
+      "title": "records"
+    },
+    "light/expense-detail": {
+      "id": "8:1514",
+      "title": "expense-detail"
+    },
+    "dark/expense-detail": {
+      "id": "8:1768",
+      "title": "expense-detail"
+    },
+    "light/calendar": {
+      "id": "8:2022",
+      "title": "calendar"
+    },
+    "dark/calendar": {
+      "id": "8:2344",
+      "title": "calendar"
+    },
+    "light/history-review": {
+      "id": "8:2666",
+      "title": "history-review"
+    },
+    "dark/history-review": {
+      "id": "8:2907",
+      "title": "history-review"
+    },
+    "light/budget-info": {
+      "id": "8:3148",
+      "title": "budget-info"
+    },
+    "dark/budget-info": {
+      "id": "8:3398",
+      "title": "budget-info"
+    },
+    "light/records-layer": {
+      "id": "8:3648",
+      "title": "records-layer"
+    },
+    "dark/records-layer": {
+      "id": "8:3910",
+      "title": "records-layer"
+    },
+    "light/library": {
+      "id": "8:4172",
+      "title": "library"
+    },
+    "dark/library": {
+      "id": "8:4525",
+      "title": "library"
+    },
+    "light/library-sphere": {
+      "id": "8:4878",
+      "title": "library-sphere"
+    },
+    "dark/library-sphere": {
+      "id": "8:5231",
+      "title": "library-sphere"
+    },
+    "light/wish-front": {
+      "id": "8:5584",
+      "title": "wish-front"
+    },
+    "dark/wish-front": {
+      "id": "8:5673",
+      "title": "wish-front"
+    },
+    "light/wish-expanded": {
+      "id": "8:5762",
+      "title": "wish-expanded"
+    },
+    "dark/wish-expanded": {
+      "id": "8:5857",
+      "title": "wish-expanded"
+    },
+    "light/collection": {
+      "id": "8:5952",
+      "title": "collection"
+    },
+    "dark/collection": {
+      "id": "8:6012",
+      "title": "collection"
+    }
+  },
+  "links": [
+    {
+      "from": "4:136",
+      "target": "light/create-budget",
+      "event": "ON_CLICK",
+      "owner": "light/budgets"
+    },
+    {
+      "from": "4:139",
+      "target": "light/settings",
+      "event": "ON_CLICK",
+      "owner": "light/budgets"
+    },
+    {
+      "from": "4:143",
+      "target": "light/budget-detail",
+      "event": "ON_CLICK",
+      "owner": "light/budgets"
+    },
+    {
+      "from": "4:251",
+      "target": "light/record",
+      "event": "ON_CLICK",
+      "owner": "light/budgets"
+    },
+    {
+      "from": "4:256",
+      "target": "light/library",
+      "event": "ON_CLICK",
+      "owner": "light/budgets"
+    },
+    {
+      "from": "4:259",
+      "target": "light/records-layer",
+      "event": "ON_CLICK",
+      "owner": "light/budgets"
+    },
+    {
+      "from": "4:263",
+      "target": "light/records",
+      "event": "ON_CLICK",
+      "owner": "light/budgets"
+    },
+    {
+      "from": "4:276",
+      "target": "light/calendar",
+      "event": "ON_CLICK",
+      "owner": "light/budgets"
+    },
+    {
+      "from": "4:308",
+      "target": "light/records",
+      "event": "ON_CLICK",
+      "owner": "light/budgets"
+    },
+    {
+      "from": "4:312",
+      "target": "light/records-layer",
+      "event": "ON_CLICK",
+      "owner": "light/budgets"
+    },
+    {
+      "from": "4:314",
+      "target": "light/records",
+      "event": "ON_CLICK",
+      "owner": "light/budgets"
+    },
+    {
+      "from": "4:319",
+      "target": "light/records",
+      "event": "ON_CLICK",
+      "owner": "light/budgets"
+    },
+    {
+      "from": "4:324",
+      "target": "light/expense-detail",
+      "event": "ON_CLICK",
+      "owner": "light/budgets"
+    },
+    {
+      "from": "4:335",
+      "target": "light/budgets",
+      "event": "ON_CLICK",
+      "owner": "light/budgets"
+    },
+    {
+      "from": "4:336",
+      "target": "light/wishes",
+      "event": "ON_CLICK",
+      "owner": "light/budgets"
+    },
+    {
+      "from": "4:337",
+      "target": "light/agent",
+      "event": "ON_CLICK",
+      "owner": "light/budgets"
+    },
+    {
+      "from": "4:359",
+      "target": "light/settings",
+      "event": "ON_CLICK",
+      "owner": "light/wishes"
+    },
+    {
+      "from": "4:363",
+      "target": "light/create-wish",
+      "event": "ON_CLICK",
+      "owner": "light/wishes"
+    },
+    {
+      "from": "4:366",
+      "target": "light/wishes-list",
+      "event": "ON_CLICK",
+      "owner": "light/wishes"
+    },
+    {
+      "from": "4:369",
+      "target": "light/wallet",
+      "event": "ON_CLICK",
+      "owner": "light/wishes"
+    },
+    {
+      "from": "4:373",
+      "target": "light/wishes",
+      "event": "ON_CLICK",
+      "owner": "light/wishes"
+    },
+    {
+      "from": "4:375",
+      "target": "light/collection",
+      "event": "ON_CLICK",
+      "owner": "light/wishes"
+    },
+    {
+      "from": "4:377",
+      "target": "light/wishes-list",
+      "event": "ON_CLICK",
+      "owner": "light/wishes"
+    },
+    {
+      "from": "4:380",
+      "target": "light/wish-front",
+      "event": "ON_CLICK",
+      "owner": "light/wishes"
+    },
+    {
+      "from": "4:388",
+      "target": "light/wish-insufficient",
+      "event": "ON_CLICK",
+      "owner": "light/wishes"
+    },
+    {
+      "from": "4:396",
+      "target": "light/wish-front",
+      "event": "ON_CLICK",
+      "owner": "light/wishes"
+    },
+    {
+      "from": "4:410",
+      "target": "light/budgets",
+      "event": "ON_CLICK",
+      "owner": "light/wishes"
+    },
+    {
+      "from": "4:411",
+      "target": "light/wishes",
+      "event": "ON_CLICK",
+      "owner": "light/wishes"
+    },
+    {
+      "from": "4:412",
+      "target": "light/agent",
+      "event": "ON_CLICK",
+      "owner": "light/wishes"
+    },
+    {
+      "from": "4:435",
+      "target": "dark/create-budget",
+      "event": "ON_CLICK",
+      "owner": "dark/budgets"
+    },
+    {
+      "from": "4:438",
+      "target": "dark/settings",
+      "event": "ON_CLICK",
+      "owner": "dark/budgets"
+    },
+    {
+      "from": "4:442",
+      "target": "dark/budget-detail",
+      "event": "ON_CLICK",
+      "owner": "dark/budgets"
+    },
+    {
+      "from": "4:550",
+      "target": "dark/record",
+      "event": "ON_CLICK",
+      "owner": "dark/budgets"
+    },
+    {
+      "from": "4:555",
+      "target": "dark/library",
+      "event": "ON_CLICK",
+      "owner": "dark/budgets"
+    },
+    {
+      "from": "4:558",
+      "target": "dark/records-layer",
+      "event": "ON_CLICK",
+      "owner": "dark/budgets"
+    },
+    {
+      "from": "4:562",
+      "target": "dark/records",
+      "event": "ON_CLICK",
+      "owner": "dark/budgets"
+    },
+    {
+      "from": "4:575",
+      "target": "dark/calendar",
+      "event": "ON_CLICK",
+      "owner": "dark/budgets"
+    },
+    {
+      "from": "4:607",
+      "target": "dark/records",
+      "event": "ON_CLICK",
+      "owner": "dark/budgets"
+    },
+    {
+      "from": "4:611",
+      "target": "dark/records-layer",
+      "event": "ON_CLICK",
+      "owner": "dark/budgets"
+    },
+    {
+      "from": "4:613",
+      "target": "dark/records",
+      "event": "ON_CLICK",
+      "owner": "dark/budgets"
+    },
+    {
+      "from": "4:618",
+      "target": "dark/records",
+      "event": "ON_CLICK",
+      "owner": "dark/budgets"
+    },
+    {
+      "from": "4:623",
+      "target": "dark/expense-detail",
+      "event": "ON_CLICK",
+      "owner": "dark/budgets"
+    },
+    {
+      "from": "4:634",
+      "target": "dark/budgets",
+      "event": "ON_CLICK",
+      "owner": "dark/budgets"
+    },
+    {
+      "from": "4:635",
+      "target": "dark/wishes",
+      "event": "ON_CLICK",
+      "owner": "dark/budgets"
+    },
+    {
+      "from": "4:636",
+      "target": "dark/agent",
+      "event": "ON_CLICK",
+      "owner": "dark/budgets"
+    },
+    {
+      "from": "4:658",
+      "target": "dark/settings",
+      "event": "ON_CLICK",
+      "owner": "dark/wishes"
+    },
+    {
+      "from": "4:662",
+      "target": "dark/create-wish",
+      "event": "ON_CLICK",
+      "owner": "dark/wishes"
+    },
+    {
+      "from": "4:665",
+      "target": "dark/wishes-list",
+      "event": "ON_CLICK",
+      "owner": "dark/wishes"
+    },
+    {
+      "from": "4:668",
+      "target": "dark/wallet",
+      "event": "ON_CLICK",
+      "owner": "dark/wishes"
+    },
+    {
+      "from": "4:672",
+      "target": "dark/wishes",
+      "event": "ON_CLICK",
+      "owner": "dark/wishes"
+    },
+    {
+      "from": "4:674",
+      "target": "dark/collection",
+      "event": "ON_CLICK",
+      "owner": "dark/wishes"
+    },
+    {
+      "from": "4:676",
+      "target": "dark/wishes-list",
+      "event": "ON_CLICK",
+      "owner": "dark/wishes"
+    },
+    {
+      "from": "4:679",
+      "target": "dark/wish-front",
+      "event": "ON_CLICK",
+      "owner": "dark/wishes"
+    },
+    {
+      "from": "4:687",
+      "target": "dark/wish-insufficient",
+      "event": "ON_CLICK",
+      "owner": "dark/wishes"
+    },
+    {
+      "from": "4:695",
+      "target": "dark/wish-front",
+      "event": "ON_CLICK",
+      "owner": "dark/wishes"
+    },
+    {
+      "from": "4:709",
+      "target": "dark/budgets",
+      "event": "ON_CLICK",
+      "owner": "dark/wishes"
+    },
+    {
+      "from": "4:710",
+      "target": "dark/wishes",
+      "event": "ON_CLICK",
+      "owner": "dark/wishes"
+    },
+    {
+      "from": "4:711",
+      "target": "dark/agent",
+      "event": "ON_CLICK",
+      "owner": "dark/wishes"
+    },
+    {
+      "from": "8:492",
+      "target": "light/budgets",
+      "event": "ON_CLICK",
+      "owner": "light/budget-detail"
+    },
+    {
+      "from": "8:606",
+      "target": "light/limit-input",
+      "event": "ON_CLICK",
+      "owner": "light/budget-detail"
+    },
+    {
+      "from": "8:609",
+      "target": "light/records",
+      "event": "ON_CLICK",
+      "owner": "light/budget-detail"
+    },
+    {
+      "from": "8:612",
+      "target": "light/record",
+      "event": "ON_CLICK",
+      "owner": "light/budget-detail"
+    },
+    {
+      "from": "8:614",
+      "target": "light/pending-review",
+      "event": "ON_CLICK",
+      "owner": "light/budget-detail"
+    },
+    {
+      "from": "8:616",
+      "target": "light/records",
+      "event": "ON_CLICK",
+      "owner": "light/budget-detail"
+    },
+    {
+      "from": "8:619",
+      "target": "light/calendar",
+      "event": "ON_CLICK",
+      "owner": "light/budget-detail"
+    },
+    {
+      "from": "8:622",
+      "target": "light/history-review",
+      "event": "ON_CLICK",
+      "owner": "light/budget-detail"
+    },
+    {
+      "from": "8:625",
+      "target": "light/budget-info",
+      "event": "ON_CLICK",
+      "owner": "light/budget-detail"
+    },
+    {
+      "from": "8:856",
+      "target": "dark/budgets",
+      "event": "ON_CLICK",
+      "owner": "dark/budget-detail"
+    },
+    {
+      "from": "8:970",
+      "target": "dark/limit-input",
+      "event": "ON_CLICK",
+      "owner": "dark/budget-detail"
+    },
+    {
+      "from": "8:973",
+      "target": "dark/records",
+      "event": "ON_CLICK",
+      "owner": "dark/budget-detail"
+    },
+    {
+      "from": "8:976",
+      "target": "dark/record",
+      "event": "ON_CLICK",
+      "owner": "dark/budget-detail"
+    },
+    {
+      "from": "8:978",
+      "target": "dark/pending-review",
+      "event": "ON_CLICK",
+      "owner": "dark/budget-detail"
+    },
+    {
+      "from": "8:980",
+      "target": "dark/records",
+      "event": "ON_CLICK",
+      "owner": "dark/budget-detail"
+    },
+    {
+      "from": "8:983",
+      "target": "dark/calendar",
+      "event": "ON_CLICK",
+      "owner": "dark/budget-detail"
+    },
+    {
+      "from": "8:986",
+      "target": "dark/history-review",
+      "event": "ON_CLICK",
+      "owner": "dark/budget-detail"
+    },
+    {
+      "from": "8:989",
+      "target": "dark/budget-info",
+      "event": "ON_CLICK",
+      "owner": "dark/budget-detail"
+    },
+    {
+      "from": "8:1220",
+      "target": "light/budgets",
+      "event": "ON_CLICK",
+      "owner": "light/records"
+    },
+    {
+      "from": "8:1226",
+      "target": "light/records",
+      "event": "ON_CLICK",
+      "owner": "light/records"
+    },
+    {
+      "from": "8:1228",
+      "target": "light/pending-review",
+      "event": "ON_CLICK",
+      "owner": "light/records"
+    },
+    {
+      "from": "8:1230",
+      "target": "light/unbudgeted-empty",
+      "event": "ON_CLICK",
+      "owner": "light/records"
+    },
+    {
+      "from": "8:1233",
+      "target": "light/expense-detail",
+      "event": "ON_CLICK",
+      "owner": "light/records"
+    },
+    {
+      "from": "8:1237",
+      "target": "light/expense-detail",
+      "event": "ON_CLICK",
+      "owner": "light/records"
+    },
+    {
+      "from": "8:1240",
+      "target": "light/expense-detail",
+      "event": "ON_CLICK",
+      "owner": "light/records"
+    },
+    {
+      "from": "8:1244",
+      "target": "light/expense-detail",
+      "event": "ON_CLICK",
+      "owner": "light/records"
+    },
+    {
+      "from": "8:1247",
+      "target": "light/expense-detail",
+      "event": "ON_CLICK",
+      "owner": "light/records"
+    },
+    {
+      "from": "8:1251",
+      "target": "light/record",
+      "event": "ON_CLICK",
+      "owner": "light/records"
+    },
+    {
+      "from": "8:1481",
+      "target": "dark/budgets",
+      "event": "ON_CLICK",
+      "owner": "dark/records"
+    },
+    {
+      "from": "8:1487",
+      "target": "dark/records",
+      "event": "ON_CLICK",
+      "owner": "dark/records"
+    },
+    {
+      "from": "8:1489",
+      "target": "dark/pending-review",
+      "event": "ON_CLICK",
+      "owner": "dark/records"
+    },
+    {
+      "from": "8:1491",
+      "target": "dark/unbudgeted-empty",
+      "event": "ON_CLICK",
+      "owner": "dark/records"
+    },
+    {
+      "from": "8:1494",
+      "target": "dark/expense-detail",
+      "event": "ON_CLICK",
+      "owner": "dark/records"
+    },
+    {
+      "from": "8:1498",
+      "target": "dark/expense-detail",
+      "event": "ON_CLICK",
+      "owner": "dark/records"
+    },
+    {
+      "from": "8:1501",
+      "target": "dark/expense-detail",
+      "event": "ON_CLICK",
+      "owner": "dark/records"
+    },
+    {
+      "from": "8:1505",
+      "target": "dark/expense-detail",
+      "event": "ON_CLICK",
+      "owner": "dark/records"
+    },
+    {
+      "from": "8:1508",
+      "target": "dark/expense-detail",
+      "event": "ON_CLICK",
+      "owner": "dark/records"
+    },
+    {
+      "from": "8:1512",
+      "target": "dark/record",
+      "event": "ON_CLICK",
+      "owner": "dark/records"
+    },
+    {
+      "from": "8:1742",
+      "target": "light/budgets",
+      "event": "ON_CLICK",
+      "owner": "light/expense-detail"
+    },
+    {
+      "from": "8:1762",
+      "target": "light/pending-resolved",
+      "event": "ON_CLICK",
+      "owner": "light/expense-detail"
+    },
+    {
+      "from": "8:1764",
+      "target": "light/record",
+      "event": "ON_CLICK",
+      "owner": "light/expense-detail"
+    },
+    {
+      "from": "8:1766",
+      "target": "light/delete-review",
+      "event": "ON_CLICK",
+      "owner": "light/expense-detail"
+    },
+    {
+      "from": "8:1996",
+      "target": "dark/budgets",
+      "event": "ON_CLICK",
+      "owner": "dark/expense-detail"
+    },
+    {
+      "from": "8:2016",
+      "target": "dark/pending-resolved",
+      "event": "ON_CLICK",
+      "owner": "dark/expense-detail"
+    },
+    {
+      "from": "8:2018",
+      "target": "dark/record",
+      "event": "ON_CLICK",
+      "owner": "dark/expense-detail"
+    },
+    {
+      "from": "8:2020",
+      "target": "dark/delete-review",
+      "event": "ON_CLICK",
+      "owner": "dark/expense-detail"
+    },
+    {
+      "from": "8:2250",
+      "target": "light/budgets",
+      "event": "ON_CLICK",
+      "owner": "light/calendar"
+    },
+    {
+      "from": "8:2337",
+      "target": "light/expense-detail",
+      "event": "ON_CLICK",
+      "owner": "light/calendar"
+    },
+    {
+      "from": "8:2340",
+      "target": "light/expense-detail",
+      "event": "ON_CLICK",
+      "owner": "light/calendar"
+    },
+    {
+      "from": "8:2572",
+      "target": "dark/budgets",
+      "event": "ON_CLICK",
+      "owner": "dark/calendar"
+    },
+    {
+      "from": "8:2659",
+      "target": "dark/expense-detail",
+      "event": "ON_CLICK",
+      "owner": "dark/calendar"
+    },
+    {
+      "from": "8:2662",
+      "target": "dark/expense-detail",
+      "event": "ON_CLICK",
+      "owner": "dark/calendar"
+    },
+    {
+      "from": "8:2894",
+      "target": "light/budgets",
+      "event": "ON_CLICK",
+      "owner": "light/history-review"
+    },
+    {
+      "from": "8:2900",
+      "target": "light/history-detail",
+      "event": "ON_CLICK",
+      "owner": "light/history-review"
+    },
+    {
+      "from": "8:2903",
+      "target": "light/history-detail",
+      "event": "ON_CLICK",
+      "owner": "light/history-review"
+    },
+    {
+      "from": "8:3135",
+      "target": "dark/budgets",
+      "event": "ON_CLICK",
+      "owner": "dark/history-review"
+    },
+    {
+      "from": "8:3141",
+      "target": "dark/history-detail",
+      "event": "ON_CLICK",
+      "owner": "dark/history-review"
+    },
+    {
+      "from": "8:3144",
+      "target": "dark/history-detail",
+      "event": "ON_CLICK",
+      "owner": "dark/history-review"
+    },
+    {
+      "from": "8:3376",
+      "target": "light/budgets",
+      "event": "ON_CLICK",
+      "owner": "light/budget-info"
+    },
+    {
+      "from": "8:3390",
+      "target": "light/limit-input",
+      "event": "ON_CLICK",
+      "owner": "light/budget-info"
+    },
+    {
+      "from": "8:3394",
+      "target": "light/limit-input",
+      "event": "ON_CLICK",
+      "owner": "light/budget-info"
+    },
+    {
+      "from": "8:3396",
+      "target": "light/delete-review",
+      "event": "ON_CLICK",
+      "owner": "light/budget-info"
+    },
+    {
+      "from": "8:3626",
+      "target": "dark/budgets",
+      "event": "ON_CLICK",
+      "owner": "dark/budget-info"
+    },
+    {
+      "from": "8:3640",
+      "target": "dark/limit-input",
+      "event": "ON_CLICK",
+      "owner": "dark/budget-info"
+    },
+    {
+      "from": "8:3644",
+      "target": "dark/limit-input",
+      "event": "ON_CLICK",
+      "owner": "dark/budget-info"
+    },
+    {
+      "from": "8:3646",
+      "target": "dark/delete-review",
+      "event": "ON_CLICK",
+      "owner": "dark/budget-info"
+    },
+    {
+      "from": "8:3876",
+      "target": "light/budgets",
+      "event": "ON_CLICK",
+      "owner": "light/records-layer"
+    },
+    {
+      "from": "8:3882",
+      "target": "light/records",
+      "event": "ON_CLICK",
+      "owner": "light/records-layer"
+    },
+    {
+      "from": "8:3884",
+      "target": "light/pending-review",
+      "event": "ON_CLICK",
+      "owner": "light/records-layer"
+    },
+    {
+      "from": "8:3886",
+      "target": "light/unbudgeted-empty",
+      "event": "ON_CLICK",
+      "owner": "light/records-layer"
+    },
+    {
+      "from": "8:3890",
+      "target": "light/expense-detail",
+      "event": "ON_CLICK",
+      "owner": "light/records-layer"
+    },
+    {
+      "from": "8:3894",
+      "target": "light/expense-detail",
+      "event": "ON_CLICK",
+      "owner": "light/records-layer"
+    },
+    {
+      "from": "8:3897",
+      "target": "light/expense-detail",
+      "event": "ON_CLICK",
+      "owner": "light/records-layer"
+    },
+    {
+      "from": "8:3901",
+      "target": "light/expense-detail",
+      "event": "ON_CLICK",
+      "owner": "light/records-layer"
+    },
+    {
+      "from": "8:3904",
+      "target": "light/expense-detail",
+      "event": "ON_CLICK",
+      "owner": "light/records-layer"
+    },
+    {
+      "from": "8:3908",
+      "target": "light/record",
+      "event": "ON_CLICK",
+      "owner": "light/records-layer"
+    },
+    {
+      "from": "8:4138",
+      "target": "dark/budgets",
+      "event": "ON_CLICK",
+      "owner": "dark/records-layer"
+    },
+    {
+      "from": "8:4144",
+      "target": "dark/records",
+      "event": "ON_CLICK",
+      "owner": "dark/records-layer"
+    },
+    {
+      "from": "8:4146",
+      "target": "dark/pending-review",
+      "event": "ON_CLICK",
+      "owner": "dark/records-layer"
+    },
+    {
+      "from": "8:4148",
+      "target": "dark/unbudgeted-empty",
+      "event": "ON_CLICK",
+      "owner": "dark/records-layer"
+    },
+    {
+      "from": "8:4152",
+      "target": "dark/expense-detail",
+      "event": "ON_CLICK",
+      "owner": "dark/records-layer"
+    },
+    {
+      "from": "8:4156",
+      "target": "dark/expense-detail",
+      "event": "ON_CLICK",
+      "owner": "dark/records-layer"
+    },
+    {
+      "from": "8:4159",
+      "target": "dark/expense-detail",
+      "event": "ON_CLICK",
+      "owner": "dark/records-layer"
+    },
+    {
+      "from": "8:4163",
+      "target": "dark/expense-detail",
+      "event": "ON_CLICK",
+      "owner": "dark/records-layer"
+    },
+    {
+      "from": "8:4166",
+      "target": "dark/expense-detail",
+      "event": "ON_CLICK",
+      "owner": "dark/records-layer"
+    },
+    {
+      "from": "8:4170",
+      "target": "dark/record",
+      "event": "ON_CLICK",
+      "owner": "dark/records-layer"
+    },
+    {
+      "from": "8:4181",
+      "target": "light/budgets",
+      "event": "ON_CLICK",
+      "owner": "light/library"
+    },
+    {
+      "from": "8:4185",
+      "target": "light/budgets",
+      "event": "ON_CLICK",
+      "owner": "light/library"
+    },
+    {
+      "from": "8:4193",
+      "target": "light/library",
+      "event": "ON_CLICK",
+      "owner": "light/library"
+    },
+    {
+      "from": "8:4195",
+      "target": "light/library-sphere",
+      "event": "ON_CLICK",
+      "owner": "light/library"
+    },
+    {
+      "from": "8:4197",
+      "target": "light/budget-detail",
+      "event": "ON_CLICK",
+      "owner": "light/library"
+    },
+    {
+      "from": "8:4305",
+      "target": "light/budget-detail",
+      "event": "ON_CLICK",
+      "owner": "light/library"
+    },
+    {
+      "from": "8:4413",
+      "target": "light/budget-detail",
+      "event": "ON_CLICK",
+      "owner": "light/library"
+    },
+    {
+      "from": "8:4523",
+      "target": "light/budgets",
+      "event": "ON_CLICK",
+      "owner": "light/library"
+    },
+    {
+      "from": "8:4534",
+      "target": "dark/budgets",
+      "event": "ON_CLICK",
+      "owner": "dark/library"
+    },
+    {
+      "from": "8:4538",
+      "target": "dark/budgets",
+      "event": "ON_CLICK",
+      "owner": "dark/library"
+    },
+    {
+      "from": "8:4546",
+      "target": "dark/library",
+      "event": "ON_CLICK",
+      "owner": "dark/library"
+    },
+    {
+      "from": "8:4548",
+      "target": "dark/library-sphere",
+      "event": "ON_CLICK",
+      "owner": "dark/library"
+    },
+    {
+      "from": "8:4550",
+      "target": "dark/budget-detail",
+      "event": "ON_CLICK",
+      "owner": "dark/library"
+    },
+    {
+      "from": "8:4658",
+      "target": "dark/budget-detail",
+      "event": "ON_CLICK",
+      "owner": "dark/library"
+    },
+    {
+      "from": "8:4766",
+      "target": "dark/budget-detail",
+      "event": "ON_CLICK",
+      "owner": "dark/library"
+    },
+    {
+      "from": "8:4876",
+      "target": "dark/budgets",
+      "event": "ON_CLICK",
+      "owner": "dark/library"
+    },
+    {
+      "from": "8:4887",
+      "target": "light/budgets",
+      "event": "ON_CLICK",
+      "owner": "light/library-sphere"
+    },
+    {
+      "from": "8:4891",
+      "target": "light/budgets",
+      "event": "ON_CLICK",
+      "owner": "light/library-sphere"
+    },
+    {
+      "from": "8:4899",
+      "target": "light/library",
+      "event": "ON_CLICK",
+      "owner": "light/library-sphere"
+    },
+    {
+      "from": "8:4901",
+      "target": "light/library-sphere",
+      "event": "ON_CLICK",
+      "owner": "light/library-sphere"
+    },
+    {
+      "from": "8:4903",
+      "target": "light/budget-detail",
+      "event": "ON_CLICK",
+      "owner": "light/library-sphere"
+    },
+    {
+      "from": "8:5011",
+      "target": "light/budget-detail",
+      "event": "ON_CLICK",
+      "owner": "light/library-sphere"
+    },
+    {
+      "from": "8:5119",
+      "target": "light/budget-detail",
+      "event": "ON_CLICK",
+      "owner": "light/library-sphere"
+    },
+    {
+      "from": "8:5229",
+      "target": "light/budgets",
+      "event": "ON_CLICK",
+      "owner": "light/library-sphere"
+    },
+    {
+      "from": "8:5240",
+      "target": "dark/budgets",
+      "event": "ON_CLICK",
+      "owner": "dark/library-sphere"
+    },
+    {
+      "from": "8:5244",
+      "target": "dark/budgets",
+      "event": "ON_CLICK",
+      "owner": "dark/library-sphere"
+    },
+    {
+      "from": "8:5252",
+      "target": "dark/library",
+      "event": "ON_CLICK",
+      "owner": "dark/library-sphere"
+    },
+    {
+      "from": "8:5254",
+      "target": "dark/library-sphere",
+      "event": "ON_CLICK",
+      "owner": "dark/library-sphere"
+    },
+    {
+      "from": "8:5256",
+      "target": "dark/budget-detail",
+      "event": "ON_CLICK",
+      "owner": "dark/library-sphere"
+    },
+    {
+      "from": "8:5364",
+      "target": "dark/budget-detail",
+      "event": "ON_CLICK",
+      "owner": "dark/library-sphere"
+    },
+    {
+      "from": "8:5472",
+      "target": "dark/budget-detail",
+      "event": "ON_CLICK",
+      "owner": "dark/library-sphere"
+    },
+    {
+      "from": "8:5582",
+      "target": "dark/budgets",
+      "event": "ON_CLICK",
+      "owner": "dark/library-sphere"
+    },
+    {
+      "from": "8:5660",
+      "target": "light/wishes",
+      "event": "ON_CLICK",
+      "owner": "light/wish-front"
+    },
+    {
+      "from": "8:5671",
+      "target": "light/wish-expanded",
+      "event": "ON_CLICK",
+      "owner": "light/wish-front"
+    },
+    {
+      "from": "8:5749",
+      "target": "dark/wishes",
+      "event": "ON_CLICK",
+      "owner": "dark/wish-front"
+    },
+    {
+      "from": "8:5760",
+      "target": "dark/wish-expanded",
+      "event": "ON_CLICK",
+      "owner": "dark/wish-front"
+    },
+    {
+      "from": "8:5838",
+      "target": "light/wishes",
+      "event": "ON_CLICK",
+      "owner": "light/wish-expanded"
+    },
+    {
+      "from": "8:5853",
+      "target": "light/redemption",
+      "event": "ON_CLICK",
+      "owner": "light/wish-expanded"
+    },
+    {
+      "from": "8:5855",
+      "target": "light/wish-front",
+      "event": "ON_CLICK",
+      "owner": "light/wish-expanded"
+    },
+    {
+      "from": "8:5933",
+      "target": "dark/wishes",
+      "event": "ON_CLICK",
+      "owner": "dark/wish-expanded"
+    },
+    {
+      "from": "8:5948",
+      "target": "dark/redemption",
+      "event": "ON_CLICK",
+      "owner": "dark/wish-expanded"
+    },
+    {
+      "from": "8:5950",
+      "target": "dark/wish-front",
+      "event": "ON_CLICK",
+      "owner": "dark/wish-expanded"
+    },
+    {
+      "from": "8:5960",
+      "target": "light/settings",
+      "event": "ON_CLICK",
+      "owner": "light/collection"
+    },
+    {
+      "from": "8:5964",
+      "target": "light/create-wish",
+      "event": "ON_CLICK",
+      "owner": "light/collection"
+    },
+    {
+      "from": "8:5967",
+      "target": "light/wishes-list",
+      "event": "ON_CLICK",
+      "owner": "light/collection"
+    },
+    {
+      "from": "8:5970",
+      "target": "light/wallet",
+      "event": "ON_CLICK",
+      "owner": "light/collection"
+    },
+    {
+      "from": "8:5974",
+      "target": "light/wishes",
+      "event": "ON_CLICK",
+      "owner": "light/collection"
+    },
+    {
+      "from": "8:5976",
+      "target": "light/collection",
+      "event": "ON_CLICK",
+      "owner": "light/collection"
+    },
+    {
+      "from": "8:5978",
+      "target": "light/wishes-list",
+      "event": "ON_CLICK",
+      "owner": "light/collection"
+    },
+    {
+      "from": "8:5981",
+      "target": "light/collection-back",
+      "event": "ON_CLICK",
+      "owner": "light/collection"
+    },
+    {
+      "from": "8:5996",
+      "target": "light/budgets",
+      "event": "ON_CLICK",
+      "owner": "light/collection"
+    },
+    {
+      "from": "8:5997",
+      "target": "light/wishes",
+      "event": "ON_CLICK",
+      "owner": "light/collection"
+    },
+    {
+      "from": "8:5998",
+      "target": "light/agent",
+      "event": "ON_CLICK",
+      "owner": "light/collection"
+    },
+    {
+      "from": "8:6020",
+      "target": "dark/settings",
+      "event": "ON_CLICK",
+      "owner": "dark/collection"
+    },
+    {
+      "from": "8:6024",
+      "target": "dark/create-wish",
+      "event": "ON_CLICK",
+      "owner": "dark/collection"
+    },
+    {
+      "from": "8:6027",
+      "target": "dark/wishes-list",
+      "event": "ON_CLICK",
+      "owner": "dark/collection"
+    },
+    {
+      "from": "8:6030",
+      "target": "dark/wallet",
+      "event": "ON_CLICK",
+      "owner": "dark/collection"
+    },
+    {
+      "from": "8:6034",
+      "target": "dark/wishes",
+      "event": "ON_CLICK",
+      "owner": "dark/collection"
+    },
+    {
+      "from": "8:6036",
+      "target": "dark/collection",
+      "event": "ON_CLICK",
+      "owner": "dark/collection"
+    },
+    {
+      "from": "8:6038",
+      "target": "dark/wishes-list",
+      "event": "ON_CLICK",
+      "owner": "dark/collection"
+    },
+    {
+      "from": "8:6041",
+      "target": "dark/collection-back",
+      "event": "ON_CLICK",
+      "owner": "dark/collection"
+    },
+    {
+      "from": "8:6056",
+      "target": "dark/budgets",
+      "event": "ON_CLICK",
+      "owner": "dark/collection"
+    },
+    {
+      "from": "8:6057",
+      "target": "dark/wishes",
+      "event": "ON_CLICK",
+      "owner": "dark/collection"
+    },
+    {
+      "from": "8:6058",
+      "target": "dark/agent",
+      "event": "ON_CLICK",
+      "owner": "dark/collection"
+    }
+  ],
+  "status": "native-layers-partial-code-prototype-imported",
+  "unwired": true,
+  "codePrototype": {
+    "nodeId": "9:3637",
+    "status": "imported",
+    "localTested": true,
+    "onlinePreviewVerified": false,
+    "reason": "EgoLite browser is signed out; Present opens Figma sign-up dialog",
+    "screens": 158,
+    "viewTypes": 79
+  },
+  "pendingNativeUpdates": [
+    "Complete remaining pages and connect reactions",
+    "Sync updated wish back simplicity and dark collection contrast",
+    "Add distinct book purchase detail and settlement backdrop status"
+  ]
+}

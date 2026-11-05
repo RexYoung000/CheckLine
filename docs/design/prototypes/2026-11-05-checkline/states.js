@@ -1,0 +1,1758 @@
+window.EXTRA_STATES = [
+  {
+    "key": "first-budget-empty",
+    "title": "第一张预算",
+    "eyebrow": "还没有预算卡",
+    "headline": "先给在意的支出划条线",
+    "body": "日常吃饭，或下一次旅行，都可以从一张预算卡开始。",
+    "rows": [
+      {
+        "label": "你来决定",
+        "value": "用途、额度和时间"
+      }
+    ],
+    "primary": "创建预算卡",
+    "secondary": "请小朵帮忙",
+    "source": "PRODUCT.md:223–237；DESIGN.md:529；PRD.md:128–131",
+    "note": "独立的首次使用空账本样例，不与钱包860的常规样例并存。心愿可稍后添加，不展示数据来源配置引导。此状态表现既有空态契约。",
+    "links": [
+      "create-budget",
+      "agent"
+    ],
+    "primaryTarget": "create-budget",
+    "secondaryTarget": "agent",
+    "backTarget": null
+  },
+  {
+    "key": "budget-possible-overrun",
+    "title": "可能越线",
+    "eyebrow": "日常生活 · 本期",
+    "headline": "核对后，可能超出 ¥20",
+    "body": "有 ¥40 仍待确认。先看看它是否属于这张卡。",
+    "rows": [
+      {
+        "label": "预算上限",
+        "value": "¥3,000"
+      },
+      {
+        "label": "已确认支出",
+        "value": "¥2,980"
+      },
+      {
+        "label": "待确认",
+        "value": "¥40"
+      },
+      {
+        "label": "暂计剩余",
+        "value": "−¥20"
+      }
+    ],
+    "primary": "回到示例起点",
+    "secondary": "",
+    "source": "PRODUCT.md:102–106,248；FEATURE-LOOP.md:220–225",
+    "note": "独立风险分支：确认支出2980，待确认40；3000−2980−40=−20。已确认仍未越线。钱包保持860，未结算不扣钱包。 本状态的相应操作暂仅供审阅；“回到示例起点”明确重置至合成基线，不代表执行了保存、修正或其他未串联操作。",
+    "links": [
+      "budgets"
+    ],
+    "primaryTarget": "budgets",
+    "secondaryTarget": null,
+    "backTarget": null,
+    "primaryResetsDemo": true,
+    "reviewOnlyActions": [
+      {
+        "action": "核对这笔消费",
+        "uncoveredTarget": "pending-review-possible"
+      }
+    ]
+  },
+  {
+    "key": "budget-confirmed-overrun",
+    "title": "已越线",
+    "eyebrow": "日常生活 · 本期",
+    "headline": "本期已超出 ¥40",
+    "body": "这是已确认消费的结果。结算前，心愿余额保持不变。",
+    "rows": [
+      {
+        "label": "预算上限",
+        "value": "¥3,000"
+      },
+      {
+        "label": "已确认支出",
+        "value": "¥3,040"
+      },
+      {
+        "label": "本期剩余",
+        "value": "−¥40"
+      },
+      {
+        "label": "心愿余额",
+        "value": "¥860"
+      }
+    ],
+    "primary": "回到示例起点",
+    "secondary": "",
+    "source": "PRODUCT.md:105–106,207–209；FEATURE-LOOP.md:218–225",
+    "note": "独立风险分支：已确认3040，待确认0；越线40。没有执行结算，钱包不提前变为820。 本状态的相应操作暂仅供审阅；“回到示例起点”明确重置至合成基线，不代表执行了保存、修正或其他未串联操作。",
+    "links": [
+      "budgets"
+    ],
+    "primaryTarget": "budgets",
+    "secondaryTarget": null,
+    "backTarget": null,
+    "primaryResetsDemo": true,
+    "reviewOnlyActions": [
+      {
+        "action": "查看消费记录",
+        "uncoveredTarget": "records-confirmed-overrun"
+      }
+    ]
+  },
+  {
+    "key": "draft-restored",
+    "title": "恢复未完成输入",
+    "eyebrow": "记一笔",
+    "headline": "上次这笔还没保存",
+    "body": "已保留你的输入，继续核对就好。",
+    "rows": [
+      {
+        "label": "金额",
+        "value": "¥35"
+      },
+      {
+        "label": "内容",
+        "value": "午餐"
+      },
+      {
+        "label": "预算卡",
+        "value": "日常生活 · 请核对归属"
+      },
+      {
+        "label": "日期",
+        "value": "2026年11月5日"
+      }
+    ],
+    "primary": "继续核对",
+    "secondary": "放弃草稿",
+    "source": "DESIGN.md:1073–1075；FEATURE-LOOP.md:358–360",
+    "note": "基线账本未变化：钱包860、已确认1680、待确认40、剩余1280。恢复的是输入，不恢复聊天，不自动入账。放弃草稿按钮进入既有后果确认，不能直接清除。",
+    "links": [
+      "agent",
+      "agent-confirm",
+      "draft-discard-review"
+    ],
+    "primaryTarget": "agent-confirm",
+    "secondaryTarget": "draft-discard-review",
+    "backTarget": "agent"
+  },
+  {
+    "key": "record-save-failed",
+    "title": "保存失败",
+    "eyebrow": "记一笔",
+    "headline": "这笔还没有保存",
+    "body": "输入已经保留，可以重试或继续修改。",
+    "rows": [
+      {
+        "label": "本次消费",
+        "value": "午间小馆 · ¥35"
+      },
+      {
+        "label": "预算卡",
+        "value": "日常生活"
+      },
+      {
+        "label": "暂计剩余",
+        "value": "¥1,280 · 尚未变化"
+      }
+    ],
+    "primary": "重试保存",
+    "secondary": "继续修改",
+    "source": "DESIGN.md:432–444,1074,1079；FEATURE-LOOP.md:358–360",
+    "note": "设计中的账本保存失败样例，不能混称附件续存失败。此次消费没有入账；重试使用同一任务身份，仅保存一次。若重试成功，已确认1715、待确认40、剩余1245；钱包仍860。",
+    "links": [
+      "agent-confirm",
+      "agent-record-saved"
+    ],
+    "primaryTarget": "agent-record-saved",
+    "secondaryTarget": "agent-confirm",
+    "backTarget": "agent-confirm"
+  },
+  {
+    "key": "limit-preview-stale",
+    "title": "重新核对变化",
+    "eyebrow": "调整预算上限",
+    "headline": "刚才的预览需要更新",
+    "body": "记录有了变化。你输入的额度已保留，请重新看看影响。",
+    "rows": [
+      {
+        "label": "准备设置的上限",
+        "value": "¥3,200"
+      },
+      {
+        "label": "更新后的已确认支出",
+        "value": "¥1,715"
+      },
+      {
+        "label": "待确认",
+        "value": "¥40"
+      },
+      {
+        "label": "当前暂计剩余",
+        "value": "¥1,245"
+      }
+    ],
+    "primary": "回到示例起点",
+    "secondary": "",
+    "source": "PRODUCT.md:115；PRD.md:160；DESIGN.md:1426–1427",
+    "note": "独立分支：额度仍3000，另一笔35已成功加入基线确认支出，1680+35=1715；3000−1715−40=1245。旧3200预览的1480失效，重新生成后应为1445。尚未修改额度或钱包。 本状态的相应操作暂仅供审阅；“回到示例起点”明确重置至合成基线，不代表执行了保存、修正或其他未串联操作。",
+    "links": [
+      "budgets"
+    ],
+    "primaryTarget": "budgets",
+    "secondaryTarget": null,
+    "backTarget": null,
+    "primaryResetsDemo": true,
+    "backLabel": null,
+    "reviewOnlyActions": [
+      {
+        "action": "重新预览",
+        "uncoveredTarget": "limit-impact-refreshed"
+      },
+      {
+        "action": "返回修改",
+        "uncoveredTarget": "limit-input-refreshed"
+      }
+    ]
+  },
+  {
+    "key": "cloud-unavailable",
+    "title": "小朵暂时未连通",
+    "eyebrow": "小朵 · 预算助手",
+    "headline": "这次没能完成理解",
+    "body": "你的输入还在。可以再试一次，也可以切到手动填写。",
+    "rows": [
+      {
+        "label": "当前输入",
+        "value": "午餐35元，记到日常生活"
+      },
+      {
+        "label": "保存状态",
+        "value": "尚未新增消费"
+      }
+    ],
+    "primary": "重试",
+    "secondary": "切到手动",
+    "source": "DESIGN.md:1054；FEATURE-LOOP.md:3–7",
+    "note": "合并网络或超时的代表性错误，不伪造识别或保存成功。认证到期、限流和格式错误在实际产品中仍应使用对应原因文案；此页不新增账号登录或技术配置表单。基线金额不变。",
+    "links": [
+      "agent",
+      "agent-confirm",
+      "record"
+    ],
+    "primaryTarget": "agent-confirm",
+    "secondaryTarget": "record",
+    "backTarget": "agent"
+  },
+  {
+    "key": "voice-permission-denied",
+    "title": "语音不可用",
+    "eyebrow": "语音输入",
+    "headline": "还不能使用麦克风",
+    "body": "可以在系统设置中允许，也可以直接打字告诉小朵。",
+    "rows": [
+      {
+        "label": "当前输入",
+        "value": "已保留"
+      },
+      {
+        "label": "消费记录",
+        "value": "不会自动保存"
+      }
+    ],
+    "primary": "使用文字",
+    "secondary": "去系统设置",
+    "source": "DESIGN.md:1064–1066；docs/README.md:74",
+    "note": "麦克风权限拒绝的设计状态；不把录音、端侧识别或真机权限称为已验证。去系统设置是系统动作，不链接到应用内设置冒充授权。Speech拒权或设备不支持时沿用文字回退，但需对应原因。",
+    "links": [
+      "agent"
+    ],
+    "primaryTarget": "agent",
+    "secondaryTarget": null,
+    "backTarget": "agent",
+    "secondarySystemAction": "open-system-settings",
+    "systemAction": {
+      "secondary": "open-system-settings"
+    }
+  },
+  {
+    "key": "image-attachment-only",
+    "title": "图片已添加",
+    "eyebrow": "记一笔 · 附件",
+    "headline": "图片可以留作这笔的附件",
+    "body": "当前还不能从图片识别消费，请补充金额和归属。",
+    "rows": [
+      {
+        "label": "附件",
+        "value": "1张图片 · 已就绪"
+      },
+      {
+        "label": "金额与预算卡",
+        "value": "等待填写"
+      }
+    ],
+    "primary": "补充这笔消费",
+    "secondary": "查看图片",
+    "source": "docs/README.md:74；DESIGN.md:1074；FEATURE-LOOP.md:358–360",
+    "note": "只表现现有本地附件能力，不能展示OCR结果、多笔识别或自动扣款。图片不上传；未填写及确认前账本金额不变。查看图片是同任务内的放大，不创建新产品入口。",
+    "links": [
+      "record"
+    ],
+    "primaryTarget": "record",
+    "secondaryTarget": null,
+    "backTarget": "record",
+    "secondarySystemAction": "view-local-attachment",
+    "systemAction": {
+      "secondary": "view-local-attachment"
+    }
+  },
+  {
+    "key": "limit-input",
+    "title": "输入新的上限",
+    "eyebrow": "日常生活 · 调整预算上限",
+    "headline": "这期准备花多少",
+    "body": "新上限用于本期及以后；已经结算的周期保持原值。",
+    "rows": [
+      {
+        "label": "当前周期",
+        "value": "2026年11月1日—11月30日"
+      },
+      {
+        "label": "当前上限",
+        "value": "¥3,000"
+      },
+      {
+        "label": "新的上限",
+        "value": "¥3,200"
+      }
+    ],
+    "primary": "预览变化",
+    "secondary": "取消",
+    "source": "PRODUCT.md:109–115；DESIGN.md:254,1426–1427",
+    "note": "基线月度循环卡输入样例；3200只是尚未应用的输入，钱包860、确认1680、待确认40、剩余1280不变。一次性卡应改为只作用本次；本页不提供名称、币种或周期修改。",
+    "links": [
+      "budget-detail",
+      "limit-impact"
+    ],
+    "primaryTarget": "limit-impact",
+    "secondaryTarget": "budget-detail",
+    "backTarget": "budget-detail"
+  },
+  {
+    "key": "limit-impact",
+    "title": "核对上限影响",
+    "eyebrow": "日常生活 · 本期及以后",
+    "headline": "上限调为 ¥3,200",
+    "body": "本期记录保持不变，以后每期沿用新上限。",
+    "rows": [
+      {
+        "label": "本期日期",
+        "value": "2026年11月1日—11月30日"
+      },
+      {
+        "label": "预算上限",
+        "value": "¥3,000 → ¥3,200"
+      },
+      {
+        "label": "暂计剩余",
+        "value": "¥1,280 → ¥1,480"
+      },
+      {
+        "label": "已确认／待确认",
+        "value": "¥1,680 ／ ¥40"
+      },
+      {
+        "label": "心愿余额",
+        "value": "¥860 · 不变"
+      }
+    ],
+    "primary": "回到示例起点",
+    "secondary": "返回修改",
+    "source": "PRODUCT.md:111–116；FEATURE-LOOP.md:214–216；DESIGN.md:1426–1428",
+    "note": "基线额度变化预览：3200−1680−40=1480；尚未保存，取消不写入。已结算历史和快照不变。成功后首页剩余可滚动更新，其他页面静态。 本状态的相应操作暂仅供审阅；“回到示例起点”明确重置至合成基线，不代表执行了保存、修正或其他未串联操作。",
+    "links": [
+      "limit-input",
+      "budgets"
+    ],
+    "primaryTarget": "budgets",
+    "secondaryTarget": "limit-input",
+    "backTarget": "limit-input",
+    "primaryResetsDemo": true,
+    "reviewOnlyActions": [
+      {
+        "action": "确认保存",
+        "uncoveredTarget": "limit-saved"
+      }
+    ]
+  },
+  {
+    "key": "early-settlement-waiting",
+    "title": "提前结算后的等待",
+    "eyebrow": "日常生活 · 本期已结算",
+    "headline": "下一期 12月1日开始",
+    "body": "本期已在11月5日结束。这段间隔内的消费可以归到其他预算，或暂不纳入。",
+    "rows": [
+      {
+        "label": "本期实际范围",
+        "value": "2026年11月1日—11月5日"
+      },
+      {
+        "label": "下一期原定范围",
+        "value": "2026年12月1日—12月31日"
+      },
+      {
+        "label": "下一期上限",
+        "value": "¥3,000"
+      },
+      {
+        "label": "本次净转入",
+        "value": "+¥1,280"
+      },
+      {
+        "label": "结算后心愿余额",
+        "value": "¥2,140"
+      }
+    ],
+    "primary": "查看本期结算",
+    "secondary": "查看心愿余额",
+    "source": "PRODUCT.md:79–85；DESIGN.md:252,276–277",
+    "note": "独立的提前结算成功分支：基线待确认40已核对并确认为消费，确认支出1720；3000−1720=1280，无待恢复差额，860+1280=2140。不得在此等待期提供记入本卡或再次结算；调整上限仍可通过既有入口进入。",
+    "links": [
+      "history-current-detail",
+      "wallet-after-settlement"
+    ],
+    "primaryTarget": "history-current-detail",
+    "secondaryTarget": "wallet-after-settlement",
+    "backTarget": null
+  },
+  {
+    "key": "settlement-recovery-gap",
+    "title": "结余先补差额",
+    "eyebrow": "结算完成 · 独立样例",
+    "headline": "差额补齐，¥1,080 留进心愿",
+    "body": "本期结余先补回之前的待恢复差额，剩下的才进入心愿余额。",
+    "rows": [
+      {
+        "label": "本期结余",
+        "value": "¥1,280"
+      },
+      {
+        "label": "补待恢复差额",
+        "value": "¥200"
+      },
+      {
+        "label": "心愿余额",
+        "value": "¥0 → ¥1,080"
+      },
+      {
+        "label": "待恢复差额",
+        "value": "¥200 → ¥0"
+      }
+    ],
+    "primary": "回到示例起点",
+    "secondary": "",
+    "source": "PRODUCT.md:171–177；DESIGN.md:276–277",
+    "note": "独立分支，不使用常规钱包860：结算前钱包0、差额200。基线待确认40已核对为消费，确认1720；结余1280=补差额200+净转入1080。仅1080参与收币，不能演成1280到账。 本状态的相应操作暂仅供审阅；“回到示例起点”明确重置至合成基线，不代表执行了保存、修正或其他未串联操作。",
+    "links": [
+      "budgets"
+    ],
+    "primaryTarget": "budgets",
+    "secondaryTarget": null,
+    "backTarget": null,
+    "primaryResetsDemo": true,
+    "reviewOnlyActions": [
+      {
+        "action": "查看本次结算",
+        "uncoveredTarget": "history-recovery-detail"
+      },
+      {
+        "action": "查看余额变动",
+        "uncoveredTarget": "wallet-after-recovery"
+      }
+    ]
+  },
+  {
+    "key": "settlement-overrun",
+    "title": "越线结算",
+    "eyebrow": "结算完成 · 独立样例",
+    "headline": "本期超出 ¥1,000",
+    "body": "心愿余额已用于覆盖，剩下的会由之后的预算结余补回。",
+    "rows": [
+      {
+        "label": "预算／已确认支出",
+        "value": "¥3,000 ／ ¥4,000"
+      },
+      {
+        "label": "本期越线",
+        "value": "¥1,000"
+      },
+      {
+        "label": "心愿余额",
+        "value": "¥860 → ¥0"
+      },
+      {
+        "label": "待恢复差额",
+        "value": "¥0 → ¥140"
+      }
+    ],
+    "primary": "回到示例起点",
+    "secondary": "",
+    "source": "PRODUCT.md:171–176；FEATURE-LOOP.md:283–301；DESIGN.md:276",
+    "note": "独立越线分支：待确认0，越线1000=扣钱包860+新增差额140。保存成功结果用短静态反馈，不使用收币奖励或惩罚性震动。 本状态的相应操作暂仅供审阅；“回到示例起点”明确重置至合成基线，不代表执行了保存、修正或其他未串联操作。",
+    "links": [
+      "budgets"
+    ],
+    "primaryTarget": "budgets",
+    "secondaryTarget": null,
+    "backTarget": null,
+    "primaryResetsDemo": true,
+    "reviewOnlyActions": [
+      {
+        "action": "查看本次结算",
+        "uncoveredTarget": "history-overrun-detail"
+      },
+      {
+        "action": "查看余额变动",
+        "uncoveredTarget": "wallet-after-overrun"
+      }
+    ]
+  },
+  {
+    "key": "settlement-zero",
+    "title": "零结余结算",
+    "eyebrow": "结算完成 · 独立样例",
+    "headline": "本期已结算",
+    "body": "这期支出刚好用到预算上限，心愿余额没有变化。",
+    "rows": [
+      {
+        "label": "预算上限",
+        "value": "¥3,000"
+      },
+      {
+        "label": "已确认支出",
+        "value": "¥3,000"
+      },
+      {
+        "label": "结余",
+        "value": "¥0"
+      },
+      {
+        "label": "心愿余额",
+        "value": "¥860 · 不变"
+      }
+    ],
+    "primary": "回到示例起点",
+    "secondary": "查看心愿余额",
+    "source": "PRODUCT.md:160–177；DESIGN.md:276–277",
+    "note": "独立分支：确认3000、待确认0、差额0；结算成功但没有钱包转入，使用短静态反馈，不显示虚构金币或到账。 本状态的相应操作暂仅供审阅；“回到示例起点”明确重置至合成基线，不代表执行了保存、修正或其他未串联操作。",
+    "links": [
+      "budgets",
+      "wallet"
+    ],
+    "primaryTarget": "budgets",
+    "secondaryTarget": "wallet",
+    "backTarget": null,
+    "primaryResetsDemo": true,
+    "reviewOnlyActions": [
+      {
+        "action": "查看本次结算",
+        "uncoveredTarget": "history-zero-detail"
+      }
+    ]
+  },
+  {
+    "key": "settlement-missing-fx",
+    "title": "结算缺少汇率",
+    "eyebrow": "旅行预算 · 结算核对",
+    "headline": "先核对这次的换算",
+    "body": "还缺少美元兑人民币的汇率，暂时不能写入心愿余额。",
+    "rows": [
+      {
+        "label": "预算／已确认支出",
+        "value": "USD 400 ／ USD 280"
+      },
+      {
+        "label": "预算结余",
+        "value": "USD 120"
+      },
+      {
+        "label": "转入心愿余额",
+        "value": "等待汇率"
+      },
+      {
+        "label": "当前心愿余额",
+        "value": "CNY 860 · 尚未变化"
+      }
+    ],
+    "primary": "填写汇率",
+    "secondary": "回到示例起点",
+    "source": "PRODUCT.md:194–219；DESIGN.md:558,562",
+    "note": "独立跨币种旅行预算：额度USD400，已确认USD280，待确认0，结余USD120，钱包CNY860、差额0。进入主脚本填写7.20后预览CNY864，确认后余额1724；当前缺报价不计算转入或演出，不新增网络报价。 本状态的相应操作暂仅供审阅；“回到示例起点”明确重置至合成基线，不代表执行了保存、修正或其他未串联操作。",
+    "links": [
+      "settlement-fx",
+      "budgets"
+    ],
+    "primaryTarget": "settlement-fx",
+    "secondaryTarget": "budgets",
+    "backTarget": null,
+    "secondaryResetsDemo": true,
+    "backLabel": null,
+    "reviewOnlyActions": [
+      {
+        "action": "稍后再结算",
+        "uncoveredTarget": "budget-travel-fx"
+      }
+    ]
+  },
+  {
+    "key": "early-settlement-future-record",
+    "title": "提前结算日期阻塞",
+    "eyebrow": "日常生活 · 提前结算",
+    "headline": "先核对一笔未来日期消费",
+    "body": "本期准备在今天结束，这笔记录的日期还在之后。请先调整日期或归属。",
+    "rows": [
+      {
+        "label": "准备结束本期",
+        "value": "2026年11月5日"
+      },
+      {
+        "label": "待核对记录",
+        "value": "¥120 · 2026年11月8日"
+      },
+      {
+        "label": "心愿余额",
+        "value": "¥860 · 尚未变化"
+      }
+    ],
+    "primary": "回到示例起点",
+    "secondary": "",
+    "source": "PRODUCT.md:79–81；PRD.md:10；FEATURE-LOOP.md:229–231",
+    "note": "独立阻塞分支：在基线已确认1680、待确认40之外，另有已绑定本卡的未来120记录。此页不计算或提交提前结算，不静默移走、忽略或删除未来记录。返回后保留核对；账本变动后重新预览。 本状态的相应操作暂仅供审阅；“回到示例起点”明确重置至合成基线，不代表执行了保存、修正或其他未串联操作。",
+    "links": [
+      "budgets"
+    ],
+    "primaryTarget": "budgets",
+    "secondaryTarget": null,
+    "backTarget": null,
+    "primaryResetsDemo": true,
+    "backLabel": null,
+    "reviewOnlyActions": [
+      {
+        "action": "查看这笔消费",
+        "uncoveredTarget": "future-record-review"
+      },
+      {
+        "action": "返回预算",
+        "uncoveredTarget": "budget-future-record"
+      }
+    ]
+  },
+  {
+    "key": "wish-unpriced",
+    "title": "心愿未定价",
+    "eyebrow": "未实现心愿",
+    "headline": "先给这个心愿一个参考价格",
+    "body": "价格只是目标参考，不会预留或扣减心愿余额。",
+    "rows": [
+      {
+        "label": "心愿",
+        "value": "一场周末音乐会"
+      },
+      {
+        "label": "参考价格",
+        "value": "尚未填写"
+      },
+      {
+        "label": "兑换",
+        "value": "暂不可用"
+      }
+    ],
+    "primary": "回到示例起点",
+    "secondary": "返回心愿",
+    "source": "PRODUCT.md:3–5,179–185；DESIGN.md:16,272",
+    "note": "钱包860不变。不显示0%或伪造覆盖率；心愿卡正面仍只放名称、封面和价格占位，背面兑换置灰。该状态页是现有补价格流程的可审阅设计内容，不创造独立资金账户。 本状态的相应操作暂仅供审阅；“回到示例起点”明确重置至合成基线，不代表执行了保存、修正或其他未串联操作。",
+    "links": [
+      "wishes"
+    ],
+    "primaryTarget": "wishes",
+    "secondaryTarget": "wishes",
+    "backTarget": "wishes",
+    "primaryResetsDemo": true,
+    "reviewOnlyActions": [
+      {
+        "action": "补充价格",
+        "uncoveredTarget": "wish-price-input"
+      }
+    ]
+  },
+  {
+    "key": "wish-insufficient",
+    "title": "心愿参考覆盖不足",
+    "eyebrow": "去山里露营 · 未实现",
+    "headline": "参考覆盖 71%",
+    "body": "还没达到参考价格，兑换暂不可用。",
+    "rows": [
+      {
+        "label": "参考价格",
+        "value": "¥1,200"
+      },
+      {
+        "label": "心愿余额",
+        "value": "¥860"
+      },
+      {
+        "label": "兑换",
+        "value": "未达到100%"
+      }
+    ],
+    "primary": "返回心愿",
+    "secondary": "查看余额",
+    "source": "PRODUCT.md:3–5；PRD.md:3–5；DESIGN.md:16,272",
+    "note": "正常基线860÷1200，按原生WishCoverage向下取整展示71%，门槛仍按Decimal真实值比较。此独立状态说明页可展示余额与目标；实际卡背保持只有比例及兑换，不把本页rows堆入卡背。兑换按钮置灰，不能用此primary伪装成可兑换。",
+    "links": [
+      "wishes",
+      "wallet"
+    ],
+    "primaryTarget": "wishes",
+    "secondaryTarget": "wallet",
+    "backTarget": "wishes"
+  },
+  {
+    "key": "wish-reference-fx",
+    "title": "核对参考汇率",
+    "eyebrow": "一副旅行耳机 · 参考覆盖",
+    "headline": "核对美元兑人民币",
+    "body": "这次输入只用于展示参考覆盖，购买时还会核对实际金额和汇率。",
+    "rows": [
+      {
+        "label": "心愿参考价格",
+        "value": "USD 100"
+      },
+      {
+        "label": "参考汇率",
+        "value": "1 USD = 7 CNY"
+      },
+      {
+        "label": "来源与时间",
+        "value": "用户输入 · 2026年11月5日 10:30"
+      },
+      {
+        "label": "按此参考折算",
+        "value": "CNY 700"
+      },
+      {
+        "label": "参考覆盖预览",
+        "value": "100%"
+      }
+    ],
+    "primary": "回到示例起点",
+    "secondary": "",
+    "source": "PRODUCT.md:3–5；PRD.md:3–5；FEATURE-LOOP.md:9–11",
+    "note": "钱包CNY860、心愿USD100；输入7时860÷700≈122.9%。这是应用前预览，尚无已应用参考时原卡仍显示待核对汇率；应用后才更新覆盖，取消不覆盖旧已应用值。不是历史成交报价，不冻结资金、不写钱包。 本状态的相应操作暂仅供审阅；“回到示例起点”明确重置至合成基线，不代表执行了保存、修正或其他未串联操作。 当前WishCoverage显示比例限制为0–100%，达到真实金额门槛后显示100%；不把原始122.9%作为卡面比例。",
+    "links": [
+      "wishes"
+    ],
+    "primaryTarget": "wishes",
+    "secondaryTarget": null,
+    "backTarget": null,
+    "primaryResetsDemo": true,
+    "backLabel": null,
+    "reviewOnlyActions": [
+      {
+        "action": "应用参考",
+        "uncoveredTarget": "wish-fx-applied"
+      },
+      {
+        "action": "取消",
+        "uncoveredTarget": "wish-fx-missing"
+      }
+    ]
+  },
+  {
+    "key": "redemption-over-balance",
+    "title": "实际成交超出余额",
+    "eyebrow": "真实购买核对",
+    "headline": "这次还不能完整兑换",
+    "body": "实际成交金额换算后超过心愿余额。可以修改核对信息，或稍后再来。",
+    "rows": [
+      {
+        "label": "实际成交",
+        "value": "USD 200"
+      },
+      {
+        "label": "本次汇率",
+        "value": "1 USD = 7 CNY"
+      },
+      {
+        "label": "换算扣减",
+        "value": "CNY 1,400"
+      },
+      {
+        "label": "当前心愿余额",
+        "value": "CNY 860"
+      },
+      {
+        "label": "超出余额",
+        "value": "CNY 540"
+      }
+    ],
+    "primary": "回到示例起点",
+    "secondary": "",
+    "source": "PRODUCT.md:183–185,214–219；DESIGN.md:564–574；docs/design/evidence/2026-10-27-native-materials/README.md:46",
+    "note": "接USD100目标、参考汇率7的已达标分支，但实际购买200USD。1400>860，差540；真实购买确认按钮必须禁用，钱包不变、心愿不完成、不演出。不自动改为普通消费。确认页另需保留来源“用户提供暂估”和2026年11月5日10:30的快照时间。 本状态的相应操作暂仅供审阅；“回到示例起点”明确重置至合成基线，不代表执行了保存、修正或其他未串联操作。",
+    "links": [
+      "wishes"
+    ],
+    "primaryTarget": "wishes",
+    "secondaryTarget": null,
+    "backTarget": null,
+    "primaryResetsDemo": true,
+    "backLabel": null,
+    "reviewOnlyActions": [
+      {
+        "action": "修改购买信息",
+        "uncoveredTarget": "redemption-fx-review"
+      },
+      {
+        "action": "稍后兑换",
+        "uncoveredTarget": "wish-fx-applied"
+      }
+    ]
+  },
+  {
+    "key": "redemption-saved",
+    "title": "真实购买已保存",
+    "eyebrow": "一副新耳机 · 已实现",
+    "headline": "把这个心愿留成收藏",
+    "body": "真实购买已经确认，本次只扣心愿余额。",
+    "rows": [
+      {
+        "label": "实际成交",
+        "value": "¥699"
+      },
+      {
+        "label": "购买日期",
+        "value": "2026年11月5日"
+      },
+      {
+        "label": "心愿余额",
+        "value": "¥860 → ¥161"
+      },
+      {
+        "label": "普通预算",
+        "value": "不重复计入"
+      }
+    ],
+    "primary": "查看已实现",
+    "secondary": "查看余额变动",
+    "source": "PRODUCT.md:179–185；DESIGN.md:15–17,275,277,574",
+    "note": "独立购买成功分支：860−699=161；预算基线1680/40/1280不变。仅保存成功才破壳和收藏。必须链接parent提供的collection-redeemed，不可链接原collection（书籍89、余额771），重播或跳过不重复扣款。",
+    "links": [
+      "collection-redeemed",
+      "wallet-entry-redemption"
+    ],
+    "primaryTarget": "collection-redeemed",
+    "secondaryTarget": "wallet-entry-redemption",
+    "backTarget": "collection-redeemed"
+  },
+  {
+    "key": "cloud-first-consent",
+    "title": "首次云端理解许可",
+    "eyebrow": "小朵 · 预算助手",
+    "headline": "允许小朵借助云端理解这次指令？",
+    "body": "这次文字指令和必要的预算名称会经 CheckLine 交给 DeepSeek。完整账本和附件不会上传。",
+    "rows": [
+      {
+        "label": "你也可以",
+        "value": "继续使用本地与手动功能"
+      },
+      {
+        "label": "之后",
+        "value": "可在设置关闭云端理解"
+      }
+    ],
+    "primary": "允许并发送",
+    "secondary": "继续本地",
+    "source": "docs/README.md:74；DESIGN.md:1054；PRODUCT.md:288–293",
+    "note": "仅在已配置有效私有服务且首次主动发送时展示；不在启动时弹出，不暗示自动读取账本。本轮是许可界面设计，未发送任何真实数据，不声称现有凭据仍有效，也不新增公开用户认证。",
+    "links": [
+      "agent",
+      "agent-confirm"
+    ],
+    "primaryTarget": "agent-confirm",
+    "secondaryTarget": "agent",
+    "backTarget": "agent",
+    "prototypeAction": "consent-and-understand-synthetic-text-only"
+  },
+  {
+    "key": "settlement-positive-saved",
+    "title": "正结余已保存",
+    "eyebrow": "日常生活 · 结算完成",
+    "headline": "¥1,280 留给真正想要的事",
+    "body": "本期结果已保存，结余已进入心愿余额。",
+    "rows": [
+      {
+        "label": "本期预算",
+        "value": "¥3,000"
+      },
+      {
+        "label": "核对后的支出",
+        "value": "¥1,720"
+      },
+      {
+        "label": "本次净转入",
+        "value": "+¥1,280"
+      },
+      {
+        "label": "心愿余额",
+        "value": "¥860 → ¥2,140"
+      }
+    ],
+    "primary": "查看本期结算",
+    "secondary": "查看心愿余额",
+    "source": "PRODUCT.md:160–177；DESIGN.md:276–277",
+    "note": "当前主脚本为提前结算主线：先确认原待确认40，确认支出1720、待确认0；3000−1720=1280，860+1280=2140。本结果与waiting同一已保存事实，返回不能进入未结算基线。动画不会写账本。",
+    "links": [
+      "early-settlement-waiting",
+      "history-current-detail",
+      "wallet-after-settlement"
+    ],
+    "primaryTarget": "history-current-detail",
+    "secondaryTarget": "wallet-after-settlement",
+    "backTarget": "early-settlement-waiting"
+  },
+  {
+    "key": "pending-review",
+    "title": "核对待确认",
+    "eyebrow": "日常生活 · 本期",
+    "headline": "这杯咖啡归到日常生活吗？",
+    "body": "这笔暂时计入了预算，确认后会成为已确认消费。",
+    "rows": [
+      {
+        "label": "消费",
+        "value": "咖啡 · ¥40"
+      },
+      {
+        "label": "日期",
+        "value": "2026年11月5日"
+      },
+      {
+        "label": "预算卡",
+        "value": "日常生活"
+      },
+      {
+        "label": "本期暂计剩余",
+        "value": "¥1,280"
+      }
+    ],
+    "primary": "确认归属",
+    "secondary": "继续修改",
+    "source": "PRODUCT.md:102–106；DESIGN.md:538；Check_Line/Core/Services/BudgetEngine.swift:86–98",
+    "note": "确认的是原有待确认40，不新增一笔；确认前1680/40，确认后1720/0，暂计剩余始终1280，钱包860不变。",
+    "links": [
+      "records",
+      "pending-resolved",
+      "expense-detail"
+    ],
+    "primaryTarget": "pending-resolved",
+    "secondaryTarget": "expense-detail",
+    "backTarget": "records"
+  },
+  {
+    "key": "pending-resolved",
+    "title": "归属已确认",
+    "eyebrow": "日常生活 · 本期",
+    "headline": "这笔咖啡已经核对好了",
+    "body": "它已成为本期已确认消费，暂计剩余没有变化。",
+    "rows": [
+      {
+        "label": "已确认支出",
+        "value": "¥1,680 → ¥1,720"
+      },
+      {
+        "label": "待确认",
+        "value": "¥40 → ¥0"
+      },
+      {
+        "label": "本期剩余",
+        "value": "¥1,280"
+      },
+      {
+        "label": "心愿余额",
+        "value": "¥860 · 不变"
+      }
+    ],
+    "primary": "继续结算核对",
+    "secondary": "查看预算状态",
+    "source": "PRODUCT.md:102–106；DESIGN.md:1072；Check_Line/Core/Services/SettlementEngine.swift:67–108",
+    "note": "先确认40再结算，保证主线结余1280、钱包2140。仅勾选接受当前数据不会确认40，不能省略此步骤。",
+    "links": [
+      "budget-pending-resolved",
+      "settlement-review"
+    ],
+    "primaryTarget": "settlement-review",
+    "secondaryTarget": "budget-pending-resolved",
+    "backTarget": "budget-pending-resolved"
+  },
+  {
+    "key": "unbudgeted-empty",
+    "title": "未纳入预算",
+    "eyebrow": "当前已知消费",
+    "headline": "没有未纳入预算的消费",
+    "body": "当前已知的消费都有预算归属，待确认的记录仍需单独核对。",
+    "rows": [],
+    "primary": "查看全部记录",
+    "secondary": "核对待确认",
+    "source": "PRODUCT.md:102–106；DESIGN.md:1076",
+    "note": "正常基线仍有待确认40；不能把未纳入为空描述成所有消费已确认或来源完整。",
+    "links": [
+      "records",
+      "pending-review"
+    ],
+    "primaryTarget": "records",
+    "secondaryTarget": "pending-review",
+    "backTarget": "records"
+  },
+  {
+    "key": "record-saved",
+    "title": "这笔已保存",
+    "eyebrow": "日常生活 · 记一笔",
+    "headline": "咖啡 ¥40 已加入预算",
+    "body": "本次是新增消费，原有待确认记录仍需核对。",
+    "rows": [
+      {
+        "label": "已确认支出",
+        "value": "¥1,680 → ¥1,720"
+      },
+      {
+        "label": "待确认",
+        "value": "¥40 · 保持原值"
+      },
+      {
+        "label": "暂计剩余",
+        "value": "¥1,280 → ¥1,240"
+      },
+      {
+        "label": "心愿余额",
+        "value": "¥860 · 不变"
+      }
+    ],
+    "primary": "查看这笔记录",
+    "secondary": "撤销这笔",
+    "source": "PRODUCT.md:134–141；DESIGN.md:541；FEATURE-LOOP.md:358–360",
+    "note": "匹配主脚本record表单：新增咖啡40；不能和确认原待确认40混淆。撤销是既有最近写入撤销，其设计跳转回原record基线，不能撤销原待确认记录。",
+    "links": [
+      "budget-after-record",
+      "record-saved-detail",
+      "record"
+    ],
+    "primaryTarget": "record-saved-detail",
+    "secondaryTarget": "record",
+    "backTarget": "budget-after-record",
+    "secondaryPrototypeAction": "undo-last-synthetic-record"
+  },
+  {
+    "key": "agent-record-saved",
+    "title": "这笔已保存",
+    "eyebrow": "日常生活 · 记一笔",
+    "headline": "午餐 ¥35 已加入预算",
+    "body": "本次消费已经保存，原有待确认记录保持原状态。",
+    "rows": [
+      {
+        "label": "已确认支出",
+        "value": "¥1,680 → ¥1,715"
+      },
+      {
+        "label": "待确认",
+        "value": "¥40"
+      },
+      {
+        "label": "暂计剩余",
+        "value": "¥1,280 → ¥1,245"
+      }
+    ],
+    "primary": "查看这笔记录",
+    "secondary": "撤销这笔",
+    "source": "PRODUCT.md:134–141；DESIGN.md:541；FEATURE-LOOP.md:358–360",
+    "note": "独立Agent35元分支，与手动40元分支分开。钱包860不变；撤销只撤本次35，不撤原待确认40。",
+    "links": [
+      "agent-record-saved-detail",
+      "agent"
+    ],
+    "primaryTarget": "agent-record-saved-detail",
+    "secondaryTarget": "agent",
+    "backTarget": "agent-record-saved-detail",
+    "secondaryPrototypeAction": "undo-last-synthetic-record"
+  },
+  {
+    "key": "budget-created",
+    "title": "预算卡已创建",
+    "eyebrow": "日常生活 · 每月循环",
+    "headline": "第一条预算线准备好了",
+    "body": "从一笔真实消费开始，慢慢看清这期还能花多少。",
+    "rows": [
+      {
+        "label": "预算上限",
+        "value": "¥3,000"
+      },
+      {
+        "label": "本期范围",
+        "value": "2026年11月1日—11月30日"
+      },
+      {
+        "label": "本期已用",
+        "value": "¥0"
+      },
+      {
+        "label": "本期还能花",
+        "value": "¥3,000"
+      }
+    ],
+    "primary": "回到示例起点",
+    "secondary": "",
+    "source": "PRD.md:133–151；DESIGN.md:541,1083",
+    "note": "独立首次创建分支：新账本钱包0、确认0、待确认0；不可返回已有1680/40/1280的原budgets冒充刚创建结果。这里没有执行应用创建。 本状态的相应操作暂仅供审阅；“回到示例起点”明确重置至合成基线，不代表执行了保存、修正或其他未串联操作。",
+    "links": [
+      "budgets"
+    ],
+    "primaryTarget": "budgets",
+    "secondaryTarget": null,
+    "backTarget": null,
+    "primaryResetsDemo": true,
+    "backLabel": null,
+    "reviewOnlyActions": [
+      {
+        "action": "查看新预算卡",
+        "uncoveredTarget": "budgets-new-card"
+      },
+      {
+        "action": "记一笔",
+        "uncoveredTarget": "record-new-card"
+      }
+    ]
+  },
+  {
+    "key": "budget-custom-period",
+    "title": "指定月度区间",
+    "eyebrow": "创建预算卡",
+    "headline": "每月20日到次月5日",
+    "body": "区间外的消费不计入这张卡，下一段会按原定日期开始。",
+    "rows": [
+      {
+        "label": "开始日",
+        "value": "每月20日"
+      },
+      {
+        "label": "结束日",
+        "value": "次月5日 · 包含当天"
+      },
+      {
+        "label": "这次预览",
+        "value": "2026年11月20日—12月5日"
+      },
+      {
+        "label": "当前状态",
+        "value": "尚未开始"
+      }
+    ],
+    "primary": "回到示例起点",
+    "secondary": "返回完整周期",
+    "source": "PRODUCT.md:87–92；DESIGN.md:1085–1095",
+    "note": "独立创建草稿：日常生活额度3000，11月5日在间隔内，不提前提供可花状态。点击主操作需表现已有字段确认，原型不能暗示按钮前已保存。 本状态的相应操作暂仅供审阅；“回到示例起点”明确重置至合成基线，不代表执行了保存、修正或其他未串联操作。",
+    "links": [
+      "create-budget",
+      "budgets"
+    ],
+    "primaryTarget": "budgets",
+    "secondaryTarget": "create-budget",
+    "backTarget": "create-budget",
+    "primaryResetsDemo": true,
+    "reviewOnlyActions": [
+      {
+        "action": "核对并创建",
+        "uncoveredTarget": "budget-created-custom"
+      }
+    ]
+  },
+  {
+    "key": "agent-confirm",
+    "title": "核对这笔消费",
+    "eyebrow": "小朵 · 预算助手",
+    "headline": "午餐 ¥35，归到日常生活？",
+    "body": "金额和日期已整理好，请确认这笔属于哪张预算。",
+    "rows": [
+      {
+        "label": "金额",
+        "value": "CNY 35.00"
+      },
+      {
+        "label": "内容",
+        "value": "午餐"
+      },
+      {
+        "label": "日期",
+        "value": "2026年11月5日"
+      },
+      {
+        "label": "预算卡",
+        "value": "日常生活 · 待你确认"
+      }
+    ],
+    "primary": "确认并保存",
+    "secondary": "回到示例起点",
+    "source": "DESIGN.md:538–540,1054–1058；FEATURE-LOOP.md:3–7",
+    "note": "沿用不明确归属的结构化核对门禁；此处不是要求所有明确低风险记录额外确认。35元草稿尚未入账；继续修改需保留35/午餐等字段，不能进主脚本40咖啡默认表单。 本状态的相应操作暂仅供审阅；“回到示例起点”明确重置至合成基线，不代表执行了保存、修正或其他未串联操作。",
+    "links": [
+      "agent",
+      "agent-record-saved",
+      "budgets"
+    ],
+    "primaryTarget": "agent-record-saved",
+    "secondaryTarget": "budgets",
+    "backTarget": "agent",
+    "secondaryResetsDemo": true,
+    "reviewOnlyActions": [
+      {
+        "action": "继续修改",
+        "uncoveredTarget": "record-agent-draft"
+      }
+    ]
+  },
+  {
+    "key": "draft-discard-review",
+    "title": "放弃这次草稿？",
+    "eyebrow": "记一笔",
+    "headline": "未保存的输入会被清除",
+    "body": "已保存的消费和预算都不受影响。",
+    "rows": [
+      {
+        "label": "未保存金额",
+        "value": "¥35"
+      },
+      {
+        "label": "内容",
+        "value": "午餐"
+      },
+      {
+        "label": "预算卡",
+        "value": "日常生活"
+      }
+    ],
+    "primary": "放弃草稿",
+    "secondary": "继续填写",
+    "source": "DESIGN.md:1060,1073；FEATURE-LOOP.md:358–360",
+    "note": "只有明确点放弃才清除本次35元草稿；取消保留字段、附件和会话。",
+    "links": [
+      "agent-confirm",
+      "draft-discarded"
+    ],
+    "primaryTarget": "draft-discarded",
+    "secondaryTarget": "agent-confirm",
+    "backTarget": "agent-confirm",
+    "primaryPrototypeAction": "discard-current-synthetic-draft"
+  },
+  {
+    "key": "delete-review",
+    "title": "删除这笔消费？",
+    "eyebrow": "日常生活 · 消费核对",
+    "headline": "这杯咖啡会从预算中移除",
+    "body": "删除后不再暂计这笔消费，已确认支出和心愿余额保持不变。",
+    "rows": [
+      {
+        "label": "消费",
+        "value": "咖啡 · ¥40 · 待确认"
+      },
+      {
+        "label": "暂计剩余",
+        "value": "¥1,280 → ¥1,320"
+      },
+      {
+        "label": "附件",
+        "value": "如有，将一并移除"
+      },
+      {
+        "label": "心愿余额",
+        "value": "¥860 · 不变"
+      }
+    ],
+    "primary": "回到示例起点",
+    "secondary": "保留这笔",
+    "source": "DESIGN.md:258；PRODUCT.md:71；DESIGN.md:415–419",
+    "note": "仅原基线待确认40的未结算普通消费删除；不可拿此页作为预算删除确认。已结算、退款及心愿购买不支持直接删除。 本状态的相应操作暂仅供审阅；“回到示例起点”明确重置至合成基线，不代表执行了保存、修正或其他未串联操作。",
+    "links": [
+      "expense-detail",
+      "budgets"
+    ],
+    "primaryTarget": "budgets",
+    "secondaryTarget": "expense-detail",
+    "backTarget": "expense-detail",
+    "primaryResetsDemo": true,
+    "reviewOnlyActions": [
+      {
+        "action": "确认删除",
+        "uncoveredTarget": "delete-saved"
+      }
+    ]
+  },
+  {
+    "key": "history-detail",
+    "title": "历史周期详情",
+    "eyebrow": "日常生活 · 2026年10月",
+    "headline": "本期结余 ¥360",
+    "body": "这是当时确认保存的结算结果，不随当前预算上限变化。",
+    "rows": [
+      {
+        "label": "周期",
+        "value": "2026年10月1日—10月31日"
+      },
+      {
+        "label": "预算／确认支出",
+        "value": "¥3,000 ／ ¥2,640"
+      },
+      {
+        "label": "本次转入",
+        "value": "+¥360"
+      },
+      {
+        "label": "结算后心愿余额",
+        "value": "¥860"
+      }
+    ],
+    "primary": "查看这笔转入",
+    "secondary": "返回历史周期",
+    "source": "DESIGN.md:1075,1078；docs/design/evidence/2026-10-27-native-materials/README.md:24–25",
+    "note": "合成历史：9月结余500、10月结余360，钱包共860；不把当前2140或购买后161写进10月历史。",
+    "links": [
+      "history-review",
+      "wallet-entry"
+    ],
+    "primaryTarget": "wallet-entry",
+    "secondaryTarget": "history-review",
+    "backTarget": "history-review"
+  },
+  {
+    "key": "privacy",
+    "title": "数据与隐私",
+    "eyebrow": "当前构建",
+    "headline": "完整账本留在设备上",
+    "body": "你主动选择云端理解时，才发送这次文字指令和必要的预算名称。",
+    "rows": [
+      {
+        "label": "完整账本与附件",
+        "value": "不上传云端理解服务"
+      },
+      {
+        "label": "语音",
+        "value": "主动触发端侧转写，不保存音频"
+      },
+      {
+        "label": "本地照片",
+        "value": "只保留去除元数据的缩略图"
+      },
+      {
+        "label": "iCloud与被动来源",
+        "value": "当前未启用"
+      }
+    ],
+    "primary": "返回设置",
+    "secondary": "查看云端说明",
+    "source": "PRODUCT.md:288–293；docs/README.md:72–75；DESIGN.md:1054,1064；PRODUCT.md:12",
+    "note": "当前构建事实，不承诺公开认证或全渠道连接。仅是设计数据，没有读取、上传或发送任何真实内容。",
+    "links": [
+      "settings",
+      "cloud-first-consent"
+    ],
+    "primaryTarget": "settings",
+    "secondaryTarget": "cloud-first-consent",
+    "backTarget": "settings"
+  },
+  {
+    "key": "cover-photo",
+    "title": "选择本地封面",
+    "eyebrow": "心愿封面",
+    "headline": "用自己的照片留住这个心愿",
+    "body": "选择后可以嵌入或铺满卡面，只在设备上保存缩略图。",
+    "rows": [
+      {
+        "label": "当前心愿",
+        "value": "一副新耳机"
+      },
+      {
+        "label": "当前封面",
+        "value": "耳机预设 · 保持不变"
+      }
+    ],
+    "primary": "选择照片",
+    "secondary": "取消",
+    "source": "PRODUCT.md:12；DESIGN.md:273；docs/design/evidence/2026-10-27-native-materials/README.md:102",
+    "note": "系统照片选择器未在Figma实现，按钮标记系统动作，不假连到图片页；选择成功、照片权限和真实失败恢复不在此静态状态的运行验证内。",
+    "links": [
+      "wish-cover"
+    ],
+    "primaryTarget": null,
+    "secondaryTarget": "wish-cover",
+    "backTarget": "wish-cover",
+    "primarySystemAction": "open-system-photo-picker",
+    "systemAction": {
+      "primary": "open-system-photo-picker"
+    }
+  },
+  {
+    "key": "settlement-fx-success",
+    "title": "跨币种结算完成",
+    "eyebrow": "旅行预算 · 独立样例",
+    "headline": "CNY 864 已进入心愿余额",
+    "body": "已按你核对的汇率保存本次换算，后续汇率变化不改写这次结果。",
+    "rows": [
+      {
+        "label": "预算结余",
+        "value": "USD 120"
+      },
+      {
+        "label": "确认汇率",
+        "value": "1 USD = 7.20 CNY"
+      },
+      {
+        "label": "来源／日期",
+        "value": "用户核对 · 2026年11月5日"
+      },
+      {
+        "label": "心愿余额",
+        "value": "CNY 860 → CNY 1,724"
+      }
+    ],
+    "primary": "回到示例起点",
+    "secondary": "",
+    "source": "PRODUCT.md:194–219；DESIGN.md:558,562,276–277",
+    "note": "与主脚本相同USD400−USD280=120；120×7.2=864；860+864=1724。独立分支，不能返回1280元结余或基线860余额冒充连续状态。 本状态的相应操作暂仅供审阅；“回到示例起点”明确重置至合成基线，不代表执行了保存、修正或其他未串联操作。",
+    "links": [
+      "budgets"
+    ],
+    "primaryTarget": "budgets",
+    "secondaryTarget": null,
+    "backTarget": null,
+    "primaryResetsDemo": true,
+    "backLabel": null,
+    "reviewOnlyActions": [
+      {
+        "action": "查看余额变动",
+        "uncoveredTarget": "wallet-entry-fx"
+      },
+      {
+        "action": "查看本期结果",
+        "uncoveredTarget": "history-fx-detail"
+      }
+    ]
+  },
+  {
+    "key": "budget-pending-resolved",
+    "title": "预算状态",
+    "eyebrow": "日常生活 · 本期",
+    "headline": "还能花 ¥1,280",
+    "body": "待确认归属已处理，本期消费范围保持原样。",
+    "rows": [
+      {
+        "label": "预算上限",
+        "value": "¥3,000"
+      },
+      {
+        "label": "已确认支出",
+        "value": "¥1,720"
+      },
+      {
+        "label": "待确认",
+        "value": "¥0"
+      }
+    ],
+    "primary": "提前结算",
+    "secondary": "查看已核对记录",
+    "source": "PRODUCT.md:248；DESIGN.md:252",
+    "note": "主线确认40后的状态，不能跳回原1680/40预算首页。",
+    "links": [
+      "pending-resolved",
+      "settlement-review"
+    ],
+    "primaryTarget": "settlement-review",
+    "secondaryTarget": "pending-resolved",
+    "backTarget": "pending-resolved"
+  },
+  {
+    "key": "record-saved-detail",
+    "title": "消费详情",
+    "eyebrow": "日常生活 · 新增消费",
+    "headline": "咖啡 ¥40",
+    "body": "这笔已确认消费属于本期日常生活。",
+    "rows": [
+      {
+        "label": "消费日期",
+        "value": "2026年11月5日"
+      },
+      {
+        "label": "来源",
+        "value": "手动输入"
+      },
+      {
+        "label": "当前暂计剩余",
+        "value": "¥1,240"
+      }
+    ],
+    "primary": "查看预算状态",
+    "secondary": "返回保存结果",
+    "source": "DESIGN.md:1076；PRODUCT.md:102–106",
+    "note": "新增40的记录详情；原有另一笔待确认40仍未处理。钱包860不变。",
+    "links": [
+      "record-saved",
+      "budget-after-record"
+    ],
+    "primaryTarget": "budget-after-record",
+    "secondaryTarget": "record-saved",
+    "backTarget": "record-saved"
+  },
+  {
+    "key": "budget-after-record",
+    "title": "预算状态",
+    "eyebrow": "日常生活 · 记一笔后",
+    "headline": "还能花 ¥1,240",
+    "body": "刚保存的咖啡已经计入，另有一笔待确认。",
+    "rows": [
+      {
+        "label": "预算上限",
+        "value": "¥3,000"
+      },
+      {
+        "label": "已确认／待确认",
+        "value": "¥1,720 ／ ¥40"
+      }
+    ],
+    "primary": "查看刚才这笔",
+    "secondary": "返回保存结果",
+    "source": "PRODUCT.md:248；DESIGN.md:541",
+    "note": "3000−1720−40=1240。没有把此分支直接接到主线1720/0的结算页。",
+    "links": [
+      "record-saved",
+      "record-saved-detail"
+    ],
+    "primaryTarget": "record-saved-detail",
+    "secondaryTarget": "record-saved",
+    "backTarget": "record-saved"
+  },
+  {
+    "key": "agent-record-saved-detail",
+    "title": "消费详情",
+    "eyebrow": "日常生活 · 新增消费",
+    "headline": "午餐 ¥35",
+    "body": "这笔已经确认保存，不会因为重试再新增一笔。",
+    "rows": [
+      {
+        "label": "消费日期",
+        "value": "2026年11月5日"
+      },
+      {
+        "label": "已确认／待确认",
+        "value": "¥1,715 ／ ¥40"
+      },
+      {
+        "label": "暂计剩余",
+        "value": "¥1,245"
+      }
+    ],
+    "primary": "返回保存结果",
+    "secondary": "查看本次结果",
+    "source": "DESIGN.md:1076；FEATURE-LOOP.md:3–7",
+    "note": "35元独立分支；钱包860不变。",
+    "links": [
+      "agent-record-saved"
+    ],
+    "primaryTarget": "agent-record-saved",
+    "secondaryTarget": "agent-record-saved",
+    "backTarget": "agent-record-saved"
+  },
+  {
+    "key": "draft-discarded",
+    "title": "草稿已放弃",
+    "eyebrow": "记一笔",
+    "headline": "这次未保存输入已清除",
+    "body": "已保存的账本没有变化。",
+    "rows": [
+      {
+        "label": "已确认／待确认",
+        "value": "¥1,680 ／ ¥40"
+      },
+      {
+        "label": "暂计剩余",
+        "value": "¥1,280"
+      }
+    ],
+    "primary": "返回预算",
+    "secondary": "打开小朵",
+    "source": "DESIGN.md:1060,1073",
+    "note": "仅清除这次35元草稿，未新增或删除真实消费。",
+    "links": [
+      "budgets",
+      "agent"
+    ],
+    "primaryTarget": "budgets",
+    "secondaryTarget": "agent",
+    "backTarget": "budgets"
+  },
+  {
+    "key": "history-current-detail",
+    "title": "本期结算详情",
+    "eyebrow": "日常生活 · 已结算",
+    "headline": "本期结余 ¥1,280",
+    "body": "本期在11月5日提前结束，下一期仍按原计划开始。",
+    "rows": [
+      {
+        "label": "实际范围",
+        "value": "2026年11月1日—11月5日"
+      },
+      {
+        "label": "额度／确认支出",
+        "value": "¥3,000 ／ ¥1,720"
+      },
+      {
+        "label": "心愿余额",
+        "value": "¥860 → ¥2,140"
+      },
+      {
+        "label": "下一期开始",
+        "value": "2026年12月1日"
+      }
+    ],
+    "primary": "返回预算状态",
+    "secondary": "查看这笔转入",
+    "source": "PRODUCT.md:79–85；DESIGN.md:252,276–277",
+    "note": "同一主线结算快照，不能返回未结算预算。",
+    "links": [
+      "early-settlement-waiting",
+      "wallet-entry-settlement"
+    ],
+    "primaryTarget": "early-settlement-waiting",
+    "secondaryTarget": "wallet-entry-settlement",
+    "backTarget": "early-settlement-waiting"
+  },
+  {
+    "key": "wallet-after-settlement",
+    "title": "心愿余额",
+    "eyebrow": "日常生活 · 结算后",
+    "headline": "¥2,140",
+    "body": "这笔余额来自已确认保存的预算结算。",
+    "rows": [
+      {
+        "label": "本次净转入",
+        "value": "+¥1,280"
+      },
+      {
+        "label": "待恢复差额",
+        "value": "¥0"
+      }
+    ],
+    "primary": "查看这笔转入",
+    "secondary": "返回预算状态",
+    "source": "PRODUCT.md:171–177；DESIGN.md:274",
+    "note": "860+1280=2140，不能接原钱包860。",
+    "links": [
+      "early-settlement-waiting",
+      "wallet-entry-settlement"
+    ],
+    "primaryTarget": "wallet-entry-settlement",
+    "secondaryTarget": "early-settlement-waiting",
+    "backTarget": "early-settlement-waiting"
+  },
+  {
+    "key": "wallet-entry-settlement",
+    "title": "余额变动详情",
+    "eyebrow": "预算结余 · 2026年11月5日",
+    "headline": "＋¥1,280",
+    "body": "本次结算结余全部进入心愿余额。",
+    "rows": [
+      {
+        "label": "来源预算",
+        "value": "日常生活"
+      },
+      {
+        "label": "原周期",
+        "value": "2026年11月1日—11月5日"
+      },
+      {
+        "label": "来源／换算金额",
+        "value": "CNY 1,280 · 汇率1"
+      }
+    ],
+    "primary": "查看原周期",
+    "secondary": "返回心愿余额",
+    "source": "PRODUCT.md:171–177,203；DESIGN.md:1078",
+    "note": "保存后的同币种分录，余额2140。",
+    "links": [
+      "wallet-after-settlement",
+      "history-current-detail"
+    ],
+    "primaryTarget": "history-current-detail",
+    "secondaryTarget": "wallet-after-settlement",
+    "backTarget": "wallet-after-settlement"
+  },
+  {
+    "key": "wallet-entry-redemption",
+    "title": "余额变动详情",
+    "eyebrow": "真实购买 · 2026年11月5日",
+    "headline": "−¥699",
+    "body": "已确认购买一副新耳机，只扣心愿余额。",
+    "rows": [
+      {
+        "label": "心愿余额",
+        "value": "¥860 → ¥161"
+      },
+      {
+        "label": "实际成交",
+        "value": "CNY 699 · 汇率1"
+      }
+    ],
+    "primary": "查看已实现",
+    "secondary": "返回购买结果",
+    "source": "PRODUCT.md:179–185；DESIGN.md:574,1077–1078",
+    "note": "必须读取耳机699分支，不是已有书籍89或结余360的原wallet-entry。",
+    "links": [
+      "collection-redeemed",
+      "redemption-saved"
+    ],
+    "primaryTarget": "collection-redeemed",
+    "secondaryTarget": "redemption-saved",
+    "backTarget": "collection-redeemed"
+  },
+  {
+    "key": "book-purchase-detail",
+    "title": "购买记录",
+    "eyebrow": "一本好书 · 已实现收藏",
+    "headline": "¥89 留成一份收藏",
+    "body": "这是该心愿真实购买后保存的成交快照。",
+    "rows": [
+      {
+        "label": "实际成交",
+        "value": "CNY 89.00"
+      },
+      {
+        "label": "购买日期",
+        "value": "2026年10月20日"
+      },
+      {
+        "label": "记录类型",
+        "value": "心愿购买 · 不重复计入普通预算"
+      }
+    ],
+    "primary": "返回收藏",
+    "primaryTarget": "collection-back",
+    "secondary": "回到示例起点",
+    "secondaryTarget": "wishes",
+    "backTarget": "collection-back",
+    "source": "DESIGN.md 当前已实现收藏规则；PRODUCT.md 心愿购买契约",
+    "note": "既有书籍收藏的独立快照；不连接预算结余360的余额记录。示例起点明确重置。"
+  }
+];
