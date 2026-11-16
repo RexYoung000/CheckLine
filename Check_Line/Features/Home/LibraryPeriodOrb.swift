@@ -335,7 +335,7 @@ private struct LibraryPeriodLights: View {
             let y = sin(angle) * radial * 0.91 + x * 0.045
             let lit = frame.light(at: grain.position)
             let shimmer = elapsed == nil ? 1 : 0.86 + 0.14 * sin(time * 0.72 + grain.phase)
-            let alpha = (0.42 + lit * 0.44) * shimmer * (0.65 + 0.35 * grain.depth) * (grain.rear ? 0.43 : 1)
+            let alpha = (0.26 + lit * 0.68) * shimmer * (0.65 + 0.35 * grain.depth) * (grain.rear ? 0.43 : 1)
             let sparkle = elapsed == nil ? 0.85 : 0.66 + 0.34 * pow(0.5 + 0.5 * sin(time * 0.9 + grain.phase), 2)
             let shine = grain.glint ? lit * sparkle * (1 + frame.sweep(at: grain.position) * 0.2) : 0
             return LightGrain(point: CGPoint(x: x, y: y), radius: grain.radius, depth: grain.depth,
@@ -343,23 +343,23 @@ private struct LibraryPeriodLights: View {
         }
         let glints = grains.filter { $0.shine >= 0.002 }
         for glint in glints {
-            gradient(in: context, at: glint.point, radius: 5.5 + glint.depth * 1.5, stops: [
-                stop(0x73B5D1, glint.shine * 0.52, at: 0),
-                stop(0x73B5D1, glint.shine * 0.26, at: 0.28),
-                stop(0x84BFD6, glint.shine * 0.09, at: 0.60),
+            gradient(in: context, at: glint.point, radius: 6.8 + glint.depth * 2.0, stops: [
+                stop(0x5EA8C9, glint.shine * 0.62, at: 0),
+                stop(0x6BB2D0, glint.shine * 0.30, at: 0.28),
+                stop(0x84BFD6, glint.shine * 0.10, at: 0.60),
                 stop(0x96CADC, 0, at: 1)
             ])
         }
         for grain in grains {
-            let color = Color(red: (109 - grain.lit * 63).rounded() / 255,
-                              green: (131 - grain.lit * 12).rounded() / 255,
-                              blue: (143 + grain.lit * 7).rounded() / 255, opacity: grain.alpha)
+            let color = Color(red: (118 - grain.lit * 84).rounded() / 255,
+                              green: (135 - grain.lit * 14).rounded() / 255,
+                              blue: (145 + grain.lit * 10).rounded() / 255, opacity: grain.alpha)
             context.fill(dot(at: grain.point, radius: grain.radius), with: .color(color))
         }
         for glint in glints {
-            gradient(in: context, at: glint.point, radius: 1.06 + glint.depth * 0.25, stops: [
-                stop(0x4693B1, min(1, glint.shine * 1.15), at: 0),
-                stop(0x68AFC6, min(1, glint.shine), at: 0.62),
+            gradient(in: context, at: glint.point, radius: 1.32 + glint.depth * 0.30, stops: [
+                stop(0x2A7FA3, min(1, glint.shine * 1.25), at: 0),
+                stop(0x5AA8C4, min(1, glint.shine), at: 0.62),
                 stop(0x92C6D8, 0, at: 1)
             ])
         }

@@ -317,9 +317,9 @@ struct CartridgeBudgetHomeView: View {
                 // overlap so the tail cannot appear as a square blue bar inside it.
                 .mask(alignment: .bottom) { Rectangle().frame(height: 48 * (1 - morph)) }
                 .offset(y: 48 * (1 - morph)).opacity(libraryIsMounted ? 0 : Double(clamp(1 - recordProgress * 3)))
-            cartridgeFace(card, morph: morph, interactive: true)
+            cartridgeFace(card, morph: morph, interactive: true, styleBlend: blend)
                 .opacity(Double(1 - blend))
-            LibraryBudgetCardFace(card: libraryReturnCard ?? libraryFocusedCard ?? card, now: availabilityDate)
+            LibraryBudgetCardFace(card: libraryReturnCard ?? libraryFocusedCard ?? card, now: availabilityDate, textBlend: blend)
                 .opacity(Double(blend)).allowsHitTesting(false).accessibilityHidden(true)
         }
         .frame(width: width, height: height)
@@ -336,7 +336,7 @@ struct CartridgeBudgetHomeView: View {
         }
     }
 
-    private func cartridgeFace(_ card: HomeBudgetCardModel, morph: CGFloat, interactive: Bool, rearStack: Bool = false) -> some View {
+    private func cartridgeFace(_ card: HomeBudgetCardModel, morph: CGFloat, interactive: Bool, rearStack: Bool = false, styleBlend: CGFloat = 0) -> some View {
         GeometryReader { geometry in
             ZStack(alignment: .topLeading) {
                 NativeLiquidSurface(progress: CGFloat(BudgetPresentation.fill(card)), burstAt: interactive ? contactDate : nil,
@@ -350,6 +350,7 @@ struct CartridgeBudgetHomeView: View {
                     .frame(maxWidth: geometry.size.width - lerp(44, 135, morph), alignment: .leading)
                     .offset(x: lerp(22, 18, morph), y: lerp(22, geometry.size.height * 0.5 - 10, morph))
                     .opacity(rearStack ? 0.12 : 1).blur(radius: rearStack ? 3 : 0)
+                    .modifier(StaggeredBlendOpacity(blend: styleBlend, showHome: true))
                 VStack(alignment: .leading, spacing: 3) {
                     if BudgetPresentation.isUpcoming(card, now: availabilityDate) {
                         Text(String(format: String(localized: "settlement.early.resumes"), card.periodStart.formatted(date: .abbreviated, time: .omitted)))
@@ -364,6 +365,7 @@ struct CartridgeBudgetHomeView: View {
                 }.font(.system(size: 11)).foregroundStyle(LibraryCardOptics.metadata)
                     .opacity(Double(clamp(1 - morph * 3)) * (rearStack ? 0.12 : 1))
                     .blur(radius: rearStack ? 3 : 0).offset(x: 22, y: typeSize.isAccessibilitySize ? 62 : 57)
+                    .modifier(StaggeredBlendOpacity(blend: styleBlend, showHome: true))
                 VStack(alignment: .trailing, spacing: 5 * (1 - morph)) {
                     Text(String(localized: BudgetPresentation.isUpcoming(card, now: availabilityDate) ? "settlement.early.nextLimit" : BudgetPresentation.remaining(card) >= 0 ? "v1.card.remaining" : card.snapshot.certainOverrunAmount > 0 ? "wallet.overrun" : "wallet.possibleOverrun"))
                         .font(.system(size: 12)).frame(height: 15 * (1 - morph)).clipped().opacity(Double(clamp(1 - morph * 4)))
@@ -379,12 +381,14 @@ struct CartridgeBudgetHomeView: View {
                 .foregroundStyle(morph > 0.6 ? PaperTheme.ink : LibraryCardOptics.ink)
                 .frame(width: geometry.size.width - 44, height: geometry.size.height, alignment: .bottomTrailing)
                 .offset(x: 22, y: -lerp(28, (geometry.size.height - 29) / 2, morph))
+                .modifier(StaggeredBlendOpacity(blend: styleBlend, showHome: true))
                 if interactive {
                     Button { workspace.openComposer(.record, budgetID: card.id) } label: {
                         Image(systemName: "plus").font(.system(size: 26, weight: .light)).frame(width: 48, height: 48)
                             .background(.white.opacity(0.13), in: Circle()).overlay(Circle().stroke(.white.opacity(0.65), lineWidth: 0.8))
                     }.buttonStyle(.plain).offset(x: 22, y: geometry.size.height - 74)
                         .opacity(Double(clamp(1 - morph * 4))).allowsHitTesting(recordProgress < 0.05 && !stageTransitioning)
+                        .modifier(StaggeredBlendOpacity(blend: styleBlend, showHome: true))
                         .accessibilityLabel(String(localized: "capture.title")).accessibilityIdentifier("wallet.home.capture")
                         .disabled(BudgetPresentation.isUpcoming(card, now: availabilityDate))
                 }

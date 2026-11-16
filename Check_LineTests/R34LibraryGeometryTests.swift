@@ -79,4 +79,20 @@ import Testing
         #expect(abs(first.y - returned.y) < 0.0001)
         #expect(abs(first.opacity - returned.opacity) < 0.0001)
     }
+
+    @Test("插卡与卡库文字交叉淡入不重叠且端点完全显隐")
+    func staggeredLibraryHomeBlendNeverOverlapsText() {
+        #expect(StaggeredBlendOpacity.alpha(for: 0, showHome: true) == 1)
+        #expect(StaggeredBlendOpacity.alpha(for: 0, showHome: false) == 0)
+        #expect(StaggeredBlendOpacity.alpha(for: 1, showHome: true) == 0)
+        #expect(StaggeredBlendOpacity.alpha(for: 1, showHome: false) == 1)
+        for step in 0...100 {
+            let blend = CGFloat(step) / 100
+            let home = StaggeredBlendOpacity.alpha(for: blend, showHome: true)
+            let library = StaggeredBlendOpacity.alpha(for: blend, showHome: false)
+            #expect(home >= 0 && home <= 1)
+            #expect(library >= 0 && library <= 1)
+            #expect(home == 0 || library == 0)
+        }
+    }
 }

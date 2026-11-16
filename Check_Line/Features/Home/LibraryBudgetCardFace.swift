@@ -42,6 +42,7 @@ struct LibraryBudgetCardFace: View {
     let card: HomeBudgetCardModel
     var compact = false
     var now: Date = .now
+    var textBlend: CGFloat = 1
 
     @ScaledMetric(relativeTo: .headline) private var nameScale = 1.0
     @ScaledMetric(relativeTo: .caption) private var labelScale = 1.0
@@ -79,6 +80,7 @@ struct LibraryBudgetCardFace: View {
             .foregroundStyle(LibraryCardOptics.ink)
             .padding(inset)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+            .modifier(StaggeredBlendOpacity(blend: textBlend, showHome: false))
             .clipShape(RoundedRectangle(cornerRadius: radius))
             .background {
                 LibraryCardMaterial(radius: radius, layer: .complete(fill: summary.fill))
@@ -88,6 +90,27 @@ struct LibraryBudgetCardFace: View {
         .aspectRatio(4.0 / 3.0, contentMode: .fit)
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(summary.accessibilityLabel)
+    }
+}
+
+/// Separates library and home card text cross-fades across a 0...1 style blend
+/// so two distinct text layouts never overlap mid-flight while the glass shell morphs.
+struct StaggeredBlendOpacity: Animatable, ViewModifier {
+    var blend: CGFloat
+    let showHome: Bool
+
+    var animatableData: CGFloat {
+        get { blend }
+        set { blend = newValue }
+    }
+
+    static func alpha(for blend: CGFloat, showHome: Bool) -> Double {
+        let clamped = min(1, max(0, blend))
+        return Double(showHome ? max(0, (0.4375 - clamped) / 0.4375) : max(0, (clamped - 0.5625) / 0.4375))
+    }
+
+    func body(content: Content) -> some View {
+        content.opacity(Self.alpha(for: blend, showHome: showHome))
     }
 }
 
