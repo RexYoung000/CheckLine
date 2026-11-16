@@ -1,0 +1,23 @@
+{
+  "theme": "dark",
+  "capture": "EgoLite real pointer input, continuous screenshots and actual timestamps",
+  "durationSeconds": 14.114500045776367,
+  "frameCount": 273,
+  "approximateCaptureFps": 19.341811549442212,
+  "cssViewport": {
+    "width": 390,
+    "height": 844
+  },
+  "clip": {
+    "x": 561,
+    "y": 14.5,
+    "width": 390,
+    "height": 844,
+    "scale": 0.8
+  },
+  "playbackRate": 1,
+  "interpolatedFrames": false,
+  "containerFps": 30,
+  "sequence": "home → library → trip → learning → short pull cancel → pull to select learning → home",
+  "nativePerformanceEvidence": false
+}

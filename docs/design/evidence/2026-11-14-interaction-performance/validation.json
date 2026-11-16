@@ -1,0 +1,76 @@
+{
+  "date": "2026-11-14",
+  "version": "1.0 (20)",
+  "tests": {
+    "unit": {
+      "passed": 311,
+      "suites": 63,
+      "result": "/tmp/checkline-interaction-full-unit.xcresult"
+    },
+    "simulatorUI": {
+      "passed": 20,
+      "failed": 0,
+      "skipped": 0,
+      "result": "/tmp/checkline-interaction-ui-after.xcresult"
+    },
+    "phonePerformance": {
+      "passed": 4,
+      "failed": 0,
+      "skipped": 0,
+      "result": "/tmp/checkline-interaction-phone-metrics.xcresult",
+      "metrics": "phone-metrics.json"
+    }
+  },
+  "libraryStress": {
+    "completedReturns": 30,
+    "shortCancellations": 62
+  },
+  "unchangedProtectedFiles": {
+    "Check_Line/Features/Budget/PendingExpenseImpactView.swift": true,
+    "Check_Line/Features/Budget/BudgetDetailView.swift": true,
+    "Check_Line/Features/Budget/BudgetAmountEditorView.swift": true,
+    "Check_Line/Features/Budget/BudgetWorkspaceRoute.swift": true,
+    "Check_Line/Features/Budget/BudgetListView.swift": true,
+    "Check_Line/Features/Settlement/SettlementReceiptStudyView.swift": true,
+    "Check_Line/Features/Wish/WishReferenceQuoteView.swift": true,
+    "Check_Line/Features/Wish/WishListView.swift": true,
+    "Check_Line/Features/Wish/WishWalletSummaryView.swift": true,
+    "Check_Line/Features/Wish/NativeWishListView.swift": true,
+    "Check_Line/Features/Wish/WalletEntryDetailView.swift": true,
+    "Check_Line/DesignSystem/OutcomeCelebration.swift": true
+  },
+  "authorizedChangedProtectedFiles": [
+    "Check_Line/Features/Settlement/SettlementOutcomeView.swift",
+    "Check_Line/Features/Settlement/SettlementReviewView.swift"
+  ],
+  "release": {
+    "signedBuildSucceeded": true,
+    "strictSignatureVerified": true,
+    "phoneInProfile": true,
+    "installedVersion": "20",
+    "normalLaunch": true,
+    "processFound": true,
+    "isolatedQARemoved": true,
+    "personalLedgerReadOrTested": false,
+    "buildLog": "/tmp/checkline-phone20-build.log",
+    "app": "/tmp/checkline-phone20/CheckLine.app",
+    "binarySHA256": "6e04ee7b6286ce8c388490a57cfd56689753292857514586dab702f1b119fdcc"
+  },
+  "commit": false,
+  "push": false,
+  "publicRelease": false,
+  "openAcceptance": [
+    "Interruption during the same touch, re-grab before spring completion, multi-touch",
+    "Long-term thermal/GPU frame profiling and large personal ledger persistence cost",
+    "iOS 17 runtime and Rex final physical feel"
+  ],
+  "sourceSHA256": {
+    "Check_Line/Application/CheckLineWorkspace.swift": "4646277b158e60d8a972fbb6142515cd2bc753d22c45cd5524115ad5285e0cd7",
+    "Check_Line/Application/HomeProjector.swift": "59bbe31b2286afc612b1fefb41bac25af9a8c996f741b3d18911b1163ed728a8",
+    "Check_Line/Features/Home/CartridgeLibraryView.swift": "cc68bd923f3641b966286efc20c4db78df68357d96d42bc1cef1f2779cc3b2ad",
+    "Check_Line/Features/Home/CartridgeBudgetHomeView.swift": "af99bbb09264c676a56fb18554420392e796b35595464e43ff94fbb6f81528cb",
+    "Check_Line/Features/Settlement/SettlementReviewView.swift": "f4904c77b5ed40a4ea34282b165ecb382751c0ff47cbf8d881220034ec262eac",
+    "Check_Line/Features/Settlement/SettlementOutcomeView.swift": "8d8181a7d999ba3dd102d82d43246ebbd877db60db76460b8a5a51c83ef4a350",
+    "Check_Line/Features/Home/LibraryPeriodOrb.swift": "bfa1a122dc63d86129f91949a7a55a6a178f0bd75b6dd98c11b70e7907c2c718"
+  }
+}

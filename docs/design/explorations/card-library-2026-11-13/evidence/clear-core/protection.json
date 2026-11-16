@@ -1,0 +1,22 @@
+{
+  "orbCodeUnchanged": {
+    "pointDistribution": true,
+    "positionAndMotion": true,
+    "lifecycleAndSelection": true
+  },
+  "protectedFileChecks": [
+    {
+      "manifest": "/tmp/checkline-lamps-protected.json",
+      "filesChecked": 6,
+      "changes": []
+    },
+    {
+      "manifest": "/tmp/checkline-library-before.json",
+      "filesChecked": 841,
+      "changes": []
+    }
+  ],
+  "deterministicBuild": true,
+  "prototypeSHA256": "b9588e7f1c80e4533adaebca0f4173e3e05a6936f1d4d189ed270bdbf2c449b8",
+  "nativeValidation": "not performed; browser prototype only"
+}

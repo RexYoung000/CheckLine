@@ -1,0 +1,38 @@
+{
+  "date": "2026-11-13",
+  "purpose": "User requested full light and dark home-library-return preview",
+  "prototypeSHA256": "dfc457e9d711da360aab1e49419c622cb9b4066ba15be9153dfe51ab59c71d12",
+  "appearance": "Light glints-1 accepted; dark retained",
+  "flowAcceptance": "pending user review",
+  "protectedFiles": [
+    {
+      "filesChecked": 10,
+      "changes": []
+    },
+    {
+      "filesChecked": 841,
+      "changes": []
+    }
+  ],
+  "media": {
+    "light": {
+      "video": "light-complete.mp4",
+      "durationSeconds": 13.6,
+      "sourceFrames": 267,
+      "actualCaptureFps": 19.673580574121914,
+      "checkpoints": 8
+    },
+    "dark": {
+      "video": "dark-complete.mp4",
+      "durationSeconds": 14.166667,
+      "sourceFrames": 273,
+      "actualCaptureFps": 19.341811549442212,
+      "checkpoints": 8
+    }
+  },
+  "playbackRate": 1,
+  "timeWarping": false,
+  "frameInterpolation": false,
+  "nativeValidation": "not performed; EgoLite HTML prototype only",
+  "git": "not committed; not pushed"
+}

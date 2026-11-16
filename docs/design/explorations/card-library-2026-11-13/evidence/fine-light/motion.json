@@ -1,0 +1,17 @@
+{
+  "capture": "EgoLite actual pointer input and screenshot timestamps",
+  "durationSeconds": 17.94099998474121,
+  "frameCount": 326,
+  "approximateCaptureFps": 18.170670546639677,
+  "playbackRate": 1,
+  "interpolatedFrames": false,
+  "clip": {
+    "x": 561,
+    "y": 14.5,
+    "width": 390,
+    "height": 844,
+    "scale": 1
+  },
+  "containerFps": 30,
+  "nativePerformanceEvidence": false
+}

@@ -1,0 +1,17 @@
+{
+  "capture": "EgoLite actual browser screenshots with capture timestamps",
+  "durationSeconds": 6.578500032424927,
+  "frameCount": 186,
+  "approximateCaptureFps": 28.273922487378602,
+  "playbackRate": 1,
+  "interpolatedFrames": false,
+  "clip": {
+    "x": 346,
+    "y": 175,
+    "width": 820,
+    "height": 366,
+    "scale": 1
+  },
+  "containerFps": 30,
+  "nativePerformanceEvidence": false
+}

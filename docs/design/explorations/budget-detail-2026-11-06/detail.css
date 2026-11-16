@@ -1,0 +1,291 @@
+/* Budget detail study. Optical card layers come from the home material source. */
+.app[data-theme="light"] {
+  --bd-shell: #fafbfc;
+  --bd-list: #e9eef28c;
+  --bd-ink: #19252d;
+  --bd-muted: #61707b;
+  --bd-control: #e8edf1;
+  --bd-summary: #eef4f6;
+  --bd-pending: #356274;
+}
+.app[data-theme="dark"] {
+  --bd-shell: #121416;
+  --bd-list: #23262a99;
+  --bd-ink: #eef0f2;
+  --bd-muted: #a4adb5;
+  --bd-control: #25292e;
+  --bd-summary: #242c32;
+  --bd-pending: #a9cfde;
+}
+
+.app[data-home-material][data-theme] .reader-drawer:is([data-study-page="overview"], [data-study-page="record"]) {
+  background: var(--bd-shell);
+  color: var(--bd-ink);
+}
+.app[data-home-material][data-theme] .reader-drawer[data-study-page="overview"] .reader-drawer-title-row {
+  padding: 0 15px 2px;
+  display: flex;
+  justify-content: space-between;
+  min-height: 44px;
+}
+.reader-drawer[data-study-page="overview"] .reader-drawer-handle {
+  height: 29px;
+}
+.reader-drawer[data-study-page="overview"] .reader-drawer-handle svg {
+  height: 5px;
+  width: 31px;
+  background: var(--bd-muted);
+  border-radius: 8px;
+  opacity: .36;
+}
+.reader-drawer[data-study-page="overview"] .reader-drawer-handle svg path { display: none; }
+.app[data-home-material][data-theme] .reader-drawer[data-study-page="overview"] .reader-drawer-title-row .icon-button {
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  color: var(--bd-ink);
+}
+.reader-drawer[data-study-page="overview"] #reader-drawer-title {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.app[data-home-material][data-theme] .reader-drawer[data-study-page="overview"] .bd-content {
+  --bd-card-height: 162px;
+  --bd-summary-height: 54px;
+  padding: 4px 24px 30px;
+  gap: 0;
+}
+
+.reader-drawer .bd-liquid-anchor {
+  --bd-fold: 0;
+  --bd-height: calc(var(--bd-card-height) - (var(--bd-card-height) - var(--bd-summary-height)) * var(--bd-fold));
+  --bd-material-opacity: clamp(0, calc((1 - var(--bd-fold)) * 1.65), 1);
+  position: sticky;
+  top: 0;
+  height: 0;
+  width: 100%;
+  z-index: 2;
+}
+.reader-drawer .bd-liquid-anchor::before {
+  content: '';
+  position: absolute;
+  inset: -4px -24px auto;
+  height: calc(var(--bd-height) + 14px);
+  background: var(--bd-shell);
+}
+
+.app[data-home-material][data-theme] .reader-drawer .bd-liquid-anchor .dm-detail-card {
+  height: var(--bd-height);
+  min-height: 0;
+  position: relative;
+  border-radius: calc(24px - 8px * var(--bd-fold));
+  margin: 0;
+  padding: 0;
+  display: block;
+  overflow: hidden;
+  background: var(--bd-summary);
+  box-shadow: 0 9px 19px -14px color-mix(in srgb, var(--hm-contact) 46%, transparent);
+}
+.reader-drawer .bd-liquid-anchor .dm-detail-card > :not(.card-top, .card-bottom) {
+  opacity: var(--bd-material-opacity);
+}
+
+.reader-drawer .bd-liquid-space {
+  height: var(--bd-card-height);
+  flex: none;
+}
+.reader-drawer .bd-liquid-anchor .card-top {
+  position: absolute;
+  inset: calc(19px - 2px * var(--bd-fold)) auto auto 19px;
+}
+.reader-drawer .bd-liquid-anchor .card-bottom {
+  position: absolute;
+  right: 19px;
+  bottom: calc(17px - 1px * var(--bd-fold));
+}
+.reader-drawer .bd-liquid-anchor .card-name {
+  font-size: calc((22px - 6px * var(--bd-fold)) * var(--font-scale));
+  font-weight: 600;
+  line-height: 1.18;
+}
+.reader-drawer .bd-liquid-anchor .card-period {
+  opacity: max(0, calc(1 - 2 * var(--bd-fold)));
+  font-size: calc(12px * var(--font-scale));
+}
+.reader-drawer .bd-liquid-anchor .card-value {
+  text-align: right;
+  line-height: 1.05;
+}
+.reader-drawer .bd-liquid-anchor .card-value>.label {
+  font-size: calc(11px * var(--font-scale));
+  opacity: max(0, calc(1 - 1.7 * var(--bd-fold)));
+}
+.reader-drawer .bd-liquid-anchor .card-value strong {
+  font-size: calc((37px - 16px * var(--bd-fold)) * var(--font-scale));
+}
+.app[data-home-material][data-theme] .reader-drawer-body[data-folded="true"] .bd-liquid-anchor :is(.card-name, .card-value) {
+  color: var(--bd-ink);
+}
+
+.bd-shortcuts {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 2px 14px;
+  padding: 19px 2px 0;
+}
+.bd-shortcuts button {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--bd-muted);
+  font-size: calc(12px * var(--font-scale));
+  text-align: left;
+}
+.bd-recent { margin-top: 20px; }
+.bd-recent-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 0 2px 4px;
+}
+.bd-recent-heading h3 {
+  font-size: calc(17px * var(--font-scale));
+  font-weight: 600;
+  margin: 0;
+}
+.bd-recent-heading button {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: calc(12px * var(--font-scale));
+  color: var(--bd-muted);
+}
+.bd-recent-heading button span { font-size: 16px; line-height: 1; }
+.bd-record-list {
+  background: var(--bd-list);
+  border-radius: 19px;
+  padding: 5px 16px 12px;
+}
+.bd-record-list .bd-record-date {
+  margin: 0;
+  padding: 12px 0 2px;
+  color: var(--bd-muted);
+  font-size: calc(12px * var(--font-scale));
+  font-weight: 450;
+}
+.bd-record-list .record-row + .bd-record-date { margin-top: 13px; }
+.bd-record-list .record-row {
+  background: transparent;
+  box-shadow: none;
+  border: 0;
+  border-radius: 0;
+  margin: 0;
+  min-height: 46px;
+  padding: 5px 0;
+  width: 100%;
+}
+.bd-record-list .status-mark {
+  padding: 0;
+  background: none;
+  border: 0;
+  color: var(--bd-pending);
+  font-size: calc(11px * var(--font-scale));
+}
+.bd-record-list .record-amount {
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+
+.bd-actions {
+  position: relative;
+  z-index: 4;
+  flex: none;
+  padding: 7px 24px max(13px, env(safe-area-inset-bottom));
+  background: var(--bd-shell);
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  align-items: center;
+}
+.app[data-home-material][data-theme] .reader-drawer .bd-actions :is(.bd-record-action, .secondary) {
+  width: auto;
+  min-height: 44px;
+  border: 0;
+  border-radius: 100px;
+  padding: 8px 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: calc(13px * var(--font-scale));
+}
+.app[data-home-material][data-theme] .reader-drawer .bd-actions .bd-record-action {
+  color: var(--bd-ink);
+  background: var(--bd-control);
+}
+.app[data-home-material][data-theme] .reader-drawer .bd-actions .secondary {
+  margin-right: auto;
+  color: var(--bd-pending);
+  background: transparent;
+}
+.reader-drawer .bd-outgoing {
+  position: absolute;
+  inset: var(--bd-transition-top, 69px) 0 0;
+  z-index: 1;
+  pointer-events: none;
+}
+.app.large-text[data-home-material][data-theme] .reader-drawer .bd-content {
+  --bd-card-height: 178px;
+  --bd-summary-height: 61px;
+}
+.app.large-text .bd-liquid-anchor .card-period { max-width: 10em; }
+
+/* Keep the value and the disclosure indicator in the same inset system.
+   The native select still owns its menu, selection and keyboard handling. */
+.app[data-home-material] {
+  --bd-select-inset: 12px;
+  --bd-select-arrow-size: 12px;
+  --bd-select-gap: 9px;
+  --bd-select-value-end: calc(var(--bd-select-inset) + var(--bd-select-arrow-size) + var(--bd-select-gap));
+  --bd-select-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='m2.5 4.25 3.5 3.5 3.5-3.5' fill='none' stroke='%23455765' stroke-width='1.45' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+.app[data-home-material][data-theme="dark"] {
+  --bd-select-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='m2.5 4.25 3.5 3.5 3.5-3.5' fill='none' stroke='%23c4cdd6' stroke-width='1.45' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+
+.app[data-home-material][data-theme] :is(.dm-records #record-filter, select.currency-select, .date-pair select, .form-line select, .wish-currency-control select) {
+  appearance: none;
+  -webkit-appearance: none;
+  padding-inline: var(--bd-select-inset) var(--bd-select-value-end);
+}
+.app[data-home-material][data-theme] :is(.dm-records #record-filter:has(option[value="pending"]:checked), select.currency-select, .date-pair select, .form-line select, .wish-currency-control select),
+.app[data-home-material][data-theme] .dm-records #record-filter {
+  background-image: var(--bd-select-arrow);
+  background-repeat: no-repeat;
+  background-position: right var(--bd-select-inset) center;
+  background-size: var(--bd-select-arrow-size);
+}
+.app[data-home-material][data-theme] .dm-records #record-filter {
+  max-width: 100%;
+  min-height: 44px;
+}
+.app[data-home-material][data-theme] select.currency-select {
+  min-width: calc(3ch + var(--bd-select-inset) + var(--bd-select-value-end));
+}
+.app[data-home-material][data-theme] .wish-currency-control > .icon { display: none; }
+
+@media (forced-colors: active) {
+  .app[data-home-material][data-theme] :is(.dm-records #record-filter:has(option:checked), select.currency-select, .date-pair select, .form-line select, .wish-currency-control select) {
+    appearance: auto;
+    background-image: none;
+    padding-inline: var(--bd-select-inset);
+  }
+}

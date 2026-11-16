@@ -1,0 +1,112 @@
+[
+  {
+    "name": "light-small-large-long",
+    "layout": {
+      "state": {
+        "mode": "arc",
+        "selected": "month",
+        "focused": "month",
+        "browsing": false,
+        "library": true,
+        "phase": "connected",
+        "progress": 0,
+        "commits": 0,
+        "count": 3,
+        "reduced": true,
+        "theme": "light"
+      },
+      "card": "和家人一起出发的年度长途旅行预算\n还能花\nUS$123,455,069",
+      "period": "本期还剩\n17\n天\n11月1日—11月30日\n和家人一起出发的年度长途旅行预算，本期还剩，17，天，11月1日—11月30日",
+      "titleCount": 0,
+      "removedDetails": true,
+      "holderHidden": true,
+      "cardFits": true,
+      "footerFits": true,
+      "textFits": true,
+      "large": true,
+      "errors": []
+    }
+  },
+  {
+    "name": "dark-small-large-long",
+    "layout": {
+      "state": {
+        "mode": "arc",
+        "selected": "month",
+        "focused": "month",
+        "browsing": false,
+        "library": true,
+        "phase": "connected",
+        "progress": 0,
+        "commits": 0,
+        "count": 3,
+        "reduced": true,
+        "theme": "dark"
+      },
+      "card": "和家人一起出发的年度长途旅行预算\n还能花\nUS$123,455,069",
+      "period": "本期还剩\n17\n天\n11月1日—11月30日\n和家人一起出发的年度长途旅行预算，本期还剩，17，天，11月1日—11月30日",
+      "titleCount": 0,
+      "removedDetails": true,
+      "holderHidden": true,
+      "cardFits": true,
+      "footerFits": true,
+      "textFits": true,
+      "large": true,
+      "errors": []
+    }
+  },
+  {
+    "name": "resize-before-return",
+    "state": {
+      "mode": "arc",
+      "selected": "month",
+      "focused": "month",
+      "browsing": false,
+      "library": false,
+      "phase": "connected",
+      "progress": 0,
+      "commits": 1,
+      "count": 3,
+      "reduced": false,
+      "theme": "light"
+    },
+    "card": {
+      "x": 609,
+      "y": 202,
+      "width": 282,
+      "height": 240.3359375
+    }
+  },
+  {
+    "name": "background-cancels-drag",
+    "state": {
+      "mode": "arc",
+      "selected": "month",
+      "focused": "month",
+      "browsing": false,
+      "library": true,
+      "phase": "connected",
+      "progress": 0,
+      "commits": 0,
+      "count": 3,
+      "reduced": false,
+      "theme": "dark"
+    }
+  },
+  {
+    "name": "background-completes-once",
+    "state": {
+      "mode": "arc",
+      "selected": "month",
+      "focused": "month",
+      "browsing": false,
+      "library": false,
+      "phase": "connected",
+      "progress": 0,
+      "commits": 1,
+      "count": 3,
+      "reduced": false,
+      "theme": "dark"
+    }
+  }
+]

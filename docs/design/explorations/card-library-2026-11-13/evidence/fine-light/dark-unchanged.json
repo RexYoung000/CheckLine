@@ -1,0 +1,18 @@
+{
+  "method": "Before/after SHA256 of actual reduced-motion canvas pixels",
+  "cases": [
+    {
+      "sample": "normal",
+      "sha256": "c1e9960d22f20da6e9ef341b19ba5b1eedf64ffd8431e31902fef1b08eac768b"
+    },
+    {
+      "sample": "no-deadline",
+      "sha256": "74e088864b20062a95efc0d9d88b36ea1dbec21c07c6d2e78a17ee89e8d3771c"
+    },
+    {
+      "sample": "due",
+      "sha256": "b02c5ce3cb814d315942852cf9a62c9bb6c18bb84a3c15555bc82f8309c5e8a8"
+    }
+  ],
+  "identical": true
+}

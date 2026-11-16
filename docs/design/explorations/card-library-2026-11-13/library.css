@@ -1,0 +1,80 @@
+/* Scoped study. The existing page, drawers, wishes and ledger UI are inherited. */
+@property --cll-holder-return { syntax: '<number>'; initial-value: 0; inherits: true; }
+.app[data-library-study] .cartridge-world.library-open { --library-height: calc(var(--reader-focus-height,774px) - 105px); }
+.app[data-library-study] .cartridge-world.library-open .reader-level-controls { display: none; }
+.app[data-library-study] .cartridge-library { z-index: 20; }
+.app[data-library-study] .cartridge-world.library-open .machine-unit { opacity: var(--cll-holder-return,0) !important; pointer-events: none; }
+.cll-library { width: 100%; height: 100%; display: flex; flex-direction: column; position: relative; color: var(--ink); user-select: none; -webkit-user-select: none; }
+.cll-library *, .cll-flight * { box-sizing: border-box; }
+.cll-header { padding: 2px 20px 0; min-height: 50px; display: flex; align-items: center; justify-content: flex-end; flex: none; }
+.cll-controls { display: flex; gap: 0; }
+.cll-controls button, .cll-return { color: inherit; background: transparent; border: 0; padding: 0; min-width: 44px; min-height: 44px; display: grid; place-items: center; cursor: pointer; border-radius: 50%; }
+.cll-controls button:hover { background: color-mix(in srgb,currentColor 5%,transparent); }
+.cll-controls svg { width: 20px; height: 20px; stroke: currentColor; stroke-width: 1.6; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+.cll-library button:focus-visible, .cll-search:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.cll-body { flex: 1; min-height: 0; position: relative; }
+.cll-arc { height: 100%; position: relative; display: flex; flex-direction: column; touch-action: none; overflow: hidden; }
+.cll-period { flex: 0 0 auto; display: flex; justify-content: center; padding: 6px 20px 0; }
+.cll-period .cll-orb { width: clamp(140px, 25vh, 208px); }
+.cll-stage { position: relative; flex: 1; min-height: 185px; width: 100%; perspective: 1000px; touch-action: none; }
+.cll-slot { position: absolute; top: 50%; left: 50%; padding: 0; background: transparent; border: none; border-radius: 26px; margin: 0; cursor: pointer; touch-action: none; transform-origin: 50% 50%; will-change: transform; }
+.cll-slot .cll-card { pointer-events: none; }
+.cll-slot:not([data-centered=true]) .cll-card-content { opacity: .42; }
+.cll-slot:not([data-centered=true]) .cll-card { filter: saturate(.66); }
+.cll-status { min-height: 22px; text-align: center; color: var(--muted); font-size: 11px; line-height: 1.4; margin: 0 24px; flex: none; }
+.cll-footer { flex: 0 0 52px; position: relative; display: flex; align-items: center; justify-content: center; }
+.cll-return { width: 100px; border-radius: 20px; gap: 4px; align-content: center; touch-action: none; }
+.cll-grip { display: grid; place-items: center; width: 48px; height: 12px; border-radius: 8px; background: color-mix(in srgb,var(--accent) 9%,transparent); }
+.cll-grip svg { width: 16px; height: 10px; fill: none; stroke: var(--accent); stroke-width: 1.6; }
+.cll-return-label { font-size: 10px; color: var(--muted); line-height: 1.2; }
+.cll-count { position: absolute; right: 24px; font-size: 11px; color: var(--muted); }
+.cll-search-wrap { padding: 12px 22px 8px; }
+.cll-search { width: 100%; font: inherit; font-size: 15px; color: var(--ink); border: 1px solid var(--tile-border); background: var(--surface); border-radius: 18px; padding: 12px 16px; }
+.cll-grid { overflow: auto; overscroll-behavior: contain; display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 16px; align-content: start; padding: 16px 22px 28px; height: 100%; }
+.cll-grid button { background: none; padding: 0; border: 0; min-width: 0; aspect-ratio: 4/3; border-radius: 18px; cursor: pointer; }
+.cll-empty { padding: 70px 25px; margin: 0; color: var(--muted); text-align: center; line-height: 1.8; }
+.cll-empty strong { display: block; color: var(--ink); font-size: 18px; font-weight: 550; margin-bottom: 8px; }
+.cll-home-empty { padding-top: 80px; text-align: center; }
+.cll-home-empty .cll-empty { padding-bottom: 22px; }
+.cll-home-empty>button { border: 1px solid var(--tile-border); background: var(--surface); border-radius: 22px; min-height: 44px; padding: 10px 22px; color: var(--ink); font: inherit; }
+.library-open .cll-home-empty { visibility: hidden; }
+.cll-library[data-mode=search] .cll-body { display: flex; flex-direction: column; }
+.cll-library[data-mode=search] .cll-grid { flex: 1; min-height: 0; }
+.cll-legacy { height: 100%; }
+.cll-legacy .budget-library-picker>header, .cll-legacy .budget-library-picker>footer { display: none; }
+.cll-legacy .picker-scene { height: 100%; flex: 1; }
+.cll-legacy .picker-confirm { z-index: 10; }
+.cll-edge { position: absolute; z-index: 5; top: 54px; bottom: 52px; width: 18px; touch-action: none; }
+.cll-edge-left { left: 0; }.cll-edge-right { right: 0; }
+.cll-flight { position: absolute; z-index: 24; pointer-events: none; transform-origin: 50% 60%; isolation: isolate; border-radius: 26px; }
+.cll-flight-from, .cll-flight-to { position: absolute; inset: 0; }
+.cll-flight-to { opacity: 0; }
+.cll-flight-to .reader-card-face { position: absolute; inset: 0; width: 100%; height: 100%; }
+.cll-flight-to .contact-extension { display: none; }
+.cll-flight-to .card-name { font-size: 22px; }
+.cll-flight-to .card-value strong { font-size: 40px; }
+.cll-home-optics { display: none; position: absolute; inset: 0; border-radius: inherit; overflow: hidden; pointer-events: none; color-scheme: light; }
+.app[data-theme=dark] .cll-home-optics { color-scheme: dark; }
+.cll-home-optics svg { display: block; width: 100%; height: 100%; }
+.cartridge-world[data-fold-view=overview] .cll-home-optics, .cll-flight-to .cll-home-optics { display: block; }
+.app[data-library-study] :is(.cartridge-world[data-fold-view=overview],.cll-flight-to) .reader-card-face:has(.cll-home-optics) > :is(.hm-card-body,.hm-card-edge) { visibility: hidden; }
+.cll-transporting .cartridge-card { visibility: hidden !important; }
+.cll-transporting .cartridge-stack-backs { opacity: 0; }
+.cll-transporting .console-content { opacity: 0 !important; visibility: hidden !important; }
+.cll-transporting .console-lip, .cll-transporting .slot-recess { visibility: visible !important; }
+.cll-transporting .machine-unit { transition: none !important; }
+/* Only the home landing face borrows the study optics; layout remains intact. */
+.app[data-library-study] .cartridge-card .reader-card-face { box-shadow: inset 0 1px 1px #fff9, inset 0 -2px 5px #c4f3ff66, 0 10px 26px -15px #346d8b50; }
+.app[data-library-study][data-theme=dark] .cartridge-card .reader-card-face { box-shadow: inset 0 1px 1px #c4f3ff77,inset 0 -3px 8px #68cbed66,0 12px 24px -14px #000a; }
+.app[data-library-study].large-text .cll-period .cll-orb { width: 142px; }
+.app[data-library-study].large-text .cll-grid { grid-template-columns: 1fr; padding: 16px 34px 30px; }
+.app[data-library-study].large-text .cll-grid .cll-card { --cll-card-radius: 24px; }
+.app[data-library-study].large-text .cll-card-name { font-size: clamp(19px,8cqi,28px); }
+.app[data-library-study].large-text .cll-card-label { --cll-line-max: min(18px,5.6cqi); }
+.app[data-library-study].large-text .cll-card-amount { --cll-line-max: min(48px,14cqi); }
+.app[data-library-study].large-text .cll-orb__date { font-size: 13px; }
+.app[data-library-study].large-text .cll-return-label, .app[data-library-study].large-text .cll-count { font-size: 13px; }
+.cll-library[data-static=true] .cll-stage { min-height: 210px; }
+@media(max-height:720px) { .cll-period .cll-orb { width: 138px; }.cll-period { padding-top: 0; }.cll-footer { flex-basis: 44px; }.cll-status { font-size: 10px; min-height: 18px; } }
+@media(max-width:340px) { .cll-header { padding-inline: 16px; }.cll-controls button { min-width: 40px; }.cll-count { right: 18px; }.cll-grid { padding-inline: 18px; gap: 12px; } }
+@media(min-width:650px) { .cll-header { padding-inline: 42px; }.cll-period .cll-orb { width: 218px; }.cll-grid { grid-template-columns: repeat(3,minmax(0,1fr)); padding-inline: 32px; } }

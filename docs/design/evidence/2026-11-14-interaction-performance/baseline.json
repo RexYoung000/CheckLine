@@ -1,0 +1,15 @@
+{
+  "basis": "Release 1.0 (19) before stability changes; OutcomeView already has debug-only baseline probes",
+  "files": {
+    "Check_Line/Application/HomeProjector.swift": "a118b172c20724129399057a731b8a1580c6d46e1193f3ac841342381bb7760b",
+    "Check_Line/Application/CheckLineWorkspace.swift": "f5ca627fbe980dd89ac94f75c0f917739781e4926914ae5cbf97fbf6564c3af1",
+    "Check_Line/Features/Home/CartridgeLibraryView.swift": "5b674695cb41fb2fdac0c0263463c84da1e3910ff4db563bdfde0da39197a534",
+    "Check_Line/Features/Home/CartridgeBudgetHomeView.swift": "92450b1100d466cb166b9dcfff560bcb8f80e4b9335a94e8c7d23fcf0d5f4e05",
+    "Check_Line/Features/Home/LibraryPeriodOrb.swift": "bfa1a122dc63d86129f91949a7a55a6a178f0bd75b6dd98c11b70e7907c2c718",
+    "Check_Line/Features/Settlement/SettlementReviewView.swift": "c9f770776d678780dd457833460680c52e7cc013b849f18954e26e89958dc73f"
+  },
+  "baselineUITests": {
+    "legacyCompleteFlow": "/tmp/checkline-library-freeze-baseline.xcresult",
+    "datedRepeatedPulls": "/tmp/checkline-library-dated-baseline.xcresult"
+  }
+}

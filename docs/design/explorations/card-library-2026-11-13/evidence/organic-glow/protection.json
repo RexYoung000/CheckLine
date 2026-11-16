@@ -1,0 +1,17 @@
+{
+  "protectedFileChecks": [
+    {
+      "manifest": "/tmp/checkline-lamps-protected.json",
+      "filesChecked": 6,
+      "changes": []
+    },
+    {
+      "manifest": "/tmp/checkline-library-before.json",
+      "filesChecked": 841,
+      "changes": []
+    }
+  ],
+  "deterministicBuild": true,
+  "prototypeSHA256": "cd8b06e1e2e26489fa8f4fcd47dde53ebda7cde5ec8bd5d5f67d53ccecdce7fa",
+  "nativeValidation": "not performed; browser prototype only"
+}

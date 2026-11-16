@@ -1,0 +1,28 @@
+[
+  {
+    "check": "rapid-switch-final-state",
+    "passed": true
+  },
+  {
+    "check": "undated-has-no-lit-arc",
+    "passed": true
+  },
+  {
+    "check": "reduce-motion-static-both-themes",
+    "passed": true
+  },
+  {
+    "check": "full-ring-bounds",
+    "passed": true,
+    "bounds": [
+      {
+        "edge": 0,
+        "center": 0
+      },
+      {
+        "edge": 0,
+        "center": 0
+      }
+    ]
+  }
+]

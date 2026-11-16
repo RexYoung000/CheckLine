@@ -1,0 +1,357 @@
+{
+  "device": {
+    "model": "iPhone 12",
+    "os": "iOS 27.0.1"
+  },
+  "configuration": "Debug; isolated CheckLine QA; in-memory synthetic ledgers",
+  "measuredIterations": 3,
+  "warmupIterations": 1,
+  "measurementNotes": [
+    "Task windows include XCTest input delivery and idle waits; not nominal animation duration.",
+    "No before-fix physical-device performance baseline or long-duration thermal run.",
+    "Zero detected XCTHitchMetric events does not prove constant FPS or exclude all stalls.",
+    "SettlementSave measures a small synthetic ledger, not the personal database."
+  ],
+  "tests": [
+    {
+      "test": "InteractionPerformanceUITests/testLibraryDarkTaskPerformance()",
+      "metrics": [
+        {
+          "name": "Clock Monotonic Time",
+          "unit": "s",
+          "values": [
+            6.997720510000001,
+            6.994317674,
+            7.01106765
+          ],
+          "average": 7.001035278000001
+        },
+        {
+          "name": "Hitches Total Duration (MotionQA)",
+          "unit": "s",
+          "values": [
+            0,
+            0,
+            0
+          ],
+          "average": 0
+        },
+        {
+          "name": "CPU Time (MotionQA)",
+          "unit": "s",
+          "values": [
+            3.2985107210000004,
+            3.292827957,
+            3.2697905080000003
+          ],
+          "average": 3.2870430620000004
+        },
+        {
+          "name": "Number of Hitches (MotionQA)",
+          "unit": "hitches",
+          "values": [
+            0,
+            0,
+            0
+          ],
+          "average": 0
+        },
+        {
+          "name": "Memory Physical (MotionQA)",
+          "unit": "kB",
+          "values": [
+            28180.48,
+            966.656,
+            27049.984
+          ],
+          "average": 18732.373333333333
+        },
+        {
+          "name": "Absolute Memory Physical (MotionQA)",
+          "unit": "kB",
+          "values": [
+            125143.12,
+            98371.664,
+            125421.648
+          ],
+          "average": 116312.144
+        },
+        {
+          "name": "Hitch Time Ratio (MotionQA)",
+          "unit": "ms per s",
+          "values": [
+            0,
+            0,
+            0
+          ],
+          "average": 0
+        }
+      ]
+    },
+    {
+      "test": "InteractionPerformanceUITests/testLibraryLightTaskPerformance()",
+      "metrics": [
+        {
+          "name": "Clock Monotonic Time",
+          "unit": "s",
+          "values": [
+            6.973421491000001,
+            7.033867873,
+            7.140313508
+          ],
+          "average": 7.049200957333333
+        },
+        {
+          "name": "Hitches Total Duration (MotionQA)",
+          "unit": "s",
+          "values": [
+            0,
+            0,
+            0
+          ],
+          "average": 0
+        },
+        {
+          "name": "CPU Time (MotionQA)",
+          "unit": "s",
+          "values": [
+            3.2980161380000004,
+            3.3279782,
+            3.6012826010000003
+          ],
+          "average": 3.4090923130000004
+        },
+        {
+          "name": "Number of Hitches (MotionQA)",
+          "unit": "hitches",
+          "values": [
+            0,
+            0,
+            0
+          ],
+          "average": 0
+        },
+        {
+          "name": "Memory Physical (MotionQA)",
+          "unit": "kB",
+          "values": [
+            2015.232,
+            18300.928,
+            30146.56
+          ],
+          "average": 16820.906666666666
+        },
+        {
+          "name": "Absolute Memory Physical (MotionQA)",
+          "unit": "kB",
+          "values": [
+            96110.624,
+            114411.552,
+            123701.28
+          ],
+          "average": 111407.81866666666
+        },
+        {
+          "name": "Hitch Time Ratio (MotionQA)",
+          "unit": "ms per s",
+          "values": [
+            0,
+            0,
+            0
+          ],
+          "average": 0
+        }
+      ]
+    },
+    {
+      "test": "InteractionPerformanceUITests/testOverrunWaveTaskPerformance()",
+      "metrics": [
+        {
+          "name": "Duration (SettlementCapture)",
+          "unit": "s",
+          "values": [
+            0.040869834,
+            0.048220625,
+            0.059397500000000006
+          ],
+          "average": 0.04949598633333334
+        },
+        {
+          "name": "Number of Hitches (MotionQA)",
+          "unit": "hitches",
+          "values": [
+            0,
+            0,
+            0
+          ],
+          "average": 0
+        },
+        {
+          "name": "Absolute Memory Physical (MotionQA)",
+          "unit": "kB",
+          "values": [
+            80136.176,
+            153028.64,
+            78186.504
+          ],
+          "average": 103783.77333333335
+        },
+        {
+          "name": "Duration (SettlementSave)",
+          "unit": "s",
+          "values": [
+            0.006931458000000001,
+            0.007857208000000001,
+            0.007897792
+          ],
+          "average": 0.007562152666666667
+        },
+        {
+          "name": "Hitch Time Ratio (MotionQA)",
+          "unit": "ms per s",
+          "values": [
+            0,
+            0,
+            0
+          ],
+          "average": 0
+        },
+        {
+          "name": "CPU Time (MotionQA)",
+          "unit": "s",
+          "values": [
+            4.64857057,
+            4.381331545,
+            4.624217636
+          ],
+          "average": 4.5513732503333335
+        },
+        {
+          "name": "Memory Physical (MotionQA)",
+          "unit": "kB",
+          "values": [
+            80136.176,
+            153028.64,
+            78186.504
+          ],
+          "average": 103783.77333333335
+        },
+        {
+          "name": "Hitches Total Duration (MotionQA)",
+          "unit": "s",
+          "values": [
+            0,
+            0,
+            0
+          ],
+          "average": 0
+        },
+        {
+          "name": "Clock Monotonic Time",
+          "unit": "s",
+          "values": [
+            3.1003469790000002,
+            3.1112544960000004,
+            3.1412560820000004
+          ],
+          "average": 3.117619185666667
+        }
+      ]
+    },
+    {
+      "test": "InteractionPerformanceUITests/testRecoveryWaveTaskPerformance()",
+      "metrics": [
+        {
+          "name": "Duration (SettlementCapture)",
+          "unit": "s",
+          "values": [
+            0.049476541000000006,
+            0.06265158400000001,
+            0.037214959000000006
+          ],
+          "average": 0.049781028000000005
+        },
+        {
+          "name": "Number of Hitches (MotionQA)",
+          "unit": "hitches",
+          "values": [
+            0,
+            0,
+            0
+          ],
+          "average": 0
+        },
+        {
+          "name": "Absolute Memory Physical (MotionQA)",
+          "unit": "kB",
+          "values": [
+            80398.344,
+            161286.152,
+            152864.776
+          ],
+          "average": 131516.424
+        },
+        {
+          "name": "Duration (SettlementSave)",
+          "unit": "s",
+          "values": [
+            0.008118167,
+            0.008514625000000001,
+            0.006816667
+          ],
+          "average": 0.007816486333333334
+        },
+        {
+          "name": "Hitch Time Ratio (MotionQA)",
+          "unit": "ms per s",
+          "values": [
+            0,
+            0,
+            0
+          ],
+          "average": 0
+        },
+        {
+          "name": "CPU Time (MotionQA)",
+          "unit": "s",
+          "values": [
+            4.823420031,
+            4.836033394,
+            4.712613800000001
+          ],
+          "average": 4.790689075
+        },
+        {
+          "name": "Memory Physical (MotionQA)",
+          "unit": "kB",
+          "values": [
+            80398.344,
+            161286.152,
+            152864.776
+          ],
+          "average": 131516.424
+        },
+        {
+          "name": "Hitches Total Duration (MotionQA)",
+          "unit": "s",
+          "values": [
+            0,
+            0,
+            0
+          ],
+          "average": 0
+        },
+        {
+          "name": "Clock Monotonic Time",
+          "unit": "s",
+          "values": [
+            3.076935036,
+            3.111274422,
+            3.0989859020000003
+          ],
+          "average": 3.0957317866666667
+        }
+      ]
+    }
+  ]
+}

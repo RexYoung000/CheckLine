@@ -1,0 +1,18 @@
+{
+  "onlyFiveLightAccentOpacityStopsChanged": true,
+  "grainFieldAndMotionUnchanged": true,
+  "accentCountPositionsSizesAndHaloExtentsUnchanged": true,
+  "darkDrawingAndLifecycleUnchanged": true,
+  "protectedFileChecks": [
+    {
+      "filesChecked": 6,
+      "changes": []
+    },
+    {
+      "filesChecked": 841,
+      "changes": []
+    }
+  ],
+  "prototypeSHA256": "dfc457e9d711da360aab1e49419c622cb9b4066ba15be9153dfe51ab59c71d12",
+  "nativeValidation": "not performed; browser prototype only"
+}

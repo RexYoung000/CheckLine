@@ -1,0 +1,20 @@
+{
+  "base": "worktree before native card-library integration; includes the morning settlement work",
+  "files": {
+    "Check_Line/Features/Budget/PendingExpenseImpactView.swift": "1f6d588f61a92ea2a1fdc782c93c86c851c0a0aa67faa695aeeaa3eaf7346649",
+    "Check_Line/Features/Budget/BudgetDetailView.swift": "94b491c641e2f14337469a0667c76c8eec8794cdfcf5f9e461c3a9e912e0e35b",
+    "Check_Line/Features/Budget/BudgetAmountEditorView.swift": "8cf4b5c73d25c86d563c693edb3065b82035eea2bcf3983d6fafb782824dd9f1",
+    "Check_Line/Features/Budget/BudgetWorkspaceRoute.swift": "5550b50c9d009ed172de40e8a4f37901f50d7a068d41412dd28e210d78ea2099",
+    "Check_Line/Features/Budget/BudgetListView.swift": "c979ef9f970efecac755ccb3a24a97a49d07be19187965ebf45ebb4bb9d1d767",
+    "Check_Line/Features/Settlement/SettlementOutcomeView.swift": "da52d78a8790f22b911aaa9d82ceccc54758818f7e3c448f3730b08638398911",
+    "Check_Line/Features/Settlement/SettlementReviewView.swift": "c9f770776d678780dd457833460680c52e7cc013b849f18954e26e89958dc73f",
+    "Check_Line/Features/Settlement/SettlementReceiptStudyView.swift": "0f4008a68d4d471785ad03875e856f194436354f0d9e4e5e5ee6f92ba20f145e",
+    "Check_Line/Features/Wish/WishReferenceQuoteView.swift": "f90c12fa58a049c51233f283db06ad5c633874461685968a27e165e25e903074",
+    "Check_Line/Features/Wish/WishListView.swift": "0bd86f6677830248d35e34e94f391e2d52c3efc8e08e66b92dc2e83dd5c76c6a",
+    "Check_Line/Features/Wish/WishWalletSummaryView.swift": "d8cbfd1ccf3c74c36e8d0671f37d4fa861275cdd48770aa171bec9bc54cc058c",
+    "Check_Line/Features/Wish/NativeWishListView.swift": "3d48428d8cc875d54fac5883afe38e1a7665a75826f298b15a82281d043f2640",
+    "Check_Line/Features/Wish/WalletEntryDetailView.swift": "fb7055bdd799dcd847c657e9894b1145cfb23237cdf98f291ef36e990e42096a",
+    "Check_Line/DesignSystem/OutcomeCelebration.swift": "f895c6154dfeb7fa61510eee23320f6e3f7bf21aa2b891b01db92883fcc11afe"
+  },
+  "unchanged": true
+}

@@ -1,0 +1,24 @@
+{
+  "frames": 189,
+  "duration": 7.44950008392334,
+  "clip": {
+    "x": 354,
+    "y": 343,
+    "width": 804,
+    "height": 256,
+    "scale": 1
+  },
+  "playbackRate": 1,
+  "interpolatedFrames": false,
+  "source": "EgoLite screenshot frames of the live light/dark preview, original capture timestamps; viewport cropped to the period graphics; not native frame-rate evidence",
+  "export": {
+    "width": 1608,
+    "height": 512,
+    "r_frame_rate": "30/1",
+    "duration": "7.500000",
+    "side_data_list": [
+      {}
+    ]
+  },
+  "observedUniqueFrames": 189
+}

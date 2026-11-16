@@ -1,0 +1,147 @@
+{
+  "approvedBrowserSHA256": "dfc457e9d711da360aab1e49419c622cb9b4066ba15be9153dfe51ab59c71d12",
+  "nativeFiles": {
+    "Check_Line/Features/Home/CartridgeBudgetHomeView.swift": "92450b1100d466cb166b9dcfff560bcb8f80e4b9335a94e8c7d23fcf0d5f4e05",
+    "Check_Line/Features/Home/CartridgeLibraryView.swift": "5b674695cb41fb2fdac0c0263463c84da1e3910ff4db563bdfde0da39197a534",
+    "Check_Line/Features/Home/LibraryArcGeometry.swift": "bf38701b39071df93adff8baf5b0a9759e247554216f5ce2b9a95d3f00a5eb5b",
+    "Check_Line/Features/Home/LibraryBudgetCardFace.swift": "65b18af80648248082abe317ec5e9e0e5848ffa573a005b6e68eb7edce5bd82a",
+    "Check_Line/Features/Home/LibraryPeriodOrb.swift": "bfa1a122dc63d86129f91949a7a55a6a178f0bd75b6dd98c11b70e7907c2c718",
+    "Check_LineTests/LibraryCardSummaryTests.swift": "5973595a5fddad320312fa2e372a343d3d4d5565f6caae82651b38385757930e",
+    "Check_LineTests/LibraryPeriodPresentationTests.swift": "7dadd2a9a74b76320ed8a52e6bd1d56d8b799f1fa9ec36002705e9cae30f2e87",
+    "Check_LineTests/R34LibraryGeometryTests.swift": "9e71c5c073281628ec22cd460f1a7edfb0b643ae21f097f1a06ded2c05e70d96",
+    "Check_LineUITests/LibraryIntegrationUITests.swift": "e84b34235104a882943b12c97168d6222d723e4cb4a2ba38cd212ba5b398ce49",
+    "Check_LineUITests/R34HomeInteractionUITests.swift": "7ee3a0e5d10de96696ba08f2fdc7662fb3383beb981e45b89b4bb51e53dbf8cb"
+  },
+  "protectedNativeUnchanged": true,
+  "tests": {
+    "unit": {
+      "passed": 304,
+      "suites": 60,
+      "result": "/tmp/checkline-library-native-unit.xcresult"
+    },
+    "mergedUI": {
+      "passed": 22,
+      "result": "/tmp/checkline-library-native-final-ui.xcresult"
+    },
+    "finalLibrary": {
+      "passed": 3,
+      "result": "/tmp/checkline-library-native-verified-ui.xcresult"
+    },
+    "small": {
+      "passed": 3,
+      "result": "/tmp/checkline-library-native-small2.xcresult"
+    },
+    "finalLargeText": {
+      "passed": 1,
+      "result": "/tmp/checkline-library-native-large-final.xcresult"
+    }
+  },
+  "releaseBuildLog": "/tmp/checkline-library-native-release-final2.log",
+  "releaseMetallibs": [
+    {
+      "path": "/tmp/checkline-library-native-release/Build/Products/Release-iphoneos/CheckLine.app/default.metallib",
+      "bytes": 20812,
+      "sha256": "aff4810c6bd067d1fbc88d414372e9e4a69c323e9e1ae041607f3e941277000a"
+    },
+    {
+      "path": "/tmp/checkline-library-native-release/Build/Products/Release-iphoneos/CheckLine.app/Libraries.dev_DistortionWavesKit.bundle/default.metallib",
+      "bytes": 42604,
+      "sha256": "018024a0e33655d46a4941570e31077fd4508edeb41bb4516e1bfab458efda0e"
+    }
+  ],
+  "media": {
+    "native-dark-complete.mp4": {
+      "sha256": "2fc3e7f9e4fc5377cb9497d715e287afb9889bdf8c7a559ab030ac4c6bc9b9df",
+      "bytes": 783156,
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "width": 602,
+          "height": 1308,
+          "avg_frame_rate": "8052/151"
+        }
+      ],
+      "format": {
+        "duration": "12.583333"
+      }
+    },
+    "settlement-recovery.mp4": {
+      "sha256": "61e050cc60dffc46cec03ab2caed0946cc9b0268a47dfa5fa51bb4b171342865",
+      "bytes": 423709,
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "width": 602,
+          "height": 1308,
+          "avg_frame_rate": "10800/209"
+        }
+      ],
+      "format": {
+        "duration": "3.483333"
+      }
+    },
+    "native-light-complete.mp4": {
+      "sha256": "95fd711a45a62d8099f20e13a52748cafa840ef81b8785e6acc4fec046244a86",
+      "bytes": 687453,
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "width": 602,
+          "height": 1308,
+          "avg_frame_rate": "700/13"
+        }
+      ],
+      "format": {
+        "duration": "12.350000"
+      }
+    },
+    "settlement-overrun.mp4": {
+      "sha256": "a338639777cd097ac9a13664c9b3bf764b64860ddf3d9ea120fcd55674133ef9",
+      "bytes": 375744,
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "width": 602,
+          "height": 1308,
+          "avg_frame_rate": "1305/26"
+        }
+      ],
+      "format": {
+        "duration": "3.466667"
+      }
+    }
+  },
+  "git": {
+    "committed": false,
+    "pushed": false,
+    "installedOnPersonalDevice": true
+  },
+  "phoneDelivery": {
+    "date": "2026-11-14",
+    "device": "iPhone 12",
+    "os": "iOS 27.0.1",
+    "versionBefore": {
+      "bundleVersion": "18",
+      "version": "1.0"
+    },
+    "versionAfter": {
+      "bundleVersion": "19",
+      "version": "1.0"
+    },
+    "signedReleaseBuildPassed": true,
+    "strictSignatureVerified": true,
+    "installedInPlace": true,
+    "normalLaunchPassed": true,
+    "launchArguments": [],
+    "runningProcessVerified": true,
+    "ledgerReset": false,
+    "personalLedgerContentsRead": false,
+    "visualAndHapticAcceptance": "pending Rex",
+    "executableSHA256": "ee71e0aaf15950f12931623033dd08af416342f764ba8394aee88930e4fd19d2",
+    "record": "phone-install-2026-11-14.md"
+  }
+}

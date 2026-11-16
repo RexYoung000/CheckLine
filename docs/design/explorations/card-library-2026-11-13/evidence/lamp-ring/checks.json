@@ -1,0 +1,490 @@
+[
+  {
+    "theme": "light",
+    "sample": "normal",
+    "layout": {
+      "state": {
+        "mode": "arc",
+        "selected": "month",
+        "focused": "month",
+        "browsing": false,
+        "library": true,
+        "phase": "connected",
+        "progress": 0,
+        "commits": 0,
+        "count": 3,
+        "reduced": false,
+        "theme": "light"
+      },
+      "card": "这个月\n还能花\n¥1,280",
+      "period": "本期还剩\n17\n天\n11月1日—11月30日\n这个月，本期还剩，17，天，11月1日—11月30日",
+      "titleCount": 0,
+      "removedDetails": true,
+      "holderHidden": true,
+      "cardFits": true,
+      "footerFits": true,
+      "textFits": true,
+      "large": false,
+      "errors": []
+    },
+    "orb": {
+      "width": 208,
+      "bottom": 341.3984375,
+      "cardTop": 407.43359375,
+      "clearCenter": true,
+      "centerAlpha": 0,
+      "edgeAlpha": 0,
+      "brightPixels": 0,
+      "state": "active",
+      "renderer": "curved-lamps"
+    }
+  },
+  {
+    "theme": "light",
+    "sample": "upcoming",
+    "layout": {
+      "state": {
+        "mode": "arc",
+        "selected": "month",
+        "focused": "month",
+        "browsing": false,
+        "library": true,
+        "phase": "connected",
+        "progress": 0,
+        "commits": 0,
+        "count": 3,
+        "reduced": false,
+        "theme": "light"
+      },
+      "card": "这个月\n待开始 · 预算额度\n¥3,000",
+      "period": "距离开始\n5\n天\n11月18日—12月17日\n这个月，距离开始，5，天，11月18日—12月17日",
+      "titleCount": 0,
+      "removedDetails": true,
+      "holderHidden": true,
+      "cardFits": true,
+      "footerFits": true,
+      "textFits": true,
+      "large": false,
+      "errors": []
+    },
+    "orb": {
+      "width": 208,
+      "bottom": 341.3984375,
+      "cardTop": 407.43359375,
+      "clearCenter": true,
+      "centerAlpha": 0,
+      "edgeAlpha": 0,
+      "brightPixels": 0,
+      "state": "upcoming",
+      "renderer": "curved-lamps"
+    }
+  },
+  {
+    "theme": "light",
+    "sample": "due",
+    "layout": {
+      "state": {
+        "mode": "arc",
+        "selected": "month",
+        "focused": "month",
+        "browsing": false,
+        "library": true,
+        "phase": "connected",
+        "progress": 0,
+        "commits": 0,
+        "count": 3,
+        "reduced": false,
+        "theme": "light"
+      },
+      "card": "这个月\n还能花\n¥1,280",
+      "period": "本期已结束\n待结算\n11月1日—11月12日\n这个月，本期已结束，待结算，，11月1日—11月12日",
+      "titleCount": 0,
+      "removedDetails": true,
+      "holderHidden": true,
+      "cardFits": true,
+      "footerFits": true,
+      "textFits": true,
+      "large": false,
+      "errors": []
+    },
+    "orb": {
+      "width": 208,
+      "bottom": 341.3984375,
+      "cardTop": 407.43359375,
+      "clearCenter": true,
+      "centerAlpha": 0,
+      "edgeAlpha": 0,
+      "brightPixels": 0,
+      "state": "due",
+      "renderer": "curved-lamps"
+    }
+  },
+  {
+    "theme": "light",
+    "sample": "no-deadline",
+    "layout": {
+      "state": {
+        "mode": "arc",
+        "selected": "month",
+        "focused": "month",
+        "browsing": false,
+        "library": true,
+        "phase": "connected",
+        "progress": 0,
+        "commits": 0,
+        "count": 3,
+        "reduced": false,
+        "theme": "light"
+      },
+      "card": "这个月\n还能花\n¥1,280",
+      "period": "本次预算\n进行中\n一次性 · 未设截止日期\n这个月，本次预算，进行中，，一次性 · 未设截止日期",
+      "titleCount": 0,
+      "removedDetails": true,
+      "holderHidden": true,
+      "cardFits": true,
+      "footerFits": true,
+      "textFits": true,
+      "large": false,
+      "errors": []
+    },
+    "orb": {
+      "width": 208,
+      "bottom": 341.3984375,
+      "cardTop": 407.43359375,
+      "clearCenter": true,
+      "centerAlpha": 0,
+      "edgeAlpha": 0,
+      "brightPixels": 0,
+      "state": "open",
+      "renderer": "curved-lamps"
+    }
+  },
+  {
+    "theme": "light",
+    "width": 320,
+    "height": 640,
+    "layout": {
+      "state": {
+        "mode": "arc",
+        "selected": "month",
+        "focused": "month",
+        "browsing": false,
+        "library": true,
+        "phase": "connected",
+        "progress": 0,
+        "commits": 0,
+        "count": 3,
+        "reduced": false,
+        "theme": "light"
+      },
+      "card": "这个月\n还能花\n¥1,280",
+      "period": "本期还剩\n17\n天\n11月1日—11月30日\n这个月，本期还剩，17，天，11月1日—11月30日",
+      "titleCount": 0,
+      "removedDetails": true,
+      "holderHidden": true,
+      "cardFits": true,
+      "footerFits": true,
+      "textFits": true,
+      "large": false,
+      "errors": []
+    },
+    "orb": {
+      "width": 138,
+      "bottom": 265.3984375,
+      "cardTop": 290.59765625,
+      "clearCenter": true,
+      "centerAlpha": 0,
+      "edgeAlpha": 0,
+      "brightPixels": 0,
+      "state": "active",
+      "renderer": "curved-lamps"
+    }
+  },
+  {
+    "theme": "light",
+    "width": 320,
+    "height": 640,
+    "text": "large",
+    "reduce": "1",
+    "layout": {
+      "state": {
+        "mode": "arc",
+        "selected": "month",
+        "focused": "month",
+        "browsing": false,
+        "library": true,
+        "phase": "connected",
+        "progress": 0,
+        "commits": 0,
+        "count": 3,
+        "reduced": true,
+        "theme": "light"
+      },
+      "card": "这个月\n还能花\n¥1,280",
+      "period": "本期还剩\n17\n天\n11月1日—11月30日\n这个月，本期还剩，17，天，11月1日—11月30日",
+      "titleCount": 0,
+      "removedDetails": true,
+      "holderHidden": true,
+      "cardFits": true,
+      "footerFits": true,
+      "textFits": true,
+      "large": true,
+      "errors": []
+    },
+    "orb": {
+      "width": 142,
+      "bottom": 272.1953125,
+      "cardTop": 293.99609375,
+      "clearCenter": true,
+      "centerAlpha": 0,
+      "edgeAlpha": 0,
+      "brightPixels": 0,
+      "state": "active",
+      "renderer": "curved-lamps"
+    }
+  },
+  {
+    "theme": "dark",
+    "sample": "normal",
+    "layout": {
+      "state": {
+        "mode": "arc",
+        "selected": "month",
+        "focused": "month",
+        "browsing": false,
+        "library": true,
+        "phase": "connected",
+        "progress": 0,
+        "commits": 0,
+        "count": 3,
+        "reduced": false,
+        "theme": "dark"
+      },
+      "card": "这个月\n还能花\n¥1,280",
+      "period": "本期还剩\n17\n天\n11月1日—11月30日\n这个月，本期还剩，17，天，11月1日—11月30日",
+      "titleCount": 0,
+      "removedDetails": true,
+      "holderHidden": true,
+      "cardFits": true,
+      "footerFits": true,
+      "textFits": true,
+      "large": false,
+      "errors": []
+    },
+    "orb": {
+      "width": 208,
+      "bottom": 341.3984375,
+      "cardTop": 407.43359375,
+      "clearCenter": true,
+      "centerAlpha": 0,
+      "edgeAlpha": 0,
+      "brightPixels": 4015,
+      "state": "active",
+      "renderer": "curved-lamps"
+    }
+  },
+  {
+    "theme": "dark",
+    "sample": "upcoming",
+    "layout": {
+      "state": {
+        "mode": "arc",
+        "selected": "month",
+        "focused": "month",
+        "browsing": false,
+        "library": true,
+        "phase": "connected",
+        "progress": 0,
+        "commits": 0,
+        "count": 3,
+        "reduced": false,
+        "theme": "dark"
+      },
+      "card": "这个月\n待开始 · 预算额度\n¥3,000",
+      "period": "距离开始\n5\n天\n11月18日—12月17日\n这个月，距离开始，5，天，11月18日—12月17日",
+      "titleCount": 0,
+      "removedDetails": true,
+      "holderHidden": true,
+      "cardFits": true,
+      "footerFits": true,
+      "textFits": true,
+      "large": false,
+      "errors": []
+    },
+    "orb": {
+      "width": 208,
+      "bottom": 341.3984375,
+      "cardTop": 407.43359375,
+      "clearCenter": true,
+      "centerAlpha": 0,
+      "edgeAlpha": 0,
+      "brightPixels": 0,
+      "state": "upcoming",
+      "renderer": "curved-lamps"
+    }
+  },
+  {
+    "theme": "dark",
+    "sample": "due",
+    "layout": {
+      "state": {
+        "mode": "arc",
+        "selected": "month",
+        "focused": "month",
+        "browsing": false,
+        "library": true,
+        "phase": "connected",
+        "progress": 0,
+        "commits": 0,
+        "count": 3,
+        "reduced": false,
+        "theme": "dark"
+      },
+      "card": "这个月\n还能花\n¥1,280",
+      "period": "本期已结束\n待结算\n11月1日—11月12日\n这个月，本期已结束，待结算，，11月1日—11月12日",
+      "titleCount": 0,
+      "removedDetails": true,
+      "holderHidden": true,
+      "cardFits": true,
+      "footerFits": true,
+      "textFits": true,
+      "large": false,
+      "errors": []
+    },
+    "orb": {
+      "width": 208,
+      "bottom": 341.3984375,
+      "cardTop": 407.43359375,
+      "clearCenter": true,
+      "centerAlpha": 0,
+      "edgeAlpha": 0,
+      "brightPixels": 0,
+      "state": "due",
+      "renderer": "curved-lamps"
+    }
+  },
+  {
+    "theme": "dark",
+    "sample": "no-deadline",
+    "layout": {
+      "state": {
+        "mode": "arc",
+        "selected": "month",
+        "focused": "month",
+        "browsing": false,
+        "library": true,
+        "phase": "connected",
+        "progress": 0,
+        "commits": 0,
+        "count": 3,
+        "reduced": false,
+        "theme": "dark"
+      },
+      "card": "这个月\n还能花\n¥1,280",
+      "period": "本次预算\n进行中\n一次性 · 未设截止日期\n这个月，本次预算，进行中，，一次性 · 未设截止日期",
+      "titleCount": 0,
+      "removedDetails": true,
+      "holderHidden": true,
+      "cardFits": true,
+      "footerFits": true,
+      "textFits": true,
+      "large": false,
+      "errors": []
+    },
+    "orb": {
+      "width": 208,
+      "bottom": 341.3984375,
+      "cardTop": 407.43359375,
+      "clearCenter": true,
+      "centerAlpha": 0,
+      "edgeAlpha": 0,
+      "brightPixels": 0,
+      "state": "open",
+      "renderer": "curved-lamps"
+    }
+  },
+  {
+    "theme": "dark",
+    "width": 320,
+    "height": 640,
+    "layout": {
+      "state": {
+        "mode": "arc",
+        "selected": "month",
+        "focused": "month",
+        "browsing": false,
+        "library": true,
+        "phase": "connected",
+        "progress": 0,
+        "commits": 0,
+        "count": 3,
+        "reduced": false,
+        "theme": "dark"
+      },
+      "card": "这个月\n还能花\n¥1,280",
+      "period": "本期还剩\n17\n天\n11月1日—11月30日\n这个月，本期还剩，17，天，11月1日—11月30日",
+      "titleCount": 0,
+      "removedDetails": true,
+      "holderHidden": true,
+      "cardFits": true,
+      "footerFits": true,
+      "textFits": true,
+      "large": false,
+      "errors": []
+    },
+    "orb": {
+      "width": 138,
+      "bottom": 265.3984375,
+      "cardTop": 290.59765625,
+      "clearCenter": true,
+      "centerAlpha": 0,
+      "edgeAlpha": 0,
+      "brightPixels": 1743,
+      "state": "active",
+      "renderer": "curved-lamps"
+    }
+  },
+  {
+    "theme": "dark",
+    "width": 320,
+    "height": 640,
+    "text": "large",
+    "reduce": "1",
+    "layout": {
+      "state": {
+        "mode": "arc",
+        "selected": "month",
+        "focused": "month",
+        "browsing": false,
+        "library": true,
+        "phase": "connected",
+        "progress": 0,
+        "commits": 0,
+        "count": 3,
+        "reduced": true,
+        "theme": "dark"
+      },
+      "card": "这个月\n还能花\n¥1,280",
+      "period": "本期还剩\n17\n天\n11月1日—11月30日\n这个月，本期还剩，17，天，11月1日—11月30日",
+      "titleCount": 0,
+      "removedDetails": true,
+      "holderHidden": true,
+      "cardFits": true,
+      "footerFits": true,
+      "textFits": true,
+      "large": true,
+      "errors": []
+    },
+    "orb": {
+      "width": 142,
+      "bottom": 272.1953125,
+      "cardTop": 293.99609375,
+      "clearCenter": true,
+      "centerAlpha": 0,
+      "edgeAlpha": 0,
+      "brightPixels": 2089,
+      "state": "active",
+      "renderer": "curved-lamps"
+    }
+  }
+]

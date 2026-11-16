@@ -1,0 +1,108 @@
+{
+  "date": "2026-11-13",
+  "nativeAndOriginalFilesChecked": 841,
+  "nativeAndOriginalChanges": [],
+  "inlineScriptsParsed": 2,
+  "deterministicBuild": true,
+  "prototypeSHA256": "23f64cac3b7ebc0f1bfffdb1a426adb2aaafb2d37462e0ec46c3fa3d57382828",
+  "layoutCases": 36,
+  "interactionEvidence": [
+    "interaction-checks.json",
+    "edge-checks.json",
+    "light-flow-checks.json",
+    "dark-flow-checks.json"
+  ],
+  "nativeValidation": "not performed; browser prototype only",
+  "userVisualAcceptance": "light fine grain and local glints accepted; dark retained; complete flow pending",
+  "git": "not committed; not pushed",
+  "latestRefinement": {
+    "name": "少量微光提亮",
+    "prototypeSHA256": "dfc457e9d711da360aab1e49419c622cb9b4066ba15be9153dfe51ab59c71d12",
+    "focusedBrowserCases": 4,
+    "evidence": "fine-glints/checks.json",
+    "recordingEvidence": "fine-glints/light-glints.mp4",
+    "comparisonEvidence": "fine-glints/before-after.png",
+    "protectionEvidence": "fine-glints/protection.json",
+    "darkAppearanceUnchanged": true,
+    "originalCardsLayoutAndReturnCodeUnchanged": true,
+    "nativeValidation": "not performed; browser prototype only",
+    "visualAcceptance": "accepted for light appearance; dark retained"
+  },
+  "priorRefinements": [
+    {
+      "name": "上方周期星光增强",
+      "prototypeSHA256": "b45efdbaa28739f7ad262ec27a8969577f425632291acd87e8ab86352eb38e5a",
+      "scopedBrowserCases": 12,
+      "evidence": "stars/checks.json",
+      "originalCardsAndReturnCodeUnchanged": true,
+      "nativeValidation": "not performed; browser prototype only",
+      "visualAcceptance": "pending",
+      "interactionEvidence": "stars/interaction.json",
+      "recordingEvidence": "stars/star-motion.mp4"
+    },
+    {
+      "name": "原版对照后的圆点光环",
+      "prototypeSHA256": "95b57f9bc29d7b7f5fb7aab523d52b177991da539e4db21ad8ceb473864489b6",
+      "scopedBrowserCases": 12,
+      "componentChecks": 4,
+      "evidence": "lamp-ring/checks.json",
+      "interactionEvidence": "lamp-ring/interaction.json",
+      "componentEvidence": "lamp-ring/component-checks.json",
+      "recordingEvidence": "lamp-ring/lamp-motion.mp4",
+      "originalCardsLayoutAndReturnCodeUnchanged": true,
+      "nativeValidation": "not performed; browser prototype only",
+      "visualAcceptance": "rejected by user: regular dense array and insufficient halo"
+    },
+    {
+      "name": "自然光点与柔光",
+      "prototypeSHA256": "cd8b06e1e2e26489fa8f4fcd47dde53ebda7cde5ec8bd5d5f67d53ccecdce7fa",
+      "scopedBrowserCases": 10,
+      "evidence": "organic-glow/checks.json",
+      "interactionEvidence": "organic-glow/interaction.json",
+      "recordingEvidence": "organic-glow/organic-motion.mp4",
+      "protectionEvidence": "organic-glow/protection.json",
+      "originalCardsLayoutAndReturnCodeUnchanged": true,
+      "nativeValidation": "not performed; browser prototype only",
+      "visualAcceptance": "natural arrangement accepted; core clarity refinement requested"
+    },
+    {
+      "name": "自然排列与清晰亮芯",
+      "prototypeSHA256": "b9588e7f1c80e4533adaebca0f4173e3e05a6936f1d4d189ed270bdbf2c449b8",
+      "focusedBrowserCases": 4,
+      "normalScreenVisualChecks": 2,
+      "evidence": "clear-core/checks.json",
+      "recordingEvidence": "clear-core/clear-core-motion.mp4",
+      "comparisonEvidence": "clear-core/before-after.png",
+      "protectionEvidence": "clear-core/protection.json",
+      "originalCardsLayoutAndReturnCodeUnchanged": true,
+      "nativeValidation": "not performed; browser prototype only",
+      "visualAcceptance": "light rejected; dark retained without further changes"
+    },
+    {
+      "name": "浅色细颗粒与局部微光",
+      "prototypeSHA256": "c664dd0d01ed2d7f4a5680745b31acf09e18dfee154f9bcd5f1ef9478a919c8d",
+      "focusedBrowserCases": 6,
+      "unchangedDarkBitmapCases": 3,
+      "evidence": "fine-light/checks.json",
+      "interactionEvidence": "fine-light/interaction.json",
+      "recordingEvidence": "fine-light/light-flow.mp4",
+      "comparisonEvidence": "fine-light/original-current.png",
+      "protectionEvidence": "fine-light/protection.json",
+      "darkAppearanceUnchanged": true,
+      "originalCardsLayoutAndReturnCodeUnchanged": true,
+      "nativeValidation": "not performed; browser prototype only",
+      "visualAcceptance": "fine grain accepted; small accent brightness refinement requested"
+    }
+  ],
+  "latestFlowReview": {
+    "evidence": "accepted-flow/summary.json",
+    "prototypeSHA256": "dfc457e9d711da360aab1e49419c622cb9b4066ba15be9153dfe51ab59c71d12",
+    "lightVideo": "accepted-flow/light-complete.mp4",
+    "darkVideo": "accepted-flow/dark-complete.mp4",
+    "flowsChecked": 2,
+    "checkpointsPerFlow": 8,
+    "runtimeChanges": false,
+    "userAcceptance": "pending",
+    "nativeValidation": "not performed"
+  }
+}

@@ -1,0 +1,16 @@
+[
+  {
+    "file": "settlement-recovery.mp4",
+    "raw": "/tmp/checkline-library-native-final-raw.mp4",
+    "start": 290.4841919136048,
+    "duration": 3.5,
+    "speed": 1
+  },
+  {
+    "file": "settlement-overrun.mp4",
+    "raw": "/tmp/checkline-library-native-final-raw.mp4",
+    "start": 278.4011919403076,
+    "duration": 3.4700000000000006,
+    "speed": 1
+  }
+]

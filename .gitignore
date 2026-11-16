@@ -78,6 +78,9 @@ secrets/
 tmp/
 temp/
 
+# 大体积原速录屏只留本地（2026-11-16 Rex 确认），README/截图/validation.json 照常入库
+docs/design/evidence/2026-11-14-input-and-flow-regression/*.mp4
+
 # AI / 笔记本地缓存（不进版本库）
 .aider*
 .copilot/

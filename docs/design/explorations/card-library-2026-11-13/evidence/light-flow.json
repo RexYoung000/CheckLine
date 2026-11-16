@@ -1,0 +1,36 @@
+{
+  "name": "light-flow",
+  "frames": 726,
+  "duration": 11.20266604423523,
+  "clip": {
+    "x": 0,
+    "y": 0,
+    "width": 390,
+    "height": 844,
+    "top": 0,
+    "right": 390,
+    "bottom": 844,
+    "left": 0
+  },
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "source": "EgoLite top-level 390x844 CDP screencast; real frames and timestamps, native pointer input, no speed change",
+  "excludedStaleFrames": 0,
+  "export": {
+    "width": 390,
+    "height": 844,
+    "containerFPS": 60,
+    "playbackRate": 1,
+    "interpolatedFrames": false,
+    "timebase": "original capture timestamps",
+    "media": {
+      "width": 390,
+      "height": 844,
+      "r_frame_rate": "60/1",
+      "duration": "11.216667",
+      "nb_frames": "673"
+    }
+  }
+}

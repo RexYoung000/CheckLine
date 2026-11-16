@@ -1,0 +1,128 @@
+.cll-card {
+  --cll-card-ink: #102f41;
+  --cll-card-supporting-ink: #2c5669;
+  --cll-card-risk-ink: #704019;
+  --cll-card-edge: rgb(69 131 158 / .33);
+  --cll-card-shadow: rgb(36 94 120 / .26);
+  position: relative;
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  container-type: inline-size;
+  isolation: isolate;
+  border-radius: var(--cll-card-radius, 26px);
+  color-scheme: light;
+  color: var(--cll-card-ink);
+  font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Helvetica Neue', Arial, sans-serif;
+  font-variant-numeric: tabular-nums;
+  text-align: left;
+  box-shadow: 0 8px 24px -14px var(--cll-card-shadow), 0 2px 5px -4px var(--cll-card-shadow);
+}
+
+:is(.app[data-theme='dark'], [data-theme='dark']) .cll-card,
+.cll-card[data-theme='dark'] {
+  --cll-card-ink: #edfaff;
+  --cll-card-supporting-ink: #c4e6f4;
+  --cll-card-risk-ink: #ffdda9;
+  --cll-card-edge: rgb(151 222 251 / .36);
+  --cll-card-shadow: rgb(4 15 24 / .81);
+  color-scheme: dark;
+}
+
+.cll-card.cll-card-compact {
+  border-radius: var(--cll-card-radius, 18px);
+}
+
+.cll-card::after {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  border: 1px solid var(--cll-card-edge);
+  border-radius: inherit;
+  pointer-events: none;
+  content: '';
+}
+
+.cll-card .cll-card-optics {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.cll-card .cll-card-content {
+  position: absolute;
+  inset: min(20px, 8cqi);
+  display: grid;
+  grid-template-rows: 1fr auto;
+  min-width: 0;
+  color: var(--cll-card-ink);
+}
+
+.cll-card.cll-card-compact .cll-card-content {
+  inset: min(14px, 8cqi);
+}
+
+.cll-card :is(.cll-card-summary, .cll-card-details) {
+  display: grid;
+  gap: min(4px, 1.1cqi);
+  min-width: 0;
+}
+
+.cll-card .cll-card-details {
+  align-self: end;
+}
+
+.cll-card :is(.cll-card-name, .cll-card-label, .cll-card-amount, .cll-card-used, .cll-card-pending, .cll-card-risk) {
+  display: block;
+  min-width: 0;
+  overflow: hidden;
+  font-size: min(var(--cll-line-size, 10cqi), var(--cll-line-max, 16px));
+  line-height: 1.12;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cll-card .cll-card-name {
+  --cll-line-max: min(24px, 7.2cqi);
+  align-self: start;
+  font-weight: 600;
+}
+.cll-card:not(.cll-card-compact) .cll-card-name {
+  white-space: normal;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  font-size: clamp(16px,7.2cqi,24px);
+  line-height: 1.25;
+}
+
+.cll-card .cll-card-label {
+  --cll-line-max: min(14px, 4.65cqi);
+  color: var(--cll-card-supporting-ink);
+  font-weight: 530;
+}
+.cll-card[data-risk=true] .cll-card-label { color: var(--cll-card-risk-ink); }
+
+.cll-card .cll-card-amount {
+  --cll-line-max: min(42px, 11.65cqi);
+  font-weight: 620;
+  letter-spacing: -.025em;
+  line-height: 1.03;
+}
+
+.cll-card :is(.cll-card-used, .cll-card-pending, .cll-card-risk) {
+  --cll-line-max: min(13px, 4.25cqi);
+  color: var(--cll-card-supporting-ink);
+  font-weight: 530;
+}
+
+.cll-card .cll-card-risk {
+  color: var(--cll-card-risk-ink);
+  font-weight: 600;
+}

@@ -1,0 +1,18 @@
+{
+  "capture": "EgoLite actual light component screenshots with real capture timestamps",
+  "durationSeconds": 7.560999870300293,
+  "frameCount": 215,
+  "approximateCaptureFps": 28.43539263167069,
+  "playbackRate": 1,
+  "interpolatedFrames": false,
+  "clip": {
+    "x": 424,
+    "y": 175,
+    "width": 320,
+    "height": 366,
+    "scale": 1
+  },
+  "containerFps": 30,
+  "sequence": "10/30 days → 20/30 days → 10/30 days",
+  "nativePerformanceEvidence": false
+}

@@ -1,0 +1,18 @@
+{
+  "capture": "EgoLite Page.captureScreenshot; actual browser animation",
+  "durationSeconds": 8.569000005722046,
+  "frameCount": 229,
+  "approximateCaptureFps": 26.72423851640596,
+  "playbackRate": 1,
+  "interpolatedFrames": false,
+  "clip": {
+    "x": 346,
+    "y": 175,
+    "width": 820,
+    "height": 366,
+    "scale": 1
+  },
+  "sequence": "10 of 30 days → 20 of 30 → 10 of 30",
+  "containerFps": 30,
+  "nativePerformanceEvidence": false
+}
