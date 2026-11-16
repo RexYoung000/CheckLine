@@ -119,7 +119,9 @@ struct CreateWishSheet: View {
                             .accessibilityLabel(String(localized: "wallet.wishes.name")).accessibilityIdentifier("wallet.wishes.name")
                             .onChange(of: task.draft.name) { _, value in if value.count > 80 { task.draft.name = String(value.prefix(80)) } }
                     }.padding(18).walletSurface(radius: 18)
-                        .overlay(RoundedRectangle(cornerRadius: 18).strokeBorder(fieldFocused == .name ? PaperTheme.focus : .clear, lineWidth: 1.5))
+                        .overlay(RoundedRectangle(cornerRadius: 18).strokeBorder(fieldFocused == .name ? PaperTheme.focus : .clear, lineWidth: 1.5).allowsHitTesting(false))
+                        .contentShape(Rectangle())
+                        .simultaneousGesture(TapGesture().onEnded { fieldFocused = .name })
                     Button { showsCover = true } label: {
                         ZStack(alignment: .topLeading) {
                             WishCoverArtwork(cover: workspace.wishCovers.cover(for: task.draft.entityID))
@@ -137,8 +139,13 @@ struct CreateWishSheet: View {
                 }.padding(22).frame(maxWidth: 560).frame(maxWidth: .infinity)
             }.scrollDismissesKeyboard(.interactively).background(PaperTheme.canvas.ignoresSafeArea())
                 .safeAreaInset(edge: .bottom) {
-                    PaperSubmitBar(title: String(localized: "wallet.wishes.add"), enabled: canSave, action: save)
-                        .accessibilityIdentifier("wallet.wishes.create.save").padding(.vertical, 12).background(PaperTheme.canvas)
+                    VStack(spacing: 0) {
+                        if fieldFocused != nil {
+                            PaperKeyboardDoneBar { fieldFocused = nil }
+                        }
+                        PaperSubmitBar(title: String(localized: "wallet.wishes.add"), enabled: canSave, action: save)
+                            .accessibilityIdentifier("wallet.wishes.create.save").padding(.vertical, 12).background(PaperTheme.canvas)
+                    }
                 }
                 .navigationTitle(String(localized: "wallet.wishes.add")).navigationBarTitleDisplayMode(.inline)
                 .toolbarBackground(.hidden, for: .navigationBar)
@@ -152,9 +159,6 @@ struct CreateWishSheet: View {
                             label: { CheckLineIcon(symbol: "ellipsis", size: 20).frame(width: 44, height: 44) }
                                 .accessibilityLabel(String(localized: "ui.task.options"))
                         }
-                    }
-                    ToolbarItemGroup(placement: .keyboard) {
-                        Spacer(); Button(String(localized: "ui.keyboard.done")) { fieldFocused = nil }
                     }
                 }
         }.modifier(NativeDrawerStyle())
@@ -187,13 +191,15 @@ struct CreateWishSheet: View {
                 TextField("0.00", text: field(\.amount)).keyboardType(AmountKeyboard.type).font(.largeTitle).monospacedDigit().focused($fieldFocused, equals: .amount)
                     .accessibilityLabel(String(localized: "wallet.wishes.estimate")).accessibilityIdentifier("wallet.wishes.estimate")
             }.frame(maxWidth: .infinity, alignment: .leading)
+                .contentShape(Rectangle())
+                .simultaneousGesture(TapGesture().onEnded { fieldFocused = .amount })
             VStack(alignment: .leading, spacing: 8) {
                 Text(String(localized: "v1.budget.currency")).font(.subheadline).foregroundStyle(PaperTheme.muted)
                 CurrencyMenuButton(currency: field(\.currency), preferred: workspace.ledger.walletSettings.walletCurrencyCode)
                     .accessibilityIdentifier("wallet.wishes.currency")
             }
         }.padding(18).walletSurface(radius: 18)
-            .overlay(RoundedRectangle(cornerRadius: 18).strokeBorder(fieldFocused == .amount ? PaperTheme.focus : .clear, lineWidth: 1.5))
+            .overlay(RoundedRectangle(cornerRadius: 18).strokeBorder(fieldFocused == .amount ? PaperTheme.focus : .clear, lineWidth: 1.5).allowsHitTesting(false))
     }
 
     private func save() {
@@ -276,6 +282,7 @@ struct WishRedemptionView: View {
     @State private var purchased = false
     @State private var failed = false
     @State private var discardRequested = false
+    @State private var rateFocused = false
     @FocusState private var amountFocused: Bool
     @Environment(\.dismiss) private var dismiss
     @Environment(\.dynamicTypeSize) private var typeSize
@@ -347,12 +354,17 @@ struct WishRedemptionView: View {
                 }.padding(24).frame(maxWidth: 600).frame(maxWidth: .infinity)
             }.scrollDismissesKeyboard(.interactively).background(PaperTheme.canvas.ignoresSafeArea())
                 .safeAreaInset(edge: .bottom) {
-                    if saved != nil {
-                        PaperSubmitBar(title: String(localized: "action.close"), enabled: true) { dismiss() }
-                            .padding(.vertical, 12).background(PaperTheme.canvas)
-                    } else if wish?.state == .active {
-                        PaperSubmitBar(title: String(localized: "wallet.wishes.confirm"), enabled: canSubmit, action: submit)
-                            .accessibilityIdentifier("wallet.wishes.confirm").padding(.vertical, 12).background(PaperTheme.canvas)
+                    VStack(spacing: 0) {
+                        if saved == nil && wish?.state == .active && (amountFocused || rateFocused) {
+                            PaperKeyboardDoneBar { amountFocused = false; rateFocused = false }
+                        }
+                        if saved != nil {
+                            PaperSubmitBar(title: String(localized: "action.close"), enabled: true) { dismiss() }
+                                .padding(.vertical, 12).background(PaperTheme.canvas)
+                        } else if wish?.state == .active {
+                            PaperSubmitBar(title: String(localized: "wallet.wishes.confirm"), enabled: canSubmit, action: submit)
+                                .accessibilityIdentifier("wallet.wishes.confirm").padding(.vertical, 12).background(PaperTheme.canvas)
+                        }
                     }
                 }
                 .navigationTitle(String(localized: "wallet.wishes.redemption")).navigationBarTitleDisplayMode(.inline)
@@ -366,12 +378,6 @@ struct WishRedemptionView: View {
                             Menu { Button(String(localized: "ui.draft.discard"), role: .destructive) { discardRequested = true } }
                             label: { CheckLineIcon(symbol: "ellipsis", size: 20).frame(width: 44, height: 44) }
                                 .accessibilityLabel(String(localized: "ui.task.options"))
-                        }
-                    }
-                    ToolbarItemGroup(placement: .keyboard) {
-                        Spacer(); Button(String(localized: "ui.keyboard.done")) {
-                            amountFocused = false
-                            UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
                         }
                     }
                 }
@@ -413,18 +419,20 @@ struct WishRedemptionView: View {
                 TextField("0.00", text: field(\.amount)).keyboardType(AmountKeyboard.type).font(.largeTitle).monospacedDigit().focused($amountFocused)
                     .accessibilityLabel(String(localized: "wallet.wishes.actual")).accessibilityIdentifier("wallet.wishes.actual")
             }.frame(maxWidth: .infinity, alignment: .leading)
+                .contentShape(Rectangle())
+                .simultaneousGesture(TapGesture().onEnded { amountFocused = true })
             VStack(alignment: .leading, spacing: 8) {
                 Text(String(localized: "wallet.wishes.purchaseCurrency")).font(.subheadline).foregroundStyle(PaperTheme.muted)
                 CurrencyMenuButton(currency: field(\.currency), preferred: walletCurrency, label: String(localized: "wallet.wishes.purchaseCurrency"))
                     .accessibilityIdentifier("wallet.wishes.purchaseCurrency")
             }
         }.padding(18).walletSurface()
-            .overlay(RoundedRectangle(cornerRadius: 24).strokeBorder(amountFocused ? PaperTheme.focus : .clear, lineWidth: 1.5))
+            .overlay(RoundedRectangle(cornerRadius: 24).strokeBorder(amountFocused ? PaperTheme.focus : .clear, lineWidth: 1.5).allowsHitTesting(false))
     }
 
     private var walletImpact: some View {
         VStack(alignment: .leading, spacing: 16) {
-            if needsQuote { WalletExchangeQuoteFields(sourceCurrencyCode: currency, walletCurrencyCode: walletCurrency, rateText: rate, quotedAt: quoteDate) }
+            if needsQuote { WalletExchangeQuoteFields(sourceCurrencyCode: currency, walletCurrencyCode: walletCurrency, rateText: rate, quotedAt: quoteDate, onFocusChange: { rateFocused = $0 }) }
             if let preview {
                 PaperValueRow(title: String(localized: "wallet.exchange.walletChange"), value: MoneyFormat.string(preview.walletSignedAmount, currencyCode: walletCurrency))
                     .accessibilityElement(children: .combine).accessibilityIdentifier("wallet.exchange.walletChange")
@@ -448,7 +456,7 @@ struct WishRedemptionView: View {
         do {
             try workspace.redeemWish(wishID, actualAmount: parsed, currencyCode: currency, realPurchaseConfirmed: purchased, quote: quote)
             // Persistence has succeeded. Draft cleanup is independent of that saved purchase.
-            outcome = OutcomeReceipt(kind: .wish, title: wish.name, before: before, after: workspace.wallet.balance,
+            outcome = OutcomeReceipt(title: wish.name, before: before, after: workspace.wallet.balance,
                 currency: walletCurrency, originalAmount: parsed, originalCurrency: currency,
                 date: saved?.confirmedAt ?? Date(), cover: workspace.wishCovers.cover(for: wishID, fallback: wish.symbolName),
                 progress: (wish.currencyCode ?? walletCurrency) == walletCurrency ? wish.targetAmount.map { CGFloat(NSDecimalNumber(decimal: min(1,before / $0)).doubleValue) } : nil)

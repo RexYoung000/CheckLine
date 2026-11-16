@@ -29,7 +29,7 @@ nonisolated struct HomeProcessingItem: Equatable, Identifiable, Sendable {
 
 nonisolated enum HomeProjector {
     static func cards(in ledger: Ledger, now: Date = Date()) -> [HomeBudgetCardModel] {
-        ledger.budgets.values
+        let budgets = ledger.budgets.values
             .filter { $0.state == .active || $0.state == .pendingSettlement }
             .sorted { lhs, rhs in
                 if lhs.sortIndex != rhs.sortIndex {
@@ -37,24 +37,34 @@ nonisolated enum HomeProjector {
                 }
                 return lhs.name < rhs.name
             }
-            .compactMap { budget -> HomeBudgetCardModel? in
-                guard let period = displayPeriod(for: budget.id, ledger: ledger) else { return nil }
-                return HomeBudgetCardModel(
-                    id: budget.id,
-                    periodID: period.id,
-                    name: budget.name,
-                    cycleType: budget.cycleType,
-                    currencyCode: period.currencyCode,
-                    snapshot: BudgetEngine.periodSnapshot(
-                        period: period,
-                        expenses: Array(ledger.expenses.values)
-                    ),
-                    periodState: period.state,
-                    periodStart: period.startDate,
-                    periodEnd: period.endDate,
-                    cycleProgress: cycleProgress(period: period, now: now)
-                )
-            }
+        guard !budgets.isEmpty else { return [] }
+        let periodsByBudget = Dictionary(grouping: ledger.periods.values, by: \.budgetID)
+        let visiblePeriods = budgets.compactMap { budget -> (Budget, BudgetPeriod)? in
+            let periods = periodsByBudget[budget.id, default: []].sorted { $0.sequence < $1.sequence }
+            guard let period = displayPeriod(in: periods) else { return nil }
+            return (budget, period)
+        }
+        guard !visiblePeriods.isEmpty else { return [] }
+        let visiblePeriodIDs = Set(visiblePeriods.map(\.1.id))
+        var expensesByPeriod: [UUID: [Expense]] = [:]
+        for expense in ledger.expenses.values {
+            guard let periodID = expense.budgetPeriodID, visiblePeriodIDs.contains(periodID) else { continue }
+            expensesByPeriod[periodID, default: []].append(expense)
+        }
+        return visiblePeriods.map { budget, period in
+            HomeBudgetCardModel(
+                id: budget.id,
+                periodID: period.id,
+                name: budget.name,
+                cycleType: budget.cycleType,
+                currencyCode: period.currencyCode,
+                snapshot: BudgetEngine.periodSnapshot(period: period, expenses: expensesByPeriod[period.id, default: []]),
+                periodState: period.state,
+                periodStart: period.startDate,
+                periodEnd: period.endDate,
+                cycleProgress: cycleProgress(period: period, now: now)
+            )
+        }
     }
 
     static func card(budgetID: UUID, periodID: UUID?, in ledger: Ledger) -> HomeBudgetCardModel? {
@@ -126,7 +136,10 @@ nonisolated enum HomeProjector {
     }
 
     static func displayPeriod(for budgetID: UUID, ledger: Ledger) -> BudgetPeriod? {
-        let periods = ledger.periods(forBudget: budgetID)
+        displayPeriod(in: ledger.periods(forBudget: budgetID))
+    }
+
+    private static func displayPeriod(in periods: [BudgetPeriod]) -> BudgetPeriod? {
         if let active = periods.first(where: { $0.state == .active }) {
             return active
         }

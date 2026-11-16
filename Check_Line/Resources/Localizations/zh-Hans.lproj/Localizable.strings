@@ -865,13 +865,12 @@
 "native.cover.use" = "使用封面";
 "native.outcome.viewRealized" = "查看已实现";
 "native.outcome.wishSaved" = "心愿实现了";
-"native.outcome.settled" = "这期结算好了";
 "native.outcome.skip" = "跳过动效";
 "native.outcome.fulfilled" = "如愿了。";
 "native.outcome.yourMoment" = "这一刻，属于你。";
 "native.outcome.transferred" = "转入心愿余额";
-"native.outcome.recovered" = "已补待恢复差额";
-"native.outcome.savedForWish" = "这份结余，留给想要的。";
+"native.outcome.walletDeducted" = "从心愿钱包扣除";
+"native.outcome.recoveryReduced" = "待恢复差额减少";
 "wallet.home.recent" = "最近记录";
 "wallet.records.empty" = "还没有消费记录";
 "native.icon.headphones" = "耳机";
@@ -950,3 +949,20 @@
 "native.wish.referenceTarget" = "目标折合";
 "native.wish.referenceFailed" = "参考汇率未能保存或读取，请重试。原有已应用值保持。";
 "native.wish.applyReference" = "应用参考汇率";
+
+/* Accepted library period and card presentation. */
+"native.library.period.remaining" = "本期还剩";
+"native.library.period.upcoming" = "待开始";
+"native.library.period.day" = "天";
+"native.library.period.days" = "天";
+"native.library.period.current" = "本期";
+"native.library.period.endsToday" = "今天结束";
+"native.library.period.ended" = "本期已结束";
+"native.library.period.due" = "待结算";
+"native.library.period.settled" = "已结算";
+"native.library.period.oneShot" = "本次预算";
+"native.library.period.noDeadline" = "无截止日期";
+"native.library.period.since" = "始于 %@";
+"native.library.card.upcoming" = "待开始 · 预算额度";
+"native.library.pullUse" = "下拉选用";
+"native.library.pullBack" = "下拉返回";

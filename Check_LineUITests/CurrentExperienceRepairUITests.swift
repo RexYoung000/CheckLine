@@ -7,14 +7,16 @@ final class CurrentExperienceRepairUITests: XCTestCase {
         if #available(iOS 27.0, *) { try XCUIDevice.shared.voiceOverService.disable() }
     }
 
-    func testEstimateOpensPendingDetailAndRefreshesThroughBackNavigation() {
-        let app = launch("home-inline")
+    func testSettlementReviewOpensPendingDetailAndRefreshesThroughBackNavigation() {
+        let app = launch("r34-home")
+        openBudgetDetails(in: app)
         let settlement = app.buttons["wallet.budget.settlement"]
         XCTAssertTrue(settlement.waitForExistence(timeout: 10))
         reveal(settlement, in: app); settlement.tap()
-        XCTAssertTrue(app.staticTexts["wallet.settlement.estimateOnly"].waitForExistence(timeout: 5))
-        XCTAssertFalse(app.buttons["wallet.settlement.confirm"].exists)
-        XCTAssertFalse(app.buttons["wallet.settlement.acceptData"].exists)
+        let submit = app.buttons["wallet.settlement.confirm"]
+        XCTAssertTrue(submit.waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["wallet.settlement.acceptData"].exists)
+        XCTAssertFalse(submit.isEnabled, "Opening an early settlement review must not accept it.")
         let pending = app.buttons["wallet.settlement.pending"]
         reveal(pending, in: app); pending.tap()
         let row = app.buttons.matching(NSPredicate(format: "label CONTAINS %@", "咖啡")).firstMatch
@@ -26,9 +28,10 @@ final class CurrentExperienceRepairUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["已确认"].waitForExistence(timeout: 5))
         app.navigationBars["消费详情"].buttons.firstMatch.tap()
         XCTAssertTrue(app.staticTexts["已全部确认"].waitForExistence(timeout: 5))
-        app.buttons["关闭"].firstMatch.tap()
+        app.navigationBars["待确认"].buttons["关闭"].tap()
         XCTAssertTrue(pending.waitForExistence(timeout: 5))
         XCTAssertFalse(pending.isEnabled)
+        XCTAssertFalse(submit.isEnabled)
         attach(app, "settlement-estimate-updated-after-confirming")
     }
 
@@ -63,42 +66,69 @@ final class CurrentExperienceRepairUITests: XCTestCase {
         let name = app.textFields["wallet.wishes.name"]
         XCTAssertTrue(name.waitForExistence(timeout: 5)); name.tap(); name.typeText("RestoreWishUITest")
         app.buttons["完成输入"].firstMatch.tap()
-        app.buttons["关闭"].firstMatch.tap()
+        app.navigationBars["添加心愿"].buttons["关闭"].tap()
+        XCTAssertTrue(name.waitForNonExistence(timeout: 5))
         add.tap()
         XCTAssertTrue(name.waitForExistence(timeout: 5)); XCTAssertEqual(name.value as? String, "RestoreWishUITest")
         attach(app, "wish-create-restored")
         app.buttons["wallet.wishes.create.save"].tap()
         let created = app.staticTexts["RestoreWishUITest"]
-        XCTAssertTrue(created.waitForExistence(timeout: 5)); created.tap()
-        app.buttons["已购买，去兑现"].tap()
+        XCTAssertTrue(created.waitForExistence(timeout: 5))
+
+        app.buttons["native.wish.layout"].tap()
+        let eligible = app.buttons.matching(NSPredicate(format: "identifier BEGINSWITH %@ AND label == %@", "native.wish.card.", "一副新耳机")).firstMatch
+        reveal(eligible, in: app)
+        let wishID = eligible.identifier
+        eligible.tap()
+        let expanded = app.descendants(matching: .any)["native.wish.expanded"].firstMatch
+        XCTAssertTrue(expanded.waitForExistence(timeout: 5))
+        let card = expanded.descendants(matching: .any)[wishID].firstMatch
+        card.coordinate(withNormalizedOffset: CGVector(dx: 0.16, dy: 0.45)).tap()
+        let redeem = expanded.buttons["native.wish.redeem"].firstMatch
+        let redeemable = XCTNSPredicateExpectation(predicate: NSPredicate(format: "hittable == true AND enabled == true"), object: redeem)
+        XCTAssertEqual(XCTWaiter.wait(for: [redeemable], timeout: 5), .completed)
+        redeem.tap()
         let amount = app.textFields["wallet.wishes.actual"]
         XCTAssertTrue(amount.waitForExistence(timeout: 5)); amount.tap(); amount.typeText("25")
         app.buttons["完成输入"].firstMatch.tap()
         let consent = app.switches["wallet.wishes.purchaseConfirmed"]
         reveal(consent, in: app); consent.tap()
         XCTAssertTrue(app.buttons["wallet.wishes.confirm"].isEnabled)
-        app.buttons["关闭"].firstMatch.tap()
-        app.buttons["已购买，去兑现"].tap()
+        app.navigationBars["兑现心愿"].buttons["关闭"].tap()
+        XCTAssertTrue(amount.waitForNonExistence(timeout: 5))
+        reveal(redeem, in: app)
+        redeem.tap()
         XCTAssertTrue(amount.waitForExistence(timeout: 5)); XCTAssertEqual(amount.value as? String, "25")
         XCTAssertEqual(consent.value as? String, "0")
         XCTAssertFalse(app.buttons["wallet.wishes.confirm"].isEnabled)
         attach(app, "wish-purchase-draft-needs-new-consent")
     }
 
-    func testWalletChangeHasReadOnlyDetailAndAnalysisNamesItsRange() {
+    func testWalletChangeHasReadOnlyDetailAndBudgetShowsItsCalendar() {
         let app = launch("wishes")
-        let balance = app.buttons.matching(NSPredicate(format: "label CONTAINS %@", "心愿余额")).firstMatch
+        let balance = app.buttons["native.wish.balance"]
         XCTAssertTrue(balance.waitForExistence(timeout: 10)); balance.tap()
         let row = app.buttons.matching(NSPredicate(format: "label CONTAINS %@", "结余")).firstMatch
         reveal(row, in: app); row.tap()
-        XCTAssertTrue(app.navigationBars["余额变动"].waitForExistence(timeout: 5))
+        let entry = app.descendants(matching: .any)["wallet.wishes.entry.detail"].firstMatch
+        XCTAssertTrue(entry.waitForExistence(timeout: 5))
+        XCTAssertTrue(entry.descendants(matching: .any)["wallet.wishes.entry.amount"].exists)
+        XCTAssertEqual(entry.textFields.count, 0)
         attach(app, "wish-balance-change-detail")
         app.navigationBars["余额变动"].buttons.firstMatch.tap()
-        app.buttons["关闭"].firstMatch.tap()
-        app.buttons["wallet.tab.insights"].tap()
-        XCTAssertTrue(app.staticTexts["wallet.analysis.trendRange"].waitForExistence(timeout: 5))
-        XCTAssertTrue(app.staticTexts["本期已用"].exists)
-        attach(app, "analysis-period-and-trend-range")
+        app.navigationBars["心愿余额"].buttons["关闭"].tap()
+        let nativeBudgetTab = app.tabBars.buttons["预算"].firstMatch
+        let budgetTab = nativeBudgetTab.exists ? nativeBudgetTab : app.buttons["wallet.tab.budgets"].firstMatch
+        budgetTab.tap()
+        openBudgetDetails(in: app)
+        let calendar = app.buttons.matching(NSPredicate(format: "label CONTAINS %@", "消费日历")).firstMatch
+        reveal(calendar, in: app)
+        calendar.tap()
+        XCTAssertTrue(app.navigationBars["消费日历"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["上个月"].exists)
+        app.buttons["上个月"].tap()
+        XCTAssertTrue(app.staticTexts["所选日期不在本周期"].waitForExistence(timeout: 5))
+        attach(app, "budget-calendar-outside-period")
     }
 
     func testHistoryShowsSelectedPeriodResultAndReturnsToDirectory() {
@@ -178,7 +208,8 @@ final class CurrentExperienceRepairUITests: XCTestCase {
         app.navigationBars["隐私与存储"].buttons.firstMatch.tap()
         let about = app.buttons.matching(NSPredicate(format: "label CONTAINS %@", "关于")).firstMatch
         reveal(about, in: app); about.tap()
-        XCTAssertTrue(app.staticTexts["1.0 (5)"].waitForExistence(timeout: 5))
+        let version = app.staticTexts.matching(NSPredicate(format: "label MATCHES %@", #"[0-9]+(?:\.[0-9]+)+ \([0-9]+\)"#)).firstMatch
+        XCTAssertTrue(version.waitForExistence(timeout: 5))
         attach(app, "about-current-version")
     }
 
@@ -186,6 +217,13 @@ final class CurrentExperienceRepairUITests: XCTestCase {
         let app = XCUIApplication()
         app.launchArguments = ["-design-preview", "-design-screen", screen, "-AppleLanguages", "(zh-Hans)", "-AppleLocale", "zh_CN"]
         app.launch(); return app
+    }
+
+    private func openBudgetDetails(in app: XCUIApplication) {
+        let card = app.descendants(matching: .any)["wallet.home.card"].firstMatch
+        XCTAssertTrue(card.waitForExistence(timeout: 10), app.debugDescription)
+        card.coordinate(withNormalizedOffset: CGVector(dx: 0.7, dy: 0.3)).tap()
+        XCTAssertTrue(app.descendants(matching: .any)["wallet.workspace.page"].firstMatch.waitForExistence(timeout: 5))
     }
     private func reveal(_ element: XCUIElement, in app: XCUIApplication) {
         for _ in 0..<8 where !element.isHittable { app.scrollViews.firstMatch.swipeUp() }

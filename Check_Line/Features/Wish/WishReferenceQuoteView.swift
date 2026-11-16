@@ -8,6 +8,7 @@ struct WishReferenceQuoteView: View {
     @State private var rateText = ""
     @State private var quotedAt = Date()
     @State private var failed = false
+    @State private var rateFocused = false
     @Environment(\.dismiss) private var dismiss
     private var source: String { wish.currencyCode ?? workspace.ledger.walletSettings.walletCurrencyCode }
     private var target: String { walletCurrencyAtOpen }
@@ -33,7 +34,8 @@ struct WishReferenceQuoteView: View {
                     Text(wish.name).font(.title2.weight(.medium)).foregroundStyle(PaperTheme.ink)
                     Text(String(localized: "native.wish.referenceExplanation")).font(.subheadline).foregroundStyle(PaperTheme.muted)
                     WalletExchangeQuoteFields(sourceCurrencyCode: source, walletCurrencyCode: target,
-                                              rateText: $rateText, quotedAt: $quotedAt)
+                                              rateText: $rateText, quotedAt: $quotedAt,
+                                              onFocusChange: { rateFocused = $0 })
                     if let reference,
                        let required = WishCoverage.calculate(wish: wish, walletBalance: workspace.wallet.balance,
                             walletCurrency: target, reference: reference).targetInWallet {
@@ -47,19 +49,18 @@ struct WishReferenceQuoteView: View {
                 }.padding(24).frame(maxWidth: 560).frame(maxWidth: .infinity)
             }.scrollDismissesKeyboard(.interactively).background(PaperTheme.canvas.ignoresSafeArea())
                 .safeAreaInset(edge: .bottom) {
-                    PaperSubmitBar(title: String(localized: "native.wish.applyReference"), enabled: reference != nil) { apply() }
-                        .accessibilityIdentifier("native.wish.applyReference").padding(.vertical, 12).background(PaperTheme.canvas)
+                    VStack(spacing: 0) {
+                        if rateFocused {
+                            PaperKeyboardDoneBar { rateFocused = false }
+                        }
+                        PaperSubmitBar(title: String(localized: "native.wish.applyReference"), enabled: reference != nil) { apply() }
+                            .accessibilityIdentifier("native.wish.applyReference").padding(.vertical, 12).background(PaperTheme.canvas)
+                    }
                 }
                 .navigationTitle(String(localized: "native.wish.checkRate")).navigationBarTitleDisplayMode(.inline)
                 .toolbar {
                     ToolbarItem(placement: .cancellationAction) {
                         Button(String(localized: "action.cancel")) { dismiss() }.accessibilityIdentifier("native.wish.cancelReference")
-                    }
-                    ToolbarItemGroup(placement: .keyboard) {
-                        Spacer()
-                        Button(String(localized: "ui.keyboard.done")) {
-                            UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
-                        }
                     }
                 }
         }.modifier(NativeDrawerStyle())

@@ -78,13 +78,20 @@ enum DesignPreviewData {
             try LedgerStore.replaceAll(ledger, in: context)
             return
         }
-        if screen == "settlement-loop" {
+        if ["settlement-loop", "settlement-recovery", "settlement-overrun"].contains(screen) {
+            if screen == "settlement-recovery" {
+                ledger = try WalletLedger.append(ledger: ledger, type: .overrun, sourceSignedAmount: -500,
+                                                 sourceCurrencyCode: "CNY", quote: nil, at: now).0
+            } else if screen == "settlement-overrun" {
+                ledger = try WalletLedger.append(ledger: ledger, type: .surplus, sourceSignedAmount: 120,
+                                                 sourceCurrencyCode: "CNY", quote: nil, at: now).0
+            }
             let card = try ledger.insertBudgetCard(
                 name: String(localized: "wallet.demo.trip"), amount: 1_000,
                 currencyCode: "CNY", cycleType: .oneShot, recurrence: nil,
                 startDate: start, endDate: nil, now: now
             )
-            try record(ledger: &ledger, amount: 250, currencyCode: "CNY", occurredAt: now,
+            try record(ledger: &ledger, amount: screen == "settlement-overrun" ? 1_300 : 250, currencyCode: "CNY", occurredAt: now,
                        now: now, decision: .confirmed(periodID: card.1.id), merchant: String(localized: "wallet.demo.train"))
             try LedgerStore.replaceAll(ledger, in: context)
             return

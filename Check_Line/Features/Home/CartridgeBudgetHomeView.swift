@@ -7,6 +7,7 @@ struct CartridgeBudgetHomeView: View {
     @Environment(\.shellChrome) private var chrome
     @Environment(\.walletReduceMotion) private var reduceMotion
     @Environment(\.dynamicTypeSize) private var typeSize
+    @Environment(\.verticalSizeClass) private var verticalSizeClass
     @Environment(\.scenePhase) private var scenePhase
     @State private var stage: BudgetStage = .dashboard
     @State private var layerPosition: CGFloat = 0
@@ -45,16 +46,30 @@ struct CartridgeBudgetHomeView: View {
     @State private var libraryUsesArc = true
     @State private var libraryFocusedCard: HomeBudgetCardModel?
     @State private var libraryIsMounted = false
+    @State private var libraryDragDistance: CGFloat = 0
+    @State private var libraryTransportActive = false
+    @State private var libraryReturnCard: HomeBudgetCardModel?
+    @State private var libraryReturnBlend: CGFloat = 1
+    @State private var libraryHolderReveal: CGFloat = 0
+    @State private var libraryCancelID = UUID()
+    @State private var libraryPresentedDragDistance: CGFloat = 0
+    @State private var libraryDragOrigin: CGFloat?
+
     @State private var enteredPreviewStage = false
 
-    private var card: HomeBudgetCardModel? { workspace.selectedCard }
+    private var cards: [HomeBudgetCardModel] { workspace.cards(at: availabilityDate) }
+    private var card: HomeBudgetCardModel? {
+        cards.first { $0.id == workspace.selectedBudgetID } ?? cards.first
+    }
     private var recordProgress: CGFloat { max(0, -layerPosition) }
     private var libraryProgress: CGFloat { max(0, layerPosition) }
     private var connected: Bool { phase == .connected || phase == .charging }
     private var gestureIsActive: Bool { holderDragOrigin != nil || cardDragAxis != nil }
     private var liquidIsActive: Bool {
-        stage == .dashboard && recordProgress < 0.001 && libraryProgress < 0.001
-            && detail == nil && selectedExpense == nil && deletingExpense == nil
+        stage == .dashboard && recordProgress < 0.001 && libraryProgress < 0.001 && homeIsUnobscured
+    }
+    private var homeIsUnobscured: Bool {
+        detail == nil && selectedExpense == nil && deletingExpense == nil
             && !showArchive && !showUnbudgeted && !workspace.showComposer && !workspace.showAgent
             && chrome?.isSettingsPresented != true && chrome?.isSourcesPresented != true
             && chrome?.isAttentionPresented != true
@@ -115,7 +130,7 @@ struct CartridgeBudgetHomeView: View {
                 if internalSelection == current { internalSelection = nil }
                 else { settlePresentation(); phase = .connected; cardLift = 8; contactDate = nil }
             }
-            .onChange(of: workspace.cards.map(\.id)) { _, _ in synchronizeStack() }
+            .onChange(of: cards.map(\.id)) { _, _ in synchronizeStack() }
             .onChange(of: scenePhase) { _, value in
                 if value != .active { settlePresentation() }
                 else { availabilityDate = Date() }
@@ -147,31 +162,35 @@ struct CartridgeBudgetHomeView: View {
         HStack {
             Text(String(localized: "tab.budgets")).font(.system(size: 29, weight: .bold)).accessibilityAddTraits(.isHeader)
             Spacer()
-            Button { workspace.openComposer(.budget) } label: { Image(systemName: "plus").frame(width: 44, height: 44).paperGlass(.circle, interactive: true) }
+            Button { workspace.openComposer(.budget) } label: { Image(systemName: "plus").font(.system(size: 20)).frame(width: 44, height: 44).paperGlass(.circle, interactive: true) }
                 .accessibilityLabel(String(localized: "v1.budget.create")).accessibilityIdentifier("wallet.header.create")
-            Button { chrome?.isSettingsPresented = true } label: { Image(systemName: "gearshape").frame(width: 44, height: 44).paperGlass(.circle, interactive: true) }
+            Button { chrome?.isSettingsPresented = true } label: { Image(systemName: "gearshape").font(.system(size: 20)).frame(width: 44, height: 44).paperGlass(.circle, interactive: true) }
                 .accessibilityLabel(String(localized: "tab.settings")).accessibilityIdentifier("wallet.profile")
         }.font(.title3).foregroundStyle(PaperTheme.ink).padding(.horizontal, 23).padding(.vertical, 8).frame(maxWidth: 650).frame(maxWidth: .infinity)
     }
 
     private func budgetStage(_ card: HomeBudgetCardModel, size: CGSize, origin: CGPoint) -> some View {
         let width = min(650, size.width)
-        let height = max(380, size.height)
+        let compactViewport = verticalSizeClass == .compact
+        let height = max(compactViewport ? 240 : 380, size.height)
         let cardWidth = width > 600 ? 410 : width - (width < 340 ? 38 : 46)
-        let expandedHeight: CGFloat = typeSize.isAccessibilitySize ? 306 : 258
+        let expandedHeight: CGFloat = compactViewport ? max(120, min(258, height - 160)) : typeSize.isAccessibilitySize ? 306 : 258
         let stageHeight = expandedHeight + 68
         let compactHeight: CGFloat = typeSize.isAccessibilitySize ? 88 : 68
         let morph = clamp((recordProgress - 0.2) / 0.8)
         let faceHeight = lerp(expandedHeight, compactHeight, morph)
         let faceTop = lerp(62, 12, recordProgress)
-        let libraryHeight = max(260, height - (WalletTabTransition.usesSystemBar ? 42 : PaperTheme.Dock.contentBottomClearance))
-        let librarySceneHeight = max(0, libraryHeight - 116)
-        let libraryFaceHeight = min(min(356, width * 0.82) * 0.75, librarySceneHeight * 0.74)
-        let libraryFaceWidth = min(min(356, width * 0.82), libraryFaceHeight * 4 / 3)
+        let libraryHeight = max(compactViewport ? 160 : 260, height - (WalletTabTransition.usesSystemBar ? 42 : PaperTheme.Dock.contentBottomClearance))
+        let libraryMetrics = LibraryArcGeometry(size: CGSize(width: width, height: libraryHeight))
+        let libraryFaceHeight = libraryMetrics.cardHeight
+        let libraryFaceWidth = libraryMetrics.cardWidth
+        let pull = reduceMotion ? 0 : min(0.48, libraryDragDistance / 230)
+        let transportCard = libraryReturnCard ?? (libraryTransportActive ? libraryFocusedCard : nil) ?? card
         let transport = libraryUsesArc && !reduceMotion && !typeSize.isAccessibilitySize ? libraryProgress : 0
-        let libraryFaceTop = 52 + (librarySceneHeight - libraryFaceHeight) / 2
+        let libraryFaceTop = libraryMetrics.cardTop
         let holderTop = lerp(stageHeight - 6, max(stageHeight - 6, height - 60), max(recordProgress, libraryProgress))
-        let holderOpacity = 1 - Double(clamp(recordProgress * 1.85))
+        let holderVisibility: CGFloat = libraryIsMounted ? libraryHolderReveal : 1
+        let holderOpacity = (1 - Double(clamp(recordProgress * 1.85))) * Double(holderVisibility)
         return ZStack(alignment: .top) {
             if recordProgress > 0.001 {
             recordsLayer(card, top: lerp(164, compactHeight + 72, recordProgress), size: CGSize(width: width, height: height))
@@ -181,11 +200,19 @@ struct CartridgeBudgetHomeView: View {
             }
 
             if libraryIsMounted || stage == .library || libraryProgress > 0.001 {
-            CartridgeLibraryView(workspace: workspace, onChoose: { choose($0) }, onClose: { setStage(.dashboard) }, onReturnProgress: { progress in
-                if stage == .library { layerPosition = 1 - progress }
-            }, presentationProgress: libraryProgress,
-               transportsFocusedCard: libraryUsesArc && (stageTransitioning || (transport > 0.001 && transport < 0.999)),
-               onArcPresentation: { arc, focus in libraryUsesArc = arc; libraryFocusedCard = focus })
+            CartridgeLibraryView(workspace: workspace, onChoose: { choose($0) }, onClose: closeLibrary, onReturnProgress: { progress in
+                guard stage == .library, libraryReturnCard == nil else { return }
+                libraryCancelID = UUID()
+                if libraryDragOrigin == nil { libraryDragOrigin = libraryPresentedDragDistance }
+                libraryTransportActive = true
+                libraryDragDistance = min(180, max(0, (libraryDragOrigin ?? 0) + progress * 180))
+            }, onReturnCancelled: cancelLibraryPull, returnPull: pull, now: availabilityDate, active: homeIsUnobscured,
+               presentationProgress: libraryProgress,
+               transportsFocusedCard: libraryUsesArc && (stageTransitioning || libraryTransportActive),
+               onArcPresentation: { arc, focus in
+                   if libraryUsesArc != arc { libraryUsesArc = arc }
+                   if libraryFocusedCard != focus { libraryFocusedCard = focus }
+               })
                 .frame(width: width, height: libraryHeight)
                 .allowsHitTesting(stage == .library && !stageTransitioning)
                 .accessibilityHidden(stage != .library)
@@ -201,7 +228,7 @@ struct CartridgeBudgetHomeView: View {
 
             slotRecess(width: cardWidth - 78)
                 .allowsHitTesting(false)
-                .opacity(0.46 * (1 - Double(max(recordProgress, libraryProgress))))
+                .opacity(0.46 * (1 - Double(max(recordProgress, libraryProgress))) * Double(holderVisibility))
                 .offset(y: holderTop + 5)
                 .zIndex(3)
 
@@ -210,22 +237,23 @@ struct CartridgeBudgetHomeView: View {
                     .offset(y: 62 - (reduceMotion ? 0 : libraryProgress * 74))
                     // Restore the stored cards only once the transported face
                     // covers their amounts, rather than showing them through it.
-                    .opacity(Double(clamp(1 - recordProgress * 4) * clamp(1 - libraryProgress * 5)))
+                    .opacity(Double(clamp(1 - recordProgress * 4) * clamp(1 - libraryProgress * 5) * holderVisibility))
                     .zIndex(4)
-                frontCard(card, width: lerp(cardWidth, libraryFaceWidth, transport),
-                          height: lerp(faceHeight, libraryFaceHeight, transport), morph: morph, libraryStyle: transport)
+                frontCard(transportCard, width: lerp(cardWidth, libraryFaceWidth, transport) * (1 - pull * 0.055),
+                          height: lerp(faceHeight, libraryFaceHeight, transport) * (1 + pull * 0.055), morph: morph, libraryStyle: transport)
                     .padding(.bottom, 68 * (1 - morph))
                     .mask {
                         // Mask before moving the card so the mask travels with
                         // its contents instead of clipping the lower edge.
-                        Rectangle().opacity(!libraryUsesArc || libraryProgress < 0.999 || stageTransitioning ? 1 : 0)
+                        Rectangle().opacity(!libraryUsesArc || libraryProgress < 0.999 || stageTransitioning || libraryTransportActive ? 1 : 0)
                             .transaction { $0.animation = nil }
                     }
                     .scaleEffect(x: cardScale, y: cardScale * impactCompression, anchor: .top)
                     .rotationEffect(.degrees(cardDragAxis == .horizontal ? Double(bounded(cardDrag.width / 260, -1, 1)) * 6 : 0))
                     .rotation3DEffect(.degrees(cardDragAxis == .horizontal ? Double(bounded(cardDrag.width / 260, -1, 1)) * 12 : 0), axis: (x: 0, y: 1, z: 0))
                     .offset(x: frontMovement.width,
-                            y: lerp(faceTop + cardLift * (1 - morph) + frontMovement.height, libraryFaceTop, transport))
+                            y: lerp(faceTop + cardLift * (1 - morph) + frontMovement.height, libraryFaceTop, transport) + (reduceMotion ? 0 : libraryDragDistance * 0.42))
+                    .rotation3DEffect(.degrees(Double(-pull * 5)), axis: (x: 1, y: 0, z: 0), perspective: 0.35)
                     .opacity(libraryUsesArc ? 1 : Double(1 - libraryProgress))
                     .allowsHitTesting(stage != .library && !stageTransitioning)
                     .accessibilityHidden(stage == .library)
@@ -243,13 +271,13 @@ struct CartridgeBudgetHomeView: View {
                     .accessibilityHidden(true).allowsHitTesting(false)
             }
 
-            holderFront(card, width: width, height: max(230, height - stageHeight + 6))
+            holderFront(transportCard, width: width, height: max(230, height - stageHeight + 6))
                 .offset(y: holderTop + holderImpact)
                 .opacity(holderOpacity)
                 .allowsHitTesting(libraryProgress < 0.01)
                 .zIndex(6)
 
-            if libraryProgress < 0.99 {
+            if libraryProgress < 0.99 && !libraryIsMounted {
                 levelControls(width: width)
                     .offset(y: lerp(stageHeight - 6, compactHeight + 20, recordProgress))
                     .opacity(Double(1 - libraryProgress))
@@ -264,6 +292,8 @@ struct CartridgeBudgetHomeView: View {
         }
         .frame(width: width, height: height, alignment: .top).frame(maxWidth: .infinity)
         .clipped()
+        .modifier(LibraryPullPresentation(distance: libraryDragDistance))
+        .onPreferenceChange(LibraryPullDistanceKey.self) { libraryPresentedDragDistance = $0 }
         .simultaneousGesture(cardGesture(in: CGRect(x: origin.x + (size.width - cardWidth) / 2 + frontMovement.width,
                                                     y: origin.y + faceTop + cardLift * (1 - morph) + frontMovement.height,
                                                     width: cardWidth, height: faceHeight)))
@@ -274,23 +304,23 @@ struct CartridgeBudgetHomeView: View {
         .accessibilityActions {
             Button(String(localized: "native.records")) { if connected { setStage(.records) } }
             Button(String(localized: "native.library")) { setStage(.library) }
-            Button(String(localized: "native.returnBudget")) { setStage(.dashboard) }
+            Button(String(localized: "native.returnBudget")) { if stage == .library { closeLibrary() } else { setStage(.dashboard) } }
         }
         .transaction { if reduceMotion { $0.disablesAnimations = true; $0.animation = nil } }
     }
 
     private func frontCard(_ card: HomeBudgetCardModel, width: CGFloat, height: CGFloat, morph: CGFloat, libraryStyle: CGFloat = 0) -> some View {
-        ZStack(alignment: .bottom) {
+        let blend = libraryReturnCard == nil ? libraryStyle : libraryReturnBlend
+        return ZStack(alignment: .bottom) {
             CartridgeContactExtension().frame(width: max(80, width - 78), height: 68 * (1 - morph))
                 // The upper 20pt sit behind the transparent face. Hide that
                 // overlap so the tail cannot appear as a square blue bar inside it.
                 .mask(alignment: .bottom) { Rectangle().frame(height: 48 * (1 - morph)) }
-                .offset(y: 48 * (1 - morph)).opacity(Double(clamp(1 - recordProgress * 3) * (1 - libraryStyle)))
+                .offset(y: 48 * (1 - morph)).opacity(libraryIsMounted ? 0 : Double(clamp(1 - recordProgress * 3)))
             cartridgeFace(card, morph: morph, interactive: true)
-                .opacity(Double(1 - libraryStyle))
-            CartridgeLibraryCard(card: libraryFocusedCard ?? card,
-                                 expenses: BudgetPresentation.expenses(libraryFocusedCard ?? card, in: workspace.ledger), compact: false)
-                .opacity(Double(libraryStyle)).allowsHitTesting(false).accessibilityHidden(true)
+                .opacity(Double(1 - blend))
+            LibraryBudgetCardFace(card: libraryReturnCard ?? libraryFocusedCard ?? card, now: availabilityDate)
+                .opacity(Double(blend)).allowsHitTesting(false).accessibilityHidden(true)
         }
         .frame(width: width, height: height)
         .contentShape(RoundedRectangle(cornerRadius: 27))
@@ -331,7 +361,7 @@ struct CartridgeBudgetHomeView: View {
                             Text(verbatim: "· " + card.currencyCode)
                         }
                     }
-                }.font(.system(size: 11)).foregroundStyle(BudgetGlassPalette.metadata)
+                }.font(.system(size: 11)).foregroundStyle(LibraryCardOptics.metadata)
                     .opacity(Double(clamp(1 - morph * 3)) * (rearStack ? 0.12 : 1))
                     .blur(radius: rearStack ? 3 : 0).offset(x: 22, y: typeSize.isAccessibilitySize ? 62 : 57)
                 VStack(alignment: .trailing, spacing: 5 * (1 - morph)) {
@@ -346,7 +376,7 @@ struct CartridgeBudgetHomeView: View {
                     }
                 }
                 .opacity(rearStack ? 0.08 : 1).blur(radius: rearStack ? 4 : 0)
-                .foregroundStyle(morph > 0.6 ? PaperTheme.ink : BudgetGlassPalette.amount(level: CGFloat(BudgetPresentation.fill(card))))
+                .foregroundStyle(morph > 0.6 ? PaperTheme.ink : LibraryCardOptics.ink)
                 .frame(width: geometry.size.width - 44, height: geometry.size.height, alignment: .bottomTrailing)
                 .offset(x: 22, y: -lerp(28, (geometry.size.height - 29) / 2, morph))
                 if interactive {
@@ -358,12 +388,12 @@ struct CartridgeBudgetHomeView: View {
                         .accessibilityLabel(String(localized: "capture.title")).accessibilityIdentifier("wallet.home.capture")
                         .disabled(BudgetPresentation.isUpcoming(card, now: availabilityDate))
                 }
-            }.foregroundStyle(morph > 0.6 ? PaperTheme.ink : BudgetGlassPalette.ink)
-        }.modifier(NativeGlassCard(radius: lerp(27, 25, morph), level: CGFloat(BudgetPresentation.fill(card))))
+            }.foregroundStyle(morph > 0.6 ? PaperTheme.ink : LibraryCardOptics.ink)
+        }.modifier(HomeLibraryOptics(morph: morph))
     }
 
     private func rearStack(width: CGFloat, height: CGFloat) -> some View {
-        let all = workspace.cards
+        let all = cards
         let rear = stackOrder.compactMap { id in all.first { $0.id == id && id != card?.id } }
         return ZStack(alignment: .top) {
             ForEach(Array(rear.prefix(2).enumerated()), id: \.element.id) { index, item in
@@ -407,7 +437,7 @@ struct CartridgeBudgetHomeView: View {
                 .allowsHitTesting(false).accessibilityHidden(true)
             summary(card).padding(.horizontal, 22).padding(.top, 36)
                 .frame(height: height, alignment: .top)
-                .opacity(Double(clamp(1 - recordProgress * 2.5) * (1 - libraryProgress)))
+                .opacity(libraryIsMounted ? 0 : Double(clamp(1 - recordProgress * 2.5)))
                 .allowsHitTesting(recordProgress < 0.01 && libraryProgress < 0.01 && !stageTransitioning)
             Color.clear.frame(height: 36).contentShape(Rectangle()).gesture(holderGesture)
         }.frame(width: width, height: height, alignment: .top)
@@ -422,11 +452,15 @@ struct CartridgeBudgetHomeView: View {
                 if pending > 0, connected {
                     Button { open(card, .pending) } label: {
                         HStack { Text(String(format: String(localized: "wallet.pending.count"), pending)); Spacer(); Text(MoneyFormat.string(card.snapshot.pendingAmount, currencyCode: card.currencyCode)).monospacedDigit(); Image(systemName: "chevron.right") }.font(.subheadline).padding(12)
+                            .contentShape(Rectangle())
                     }.buttonStyle(.plain)
                 }
                 let unbudgeted = workspace.ledger.expenses.values.filter { $0.attributionState == .unbudgeted && $0.wishRedemptionID == nil }.count
                 if unbudgeted > 0, connected {
-                    Button { showUnbudgeted = true } label: { HStack { Text(String(localized: "v1.unbudgeted")); Spacer(); Text(unbudgeted, format: .number); Image(systemName: "chevron.right") }.font(.subheadline).padding(12) }.buttonStyle(.plain)
+                    Button { showUnbudgeted = true } label: {
+                        HStack { Text(String(localized: "v1.unbudgeted")); Spacer(); Text(unbudgeted, format: .number); Image(systemName: "chevron.right") }.font(.subheadline).padding(12)
+                            .contentShape(Rectangle())
+                    }.buttonStyle(.plain)
                 }
                 HStack(spacing: 9) {
                     Text(String(localized: "wallet.home.recent")).font(.system(size: 14, weight: .semibold))
@@ -653,15 +687,21 @@ struct CartridgeBudgetHomeView: View {
         }
     }
     private func synchronizeStack() {
-        let ids = workspace.cards.map(\.id)
+        let ids = cards.map(\.id)
         stackOrder = stackOrder.filter { ids.contains($0) }
         stackOrder += ids.filter { !stackOrder.contains($0) }
         if let selected = card?.id { stackOrder.removeAll { $0 == selected }; stackOrder.insert(selected, at: 0) }
     }
     private func setStage(_ value: BudgetStage, force: Bool = false) {
+        guard libraryReturnCard == nil else { return }
         guard force || stage != value || abs(layerPosition - CGFloat(value.rawValue)) > 0.001 else { return }
         guard value != .records || connected else { return }
-        if value == .library && stage != .library { libraryUsesArc = true; libraryFocusedCard = card }
+        if value == .library && stage != .library {
+            cancelMotionForGesture()
+            libraryUsesArc = true; libraryFocusedCard = card; libraryReturnCard = nil
+            libraryReturnBlend = 1
+            libraryDragDistance = 0; libraryTransportActive = false; libraryHolderReveal = 0
+        }
         let transition = UUID(); stageTransitionID = transition
         if stage == .library || value == .library || libraryProgress > 0 { libraryIsMounted = true }
         stageTransitioning = !reduceMotion; holderDragOrigin = nil
@@ -674,10 +714,61 @@ struct CartridgeBudgetHomeView: View {
             }
         }
     }
-    private func choose(_ value: HomeBudgetCardModel) {
+    private func closeLibrary() {
+        guard stage == .library, !stageTransitioning else { return }
+        if libraryUsesArc, let focused = libraryFocusedCard { choose(focused); return }
+        libraryDragOrigin = nil; libraryDragDistance = 0; libraryTransportActive = false
+        withAnimation(reduceMotion ? nil : .easeOut(duration: 0.24)) { libraryHolderReveal = 1 }
         setStage(.dashboard)
-        if value.id == card?.id { if !connected { insert() }; return }
-        changeCard(1, selected: value)
+    }
+
+    private func cancelLibraryPull() {
+        guard libraryReturnCard == nil else { return }
+        libraryDragOrigin = nil
+        let token = UUID(); libraryCancelID = token
+        withAnimation(reduceMotion ? nil : .easeOut(duration: 0.19), completionCriteria: .removed) {
+            libraryDragDistance = 0
+        } completion: {
+            if libraryCancelID == token { libraryTransportActive = false }
+        }
+    }
+
+    private func choose(_ value: HomeBudgetCardModel) {
+        guard stage == .library, !stageTransitioning, libraryReturnCard == nil, cards.contains(where: { $0.id == value.id }) else { return }
+        cancelMotionForGesture()
+        libraryDragOrigin = nil
+        libraryReturnBlend = 1
+        libraryReturnCard = value; libraryFocusedCard = value; libraryTransportActive = true
+        libraryCancelID = UUID()
+        let token = UUID(); stageTransitionID = token
+        stageTransitioning = true
+        // The selected budget remains unchanged until this same face reaches home.
+        phase = .detached; cardLift = -56
+        withAnimation(reduceMotion ? nil : .timingCurve(0.32, 0, 0.2, 1, duration: 0.36), completionCriteria: .removed) {
+            layerPosition = 0; libraryDragDistance = 0
+        } completion: {
+            guard stageTransitionID == token else { return }
+            completeLibraryReturn(feedback: true)
+        }
+        withAnimation(reduceMotion ? nil : .easeInOut(duration: 0.22).delay(0.13)) { libraryReturnBlend = 0 }
+        withAnimation(reduceMotion ? nil : .linear(duration: 0.13).delay(0.16)) { libraryHolderReveal = 1 }
+    }
+
+    private func completeLibraryReturn(feedback: Bool) {
+        guard let value = libraryReturnCard else { return }
+        libraryReturnCard = nil; stageTransitionID = UUID()
+        if cards.contains(where: { $0.id == value.id }), card?.id != value.id {
+            if let old = card { receiptPositions[old.id] = receiptPosition }
+            internalSelection = value.id
+            workspace.selectedBudgetID = value.id
+            receiptPosition = receiptPositions[value.id] ?? 0
+            synchronizeStack()
+        }
+        stage = .dashboard; layerPosition = 0; stageTransitioning = false
+        libraryIsMounted = false; libraryTransportActive = false
+        libraryDragDistance = 0; libraryHolderReveal = 0
+        if feedback { insert() }
+        else { phase = .connected; cardLift = 8 }
     }
     private func open(_ card: HomeBudgetCardModel, _ section: BudgetDetailSection) {
         guard !stageTransitioning, connected else { return }
@@ -690,6 +781,8 @@ struct CartridgeBudgetHomeView: View {
         contactDate = nil; liquidImpulse = nil; liquidSwitchDirection = 0; cardScale = 1; impactCompression = 1; holderImpact = 0
     }
     private func settlePresentation() {
+        if libraryReturnCard != nil { completeLibraryReturn(feedback: false) }
+        libraryCancelID = UUID(); libraryDragOrigin = nil; libraryDragDistance = 0; libraryPresentedDragDistance = 0; libraryTransportActive = false; libraryHolderReveal = 0
         cardPressTask?.cancel(); cardInputIsActive = false; cardPressDidFire = false
         cancelMotionForGesture(); holderDragOrigin = nil; cardDragAxis = nil; cardDrag = .zero
         layerPosition = CGFloat(stage.rawValue); stageTransitioning = false; stageTransitionID = UUID()
@@ -732,7 +825,7 @@ struct CartridgeBudgetHomeView: View {
         }
     }
     private func changeCard(_ direction: Int, selected explicit: HomeBudgetCardModel? = nil) {
-        let cards = workspace.cards
+        let cards = self.cards
         guard let old = card, cards.count > 1, let index = cards.firstIndex(where: { $0.id == old.id }) else { withAnimation(motion(.settle)) { cardDrag = .zero }; return }
         let next = explicit ?? cards[(index + direction + cards.count) % cards.count]
         guard old.id != next.id else { return }
@@ -900,5 +993,30 @@ private struct ArchivedBudgetSheet: View {
                 .toolbar { ToolbarItem(placement: .topBarTrailing) { Button(String(localized: "action.close")) { dismiss() } } }
                 .navigationDestination(for: BudgetWorkspaceRoute.self) { BudgetWorkspaceDestination(workspace: workspace,route: $0) }
         }.modifier(NativeDrawerStyle())
+    }
+}
+
+/// A stable wrapper preserves the live water's identity during the record fold.
+private struct HomeLibraryOptics: ViewModifier {
+    let morph: CGFloat
+    func body(content: Content) -> some View {
+        content.modifier(LibraryCardOptics(radius: 27 - 2 * morph))
+    }
+}
+
+private struct LibraryPullDistanceKey: PreferenceKey {
+    static let defaultValue: CGFloat = 0
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) { value = nextValue() }
+}
+
+/// Retain the visible spring position when the user re-grabs a cancelling pull.
+private struct LibraryPullPresentation: AnimatableModifier {
+    var distance: CGFloat
+    var animatableData: CGFloat {
+        get { distance }
+        set { distance = newValue }
+    }
+    func body(content: Content) -> some View {
+        content.preference(key: LibraryPullDistanceKey.self, value: distance)
     }
 }

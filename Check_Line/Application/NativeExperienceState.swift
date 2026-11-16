@@ -23,27 +23,6 @@ nonisolated enum BudgetStage: Int, CaseIterable {
 
 nonisolated enum RewardTiming {
     static let wishDuration: TimeInterval = 3.2
-    static let settlementDuration: TimeInterval = 2.75
-    static let arrivalTimes: [TimeInterval] = [0.99, 1.18, 1.39, 1.6, 1.82, 2.05]
-    static let arrivalParts: [Decimal] = [0.09, 0.23, 0.42, 0.64, 0.84, 1]
-
-    /// Each actual receiving beat advances one Decimal clock. It never runs ahead
-    /// of the arriving wave, overshoots, or mutates the already saved ledger.
-    static func receivedAmount(before: Decimal, after: Decimal, elapsed: TimeInterval) -> Decimal {
-        guard after > before else { return after }
-        guard let index = arrivalTimes.lastIndex(where: { elapsed >= $0 }) else { return before }
-        let previous = index == 0 ? Decimal.zero : arrivalParts[index - 1]
-        let target = arrivalParts[index]
-        let duration = index == arrivalTimes.count - 1 ? 0.24 : 0.165
-        let p = min(1, max(0, (elapsed - arrivalTimes[index]) / duration))
-        let eased = p * p * (3 - 2 * p)
-        let fraction = Decimal(string: String(eased)) ?? 0
-        let progress = previous + (target - previous) * fraction
-        var amount = before + (after - before) * progress
-        var rounded = Decimal()
-        NSDecimalRound(&rounded, &amount, 2, .plain)
-        return min(after, max(before, rounded))
-    }
 
     static func wishPose(elapsed: TimeInterval) -> RewardWishPose {
         let ms = max(0, elapsed * 1000)

@@ -24,39 +24,6 @@ import UIKit
         #expect(BudgetStage.library.position(translation: CGSize(width: 0,height: 900)) == 0)
     }
 
-    @Test("收币整个金额单调且不超真实结果，跨位和大额仍精确")
-    func amountClock() {
-        for (before,after) in [(Decimal(280),Decimal(400)),(DecimalMath.parse("9.99"),DecimalMath.parse("10.01")),(DecimalMath.parse("99999999.99"),DecimalMath.parse("100000001.01"))] {
-            var last=before
-            for step in 0...400 {
-                let value=RewardTiming.receivedAmount(before: before,after: after,elapsed: Double(step)/100)
-                #expect(value>=last && value>=before && value<=after)
-                last=value
-            }
-            #expect(last==after)
-        }
-        #expect(RewardTiming.receivedAmount(before: 280,after: 0,elapsed: 0.5)==0)
-    }
-
-    @Test("六波收币先到达再加金额，拍间保持上一笔结果，最终精确落稳")
-    func sixReceivingBeatsDoNotRunAhead() {
-        let plateaus: [Decimal] = [DecimalMath.parse("290.80"), DecimalMath.parse("307.60"), DecimalMath.parse("330.40"), DecimalMath.parse("356.80"), DecimalMath.parse("380.80"), 400]
-        #expect(RewardTiming.arrivalTimes.count == 6)
-        #expect(RewardTiming.receivedAmount(before: 280, after: 400, elapsed: -100) == 280)
-        #expect(RewardTiming.receivedAmount(before: 280, after: 400, elapsed: RewardTiming.arrivalTimes[0] - 0.001) == 280)
-        for index in RewardTiming.arrivalTimes.indices {
-            let arrival = RewardTiming.arrivalTimes[index]
-            let beforeBeat = index == 0 ? Decimal(280) : plateaus[index - 1]
-            let arrivalValue = RewardTiming.receivedAmount(before: 280, after: 400, elapsed: arrival)
-            #expect(arrivalValue == beforeBeat)
-            let duringBeat = RewardTiming.receivedAmount(before: 280, after: 400, elapsed: arrival + 0.08)
-            #expect(duringBeat > beforeBeat && duringBeat < plateaus[index])
-            let endOfBeat = index + 1 < RewardTiming.arrivalTimes.count ? RewardTiming.arrivalTimes[index + 1] - 0.001 : RewardTiming.settlementDuration
-            #expect(RewardTiming.receivedAmount(before: 280, after: 400, elapsed: endOfBeat) == plateaus[index])
-        }
-        #expect(RewardTiming.receivedAmount(before: 280, after: 400, elapsed: 100) == 400)
-    }
-
     @Test("碎片覆盖原面且随机种子改变几何，重演不涉及账本")
     func fracture() {
         let first=GlassFracture.make(seed: 1), second=GlassFracture.make(seed: 2)

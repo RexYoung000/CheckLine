@@ -343,6 +343,36 @@ struct PaperSubmitBar: View {
     }
 }
 
+/// Placed inside a bottom safe-area inset instead of `.toolbar(.keyboard)`
+/// to avoid iOS SwiftUI keyboard toolbar layout warnings while keeping Done reachable.
+struct PaperKeyboardDoneBar: View {
+    var action: () -> Void
+
+    var body: some View {
+        HStack {
+            Spacer(minLength: 0)
+            Button {
+                UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                action()
+            } label: {
+                Text(String(localized: "ui.keyboard.done"))
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(PaperTheme.accent)
+                    .padding(.horizontal, 12)
+                    .frame(minHeight: 40)
+            }
+            .buttonStyle(.plain)
+            .accessibilityIdentifier("wallet.keyboard.done")
+        }
+        .padding(.horizontal, 12)
+        .frame(maxWidth: .infinity)
+        .background(PaperTheme.canvas)
+        .overlay(alignment: .top) {
+            Rectangle().fill(PaperTheme.stroke).frame(height: PaperTheme.Stroke.hairline)
+        }
+    }
+}
+
 extension View {
     /// Draws the single visible focus edge over a surface's existing neutral border.
     func paperFocusRing(_ isFocused: Bool, radius: CGFloat = PaperTheme.Radius.card) -> some View {

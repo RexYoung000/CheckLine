@@ -7,17 +7,27 @@ final class AmountReviewRefinementUITests: XCTestCase {
         if #available(iOS 27.0, *) { try XCUIDevice.shared.voiceOverService.disable() }
     }
 
-    func testCompletedWishUsesStaticSectionAndKeepsDetailAndCreation() {
+    func testCompletedWishMovesToRealizedAndKeepsDetailAndCreation() {
         let app = launch("wishes")
-        let wish = app.staticTexts["一副新耳机"]
-        XCTAssertTrue(wish.waitForExistence(timeout: 8))
-        XCTAssertFalse(app.segmentedControls["wallet.wishes.filter"].exists)
-        XCTAssertTrue(app.staticTexts["心愿余额"].exists)
+        let phases = app.segmentedControls["native.wish.tabs"]
+        let unrealized = phases.buttons["未实现"]
+        let realized = phases.buttons["已实现"]
+        XCTAssertTrue(unrealized.waitForExistence(timeout: 8))
+        XCTAssertTrue(unrealized.isSelected)
+        XCTAssertTrue(app.buttons["native.wish.balance"].exists)
         XCTAssertFalse(app.staticTexts["预算结余形成，非真实资金。"].exists)
+        app.buttons["native.wish.layout"].tap()
+        let wish = wishRow("一副新耳机", in: app)
+        XCTAssertTrue(wish.waitForExistence(timeout: 5))
+        let wishID = wish.identifier
         wish.tap()
-        let purchased = app.buttons["已购买，去兑现"]
-        reveal(purchased, in: app)
-        purchased.tap()
+        let expanded = app.descendants(matching: .any)["native.wish.expanded"].firstMatch
+        XCTAssertTrue(expanded.waitForExistence(timeout: 5))
+        expanded.descendants(matching: .any)[wishID].firstMatch.coordinate(withNormalizedOffset: CGVector(dx: 0.16, dy: 0.45)).tap()
+        let redeem = expanded.buttons["native.wish.redeem"].firstMatch
+        let redeemable = XCTNSPredicateExpectation(predicate: NSPredicate(format: "hittable == true AND enabled == true"), object: redeem)
+        XCTAssertEqual(XCTWaiter.wait(for: [redeemable], timeout: 5), .completed)
+        redeem.tap()
         let amount = app.textFields["wallet.wishes.actual"]
         XCTAssertTrue(amount.waitForExistence(timeout: 5))
         replace(amount, with: "100")
@@ -27,48 +37,75 @@ final class AmountReviewRefinementUITests: XCTestCase {
         let confirm = app.buttons["wallet.wishes.confirm"]
         reveal(confirm, in: app)
         confirm.tap()
-        XCTAssertTrue(app.staticTexts["这个心愿，实现了"].waitForExistence(timeout: 5))
-        app.buttons["关闭"].firstMatch.tap()
-        XCTAssertTrue(app.staticTexts["已实现"].waitForExistence(timeout: 5))
-        XCTAssertFalse(purchased.exists)
-        app.navigationBars.buttons.element(boundBy: 0).tap()
-
-        let completed = app.staticTexts["wallet.wishes.completed.heading"]
-        reveal(completed, in: app)
-        XCTAssertEqual(completed.label, "已实现 · 1")
-        XCTAssertFalse(app.buttons["已实现"].exists)
-        reveal(wish, in: app)
+        let saved = app.descendants(matching: .any)["native.outcome.result"].firstMatch
+        XCTAssertTrue(saved.waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["native.outcome.skip"].waitForNonExistence(timeout: 8))
+        let viewRealized = app.buttons["查看已实现"]
+        XCTAssertTrue(viewRealized.waitForExistence(timeout: 5))
+        XCTAssertTrue(viewRealized.isHittable)
+        viewRealized.tap()
+        XCTAssertTrue(expanded.waitForNonExistence(timeout: 5))
+        XCTAssertTrue(realized.isSelected)
+        XCTAssertTrue(wish.waitForExistence(timeout: 5))
+        XCTAssertTrue((wish.value as? String)?.contains("¥100") == true)
+        unrealized.tap()
+        XCTAssertTrue(wish.waitForNonExistence(timeout: 5))
+        realized.tap()
+        XCTAssertTrue(wish.waitForExistence(timeout: 5))
         wish.tap()
-        XCTAssertTrue(app.staticTexts["已实现"].waitForExistence(timeout: 5))
-        XCTAssertTrue(app.staticTexts["¥100"].exists)
-        XCTAssertFalse(purchased.exists)
-        attach(app, "completed-wish-static-detail")
-        app.navigationBars.buttons.element(boundBy: 0).tap()
+        XCTAssertTrue(expanded.waitForExistence(timeout: 5))
+        XCTAssertTrue(expanded.staticTexts["¥100"].exists)
+        XCTAssertFalse(expanded.buttons["native.wish.redeem"].exists)
+        attach(app, "completed-wish-expanded-detail")
+        expanded.buttons["关闭"].tap()
         XCTAssertTrue(app.buttons["wallet.header.create"].isHittable)
-        attach(app, "completed-wish-static-section")
+        attach(app, "completed-wish-realized-section")
         app.buttons["wallet.header.create"].tap()
-        XCTAssertTrue(app.textFields["心愿名称"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.textFields["wallet.wishes.name"].waitForExistence(timeout: 5))
     }
 
-    func testEmptyWishKeepsOneAddActionWithoutRepeatedHeadings() {
+    func testEmptyWishOffersCreationFromEmptyStateAndHeader() {
         let app = launch("wishes-empty")
         let add = app.buttons["wallet.wishes.empty.add"]
         XCTAssertTrue(add.waitForExistence(timeout: 8))
         XCTAssertTrue(add.isHittable)
-        XCTAssertFalse(app.buttons["wallet.header.create"].exists)
+        XCTAssertEqual(app.buttons.matching(identifier: "wallet.wishes.empty.add").count, 1)
+        XCTAssertTrue(app.buttons["wallet.header.create"].exists)
         XCTAssertFalse(app.staticTexts["留一个想实现的心愿"].exists)
         XCTAssertFalse(app.staticTexts["预算结余形成，非真实资金。"].exists)
         add.tap()
-        XCTAssertTrue(app.textFields["心愿名称"].waitForExistence(timeout: 5))
+        let name = app.textFields["wallet.wishes.name"]
+        XCTAssertTrue(name.waitForExistence(timeout: 5))
+        app.navigationBars["添加心愿"].buttons["关闭"].tap()
+        XCTAssertTrue(name.waitForNonExistence(timeout: 5))
+        app.buttons["wallet.header.create"].tap()
+        XCTAssertTrue(name.waitForExistence(timeout: 5))
     }
 
     func testWishPurchaseKeepsCurrencyQuoteAndExplicitConfirmation() {
-        let app = launch("redemption")
+        let app = launch("wishes")
+        let layout = app.buttons["native.wish.layout"]
+        XCTAssertTrue(layout.waitForExistence(timeout: 8))
+        layout.tap()
+        let wish = wishRow("一副新耳机", in: app)
+        XCTAssertTrue(wish.waitForExistence(timeout: 5))
+        let wishID = wish.identifier
+        wish.tap()
+        let expanded = app.descendants(matching: .any)["native.wish.expanded"].firstMatch
+        XCTAssertTrue(expanded.waitForExistence(timeout: 5))
+        let card = expanded.descendants(matching: .any)[wishID].firstMatch
+        card.coordinate(withNormalizedOffset: CGVector(dx: 0.16, dy: 0.45)).tap()
+        let redeem = expanded.buttons["native.wish.redeem"].firstMatch
+        let redeemable = XCTNSPredicateExpectation(predicate: NSPredicate(format: "hittable == true AND enabled == true"), object: redeem)
+        XCTAssertEqual(XCTWaiter.wait(for: [redeemable], timeout: 5), .completed)
+        redeem.tap()
+
         let amount = app.textFields["wallet.wishes.actual"]
         let currency = app.buttons["wallet.wishes.purchaseCurrency"]
         XCTAssertTrue(amount.waitForExistence(timeout: 8))
         XCTAssertEqual(currency.value as? String, "CNY")
         replace(amount, with: "10")
+        finishKeyboard(in: app)
         currency.tap()
         app.buttons.matching(NSPredicate(format: "label BEGINSWITH %@", "USD")).firstMatch.tap()
         XCTAssertEqual(currency.value as? String, "USD")
@@ -82,6 +119,8 @@ final class AmountReviewRefinementUITests: XCTestCase {
         let rate = app.textFields["wallet.exchange.rate"]
         reveal(rate, in: app)
         replace(rate, with: "7")
+        finishKeyboard(in: app)
+        XCTAssertEqual(rate.value as? String, "7")
 
         let balanceAfter = app.descendants(matching: .any)["wallet.wishes.balanceAfter"]
         XCTAssertTrue(balanceAfter.waitForExistence(timeout: 5))
@@ -90,18 +129,33 @@ final class AmountReviewRefinementUITests: XCTestCase {
         XCTAssertTrue(provenance.exists, "Wish conversion must retain its only source and time.")
         XCTAssertFalse(confirm.isEnabled, "A valid conversion cannot replace real-purchase consent.")
         let purchased = app.switches["wallet.wishes.purchaseConfirmed"]
-        reveal(purchased, in: app)
-        purchased.tap()
-        reveal(confirm, in: app)
+        let form = app.scrollViews.containing(.switch, identifier: "wallet.wishes.purchaseConfirmed").firstMatch
+        revealFormControl(purchased, in: form, below: app.navigationBars["兑现心愿"], above: confirm, app: app)
+        XCTAssertEqual(purchased.value as? String, "0")
+        purchased.coordinate(withNormalizedOffset: CGVector(dx: 0.95, dy: 0.5)).tap()
+        XCTAssertEqual(purchased.value as? String, "1", app.debugDescription)
         XCTAssertTrue(confirm.isEnabled)
         XCTAssertTrue(app.descendants(matching: .any)["wallet.exchange.walletChange"].exists)
         attach(app, "wish-usd-purchase-cny-impact")
         confirm.tap()
 
-        XCTAssertTrue(app.staticTexts["这个心愿，实现了"].waitForExistence(timeout: 5))
-        let savedActual = app.staticTexts.matching(NSPredicate(format: "label CONTAINS '$' AND label CONTAINS '10'")).firstMatch
+        let result = app.descendants(matching: .any)["native.outcome.result"].firstMatch
+        XCTAssertTrue(result.waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["native.outcome.skip"].waitForNonExistence(timeout: 8))
+        let savedActual = result.descendants(matching: .any).matching(NSPredicate(format: "label CONTAINS '$' AND label CONTAINS '10'")).firstMatch
         XCTAssertTrue(savedActual.exists, "The saved original amount must remain 10 USD.")
-        XCTAssertTrue(app.staticTexts["¥790"].exists)
+        app.buttons["查看已实现"].tap()
+        XCTAssertTrue(result.waitForNonExistence(timeout: 5))
+        XCTAssertTrue(expanded.waitForNonExistence(timeout: 5))
+        let realized = app.segmentedControls["native.wish.tabs"].buttons["已实现"]
+        let selectedRealized = XCTNSPredicateExpectation(predicate: NSPredicate(format: "selected == true"), object: realized)
+        XCTAssertEqual(XCTWaiter.wait(for: [selectedRealized], timeout: 5), .completed)
+        let wallet = app.buttons["native.wish.balance"]
+        XCTAssertTrue(wallet.waitForExistence(timeout: 5))
+        wallet.tap()
+        let walletAmount = app.staticTexts["wallet.wishes.balance.detail"]
+        XCTAssertTrue(walletAmount.waitForExistence(timeout: 5))
+        XCTAssertEqual(walletAmount.value as? String, "¥790")
         attach(app, "wish-original-usd-amount-saved")
     }
 
@@ -143,29 +197,96 @@ final class AmountReviewRefinementUITests: XCTestCase {
         app.buttons["wallet.budget.edit.cancel"].tap()
     }
 
-    func testSettlementQuoteProvenanceRemainsVisibleWithoutDuplication() {
+    func testSettlementQuoteProvenanceAndConfirmedWalletCredit() {
         let app = launch("settlement-fx")
+        // The preview shortcut follows the pending period and empties when it settles.
+        // Open the seeded card's normal drawer to exercise the saved result and return.
+        let navigation = app.navigationBars["检查并结算"]
+        let previewClose = navigation.buttons["关闭"]
+        XCTAssertTrue(previewClose.waitForExistence(timeout: 8))
+        previewClose.tap()
+        XCTAssertTrue(navigation.waitForNonExistence(timeout: 5))
+        let trip = app.staticTexts["周末旅行"].firstMatch
+        XCTAssertTrue(trip.waitForExistence(timeout: 5))
+        trip.tap()
+        let settle = app.buttons["wallet.budget.settlement"]
+        XCTAssertTrue(settle.waitForExistence(timeout: 8))
+        if !settle.isHittable { app.scrollViews.firstMatch.swipeUp(velocity: .slow) }
+        settle.tap()
+
         let inputSource = app.staticTexts["wallet.exchange.provenance.input"]
         let previewSource = app.staticTexts["wallet.exchange.provenance.preview"]
         XCTAssertTrue(inputSource.waitForExistence(timeout: 8))
         XCTAssertTrue(app.staticTexts["wallet.exchange.provenance.time"].exists)
         XCTAssertFalse(previewSource.exists)
         let rate = app.textFields["wallet.exchange.rate"]
-        reveal(rate, in: app)
+        let accept = app.buttons["wallet.settlement.acceptData"]
+        let confirm = app.buttons["wallet.settlement.confirm"]
+        let form = app.scrollViews.containing(.textField, identifier: "wallet.exchange.rate").firstMatch
+        revealFormControl(rate, in: form, below: navigation, above: accept, app: app)
         attach(app, "settlement-fx-source-without-preview")
         replace(rate, with: "7")
         XCTAssertTrue(previewSource.waitForExistence(timeout: 5))
         XCTAssertFalse(inputSource.exists)
         XCTAssertFalse(app.staticTexts["wallet.exchange.provenance.time"].exists)
-        reveal(previewSource, in: app)
+        revealFormControl(previewSource, in: form, below: navigation, above: accept, app: app)
         attach(app, "settlement-fx-single-source-with-preview")
 
-        reveal(rate, in: app, upwards: false)
+        revealFormControl(rate, in: form, below: navigation, above: accept, app: app)
         replace(rate, with: "")
         XCTAssertTrue(inputSource.waitForExistence(timeout: 5))
         XCTAssertTrue(app.staticTexts["wallet.exchange.provenance.time"].exists)
         XCTAssertFalse(previewSource.exists)
-        XCTAssertFalse(app.buttons["wallet.settlement.confirm"].isEnabled)
+        XCTAssertFalse(confirm.isEnabled)
+
+        reveal(accept, in: app)
+        accept.tap()
+        XCTAssertFalse(confirm.isEnabled, "Acknowledging incomplete data cannot substitute for a valid quote.")
+        revealFormControl(rate, in: form, below: navigation, above: accept, app: app)
+        replace(rate, with: "7")
+        XCTAssertTrue(previewSource.waitForExistence(timeout: 5))
+        XCTAssertFalse(inputSource.exists)
+        reveal(accept, in: app)
+        XCTAssertFalse(confirm.isEnabled, "After changing the quote the user must acknowledge the revised review.")
+        accept.tap()
+        XCTAssertTrue(confirm.isEnabled)
+        confirm.tap()
+
+        let result = app.descendants(matching: .any)["native.outcome.result"].firstMatch
+        XCTAssertTrue(result.waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["native.outcome.skip"].waitForNonExistence(timeout: 8))
+        let amount = result.staticTexts.matching(NSPredicate(format: "label CONTAINS %@ AND label CONTAINS %@", "结余", "+US$75")).firstMatch
+        XCTAssertTrue(amount.exists)
+        let movement = result.staticTexts.matching(NSPredicate(format: "label CONTAINS %@ AND label CONTAINS %@", "转入心愿余额", "+¥525")).firstMatch
+        XCTAssertTrue(movement.exists)
+        let balance = result.descendants(matching: .any)["native.outcome.wallet"].firstMatch
+        XCTAssertTrue(balance.label.hasSuffix("¥1,385"))
+        attach(app, "settlement-fx-saved-result")
+        app.buttons["回到预算"].tap()
+        XCTAssertTrue(result.waitForNonExistence(timeout: 5))
+        let detailClose = app.buttons["wallet.budget.detail.close"]
+        if detailClose.exists {
+            detailClose.tap()
+            XCTAssertTrue(detailClose.waitForNonExistence(timeout: 5))
+        }
+
+        let nativeWishTab = app.tabBars.buttons["心愿"].firstMatch
+        let wishTab = nativeWishTab.exists ? nativeWishTab : app.buttons["wallet.tab.wishes"].firstMatch
+        XCTAssertTrue(wishTab.waitForExistence(timeout: 5))
+        wishTab.tap()
+        let wallet = app.buttons["native.wish.balance"]
+        XCTAssertTrue(wallet.waitForExistence(timeout: 5))
+        wallet.tap()
+        let savedBalance = app.staticTexts["wallet.wishes.balance.detail"]
+        XCTAssertTrue(savedBalance.waitForExistence(timeout: 5))
+        XCTAssertEqual(savedBalance.value as? String, "¥1,385")
+        let savedCredit = app.buttons.matching(NSPredicate(format: "label CONTAINS %@ AND label CONTAINS %@", "结余", "525")).firstMatch
+        reveal(savedCredit, in: app)
+        savedCredit.tap()
+        let entry = app.descendants(matching: .any)["wallet.wishes.entry.detail"].firstMatch
+        XCTAssertTrue(entry.waitForExistence(timeout: 5))
+        XCTAssertEqual(entry.descendants(matching: .any)["wallet.wishes.entry.amount"].firstMatch.value as? String, "¥525")
+        attach(app, "settlement-fx-wallet-credit")
     }
 
     private func launch(_ screen: String, english: Bool = false, accessibilityText: Bool = false) -> XCUIApplication {
@@ -176,11 +297,23 @@ final class AmountReviewRefinementUITests: XCTestCase {
         return app
     }
 
+    private func wishRow(_ title: String, in app: XCUIApplication) -> XCUIElement {
+        app.buttons.matching(NSPredicate(format: "identifier BEGINSWITH %@ AND label == %@", "native.wish.card.", title)).firstMatch
+    }
+
     private func replace(_ field: XCUIElement, with value: String) {
         field.tap()
         field.coordinate(withNormalizedOffset: CGVector(dx: 0.95, dy: 0.5)).tap()
         let current = field.value as? String ?? ""
-        field.typeText(String(repeating: XCUIKeyboardKey.delete.rawValue, count: current.count) + value)
+        let count = current == field.placeholderValue ? 0 : current.count
+        field.typeText(String(repeating: XCUIKeyboardKey.delete.rawValue, count: count) + value)
+    }
+
+    private func finishKeyboard(in app: XCUIApplication) {
+        let done = app.buttons["完成输入"].firstMatch
+        XCTAssertTrue(done.waitForExistence(timeout: 5), app.debugDescription)
+        done.tap()
+        XCTAssertTrue(done.waitForNonExistence(timeout: 5), "Finishing input must dismiss the keyboard toolbar.")
     }
 
     private func reveal(_ element: XCUIElement, in app: XCUIApplication, upwards: Bool = true) {
@@ -191,6 +324,30 @@ final class AmountReviewRefinementUITests: XCTestCase {
             start.press(forDuration: 0.05, thenDragTo: end)
         }
         XCTAssertTrue(element.isHittable, app.debugDescription)
+    }
+
+    private func revealFormControl(
+        _ element: XCUIElement, in form: XCUIElement, below navigation: XCUIElement,
+        above footer: XCUIElement, app: XCUIApplication
+    ) {
+        XCTAssertTrue(form.waitForExistence(timeout: 5))
+        for _ in 0..<8 {
+            let bounds = form.frame.intersection(app.frame)
+            let top = max(bounds.minY, navigation.frame.maxY) + 12
+            let bottom = min(bounds.maxY, footer.frame.minY) - 12
+            let hitY = element.frame.midY
+            if element.isHittable && hitY >= top && hitY <= bottom { return }
+            guard bottom > top + 40 else { break }
+            let center = form.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0))
+            let nearTop = center.withOffset(CGVector(dx: 0, dy: top - form.frame.minY + 12))
+            let nearBottom = center.withOffset(CGVector(dx: 0, dy: bottom - form.frame.minY - 12))
+            if hitY > bottom {
+                nearBottom.press(forDuration: 0.05, thenDragTo: nearTop)
+            } else {
+                nearTop.press(forDuration: 0.05, thenDragTo: nearBottom)
+            }
+        }
+        XCTFail("Could not scroll \(element.identifier) between the navigation bar and fixed actions.\n\(app.debugDescription)")
     }
 
     private func attach(_ app: XCUIApplication, _ name: String) {

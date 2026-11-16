@@ -10,8 +10,9 @@ final class TaskEnvironmentUITests: XCTestCase {
 
     func testVoiceOverCanReadAndSaveManualRecord() throws {
         guard #available(iOS 27.0, *) else { throw XCTSkip("VoiceOver automation requires iOS 27.") }
-        let app = launch("record")
-        let amount = app.textFields["输入金额"]
+        let app = launch("r34-home")
+        openRecord(in: app)
+        let amount = app.textFields["wallet.composer.amount"]
         XCTAssertTrue(amount.waitForExistence(timeout: 8))
         let voice = XCUIDevice.shared.voiceOverService
         try voice.enable()
@@ -74,13 +75,17 @@ final class TaskEnvironmentUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["静态显示"].waitForExistence(timeout: 8), app.debugDescription)
         attach(app, "system-reduce-motion-setting")
         app.terminate()
-        let task = launch("record")
-        task.textFields["输入金额"].tap(); task.textFields["输入金额"].typeText("8")
+        let task = launch("r34-home")
+        openRecord(in: task)
+        let amount = task.textFields["wallet.composer.amount"]
+        reach(amount, in: task)
+        amount.tap(); amount.typeText("8")
+        dismissKeyboard(in: task)
         task.buttons["wallet.task.switchMode"].tap()
         task.buttons["wallet.task.switchMode"].tap()
-        XCTAssertEqual(task.textFields["输入金额"].value as? String, "8")
+        XCTAssertEqual(amount.value as? String, "8")
         task.buttons["wallet.composer.save"].tap()
-        XCTAssertTrue(task.textFields["输入金额"].waitForNonExistence(timeout: 5))
+        XCTAssertTrue(amount.waitForNonExistence(timeout: 5))
         attach(task, "system-reduce-motion-task-saved")
     }
 
@@ -90,33 +95,45 @@ final class TaskEnvironmentUITests: XCTestCase {
         app.launch()
         let createBudget = app.buttons["wallet.header.create"]
         XCTAssertTrue(createBudget.waitForExistence(timeout: 5))
+        XCTAssertTrue(createBudget.isHittable)
         createBudget.tap()
-        let name = app.textFields["输入预算名称"]
-        XCTAssertTrue(name.waitForExistence(timeout: 5))
-        name.tap(); name.typeText("草稿恢复样例")
-        let amount = app.textFields["额度"]
+        let title = "草稿恢复样例"
+        let name = app.textFields["wallet.composer.name"]
+        reach(name, in: app)
+        name.tap(); name.typeText(title)
+        XCTAssertEqual(name.value as? String, title)
+        dismissKeyboard(in: app)
+        let amount = app.textFields["wallet.composer.amount"]
+        reach(amount, in: app)
         amount.tap(); amount.typeText("123.45")
+        XCTAssertEqual(amount.value as? String, "123.45")
+        dismissKeyboard(in: app)
         app.buttons["wallet.composer.close"].tap()
         app.terminate(); app.launch()
         XCTAssertTrue(createBudget.waitForExistence(timeout: 5))
+        XCTAssertFalse(app.descendants(matching: .any)["wallet.home.card"].firstMatch.staticTexts[title].exists)
         createBudget.tap()
         XCTAssertTrue(name.waitForExistence(timeout: 5))
-        XCTAssertEqual(name.value as? String, "草稿恢复样例")
+        XCTAssertEqual(name.value as? String, title)
         XCTAssertEqual(amount.value as? String, "123.45")
         attach(app, "persistent-task-relaunch")
-        app.buttons["任务选项"].tap(); app.buttons["放弃这份草稿"].tap(); app.alerts["清除未保存的内容？"].buttons["放弃草稿"].tap()
+        app.buttons["wallet.task.options"].tap()
+        app.buttons["放弃这份草稿"].tap()
+        app.alerts["清除未保存的内容？"].buttons["放弃草稿"].tap()
     }
 
     func testEnglishTaskKeepsItsFieldsAndSaveReachableWithKeyboard() {
         let app = XCUIApplication()
-        app.launchArguments = ["-design-preview", "-design-screen", "record", "-AppleLanguages", "(en)", "-AppleLocale", "en_US"]
+        app.launchArguments = ["-design-preview", "-design-screen", "r34-home", "-AppleLanguages", "(en)", "-AppleLocale", "en_US"]
         app.launch()
-        let amount = app.textFields["Amount"]
-        XCTAssertTrue(amount.waitForExistence(timeout: 8), app.debugDescription)
+        openRecord(in: app)
+        let amount = app.textFields["wallet.composer.amount"]
+        reach(amount, in: app)
         amount.tap(); amount.typeText("8")
         attach(app, "english-task-keyboard")
         XCTAssertTrue(app.buttons["wallet.composer.save"].isEnabled)
         XCTAssertTrue(app.buttons["wallet.composer.save"].isHittable)
+        dismissKeyboard(in: app)
         app.buttons["wallet.task.switchMode"].tap()
         XCTAssertTrue(app.buttons["wallet.agent.close"].waitForExistence(timeout: 5))
         app.buttons["wallet.task.switchMode"].tap()
@@ -128,8 +145,11 @@ final class TaskEnvironmentUITests: XCTestCase {
 
     func testLargeTypeAgentKeepsVoiceAndManualSaveReachable() {
         let app = XCUIApplication()
-        app.launchArguments = ["-design-preview", "-design-screen", "agent", "-AppleLanguages", "(en)", "-AppleLocale", "en_US", "-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXXXL"]
+        app.launchArguments = ["-design-preview", "-design-screen", "r34-home", "-AppleLanguages", "(en)", "-AppleLocale", "en_US", "-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXXXL"]
         app.launch()
+        let agent = app.buttons["wallet.agent.avatar"]
+        XCTAssertTrue(agent.waitForExistence(timeout: 8)); XCTAssertTrue(agent.isHittable)
+        agent.tap()
         let input = app.descendants(matching: .any).matching(identifier: "wallet.agent.input").firstMatch
         XCTAssertTrue(input.waitForExistence(timeout: 8))
         input.tap(); input.typeText("lunch 35 CNY")
@@ -140,7 +160,7 @@ final class TaskEnvironmentUITests: XCTestCase {
         XCTAssertTrue(app.alerts.firstMatch.waitForExistence(timeout: 5))
         app.alerts.buttons["Cancel"].tap()
         app.buttons["wallet.task.switchMode"].tap()
-        let amount = app.textFields["Amount"]
+        let amount = app.textFields["wallet.composer.amount"]
         XCTAssertTrue(amount.waitForExistence(timeout: 5))
         XCTAssertEqual(amount.value as? String, "35")
         XCTAssertTrue(app.buttons["wallet.composer.save"].isHittable)
@@ -153,6 +173,28 @@ final class TaskEnvironmentUITests: XCTestCase {
         let app = XCUIApplication()
         app.launchArguments = ["-design-preview", "-design-screen", screen, "-AppleLanguages", "(zh-Hans)", "-AppleLocale", "zh_CN"]
         app.launch(); return app
+    }
+
+    private func openRecord(in app: XCUIApplication) {
+        let capture = app.buttons["wallet.home.capture"]
+        XCTAssertTrue(capture.waitForExistence(timeout: 8), app.debugDescription)
+        XCTAssertTrue(capture.isHittable)
+        capture.tap()
+    }
+
+    private func dismissKeyboard(in app: XCUIApplication) {
+        let done = app.buttons["wallet.keyboard.done"]
+        if done.waitForExistence(timeout: 2), done.isHittable { done.tap() }
+    }
+
+    private func reach(_ control: XCUIElement, in app: XCUIApplication) {
+        XCTAssertTrue(control.waitForExistence(timeout: 5), app.debugDescription)
+        let form = app.scrollViews.containing(.textField, identifier: control.identifier).firstMatch
+        for _ in 0..<6 where !control.isHittable {
+            XCTAssertTrue(form.exists)
+            form.swipeUp(velocity: .slow)
+        }
+        XCTAssertTrue(control.isHittable, app.debugDescription)
     }
     private func attach(_ app: XCUIApplication, _ name: String) {
         let attachment = XCTAttachment(screenshot: app.screenshot()); attachment.name = name; attachment.lifetime = .keepAlways; add(attachment)

@@ -144,17 +144,22 @@ struct CreateComposerSheet: View {
                     .accessibilityIdentifier("wallet.task.resume").padding(.top, 12).background(PaperTheme.canvas)
                 }.background(PaperTheme.canvas)
             } else if mode == .form {
-                VStack(spacing: 8) {
-                if let hint = budgetValidationHint {
-                    Text(hint).font(.caption).foregroundStyle(PaperTheme.muted)
-                        .accessibilityIdentifier("wallet.composer.validation")
-                        .padding(.horizontal, 22)
-                }
-                PaperSubmitBar(
-                    title: workspace.composerIntent == .budget ? String(localized: "v1.budget.create") : String(localized: "wallet.record.save"),
-                    enabled: canSubmit,
-                    action: submitForm
-                ).accessibilityIdentifier("wallet.composer.save").padding(.top, 12).background(PaperTheme.canvas)
+                VStack(spacing: 0) {
+                    if focusedFormField != nil {
+                        PaperKeyboardDoneBar { focusedFormField = nil }
+                    }
+                    VStack(spacing: 8) {
+                        if let hint = budgetValidationHint {
+                            Text(hint).font(.caption).foregroundStyle(PaperTheme.muted)
+                                .accessibilityIdentifier("wallet.composer.validation")
+                                .padding(.horizontal, 22)
+                        }
+                        PaperSubmitBar(
+                            title: workspace.composerIntent == .budget ? String(localized: "v1.budget.create") : String(localized: "wallet.record.save"),
+                            enabled: canSubmit,
+                            action: submitForm
+                        ).accessibilityIdentifier("wallet.composer.save").padding(.top, 12).background(PaperTheme.canvas)
+                    }.background(PaperTheme.canvas)
                 }.background(PaperTheme.canvas)
             } else {
                 AgentTaskPanel(workspace: workspace, voiceCapture: voiceCapture, embedded: true, part: .footer)
@@ -164,15 +169,6 @@ struct CreateComposerSheet: View {
         .frame(maxWidth: .infinity)
         .presentationBackground(PaperTheme.canvas)
         .tint(PaperTheme.focus)
-        .toolbar {
-            ToolbarItemGroup(placement: .keyboard) {
-                if focusedFormField != nil {
-                    Spacer()
-                    Button(String(localized: "ui.keyboard.done")) { focusedFormField = nil }
-                        .accessibilityIdentifier("wallet.keyboard.done")
-                }
-            }
-        }
         .presentationDetents([.height(360), .large], selection: $detent)
         .presentationDragIndicator(.visible)
         .presentationCornerRadius(PaperTheme.Radius.sheet)
@@ -454,10 +450,14 @@ struct CreateComposerSheet: View {
                     .padding(18)
                     .walletSurface()
                     .paperFocusRing(focusedFormField == .name)
+                    .contentShape(Rectangle())
+                    .simultaneousGesture(TapGesture().onEnded { focusedFormField = .name })
                     VStack(alignment: .leading, spacing: 16) {
                         let layout = typeSize.isAccessibilitySize ? AnyLayout(VStackLayout(alignment: .leading, spacing: 12)) : AnyLayout(HStackLayout(spacing: 12))
                         layout {
                             Text(String(localized: "v1.budget.amount")).foregroundStyle(PaperTheme.muted)
+                                .contentShape(Rectangle())
+                                .onTapGesture { focusedFormField = .amount }
                             HStack(spacing: 12) {
                                 TextField("0", text: field(\.amount))
                                     .focused($focusedFormField, equals: .amount)
@@ -512,6 +512,8 @@ struct CreateComposerSheet: View {
                                 axis: .vertical,
                                 isFocused: focusedFormField == .source
                             ).focused($focusedFormField, equals: .source)
+                                .contentShape(Rectangle())
+                                .simultaneousGesture(TapGesture().onEnded { focusedFormField = .source })
                             attachmentInput
                         } label: {
                             CheckLineIconLabel(note.isEmpty && workspace.taskSourceText.isEmpty && workspace.taskDraft.attachments.isEmpty ? String(localized: "ui.record.extras") : String(format: String(localized: "ui.record.extrasCount"), note.count + workspace.taskSourceText.count, workspace.taskDraft.attachments.count), symbol: "text.badge.plus")
@@ -573,6 +575,8 @@ struct CreateComposerSheet: View {
         .padding(.horizontal, 16)
         .frame(minHeight: 52)
         .paperFocusRing(focusedFormField == .merchant, radius: 16)
+        .contentShape(Rectangle())
+        .simultaneousGesture(TapGesture().onEnded { focusedFormField = .merchant })
     }
 
     private var noteCard: some View {

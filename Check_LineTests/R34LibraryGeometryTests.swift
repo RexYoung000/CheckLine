@@ -3,6 +3,19 @@ import Testing
 @testable import CheckLine
 
 @MainActor struct R34LibraryGeometryTests {
+    @Test("周期环、完整卡面与返回区在小屏和 iPad 中互不裁切")
+    func arcCardFitsBetweenPeriodAndFooter() {
+        for width: CGFloat in [320, 375, 402, 650] {
+            for height: CGFloat in [400, 450, 505, 620, 820] {
+                let metrics = LibraryArcGeometry(size: CGSize(width: width, height: height))
+                #expect(metrics.cardTop >= LibraryArcGeometry.headerHeight + metrics.periodHeight)
+                #expect(metrics.cardTop + metrics.cardHeight <= height - LibraryArcGeometry.footerHeight)
+                #expect(metrics.cardWidth <= width - 40)
+                #expect(metrics.pitch > metrics.cardWidth)
+            }
+        }
+    }
+
     @Test("少量预算优先多行，水平与垂直间距各自一致")
     func sparseLibrariesUseMultipleRows() {
         for size in [CGSize(width: 320, height: 390), CGSize(width: 390, height: 520), CGSize(width: 700, height: 780)] {

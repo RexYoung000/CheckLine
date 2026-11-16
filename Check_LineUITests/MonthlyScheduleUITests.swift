@@ -35,16 +35,19 @@ final class MonthlyScheduleUITests: XCTestCase {
         attach(app, "monthly-window-agent-review")
         app.buttons["wallet.task.switchMode"].tap()
         XCTAssertEqual(app.textFields["wallet.composer.name"].value as? String, "Window card")
-        XCTAssertEqual(app.textFields["额度"].value as? String, "500")
+        XCTAssertEqual(app.textFields["wallet.composer.amount"].value as? String, "500")
         XCTAssertEqual(app.buttons["wallet.composer.monthlyStart"].value as? String, "5 日")
         XCTAssertEqual(app.buttons["wallet.composer.monthlyEnd"].value as? String, "20 日")
         app.buttons["wallet.composer.save"].tap()
-        let saved = app.buttons["Window card"].firstMatch
+        let saved = savedBudget("Window card", in: app)
         XCTAssertTrue(saved.waitForExistence(timeout: 5))
-        saved.tap()
-        let info = app.buttons["卡片信息与管理"].firstMatch
-        // NavigationLink is exposed as a button with the section title.
-        reach(info, in: app); info.tap()
+        saved.coordinate(withNormalizedOffset: CGVector(dx: 0.7, dy: 0.25)).tap()
+        let details = app.scrollViews["wallet.workspace.page"].firstMatch
+        XCTAssertTrue(details.waitForExistence(timeout: 5))
+        let info = details.buttons["卡片信息与管理"].firstMatch
+        for _ in 0..<6 where !info.isHittable { details.swipeUp(velocity: .slow) }
+        XCTAssertTrue(info.isHittable, app.debugDescription)
+        info.tap()
         XCTAssertTrue(app.staticTexts.matching(NSPredicate(format: "label CONTAINS %@", "每月 5～20 日")).firstMatch.waitForExistence(timeout: 5))
         attach(app, "monthly-window-budget-information")
     }
@@ -62,7 +65,7 @@ final class MonthlyScheduleUITests: XCTestCase {
         XCTAssertTrue(dates.exists && !dates.label.isEmpty)
         attach(app, "monthly-cross-month-preview")
         app.buttons["wallet.composer.save"].tap()
-        XCTAssertTrue(app.buttons["Cross month card"].firstMatch.waitForExistence(timeout: 5))
+        XCTAssertTrue(savedBudget("Cross month card", in: app).waitForExistence(timeout: 5))
         attach(app, "monthly-cross-month-created")
     }
 
@@ -79,7 +82,7 @@ final class MonthlyScheduleUITests: XCTestCase {
         XCTAssertEqual(start.value as? String, "31 日")
         XCTAssertEqual(app.textFields["wallet.composer.name"].value as? String, "Full cycle card")
         app.buttons["wallet.composer.save"].tap()
-        XCTAssertTrue(app.buttons["Full cycle card"].firstMatch.waitForExistence(timeout: 5))
+        XCTAssertTrue(savedBudget("Full cycle card", in: app).waitForExistence(timeout: 5))
     }
 
     func testEnglishDarkLargeTextCanChooseRangeAndSave() {
@@ -95,28 +98,29 @@ final class MonthlyScheduleUITests: XCTestCase {
         XCTAssertTrue(save.isHittable && save.isEnabled)
         attach(app, "monthly-range-english-dark-largest-text")
         save.tap()
-        XCTAssertTrue(app.buttons["Monthly range"].firstMatch.waitForExistence(timeout: 5))
+        XCTAssertTrue(savedBudget("Monthly range", in: app).waitForExistence(timeout: 5))
     }
 
     func testMonthlyDraftSurvivesAppRelaunchWithoutCreatingBudget() {
         let app = XCUIApplication()
         app.launchArguments = ["-AppleLanguages", "(zh-Hans)", "-AppleLocale", "zh_CN"]
         app.launch()
-        app.buttons["wallet.functions"].tap(); app.buttons["创建预算卡"].tap()
-        let name = app.textFields["wallet.composer.name"]
-        XCTAssertTrue(name.waitForExistence(timeout: 5)); name.tap(); name.typeText("月度日期恢复样例")
-        let amount = app.textFields["额度"]; amount.tap(); amount.typeText("600")
-        let done = app.buttons["完成输入"].firstMatch
-        if done.waitForExistence(timeout: 2), done.isHittable { done.tap() }
+        let title = "月度日期恢复样例"
+        let create = app.buttons["wallet.header.create"]
+        enterBudget(app, name: title, using: create)
         let kind = app.segmentedControls["wallet.composer.monthlyKind"]
         reach(kind, in: app); kind.buttons["指定区间"].tap()
         chooseDay(20, picker: "wallet.composer.monthlyStart", in: app)
         chooseDay(5, picker: "wallet.composer.monthlyEnd", in: app)
         app.buttons["wallet.composer.close"].tap()
         app.terminate(); app.launch()
-        app.buttons["wallet.functions"].tap(); app.buttons["创建预算卡"].tap()
+        XCTAssertTrue(create.waitForExistence(timeout: 8)); XCTAssertTrue(create.isHittable)
+        XCTAssertFalse(savedBudget(title, in: app).exists)
+        create.tap()
+        let name = app.textFields["wallet.composer.name"]
         XCTAssertTrue(name.waitForExistence(timeout: 5))
-        XCTAssertEqual(name.value as? String, "月度日期恢复样例")
+        XCTAssertEqual(name.value as? String, title)
+        XCTAssertEqual(app.textFields["wallet.composer.amount"].value as? String, "600")
         XCTAssertEqual(app.buttons["wallet.composer.monthlyStart"].value as? String, "20 日")
         XCTAssertEqual(app.buttons["wallet.composer.monthlyEnd"].value as? String, "5 日")
         XCTAssertTrue(kind.buttons["指定区间"].isSelected)
@@ -132,17 +136,23 @@ final class MonthlyScheduleUITests: XCTestCase {
         if largeText { app.launchArguments += ["-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXXXL"] }
         app.launch(); return app
     }
-    private func enterBudget(_ app: XCUIApplication, name: String, english: Bool = false) {
-        let create = app.buttons["wallet.empty.card"]
-        XCTAssertTrue(create.waitForExistence(timeout: 10)); create.tap()
+    private func enterBudget(_ app: XCUIApplication, name: String, english: Bool = false, using entry: XCUIElement? = nil) {
+        let create = entry ?? app.buttons["wallet.empty.card"]
+        XCTAssertTrue(create.waitForExistence(timeout: 10)); XCTAssertTrue(create.isHittable); create.tap()
         let field = app.textFields["wallet.composer.name"]
-        XCTAssertTrue(field.waitForExistence(timeout: 5)); field.tap(); field.typeText(name)
+        reach(field, in: app)
+        field.tap(); field.typeText(name)
+        XCTAssertEqual(field.value as? String, name)
         dismissKeyboard(app, english: english)
-        let amount = app.textFields[english ? "Amount" : "额度"]
+        let amount = app.textFields["wallet.composer.amount"]
         reach(amount, in: app)
         amount.tap()
         amount.typeText("600")
+        XCTAssertEqual(amount.value as? String, "600")
         dismissKeyboard(app, english: english)
+    }
+    private func savedBudget(_ title: String, in app: XCUIApplication) -> XCUIElement {
+        app.descendants(matching: .any)["wallet.home.card"].firstMatch.staticTexts[title].firstMatch
     }
     private func dismissKeyboard(_ app: XCUIApplication, english: Bool) {
         let done = app.buttons[english ? "Done" : "完成输入"].firstMatch
@@ -172,8 +182,10 @@ final class MonthlyScheduleUITests: XCTestCase {
             let validation = app.staticTexts["wallet.composer.validation"]
             let footerTop = min(save.exists ? save.frame.minY : form.frame.maxY,
                                 validation.exists ? validation.frame.minY : form.frame.maxY)
-            let bottom = min(form.frame.maxY, footerTop) - 18
-            if element.frame.minY >= top && element.frame.maxY <= bottom && (element.isHittable || element.elementType == .textField) { return }
+            let keyboard = app.keyboards.firstMatch
+            let keyboardTop = keyboard.exists ? keyboard.frame.minY : form.frame.maxY
+            let bottom = min(form.frame.maxY, footerTop, keyboardTop) - 18
+            if element.frame.minY >= top && element.frame.maxY <= bottom && element.isHittable { return }
             let targetY = (top + bottom) / 2
             let distance = min(max(24, abs(element.frame.midY - targetY)), max(24, (bottom - top) * 0.7))
             let movingDown = element.frame.midY < targetY

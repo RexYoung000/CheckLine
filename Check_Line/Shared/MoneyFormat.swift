@@ -1,8 +1,12 @@
 import Foundation
 
 nonisolated enum MoneyFormat {
-    static func string(_ amount: Decimal, currencyCode: String) -> String {
-        amount.formatted(.currency(code: currencyCode).precision(.fractionLength(0...2)))
+    static func string(_ amount: Decimal, currencyCode: String, showsSign: Bool = false) -> String {
+        amount.formatted(
+            .currency(code: currencyCode)
+                .precision(.fractionLength(0...2))
+                .sign(strategy: showsSign ? .always(showZero: false) : .automatic)
+        )
     }
 
     // Budget editing must not store precision hidden by the two-place currency display.

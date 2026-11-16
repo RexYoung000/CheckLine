@@ -8,7 +8,10 @@ final class CheckLineWorkspace {
     var conversation: [AgentConversationEntry] = []
     var proposedWishDraft: TaskDraft?
     var remainingAmountChange: BudgetRemainingChange?
-    var ledger: Ledger
+    var latestSettlementReceipt: SettlementOutcomeReceipt?
+    var ledger: Ledger {
+        didSet { datedCardProjection = nil }
+    }
     let storageLoadFailed: Bool
     var draftStorageFailed = false
     var draftLoadFailed = false
@@ -73,6 +76,7 @@ final class CheckLineWorkspace {
     let attachmentStore: ExpenseAttachmentStore
 
     @ObservationIgnored private var isInitializing = true
+    @ObservationIgnored private var datedCardProjection: (date: Date, cards: [HomeBudgetCardModel])?
     private var budgetAmountDrafts: [UUID: (periodID: UUID, amountText: String)] = [:]
     private var budgetAmountDraftFailures: [String: Bool] = [:] // true: unreadable, false: write failed
     private let context: ModelContext
@@ -118,6 +122,17 @@ final class CheckLineWorkspace {
 
     var cards: [HomeBudgetCardModel] {
         HomeProjector.cards(in: ledger)
+    }
+
+    func cards(at date: Date) -> [HomeBudgetCardModel] {
+        // Read the ledger even on a cache hit so observing views see its next change.
+        let currentLedger = ledger
+        if let datedCardProjection, datedCardProjection.date == date {
+            return datedCardProjection.cards
+        }
+        let cards = HomeProjector.cards(in: currentLedger, now: date)
+        datedCardProjection = (date, cards)
+        return cards
     }
 
     var selectedCard: HomeBudgetCardModel? {

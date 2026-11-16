@@ -17,11 +17,23 @@ nonisolated enum BudgetDetailSection: String, Identifiable, Hashable {
     }
 }
 
+private struct RecordFromBudgetDetailKey: EnvironmentKey {
+    static let defaultValue: ((UUID) -> Void)? = nil
+}
+
+private extension EnvironmentValues {
+    var recordFromBudgetDetail: ((UUID) -> Void)? {
+        get { self[RecordFromBudgetDetailKey.self] }
+        set { self[RecordFromBudgetDetailKey.self] = newValue }
+    }
+}
+
 struct BudgetDetailSheet: View {
     @Bindable var workspace: CheckLineWorkspace
     var budgetID: UUID
     var initialSection: BudgetDetailSection
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.shellChrome) private var chrome
     @State private var path = NavigationPath()
     var body: some View {
         NavigationStack(path: $path) {
@@ -32,7 +44,18 @@ struct BudgetDetailSheet: View {
                 } }
             .environment(\.budgetWorkspacePush, { path.append($0) })
             .navigationDestination(for: BudgetWorkspaceRoute.self) { BudgetWorkspaceDestination(workspace: workspace, route: $0) }
-        }.modifier(NativeDrawerStyle())
+        }
+        .environment(\.recordFromBudgetDetail, openRecord)
+        .modifier(NativeDrawerStyle())
+    }
+
+    private func openRecord(_ budgetID: UUID) {
+        if let chrome {
+            chrome.recordAfterDetailDismissal = budgetID
+            dismiss()
+        } else {
+            workspace.openComposer(.record, budgetID: budgetID)
+        }
     }
 }
 
@@ -59,6 +82,7 @@ struct BudgetDetailContent: View {
     var section: BudgetDetailSection
     var periodID: UUID? = nil
     @Environment(\.dismiss) private var dismissDetail
+    @Environment(\.recordFromBudgetDetail) private var recordFromBudgetDetail
     @Environment(\.shellChrome) private var chrome
     @Environment(\.dynamicTypeSize) private var typeSize
     @State private var settlementSelection: SettlementSelection?
@@ -214,7 +238,9 @@ struct BudgetDetailContent: View {
 
     @ViewBuilder private func recordAction(_ card: HomeBudgetCardModel, primary: Bool) -> some View {
         let button = Button {
-            if let chrome {
+            if let recordFromBudgetDetail {
+                recordFromBudgetDetail(card.id)
+            } else if let chrome {
                 chrome.recordAfterDetailDismissal = card.id
                 dismissDetail()
             } else { workspace.openComposer(.record, budgetID: card.id) }
@@ -354,7 +380,12 @@ struct BudgetDetailContent: View {
                     if pendingOnly {
                         Button(String(localized: "wallet.records.all")) { pendingOnly = false }.buttonStyle(PaperQuietButtonStyle())
                     } else if card.periodState != .settled {
-                        Button(String(localized: "capture.title")) { workspace.openComposer(.record, budgetID: budgetID) }.buttonStyle(PaperQuietButtonStyle())
+                        Button(String(localized: "capture.title")) {
+                            if let recordFromBudgetDetail { recordFromBudgetDetail(budgetID) }
+                            else { workspace.openComposer(.record, budgetID: budgetID) }
+                        }
+                        .buttonStyle(PaperQuietButtonStyle())
+                        .accessibilityIdentifier("wallet.budget.records.capture")
                     }
                 }
             }

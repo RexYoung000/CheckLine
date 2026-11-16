@@ -3,257 +3,345 @@ import UIKit
 
 @MainActor
 final class WalletNavigationUITests: XCTestCase {
-    override func setUpWithError() throws { continueAfterFailure = false }
-
-    func testFloatingHeaderRemainsUsableWhileScrolling() throws {
-        let app = launch(screen: "home")
-        let profile = app.buttons["wallet.profile"]
-        let attention = app.buttons["wallet.attention"]
-        let functions = app.buttons["wallet.functions"]
-        XCTAssertTrue(profile.waitForExistence(timeout: 10))
-        XCTAssertTrue(attention.exists)
-        XCTAssertTrue(functions.exists)
-        XCTAssertGreaterThan(attention.frame.minX - profile.frame.maxX, 40)
-        XCTAssertGreaterThanOrEqual(profile.frame.width, 43)
-        XCTAssertGreaterThanOrEqual(attention.frame.width, 43)
-        XCTAssertGreaterThanOrEqual(functions.frame.width, 43)
-        attach(app, name: "floating-header-home")
-
-        app.swipeUp()
-        XCTAssertTrue(profile.isHittable)
-        XCTAssertTrue(attention.isHittable)
-        XCTAssertTrue(functions.isHittable)
-        attach(app, name: "floating-header-over-scrolled-content")
-
-        attention.tap()
-        XCTAssertTrue(app.navigationBars["待处理事项"].waitForExistence(timeout: 5))
-        app.navigationBars.buttons.firstMatch.tap()
-        XCTAssertTrue(app.navigationBars["待处理事项"].waitForNonExistence(timeout: 5))
-
-        app.buttons["wallet.tab.budgets"].tap()
-        let create = app.buttons["wallet.header.create"]
-        XCTAssertTrue(create.waitForExistence(timeout: 5))
-        XCTAssertTrue(create.isHittable)
-        XCTAssertGreaterThanOrEqual(create.frame.width, 43)
-        attach(app, name: "floating-header-dark-page")
-        create.tap()
-        XCTAssertTrue(app.textFields.firstMatch.waitForExistence(timeout: 5))
+    override func setUpWithError() throws {
+        continueAfterFailure = false
+        if #available(iOS 27.0, *) { try XCUIDevice.shared.voiceOverService.disable() }
     }
 
-    func testFloatingHeaderProfileAndMenuOpenTheirDestinations() throws {
-        let app = launch(screen: "home")
+    func testBudgetHeaderRemainsUsableAcrossHolderLayers() {
+        let app = launch(screen: "r34-home")
+        let create = app.buttons["wallet.header.create"]
+        let profile = app.buttons["wallet.profile"]
+        XCTAssertTrue(create.waitForExistence(timeout: 10))
+        XCTAssertTrue(profile.isHittable)
+        XCTAssertGreaterThanOrEqual(create.frame.width, 43)
+        XCTAssertGreaterThanOrEqual(profile.frame.width, 43)
+        let headerY = create.frame.midY
+
+        app.buttons["native.holder.up"].tap()
+        XCTAssertTrue(element("native.budget.records", in: app).waitForExistence(timeout: 5))
+        XCTAssertTrue(create.isHittable)
+        XCTAssertTrue(profile.isHittable)
+        XCTAssertEqual(create.frame.midY, headerY, accuracy: 3)
+        app.buttons["native.holder.down"].tap()
+        XCTAssertTrue(app.buttons["wallet.home.capture"].waitForExistence(timeout: 5))
+        app.buttons["native.holder.down"].tap()
+        XCTAssertTrue(element("native.budget.library", in: app).waitForExistence(timeout: 5))
+        XCTAssertTrue(create.isHittable)
+        XCTAssertTrue(profile.isHittable)
+        XCTAssertEqual(create.frame.midY, headerY, accuracy: 3)
+        attach(app, name: "budget-header-over-library")
+
+        create.tap()
+        XCTAssertTrue(app.textFields["wallet.composer.name"].waitForExistence(timeout: 5))
+        app.buttons["wallet.composer.close"].tap()
+        XCTAssertTrue(app.buttons["native.library.close"].isHittable)
+    }
+
+    func testBudgetSettingsAndRecordOpenFromTheirNativeEntries() {
+        let app = launch(screen: "r34-home")
         let profile = app.buttons["wallet.profile"]
         XCTAssertTrue(profile.waitForExistence(timeout: 10))
         profile.tap()
         XCTAssertTrue(app.navigationBars["设置"].waitForExistence(timeout: 5))
-        app.navigationBars.buttons.firstMatch.tap()
+        app.navigationBars["设置"].buttons.firstMatch.tap()
         XCTAssertTrue(app.navigationBars["设置"].waitForNonExistence(timeout: 5))
 
-        app.buttons["wallet.functions"].tap()
-        let record = app.buttons["记一笔"].firstMatch
-        XCTAssertTrue(record.waitForExistence(timeout: 5))
-        attach(app, name: "function-menu-icons")
+        let record = app.buttons["wallet.home.capture"]
+        XCTAssertTrue(record.isHittable)
         record.tap()
-        XCTAssertTrue(app.textFields.firstMatch.waitForExistence(timeout: 5))
+        XCTAssertTrue(app.textFields["wallet.composer.amount"].waitForExistence(timeout: 5))
+        app.buttons["wallet.composer.close"].tap()
+        XCTAssertTrue(record.isHittable)
     }
 
-    func testNativeTabsAndAgentKeepTheCurrentPage() throws {
-        guard #available(iOS 27.0, *) else { throw XCTSkip("Native prominent tabs require iOS 27.") }
-        try XCTSkipUnless(UIDevice.current.userInterfaceIdiom == .phone, "iPad retains the centered custom navigation.")
-        let app = launch(screen: "home")
-        let bar = app.tabBars.firstMatch
-        XCTAssertTrue(bar.waitForExistence(timeout: 10))
-        XCTAssertEqual(bar.buttons.count, 5, app.debugDescription)
+    func testNativeTabsAndAgentKeepTheCurrentPage() {
+        let app = launch(screen: "r34-home")
+        XCTAssertTrue(app.buttons["wallet.home.capture"].waitForExistence(timeout: 10))
+        let budget = tab("budgets", title: "预算", in: app)
+        let wish = tab("wishes", title: "心愿", in: app)
+        let agent = app.buttons["wallet.agent.avatar"]
+        XCTAssertTrue(budget.isSelected)
+        let nativeBar = app.tabBars["wallet.nativeTabBar"]
+        if nativeBar.exists { XCTAssertEqual(nativeBar.buttons.count, 2) }
+        XCTAssertEqual(budget.frame.midY, agent.frame.midY, accuracy: 9)
+        XCTAssertGreaterThan(agent.frame.minX, wish.frame.maxX)
 
-        for index in [1, 2, 3, 0, 2, 1] {
-            let tab = bar.buttons.element(boundBy: index)
-            tab.tap()
-            XCTAssertTrue(tab.isSelected)
-        }
-        let budget = bar.buttons.element(boundBy: 1)
-        let agent = bar.buttons.element(boundBy: 4)
-        XCTAssertEqual(budget.frame.midY, agent.frame.midY, accuracy: 4)
-        XCTAssertGreaterThan(agent.frame.minX, bar.buttons.element(boundBy: 3).frame.maxX)
-        attach(app, name: "native-tabs-before-agent")
-
-        for _ in 0..<2 {
+        for (page, visibleControl) in [(wish, "native.wish.layout"), (budget, "wallet.home.capture")] {
+            page.tap()
+            XCTAssertTrue(app.buttons[visibleControl].waitForExistence(timeout: 5))
+            XCTAssertTrue(page.isSelected)
             agent.tap()
             let close = app.buttons["wallet.agent.close"]
-            XCTAssertTrue(close.waitForExistence(timeout: 5), app.debugDescription)
-            attach(app, name: "agent-sheet")
+            XCTAssertTrue(close.waitForExistence(timeout: 5))
             close.tap()
-            XCTAssertTrue(budget.waitForExistence(timeout: 5))
-            XCTAssertTrue(budget.isSelected, "Closing Agent must preserve the selected page.")
+            XCTAssertTrue(close.waitForNonExistence(timeout: 5))
+            XCTAssertTrue(page.isSelected)
+            XCTAssertTrue(app.buttons[visibleControl].isHittable)
         }
-        attach(app, name: "native-tabs-after-agent")
     }
 
-    func testEmptyHomeOffersReadableCreation() throws {
-        let app = launch(screen: "empty")
-        let create = app.buttons["wallet.empty.createBudget"]
+    func testEmptyHomeOffersReadableCreation() {
+        let app = launch(screen: "budget-empty")
         let emptyCard = app.buttons["wallet.empty.card"]
-        XCTAssertTrue(create.waitForExistence(timeout: 10))
+        let manual = app.buttons["手动填写"]
+        XCTAssertTrue(emptyCard.waitForExistence(timeout: 10))
         XCTAssertTrue(emptyCard.isHittable)
+        XCTAssertTrue(manual.isHittable)
         XCTAssertFalse(app.staticTexts["为日常开销或一个计划，创建一张预算卡。"].exists)
-        XCTAssertTrue(create.isHittable)
-        attach(app, name: "empty-home")
-        emptyCard.tap()
-        let agentClose = app.buttons["wallet.agent.close"]
-        XCTAssertTrue(agentClose.waitForExistence(timeout: 5))
-        agentClose.tap()
-        create.tap()
-        XCTAssertTrue(app.textFields.firstMatch.waitForExistence(timeout: 5))
-        attach(app, name: "create-from-empty-home")
 
-        let name = app.textFields["输入预算名称"]
-        name.tap()
-        name.typeText("导航测试")
-        let amount = app.textFields["额度"]
-        amount.tap()
-        amount.typeText("500")
-        app.buttons.matching(NSPredicate(format: "label == %@ AND identifier != %@", "创建预算卡", "wallet.empty.createBudget")).firstMatch.tap()
+        emptyCard.tap()
+        XCTAssertTrue(app.textFields["wallet.composer.name"].waitForExistence(timeout: 5))
+        app.buttons["wallet.composer.close"].tap()
+        XCTAssertTrue(emptyCard.isHittable)
+        manual.tap()
+        enterBudget(name: "导航测试", in: app)
         let undo = app.buttons["撤销"]
         XCTAssertTrue(undo.waitForExistence(timeout: 5))
-        attach(app, name: "creation-feedback-above-tabs")
-        if #available(iOS 27.0, *), UIDevice.current.userInterfaceIdiom == .phone {
-            XCTAssertLessThanOrEqual(undo.frame.maxY, app.tabBars.firstMatch.frame.minY,
-                                     "Action feedback must remain above the system tab bar.")
-        }
+        XCTAssertTrue(element("wallet.home.card", in: app).staticTexts["导航测试"].exists)
+        let budget = tab("budgets", title: "预算", in: app)
+        XCTAssertLessThanOrEqual(undo.frame.maxY, budget.frame.minY)
         undo.tap()
-        XCTAssertTrue(create.waitForExistence(timeout: 5))
+        XCTAssertTrue(emptyCard.waitForExistence(timeout: 5))
+        XCTAssertFalse(element("wallet.home.card", in: app).exists)
     }
 
-    func testEmptyHomeCreatesFirstCardThroughOfflineAgent() throws {
-        let app = launch(screen: "empty")
-        app.buttons["wallet.empty.card"].tap()
-        let input = app.descendants(matching: .any)["wallet.agent.input"]
+    func testEmptyHomeCreatesFirstCardThroughOfflineAgent() {
+        let app = launch(screen: "budget-empty")
+        XCTAssertTrue(app.buttons["wallet.empty.card"].waitForExistence(timeout: 10))
+        app.buttons["wallet.agent.avatar"].tap()
+        let input = element("wallet.agent.input", in: app)
         XCTAssertTrue(input.waitForExistence(timeout: 5), app.debugDescription)
         input.tap()
         input.typeText("创建每月餐饮预算1000元")
-        app.buttons["发送"].tap()
+        app.buttons["wallet.agent.send"].tap()
         let confirm = app.buttons["确认创建预算卡"]
         XCTAssertTrue(confirm.waitForExistence(timeout: 8), app.debugDescription)
         confirm.tap()
-        XCTAssertTrue(app.buttons["wallet.agent.close"].waitForNonExistence(timeout: 5), app.debugDescription)
-        XCTAssertFalse(app.buttons["wallet.empty.createBudget"].exists)
-        XCTAssertTrue(app.staticTexts["餐饮"].waitForExistence(timeout: 5), app.debugDescription)
+        XCTAssertTrue(app.buttons["wallet.agent.close"].waitForNonExistence(timeout: 5))
+        XCTAssertFalse(app.buttons["wallet.empty.card"].exists)
+        XCTAssertTrue(element("wallet.home.card", in: app).staticTexts["餐饮"].waitForExistence(timeout: 5))
     }
 
-    func testNormalAppKeepsFirstCardAfterRelaunch() throws {
+    func testNormalAppKeepsCreatedCardAfterRelaunch() {
         let app = XCUIApplication()
         app.launchArguments = ["-AppleLanguages", "(zh-Hans)", "-AppleLocale", "zh_CN"]
         app.launch()
-        let create = app.buttons["wallet.empty.createBudget"]
+        let create = app.buttons["wallet.header.create"]
         XCTAssertTrue(create.waitForExistence(timeout: 10), app.debugDescription)
+        let name = "重开测试 " + String(UUID().uuidString.prefix(8))
         create.tap()
-        let name = app.textFields["输入预算名称"]
-        XCTAssertTrue(name.waitForExistence(timeout: 5))
-        name.tap()
-        name.typeText("重开测试")
-        let amount = app.textFields["额度"]
-        amount.tap()
-        amount.typeText("500")
-        app.buttons.matching(NSPredicate(format: "label == %@ AND identifier != %@", "创建预算卡", "wallet.empty.createBudget")).firstMatch.tap()
-        XCTAssertTrue(app.staticTexts["重开测试"].waitForExistence(timeout: 5), app.debugDescription)
+        enterBudget(name: name, in: app)
+        let home = element("wallet.home.card", in: app)
+        XCTAssertTrue(home.staticTexts[name].waitForExistence(timeout: 5))
         app.terminate()
         app.launch()
-        XCTAssertFalse(create.waitForExistence(timeout: 3), app.debugDescription)
-        XCTAssertTrue(app.staticTexts["重开测试"].waitForExistence(timeout: 8), app.debugDescription)
+        XCTAssertTrue(home.waitForExistence(timeout: 8))
+        if !home.staticTexts[name].exists {
+            app.buttons["native.holder.down"].tap()
+            let search = app.buttons["native.library.search"]
+            XCTAssertTrue(search.waitForExistence(timeout: 5))
+            search.tap()
+            let field = app.textFields["native.library.searchField"]
+            XCTAssertTrue(field.waitForExistence(timeout: 5))
+            field.tap()
+            field.typeText(name)
+            let card = app.descendants(matching: .any).matching(NSPredicate(format: "identifier BEGINSWITH %@ AND label BEGINSWITH %@", "native.library.card.", name)).firstMatch
+            XCTAssertTrue(card.waitForExistence(timeout: 5))
+            card.tap()
+        }
+        XCTAssertTrue(home.staticTexts[name].waitForExistence(timeout: 5))
     }
 
-    func testAgentDraftMovesIntoManualBudgetForm() throws {
-        let app = launch(screen: "empty")
-        app.buttons["wallet.empty.card"].tap()
-        let input = app.descendants(matching: .any)["wallet.agent.input"]
+    func testAgentDraftMovesIntoManualBudgetForm() {
+        let app = launch(screen: "budget-empty")
+        XCTAssertTrue(app.buttons["wallet.empty.card"].waitForExistence(timeout: 10))
+        app.buttons["wallet.agent.avatar"].tap()
+        let input = element("wallet.agent.input", in: app)
         XCTAssertTrue(input.waitForExistence(timeout: 5))
         input.tap()
         input.typeText("创建预算卡")
-        app.buttons["发送"].tap()
+        app.buttons["wallet.agent.send"].tap()
         XCTAssertTrue(app.staticTexts.matching(NSPredicate(format: "label CONTAINS %@", "这张预算卡叫什么名字？")).firstMatch.waitForExistence(timeout: 5))
         input.tap()
         input.typeText("餐饮 1000元 每月")
         app.buttons["wallet.task.switchMode"].tap()
-        let name = app.textFields["输入预算名称"]
+        let name = app.textFields["wallet.composer.name"]
         XCTAssertTrue(name.waitForExistence(timeout: 5), app.debugDescription)
         XCTAssertEqual(name.value as? String, "餐饮")
-        XCTAssertEqual(app.textFields["额度"].value as? String, "1000")
+        XCTAssertEqual(app.textFields["wallet.composer.amount"].value as? String, "1000")
     }
 
-    func testOneShotSettlementReachesWishWalletAndRealPurchase() throws {
+    func testOneShotSettlementReachesWishWalletAndRealPurchase() {
         let app = launch(screen: "settlement-loop")
-        let budgetCard = app.buttons["周末旅行"].firstMatch
-        XCTAssertTrue(budgetCard.waitForExistence(timeout: 10), app.debugDescription)
-        budgetCard.tap()
+        let used = app.buttons["native.home.summary.used"]
+        XCTAssertTrue(used.waitForExistence(timeout: 10))
+        used.tap()
         let settle = app.buttons["wallet.budget.settlement"]
-        XCTAssertTrue(settle.waitForExistence(timeout: 5), app.debugDescription)
+        reveal(settle, in: app)
         settle.tap()
-        XCTAssertTrue(app.staticTexts["结算后会怎样"].waitForExistence(timeout: 5), app.debugDescription)
-        XCTAssertTrue(app.staticTexts["未连接的来源与漏记消费不会自动出现在此处；空白日期不代表没有消费。"].exists)
-        attach(app, name: "settlement-review")
 
+        let accept = app.buttons["wallet.settlement.acceptData"]
         let confirm = app.buttons["wallet.settlement.confirm"]
+        XCTAssertTrue(accept.waitForExistence(timeout: 5))
         XCTAssertFalse(confirm.isEnabled)
-        app.buttons["wallet.settlement.acceptData"].tap()
-        XCTAssertTrue(confirm.isEnabled, app.debugDescription)
+        accept.tap()
+        XCTAssertTrue(confirm.isEnabled)
         confirm.tap()
-        XCTAssertTrue(app.staticTexts["本期已结算"].waitForExistence(timeout: 5), app.debugDescription)
-        attach(app, name: "settlement-saved")
-        app.buttons["wallet.settlement.viewWishes"].tap()
-        XCTAssertTrue(app.staticTexts["¥750"].waitForExistence(timeout: 5), app.debugDescription)
+        let result = element("native.outcome.result", in: app)
+        XCTAssertTrue(result.waitForExistence(timeout: 5))
+        XCTAssertTrue(result.descendants(matching: .any)["native.outcome.wallet"].label.contains("750"))
+        XCTAssertTrue(app.buttons["native.outcome.skip"].waitForNonExistence(timeout: 6))
+        app.buttons["回到预算"].tap()
+        XCTAssertTrue(result.waitForNonExistence(timeout: 5))
+        if app.buttons["wallet.budget.detail.close"].isHittable { app.buttons["wallet.budget.detail.close"].tap() }
+        XCTAssertTrue(app.buttons["wallet.empty.card"].waitForExistence(timeout: 5), "The one-shot budget is archived after settlement.")
 
-        app.buttons["添加心愿"].firstMatch.tap()
-        let name = app.textFields["心愿名称"]
-        XCTAssertTrue(name.waitForExistence(timeout: 5), app.debugDescription)
-        name.tap()
-        name.typeText("耳机")
-        app.buttons["添加心愿"].firstMatch.tap()
-        XCTAssertTrue(app.staticTexts["耳机"].waitForExistence(timeout: 5), app.debugDescription)
-        app.staticTexts["耳机"].tap()
-        app.buttons["已购买，去兑现"].tap()
-        let actual = app.textFields["实际花费"]
-        XCTAssertTrue(actual.waitForExistence(timeout: 5), app.debugDescription)
-        actual.tap()
-        actual.typeText("500")
-        app.switches["我已完成真实购买"].tap()
-        app.buttons["确认兑现"].tap()
-        XCTAssertTrue(app.staticTexts["这个心愿，实现了"].waitForExistence(timeout: 5), app.debugDescription)
-        XCTAssertTrue(app.staticTexts["¥250"].exists, app.debugDescription)
+        tab("wishes", title: "心愿", in: app).tap()
+        let balance = app.buttons["native.wish.balance"]
+        XCTAssertTrue(balance.waitForExistence(timeout: 5))
+        XCTAssertTrue(balance.label.contains("750"))
+        app.buttons["wallet.wishes.empty.add"].tap()
+        let name = app.textFields["wallet.wishes.name"]
+        XCTAssertTrue(name.waitForExistence(timeout: 5))
+        name.tap(); name.typeText("耳机")
+        dismissKeyboard(in: app)
+        let estimate = app.textFields["wallet.wishes.estimate"]
+        reveal(estimate, in: app)
+        estimate.tap(); estimate.typeText("500")
+        dismissKeyboard(in: app)
+        app.buttons["wallet.wishes.create.save"].tap()
+        XCTAssertTrue(balance.waitForExistence(timeout: 5))
+        XCTAssertTrue(balance.label.contains("750"), "Creating a wish must leave the wallet amount intact.")
+
+        let wish = app.descendants(matching: .any).matching(NSPredicate(format: "identifier BEGINSWITH %@ AND label == %@", "native.wish.card.", "耳机")).firstMatch
+        XCTAssertTrue(wish.waitForExistence(timeout: 5))
+        wish.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).tap()
+        let redeem = wish.buttons["native.wish.redeem"].firstMatch
+        waitUntilHittable(redeem)
+        XCTAssertTrue(redeem.isEnabled)
+        redeem.tap()
+        let actual = app.textFields["wallet.wishes.actual"]
+        XCTAssertTrue(actual.waitForExistence(timeout: 5))
+        actual.tap(); actual.typeText("500")
+        dismissKeyboard(in: app)
+        let purchase = app.buttons["wallet.wishes.confirm"]
+        XCTAssertFalse(purchase.isEnabled)
+        let consent = app.switches["wallet.wishes.purchaseConfirmed"]
+        reveal(consent, in: app)
+        consent.tap()
+        XCTAssertTrue(purchase.isEnabled)
+        purchase.tap()
+        let realized = app.buttons["查看已实现"]
+        XCTAssertTrue(realized.waitForExistence(timeout: 5))
+        realized.tap()
+        XCTAssertTrue(app.segmentedControls["native.wish.tabs"].buttons["已实现"].isSelected)
+        XCTAssertTrue(wish.waitForExistence(timeout: 5))
+        XCTAssertTrue(balance.label.contains("250"))
         attach(app, name: "wish-redeemed-from-settlement")
     }
 
-    func testAnalysisEmptyStatesUseRealDataAndOfferNextAction() throws {
-        let withoutCard = launch(screen: "analysis-empty")
-        XCTAssertTrue(withoutCard.staticTexts["还没有可回看的预算卡"].waitForExistence(timeout: 10))
-        XCTAssertTrue(withoutCard.buttons["创建预算卡"].isHittable)
-        XCTAssertFalse(withoutCard.staticTexts["-¥0"].exists)
-        withoutCard.terminate()
-
-        let withoutRecords = launch(screen: "analysis-no-records")
-        XCTAssertTrue(withoutRecords.staticTexts["还没有消费记录"].waitForExistence(timeout: 10))
-        XCTAssertTrue(withoutRecords.buttons["记一笔"].isHittable)
-        XCTAssertFalse(withoutRecords.staticTexts["-¥0"].exists)
+    func testNewBudgetReachesEmptyRecordsAndCalendarThroughDetails() {
+        let app = launch(screen: "budget-empty")
+        let empty = app.buttons["wallet.empty.card"]
+        XCTAssertTrue(empty.waitForExistence(timeout: 10))
+        XCTAssertFalse(app.buttons["native.home.summary.period"].exists)
+        XCTAssertFalse(app.buttons["上个月"].exists)
+        empty.tap()
+        enterBudget(name: "空周期", in: app)
+        let period = app.buttons["native.home.summary.period"]
+        XCTAssertTrue(period.waitForExistence(timeout: 5))
+        period.tap()
+        XCTAssertTrue(app.buttons["上个月"].waitForExistence(timeout: 5))
+        app.navigationBars["消费日历"].buttons.firstMatch.tap()
+        let records = app.buttons["wallet.workspace.records"]
+        reveal(records, in: app)
+        records.tap()
+        XCTAssertTrue(app.staticTexts["还没有记到这张卡的消费"].waitForExistence(timeout: 5))
+        XCTAssertFalse(app.staticTexts["-¥0"].exists)
+        let record = app.buttons["wallet.budget.records.capture"]
+        reveal(record, in: app)
+        record.tap()
+        let amount = app.textFields["wallet.composer.amount"]
+        XCTAssertTrue(amount.waitForExistence(timeout: 5))
+        XCTAssertTrue(app.scrollViews["wallet.workspace.page"].firstMatch.waitForNonExistence(timeout: 5))
+        amount.tap(); amount.typeText("12.34")
+        XCTAssertEqual(amount.value as? String, "12.34")
+        dismissKeyboard(in: app)
+        app.buttons["wallet.composer.close"].tap()
+        XCTAssertTrue(amount.waitForNonExistence(timeout: 5))
+        XCTAssertTrue(element("wallet.home.card", in: app).staticTexts["空周期"].exists)
+        let capture = app.buttons["wallet.home.capture"]
+        XCTAssertTrue(capture.isHittable)
+        capture.tap()
+        XCTAssertTrue(amount.waitForExistence(timeout: 5))
+        XCTAssertEqual(amount.value as? String, "12.34")
     }
 
-    func testNativeLensDragAndDetailReturn() throws {
-        guard #available(iOS 27.0, *) else { throw XCTSkip("Native prominent tabs require iOS 27.") }
-        try XCTSkipUnless(UIDevice.current.userInterfaceIdiom == .phone, "iPad retains the centered custom navigation.")
-        let app = launch(screen: "home")
-        let bar = app.tabBars.firstMatch
-        XCTAssertTrue(bar.waitForExistence(timeout: 10))
-        let home = bar.buttons.element(boundBy: 0)
-        let analysis = bar.buttons.element(boundBy: 3)
-        home.press(forDuration: 0.2, thenDragTo: analysis)
-        XCTAssertTrue(analysis.isSelected)
-        analysis.press(forDuration: 0.2, thenDragTo: home)
-        XCTAssertTrue(home.isSelected)
+    func testNativeLensDragAndDetailReturn() {
+        let app = launch(screen: "r34-home")
+        XCTAssertTrue(app.buttons["wallet.home.capture"].waitForExistence(timeout: 10))
+        let budget = tab("budgets", title: "预算", in: app)
+        let wish = tab("wishes", title: "心愿", in: app)
+        let center = CGVector(dx: 0.5, dy: 0.5)
+        budget.coordinate(withNormalizedOffset: center).press(forDuration: 0.18, thenDragTo: wish.coordinate(withNormalizedOffset: center), withVelocity: .slow, thenHoldForDuration: 0.3)
+        XCTAssertTrue(app.buttons["native.wish.layout"].waitForExistence(timeout: 5))
+        XCTAssertTrue(wish.isSelected)
+        wish.coordinate(withNormalizedOffset: center).press(forDuration: 0.18, thenDragTo: budget.coordinate(withNormalizedOffset: center), withVelocity: .slow, thenHoldForDuration: 0.3)
+        XCTAssertTrue(app.buttons["wallet.home.capture"].waitForExistence(timeout: 5))
+        XCTAssertTrue(budget.isSelected)
 
-        bar.buttons.element(boundBy: 2).tap()
-        app.staticTexts["一副新耳机"].tap()
-        XCTAssertTrue(bar.waitForNonExistence(timeout: 5), "A pushed detail must hide the root tab bar.")
-        attach(app, name: "wish-detail-without-tab-bar")
-        app.navigationBars.buttons.firstMatch.tap()
-        XCTAssertTrue(bar.waitForExistence(timeout: 5))
-        XCTAssertTrue(bar.buttons.element(boundBy: 2).isSelected)
+        wish.tap()
+        let expand = app.buttons["native.wish.expand"].firstMatch
+        XCTAssertTrue(expand.waitForExistence(timeout: 5))
+        expand.tap()
+        let expanded = element("native.wish.expanded", in: app)
+        XCTAssertTrue(expanded.waitForExistence(timeout: 5))
+        XCTAssertFalse(wish.isHittable)
+        app.buttons["关闭"].firstMatch.tap()
+        XCTAssertTrue(expanded.waitForNonExistence(timeout: 5))
+        XCTAssertTrue(wish.isSelected)
+        XCTAssertTrue(wish.isHittable)
+    }
+
+    private func enterBudget(name: String, in app: XCUIApplication) {
+        let field = app.textFields["wallet.composer.name"]
+        XCTAssertTrue(field.waitForExistence(timeout: 5))
+        field.tap(); field.typeText(name)
+        dismissKeyboard(in: app)
+        let amount = app.textFields["wallet.composer.amount"]
+        reveal(amount, in: app)
+        amount.tap(); amount.typeText("500")
+        dismissKeyboard(in: app)
+        app.buttons["wallet.composer.save"].tap()
+        XCTAssertTrue(field.waitForNonExistence(timeout: 5))
+    }
+
+    private func dismissKeyboard(in app: XCUIApplication) {
+        let done = app.buttons["完成输入"].firstMatch
+        if done.isHittable { done.tap() }
+    }
+
+    private func reveal(_ control: XCUIElement, in app: XCUIApplication) {
+        for _ in 0..<6 where !control.isHittable {
+            let scroll = app.scrollViews.firstMatch
+            if scroll.exists { scroll.swipeUp(velocity: .slow) }
+        }
+        XCTAssertTrue(control.isHittable, app.debugDescription)
+    }
+
+    private func waitUntilHittable(_ control: XCUIElement) {
+        let ready = XCTNSPredicateExpectation(predicate: NSPredicate(format: "hittable == true AND enabled == true"), object: control)
+        XCTAssertEqual(XCTWaiter.wait(for: [ready], timeout: 5), .completed)
+    }
+
+    private func element(_ identifier: String, in app: XCUIApplication) -> XCUIElement {
+        app.descendants(matching: .any)[identifier].firstMatch
+    }
+
+    private func tab(_ id: String, title: String, in app: XCUIApplication) -> XCUIElement {
+        let native = app.tabBars.buttons[title].firstMatch
+        return native.exists ? native : app.buttons["wallet.tab.\(id)"].firstMatch
     }
 
     private func launch(screen: String) -> XCUIApplication {

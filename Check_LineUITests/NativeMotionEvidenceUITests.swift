@@ -28,7 +28,7 @@ import XCTest
         XCTAssertTrue(result.waitForNonExistence(timeout: 5), app.debugDescription)
     }
 
-    func testSettlementPlaysAllReceivingBeatsInCurrentPageBeforeReturn() {
+    func testSettlementCompletesWaveInCurrentDrawerBeforeReturn() {
         let app = launch("settlement-loop")
         app.staticTexts["周末旅行"].firstMatch.tap()
         let settle = app.buttons["wallet.budget.settlement"]
@@ -48,14 +48,13 @@ import XCTest
         let wallet = app.descendants(matching: .any)["native.outcome.wallet"].firstMatch
         XCTAssertTrue(wallet.isHittable,"The receiving amount must remain visible above the fixed action.")
         XCTAssertLessThanOrEqual(wallet.frame.maxY,app.buttons["回到预算"].frame.minY+2,"The fixed action must not cover the receiving wallet.")
-        attach(app, "r34-settlement-six-beats-finished-current-page")
+        attach(app, "settlement-wave-finished-current-drawer")
         app.buttons["回到预算"].tap()
         XCTAssertTrue(result.waitForNonExistence(timeout: 5), app.debugDescription)
     }
 
     private func waitForCompleteMotion(in app: XCUIApplication) {
-        // This button exists only until the receipt's own 3.2 s / 2.75 s
-        // presentation clock completes. Never tap it in a recording path.
+        // Let the native animation finish without using the skip control.
         XCTAssertTrue(app.buttons["native.outcome.skip"].waitForNonExistence(timeout: 8),
                       "The native reward must reach its stable saved result without a skip.", file: #filePath, line: #line)
     }

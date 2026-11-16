@@ -113,13 +113,12 @@ import XCTest
 
         let sideCards = app.descendants(matching: .any).matching(NSPredicate(
             format: "identifier BEGINSWITH %@ AND value == %@",
-            "native.library.card.", "点按聚焦"
+            "native.library.edge.", "点按聚焦"
         )).allElementsBoundByIndex
         guard let side = sideCards.first(where: { $0.isHittable }) else {
             XCTFail("The arc must show an actionable side card. \(app.debugDescription)")
             return
         }
-        let sideID = side.identifier
         let selectedName = ["日常生活", "周末旅行", "学点新东西"].first { side.label.contains($0) }
         XCTAssertNotNil(selectedName, "The side card must expose its real budget title, not an anonymous backplate.")
         // The side card's accessibility bounding box extends behind the front
@@ -144,7 +143,7 @@ import XCTest
         app.coordinate(withNormalizedOffset: .zero).withOffset(CGVector(dx: point.x, dy: point.y)).tap()
         XCTAssertTrue(library.exists, "A side-card tap focuses it; selecting requires the centered card.")
         let focused = app.descendants(matching: .any).matching(NSPredicate(
-            format: "identifier == %@ AND value CONTAINS %@", sideID, "已聚焦"
+            format: "identifier BEGINSWITH %@ AND value CONTAINS %@ AND label CONTAINS %@", "native.library.card.", "已聚焦", selectedName ?? ""
         )).firstMatch
         XCTAssertTrue(focused.waitForExistence(timeout: 5), app.debugDescription)
         attach(app, "r34-arc-side-card-focused")

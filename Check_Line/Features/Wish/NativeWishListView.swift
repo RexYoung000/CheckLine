@@ -686,15 +686,19 @@ struct WishPriceSheet: View {
                 }.padding(24)
             }.scrollDismissesKeyboard(.interactively)
                 .safeAreaInset(edge: .bottom) {
-                    PaperSubmitBar(title: String(localized: "action.save"), enabled: MoneyFormat.parseAmount(amount).map { $0 > 0 } ?? false) {
-                        guard let value = MoneyFormat.parseAmount(amount), value > 0 else { return }
-                        do { try workspace.setWishPrice(wish.id, amount: value, currency: currency); dismiss() } catch { failed = true }
-                    }.accessibilityIdentifier("native.wish.price.save").padding(.vertical, 12).background(PaperTheme.canvas)
+                    VStack(spacing: 0) {
+                        if amountFocused {
+                            PaperKeyboardDoneBar { amountFocused = false }
+                        }
+                        PaperSubmitBar(title: String(localized: "action.save"), enabled: MoneyFormat.parseAmount(amount).map { $0 > 0 } ?? false) {
+                            guard let value = MoneyFormat.parseAmount(amount), value > 0 else { return }
+                            do { try workspace.setWishPrice(wish.id, amount: value, currency: currency); dismiss() } catch { failed = true }
+                        }.accessibilityIdentifier("native.wish.price.save").padding(.vertical, 12).background(PaperTheme.canvas)
+                    }
                 }
                 .navigationTitle(String(localized: "native.wish.setPrice")).navigationBarTitleDisplayMode(.inline)
                 .toolbar {
                     ToolbarItem(placement: .topBarTrailing) { Button(String(localized: "action.close")) { dismiss() } }
-                    ToolbarItemGroup(placement: .keyboard) { Spacer(); Button(String(localized: "ui.keyboard.done")) { amountFocused = false } }
                 }.background(PaperTheme.canvas.ignoresSafeArea())
         }.modifier(NativeDrawerStyle()).onAppear { currency = wish.currencyCode ?? workspace.ledger.walletSettings.walletCurrencyCode }
     }
@@ -736,7 +740,8 @@ struct WishCoverPicker: View {
                 .safeAreaInset(edge: .bottom) {
                     Button(String(localized: "native.cover.use")) {
                         do { try store.save(cover, for: wishID); dismiss() } catch { failed = true }
-                    }.buttonStyle(PaperSolidButtonStyle(enabled: !reading)).disabled(reading).padding(22).background(PaperTheme.canvas)
+                    }.buttonStyle(PaperSolidButtonStyle(enabled: !reading)).disabled(reading).padding(22)
+                        .frame(maxWidth: .infinity).background(PaperTheme.canvas)
                         .accessibilityIdentifier("native.cover.save")
                 }
                 .navigationTitle(String(localized: "native.cover.title")).navigationBarTitleDisplayMode(.inline)

@@ -8,12 +8,20 @@ final class TaskWorkspaceUITests: XCTestCase {
     }
 
     func testSharedTaskSwitchRetainsFieldsAndClosesToSamePage() {
-        let app = launch("record")
-        let amount = app.textFields["输入金额"]
+        let app = launch("r34-home")
+        let capture = app.buttons["wallet.home.capture"]
+        XCTAssertTrue(capture.waitForExistence(timeout: 10))
+        let card = app.descendants(matching: .any)["wallet.home.card"].firstMatch
+        let originalCard = card.label
+        capture.tap()
+        let amount = app.textFields["wallet.composer.amount"]
         XCTAssertTrue(amount.waitForExistence(timeout: 8))
         amount.tap(); amount.typeText("12.34")
+        app.buttons["wallet.keyboard.done"].tap()
         let merchant = app.textFields["商家"]
+        reveal(merchant, in: app)
         merchant.tap(); merchant.typeText("Sample shop")
+        app.buttons["wallet.keyboard.done"].tap()
         app.buttons["wallet.task.switchMode"].tap()
         XCTAssertTrue(app.buttons["wallet.agent.close"].waitForExistence(timeout: 5))
         attach(app, "task-agent-keeps-form")
@@ -22,10 +30,13 @@ final class TaskWorkspaceUITests: XCTestCase {
         XCTAssertEqual(merchant.value as? String, "Sample shop")
         attach(app, "task-manual-keeps-fields")
         app.buttons["wallet.composer.close"].tap()
-        XCTAssertTrue(app.buttons["wallet.tab.home"].waitForExistence(timeout: 5))
-        app.buttons["记一笔"].firstMatch.tap()
+        XCTAssertTrue(capture.waitForExistence(timeout: 5))
+        XCTAssertTrue(capture.isHittable)
+        XCTAssertEqual(card.label, originalCard)
+        capture.tap()
         XCTAssertTrue(amount.waitForExistence(timeout: 5))
         XCTAssertEqual(amount.value as? String, "12.34")
+        XCTAssertEqual(merchant.value as? String, "Sample shop")
     }
 
     func testVoiceEntryKeepsTheTaskAndManualFallback() {
@@ -46,7 +57,10 @@ final class TaskWorkspaceUITests: XCTestCase {
     }
 
     func testCalendarDistinguishesDatesOutsideSelectedPeriod() {
-        let app = launch("calendar")
+        let app = launch("r34-home")
+        let period = app.buttons["native.home.summary.period"]
+        XCTAssertTrue(period.waitForExistence(timeout: 10))
+        period.tap()
         let previous = app.buttons["上个月"]
         XCTAssertTrue(previous.waitForExistence(timeout: 8))
         previous.tap()
@@ -58,10 +72,13 @@ final class TaskWorkspaceUITests: XCTestCase {
     }
 
     func testWorkspaceRecordsPendingDetailAndBackRestore() {
-        let app = launch("home-inline")
+        let app = launch("r34-home")
+        let summary = app.buttons["native.home.summary.used"]
+        XCTAssertTrue(summary.waitForExistence(timeout: 10))
+        summary.tap()
         let records = app.buttons["wallet.workspace.records"]
-        XCTAssertTrue(records.waitForExistence(timeout: 10), app.debugDescription)
-        XCTAssertFalse(app.tabBars.firstMatch.isHittable)
+        reveal(records, in: app)
+        XCTAssertFalse(app.buttons["wallet.home.capture"].isHittable)
         attach(app, "workspace-overview")
         records.tap()
         let pending = app.segmentedControls.buttons.matching(NSPredicate(format: "label BEGINSWITH %@", "待确认")).firstMatch
@@ -78,10 +95,12 @@ final class TaskWorkspaceUITests: XCTestCase {
         app.navigationBars.buttons.firstMatch.tap()
         XCTAssertTrue(pending.waitForExistence(timeout: 5))
         XCTAssertTrue(pending.isSelected)
+        XCTAssertTrue(app.staticTexts["已全部确认"].exists)
         app.navigationBars.buttons.firstMatch.tap()
         XCTAssertTrue(records.waitForExistence(timeout: 5))
-        app.navigationBars.buttons.firstMatch.tap()
-        XCTAssertTrue(app.buttons["wallet.tab.home"].waitForExistence(timeout: 5))
+        app.buttons["wallet.budget.detail.close"].tap()
+        XCTAssertTrue(summary.waitForExistence(timeout: 5))
+        XCTAssertTrue(summary.isHittable)
     }
 
     func testImportDesignStatesNeverClaimLiveConnection() {
@@ -128,6 +147,14 @@ final class TaskWorkspaceUITests: XCTestCase {
         app.launchArguments = ["-design-preview", "-design-screen", screen, "-AppleLanguages", "(zh-Hans)", "-AppleLocale", "zh_CN"]
         app.launch(); return app
     }
+    private func reveal(_ element: XCUIElement, in app: XCUIApplication) {
+        for _ in 0..<6 where !element.isHittable {
+            let scroll = app.scrollViews.firstMatch
+            if scroll.exists { scroll.swipeUp(velocity: .slow) }
+        }
+        XCTAssertTrue(element.isHittable, app.debugDescription)
+    }
+
     private func attach(_ app: XCUIApplication, _ name: String) {
         let attachment = XCTAttachment(screenshot: app.screenshot()); attachment.name = name; attachment.lifetime = .keepAlways; add(attachment)
     }

@@ -1,4 +1,14 @@
+import DistortionWavesKit
 import SwiftUI
+import UIKit
+#if DEBUG
+import os
+
+/// Timings only. No budget, amount, record or identifier is attached to events.
+nonisolated private enum SettlementPerformanceTrace {
+    static let signposter = OSSignposter(subsystem: "Rex.CheckLine", category: "Settlement")
+}
+#endif
 
 /// A single visible quote is shared by the impact preview and the confirmed write.
 struct WalletExchangeQuoteFields: View {
@@ -7,6 +17,7 @@ struct WalletExchangeQuoteFields: View {
     @Binding var rateText: String
     @Binding var quotedAt: Date
     var showsProvenance = true
+    var onFocusChange: ((Bool) -> Void)? = nil
     @FocusState private var rateFocused: Bool
 
     var body: some View {
@@ -23,6 +34,7 @@ struct WalletExchangeQuoteFields: View {
                 .accessibilityIdentifier("wallet.exchange.rate")
                 .simultaneousGesture(TapGesture().onEnded { rateFocused = true })
                 .onChange(of: rateText) { _, _ in quotedAt = Date() }
+                .onChange(of: rateFocused) { _, focused in onFocusChange?(focused) }
             if showsProvenance {
                 Text(String(localized: "wallet.exchange.userEstimate"))
                     .font(.caption).foregroundStyle(PaperTheme.muted)
@@ -36,14 +48,46 @@ struct WalletExchangeQuoteFields: View {
 }
 
 struct SettlementReviewView: View {
-    @Environment(\.accessibilityReduceTransparency) private var reduceTransparency
     @Bindable var workspace: CheckLineWorkspace
     let periodID: UUID
     var endingEarly = false
     let onShowWishes: () -> Void
     @Environment(\.dismiss) private var dismiss
     @Environment(\.dynamicTypeSize) private var typeSize
-    @State private var outcome: OutcomeReceipt?
+    @Environment(\.walletReduceMotion) private var reduceMotion
+    @Environment(\.scenePhase) private var scenePhase
+    @State private var closingReceipt: SettlementOutcomeReceipt?
+    @State private var confirmFrame = CGRect.zero
+    @State private var reviewHeadingFrame = CGRect.zero
+    @State private var waveCaptureView = UIView()
+    @State private var reviewSnapshot: UIImage?
+    @State private var waveStarted: Date?
+    @State private var waveLaunched = false
+    @State private var resultIsExposed = true
+    @State private var resultEntrance: SettlementResultEntrance?
+
+    private let buttonLeadIn: TimeInterval = 0.24
+    private var waveStyle: DistortionWaveStyle {
+        var style = DistortionWaveStyle.vertical
+        style.cornerRadius = 32
+        style.anticipation = 0.30
+        style.pull = 6
+        style.gatherGlow = 0.15
+        style.travel = 2.50
+        style.easing = DistortionWaveEasing(0.34, 0.72, 0.48, 1)
+        style.rimFade = 1.45
+        style.hairlineLinger = 0.12
+        style.hairlineFade = 1.55
+        style.particleLife = 1.43
+        if let outcome, outcome.originalAmount < 0 {
+            style.palette = .ocean
+            style.strength = 0.48
+            style.rimStrength = 0.43
+            style.hairlineOpacity = 0.48
+            style.particleCount = 24
+        }
+        return style
+    }
     @State private var accepted = false
     @State private var completed = false
     @State private var reviewedLedger: Ledger?
@@ -52,6 +96,12 @@ struct SettlementReviewView: View {
     @State private var errorText: String?
     @State private var showPending = false
     @State private var showUnbudgeted = false
+
+    private var outcome: SettlementOutcomeReceipt? {
+        if let closingReceipt { return closingReceipt }
+        guard let receipt = workspace.latestSettlementReceipt, receipt.settlement.periodID == periodID else { return nil }
+        return receipt
+    }
 
     private var period: BudgetPeriod? { workspace.ledger.periods[periodID] }
     private var budget: Budget? { period.flatMap { workspace.ledger.budgets[$0.budgetID] } }
@@ -102,11 +152,85 @@ struct SettlementReviewView: View {
     }
 
     var body: some View {
+        ZStack {
+            if let outcome {
+                SettlementOutcomeView(
+                    receipt: outcome,
+                    waveStarted: waveStarted,
+                    entrance: resultEntrance,
+                    onSkipMotion: finishWave,
+                    onDone: closeResult
+                )
+                .allowsHitTesting(resultIsExposed)
+                .accessibilityHidden(!resultIsExposed)
+            } else {
+                reviewScreen
+            }
+        }
+        .overlay {
+            if !reduceMotion, outcome == nil || reviewSnapshot != nil {
+                settlementWave.allowsHitTesting(false).accessibilityHidden(true)
+            }
+        }
+        .onChange(of: scenePhase) { _, phase in
+            if phase != .active, outcome != nil { finishWave() }
+        }
+        .onChange(of: reduceMotion) { _, enabled in
+            if enabled, outcome != nil { finishWave() }
+        }
+        .task(id: waveStarted) {
+            guard waveStarted != nil else { return }
+            do {
+                try await Task.sleep(for: .seconds(buttonLeadIn))
+                try Task.checkCancellation()
+                waveLaunched = true
+                try await Task.sleep(for: .seconds(waveStyle.anticipation + 0.36))
+                try Task.checkCancellation()
+                resultIsExposed = true
+            } catch {
+                // A skipped or dismissed wave no longer controls the result.
+            }
+        }
+        .modifier(NativeDrawerStyle())
+        .sheet(isPresented: $showPending) {
+            NavigationStack {
+                BudgetDetailContent(workspace: workspace, budgetID: budget?.id ?? UUID(), section: .pending, periodID: periodID)
+                    .navigationDestination(for: BudgetWorkspaceRoute.self) { route in
+                        BudgetWorkspaceDestination(workspace: workspace, route: route)
+                    }
+                    .toolbar {
+                        ToolbarItem(placement: .topBarTrailing) {
+                            Button(String(localized: "action.close")) { showPending = false }
+                        }
+                    }
+            }
+            .presentationDetents([.large])
+        }
+        .sheet(isPresented: $showUnbudgeted) {
+            NavigationStack {
+                UnbudgetedRecordsView(workspace: workspace)
+                    .navigationDestination(for: BudgetWorkspaceRoute.self) { route in
+                        BudgetWorkspaceDestination(workspace: workspace, route: route)
+                    }
+                    .toolbar {
+                        ToolbarItem(placement: .topBarTrailing) {
+                            Button(String(localized: "action.close")) { showUnbudgeted = false }
+                        }
+                    }
+            }
+            .presentationDetents([.large])
+        }
+    }
+
+    private var reviewScreen: some View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 22) {
                     if let period, let budget, let snapshot = periodSnapshot {
                         header(budget: budget, period: period)
+                            .onGeometryChange(for: CGRect.self) { $0.frame(in: .global) } action: { frame in
+                                if !completed { reviewHeadingFrame = frame }
+                            }
                         if endingEarly && !completed, let nextStart {
                             Text(String(format: String(localized: "settlement.early.schedule"),
                                         Date().formatted(date: .abbreviated, time: .omitted),
@@ -177,10 +301,6 @@ struct SettlementReviewView: View {
                 }
             }
         }
-        .blur(radius: outcome == nil || reduceTransparency ? 0 : 8)
-        .allowsHitTesting(outcome == nil).accessibilityHidden(outcome != nil)
-        .overlay { if let outcome { OutcomeCelebration(receipt: outcome) { dismiss() } } }
-        .modifier(NativeDrawerStyle())
         .onAppear { reviewedLedger = workspace.ledger }
         .onChange(of: workspace.ledger) { _, updated in
             guard !completed else { return }
@@ -189,34 +309,73 @@ struct SettlementReviewView: View {
             errorText = nil
         }
         .onChange(of: exchangeRate) { _, _ in accepted = false }
-        .sheet(isPresented: $showPending) {
-            NavigationStack {
-                BudgetDetailContent(workspace: workspace, budgetID: budget?.id ?? UUID(), section: .pending, periodID: periodID)
-                    .navigationDestination(for: BudgetWorkspaceRoute.self) { route in
-                        BudgetWorkspaceDestination(workspace: workspace, route: route)
-                    }
-                    .toolbar {
-                        ToolbarItem(placement: .topBarTrailing) {
-                            Button(String(localized: "action.close")) { showPending = false }
+    }
+
+    private var settlementWave: some View {
+        GeometryReader { geometry in
+            let origin = geometry.frame(in: .global).origin
+            let source = (resultEntrance?.button ?? confirmFrame).offsetBy(dx: -origin.x, dy: -origin.y)
+            // The departing frame includes the native toolbar and scroll position.
+            // The saved result is already underneath, with its original materials.
+            DistortionWave(
+                isRevealed: waveLaunched,
+                source: source,
+                style: waveStyle,
+                onFinish: finishWave
+            ) {
+                if let reviewSnapshot {
+                    Image(uiImage: reviewSnapshot)
+                        .resizable()
+                        .frame(width: geometry.size.width, height: geometry.size.height)
+                        .clipShape(RoundedRectangle(cornerRadius: waveStyle.cornerRadius))
+                } else {
+                    Color.clear
+                }
+            } revealed: {
+                Color.clear
+            }
+            .overlay {
+                if let waveStarted, reviewSnapshot != nil {
+                    TimelineView(.animation(minimumInterval: 1.0 / 60, paused: resultIsExposed)) { clock in
+                        let elapsed = clock.date.timeIntervalSince(waveStarted)
+                        let glowDuration = buttonLeadIn + waveStyle.anticipation
+                        if elapsed < glowDuration {
+                            let progress = max(0, elapsed / glowDuration)
+                            let glow = sin(progress * .pi)
+                            Capsule()
+                                .strokeBorder(Color(red: 0.60, green: 0.86, blue: 1), lineWidth: 2)
+                                .background(Color(red: 0.60, green: 0.86, blue: 1).opacity(0.20), in: Capsule())
+                                .shadow(color: Color(red: 0.39, green: 0.73, blue: 1), radius: 8)
+                                .opacity(glow)
+                                .frame(width: source.width, height: source.height)
+                                .position(x: source.midX, y: source.midY)
                         }
                     }
+                }
             }
-            .presentationDetents([.large])
-        }
-        .sheet(isPresented: $showUnbudgeted) {
-            NavigationStack {
-                UnbudgetedRecordsView(workspace: workspace)
-                    .navigationDestination(for: BudgetWorkspaceRoute.self) { route in
-                        BudgetWorkspaceDestination(workspace: workspace, route: route)
-                    }
-                    .toolbar {
-                        ToolbarItem(placement: .topBarTrailing) {
-                            Button(String(localized: "action.close")) { showUnbudgeted = false }
-                        }
-                    }
+            .background(SettlementWaveCapture(view: waveCaptureView))
+            .onChange(of: geometry.size) { _, _ in
+                if outcome != nil { finishWave() }
             }
-            .presentationDetents([.large])
         }
+        .ignoresSafeArea()
+    }
+
+    private func finishWave() {
+        reviewSnapshot = nil
+        resultEntrance = nil
+        waveStarted = nil
+        resultIsExposed = true
+    }
+
+    private func closeResult() {
+        finishWave()
+        // Retain the result locally while the drawer animates out.
+        if let outcome, workspace.latestSettlementReceipt?.settlement.id == outcome.settlement.id {
+            closingReceipt = outcome
+            workspace.latestSettlementReceipt = nil
+        }
+        dismiss()
     }
 
     private func header(budget: Budget, period: BudgetPeriod) -> some View {
@@ -392,6 +551,9 @@ struct SettlementReviewView: View {
                 Button(String(localized: endingEarly ? "settlement.early.confirm" : "wallet.settlement.confirm")) { confirm() }
                     .buttonStyle(PaperSolidButtonStyle(enabled: accepted && preview != nil && canFinalize))
                     .disabled(!accepted || preview == nil || !canFinalize)
+                    .onGeometryChange(for: CGRect.self) { $0.frame(in: .global) } action: { frame in
+                        confirmFrame = frame
+                    }
                     .accessibilityIdentifier("wallet.settlement.confirm")
             } else {
                 Text(String(localized: "ui.settlement.currentEstimate"))
@@ -403,20 +565,42 @@ struct SettlementReviewView: View {
     }
 
     private func confirm() {
-        guard let reviewedLedger, accepted, preview != nil, canFinalize else { return }
+        guard outcome == nil, !completed, let reviewedLedger, let savedPeriod = period,
+              accepted, preview != nil, canFinalize else { return }
         let before = workspace.wallet
-        let savedPeriod = period
         let savedTitle = budget?.name ?? String(localized: "wallet.settlement.complete")
+        let snapshot = !reduceMotion && scenePhase == .active && !confirmFrame.isEmpty
+            ? SettlementWaveCapture.snapshot(of: waveCaptureView)
+            : nil
         do {
-            try workspace.settlePeriod(periodID, quote: quote, reviewedLedger: reviewedLedger, acceptedIncompleteData: true, endingEarly: endingEarly)
+            try {
+                #if DEBUG
+                let trace = SettlementPerformanceTrace.signposter
+                let interval = trace.beginInterval("SettlementSave", id: trace.makeSignpostID())
+                defer { trace.endInterval("SettlementSave", interval) }
+                #endif
+                try workspace.settlePeriod(periodID, quote: quote, reviewedLedger: reviewedLedger, acceptedIncompleteData: true, endingEarly: endingEarly)
+            }()
             completed = true
-            outcome = OutcomeReceipt(kind: .settlement, title: savedTitle, before: before.balance, after: workspace.wallet.balance,
-                currency: walletCurrency, originalAmount: workspace.ledger.settlement(forPeriod: periodID)?.baseSurplus ?? 0,
-                originalCurrency: savedPeriod?.currencyCode ?? walletCurrency,
-                date: workspace.ledger.settlement(forPeriod: periodID)?.settledAt ?? Date(), recoveryBefore: before.recoveryGap,
-                recoveryAfter: workspace.wallet.recoveryGap, periodStart: savedPeriod?.startDate,
-                periodEnd: workspace.ledger.periods[periodID]?.endDate)
+            self.reviewedLedger = nil
             errorText = nil
+            guard let savedSettlement = workspace.ledger.settlement(forPeriod: periodID) else { return }
+            workspace.latestSettlementReceipt = SettlementOutcomeReceipt(
+                title: savedTitle, settlement: savedSettlement, periodStart: savedPeriod.startDate,
+                periodEnd: workspace.ledger.periods[periodID]?.endDate, walletCurrency: walletCurrency,
+                before: before, after: workspace.wallet
+            )
+            if let snapshot {
+                reviewSnapshot = snapshot
+                resultEntrance = SettlementResultEntrance(
+                    heading: reviewHeadingFrame,
+                    button: confirmFrame,
+                    start: buttonLeadIn + waveStyle.anticipation,
+                    duration: 0.71
+                )
+                waveStarted = Date()
+                resultIsExposed = false
+            }
         } catch LedgerError.staleSettlementPreview {
             accepted = false
             self.reviewedLedger = workspace.ledger
@@ -437,5 +621,35 @@ struct SettlementReviewView: View {
         case .email: String(localized: "wallet.source.email")
         case .statement: String(localized: "wallet.source.statement")
         }
+    }
+}
+
+/// Provides the wave's bounds in the native window so it can retain the exact
+/// outgoing frame, including the system toolbar and the current scroll position.
+private struct SettlementWaveCapture: UIViewRepresentable {
+    let view: UIView
+
+    func makeUIView(context: Context) -> UIView { view }
+    func updateUIView(_ uiView: UIView, context: Context) {}
+
+    static func snapshot(of view: UIView) -> UIImage? {
+        guard let window = view.window, !view.bounds.isEmpty else { return nil }
+        #if DEBUG
+        let trace = SettlementPerformanceTrace.signposter
+        let interval = trace.beginInterval("SettlementCapture", id: trace.makeSignpostID())
+        defer { trace.endInterval("SettlementCapture", interval) }
+        #endif
+        let rect = view.convert(view.bounds, to: window)
+        let format = UIGraphicsImageRendererFormat()
+        format.scale = window.traitCollection.displayScale
+        let renderer = UIGraphicsImageRenderer(size: rect.size, format: format)
+        var captured = false
+        let image = renderer.image { _ in
+            captured = window.drawHierarchy(
+                in: window.bounds.offsetBy(dx: -rect.minX, dy: -rect.minY),
+                afterScreenUpdates: false
+            )
+        }
+        return captured ? image : nil
     }
 }

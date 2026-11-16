@@ -7,6 +7,10 @@ struct CartridgeLibraryView: View {
     var onChoose: (HomeBudgetCardModel) -> Void
     var onClose: () -> Void
     var onReturnProgress: ((CGFloat) -> Void)? = nil
+    var onReturnCancelled: (() -> Void)? = nil
+    var returnPull: CGFloat = 0
+    var now: Date = .now
+    var active = true
     var presentationProgress: CGFloat = 1
     var transportsFocusedCard = false
     var onArcPresentation: ((Bool, HomeBudgetCardModel?) -> Void)? = nil
@@ -32,12 +36,18 @@ struct CartridgeLibraryView: View {
     @State private var lastDragEnd = Date.distantPast
     @State private var inertia: Task<Void, Never>?
     @State private var returnDistance: CGFloat = 0
+    @State private var returnGestureAccepted = false
+    @State private var shortViewport = false
+    @GestureState private var pointerActive = false
     @FocusState private var searchFocused: Bool
 
-    private var staticMode: Bool { reduceMotion || voiceOver || typeSize.isAccessibilitySize }
-    private var returnTravel: CGFloat { reduceMotion ? 0 : (1 - min(1, max(0, presentationProgress))) * 140 }
+    private var staticMode: Bool { voiceOver || typeSize.isAccessibilitySize || shortViewport }
+    private var usesArc: Bool { layout == .arc && !searching && !staticMode }
+    private var focusedCard: HomeBudgetCardModel? { cards.isEmpty ? nil : cards[wrappedIndex(Int(arcPosition.rounded()), count: cards.count)] }
     private var cards: [HomeBudgetCardModel] {
-        let source = workspace.cards
+        // Use the same dated projection as the parent; wall-clock drift must
+        // never become a new focus event during a gesture or animation frame.
+        let source = workspace.cards(at: now)
         guard let initialSelectedID, let current = source.first(where: { $0.id == initialSelectedID }) else { return source }
         return [current] + source.filter { $0.id != initialSelectedID }
     }
@@ -48,14 +58,26 @@ struct CartridgeLibraryView: View {
 
     var body: some View {
         GeometryReader { proxy in
-            let footerHeight: CGFloat = 64
+            let metrics = LibraryArcGeometry(size: proxy.size)
             VStack(spacing: 0) {
                 header.opacity(Double(presentationProgress))
                     .allowsHitTesting(openedID == nil).accessibilityHidden(openedID != nil)
                 if searching { searchField.opacity(Double(presentationProgress)) }
                 Group {
                     if searching || staticMode { accessibleGrid.opacity(Double(presentationProgress)) }
-                    else if layout == .arc { arcScene }
+                    else if layout == .arc {
+                        VStack(spacing: 0) {
+                            if let focusedCard {
+                                LibraryPeriodOrb(card: focusedCard, now: now, diameter: metrics.orbDiameter,
+                                                 active: active && presentationProgress > 0.99 && returnPull == 0,
+                                                 returnProgress: max(returnPull, 1 - presentationProgress))
+                                    .frame(height: metrics.periodHeight, alignment: .top)
+                            }
+                            arcScene(metrics: metrics)
+                        }
+                        .contentShape(Rectangle())
+                        .highPriorityGesture(arcGesture(pitch: metrics.pitch))
+                    }
                     else { domeScene }
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -65,10 +87,11 @@ struct CartridgeLibraryView: View {
                 .accessibilityIdentifier("native.library.surface")
                 .accessibilityValue(layoutTitle)
                 returnGrip
-                    .frame(height: footerHeight)
+                    .frame(height: LibraryArcGeometry.footerHeight)
                     .allowsHitTesting(openedID == nil).accessibilityHidden(openedID != nil)
             }
             .frame(width: proxy.size.width, height: proxy.size.height)
+            .onChange(of: proxy.size.height, initial: true) { _, height in shortViewport = height < 400 }
             .foregroundStyle(PaperTheme.ink)
             .overlay(alignment: .bottom) {
                 if layout == .dome || searching || staticMode {
@@ -84,26 +107,28 @@ struct CartridgeLibraryView: View {
         .accessibilityElement(children: .contain)
         .accessibilityIdentifier("native.budget.library")
         .onAppear { initialSelectedID = workspace.selectedBudgetID; publishArcPresentation() }
-        .onChange(of: Int(arcPosition.rounded())) { _, _ in publishArcPresentation() }
-        .onChange(of: layout) { _, _ in publishArcPresentation() }
+        .onChange(of: focusedCard) { _, _ in publishArcPresentation() }
+        .onChange(of: layout) { _, _ in cancelPointer(); publishArcPresentation() }
+        .onChange(of: staticMode) { _, _ in cancelPointer(); publishArcPresentation() }
         .onChange(of: openedID) { old, current in
             if current != nil { focusedUseCard = true }
             else { focusedUseCard = false; focusedLibraryCard = old }
         }
-        .onChange(of: searching) { _, _ in publishArcPresentation() }
+        .onChange(of: searching) { _, _ in cancelPointer(); publishArcPresentation() }
         .onDisappear { stopInertia() }
-        .onChange(of: scenePhase) { _, phase in if phase != .active { stopInertia(); dragOrigin = nil } }
+        .onChange(of: pointerActive) { _, active in if !active { cancelPointer() } }
+        .onChange(of: scenePhase) { _, phase in if phase != .active { cancelPointer() } }
         .onChange(of: reduceMotion) { _, _ in stopInertia() }
         .onChange(of: cards.map(\.id)) { _, _ in
-            stopInertia()
+            cancelPointer()
+            if cards.count < 2 { arcPosition = 0 }
+            publishArcPresentation()
             if let openedID, !cards.contains(where: { $0.id == openedID }) { self.openedID = nil }
         }
     }
 
     private var header: some View {
         HStack(spacing: 0) {
-            Text(String(localized: "native.library")).font(.headline.weight(.medium)).lineLimit(1).minimumScaleFactor(0.8)
-                .accessibilityAddTraits(.isHeader)
             Spacer(minLength: 0)
             Button {
                 stopInertia(); openedID = nil; searchFocused = false
@@ -139,6 +164,7 @@ struct CartridgeLibraryView: View {
         TextField(String(localized: "native.search"), text: $query)
             .font(.body).textInputAutocapitalization(.never).autocorrectionDisabled()
             .focused($searchFocused).submitLabel(.search)
+            .onSubmit { searchFocused = false }
             .padding(.horizontal, 16).padding(.vertical, 11)
             .background(PaperTheme.card.opacity(0.65), in: Capsule())
             .overlay(Capsule().strokeBorder(.white.opacity(0.6), lineWidth: 1))
@@ -152,11 +178,12 @@ struct CartridgeLibraryView: View {
             LazyVGrid(columns: [GridItem(.adaptive(minimum: typeSize.isAccessibilitySize ? 270 : 145), spacing: 14)], spacing: 14) {
                 ForEach(filteredCards) { card in
                     Button { choose(card) } label: {
-                        CartridgeLibraryCard(card: card, expenses: BudgetPresentation.expenses(card, in: workspace.ledger), compact: false)
-                            .frame(minHeight: typeSize.isAccessibilitySize ? 230 : 177)
+                        LibraryBudgetCardFace(card: card, now: now)
+                            .contentShape(RoundedRectangle(cornerRadius: 22))
                     }
                     .buttonStyle(.plain)
                     .accessibilityLabel(cardLabel(card))
+                        .accessibilityAddTraits(.isButton)
                     .accessibilityIdentifier("native.library.card.\(card.id.uuidString)")
                 }
             }.padding(22)
@@ -166,31 +193,28 @@ struct CartridgeLibraryView: View {
         }.scrollDismissesKeyboard(.interactively)
     }
 
-    private var arcScene: some View {
+    private func arcScene(metrics: LibraryArcGeometry) -> some View {
         GeometryReader { proxy in
-            let width = min(356, proxy.size.width * 0.82)
-            let height = min(width * 0.75, proxy.size.height * 0.74)
-            let cardWidth = min(width, height * 4 / 3)
-            let pitch = cardWidth * 0.75
+            let height = metrics.cardHeight
+            let cardWidth = metrics.cardWidth
+            let pitch = metrics.pitch
             let middle = Int(arcPosition.rounded())
-            let slots = cards.count > 1 ? Array((middle - 3)...(middle + 3)) : cards.isEmpty ? [] : [0]
+            let slots = cards.count > 1 ? Array((middle - 2)...(middle + 2)) : cards.isEmpty ? [] : [0]
             ZStack {
                 ForEach(slots, id: \.self) { slot in
                     let index = wrappedIndex(slot, count: cards.count)
                     let card = cards[index]
                     let delta = CGFloat(slot) - arcPosition
-                    let x = delta * pitch
-                    let radius = max(proxy.size.width * 1.25, 520)
-                    let reach = min(abs(x), radius * 0.82)
-                    let y = -(radius - sqrt(radius * radius - reach * reach))
-                    let angle = -atan2(x, radius) * 180 / .pi
-                    let centered = abs(delta) < 0.51
+                    let x = delta * pitch * (1 + returnPull * 0.12)
+                    let y = min(26, abs(delta) * abs(delta) * 18)
+                    let angle = reduceMotion ? 0 : delta * 2
+                    let centered = slot == middle
                     Button {
                         guard Date().timeIntervalSince(lastDragEnd) > 0.18 else { return }
                         if centered { choose(card) }
                         else { focusArc(slot) }
                     } label: {
-                        CartridgeLibraryCard(card: card, expenses: BudgetPresentation.expenses(card, in: workspace.ledger), compact: false)
+                        LibraryBudgetCardFace(card: card, now: now)
                             .frame(width: cardWidth, height: height)
                             // Move only the artwork. The enclosing scene and its
                             // gesture owner stay still while the finger is down.
@@ -198,31 +222,40 @@ struct CartridgeLibraryView: View {
                                 Rectangle().opacity(centered && transportsFocusedCard ? 0 : 1)
                                     .transaction { $0.animation = nil }
                             }
-                            .offset(y: returnTravel)
+                            .offset(y: centered ? 0 : returnPull * 20)
                             .opacity(Double(presentationProgress))
                             .contentShape(RoundedRectangle(cornerRadius: 26))
                     }
                         .buttonStyle(.plain)
                         .accessibilityElement(children: .ignore)
                         .accessibilityLabel(cardLabel(card))
+                        .accessibilityAddTraits(.isButton)
                         .accessibilityValue(String(localized: centered ? "native.library.focus" : "native.library.side"))
                         .accessibilityIdentifier("native.library.card.\(card.id.uuidString).slot.\(slot)")
-                        .accessibilityHidden(abs(delta) > 1.5)
-                        .scaleEffect(1 - min(0.24, abs(delta) * 0.085))
+                        .accessibilityHidden(!centered)
+                        .scaleEffect(reduceMotion ? 1 : 1 - min(0.15, abs(delta) * 0.1))
                         .rotationEffect(.degrees(Double(angle)))
-                        .rotation3DEffect(.degrees(Double(-delta * 7)), axis: (x: 0, y: 1, z: 0), perspective: 0.35)
-                        .opacity(max(0.1, 1 - Double(abs(delta)) * 0.55))
-                        .blur(radius: centered ? 0 : min(1, abs(delta) * 0.5))
+                        .rotation3DEffect(.degrees(Double(reduceMotion ? 0 : -delta * 12)), axis: (x: 0, y: 1, z: 0), perspective: 0.35)
+                        .opacity(max(0.16, 1 - Double(abs(delta)) * 0.42) * (centered ? 1 : Double(1 - returnPull)))
+                        .saturation(centered ? 1 : 0.66)
                         // Position the semantic Button itself, not only its painted
                         // GeometryReader label. Each slot owns its actual touch/AX frame.
                         .position(x: proxy.size.width / 2 + x,
-                                  y: proxy.size.height / 2 + y + min(8, abs(delta) * 4))
+                                  y: proxy.size.height / 2 + y)
                         .zIndex(20 - Double(abs(delta)))
                 }
             }
             .frame(width: proxy.size.width, height: proxy.size.height)
+            .overlay {
+                if cards.count > 1 {
+                    HStack(spacing: 0) {
+                        arcEdge(slot: middle - 1, height: height)
+                        Spacer(minLength: 0).allowsHitTesting(false)
+                        arcEdge(slot: middle + 1, height: height)
+                    }.allowsHitTesting(!transportsFocusedCard)
+                }
+            }
             .contentShape(Rectangle())
-            .highPriorityGesture(arcGesture(pitch: pitch))
             .accessibilityElement(children: .contain)
             .accessibilityScrollAction { edge in
                 if edge == .trailing { focusArc(Int(arcPosition.rounded()) + 1) }
@@ -232,14 +265,29 @@ struct CartridgeLibraryView: View {
         }
     }
 
+    private func arcEdge(slot: Int, height: CGFloat) -> some View {
+        let card = cards[wrappedIndex(slot, count: cards.count)]
+        return Button { focusArc(slot) } label: {
+            Color.clear.frame(width: 44, height: height).contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel(cardLabel(card))
+        .accessibilityValue(String(localized: "native.library.side"))
+        .accessibilityIdentifier("native.library.edge.\(slot)")
+    }
+
     private func arcGesture(pitch: CGFloat) -> some Gesture {
         DragGesture(minimumDistance: 12, coordinateSpace: .global)
+            .updating($pointerActive) { _, active, _ in active = true }
             .onChanged { value in
                 if arcDragAxis == nil {
                     if abs(value.translation.width) > abs(value.translation.height) * 1.15 {
+                        guard cards.count > 1 else { return }
+                        onReturnCancelled?()
                         arcDragAxis = .horizontal
                         stopInertia(); dragOrigin = CGPoint(x: arcPosition, y: 0)
                     } else if value.translation.height > abs(value.translation.width) * 1.15 {
+                        arcPosition = arcPosition.rounded()
                         arcDragAxis = .returnToBudget
                     } else { return }
                 }
@@ -260,7 +308,7 @@ struct CartridgeLibraryView: View {
     }
 
     private func focusArc(_ slot: Int) {
-        guard !cards.isEmpty else { return }
+        guard cards.count > 1 else { arcPosition = 0; return }
         stopInertia()
         PaperHaptics.selection()
         withAnimation(reduceMotion ? nil : .spring(response: 0.34, dampingFraction: 0.88)) { arcPosition = CGFloat(slot) }
@@ -272,10 +320,10 @@ struct CartridgeLibraryView: View {
             ZStack {
                 ForEach(Array(cards.enumerated()), id: \.element.id) { index, card in
                     let place = metrics.position(index: index, offset: domePosition)
-                    CartridgeLibraryCard(card: card, expenses: BudgetPresentation.expenses(card, in: workspace.ledger), compact: true)
+                    LibraryBudgetCardFace(card: card, compact: true, now: now)
                         .frame(width: metrics.cardWidth, height: metrics.cardHeight)
                         .blur(radius: openedID != nil && !reduceTransparency ? 6 : 0)
-                        .offset(y: returnTravel)
+                        .offset(y: returnPull * 20)
                         .rotation3DEffect(.degrees(place.angleY), axis: (x: 0, y: 1, z: 0), perspective: 0.4)
                         .rotation3DEffect(.degrees(place.angleX), axis: (x: 1, y: 0, z: 0), perspective: 0.4)
                         .scaleEffect(place.scale)
@@ -356,7 +404,7 @@ struct CartridgeLibraryView: View {
                 .onTapGesture { withAnimation(reduceMotion ? nil : .easeOut(duration: 0.2)) { openedID = nil } }
                 .accessibilityHidden(true)
             VStack(spacing: 24) {
-                CartridgeLibraryCard(card: card, expenses: BudgetPresentation.expenses(card, in: workspace.ledger), compact: false)
+                LibraryBudgetCardFace(card: card, now: now)
                     .frame(width: min(340, size.width * 0.84), height: min(255, size.width * 0.63))
                 HStack(spacing: 12) {
                     Button(String(localized: "native.library.useCard")) { choose(card) }
@@ -377,10 +425,16 @@ struct CartridgeLibraryView: View {
         ZStack {
             Color.clear.contentShape(Rectangle())
             Button { close() } label: {
-                Image(systemName: "chevron.down").font(.system(size: 19, weight: .medium))
-                    .foregroundStyle(PaperTheme.accent.opacity(0.72))
-                    .opacity(Double(presentationProgress))
-                    .frame(width: 52, height: 52).contentShape(Rectangle())
+                VStack(spacing: 5) {
+                    Image(systemName: "chevron.down").font(.system(size: 12, weight: .medium))
+                        .foregroundStyle(PaperTheme.accent.opacity(0.72))
+                        .frame(width: 48, height: 12)
+                        .background(PaperTheme.accent.opacity(0.09), in: Capsule())
+                    Text(String(localized: layout == .arc && !searching && !staticMode ? "native.library.pullUse" : "native.library.pullBack"))
+                        .font(.system(size: typeSize.isAccessibilitySize ? 14 : 10)).foregroundStyle(PaperTheme.muted)
+                }
+                .opacity(Double(presentationProgress))
+                .frame(width: 100, height: 52).contentShape(Rectangle())
             }.buttonStyle(.plain)
                 .offset(y: min(10, returnDistance * 0.13))
                 .accessibilityLabel(String(localized: "native.returnBudget"))
@@ -388,7 +442,7 @@ struct CartridgeLibraryView: View {
             HStack {
                 Spacer()
                 Text(String(format: String(localized: "native.cardCount"), cards.count))
-                    .font(.caption).foregroundStyle(PaperTheme.muted.opacity(0.7))
+                    .font(.system(size: typeSize.isAccessibilitySize ? 14 : 12)).foregroundStyle(PaperTheme.muted.opacity(0.7))
                     .opacity(Double(presentationProgress))
             }.padding(.horizontal, 24).allowsHitTesting(false)
         }
@@ -403,6 +457,7 @@ struct CartridgeLibraryView: View {
 
     private var returnGesture: some Gesture {
         DragGesture(minimumDistance: 12, coordinateSpace: .global)
+            .updating($pointerActive) { _, active, _ in active = true }
             .onChanged { value in
                 guard abs(value.translation.height) > abs(value.translation.width) * 1.2 else { return }
                 trackReturn(value.translation)
@@ -412,17 +467,19 @@ struct CartridgeLibraryView: View {
 
     private func trackReturn(_ translation: CGSize) {
         stopInertia()
+        returnGestureAccepted = true
         returnDistance = min(180, max(0, translation.height))
-        onReturnProgress?(returnDistance / 180)
+        onReturnProgress?(translation.height / 180)
     }
 
     private func finishReturn(_ translation: CGSize) {
+        guard returnGestureAccepted else { return }
+        returnGestureAccepted = false
         lastDragEnd = Date()
         let committed = translation.height > 64 && translation.height > abs(translation.width) * 1.2
-        withAnimation(reduceMotion ? nil : .spring(response: 0.28, dampingFraction: 0.88)) {
-            returnDistance = 0
-            if committed { close() } else { onReturnProgress?(0) }
-        }
+        if committed { close() }
+        else { onReturnCancelled?() }
+        withAnimation(reduceMotion ? nil : .easeOut(duration: 0.19)) { returnDistance = 0 }
     }
 
     private func runInertia(_ initialVelocity: CGPoint) {
@@ -438,17 +495,29 @@ struct CartridgeLibraryView: View {
         }
     }
 
+    private func cancelPointer() {
+        stopInertia()
+        if arcDragAxis == .horizontal {
+            withAnimation(reduceMotion ? nil : .easeOut(duration: 0.19)) { arcPosition = arcPosition.rounded() }
+        }
+        dragOrigin = nil; arcDragAxis = nil
+        if returnGestureAccepted { returnGestureAccepted = false; returnDistance = 0; onReturnCancelled?() }
+    }
     private func stopInertia() { inertia?.cancel(); inertia = nil }
     private func publishArcPresentation() {
         let card = cards.isEmpty ? nil : cards[wrappedIndex(Int(arcPosition.rounded()), count: cards.count)]
-        onArcPresentation?(layout == .arc && !searching && !staticMode, card)
+        onArcPresentation?(usesArc, card)
     }
     private var layoutTitle: String { String(localized: layout == .arc ? "native.library.arc" : "native.library.dome") }
-    private func close() { stopInertia(); searchFocused = false; onClose() }
+    private func close() {
+        stopInertia(); searchFocused = false
+        if layout == .arc && !searching && !staticMode, let focusedCard { choose(focusedCard) }
+        else { onClose() }
+    }
     private func choose(_ card: HomeBudgetCardModel) { stopInertia(); searchFocused = false; onChoose(card) }
     private func wrappedIndex(_ index: Int, count: Int) -> Int { guard count > 0 else { return 0 }; return ((index % count) + count) % count }
     private func cardLabel(_ card: HomeBudgetCardModel) -> String {
-        card.name + ", " + MoneyFormat.string(BudgetPresentation.remaining(card), currencyCode: card.currencyCode)
+        LibraryCardSummary(card: card, now: now).accessibilityLabel
     }
 }
 
@@ -507,59 +576,4 @@ struct LibraryDomePosition {
     var scale: CGFloat
     var opacity: Double
     var depth: Double
-}
-
-/// Glass card content is shared by both layouts; monetary values remain Decimal.
-struct CartridgeLibraryCard: View {
-    var card: HomeBudgetCardModel
-    var expenses: [Expense]
-    var compact: Bool
-
-    var body: some View {
-        GeometryReader { proxy in
-            let small = compact || proxy.size.width < 220
-            let inset: CGFloat = small ? 12 : 20
-            ZStack {
-                NativeLiquidSurface(progress: CGFloat(BudgetPresentation.fill(card)), active: false, staticPreview: true)
-                VStack(alignment: .leading, spacing: small ? 5 : 10) {
-                    Text(card.name).font(.system(size: small ? 13 : 19, weight: .semibold))
-                        .lineLimit(1).minimumScaleFactor(0.7)
-                    Spacer(minLength: 2)
-                    Text(MoneyFormat.string(BudgetPresentation.remaining(card), currencyCode: card.currencyCode))
-                        .font(.system(size: small ? 23 : 38, weight: .medium)).monospacedDigit()
-                        .lineLimit(1).minimumScaleFactor(0.38).frame(maxWidth: .infinity, alignment: .trailing)
-                        .foregroundStyle(BudgetGlassPalette.amount(level: CGFloat(BudgetPresentation.fill(card))))
-                    HStack(spacing: 3) {
-                        symbolCollection(small: small).fixedSize(horizontal: true,vertical: false)
-                        Spacer(minLength: 2)
-                        Text(MoneyFormat.string(-BudgetPresentation.used(card), currencyCode: card.currencyCode))
-                            .font(.system(size: small ? 9 : 12, weight: .medium)).monospacedDigit()
-                            .lineLimit(1).minimumScaleFactor(0.5)
-                            .padding(.horizontal, small ? 5 : 8).padding(.vertical, small ? 4 : 6)
-                            .background(.white.opacity(0.30), in: Capsule())
-                    }
-                }.padding(inset)
-            }
-            .modifier(NativeGlassCard(radius: small ? 18 : 27, level: CGFloat(BudgetPresentation.fill(card))))
-        }
-        .foregroundStyle(BudgetGlassPalette.ink)
-        .accessibilityElement(children: .ignore)
-    }
-
-    private func symbolCollection(small: Bool) -> some View {
-        HStack(spacing: small ? -5 : -7) {
-            ForEach(Array(expenses.prefix(3))) { expense in
-                CheckLineIcon(symbol: BudgetPresentation.symbol(for: expense), size: small ? 8 : 11)
-                    .frame(width: small ? 17 : 25, height: small ? 17 : 25)
-                    .background(.white.opacity(0.42), in: Circle())
-                    .overlay(Circle().strokeBorder(.white.opacity(0.75), lineWidth: 0.8))
-            }
-            if expenses.count > 3 {
-                Text("+\(expenses.count - 3)")
-                    .font(.system(size: small ? 8 : 10, weight: .medium)).monospacedDigit()
-                    .padding(.horizontal, small ? 5 : 7).frame(height: small ? 17 : 25)
-                    .background(.white.opacity(0.42), in: Capsule())
-            }
-        }.accessibilityHidden(true)
-    }
 }

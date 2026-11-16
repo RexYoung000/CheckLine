@@ -865,13 +865,12 @@
 "native.cover.use" = "Use cover";
 "native.outcome.viewRealized" = "View realized wishes";
 "native.outcome.wishSaved" = "Wish fulfilled";
-"native.outcome.settled" = "Period settled";
 "native.outcome.skip" = "Skip animation";
 "native.outcome.fulfilled" = "Made it happen.";
 "native.outcome.yourMoment" = "This moment is yours.";
 "native.outcome.transferred" = "Added to wish balance";
-"native.outcome.recovered" = "Recovery covered";
-"native.outcome.savedForWish" = "This surplus is for what matters.";
+"native.outcome.walletDeducted" = "Deducted from wish wallet";
+"native.outcome.recoveryReduced" = "Recovery gap reduced";
 "wallet.home.recent" = "Recent records";
 "wallet.records.empty" = "No records yet";
 "native.icon.headphones" = "Headphones";
@@ -950,3 +949,20 @@
 "native.wish.referenceTarget" = "Target equivalent";
 "native.wish.referenceFailed" = "Could not save or read the reference rate. Try again. Your previously applied rate is unchanged.";
 "native.wish.applyReference" = "Apply reference rate";
+
+/* Accepted library period and card presentation. */
+"native.library.period.remaining" = "Left this period";
+"native.library.period.upcoming" = "Starts in";
+"native.library.period.day" = "day";
+"native.library.period.days" = "days";
+"native.library.period.current" = "This period";
+"native.library.period.endsToday" = "Ends today";
+"native.library.period.ended" = "Period ended";
+"native.library.period.due" = "To settle";
+"native.library.period.settled" = "Settled";
+"native.library.period.oneShot" = "One-time budget";
+"native.library.period.noDeadline" = "No deadline";
+"native.library.period.since" = "From %@";
+"native.library.card.upcoming" = "Upcoming · Budget limit";
+"native.library.pullUse" = "Pull to select";
+"native.library.pullBack" = "Pull to return";
