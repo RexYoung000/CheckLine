@@ -322,28 +322,33 @@ private struct LibraryPeriodLights: View {
         var lit: Double
         var alpha: Double
         var shine: Double
+        var pulse: Double
     }
 
     private func drawLight(in context: GraphicsContext) {
         let time = elapsed ?? 0
-        let breathing = elapsed == nil ? 1 : 1 + sin(time * 0.28) * 0.009
+        let breathing = elapsed == nil ? 1 : 1 + sin(time * 1.45) * 0.022
         let grains = Self.grains.map { grain in
-            let angle = grain.angle + (elapsed == nil ? 0 : sin(time * 0.22 + grain.phase) * 0.014)
-            let ripple = elapsed == nil ? 0 : sin(grain.angle * 3 - time * 0.55) * 0.008
+            let angle = grain.angle + (elapsed == nil ? 0 : sin(time * 0.45 + grain.phase) * 0.016)
+            let ripple = elapsed == nil ? 0 : sin(grain.angle * 3 - time * 1.15) * 0.011
             let radial = Self.referenceDiameter * 0.394 * (1 + grain.spread + ripple) * breathing
             let x = cos(angle) * radial
             let y = sin(angle) * radial * 0.91 + x * 0.045
             let lit = frame.light(at: grain.position)
-            let shimmer = elapsed == nil ? 1 : 0.86 + 0.14 * sin(time * 0.72 + grain.phase)
+            let wave = elapsed == nil ? 1.0 : pow(0.5 + 0.5 * sin(time * 2.1 + grain.phase), 1.5)
+            let shimmer = elapsed == nil ? 1.0 : (0.86 - 0.24 * lit) + (0.14 + 0.24 * lit) * wave
             let alpha = (0.26 + lit * 0.68) * shimmer * (0.65 + 0.35 * grain.depth) * (grain.rear ? 0.43 : 1)
-            let sparkle = elapsed == nil ? 0.85 : 0.66 + 0.34 * pow(0.5 + 0.5 * sin(time * 0.9 + grain.phase), 2)
+            let glintWave = elapsed == nil ? 0.85 : pow(0.5 + 0.5 * sin(time * 2.3 + grain.phase), 1.6)
+            let sparkle = elapsed == nil ? 0.85 : 0.42 + 0.58 * glintWave
             let shine = grain.glint ? lit * sparkle * (1 + frame.sweep(at: grain.position) * 0.2) : 0
-            return LightGrain(point: CGPoint(x: x, y: y), radius: grain.radius, depth: grain.depth,
-                              lit: lit, alpha: alpha, shine: shine)
+            let pulse = elapsed == nil ? 1.0 : 0.74 + 0.44 * glintWave
+            let grainRadius = grain.radius * (elapsed == nil ? 1.0 : 1.0 + lit * (0.24 * wave - 0.10))
+            return LightGrain(point: CGPoint(x: x, y: y), radius: grainRadius, depth: grain.depth,
+                              lit: lit, alpha: alpha, shine: shine, pulse: pulse)
         }
         let glints = grains.filter { $0.shine >= 0.002 }
         for glint in glints {
-            gradient(in: context, at: glint.point, radius: 6.8 + glint.depth * 2.0, stops: [
+            gradient(in: context, at: glint.point, radius: (6.8 + glint.depth * 2.0) * glint.pulse, stops: [
                 stop(0x5EA8C9, glint.shine * 0.62, at: 0),
                 stop(0x6BB2D0, glint.shine * 0.30, at: 0.28),
                 stop(0x84BFD6, glint.shine * 0.10, at: 0.60),
@@ -357,7 +362,7 @@ private struct LibraryPeriodLights: View {
             context.fill(dot(at: grain.point, radius: grain.radius), with: .color(color))
         }
         for glint in glints {
-            gradient(in: context, at: glint.point, radius: 1.32 + glint.depth * 0.30, stops: [
+            gradient(in: context, at: glint.point, radius: (1.32 + glint.depth * 0.30) * glint.pulse, stops: [
                 stop(0x2A7FA3, min(1, glint.shine * 1.25), at: 0),
                 stop(0x5AA8C4, min(1, glint.shine), at: 0.62),
                 stop(0x92C6D8, 0, at: 1)
@@ -411,21 +416,25 @@ private struct LibraryPeriodLights: View {
         var strength: Double
         var core: Double
         var base: Double
+        var pulse: Double
         var faint: Bool
     }
 
     private func drawDark(in context: GraphicsContext) {
         let time = elapsed ?? 0
+        let ringBreath = elapsed == nil ? 1.0 : 1.0 + sin(time * 1.45) * 0.022
         let points = Self.stars.map { star in
-            let drift = sin(time * 0.42 + star.phase)
-            let angle = star.angle + sin(time * 0.27 + star.phase) * 0.012
-            let radial = star.radius * Self.referenceDiameter + drift * 0.85
+            let drift = elapsed == nil ? 0 : sin(time * 0.72 + star.phase)
+            let angle = star.angle + (elapsed == nil ? 0 : sin(time * 0.45 + star.phase) * 0.015)
+            let radial = star.radius * Self.referenceDiameter * ringBreath + drift * 1.05
             let lit = frame.light(at: star.position)
-            let breathe = elapsed == nil ? 1 : 0.85 + 0.15 * sin(time * 0.85 + star.phase)
+            let wave = elapsed == nil ? 1.0 : pow(0.5 + 0.5 * sin(time * 2.1 + star.phase), 1.6)
+            let breathe = elapsed == nil ? 1.0 : 0.56 + 0.44 * wave
+            let pulse = elapsed == nil ? 1.0 : 0.76 + 0.42 * wave
             let strength = lit * breathe * (star.faint ? 0.35 : 0.75 + star.depth * 0.25) * (1 + frame.sweep(at: star.position) * 0.16)
             return DarkPoint(point: CGPoint(x: cos(angle) * radial, y: sin(angle) * radial * 0.98), depth: star.depth,
                              lit: lit, strength: strength, core: (star.faint ? 0.8 : 1.72) * star.size,
-                             base: 0.5 + star.size * 0.36, faint: star.faint)
+                             base: 0.5 + star.size * 0.36, pulse: pulse, faint: star.faint)
         }
         for point in points {
             let alpha = 0.40 * (point.faint ? 0.44 : 0.65 + point.depth * 0.35) * (1 - point.lit)
@@ -438,8 +447,8 @@ private struct LibraryPeriodLights: View {
         var haloContext = context
         haloContext.blendMode = .screen
         for point in bright {
-            let radius = min(point.faint ? 6 : 12 + point.depth * 3,
-                             Self.referenceDiameter / 2 - max(abs(point.point.x), abs(point.point.y)) - 1)
+            let radius = max(0.5, min((point.faint ? 6 : 12 + point.depth * 3) * point.pulse,
+                             Self.referenceDiameter / 2 - max(abs(point.point.x), abs(point.point.y)) - 1))
             gradient(in: haloContext, at: point.point, radius: radius, stops: [
                 stop(0x689EFF, point.strength * 0.82, at: 0),
                 stop(0x689EFF, point.strength * 0.50, at: 0.22),
@@ -450,7 +459,7 @@ private struct LibraryPeriodLights: View {
         }
         for point in bright {
             let opacity = min(1, point.strength * (point.faint ? 1 : 1.22))
-            gradient(in: context, at: point.point, radius: point.core * 1.1, stops: [
+            gradient(in: context, at: point.point, radius: point.core * 1.1 * point.pulse, stops: [
                 stop(0xFFFFFF, opacity, at: 0),
                 stop(0xF7FCFF, opacity, at: 0.58),
                 stop(0xDDEFFF, opacity * 0.88, at: 0.78),
