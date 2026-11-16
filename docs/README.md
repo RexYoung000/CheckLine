@@ -28,6 +28,7 @@
 | `product/USER-JOURNEY.md` | 从第一张预算卡到首个完整周期 |
 | `product/GLOSSARY.md` | 术语、金额规则与废弃概念 |
 | `product/ROADMAP.md` | 完整 V1 与内部里程碑 |
+| `product/2026-11-16-english-market-validation.md` | 英文社区市场验证：预算边界与银行安全额度的区分；证据可用性与缺口 |
 
 ### 设计
 
