@@ -2,19 +2,79 @@ import SwiftUI
 
 struct WalletSurface: ViewModifier {
     var radius: CGFloat = 24
+    @Environment(\.colorScheme) private var scheme
+    @Environment(\.colorSchemeContrast) private var contrast
+    @Environment(\.accessibilityReduceTransparency) private var reduceTransparency
+
     func body(content: Content) -> some View {
+        let shape = RoundedRectangle(cornerRadius: radius, style: .continuous)
+        let light = scheme == .light
         content
             .background {
-                RoundedRectangle(cornerRadius: radius, style: .continuous)
-                    .fill(LinearGradient(colors: [PaperTheme.ink.opacity(0.025), .clear], startPoint: .topLeading, endPoint: .bottomTrailing))
-                    .background(PaperTheme.card, in: RoundedRectangle(cornerRadius: radius, style: .continuous))
-                    .overlay {
-                        RoundedRectangle(cornerRadius: radius, style: .continuous)
-                            .strokeBorder(LinearGradient(colors: [PaperTheme.ink.opacity(0.1), PaperTheme.ink.opacity(0.025)], startPoint: .topLeading, endPoint: .bottomTrailing), lineWidth: 0.8)
+                ZStack {
+                    if reduceTransparency {
+                        shape.fill(PaperTheme.card)
+                    } else {
+                        shape.fill(
+                            LinearGradient(
+                                colors: [
+                                    Color.paper(light: 0xFFFFFF, dark: 0x22252A),
+                                    Color.paper(light: 0xF5F8FA, dark: 0x191B1F)
+                                ],
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            )
+                        )
+                        shape.fill(
+                            RadialGradient(
+                                stops: [
+                                    .init(color: .white.opacity(light ? 0.72 : 0.05), location: 0),
+                                    .init(color: .clear, location: 0.78)
+                                ],
+                                center: UnitPoint(x: 0.16, y: 0.08),
+                                startRadius: 0,
+                                endRadius: 220
+                            )
+                        )
                     }
+                }
+                .overlay {
+                    if contrast == .increased {
+                        shape.strokeBorder(PaperTheme.ink.opacity(light ? 0.26 : 0.30), lineWidth: 1.2)
+                    } else {
+                        ZStack {
+                            shape.strokeBorder(
+                                LinearGradient(
+                                    stops: light ? [
+                                        .init(color: .white.opacity(0.95), location: 0),
+                                        .init(color: PaperTheme.ink.opacity(0.08), location: 0.45),
+                                        .init(color: PaperTheme.ink.opacity(0.12), location: 1)
+                                    ] : [
+                                        .init(color: .white.opacity(0.17), location: 0),
+                                        .init(color: PaperTheme.ink.opacity(0.07), location: 0.55),
+                                        .init(color: .black.opacity(0.35), location: 1)
+                                    ],
+                                    startPoint: .topLeading,
+                                    endPoint: .bottomTrailing
+                                ),
+                                lineWidth: 0.8
+                            )
+                            if !reduceTransparency {
+                                shape.inset(by: 0.9).strokeBorder(
+                                    LinearGradient(
+                                        colors: [.white.opacity(light ? 0.85 : 0.07), .clear],
+                                        startPoint: .topLeading,
+                                        endPoint: .center
+                                    ),
+                                    lineWidth: 0.65
+                                )
+                            }
+                        }
+                    }
+                }
             }
-            .clipShape(RoundedRectangle(cornerRadius: radius, style: .continuous))
-            .shadow(color: .black.opacity(0.07), radius: 12, y: 5)
+            .clipShape(shape)
+            .shadow(color: (light ? Color.paper(light: 0x1A3342, dark: 0x000000) : .black).opacity(light ? 0.065 : 0.24), radius: 10, y: 4)
     }
 }
 
