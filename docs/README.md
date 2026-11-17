@@ -29,6 +29,7 @@
 | `product/GLOSSARY.md` | 术语、金额规则与废弃概念 |
 | `product/ROADMAP.md` | 完整 V1 与内部里程碑 |
 | `product/2026-11-16-english-market-validation.md` | 英文社区市场验证：预算边界与银行安全额度的区分；证据可用性与缺口 |
+| `product/2026-11-17-product-advantages.md` | 产品优势盘点：闭环与信任架构两条护城河、非护城河能力、短板与两周验证项 |
 
 ### 设计
 
