@@ -25,7 +25,9 @@ struct WishWalletSummaryView: View {
                         Text(String(localized: "ui.wish.balanceSummary"))
                             .font(.subheadline).foregroundStyle(PaperTheme.muted)
                     }
-                    .padding(22).walletSurface()
+                    .padding(22)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .walletSurface()
                     if projection.recoveryGap > 0 {
                         recoverySummary
                     }
@@ -58,7 +60,9 @@ struct WishWalletSummaryView: View {
                         }
                         .font(.subheadline).foregroundStyle(PaperTheme.muted)
                         .fixedSize(horizontal: false, vertical: true).padding(.top, 12)
-                    }.font(.subheadline).tint(PaperTheme.accent)
+                    }.font(.subheadline.weight(.medium)).tint(PaperTheme.accent)
+                        .padding(16)
+                        .walletSurface(radius: 20)
                         .accessibilityIdentifier("wallet.wishes.balance.about")
                 }.padding(PaperTheme.Layout.sheetPadding).frame(maxWidth: PaperTheme.Layout.sheetMaxWidth).frame(maxWidth: .infinity)
             }

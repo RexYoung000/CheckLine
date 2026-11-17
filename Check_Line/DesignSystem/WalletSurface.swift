@@ -166,7 +166,7 @@ struct WalletRootPage<Content: View>: View {
             ScrollView {
                 content()
                     .id("wallet-page-top")
-                    .padding(.horizontal, lightHeader ? 0 : 18)
+                    .padding(.horizontal, lightHeader ? 0 : PaperTheme.Layout.sheetPadding)
                     .padding(.top, lightHeader ? 0 : 12)
                     .padding(.bottom, (WalletTabTransition.usesSystemBar ? 24 : PaperTheme.Dock.contentBottomClearance) + (workspace.actionFeedback == nil ? 0 : 56))
                     .frame(maxWidth: PaperTheme.Layout.contentMaxWidth)

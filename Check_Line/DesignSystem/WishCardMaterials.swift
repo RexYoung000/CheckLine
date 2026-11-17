@@ -16,27 +16,61 @@ struct WishCardBackdrop: View {
     @Environment(\.accessibilityReduceTransparency) private var reduceTransparency
 
     var body: some View {
+        let shape = RoundedRectangle(cornerRadius: radius, style: .continuous)
         ZStack {
             if role == .collection {
                 WishMetalSurface(radius: radius, pose: pose, roll: roll, glare: glare)
             } else if !photoFill {
-                RoundedRectangle(cornerRadius: radius, style: .continuous)
-                    .fill(WishMaterialPalette.glassTint.opacity(reduceTransparency ? 1 : 0.12))
-                Group {
-                    if scheme == .dark {
-                        WishMetalSurface(radius: max(0, radius - 2), pose: pose, roll: roll, glare: glare)
-                    } else {
-                        RoundedRectangle(cornerRadius: max(0, radius - 2), style: .continuous)
-                            .fill(LinearGradient(colors: [.white.opacity(0.68), Color(red: 0.72, green: 0.89, blue: 0.95).opacity(reduceTransparency ? 1 : 0.48)], startPoint: .topLeading, endPoint: .bottomTrailing))
-                            .overlay { RoundedRectangle(cornerRadius: max(0, radius - 2), style: .continuous).strokeBorder(.white.opacity(0.5), lineWidth: 0.8) }
+                if scheme == .dark {
+                    shape.fill(WishMaterialPalette.glassTint.opacity(reduceTransparency ? 1 : 0.12))
+                    WishMetalSurface(radius: max(0, radius - 2), pose: pose, roll: roll, glare: glare)
+                        .padding(EdgeInsets(top: 4, leading: 6, bottom: 6, trailing: 4))
+                        .shadow(color: .black.opacity(0.30), radius: 5, x: 2, y: 4)
+                } else {
+                    shape.fill(
+                        LinearGradient(
+                            colors: [
+                                Color.paper(light: 0xF3FBFE, dark: 0x1E252A),
+                                Color.paper(light: 0xD4EFF8, dark: 0x172026)
+                            ],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                    )
+                    if !reduceTransparency {
+                        shape.fill(
+                            RadialGradient(
+                                stops: [
+                                    .init(color: .white.opacity(0.82), location: 0),
+                                    .init(color: .clear, location: 0.72)
+                                ],
+                                center: UnitPoint(x: min(0.85, max(0.15, glare.x)), y: min(0.65, max(0.08, glare.y))),
+                                startRadius: 0,
+                                endRadius: 210
+                            )
+                        )
                     }
+                    shape.strokeBorder(
+                        LinearGradient(
+                            stops: [
+                                .init(color: .white.opacity(0.95), location: 0),
+                                .init(color: Color(red: 0.45, green: 0.75, blue: 0.86).opacity(0.32), location: 0.55),
+                                .init(color: .white.opacity(0.62), location: 1)
+                            ],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        ),
+                        lineWidth: 1
+                    )
                 }
-                .padding(EdgeInsets(top: 4, leading: 7, bottom: 8, trailing: 4))
-                .rotationEffect(.degrees(-0.8))
-                .shadow(color: .black.opacity(scheme == .dark ? 0.3 : 0.08), radius: 4, x: 2, y: 4)
             }
         }
-        .clipShape(RoundedRectangle(cornerRadius: radius, style: .continuous))
+        .clipShape(shape)
+        .shadow(
+            color: (scheme == .light ? Color(red: 0.08, green: 0.30, blue: 0.39) : .black).opacity(scheme == .light ? 0.085 : 0.28),
+            radius: 12,
+            y: 5
+        )
         .allowsHitTesting(false).accessibilityHidden(true)
     }
 }
@@ -114,15 +148,22 @@ struct WishMetalSurface: View {
         GeometryReader { proxy in
             let light = scheme == .light
             ZStack {
-                Color.paper(light: 0xAFD4E0, dark: 0x454547)
-                Ellipse().fill(.white.opacity(light ? 0.6 : 0.22))
-                    .frame(width: proxy.size.width * 0.58, height: proxy.size.height * 0.62)
-                    .blur(radius: 14).position(x: proxy.size.width * 0.28, y: proxy.size.height * 0.2)
-                Rectangle().fill(.black.opacity(light ? 0.13 : 0.35))
-                    .frame(width: proxy.size.width * 0.07, height: proxy.size.height * 0.74)
-                    .blur(radius: 7).rotationEffect(.degrees(-7))
-                    .position(x: proxy.size.width * 0.65, y: proxy.size.height * 0.69)
-                LinearGradient(colors: [.clear, .white.opacity(light ? 0.18 : 0.09), .clear], startPoint: .topLeading, endPoint: .bottomTrailing)
+                LinearGradient(
+                    colors: light
+                        ? [Color.paper(light: 0xEFF5F8, dark: 0x454547), Color.paper(light: 0xCBE1EA, dark: 0x35373A)]
+                        : [Color.paper(light: 0x454547, dark: 0x484B50), Color.paper(light: 0x35373A, dark: 0x2F3236)],
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                )
+                Ellipse().fill(.white.opacity(light ? 0.65 : 0.22))
+                    .frame(width: proxy.size.width * 0.64, height: proxy.size.height * 0.58)
+                    .blur(radius: 16).position(x: proxy.size.width * 0.26, y: proxy.size.height * 0.18)
+                if light {
+                    Ellipse().fill(PaperTheme.gold.opacity(0.18))
+                        .frame(width: proxy.size.width * 0.55, height: proxy.size.height * 0.45)
+                        .blur(radius: 20).position(x: proxy.size.width * 0.82, y: proxy.size.height * 0.84)
+                }
+                LinearGradient(colors: [.clear, .white.opacity(light ? 0.28 : 0.10), .clear], startPoint: .topLeading, endPoint: .bottomTrailing)
             }
         }
     }

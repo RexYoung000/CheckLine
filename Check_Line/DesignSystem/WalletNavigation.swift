@@ -57,38 +57,52 @@ struct WalletPageHeader: View {
     var body: some View {
         Group {
             if #available(iOS 26.0, *) {
-                GlassEffectContainer(spacing: 12) { headerRow }
+                GlassEffectContainer(spacing: 10) { headerRow }
             } else {
                 headerRow
             }
         }
-        .font(.system(size: 20, weight: .regular))
+        .font(.title3)
         .buttonStyle(.plain)
         .foregroundStyle(PaperTheme.ink)
         .opacity(visibility)
         .offset(y: light ? -12 * (1 - visibility) : 6 * (1 - visibility))
-        .padding(.horizontal, 16)
-        .padding(.vertical, 5)
+        .padding(.horizontal, 23)
+        .padding(.vertical, 8)
+        .frame(maxWidth: 650)
+        .frame(maxWidth: .infinity)
     }
 
     private var headerRow: some View {
-        HStack(spacing: 10) {
-            profileControl
-                .paperGlass(.circle, interactive: true)
+        HStack {
             if let title {
-                Text(title).font(.title2.weight(.semibold)).lineLimit(1).minimumScaleFactor(0.7).accessibilityAddTraits(.isHeader)
+                Text(title).font(.system(size: 29, weight: .bold)).lineLimit(1).minimumScaleFactor(0.7).accessibilityAddTraits(.isHeader)
             } else if DesignPreviewData.isEnabled {
                 Text(String(localized: "wallet.preview")).font(.caption2).foregroundStyle(PaperTheme.paperInk.opacity(0.5))
             }
             Spacer(minLength: 8)
-            trailingControls
+            trailingButtons
         }
     }
 
-    private var profileControl: some View {
+    private var trailingButtons: some View {
+        HStack(spacing: 10) {
+            if let onAdd {
+                createControl(onAdd)
+                    .paperGlass(.circle, interactive: true)
+            }
+            if light {
+                attentionControl
+                    .paperGlass(.circle, interactive: true)
+            }
+            settingsControl
+                .paperGlass(.circle, interactive: true)
+        }
+    }
+
+    private var settingsControl: some View {
         Button { chrome?.isSettingsPresented = true } label: {
-            CheckLineIcon(symbol: "person", size: 20)
-                .font(.system(size: 20, weight: .medium))
+            CheckLineIcon(symbol: "gearshape", size: 20)
                 .frame(width: 44, height: 44)
                 .contentShape(Circle())
         }
@@ -96,28 +110,11 @@ struct WalletPageHeader: View {
         .accessibilityIdentifier("wallet.profile")
     }
 
-    @ViewBuilder private var trailingControls: some View {
-        if #available(iOS 26.0, *) {
-            trailingButtons
-                .glassEffect(.regular, in: .capsule)
-        } else {
-            trailingButtons.paperGlass(.capsule)
-        }
-    }
-
-    private var trailingButtons: some View {
-        HStack(spacing: 0) {
-            if let onAdd { createControl(onAdd) }
-            if light { attentionControl }
-            functionsControl
-        }
-    }
-
     private func createControl(_ action: @escaping () -> Void) -> some View {
         Button(action: action) {
-            CheckLineIcon(symbol: "plus")
+            CheckLineIcon(symbol: "plus", size: 20)
                 .frame(width: 44, height: 44)
-                .contentShape(Rectangle())
+                .contentShape(Circle())
         }
         .accessibilityLabel(String(localized: "wallet.create"))
         .accessibilityIdentifier("wallet.header.create")

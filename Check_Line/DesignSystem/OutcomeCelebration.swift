@@ -35,23 +35,36 @@ struct OutcomeCelebration: View {
             TimelineView(.animation(minimumInterval: 1.0 / 60, paused: settled || reduceMotion || scenePhase != .active)) { clock in
                 let elapsed = (settled || reduceMotion) ? receipt.duration : min(receipt.duration, clock.date.timeIntervalSince(started))
                 ZStack {
-                    WishFocusScrim()
+                    PaperTheme.canvas.ignoresSafeArea()
                     aurora(elapsed).ignoresSafeArea()
                     ScrollView {
-                        VStack(alignment: .leading, spacing: geometry.size.height < 700 ? 14 : 22) {
+                        VStack(alignment: .leading, spacing: geometry.size.height < 700 ? 18 : 26) {
                             header(elapsed)
                             wishScene(elapsed, compact: geometry.size.height < 650 || typeSize.isAccessibilitySize)
-                        }.padding(geometry.size.height < 700 ? 18 : 22).frame(maxWidth: 560).frame(maxWidth: .infinity)
+                        }
+                        .padding(.horizontal, PaperTheme.Layout.sheetPadding)
+                        .padding(.top, 10)
+                        .padding(.bottom, 24)
+                        .frame(maxWidth: PaperTheme.Layout.sheetMaxWidth)
+                        .frame(maxWidth: .infinity)
                     }.scrollBounceBehavior(.basedOnSize)
                 }
                 .foregroundStyle(foreground)
                 .safeAreaInset(edge: .bottom) {
-                    Button(action: finish) {
-                        Text(String(localized: "native.outcome.viewRealized")).frame(maxWidth: .infinity)
-                    }
-                    .buttonStyle(PaperSolidButtonStyle(foreground: PaperTheme.primaryInk, background: PaperTheme.primary))
-                    .frame(maxWidth: 560).padding(.horizontal, 22).padding(.vertical, 12).frame(maxWidth: .infinity)
-                    .background(Color.clear)
+                    Button(String(localized: "native.outcome.viewRealized"), action: finish)
+                        .buttonStyle(WishGlazedButtonStyle(fullWidth: true))
+                        .frame(maxWidth: PaperTheme.Layout.sheetMaxWidth)
+                        .padding(.horizontal, PaperTheme.Layout.sheetPadding)
+                        .padding(.top, 12)
+                        .padding(.bottom, 16)
+                        .frame(maxWidth: .infinity)
+                        .background(
+                            LinearGradient(
+                                colors: [PaperTheme.canvas.opacity(0), PaperTheme.canvas.opacity(0.92), PaperTheme.canvas],
+                                startPoint: .top,
+                                endPoint: .bottom
+                            )
+                        )
                 }
             }
             .onChange(of: geometry.size) { old, new in if old != new { settled = true } }
@@ -68,30 +81,65 @@ struct OutcomeCelebration: View {
 
     private func finish() { settled = true; onDone() }
     private func header(_ elapsed: TimeInterval) -> some View {
-        HStack {
-            Text(String(localized: "native.outcome.wishSaved")).font(.subheadline)
+        HStack(spacing: 10) {
             Spacer()
             if elapsed < receipt.duration {
-                Button(String(localized: "native.outcome.skip")) { settled = true }.font(.subheadline).frame(minWidth: 44, minHeight: 44).accessibilityIdentifier("native.outcome.skip")
+                Button(String(localized: "native.outcome.skip")) { settled = true }
+                    .font(.subheadline.weight(.medium))
+                    .foregroundStyle(PaperTheme.ink)
+                    .padding(.horizontal, 14)
+                    .frame(minWidth: 44, minHeight: 40)
+                    .walletSurface(radius: 20)
+                    .accessibilityIdentifier("native.outcome.skip")
             }
-            Button(action: finish) { Image(systemName: "xmark").font(.subheadline).frame(width: 44, height: 44).background(foreground.opacity(0.06), in: Circle()) }
-                .accessibilityLabel(String(localized: "action.close"))
-        }.padding(10).background(PaperTheme.card.opacity(reduceTransparency ? 1 : 0.92), in: RoundedRectangle(cornerRadius: 20))
+            Button(action: finish) {
+                CheckLineIcon(symbol: "xmark", size: 17)
+                    .foregroundStyle(PaperTheme.ink)
+                    .paperHeaderCircleChrome()
+            }
+            .buttonStyle(PaperCirclePressStyle())
+            .accessibilityLabel(String(localized: "action.close"))
+        }
     }
 
     private func aurora(_ elapsed: Double) -> some View {
-        let strength = elapsed < 0.9 ? reveal(elapsed, 0.1, 0.8) * 0.3 : 0.12 + pow(1 - reveal(elapsed, 0.9, 1.4), 2) * 0.68
-        return RadialGradient(colors: [PaperTheme.accent.opacity(strength * 0.4), .white.opacity(strength * 0.2), .clear], center: UnitPoint(x: 0.5, y: 0.43), startRadius: 5, endRadius: 260)
+        let strength = elapsed < 0.9 ? reveal(elapsed, 0.1, 0.8) * 0.35 : 0.22 + pow(1 - reveal(elapsed, 0.9, 1.4), 2) * 0.65
+        return ZStack {
+            RadialGradient(
+                colors: [
+                    Color.paper(light: 0xB8E7F5, dark: 0x164E63).opacity(strength * 0.55),
+                    Color.paper(light: 0xE6F7FC, dark: 0x0E2A36).opacity(strength * 0.30),
+                    .clear
+                ],
+                center: UnitPoint(x: 0.5, y: 0.42),
+                startRadius: 10,
+                endRadius: 340
+            )
+            RadialGradient(
+                colors: [
+                    PaperTheme.gold.opacity(strength * 0.28),
+                    .clear
+                ],
+                center: UnitPoint(x: 0.62, y: 0.36),
+                startRadius: 8,
+                endRadius: 230
+            )
+        }
     }
 
     private func wishScene(_ elapsed: TimeInterval, compact: Bool) -> some View {
         let pose = RewardTiming.wishPose(elapsed: elapsed)
-        let height: CGFloat = compact ? 220 : 272
-        return VStack(spacing: 16) {
-            VStack(spacing: 6) {
-                Text(String(localized: "native.outcome.fulfilled")).font(.largeTitle.weight(.semibold))
-                Text(String(localized: "native.outcome.yourMoment")).font(.caption).foregroundStyle(pearl.opacity(0.6))
-            }.opacity(reveal(elapsed, 1.72, 0.43)).offset(y: 7 * (1 - reveal(elapsed, 1.72, 0.43)))
+        let height: CGFloat = compact ? 226 : 276
+        return VStack(spacing: 20) {
+            VStack(spacing: 8) {
+                Text(String(localized: "native.outcome.fulfilled"))
+                    .font(.system(size: compact ? 30 : 34, weight: .bold))
+                Text(String(localized: "native.outcome.yourMoment"))
+                    .font(.subheadline)
+                    .foregroundStyle(PaperTheme.muted)
+            }
+            .opacity(reveal(elapsed, 1.72, 0.43))
+            .offset(y: 7 * (1 - reveal(elapsed, 1.72, 0.43)))
             ZStack {
                 wishRevealedCard(elapsed)
                 if elapsed < 0.91 {
@@ -110,19 +158,36 @@ struct OutcomeCelebration: View {
             .frame(height: height)
             .scaleEffect(pose.scale).rotationEffect(.degrees(pose.angle)).offset(x: pose.x, y: pose.y)
             HStack(spacing: 8) {
-                Image(systemName: "checkmark.seal.fill").font(.title3).foregroundStyle(PaperTheme.accent)
-                    .scaleEffect(elapsed < 2.2 ? 0.65 : 1 + sin(reveal(elapsed, 2.2, 0.39) * .pi) * 0.13)
-                Text(receipt.date, format: .dateTime.year().month().day()).font(.caption).foregroundStyle(pearl.opacity(0.65))
-            }.opacity(reveal(elapsed, 2.2, 0.39))
+                Image(systemName: "checkmark.seal.fill")
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(PaperTheme.seaAction)
+                    .scaleEffect(elapsed < 2.2 ? 0.65 : 1 + sin(reveal(elapsed, 2.2, 0.39) * .pi) * 0.14)
+                Text(String(localized: "native.wish.realized"))
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(PaperTheme.ink)
+                Text("·")
+                    .foregroundStyle(PaperTheme.muted)
+                Text(receipt.date, format: .dateTime.year().month().day())
+                    .font(.caption)
+                    .foregroundStyle(PaperTheme.muted)
+            }
+            .padding(.horizontal, 14)
+            .padding(.vertical, 8)
+            .walletSurface(radius: 16)
+            .opacity(reveal(elapsed, 2.2, 0.39))
             HStack(alignment: .firstTextBaseline) {
-                VStack(alignment: .leading, spacing: 7) {
-                    Text(String(localized: "v1.wish.balance")).font(.caption)
-                    Text(MoneyFormat.string(receipt.net, currencyCode: receipt.currency)).font(.caption).foregroundStyle(PaperTheme.muted)
+                VStack(alignment: .leading, spacing: 6) {
+                    Text(String(localized: "v1.wish.balance")).font(.subheadline).foregroundStyle(PaperTheme.muted)
+                    Text(MoneyFormat.string(receipt.net, currencyCode: receipt.currency)).font(.caption.weight(.medium)).monospacedDigit().foregroundStyle(PaperTheme.seaAction)
                 }
                 Spacer(minLength: 8)
                 Text(MoneyFormat.string(receipt.after, currencyCode: receipt.currency)).font(.title.weight(.semibold)).monospacedDigit().lineLimit(1).minimumScaleFactor(0.5)
-            }.foregroundStyle(PaperTheme.ink).padding(20).walletSurface()
-                .opacity(reveal(elapsed, 2.41, 0.39)).offset(y: 12 * (1 - reveal(elapsed, 2.41, 0.39)))
+            }
+            .foregroundStyle(PaperTheme.ink)
+            .padding(20)
+            .walletSurface(radius: 22)
+            .opacity(reveal(elapsed, 2.41, 0.39))
+            .offset(y: 12 * (1 - reveal(elapsed, 2.41, 0.39)))
         }
         .accessibilityElement(children: .combine)
         .accessibilityLabel(String(localized: "native.outcome.fulfilled") + " " + receipt.title + " " + MoneyFormat.string(receipt.originalAmount, currencyCode: receipt.originalCurrency))
@@ -300,7 +365,12 @@ private func rewardBloom(_ original: GraphicsContext, origin: CGPoint, elapsed: 
 
 private func rewardParticles(_ original: GraphicsContext, origin: CGPoint, elapsed: Double, seed: UInt64, strength: Double) {
     var random = VisualRandom(state: seed &+ 9000)
-    let colors = [Color(red: 0.92, green: 0.98, blue: 1), Color(red: 0.67, green: 0.82, blue: 0.91), .white, Color(red: 0.75, green: 0.9, blue: 0.97)]
+    let colors = [
+        Color(red: 0.15, green: 0.56, blue: 0.69),
+        Color(red: 0.85, green: 0.68, blue: 0.41),
+        Color(red: 0.47, green: 0.79, blue: 0.89),
+        .white
+    ]
     for i in 0..<64 {
         let angle = random.next() * .pi * 2
         let speed = 80 + random.next() * 230, vx = cos(angle) * speed, vy = sin(angle) * speed * 0.68 - 110

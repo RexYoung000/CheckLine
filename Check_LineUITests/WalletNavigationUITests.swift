@@ -216,8 +216,13 @@ final class WalletNavigationUITests: XCTestCase {
 
         let wish = app.descendants(matching: .any).matching(NSPredicate(format: "identifier BEGINSWITH %@ AND label == %@", "native.wish.card.", "耳机")).firstMatch
         XCTAssertTrue(wish.waitForExistence(timeout: 5))
+        let wishID = wish.identifier
         wish.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).tap()
-        let redeem = wish.buttons["native.wish.redeem"].firstMatch
+        let expanded = element("native.wish.expanded", in: app)
+        XCTAssertTrue(expanded.waitForExistence(timeout: 5))
+        let card = expanded.descendants(matching: .any)[wishID].firstMatch
+        card.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).tap()
+        let redeem = card.buttons["native.wish.redeem"].firstMatch
         waitUntilHittable(redeem)
         XCTAssertTrue(redeem.isEnabled)
         redeem.tap()

@@ -105,6 +105,57 @@ struct PaperSolidButtonStyle: ButtonStyle {
     }
 }
 
+/// Deep sea-teal glazed pill CTA suited to glass/liquid wish surfaces and celebrations.
+struct WishGlazedButtonStyle: ButtonStyle {
+    @Environment(\.walletReduceMotion) private var reduceMotion
+    @Environment(\.isEnabled) private var isEnabled
+    @Environment(\.colorScheme) private var scheme
+    var enabled: Bool = true
+    var fullWidth: Bool = false
+    var compact: Bool = false
+
+    func makeBody(configuration: Configuration) -> some View {
+        let active = enabled && isEnabled
+        let height: CGFloat = compact ? 36 : 52
+        configuration.label
+            .font(compact ? .subheadline.weight(.semibold) : .headline)
+            .foregroundStyle(active ? PaperTheme.seaActionInk : PaperTheme.muted)
+            .padding(.horizontal, compact ? 14 : PaperTheme.Space.m)
+            .frame(maxWidth: fullWidth ? .infinity : nil)
+            .frame(minHeight: height)
+            .background {
+                if active {
+                    Capsule()
+                        .fill(
+                            LinearGradient(
+                                colors: [PaperTheme.seaActionTop, PaperTheme.seaAction],
+                                startPoint: .top,
+                                endPoint: .bottom
+                            )
+                        )
+                        .opacity(configuration.isPressed ? 0.84 : 1)
+                        .overlay {
+                            Capsule().strokeBorder(
+                                LinearGradient(
+                                    colors: [.white.opacity(scheme == .light ? 0.44 : 0.26), .clear],
+                                    startPoint: .top,
+                                    endPoint: .bottom
+                                ),
+                                lineWidth: 1
+                            )
+                        }
+                } else {
+                    Capsule()
+                        .fill(PaperTheme.ink.opacity(0.07))
+                        .overlay { Capsule().strokeBorder(PaperTheme.stroke, lineWidth: PaperTheme.Stroke.hairline) }
+                }
+            }
+            .shadow(color: active ? PaperTheme.seaAction.opacity(scheme == .light ? 0.24 : 0.36) : .clear, radius: compact ? 5 : 10, y: compact ? 2 : 4)
+            .scaleEffect(configuration.isPressed && !reduceMotion ? 0.98 : 1)
+            .animation(reduceMotion ? nil : PaperTheme.Motion.spring, value: configuration.isPressed)
+    }
+}
+
 struct PaperChipPressStyle: ButtonStyle {
     @Environment(\.walletReduceMotion) private var reduceMotion
     func makeBody(configuration: Configuration) -> some View {

@@ -50,7 +50,11 @@ import XCTest
         let app = launch("wishes-fx", theme: "dark")
         let front = app.descendants(matching: .any).matching(NSPredicate(format: "identifier BEGINSWITH %@", "native.wish.card.")).containing(.staticText, identifier: "一副新耳机").firstMatch
         XCTAssertTrue(front.waitForExistence(timeout: 10), app.debugDescription)
-        let card = app.descendants(matching: .any)[front.identifier].firstMatch
+        let identifier = front.identifier
+        front.coordinate(withNormalizedOffset: CGVector(dx: 0.25, dy: 0.45)).tap()
+        let expanded = app.descendants(matching: .any)["native.wish.expanded"].firstMatch
+        XCTAssertTrue(expanded.waitForExistence(timeout: 5), app.debugDescription)
+        let card = expanded.descendants(matching: .any)[identifier].firstMatch
         card.coordinate(withNormalizedOffset: CGVector(dx: 0.16, dy: 0.45)).tap()
         let checkRate = app.buttons["native.wish.checkRate"].firstMatch
         XCTAssertTrue(checkRate.waitForExistence(timeout: 5), app.debugDescription)

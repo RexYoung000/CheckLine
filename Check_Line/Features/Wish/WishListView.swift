@@ -382,17 +382,19 @@ struct WishRedemptionView: View {
                         }
                     }
                 }
-        }.blur(radius: outcome == nil || reduceTransparency ? 0 : 8)
-            .allowsHitTesting(outcome == nil).accessibilityHidden(outcome != nil)
-            .overlay {
-            if let outcome { OutcomeCelebration(receipt: outcome) {
+        }
+        .fullScreenCover(item: $outcome) { receipt in
+            OutcomeCelebration(receipt: receipt) {
                 chrome?.wishesShowCompleted = true
                 chrome?.selectedTab = .wishes
                 chrome?.isShowingDetail = false
-                workspace.showAgent = false; workspace.showComposer = false
+                workspace.showAgent = false
+                workspace.showComposer = false
+                outcome = nil
                 dismiss()
-            }.transition(.opacity) }
-        }.sheet(isPresented: $priceSheet) { if let wish { WishPriceSheet(workspace: workspace,wish: wish) } }
+            }
+        }
+        .sheet(isPresented: $priceSheet) { if let wish { WishPriceSheet(workspace: workspace,wish: wish) } }
         .alert(String(localized: "ui.draft.discard.title"), isPresented: $discardRequested) {
             Button(String(localized: "ui.draft.keep"), role: .cancel) { }
             Button(String(localized: "ui.draft.discard.action"), role: .destructive) {
