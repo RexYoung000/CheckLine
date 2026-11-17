@@ -122,7 +122,10 @@ struct CreateComposerSheet: View {
                                     mode = .form
                                 }
                                 Color.clear.frame(height: 1).id("agent.latest")
-                            }.padding(.horizontal, 22).padding(.top, 8).padding(.bottom, 12)
+                            }
+                            .padding(.horizontal, PaperTheme.Layout.sheetPadding)
+                            .padding(.top, 8)
+                            .padding(.bottom, 12)
                         }
                         .scrollDismissesKeyboard(.interactively).clipped()
                         .onChange(of: workspace.conversation.count) { _, _ in
@@ -139,7 +142,7 @@ struct CreateComposerSheet: View {
             if workspace.taskDraft.committedEntityID != nil {
                 VStack(spacing: 8) {
                 Text(String(localized: workspace.taskDraft.kind == "budget" ? "ui.task.savedBudget" : workspace.taskDraft.attachments.isEmpty ? "ui.task.savedRecord" : "ui.task.savedAttachmentsPending")).font(.caption).foregroundStyle(PaperTheme.muted)
-                    .padding(.horizontal, 22).background(PaperTheme.canvas)
+                    .padding(.horizontal, PaperTheme.Layout.sheetPadding).background(PaperTheme.canvas)
                 PaperSubmitBar(title: String(localized: workspace.taskDraft.attachments.isEmpty ? "ui.task.finishSaved" : "ui.task.finishAttachments"), enabled: !workspace.draftStorageFailed, action: finishCommittedTask)
                     .accessibilityIdentifier("wallet.task.resume").padding(.top, 12).background(PaperTheme.canvas)
                 }.background(PaperTheme.canvas)
@@ -152,7 +155,7 @@ struct CreateComposerSheet: View {
                         if let hint = budgetValidationHint {
                             Text(hint).font(.caption).foregroundStyle(PaperTheme.muted)
                                 .accessibilityIdentifier("wallet.composer.validation")
-                                .padding(.horizontal, 22)
+                                .padding(.horizontal, PaperTheme.Layout.sheetPadding)
                         }
                         PaperSubmitBar(
                             title: workspace.composerIntent == .budget ? String(localized: "v1.budget.create") : String(localized: "wallet.record.save"),
@@ -262,14 +265,19 @@ struct CreateComposerSheet: View {
     }
 
     private var header: some View {
-        VStack(spacing: 8) {
+        VStack(spacing: 10) {
             HStack {
                 Button {
                     workspace.closeTaskPanel()
                     dismiss()
-                } label: { CheckLineIcon(symbol: "xmark", size: 17).frame(width: 44, height: 44) }
-                    .accessibilityLabel(String(localized: "action.close"))
-                    .accessibilityIdentifier(mode == .agent ? "wallet.agent.close" : "wallet.composer.close")
+                } label: {
+                    CheckLineIcon(symbol: "xmark", size: 17)
+                        .foregroundStyle(PaperTheme.ink)
+                        .paperHeaderCircleChrome()
+                }
+                .buttonStyle(PaperCirclePressStyle())
+                .accessibilityLabel(String(localized: "action.close"))
+                .accessibilityIdentifier(mode == .agent ? "wallet.agent.close" : "wallet.composer.close")
                 Spacer()
                 if mode == .form {
                     Text(String(localized: workspace.composerIntent == .budget ? "v1.budget.create" : "capture.title")).font(.headline)
@@ -278,18 +286,27 @@ struct CreateComposerSheet: View {
                 if mode == .agent { modeToggle }
                 Menu {
                     Button(String(localized: "ui.draft.discard"), role: .destructive) { discardRequested = true }
-                } label: { CheckLineIcon(symbol: "ellipsis", size: 17).frame(width: 44, height: 44) }
+                } label: {
+                    CheckLineIcon(symbol: "ellipsis", size: 17)
+                        .foregroundStyle(PaperTheme.ink)
+                        .paperHeaderCircleChrome()
+                }
                 .accessibilityLabel(String(localized: "ui.task.options"))
                 .accessibilityIdentifier("wallet.task.options")
             }
             if mode == .form {
-                modeToggle.frame(maxWidth: .infinity, alignment: .trailing).padding(.trailing, 6)
+                modeToggle.frame(maxWidth: .infinity, alignment: .trailing)
             }
             if workspace.draftStorageFailed {
-                Text(String(localized: "ui.draft.failed")).font(.caption).foregroundStyle(.red)
+                Text(String(localized: "ui.draft.failed")).font(.caption).foregroundStyle(PaperTheme.warning)
                 Button(String(localized: "ui.draft.retry")) { workspace.retryTaskStorage() }.frame(minHeight: 44)
             }
-        }.padding(.horizontal, 16).padding(.top, 12)
+        }
+        .padding(.horizontal, PaperTheme.Layout.sheetPadding)
+        .padding(.top, 14)
+        .padding(.bottom, 8)
+        .background(PaperTheme.canvas)
+        .zIndex(1)
     }
 
     private func conversationBubble(_ entry: AgentConversationEntry) -> some View {
@@ -299,14 +316,31 @@ struct CreateComposerSheet: View {
                 CloudMascotView(state: entry.id == workspace.conversation.last?.id ? workspace.mascotState : .idle)
                     .frame(width: 36, height: 36).accessibilityHidden(true)
             }
-            Text(entry.text)
-                .font(.body).foregroundStyle(PaperTheme.ink)
-                .fixedSize(horizontal: false, vertical: true)
-                .textSelection(.enabled)
-                .padding(14)
-                .background(entry.isUser ? PaperTheme.accent.opacity(0.12) : PaperTheme.card,
-                            in: RoundedRectangle(cornerRadius: 20))
-                .accessibilityLabel(String(localized: entry.isUser ? "ui.agent.you" : "wallet.mascot.name") + "，" + entry.text)
+            Group {
+                if entry.isUser {
+                    Text(entry.text)
+                        .font(.body).foregroundStyle(PaperTheme.ink)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .textSelection(.enabled)
+                        .padding(14)
+                        .background {
+                            RoundedRectangle(cornerRadius: 20, style: .continuous)
+                                .fill(PaperTheme.selectedFill.opacity(0.75))
+                                .overlay {
+                                    RoundedRectangle(cornerRadius: 20, style: .continuous)
+                                        .strokeBorder(PaperTheme.selectedStroke.opacity(0.55), lineWidth: PaperTheme.Stroke.hairline)
+                                }
+                        }
+                } else {
+                    Text(entry.text)
+                        .font(.body).foregroundStyle(PaperTheme.ink)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .textSelection(.enabled)
+                        .padding(14)
+                        .walletSurface(radius: 20)
+                }
+            }
+            .accessibilityLabel(String(localized: entry.isUser ? "ui.agent.you" : "wallet.mascot.name") + "，" + entry.text)
             if !entry.isUser { Spacer(minLength: 12) }
         }.id(entry.id)
     }
@@ -531,12 +565,12 @@ struct CreateComposerSheet: View {
                         .foregroundStyle(PaperTheme.ink)
                         .frame(maxWidth: .infinity, alignment: .leading)
                 }
-                if let attachmentError { Text(attachmentError).font(.caption).foregroundStyle(.red) }
+                if let attachmentError { Text(attachmentError).font(.caption).foregroundStyle(PaperTheme.warning) }
             }
-            .padding(.horizontal, 20)
+            .padding(.horizontal, PaperTheme.Layout.sheetPadding)
             .padding(.bottom, 24)
         }
-        .frame(maxWidth: 650).frame(maxWidth: .infinity)
+        .frame(maxWidth: PaperTheme.Layout.sheetMaxWidth).frame(maxWidth: .infinity)
         .scrollDismissesKeyboard(.interactively)
         .clipped()
         .disabled(workspace.taskDraft.committedEntityID != nil)
@@ -602,11 +636,11 @@ struct CreateComposerSheet: View {
                 Spacer()
                 Text("\(note.count)/10000")
                     .font(.caption2)
-                    .foregroundStyle(note.count > 10_000 ? .red : PaperTheme.muted)
+                    .foregroundStyle(note.count > 10_000 ? PaperTheme.warning : PaperTheme.muted)
             }
             if note.count > 10_000 {
                 Text(String(localized: "wallet.expense.noteTooLong"))
-                    .font(.caption).foregroundStyle(.red)
+                    .font(.caption).foregroundStyle(PaperTheme.warning)
             }
         }
         .padding(12)
@@ -748,6 +782,7 @@ struct CreateComposerSheet: View {
                                    cycleType: repeating ? .repeating : .oneShot,
                                    monthlySchedule: repeating ? monthlySchedule : nil,
                                    budgetID: workspace.taskDraft.entityID, periodID: workspace.taskDraft.newPeriodID)
+            if workspace.banner == .createdBudget { PaperHaptics.success() }
         case .record:
             let id = workspace.taskDraft.committedEntityID ?? workspace.recordExpense(
                 amountText: amount, merchant: merchant, note: note,
@@ -769,7 +804,7 @@ struct CreateComposerSheet: View {
             try workspace.completeTaskAttachments(id)
             workspace.banner = wasBudget ? .createdBudget : .recorded
             workspace.showComposer = false; workspace.showAgent = false
-            dismiss(); PaperHaptics.light()
+            dismiss(); PaperHaptics.success()
         } catch {
             attachmentError = String(localized: "wallet.expense.retrySave")
             workspace.banner = .failed

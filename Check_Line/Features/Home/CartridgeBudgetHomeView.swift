@@ -991,10 +991,15 @@ private struct ArchivedBudgetSheet: View {
                             }.buttonStyle(.plain)
                         }
                     }
-                }.padding(22)
+                }.padding(PaperTheme.Layout.sheetPadding).frame(maxWidth: PaperTheme.Layout.sheetMaxWidth).frame(maxWidth: .infinity)
             }.background(PaperTheme.canvas.ignoresSafeArea())
                 .navigationTitle(String(localized: "ui.directory.archived")).navigationBarTitleDisplayMode(.inline)
-                .toolbar { ToolbarItem(placement: .topBarTrailing) { Button(String(localized: "action.close")) { dismiss() } } }
+                .toolbarBackground(.hidden, for: .navigationBar)
+                .toolbar {
+                    ToolbarItem(placement: .topBarTrailing) {
+                        Button(String(localized: "action.close"), iconSymbol: "xmark") { dismiss() }.labelStyle(.iconOnly)
+                    }
+                }
                 .navigationDestination(for: BudgetWorkspaceRoute.self) { BudgetWorkspaceDestination(workspace: workspace,route: $0) }
         }.modifier(NativeDrawerStyle())
     }

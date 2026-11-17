@@ -44,8 +44,12 @@ struct BudgetAmountEditorView: View {
                                 .keyboardType(AmountKeyboard.type).focused($amountFocused)
                                 .font(.title2.monospacedDigit())
                                 .accessibilityIdentifier("wallet.budget.edit.amount")
-                        }.padding(16).walletSurface(radius: 18)
-                            .paperFocusRing(amountFocused, radius: 18)
+                        }
+                        .padding(16)
+                        .walletSurface(radius: 18)
+                        .contentShape(Rectangle())
+                        .simultaneousGesture(TapGesture().onEnded { amountFocused = true })
+                        .paperFocusRing(amountFocused, radius: 18)
                         Text(String(localized: "wallet.budget.edit.inputHint"))
                             .font(.subheadline).foregroundStyle(PaperTheme.muted)
                     }
@@ -65,11 +69,15 @@ struct BudgetAmountEditorView: View {
                     }
                     if typeSize.isAccessibilitySize { actions }
                 }
-                .padding(22).frame(maxWidth: 640, alignment: .leading).frame(maxWidth: .infinity)
+                .padding(PaperTheme.Layout.sheetPadding)
+                .frame(maxWidth: PaperTheme.Layout.sheetMaxWidth, alignment: .leading)
+                .frame(maxWidth: .infinity)
             }
-            .background(PaperTheme.canvas)
+            .scrollDismissesKeyboard(.interactively)
+            .background(PaperTheme.canvas.ignoresSafeArea())
             .navigationTitle(String(localized: "wallet.budget.edit.title"))
             .navigationBarTitleDisplayMode(.inline)
+            .toolbarBackground(.hidden, for: .navigationBar)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button(String(localized: "action.cancel")) { dismiss() }
@@ -78,9 +86,18 @@ struct BudgetAmountEditorView: View {
                 }
             }
             .safeAreaInset(edge: .bottom) {
-                if !typeSize.isAccessibilitySize {
-                    actions.padding(.horizontal, 22).padding(.vertical, 12)
-                        .frame(maxWidth: 640).frame(maxWidth: .infinity).background(PaperTheme.canvas)
+                VStack(spacing: 0) {
+                    if amountFocused {
+                        PaperKeyboardDoneBar { amountFocused = false }
+                    }
+                    if !typeSize.isAccessibilitySize {
+                        actions
+                            .padding(.horizontal, PaperTheme.Layout.sheetPadding)
+                            .padding(.vertical, 12)
+                            .frame(maxWidth: PaperTheme.Layout.sheetMaxWidth)
+                            .frame(maxWidth: .infinity)
+                            .background(PaperTheme.canvas)
+                    }
                 }
             }
             .onChange(of: amountText) { _, text in
@@ -95,6 +112,7 @@ struct BudgetAmountEditorView: View {
             }
         }
         .interactiveDismissDisabled(isSaving)
+        .presentationBackground(PaperTheme.canvas)
         .alert(String(localized: "ui.draft.discard.title"), isPresented: $discardRequested) {
             Button(String(localized: "ui.draft.keep"), role: .cancel) { }
             Button(String(localized: "ui.draft.discard.action"), role: .destructive) {
@@ -113,17 +131,23 @@ struct BudgetAmountEditorView: View {
     private var actions: some View {
         VStack(spacing: 10) {
             if let preview {
+                let saveDisabled = isSaving || !isEditable || workspace.budgetDraftStorageFailed
                 Button(String(localized: "wallet.budget.edit.save")) { save(preview) }
-                    .buttonStyle(PaperSolidButtonStyle()).disabled(isSaving || !isEditable || workspace.budgetDraftStorageFailed)
+                    .buttonStyle(PaperSolidButtonStyle(enabled: !saveDisabled, fullWidth: true))
+                    .disabled(saveDisabled)
                     .accessibilityIdentifier("wallet.budget.edit.save")
                 Button(String(localized: "wallet.budget.edit.back")) {
                     self.preview = nil
                     errorText = nil
-                }.frame(minHeight: 44).disabled(isSaving)
-                    .accessibilityIdentifier("wallet.budget.edit.back")
+                }
+                .buttonStyle(PaperQuietButtonStyle())
+                .disabled(isSaving)
+                .accessibilityIdentifier("wallet.budget.edit.back")
             } else {
+                let previewDisabled = !isEditable || isSaving || workspace.budgetDraftStorageFailed
                 Button(String(localized: "wallet.budget.edit.preview")) { review() }
-                    .buttonStyle(PaperSolidButtonStyle()).disabled(!isEditable || isSaving || workspace.budgetDraftStorageFailed)
+                    .buttonStyle(PaperSolidButtonStyle(enabled: !previewDisabled, fullWidth: true))
+                    .disabled(previewDisabled)
                     .accessibilityIdentifier("wallet.budget.edit.preview")
             }
         }
@@ -208,6 +232,7 @@ struct BudgetAmountEditorView: View {
         defer { isSaving = false }
         do {
             try workspace.saveBudgetAmount(preview)
+            PaperHaptics.success()
             dismiss()
         } catch LedgerError.staleBudgetAmountPreview {
             self.preview = nil

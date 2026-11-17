@@ -276,8 +276,8 @@ struct SettlementReviewView: View {
                         ContentUnavailableView { Label { Text(String(localized: "budget.missing")) } icon: { CheckLineIcon(symbol: "wallet.pass", size: 48) } }
                     }
                 }
-                .padding(22)
-                .frame(maxWidth: 640)
+                .padding(PaperTheme.Layout.sheetPadding)
+                .frame(maxWidth: PaperTheme.Layout.sheetMaxWidth)
                 .frame(maxWidth: .infinity)
             }
             .scrollDismissesKeyboard(.interactively)
@@ -295,7 +295,7 @@ struct SettlementReviewView: View {
             .safeAreaInset(edge: .bottom) {
                 if period != nil {
                     bottomAction
-                        .padding(.horizontal, 22).padding(.vertical, 12)
+                        .padding(.horizontal, PaperTheme.Layout.sheetPadding).padding(.vertical, 12)
                         .frame(maxWidth: .infinity)
                         .background(PaperTheme.canvas)
                 }
@@ -529,7 +529,7 @@ struct SettlementReviewView: View {
                 Button(String(localized: "wallet.settlement.viewWishes")) {
                     onShowWishes()
                 }
-                .buttonStyle(PaperSolidButtonStyle())
+                .buttonStyle(PaperSolidButtonStyle(fullWidth: true))
                 .accessibilityIdentifier("wallet.settlement.viewWishes")
                 Button(String(localized: "action.close")) { dismiss() }
                     .frame(minHeight: 44)
@@ -549,7 +549,7 @@ struct SettlementReviewView: View {
                     .accessibilityAddTraits(accepted ? .isSelected : [])
                     .accessibilityIdentifier("wallet.settlement.acceptData")
                 Button(String(localized: endingEarly ? "settlement.early.confirm" : "wallet.settlement.confirm")) { confirm() }
-                    .buttonStyle(PaperSolidButtonStyle(enabled: accepted && preview != nil && canFinalize))
+                    .buttonStyle(PaperSolidButtonStyle(enabled: accepted && preview != nil && canFinalize, fullWidth: true))
                     .disabled(!accepted || preview == nil || !canFinalize)
                     .onGeometryChange(for: CGRect.self) { $0.frame(in: .global) } action: { frame in
                         confirmFrame = frame
@@ -561,7 +561,7 @@ struct SettlementReviewView: View {
                     .accessibilityIdentifier("wallet.settlement.estimateOnly")
             }
         }
-        .frame(maxWidth: 600)
+        .frame(maxWidth: PaperTheme.Layout.sheetMaxWidth)
     }
 
     private func confirm() {
@@ -585,6 +585,7 @@ struct SettlementReviewView: View {
             self.reviewedLedger = nil
             errorText = nil
             guard let savedSettlement = workspace.ledger.settlement(forPeriod: periodID) else { return }
+            PaperHaptics.success()
             workspace.latestSettlementReceipt = SettlementOutcomeReceipt(
                 title: savedTitle, settlement: savedSettlement, periodStart: savedPeriod.startDate,
                 periodEnd: workspace.ledger.periods[periodID]?.endDate, walletCurrency: walletCurrency,

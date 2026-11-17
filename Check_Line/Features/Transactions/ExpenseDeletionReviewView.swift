@@ -42,21 +42,35 @@ struct ExpenseDeletionReviewView: View {
                     } else {
                         ContentUnavailableView(String(localized: "ui.record.unavailable"), systemImage: "receipt")
                     }
-                }.padding(24).frame(maxWidth: 650, alignment: .leading).frame(maxWidth: .infinity)
+                }.padding(PaperTheme.Layout.sheetPadding).frame(maxWidth: PaperTheme.Layout.sheetMaxWidth, alignment: .leading).frame(maxWidth: .infinity)
             }
             .background(PaperTheme.canvas.ignoresSafeArea())
             .navigationTitle(String(localized: "cloud.agent.deleteTitle")).navigationBarTitleDisplayMode(.inline)
-            .toolbar { ToolbarItem(placement: .topBarTrailing) { Button(String(localized: "action.close")) { dismiss() }.accessibilityIdentifier("expense.delete.close") } }
+            .toolbarBackground(.hidden, for: .navigationBar)
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button(String(localized: "action.close"), iconSymbol: "xmark") { dismiss() }
+                        .labelStyle(.iconOnly)
+                        .accessibilityIdentifier("expense.delete.close")
+                }
+            }
             .safeAreaInset(edge: .bottom) {
                 if let reviewed, workspace.expenseDeletionPreview(expenseID, in: reviewed) != nil {
                     Button(String(localized: "cloud.agent.confirmDelete"), role: .destructive) {
                         do {
                             try workspace.confirmExpenseDeletion(expenseID, reviewed: reviewed)
+                            PaperHaptics.success()
                             onDeleted(); dismiss()
                         } catch { failed = true }
-                    }.buttonStyle(PaperSolidButtonStyle()).disabled(workspace.ledger != reviewed)
-                        .accessibilityIdentifier("expense.delete.confirm")
-                        .padding(22).background(PaperTheme.canvas)
+                    }
+                    .buttonStyle(PaperSolidButtonStyle(enabled: workspace.ledger == reviewed, fullWidth: true))
+                    .disabled(workspace.ledger != reviewed)
+                    .accessibilityIdentifier("expense.delete.confirm")
+                    .padding(.horizontal, PaperTheme.Layout.sheetPadding)
+                    .padding(.vertical, 12)
+                    .frame(maxWidth: PaperTheme.Layout.sheetMaxWidth)
+                    .frame(maxWidth: .infinity)
+                    .background(PaperTheme.canvas)
                 }
             }
         }

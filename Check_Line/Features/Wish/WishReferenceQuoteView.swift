@@ -46,7 +46,7 @@ struct WishReferenceQuoteView: View {
                         Text(String(localized: "native.wish.referenceFailed")).font(.subheadline).foregroundStyle(PaperTheme.ink)
                             .accessibilityIdentifier("native.wish.referenceFailed")
                     }
-                }.padding(24).frame(maxWidth: 560).frame(maxWidth: .infinity)
+                }.padding(PaperTheme.Layout.sheetPadding).frame(maxWidth: PaperTheme.Layout.sheetMaxWidth).frame(maxWidth: .infinity)
             }.scrollDismissesKeyboard(.interactively).background(PaperTheme.canvas.ignoresSafeArea())
                 .safeAreaInset(edge: .bottom) {
                     VStack(spacing: 0) {
@@ -58,6 +58,7 @@ struct WishReferenceQuoteView: View {
                     }
                 }
                 .navigationTitle(String(localized: "native.wish.checkRate")).navigationBarTitleDisplayMode(.inline)
+                .toolbarBackground(.hidden, for: .navigationBar)
                 .toolbar {
                     ToolbarItem(placement: .cancellationAction) {
                         Button(String(localized: "action.cancel")) { dismiss() }.accessibilityIdentifier("native.wish.cancelReference")
@@ -68,7 +69,7 @@ struct WishReferenceQuoteView: View {
 
     private func apply() {
         guard let reference else { return }
-        do { try workspace.applyWishReference(reference); dismiss() }
+        do { try workspace.applyWishReference(reference); PaperHaptics.success(); dismiss() }
         catch { failed = true }
     }
 }

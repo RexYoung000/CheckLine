@@ -136,7 +136,7 @@ struct CreateWishSheet: View {
                     if let errorText {
                         Text(errorText).font(.subheadline).foregroundStyle(PaperTheme.accent).accessibilityIdentifier("wallet.wishes.create.error")
                     }
-                }.padding(22).frame(maxWidth: 560).frame(maxWidth: .infinity)
+                }.padding(PaperTheme.Layout.sheetPadding).frame(maxWidth: PaperTheme.Layout.sheetMaxWidth).frame(maxWidth: .infinity)
             }.scrollDismissesKeyboard(.interactively).background(PaperTheme.canvas.ignoresSafeArea())
                 .safeAreaInset(edge: .bottom) {
                     VStack(spacing: 0) {
@@ -213,6 +213,7 @@ struct CreateWishSheet: View {
                 workspace.proposedWishDraft = nil
                 workspace.conversation.append(AgentConversationEntry(isUser: false, text: String(format: String(localized: "native.agent.wishSaved"), savedName)))
             }
+            PaperHaptics.success()
             dismiss()
         } catch WorkspaceInputError.invalidCurrency { errorText = String(localized: "ui.wish.chooseCurrency") }
         catch LedgerError.zeroOrNegativeAmount, WorkspaceInputError.missingName { errorText = String(localized: "wallet.wishes.invalid") }
@@ -351,7 +352,7 @@ struct WishRedemptionView: View {
                     } else {
                         ContentUnavailableView(String(localized: "ui.wish.unavailable"), systemImage: "heart")
                     }
-                }.padding(24).frame(maxWidth: 600).frame(maxWidth: .infinity)
+                }.padding(PaperTheme.Layout.sheetPadding).frame(maxWidth: PaperTheme.Layout.sheetMaxWidth).frame(maxWidth: .infinity)
             }.scrollDismissesKeyboard(.interactively).background(PaperTheme.canvas.ignoresSafeArea())
                 .safeAreaInset(edge: .bottom) {
                     VStack(spacing: 0) {
@@ -462,6 +463,7 @@ struct WishRedemptionView: View {
                 progress: (wish.currencyCode ?? walletCurrency) == walletCurrency ? wish.targetAmount.map { CGFloat(NSDecimalNumber(decimal: min(1,before / $0)).doubleValue) } : nil)
             try? task.clear()
             failed = false
+            PaperHaptics.success()
         } catch { failed = true }
     }
 }

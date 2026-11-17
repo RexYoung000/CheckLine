@@ -82,12 +82,14 @@ struct PaperSolidButtonStyle: ButtonStyle {
     var enabled: Bool = true
     var foreground: Color = PaperTheme.primaryInk
     var background: Color = PaperTheme.primary
+    var fullWidth: Bool = false
 
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .font(.body.weight(.semibold))
             .foregroundStyle(foreground)
             .padding(.horizontal, PaperTheme.Space.m)
+            .frame(maxWidth: fullWidth ? .infinity : nil)
             .frame(minHeight: PaperTheme.Layout.minTap)
             .background(
                 background.opacity(backgroundOpacity(pressed: configuration.isPressed)),
@@ -242,11 +244,10 @@ struct PaperComposerCloseButton: View {
 
     var body: some View {
         Button(action: action) {
-            CheckLineIcon(symbol: "xmark", size: 20)
+            CheckLineIcon(symbol: "xmark", size: 17)
                 .font(.system(size: 16, weight: .medium))
                 .foregroundStyle(PaperTheme.ink)
-                .frame(width: 44, height: 44)
-                .background(Circle().fill(PaperTheme.ink.opacity(0.06)))
+                .paperHeaderCircleChrome()
         }
         .buttonStyle(PaperCirclePressStyle())
         .accessibilityLabel(String(localized: "v1.shell.close"))
@@ -374,6 +375,18 @@ struct PaperKeyboardDoneBar: View {
 }
 
 extension View {
+    /// Circular elevated surface matching native toolbar icon buttons inside custom drawer headers.
+    func paperHeaderCircleChrome() -> some View {
+        frame(width: PaperTheme.Layout.minTap, height: PaperTheme.Layout.minTap)
+            .background {
+                Circle()
+                    .fill(PaperTheme.card)
+                    .overlay { Circle().strokeBorder(PaperTheme.stroke, lineWidth: PaperTheme.Stroke.hairline) }
+                    .shadow(color: PaperTheme.shadow.opacity(0.42), radius: 6, y: 2)
+            }
+            .contentShape(Circle())
+    }
+
     /// Draws the single visible focus edge over a surface's existing neutral border.
     func paperFocusRing(_ isFocused: Bool, radius: CGFloat = PaperTheme.Radius.card) -> some View {
         overlay {

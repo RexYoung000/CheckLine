@@ -23,18 +23,32 @@ struct PendingExpenseImpactView: View {
                         impactRow("v1.wish.balance", MoneyFormat.string(preview.balanceAfter, currencyCode: workspace.ledger.walletSettings.walletCurrencyCode))
                         impactRow("v1.wish.recovery", MoneyFormat.string(preview.recoveryGapAfter, currencyCode: workspace.ledger.walletSettings.walletCurrencyCode))
                     }.padding(18).walletSurface(radius: 22)
-                    if let errorText { Text(errorText).font(.subheadline).foregroundStyle(.red) }
-                }.padding(22).frame(maxWidth: 650).frame(maxWidth: .infinity)
-            }.background(PaperTheme.canvas)
+                    if let errorText {
+                        CheckLineIconLabel(errorText, symbol: "exclamationmark.circle")
+                            .font(.subheadline)
+                            .foregroundStyle(PaperTheme.warning)
+                    }
+                }.padding(PaperTheme.Layout.sheetPadding).frame(maxWidth: PaperTheme.Layout.sheetMaxWidth).frame(maxWidth: .infinity)
+            }.background(PaperTheme.canvas.ignoresSafeArea())
             .safeAreaInset(edge: .bottom) {
                 VStack(spacing: 12) {
                     Button(String(localized: "wallet.expense.confirmAttribution")) {
-                        do { try workspace.confirmPendingRetrospective(preview); onClose() }
+                        do {
+                            try workspace.confirmPendingRetrospective(preview)
+                            PaperHaptics.success()
+                            onClose()
+                        }
                         catch { errorText = String(localized: "wallet.expense.actionFailed") }
-                    }.buttonStyle(PaperSolidButtonStyle())
+                    }.buttonStyle(PaperSolidButtonStyle(fullWidth: true))
                     Button(String(localized: "action.cancel"), action: onClose).buttonStyle(PaperQuietButtonStyle())
-                }.padding(20).frame(maxWidth: 650).frame(maxWidth: .infinity).background(PaperTheme.canvas)
+                }
+                .padding(.horizontal, PaperTheme.Layout.sheetPadding)
+                .padding(.vertical, 12)
+                .frame(maxWidth: PaperTheme.Layout.sheetMaxWidth)
+                .frame(maxWidth: .infinity)
+                .background(PaperTheme.canvas)
             }.navigationBarTitleDisplayMode(.inline)
+            .toolbarBackground(.hidden, for: .navigationBar)
         }
     }
 

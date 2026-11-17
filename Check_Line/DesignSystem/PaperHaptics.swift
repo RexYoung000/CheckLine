@@ -12,4 +12,10 @@ enum PaperHaptics {
         generator.prepare()
         generator.selectionChanged()
     }
+
+    static func success() {
+        let generator = UINotificationFeedbackGenerator()
+        generator.prepare()
+        generator.notificationOccurred(.success)
+    }
 }

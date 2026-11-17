@@ -14,7 +14,7 @@ struct AgentTaskPanel: View {
 
     var body: some View {
         expanded
-            .frame(maxWidth: PaperTheme.Layout.contentMaxWidth, alignment: .leading)
+            .frame(maxWidth: embedded ? PaperTheme.Layout.sheetMaxWidth : PaperTheme.Layout.contentMaxWidth, alignment: .leading)
             .frame(maxWidth: .infinity)
             .background {
                 if embedded == false {
@@ -93,7 +93,7 @@ struct AgentTaskPanel: View {
                             workspace.openComposer(.budget)
                         }
                     }
-                    .buttonStyle(PaperSolidButtonStyle())
+                    .buttonStyle(PaperSolidButtonStyle(fullWidth: true))
                 }
             }
 
@@ -183,6 +183,19 @@ struct AgentTaskPanel: View {
                         Button(String(localized: "ui.voice.cancel")) { voiceCapture.cancel() }
                             .font(.subheadline).frame(minHeight: 44)
                             .accessibilityIdentifier("wallet.agent.voice.cancel")
+                    } else if inputFocused {
+                        Button {
+                            UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                            inputFocused = false
+                        } label: {
+                            CheckLineIcon(symbol: "keyboard.chevron.compact.down", size: 18)
+                                .foregroundStyle(PaperTheme.muted)
+                                .frame(width: 44, height: 44)
+                                .background(PaperTheme.chipIdle, in: Circle())
+                        }
+                        .buttonStyle(PaperCirclePressStyle())
+                        .accessibilityLabel(String(localized: "ui.keyboard.done"))
+                        .accessibilityIdentifier("wallet.keyboard.done")
                     }
                     Spacer()
                     Button {
@@ -199,6 +212,7 @@ struct AgentTaskPanel: View {
                         .disabled(workspace.isWorking || (voiceCapture.isActive && !voiceCapture.isListening))
                     Button {
                         inputFocused = false
+                        PaperHaptics.light()
                         Task { await workspace.submitText() }
                     } label: {
                         CheckLineIcon(symbol: "arrow.up", size: 20)
@@ -212,6 +226,12 @@ struct AgentTaskPanel: View {
             }
             .padding(16)
             .walletSurface(radius: 24)
+            .contentShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
+            .onTapGesture {
+                if !voiceCapture.isActive {
+                    inputFocused = true
+                }
+            }
             .paperFocusRing(inputFocused, radius: 24)
 
             if workspace.lastUndo != nil && !workspace.showsStructuredConfirm {
@@ -305,17 +325,20 @@ struct AgentTaskPanel: View {
     }
 
     private var structuredActions: some View {
-        VStack(alignment: .leading, spacing: PaperTheme.Space.s) {
+        VStack(alignment: .center, spacing: PaperTheme.Space.s) {
             Button(String(localized: workspace.budgetProposal == nil ? "v1.agent.confirm" : "v1.agent.confirm.budget")) {
                 inputFocused = false
+                PaperHaptics.success()
                 workspace.confirmStructured()
             }
-            .buttonStyle(PaperSolidButtonStyle(enabled: workspace.canConfirmProposal))
+            .buttonStyle(PaperSolidButtonStyle(enabled: workspace.canConfirmProposal, fullWidth: true))
             .disabled(!workspace.canConfirmProposal)
             Button(String(localized: "ui.task.keepEditing")) {
                 workspace.leaveTaskReview()
                 inputFocused = true
-            }.buttonStyle(PaperQuietButtonStyle())
+            }
+            .buttonStyle(PaperQuietButtonStyle())
+            .frame(maxWidth: .infinity)
         }
     }
 }

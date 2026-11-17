@@ -60,7 +60,7 @@ struct WishWalletSummaryView: View {
                         .fixedSize(horizontal: false, vertical: true).padding(.top, 12)
                     }.font(.subheadline).tint(PaperTheme.accent)
                         .accessibilityIdentifier("wallet.wishes.balance.about")
-                }.padding(24).frame(maxWidth: 600).frame(maxWidth: .infinity)
+                }.padding(PaperTheme.Layout.sheetPadding).frame(maxWidth: PaperTheme.Layout.sheetMaxWidth).frame(maxWidth: .infinity)
             }
             .background(PaperTheme.canvas.ignoresSafeArea())
             .navigationTitle(String(localized: "v1.wish.balance")).navigationBarTitleDisplayMode(.inline)

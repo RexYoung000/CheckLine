@@ -52,7 +52,7 @@ struct WalletEntryDetailView: View {
                     ContentUnavailableView(String(localized: "ui.wallet.entryUnavailable"), systemImage: "receipt")
                     Button(String(localized: "action.back")) { dismiss() }.buttonStyle(PaperQuietButtonStyle())
                 }
-            }.padding(24).frame(maxWidth: 650).frame(maxWidth: .infinity)
+            }.padding(PaperTheme.Layout.sheetPadding).frame(maxWidth: PaperTheme.Layout.sheetMaxWidth).frame(maxWidth: .infinity)
         }.background(PaperTheme.canvas.ignoresSafeArea())
             .navigationTitle(String(localized: "ui.wallet.entryTitle")).navigationBarTitleDisplayMode(.inline)
             .toolbarBackground(.hidden, for: .navigationBar)

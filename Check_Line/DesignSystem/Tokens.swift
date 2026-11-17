@@ -52,6 +52,7 @@ enum PaperTheme {
 
     /// Default text and icon accent; focus remains a brighter, separate role.
     static let accent = Color.paper(light: 0x0A647B, dark: 0xAEB6BB)
+    static let warning = Color.paper(light: 0xC62828, dark: 0xF07167)
     static let gold = Color.paper(light: 0xB99C72, dark: 0xD2B78B)
     static let waterTop = Color.paper(light: 0xD8F4FA, dark: 0x82D4E8)
     static let waterBottom = Color.paper(light: 0x8DD7EA, dark: 0x388FA7)
@@ -164,6 +165,8 @@ enum PaperTheme {
 
     enum Layout {
         static let contentMaxWidth: CGFloat = 900
+        static let sheetMaxWidth: CGFloat = 600
+        static let sheetPadding: CGFloat = 22
         static let minTap: CGFloat = 44
         static let cardPadding: CGFloat = 16
         static let titleBarHeight: CGFloat = 54

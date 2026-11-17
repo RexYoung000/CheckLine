@@ -118,6 +118,7 @@ struct CheckLineShellView: View {
         TabView(selection: $chrome.selectedTab) {
             ForEach([CheckLineAppTab.budgets, .wishes]) { tab in
                 page(tab)
+                    .toolbar(.hidden, for: .tabBar)
                     .tabItem { tabLabel(tab) }
                     .tag(tab)
             }

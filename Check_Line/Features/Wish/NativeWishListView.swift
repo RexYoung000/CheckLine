@@ -680,10 +680,10 @@ struct WishPriceSheet: View {
                             .focused($amountFocused).accessibilityLabel(String(localized: "native.wish.setPrice")).accessibilityIdentifier("native.wish.price.amount")
                             .frame(minHeight: 54).textFieldStyle(.plain)
                         CurrencyMenuButton(currency: $currency, preferred: workspace.ledger.walletSettings.walletCurrencyCode)
-                    }.padding(18).background(PaperTheme.card, in: RoundedRectangle(cornerRadius: 24))
+                    }.padding(18).walletSurface(radius: 24)
                         .paperFocusRing(amountFocused, radius: 24)
                     if failed { Text(String(localized: "v1.banner.failed")).foregroundStyle(PaperTheme.accent) }
-                }.padding(24)
+                }.padding(PaperTheme.Layout.sheetPadding).frame(maxWidth: PaperTheme.Layout.sheetMaxWidth).frame(maxWidth: .infinity)
             }.scrollDismissesKeyboard(.interactively)
                 .safeAreaInset(edge: .bottom) {
                     VStack(spacing: 0) {
@@ -692,13 +692,16 @@ struct WishPriceSheet: View {
                         }
                         PaperSubmitBar(title: String(localized: "action.save"), enabled: MoneyFormat.parseAmount(amount).map { $0 > 0 } ?? false) {
                             guard let value = MoneyFormat.parseAmount(amount), value > 0 else { return }
-                            do { try workspace.setWishPrice(wish.id, amount: value, currency: currency); dismiss() } catch { failed = true }
+                            do { try workspace.setWishPrice(wish.id, amount: value, currency: currency); PaperHaptics.success(); dismiss() } catch { failed = true }
                         }.accessibilityIdentifier("native.wish.price.save").padding(.vertical, 12).background(PaperTheme.canvas)
                     }
                 }
                 .navigationTitle(String(localized: "native.wish.setPrice")).navigationBarTitleDisplayMode(.inline)
+                .toolbarBackground(.hidden, for: .navigationBar)
                 .toolbar {
-                    ToolbarItem(placement: .topBarTrailing) { Button(String(localized: "action.close")) { dismiss() } }
+                    ToolbarItem(placement: .topBarTrailing) {
+                        Button(String(localized: "action.close"), iconSymbol: "xmark") { dismiss() }.labelStyle(.iconOnly)
+                    }
                 }.background(PaperTheme.canvas.ignoresSafeArea())
         }.modifier(NativeDrawerStyle()).onAppear { currency = wish.currencyCode ?? workspace.ledger.walletSettings.walletCurrencyCode }
     }
@@ -735,17 +738,28 @@ struct WishCoverPicker: View {
                     }.pickerStyle(.segmented).accessibilityIdentifier("native.cover.source")
                     if photoMode { photoOptions } else { presetOptions }
                     if failed { Text(String(localized: "native.cover.failed")).font(.subheadline).foregroundStyle(PaperTheme.accent) }
-                }.padding(22).frame(maxWidth: 560).frame(maxWidth: .infinity)
+                }.padding(PaperTheme.Layout.sheetPadding).frame(maxWidth: PaperTheme.Layout.sheetMaxWidth).frame(maxWidth: .infinity)
             }.background(PaperTheme.canvas.ignoresSafeArea())
                 .safeAreaInset(edge: .bottom) {
                     Button(String(localized: "native.cover.use")) {
-                        do { try store.save(cover, for: wishID); dismiss() } catch { failed = true }
-                    }.buttonStyle(PaperSolidButtonStyle(enabled: !reading)).disabled(reading).padding(22)
-                        .frame(maxWidth: .infinity).background(PaperTheme.canvas)
-                        .accessibilityIdentifier("native.cover.save")
+                        do { try store.save(cover, for: wishID); PaperHaptics.success(); dismiss() } catch { failed = true }
+                    }
+                    .buttonStyle(PaperSolidButtonStyle(enabled: !reading, fullWidth: true))
+                    .disabled(reading)
+                    .padding(.horizontal, PaperTheme.Layout.sheetPadding)
+                    .padding(.vertical, 12)
+                    .frame(maxWidth: PaperTheme.Layout.sheetMaxWidth)
+                    .frame(maxWidth: .infinity)
+                    .background(PaperTheme.canvas)
+                    .accessibilityIdentifier("native.cover.save")
                 }
                 .navigationTitle(String(localized: "native.cover.title")).navigationBarTitleDisplayMode(.inline)
-                .toolbar { ToolbarItem(placement: .topBarTrailing) { Button(String(localized: "action.close")) { dismiss() } } }
+                .toolbarBackground(.hidden, for: .navigationBar)
+                .toolbar {
+                    ToolbarItem(placement: .topBarTrailing) {
+                        Button(String(localized: "action.close"), iconSymbol: "xmark") { dismiss() }.labelStyle(.iconOnly)
+                    }
+                }
         }.modifier(NativeDrawerStyle())
             .onAppear {
                 cover = store.cover(for: wishID); previewCover = cover

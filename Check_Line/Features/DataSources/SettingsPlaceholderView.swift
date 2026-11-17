@@ -68,7 +68,7 @@ struct SettingsPlaceholderView: View {
                         }
                     }
                     .walletSurface()
-                }.padding(22).frame(maxWidth: 650).frame(maxWidth: .infinity)
+                }.padding(PaperTheme.Layout.sheetPadding).frame(maxWidth: PaperTheme.Layout.sheetMaxWidth).frame(maxWidth: .infinity)
             }
             .background(PaperTheme.canvas.ignoresSafeArea())
             .navigationTitle(String(localized: "v1.settings.title")).navigationBarTitleDisplayMode(.inline)
